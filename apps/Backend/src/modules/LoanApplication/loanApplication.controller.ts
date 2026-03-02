@@ -1,0 +1,426 @@
+import { Response, Request } from "express";
+import {
+  createLoanApplicationService,
+  getAllLoanApplicationsService,
+  getLoanApplicationByIdService,
+  reviewLoanService,
+  approveLoanService,
+  rejectLoanService,
+  updateLoanApplicationStatusService,
+  uploadLoanDocumentsService,
+  verifyDocumentService,
+  rejectDocumentService,
+  reuploadLoanDocumentService,
+  getAlldoumentsforLoanApplicationService
+} from "./loanApplication.service.js";
+import { prisma } from "../../db/prismaService.js";
+
+import { cleanupFiles } from "../../common/utils/cleanup.js";
+import path from "path";
+
+export const createLoanApplicationController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    if (!req.user)
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    const loanApplication = await createLoanApplicationService(req.body, {
+      id: req.user.id,
+      role: req.user.role as any,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Loan application created successfully",
+      data: loanApplication,
+    });
+  } catch (error: any) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Loan application creation failed",
+    });
+  }
+};
+
+export const getAllLoanApplicationsController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    if (!req.user)
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+
+    const result = await getAllLoanApplicationsService({
+      page: Number(req.query.page),
+      limit: Number(req.query.limit),
+      q: typeof req.query.q === 'string' ? req.query.q : undefined,
+      user: {
+        id: req.user.id,
+        role: req.user.role as any,
+      },
+    });
+    res.status(200).json({
+      success: true,
+      message: "Loan applications retrieved successfully",
+      data: result.data,
+      meta: result.meta,
+    });
+  } catch (error: any) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Failed to retrieve loan applications",
+    });
+  }
+};
+
+export const getLoanApplicationByIdController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const loanApplicationId = typeof req.params.id === 'string' ? req.params.id : (Array.isArray(req.params.id) ? req.params.id[0] : '');
+    const loanApplication = await getLoanApplicationByIdService(
+      loanApplicationId,
+      req.user ? { id: req.user.id, role: req.user.role as any } : undefined,
+    );
+    res.status(200).json({
+      success: true,
+      message: "Loan application retrieved successfully",
+      data: loanApplication, // return loan application data
+    });
+  } catch (error: any) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Failed to retrieve loan application",
+    });
+  }
+};
+export const updateLoanApplicationStatusController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    const id = typeof req.params.id === 'string' ? req.params.id : (Array.isArray(req.params.id) ? req.params.id[0] : '');
+    const { status } = req.body;
+    const updatedLoanApplication = await updateLoanApplicationStatusService(
+      id,
+      { status },
+      req.user.id,
+    );
+    res.status(200).json({
+      success: true,
+      message: "Loan application status updated successfully",
+      data: updatedLoanApplication,
+    });
+  } catch (error: any) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Failed to update loan application status",
+    });
+  }
+};
+
+export const uploadLoanDocumentsController = async (
+  req: Request,
+  res: Response,
+) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
+
+  const loanApplicationId = typeof req.params.id === 'string' ? req.params.id : (Array.isArray(req.params.id) ? req.params.id[0] : '');
+  const userId = req.user.id;
+  const files = req.files as Express.Multer.File[];
+
+  try {
+    /* ---------------- 1️⃣ Validate files ---------------- */
+    if (!files || files.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No documents uploaded",
+      });
+    }
+
+    /* ---------------- 2️⃣ Fetch loan ---------------- */
+    const loanApplication = await prisma.loanApplication.findUnique({
+      where: { id: loanApplicationId },
+      include: {
+        kyc: true,
+      },
+    });
+
+    /* Fetch loanType separately (not a relation in schema) */
+    let loanType = null;
+    if (loanApplication?.loanTypeId) {
+      loanType = await prisma.loanType.findUnique({
+        where: { id: loanApplication.loanTypeId },
+      });
+    }
+
+    if (!loanApplication) {
+      cleanupFiles(files);
+      return res.status(404).json({
+        success: false,
+        message: "Loan application not found",
+      });
+    }
+
+    if (!loanApplication.kyc) {
+      cleanupFiles(files);
+      return res.status(400).json({
+        success: false,
+        message: "KYC not found for this application",
+      });
+    }
+
+    /* ---------------- 3️⃣ Required documents check ---------------- */
+    const requiredDocuments =
+      loanType?.documentsRequired
+        ?.split(",")
+        .map((d: string) => d.trim()) || [];
+
+    if (requiredDocuments.length === 0) {
+      cleanupFiles(files);
+      return res.status(400).json({
+        success: false,
+        message: "No documents required for this loan type",
+      });
+    }
+
+    const uploadedDocTypes = files.map((file) => file.fieldname);
+
+    const missingDocs = requiredDocuments.filter(
+      (doc) => !uploadedDocTypes.includes(doc),
+    );
+
+    if (missingDocs.length > 0) {
+      cleanupFiles(files);
+      return res.status(400).json({
+        success: false,
+        message: `Missing required documents: ${missingDocs.join(", ")}`,
+      });
+    }
+
+    /* ---------------- 4️⃣ Build payload and save documents (service handles create/update) ---------------- */
+    const documentsPayload = files.map((file) => {
+      // Store path as accessible URL: /public/uploads/filename
+      const relativePath = `/public/uploads/${path.basename(file.path)}`;
+
+      return {
+        documentType: file.fieldname,
+        documentPath: relativePath,
+        uploadedBy: userId,
+      };
+    });
+
+    /* Save documents */
+    const documents = await uploadLoanDocumentsService(
+      loanApplicationId,
+      documentsPayload,
+    );
+
+    return res.status(201).json({
+      success: true,
+      message: "Documents uploaded successfully",
+      data: documents,
+    });
+  } catch (error: any) {
+    cleanupFiles(files);
+
+    return res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Document upload failed",
+    });
+  }
+};
+
+export const verifyDocumentController = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    const documentId = typeof req.params.id === 'string' ? req.params.id : (Array.isArray(req.params.id) ? req.params.id[0] : '');
+    const doc = await verifyDocumentService(documentId, req.user.id);
+    res.status(200).json({
+      success: true,
+      message: "Document verified successfully",
+      data: doc,
+    });
+  } catch (error: any) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Document verification failed",
+    });
+  }
+};
+
+
+
+export const getAlldoumentsforLoanApplicationController = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    const loanApplicationId = typeof req.params.id === 'string' ? req.params.id : (Array.isArray(req.params.id) ? req.params.id[0] : '');
+    const documents = await getAlldoumentsforLoanApplicationService(loanApplicationId);
+    res.status(200).json({
+      success: true,
+      message: "Documents retrieved successfully",
+      data: documents,
+    });
+  } catch (error: any) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Failed to retrieve documents",
+    });
+  }
+};
+
+export const rejectDocumentController = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    const documentId = typeof req.params.id === 'string' ? req.params.id : (Array.isArray(req.params.id) ? req.params.id[0] : '');
+    const { reason } = req.body;
+    if (!reason) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Rejection reason is required" });
+    }
+    const doc = await rejectDocumentService(documentId, reason, req.user.id);
+    res.status(200).json({
+      success: true,
+      message: "Document rejected successfully",
+      data: doc,
+    });
+  } catch (error: any) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Document rejection failed",
+    });
+  }
+};
+
+export const reviewLoanController = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    const id = typeof req.params.id === 'string' ? req.params.id : (Array.isArray(req.params.id) ? req.params.id[0] : '');
+
+    const loan = await reviewLoanService(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Loan moved to review stage",
+      data: loan,
+    });
+  } catch (error: any) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Loan review failed",
+    });
+  }
+};
+
+export const approveLoanController = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    const id = typeof req.params.id === 'string' ? req.params.id : (Array.isArray(req.params.id) ? req.params.id[0] : '');
+    const approvedBy = req.user.id;
+    const data = req.body;
+
+    const loan = await approveLoanService(id, approvedBy, data);
+
+    res.status(200).json({
+      success: true,
+      message: "Loan approved successfully",
+      data: loan,
+    });
+  } catch (error: any) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Loan approval failed",
+    });
+  }
+};
+
+export const rejectLoanController = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    const id = typeof req.params.id === 'string' ? req.params.id : (Array.isArray(req.params.id) ? req.params.id[0] : '');
+    const { reason } = req.body;
+    const rejectedBy = req.user.id;
+
+    if (!reason) {
+      return res.status(400).json({
+        success: false,
+        message: "Rejection reason is required",
+      });
+    }
+
+    const loan = await rejectLoanService(id, reason, rejectedBy);
+
+    res.status(200).json({
+      success: true,
+      message: "Loan rejected successfully",
+      data: loan,
+    });
+  } catch (error: any) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Loan rejection failed",
+    });
+  }
+};
+
+export const reuploadLoanDocumentController = async (
+  req: Request,
+  res: Response,
+  next: Function,
+) => {
+  try {
+    const loanApplicationId = typeof req.params.loanApplicationId === 'string' ? req.params.loanApplicationId : (Array.isArray(req.params.loanApplicationId) ? req.params.loanApplicationId[0] : '');
+    const documentType = typeof req.params.documentType === 'string' ? req.params.documentType : (Array.isArray(req.params.documentType) ? req.params.documentType[0] : '');
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No document uploaded",
+      });
+    }
+    const updatedDoc = await reuploadLoanDocumentService(
+      loanApplicationId,
+      documentType,
+      {
+        filename: req.file.filename,
+        path: `/public/uploads/${req.file.filename}`,
+        uploadedBy: req.user.id,
+      },
+    );
+    return res.status(200).json({
+      success: true,
+      message: "Document re-uploaded successfully",
+      data: updatedDoc,
+    });
+  } catch (error: any) {
+    if (req.file) {
+      cleanupFiles([req.file]);
+    }
+    next(error);
+  }
+};

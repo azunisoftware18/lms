@@ -1,0 +1,176 @@
+import { Request, Response } from "express";
+import {
+  createEmployeeService,
+  getAllEmployeesService,
+  getEmployeeByIdService,
+  updateEmployeeService,
+  getEmployeeDashBoardService,
+} from "./employee.service.js";
+import { prisma } from "../../db/prismaService.js";
+import { logAction } from "../../audit/audit.helper.js";
+
+export const createEmployeeController = async (req: Request, res: Response) => {
+  try {
+    const result = await createEmployeeService(req.body);
+    const { user, employee } = result as any;
+    const { password: _pw, ...safeUser } = user;
+
+    // Only log action if user has a branchId
+    const userBranchId = req.user?.branchId || employee.branchId;
+    if (userBranchId) {
+      try {
+        await logAction({
+          action: "CREATE_EMPLOYEE",
+          performedBy: req.user?.id || "SYSTEM",
+          entityType: "EMPLOYEE",
+          entityId: employee.id,
+          branchId: userBranchId,
+          oldValue: null,
+          newValue: {
+            user: safeUser,
+            employee: {
+              id: employee.id,
+              name: employee.name,
+              email: employee.email,
+              contactNumber: employee.contactNumber,
+              branchId: employee.branchId,
+            },
+          },
+        });
+      } catch (auditError) {
+        console.error("Failed to log audit action:", auditError);
+      }
+    }
+
+    res.status(201).json({
+      success: true,
+      message: "Employee created successfully",
+      data: { user: safeUser, employee },
+    });
+  } catch (error: any) {
+    if (error.message && error.message.includes("already exists")) {
+      return res.status(409).json({ success: false, message: error.message });
+    }
+    res.status(400).json({
+      success: false,
+      message: "Employee creation failed",
+      error: error.message,
+    });
+  }
+};
+
+export const getAllEmployeesController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    const employees = await getAllEmployeesService(
+      {
+        page: Number(req.query.page),
+        limit: Number(req.query.limit),
+        q: req.query.q?.toString(),
+      },
+      {
+        id: req.user.id,
+        role: req.user.role,
+        branchId: req.user.branchId,
+      },
+    );
+    res.status(200).json({
+      success: true,
+      message: "Employees retrieved successfully",
+      data: employees,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: "Failed to retrieve employees",
+      error: error.message,
+    });
+  }
+};
+
+export const getEmployeeByIdController = async (
+  req: Request,
+  res: Response,
+) => {
+  const { id } = req.params;
+  try {
+    const employee = await getEmployeeByIdService(id);
+    res.status(200).json({
+      success: true,
+      message: "Employee retrieved successfully",
+      data: employee,
+    });
+  } catch (error: any) {
+    if (error.message && error.message.includes("not found")) {
+      return res.status(404).json({ success: false, message: error.message });
+    }
+    res.status(400).json({
+      success: false,
+      message: "Failed to retrieve employee",
+      error: error,
+    });
+  }
+};
+
+export const updateEmployeeController = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const updateData = req.body;
+
+  try {
+    const updatedEmployee = await updateEmployeeService(
+      id,
+      updateData,
+      req.user?.id,
+      req.user?.branchId,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Employee updated successfully",
+      data: updatedEmployee,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: "Employee update failed",
+      error: error.message,
+    });
+  }
+};
+
+export const getEmployeeDashBoardController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    const employee = await prisma.employee.findUnique({
+      where: { userId: req.user.id },
+    });
+    if (!employee) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Employee not found" });
+    }
+    const employeeId = employee.id;
+    const dashboardData = await getEmployeeDashBoardService(employeeId);
+    res.status(200).json({
+      success: true,
+      message: "Employee dashboard data retrieved successfully",
+      data: dashboardData,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve dashboard data",
+      error: error.message,
+    });
+  }
+};
