@@ -10,13 +10,4 @@ export {
   clearError,
 } from '../store/slices/authSlice'
 
-// UI hooks
-export {
-  toggleSidebar,
-  setSidebarOpen,
-  setTheme,
-  addNotification,
-  removeNotification,
-  openModal,
-  closeModal,
-} from '../store/slices/uiSlice'
+
