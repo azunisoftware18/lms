@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { ReduxProvider } from './providers/reduxProvider'
 import { QueryProvider } from './providers/queryProvider'
 import { BrowserRouter } from 'react-router-dom'
+import AppRoutes from './routes/AppRoutes'
 import './index.css'
 
 createRoot(document.getElementById('root')).render(
@@ -10,7 +11,7 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <ReduxProvider>
         <QueryProvider>
-          <h1>Welcome to React</h1>
+          <AppRoutes />
         </QueryProvider>
       </ReduxProvider>
     </BrowserRouter>
