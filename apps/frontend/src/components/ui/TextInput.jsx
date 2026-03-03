@@ -1,13 +1,13 @@
-const TextInput = ({
+import { forwardRef } from 'react';
+
+const TextInput = forwardRef(({
   id,
-  name,
   label,
   type = 'text',
-  value,
   placeholder,
-  onChange,
   error,
-}) => {
+  ...props
+}, ref) => {
   return (
     <div style={{ marginBottom: 14 }}>
       <label htmlFor={id} style={{ display: 'block', marginBottom: 6, fontWeight: 600 }}>
@@ -15,11 +15,10 @@ const TextInput = ({
       </label>
       <input
         id={id}
-        name={name}
         type={type}
-        value={value}
         placeholder={placeholder}
-        onChange={onChange}
+        ref={ref}
+        {...props}
         style={{
           width: '100%',
           padding: '10px 12px',
@@ -31,6 +30,8 @@ const TextInput = ({
       {error ? <small style={{ color: '#dc2626' }}>{error}</small> : null}
     </div>
   );
-};
+});
+
+TextInput.displayName = 'TextInput';
 
 export default TextInput;

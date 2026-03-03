@@ -6,7 +6,7 @@
 export const authConfig = {
   // API endpoints
   api: {
-    baseURL: process.env.VITE_API_URL || 'http://localhost:4000/api',
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:4000/api',
     loginEndpoint: '/auth/login',
     logoutEndpoint: '/auth/logout',
     getUserEndpoint: '/auth/me',
@@ -86,7 +86,7 @@ export const getApiUrl = (endpoint) => {
  * @returns {boolean}
  */
 export const isProduction = () => {
-  return process.env.NODE_ENV === 'production';
+  return import.meta.env.MODE === 'production';
 };
 
 /**
@@ -94,7 +94,7 @@ export const isProduction = () => {
  * @returns {boolean}
  */
 export const isDevelopment = () => {
-  return process.env.NODE_ENV === 'development';
+  return import.meta.env.MODE === 'development';
 };
 
 export default authConfig;
