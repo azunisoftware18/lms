@@ -1,24 +1,30 @@
 import { useMutation } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
-import api from "../lib/api";
-import { setUser, setToken } from "../store/slices/authSlice";
+import { login,logout } from "../lib/api/auth.api";
+import { setUser, clearUser } from "../redux/slices/authSlice";
 
-export const useLogin = () => {
+export const useLogin = ()=>{
   const dispatch = useDispatch();
-
   return useMutation({
-    mutationFn: async ({ email, password }) => {
-      const response = await api.post("/auth/login", {
-        email,
-        password,
-      });
-
-      return response.data;
-    },
-
-    onSuccess: (data) => {
+    mutationFn: login,
+    onSuccess:(data)=>{
       dispatch(setUser(data.user));
-      dispatch(setToken(data.token));
     },
-  });
-};
+    onError:(error)=>{
+      console.log(error);
+    }
+  })
+}
+
+export const useLogout = ()=>{
+  const dispatch = useDispatch();
+  return useMutation({
+    mutationFn: logout,
+    onSuccess:()=>{
+      dispatch(clearUser());
+    },
+    onError:(error)=>{
+      console.log(error);
+    }
+  })
+}

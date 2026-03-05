@@ -37,3 +37,10 @@ export async function loginService(identifier: string, password: string) {
 
   return { user, accessToken, refreshToken };
 }
+
+
+export async function logoutService() {
+  // For stateless JWT, logout is handled on the client by deleting tokens.
+  // Optionally, you can implement token blacklisting here if needed.
+  return { success: true, message: "Logout successful" };
+}

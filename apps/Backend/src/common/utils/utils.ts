@@ -18,6 +18,12 @@ export const cookieOptions = {
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
+export const clearCookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "strict" as const,
+};
+
 export const hashPassword = async (password: string) => {
   if (!password) throw new Error("Password is required for hashing");
   return bcrypt.hash(password, 10);

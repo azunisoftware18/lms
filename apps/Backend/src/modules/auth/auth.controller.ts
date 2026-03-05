@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { loginService } from "./auth.service.js";
-import { cookieOptions } from "../../common/utils/utils.js";
+import { loginService ,logoutService } from "./auth.service.js";
+import { cookieOptions, clearCookieOptions } from "../../common/utils/utils.js";
 
 export const loginController = async (req: Request, res: Response) => {
   try {
@@ -34,5 +34,22 @@ export const loginController = async (req: Request, res: Response) => {
         .json({ success: false, message: "Invalid credentials" });
     }
     res.status(400).json({ success: false, message: "Login failed", error: error.message  });
+  }
+};
+
+
+export const logoutController = async (req: Request, res: Response) => {
+  try {
+    const result = await logoutService();
+    // Clear tokens from cookies
+    res
+      .status(200)
+      .clearCookie("accessToken", clearCookieOptions)
+      .clearCookie("refreshToken", clearCookieOptions)
+      .json(result);
+  } catch (error: any) {
+    res.status(400).json({ success: false, message: "Logout failed", error: error.message });
+    
+
   }
 };
