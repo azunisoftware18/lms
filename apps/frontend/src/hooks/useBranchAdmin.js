@@ -3,7 +3,7 @@ import { createBranchAdmin,updateBranchAdmins } from "../lib/api/branchAdmin.api
 
 export const useCreateBranchAdmin = ()=>{
     return  useMutation({
-        mutationFn:createBranchAdmin
+        mutationFn:createBranchAdmin,
 
     }) 
 }
