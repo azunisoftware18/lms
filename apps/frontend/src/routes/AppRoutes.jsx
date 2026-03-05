@@ -1,25 +1,33 @@
-import { Routes,Route } from "react-router-dom";
-import PrivateRoute from "./privateRouter";
-import PublicRoute from "./publicRoute";
+import { Routes, Route } from 'react-router-dom';
+import PrivateRoute from './privateRouter';
+import PublicRoute from './publicRoute';
 
+// Private pages
+import DashboardPage from '../app/dashboard/DashboardPage';
 
-import Login from "../pages/Login";
-import Dashboard from "../pages/Dashboard";
+// Public Pages
+import HomePage from '../app/pubilc/HomePage';
 
 export default function AppRoutes() {
-    return (
-        <Routes>
-            <Route path="/login" element={
-                <PublicRoute>
-                    <Login />
-                </PublicRoute>
-            } />
-            <Route path="/" element={
-                <PrivateRoute>
-                    <Dashboard />
-                </PrivateRoute>
-            } />
-        </Routes>
-    )
-    
+	return (
+		<Routes>
+      <Route
+        path="/"
+        element={
+          <PublicRoute>
+            <HomePage />
+          </PublicRoute>
+        }
+      />
+
+      <Route
+        path="/dashboard"
+        element={
+          <PrivateRoute>
+            <DashboardPage />
+          </PrivateRoute>
+        }
+      />
+    </Routes>
+	);
 }

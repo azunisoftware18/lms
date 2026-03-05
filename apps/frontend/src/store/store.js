@@ -1,10 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
-import authReducer from './slices/authSlice'
+import authReducer from './slices/authSlicce'
 import loanTypeReducer from './slices/loanTypeSlice'
 import branchReducer from './slices/branchSlice'
 import branchAdminSlice from './slices/branchAdminSlice'
-
-
 
 export const store = configureStore({
   reducer: {
