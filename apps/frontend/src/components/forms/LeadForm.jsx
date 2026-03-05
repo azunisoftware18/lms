@@ -1,39 +1,41 @@
-import React, { useState } from "react";
+import React from "react";
+import { useForm } from "react-hook-form";
 import { User, Mail, Phone, MapPin, Calendar, CreditCard, Send } from "lucide-react";
-// Aapke reusable components
 import Button from "../ui/Button";
 import SelectField from "../ui/SelectField";
 import InputField from "../ui/InputField";
 import TextAreaField from "../ui/TextAreaField";
 
 function LeadForm({ onSuccess }) {
-  const [formData, setFormData] = useState({
-    fullName: "", email: "", contactNumber: "", dob: "", gender: "",
-    state: "", city: "", pinCode: "", address: "", loanTypeId: "", loanAmount: "",
+  // 1. Initialize useForm
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    defaultValues: {
+      fullName: "", 
+      email: "", 
+      contactNumber: "", 
+      dob: "", 
+      gender: "",
+      state: "", 
+      city: "", 
+      pinCode: "", 
+      address: "", 
+      loanTypeId: "", 
+      loanAmount: "",
+    }
   });
 
-  const [isPending, setIsPending] = useState(false);
-
-  // Mock Data
-  const loanTypes = [
-    { id: "1", name: "Personal Loan" },
-    { id: "2", name: "Business Loan" },
-    { id: "3", name: "Home Loan" },
-  ];
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsPending(true);
-
+  // 2. Submit Handler
+  const onSubmit = async (data) => {
     const payload = {
-      ...formData,
-      loanTypeId: String(formData.loanTypeId),
-      loanAmount: Number(formData.loanAmount),
+      ...data,
+      loanTypeId: String(data.loanTypeId),
+      loanAmount: Number(data.loanAmount),
     };
 
     try {
@@ -43,160 +45,163 @@ function LeadForm({ onSuccess }) {
       if (onSuccess) onSuccess();
     } catch (err) {
       alert("Something went wrong");
-    } finally {
-      setIsPending(false);
     }
   };
 
+  // Options for selects
+  const genderOptions = [
+    { value: "MALE", label: "Male" },
+    { value: "FEMALE", label: "Female" },
+    { value: "OTHER", label: "Other" }
+  ];
+
+  const stateOptions = [
+    { value: "Rajasthan", label: "Rajasthan" },
+    { value: "Maharashtra", label: "Maharashtra" },
+    { value: "Delhi", label: "Delhi" },
+    { value: "Gujarat", label: "Gujarat" }
+  ];
+
+  const cityOptions = [
+    { value: "Jaipur", label: "Jaipur" },
+    { value: "Mumbai", label: "Mumbai" },
+    { value: "Delhi", label: "Delhi" },
+    { value: "Ahmedabad", label: "Ahmedabad" }
+  ];
+
+  const loanOptions = [
+    { value: "1", label: "Personal Loan" },
+    { value: "2", label: "Business Loan" },
+    { value: "3", label: "Home Loan" }
+  ];
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
         
         {/* Full Name */}
         <InputField
           label="Full Name *"
-          name="fullName"
-          value={formData.fullName}
-          onChange={handleChange}
-          required
-          placeholder=""
+          placeholder="John Doe"
           icon={User}
+          error={errors.fullName?.message}
+          {...register("fullName", { required: "Name is required" })}
         />
 
         {/* Email */}
         <InputField
           label="Email Address *"
           type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          placeholder=""
+          placeholder="john@example.com"
           icon={Mail}
+          error={errors.email?.message}
+          {...register("email", { 
+            required: "Email is required",
+            pattern: { value: /^\S+@\S+$/i, message: "Invalid email" }
+          })}
         />
 
         {/* Contact */}
         <InputField
           label="Mobile Number *"
           type="tel"
-          name="contactNumber"
-          value={formData.contactNumber}
-          onChange={handleChange}
-          required
-          maxLength="10"
-          placeholder=""
+          placeholder="9876543210"
           icon={Phone}
+          error={errors.contactNumber?.message}
+          {...register("contactNumber", { 
+            required: "Number is required",
+            pattern: { 
+              value: /^[0-9]{10}$/, 
+              message: "Enter valid 10-digit number" 
+            }
+          })}
         />
 
         {/* Date of Birth */}
         <InputField
           label="Date of Birth *"
           type="date"
-          name="dob"
-          value={formData.dob}
-          onChange={handleChange}
-          required
           icon={Calendar}
+          error={errors.dob?.message}
+          {...register("dob", { required: "DOB is required" })}
         />
 
-        {/* Gender Select */}
+        {/* Gender Select - FIXED */}
         <SelectField
           label="Gender *"
-          name="gender"
-          value={formData.gender}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select Gender</option>
-          <option value="MALE">MALE</option>
-          <option value="FEMALE">FEMALE</option>
-          <option value="OTHER">OTHER</option>
-        </SelectField>
+          placeholder="Select Gender"
+          error={errors.gender?.message}
+          value={watch("gender")}
+          onChange={(value) => setValue("gender", value)}
+          options={genderOptions}
+          isRequired
+        />
 
         {/* State Select */}
         <SelectField
           label="State *"
-          name="state"
-          value={formData.state}
-          onChange={handleChange}
-          required
-          options={[
-            { value: "", label: "Select State" },
-            { value: "Rajasthan", label: "Rajasthan" },
-            { value: "Maharashtra", label: "Maharashtra" },
-            { value: "Delhi", label: "Delhi" },
-            { value: "Gujarat", label: "Gujarat" }
-          ]}
+          placeholder="Select State"
+          error={errors.state?.message}
+          value={watch("state")}
+          onChange={(value) => setValue("state", value)}
+          options={stateOptions}
+          isRequired
         />
 
-        {/* City */}
+        {/* City Select */}
         <SelectField
           label="City *"
-          name="city"
-          value={formData.city}
-          onChange={handleChange}
-          required
           placeholder="Select City"
-          options={[
-            { value: "", label: "Select City" },
-            { value: "Rajasthan", label: "Jaipur" },
-            { value: "Maharashtra", label: "Mumbai" },
-            { value: "Delhi", label: "Delhi" },
-            { value: "Gujarat", label: "Ahmedabad" }
-          ]}
+          error={errors.city?.message}
+          value={watch("city")}
+          onChange={(value) => setValue("city", value)}
+          options={cityOptions}
+          isRequired
         />
 
         {/* Pincode */}
         <InputField
           label="Pincode *"
-          name="pinCode"
-          value={formData.pinCode}
-          onChange={handleChange}
-          required
-          maxLength="6"
           placeholder="302001"
+          error={errors.pinCode?.message}
+          {...register("pinCode", { 
+            required: "Pincode is required",
+            pattern: { value: /^[0-9]{6}$/, message: "Enter valid 6-digit pincode" }
+          })}
         />
 
-        {/* Loan Type */}
+        {/* Loan Type - FIXED: No icon in SelectField */}
         <SelectField
           label="Loan Type *"
-          name="loanTypeId"
-          value={formData.loanTypeId}
-          onChange={handleChange}
-          required
-          icon={<CreditCard size={18} />}
-        >
-          <option value="">Select Loan Type</option>
-          {loanTypes.map((loan) => (
-            <option key={loan.id} value={loan.id}>
-              {loan.name}
-            </option>
-          ))}
-        </SelectField>
+          placeholder="Select Loan Type"
+          error={errors.loanTypeId?.message}
+          value={watch("loanTypeId")}
+          onChange={(value) => setValue("loanTypeId", value)}
+          options={loanOptions}
+          isRequired
+        />
 
         {/* Loan Amount */}
         <InputField
-          label="Required Amount *"
+          label="Required Amount (₹) *"
           type="number"
-          name="loanAmount"
-          value={formData.loanAmount}
-          onChange={handleChange}
-          required
-          min="1000"
           placeholder="e.g. 50000"
+          icon={CreditCard}
+          error={errors.loanAmount?.message}
+          {...register("loanAmount", { 
+            required: "Amount is required", 
+            min: { value: 1000, message: "Minimum amount is ₹1000" }
+          })}
         />
 
-        {/* Address - Full Width */}
+        {/* Address */}
         <div className="md:col-span-2">
           <TextAreaField
             label="Full Address *"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            required
-            rows="3"
+            rows={3}
             placeholder="House No, Street, Landmark..."
-            icon={<MapPin size={18} />}
+            error={errors.address?.message}
+            {...register("address", { required: "Address is required" })}
           />
         </div>
       </div>
@@ -205,11 +210,10 @@ function LeadForm({ onSuccess }) {
       <div className="pt-2">
         <Button
           type="submit"
-          disabled={isPending}
-          variant="primary" // Agar aapne Button mein variants banaye hain
+          disabled={isSubmitting}
           className="w-full py-4 flex items-center justify-center gap-2"
         >
-          {isPending ? (
+          {isSubmitting ? (
             <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
           ) : (
             <>
