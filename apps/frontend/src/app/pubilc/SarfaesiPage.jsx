@@ -1,35 +1,18 @@
 import { Shield, Download, FileText } from 'lucide-react';
-
-const sarfaesiData = [
-  { 
-    name: "Information on secured assets possessed under the SARFAESI Act, 2002 - September, 2025", 
-    downloadLink: "/downloads/sarfaesi_sept_2025.pdf" 
-  },
-  { 
-    name: "Information on secured assets possessed under the SARFAESI Act, 2002 - March, 2025", 
-    downloadLink: "/downloads/sarfaesi_march_2025.pdf" 
-  },
-  { 
-    name: "Information on secured assets possessed under the SARFAESI Act, 2002 - September, 2024", 
-    downloadLink: "/downloads/sarfaesi_sept_2024.pdf" 
-  },
-];
+import { colorVariables } from '../../lib';
+import { sarfaesiData } from '../../lib/dumyData';
 
 export default function SarfaesiPage() {
-  // Theme colors
-  const PRIMARY_COLOR_CLASS = "text-blue-600";
-  const PRIMARY_BG_CLASS = "bg-blue-600";
-  const LIGHT_BG_CLASS = "bg-gray-50";
-
+  
   return (
-    <div className={`font-sans min-h-screen py-16 px-4 ${LIGHT_BG_CLASS}`}>
+    <div className={`font-sans min-h-screen py-16 px-4 ${colorVariables.LIGHT_BG}`}>
       <div className="container mx-auto max-w-5xl">
         
         {/* ===== Header Section ===== */}
         <div className="text-center mb-12">
-            <Shield className={`w-12 h-12 mx-auto mb-3 ${PRIMARY_COLOR_CLASS}`} />
+            <Shield className={`w-12 h-12 mx-auto mb-3 ${colorVariables.PRIMARY_COLOR}`} />
             <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
-              Secured Asset Details under <span className={PRIMARY_COLOR_CLASS}>SARFAESI Act, 2002</span>
+              Secured Asset Details under <span className={colorVariables.PRIMARY_COLOR}>SARFAESI Act, 2002</span>
             </h1>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               Public disclosure of secured assets possessed by the company.
@@ -42,7 +25,7 @@ export default function SarfaesiPage() {
             
             <div className="min-w-full">
                 {/* Table Header (Blue Theme) */}
-                <div className={`grid grid-cols-5 ${PRIMARY_BG_CLASS} text-white font-bold text-sm md:text-base p-4 uppercase tracking-wider`}>
+                <div className={`grid grid-cols-5 ${colorVariables.PRIMARY_BG} text-white font-bold text-sm md:text-base p-4 uppercase tracking-wider`}>
                     <div className="col-span-3">Name of Document</div>
                     <div className="col-span-1 hidden md:block text-center">Type</div>
                     <div className="col-span-2 md:col-span-1 text-center">Action</div>
@@ -60,7 +43,7 @@ export default function SarfaesiPage() {
                         
                         {/* Name (Document Title) */}
                         <div className="col-span-3 pr-4 font-medium text-gray-900 flex items-start">
-                            <FileText className={`w-4 h-4 mt-0.5 mr-2 flex-shrink-0 ${PRIMARY_COLOR_CLASS}`} />
+                            <FileText className={`w-4 h-4 mt-0.5 mr-2 flex-shrink-0 ${colorVariables.PRIMARY_COLOR}`} />
                             {item.name}
                         </div>
                         
@@ -75,7 +58,7 @@ export default function SarfaesiPage() {
                                 href={item.downloadLink} 
                                 target="_blank" 
                                 rel="noopener noreferrer" 
-                                className={`flex items-center gap-1 ${PRIMARY_BG_CLASS} text-white font-semibold py-2 px-4 rounded-full transition duration-200 hover:bg-blue-700 hover:shadow-md text-sm whitespace-nowrap`}
+                                className={`flex items-center gap-1 ${colorVariables.PRIMARY_BG} text-white font-semibold py-2 px-4 rounded-full transition duration-200 hover:bg-blue-700 hover:shadow-md text-sm whitespace-nowrap`}
                             >
                                 {/* Lucide Download Icon */}
                                 <Download className="w-4 h-4" />
