@@ -11,13 +11,23 @@ import HomePage from '../app/pubilc/HomePage';
 export default function AppRoutes() {
 	return (
 		<Routes>
-			<PublicRoute>
-				<Route path="/" element={<HomePage />} />
-			</PublicRoute>
+      <Route
+        path="/"
+        element={
+          <PublicRoute>
+            <HomePage />
+          </PublicRoute>
+        }
+      />
 
-			<PrivateRoute>
-				<Route path="/dashboard" element={<DashboardPage />} />
-			</PrivateRoute>
-		</Routes>
+      <Route
+        path="/dashboard"
+        element={
+          <PrivateRoute>
+            <DashboardPage />
+          </PrivateRoute>
+        }
+      />
+    </Routes>
 	);
 }

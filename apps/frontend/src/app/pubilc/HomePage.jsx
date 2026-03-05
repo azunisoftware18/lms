@@ -1,10 +1,9 @@
 import { Shield } from "lucide-react";
-import FinovaImage1 from "../../assets/finova_1.avif";
-import FinovaImage2 from "../../assets/finova_2.avif";
+
 import Products from "./ProductsPage";
-import AboutUs from "./AboutUs";
 import { colorVariables } from "../../lib";
 import { features, HowItWorksSteps } from "../../lib/dumyData";
+import AboutUsPage from "./AboutUsPage";
 
 export default function HomePage() {
 
@@ -37,7 +36,6 @@ export default function HomePage() {
 
           <div className="md:w-1/2 flex justify-center mt-8 md:mt-0">
             <img
-              src={FinovaImage1}
               alt="Mobile App showing financial data and cards"
               className="w-full max-w-xs sm:max-w-sm h-auto rounded-2xl shadow-2xl transition duration-500 hover:scale-[1.02]"
               loading="eager"
@@ -106,7 +104,6 @@ export default function HomePage() {
 
             <div className="lg:w-1/2 flex justify-center order-1 lg:order-2 mb-8 lg:mb-0">
               <img
-                src={FinovaImage2}
                 alt="Two physical financial cards for security visual"
                 className="w-full max-w-xs sm:max-w-sm h-auto rounded-xl shadow-2xl"
                 loading="lazy"
@@ -151,7 +148,7 @@ export default function HomePage() {
 
       <Products />
 
-      <AboutUs />
+      <AboutUsPage />
 
       {/* ===== Testimonials Section ===== */}
       <section className="py-12 md:py-16 px-4 sm:px-6">

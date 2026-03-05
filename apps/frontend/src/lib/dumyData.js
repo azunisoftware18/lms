@@ -1,17 +1,14 @@
 import {
-	DollarSign,
-	Shield,
 	Zap,
 	UserCheck,
 	Briefcase,
 	Users,
 	Shield,
 	Heart,
-	Zap,
 	DollarSign,
-	Briefcase,
 	TrendingUp,
 	Award,
+	FileCheck,
 } from 'lucide-react';
 
 export const keyPillars = [
