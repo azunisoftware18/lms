@@ -3,8 +3,6 @@ import { colorVariables, getTypeColor } from '../../lib';
 import { directorsData } from '../../lib/dumyData';
 
 export default function BoardOfDirectorsPage() {
-	
-
 	return (
 		<div
 			id="board-of-directors"

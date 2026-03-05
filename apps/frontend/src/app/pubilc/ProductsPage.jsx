@@ -1,53 +1,15 @@
 import { Banknote, Home, User, CheckCircle, ExternalLink } from "lucide-react";
+import { colorVariables } from "../../lib";
+import { productsData } from "../../lib/dumyData";
 
 export default function ProductsPage() {
-  
-  const PRIMARY_COLOR = "text-blue-600";
-  const PRIMARY_BG = "bg-blue-600";
-  const LIGHT_BG = "bg-blue-50";
-
- 
-  const productsData = [
-    {
-      title: "MSME Business Loan",
-      icon: Banknote,
-      image: "https://images.unsplash.com/photo-1556740749-887f6717d7e4?q=80&w=800",
-      details: [
-        { label: "Loan Amount", value: "₹2 Lakhs to ₹25 Lakhs" },
-        { label: "Repayment Tenure", value: "3 years to 10 years" },
-        { label: "Security", value: "Secured against immovable properties" },
-      ],
-      note: "The company offers reasonable interest rates depending on factors like your credit score, loan amount, etc. ",
-    },
-    {
-      title: "Home Loan",
-      icon: Home,
-      image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800",
-      details: [
-        { label: "Loan Amount", value: "₹2 Lakhs to ₹25 Lakhs" },
-        { label: "Repayment Tenure", value: "3 years to 10 years" },
-        { label: "Security", value: "Secured against immovable properties" },
-      ],
-      note: "Find the perfect loan to build your future home. Interest rates vary based on your profile. ",
-    },
-    {
-      title: "Personal Loan",
-      icon: User,
-      image: "https://images.unsplash.com/photo-1603039078583-13468e835b01?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-      details: [
-        { label: "Loan Amount", value: "₹50,000 to ₹3 Lakhs" },
-        { label: "Repayment Tenure", value: "1 year to 3 years" },
-      ],
-      note: "Specifically for **Government Salaried Employees**. Interest rates apply based on credit history. ",
-    },
-  ];
 
   return (
     <div className="bg-white text-gray-800 font-sans leading-relaxed">
       {/* ===== Hero Section ===== */}
-      <section className={`${LIGHT_BG} py-12 text-center`}>
+      <section className={`${colorVariables.LIGHT_BG} py-12 text-center`}>
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
-          Our <span className={PRIMARY_COLOR}>Products</span> and Services
+          Our <span className={colorVariables.PRIMARY_COLOR}>Products</span> and Services
         </h1>
         <p className="text-gray-600 max-w-3xl mx-auto text-base px-4">
           Finova is committed to providing tailored financial solutions for
@@ -69,7 +31,7 @@ export default function ProductsPage() {
           >
             {/* Details Column */}
             <div className={`${index % 2 !== 0 ? "md:col-start-2" : ""}`}>
-              <product.icon className={`w-8 h-8 mb-2 ${PRIMARY_COLOR}`} />
+              <product.icon className={`w-8 h-8 mb-2 ${colorVariables.PRIMARY_COLOR}`} />
               <h2 className="text-3xl font-bold text-gray-900 mb-6">
                 {product.title}
               </h2>
@@ -92,10 +54,10 @@ export default function ProductsPage() {
                   {product.note}
                 </p>
                 <div className="flex flex-wrap gap-4">
-                  <a href="#" className={`flex items-center text-sm font-medium ${PRIMARY_COLOR} hover:underline`}>
+                  <a href="#" className={`flex items-center text-sm font-medium ${colorVariables.PRIMARY_COLOR} hover:underline`}>
                     Rate of Interest Matrix <ExternalLink size={16} className="ml-1" />
                   </a>
-                  <a href="#" className={`flex items-center text-sm font-medium ${PRIMARY_COLOR} hover:underline`}>
+                  <a href="#" className={`flex items-center text-sm font-medium ${colorVariables.PRIMARY_COLOR} hover:underline`}>
                     Processing Fee Matrix <ExternalLink size={16} className="ml-1" />
                   </a>
                 </div>
@@ -117,7 +79,7 @@ export default function ProductsPage() {
       {/* --- */}
 
       {/* ===== Requirements Section (Blue background for emphasis) ===== */}
-      <section className={`${PRIMARY_BG} py-16 px-4 text-white`}>
+      <section className={`${colorVariables.PRIMARY_BG} py-16 px-4 text-white`}>
         <div className="container mx-auto max-w-4xl">
           <h2 className="text-3xl font-bold mb-6">
             Key Prerequisites

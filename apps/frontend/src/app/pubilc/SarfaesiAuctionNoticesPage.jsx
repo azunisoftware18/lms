@@ -1,58 +1,22 @@
 import { Hammer, Download, FileText, Eye } from "lucide-react";
+import { colorVariables } from "../../lib";
+import { noticesData } from "../../lib/dumyData";
 
 export default function SarfaesiAuctionNoticesPage() {
-  // Color variables for consistency
-  const PRIMARY_COLOR = "text-blue-600";
-  const PRIMARY_BG = "bg-blue-600";
-  const LIGHT_BG = "bg-gray-50";
-
-  // Dummy Data for SARFAESI Auction Notices
-  const noticesData = [
-    {
-      name: "Auction Notice_Mr. Mohammad Ghufran S/O Ali Murtaza_23.05.2025",
-      link: "#",
-      date: "23 May 2025",
-      size: "2.4 MB"
-    },
-    {
-      name: "Auction Notice_Mr. Hasrat S/O Abdul Salam_23.05.2025",
-      link: "#",
-      date: "23 May 2025",
-      size: "1.8 MB"
-    },
-    {
-      name: "Auction Notice_Mr. Om Prakash Tavatla S/O Ganesh Tavatla_23.05.2025",
-      link: "#",
-      date: "23 May 2025",
-      size: "3.1 MB"
-    },
-    {
-      name: "Auction Notice_Ms. Anjali Sharma D/O Ramesh Sharma_23.05.2025",
-      link: "#",
-      date: "23 May 2025",
-      size: "2.7 MB"
-    },
-    {
-      name: "Auction Notice_Mr. Sunil Kumar S/O Ashok Kumar_23.05.2025",
-      link: "#",
-      date: "23 May 2025",
-      size: "1.9 MB"
-    },
-  ];
 
   return (
-    <div className={`py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 ${LIGHT_BG} font-sans min-h-screen`}>
+    <div className={`py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 ${colorVariables.LIGHT_BG} font-sans min-h-screen`}>
       <div className="max-w-7xl mx-auto">
         
         {/* ===== Header Section ===== */}
         <div className="text-center lg:text-left mb-8 sm:mb-10 lg:mb-12">
           <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 lg:gap-6">
             <div className="flex-shrink-0">
-              <Hammer className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 mx-auto lg:mx-0 mb-3 lg:mb-0 ${PRIMARY_COLOR}`} />
+              <Hammer className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 mx-auto lg:mx-0 mb-3 lg:mb-0 ${colorVariables.PRIMARY_COLOR}`} />
             </div>
             <div className="flex-1">
               <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-gray-900 mb-2 lg:mb-3">
-                SARFAESI <span className={PRIMARY_COLOR}>Auction Notices</span>
+                SARFAESI <span className={colorVariables.PRIMARY_COLOR}>Auction Notices</span>
               </h1>
               <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-4xl mx-auto lg:mx-0 leading-relaxed">
                 Find the latest auction notices under the SARFAESI Act for transparent asset recovery.
