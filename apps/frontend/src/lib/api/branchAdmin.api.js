@@ -10,3 +10,4 @@ export const updateBranchAdmins = async (id, data)=>{
     const res = await api.put(`/branch-admin/${id}`, data)
     return res.data
 }
+

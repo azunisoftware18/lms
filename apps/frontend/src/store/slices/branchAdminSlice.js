@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { setSelectedBranch } from "./branchSlice";
 
 const branchAdminSlice = createSlice({
     name: 'branchAdmin',
@@ -15,3 +14,6 @@ const branchAdminSlice = createSlice({
         }
     }
 })
+
+export const {setSelectedBranchAdmin, clearSelectedBranchAdmin} = branchAdminSlice.actions;
+export default branchAdminSlice.reducer;
