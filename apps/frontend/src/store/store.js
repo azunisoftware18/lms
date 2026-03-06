@@ -4,6 +4,10 @@ import loanTypeReducer from './slices/loanTypeSlice'
 import branchReducer from './slices/branchSlice'
 import createBranchAdminReducer from './slices/branchAdminSlice'
 import coApplicationReducer from './slices/coApplicationSlice'
+import creditReportReducer from './slices/creditReportSlice'
+import emiReducer from './slices/emiSlice'
+
+
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -11,8 +15,9 @@ export const store = configureStore({
     branch:branchReducer,
     branchAdmin: createBranchAdminReducer,
     coApplication: coApplicationReducer,
-  },
+    creditReport: creditReportReducer,
+    emi:emiReducer
+}
 })
-
 
 export default store
