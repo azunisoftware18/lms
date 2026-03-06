@@ -1,11 +1,21 @@
-import React from 'react';
+import { TableEmpty } from "./TableEmpty";
+import { TableRow } from "./TableRow";
 
-const TableBody = ({ children, className = "" }) => {
+export const TableBody = ({ columns = [], data = [], actions = [] }) => {
+  if (!data.length) {
+    return <TableEmpty colSpan={columns.length + 1} />;
+  }
+
   return (
-    <tbody className={`divide-y divide-slate-100 ${className}`}>
-      {children}
+    <tbody className="divide-y divide-slate-100">
+      {data.map((row, index) => (
+        <TableRow
+          key={index}
+          columns={columns}
+          row={row}
+          actions={actions}
+        />
+      ))}
     </tbody>
   );
 };
-
-export default TableBody;

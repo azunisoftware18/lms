@@ -1,19 +1,14 @@
-import React from 'react';
-
-const TableLoader = ({ rows = 5, cols = 4 }) => {
+export const TableLoader = ({ colSpan }) => {
   return (
-    <>
-      {[...Array(rows)].map((_, i) => (
-        <tr key={i} className="animate-pulse">
-          {[...Array(cols)].map((_, j) => (
-            <td key={j} className="px-6 py-4">
-              <div className="h-4 bg-slate-100 rounded-lg w-full" />
-            </td>
-          ))}
-        </tr>
-      ))}
-    </>
+    <tbody>
+      <tr>
+        <td colSpan={colSpan} className="py-20">
+          <div className="flex flex-col items-center justify-center gap-3">
+            <div className="w-8 h-8 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin" />
+            <span className="text-slate-400 font-medium animate-pulse">Fetching data...</span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
   );
 };
-
-export default TableLoader;
