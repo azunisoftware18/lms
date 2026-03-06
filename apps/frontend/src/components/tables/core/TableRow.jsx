@@ -1,4 +1,4 @@
-import ActionMenu from "../common/ActionMenu";
+import ActionMenu from "../../common/ActionMenu";
 
 export const TableRow = ({ columns, row, actions = [] }) => {
   return (
