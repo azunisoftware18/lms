@@ -1,3 +1,4 @@
+import { dumyImg } from "../../lib/dumyData";
 
 export default function OpportunityPage() {
   return (
@@ -17,7 +18,7 @@ export default function OpportunityPage() {
           {/* Left Image */}
           <div className="flex justify-center">
             <img
-              src="https://www.shutterstock.com/shutterstock/photos/2622897831/display_1500/stock-photo-senior-indian-couple-with-young-daughter-discussing-financial-paperwork-with-male-advisor-or-bank-2622897831.jpg"
+              src={dumyImg.OPPORTUNITY}
               alt="Opportunity"
               className="rounded-lg shadow-md max-w-full"
             />
