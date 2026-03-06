@@ -1,15 +1,18 @@
 import axios from 'axios'
 
-
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api',
-    withCredentials: true, // Automatically sends cookies
-})
+    withCredentials: true, // Automatically sends cookies 
+    })
 
 api.interceptors.request.use(
     (config) => {
-        // Cookies are automatically sent by browser with withCredentials: true
-        return config
+        // Get token from localStorage if available
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
     },
     (error) => Promise.reject(error)
 )
@@ -17,11 +20,25 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-       if (error.response?.status === 401) {
-          console.log("Unauthorized - please login again");
-          // Redirect to login or clear auth state here if needed
-       }
-        return Promise.reject(error)
+        // Handle 401 Unauthorized
+        if (error?.response?.status === 401) {
+            // Clear auth data and redirect to login
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        }
+
+        // Handle 403 Forbidden
+        if (error?.response?.status === 403) {
+            console.error('Access forbidden');
+        }
+
+        // Handle network errors
+        if (!error?.response) {
+            console.error('Network error occurred');
+        }
+
+        return Promise.reject(error);
     }
 )
 
