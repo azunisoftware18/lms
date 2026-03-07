@@ -1,12 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { login, logout } from "../lib/api/auth.api";
-import {
-  loginStart,
-  setUser,
-  loginError,
-  clearUser,
-} from "../redux/slices/authSlice";
+// import {
+//   loginStart,
+//   setUser,
+//   loginError,
+//   clearUser,
+// } from "../../store/slices/authSlice";
+import { loginStart, setUser, loginError, clearUser } from "../store/slices/authSlice"; // ✅ Updated import path
 import toast from "react-hot-toast";
 
 export const useLogin = () => {

@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Mail, Lock, CheckCircle } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { clearError, loginUser } from "../../../../../../loan/src/redux/slices/authSlice";
+import { useNavigate, Link } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { clearError } from "../../store/slices/authSlice";
+import { useLogin } from "../../hooks/useAuth"; 
+import { loginSchema } from "../../app/validations/LoginValidations"; // ✅ Import Zod schema
 
 // Aapke Custom Components
 import InputField from "../ui/InputField";
@@ -15,13 +19,19 @@ export default function LoginForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   
-  const { loading, error, isAuthenticated, user } = useSelector((state) => state.auth);
+  // Redux state
+  const { isAuthenticated, user, error } = useSelector((state) => state.auth);
+  
+  // React Query mutation
+  const loginMutation = useLogin();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset // ✅ Reset form on error
   } = useForm({
+    resolver: zodResolver(loginSchema), // ✅ Zod resolver
     defaultValues: {
       email: "",
       password: "",
@@ -33,9 +43,18 @@ export default function LoginForm() {
     if (isAuthenticated && user) {
       setShowSuccess(true);
       const timer = setTimeout(() => {
-        if (user.role === "ADMIN") navigate("/admin");
-        else if (user.role === "EMPLOYEE") navigate("/employee");
+        // ✅ Role-based redirect
+        const role = user?.role?.toUpperCase();
+        
+        if (role === "SUPER_ADMIN" || role === "ADMIN") {
+          navigate("/admin");
+        } else if (role === "EMPLOYEE") {
+          navigate("/employee");
+        } else {
+          navigate("/dashboard");
+        }
       }, 1500);
+      
       return () => clearTimeout(timer);
     }
   }, [isAuthenticated, user, navigate]);
@@ -45,11 +64,22 @@ export default function LoginForm() {
     return () => dispatch(clearError());
   }, [dispatch]);
 
+  // Handle API errors
+  useEffect(() => {
+    if (loginMutation.error) {
+      // Reset form on API error if needed
+      // reset({}, { keepErrors: false });
+    }
+  }, [loginMutation.error, reset]);
+
   const onSubmit = (data) => {
-    dispatch(loginUser({
+    // Clear any previous errors
+    dispatch(clearError());
+    
+    loginMutation.mutate({
       email: data.email.trim(),
       password: data.password,
-    }));
+    });
   };
 
   return (
@@ -60,7 +90,9 @@ export default function LoginForm() {
         <div className="absolute inset-0 bg-white/95 z-20 flex flex-col items-center justify-center animate-in fade-in duration-300">
           <CheckCircle className="w-16 h-16 text-green-500 mb-4 animate-bounce" />
           <h3 className="text-2xl font-bold text-gray-800 mb-2">Welcome Back!</h3>
-          <p className="text-gray-600">Redirecting to dashboard...</p>
+          <p className="text-gray-600">
+            {user?.role === "ADMIN" ? "Redirecting to Admin Dashboard..." : "Redirecting to Dashboard..."}
+          </p>
         </div>
       )}
       
@@ -73,54 +105,74 @@ export default function LoginForm() {
       {/* Form Section */}
       <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-5">
         
-        {/* Email Field */}
+        {/* Email Field - No inline validation */}
         <InputField
           label="Email Address"
           type="email"
-          placeholder="you@example.com"
+          placeholder="admin@example.com"
           icon={Mail}
           isRequired
-          isDisabled={loading || showSuccess}
-          error={errors.email?.message}
-          {...register("email", { 
-            required: "Email is required",
-            pattern: { value: /\S+@\S+\.\S+/, message: "Invalid email address" },
-            onChange: () => error && dispatch(clearError())
-          })}
+          isDisabled={loginMutation.isLoading || showSuccess}
+          error={errors.email?.message} // ✅ Error from Zod
+          {...register("email")} // ✅ No validation rules here
         />
 
-        {/* Password Field */}
-        {/* Note: InputField handles the Eye/EyeOff toggle automatically internally */}
+        {/* Password Field - No inline validation */}
         <InputField
           label="Password"
           type="password"
           placeholder="••••••••"
           icon={Lock}
           isRequired
-          isDisabled={loading || showSuccess}
-          error={errors.password?.message}
-          {...register("password", { 
-            required: "Password is required",
-            minLength: { value: 6, message: "Minimum 6 characters required" },
-            onChange: () => error && dispatch(clearError())
-          })}
+          isDisabled={loginMutation.isLoading || showSuccess}
+          error={errors.password?.message} // ✅ Error from Zod
+          {...register("password")} // ✅ No validation rules here
         />
 
-        {/* Error Display */}
-        {error && (
+        {/* API Error Display */}
+        {(error || loginMutation.error) && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-lg animate-in shake-100 duration-200">
-            <p className="text-sm text-red-600 text-center font-medium">{error}</p>
+            <p className="text-sm text-red-600 text-center font-medium">
+              {error || loginMutation.error?.response?.data?.message || "Invalid credentials"}
+            </p>
           </div>
         )}
+
+        {/* Forgot Password Link */}
+        <div className="text-right">
+          <Link 
+            to="/forgot-password" 
+            className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
+          >
+            Forgot Password?
+          </Link>
+        </div>
 
         {/* Submit Button */}
         <Button
           type="submit"
-          disabled={loading || showSuccess}
+          disabled={loginMutation.isLoading || showSuccess}
           className="w-full justify-center py-3.5 shadow-lg active:scale-[0.98]"
         >
-          {loading ? "Checking..." : "Sign In"}
+          {loginMutation.isLoading ? (
+            <div className="flex items-center justify-center space-x-2">
+              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span>Signing in...</span>
+            </div>
+          ) : (
+            "Sign In"
+          )}
         </Button>
+
+        {/* Demo Credentials */}
+        <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+          <p className="text-xs text-blue-700 font-medium mb-1">Demo Credentials:</p>
+          <p className="text-xs text-gray-600">Email: admin@example.com</p>
+          <p className="text-xs text-gray-600">Password: password123</p>
+        </div>
 
       </form>
     </div>

@@ -1,79 +1,59 @@
-export const loanTypeValidation = (getValues) => ({
-  loanName: {
-    required: "Loan name is required"
-  },
+import { z } from "zod";
 
-  loanCategory: {
-    required: "Loan category is required"
-  },
+export const loanTypeSchema = z.object({
+  loanName: z.string().min(1, "Loan name is required"),
 
-  description: {
-    maxLength: {
-      value: 500,
-      message: "Description cannot exceed 500 characters"
-    }
-  },
+  loanCategory: z.string().min(1, "Loan category is required"),
 
-  minLoanAmount: {
-    required: "Minimum amount is required",
-    validate: (value) =>
-      parseFloat(value) > 0 || "Amount must be positive"
-  },
+  description: z.string()
+    .max(500, "Description cannot exceed 500 characters")
+    .optional(),
 
-  maxLoanAmount: {
-    required: "Maximum amount is required",
-    validate: (value) => {
-      if (parseFloat(value) <= 0) return "Amount must be positive";
+  minLoanAmount: z.number()
+    .min(1, "Minimum amount must be positive"),
 
-      const minAmount = getValues("minLoanAmount");
-
-      if (minAmount && parseFloat(value) <= parseFloat(minAmount)) {
-        return "Must be greater than minimum amount";
+  maxLoanAmount: z.number()
+    .min(1, "Amount must be positive")
+    .refine((value, ctx) => {
+      const minAmount = ctx.parent.minLoanAmount;
+      if (minAmount && value <= minAmount) {
+        return false;
       }
-
       return true;
-    }
-  },
+    }, {
+      message: "Maximum amount must be greater than minimum amount",
+      path: ["maxLoanAmount"]
+    }),
 
-  minTenure: {
-    required: "Minimum tenure is required",
-    validate: (value) =>
-      parseInt(value) > 0 || "Tenure must be positive"
-  },
+  minTenure: z.number()
+    .min(1, "Minimum tenure must be positive"),
 
-  maxTenure: {
-    required: "Maximum tenure is required",
-    validate: (value) => {
-      if (parseInt(value) <= 0) return "Tenure must be positive";
-
-      const minTenure = getValues("minTenure");
-
-      if (minTenure && parseInt(value) <= parseInt(minTenure)) {
-        return "Must be greater than minimum tenure";
+  maxTenure: z.number()
+    .min(1, "Tenure must be positive")
+    .refine((value, ctx) => {
+      const minTenure = ctx.parent.minTenure;
+      if (minTenure && value <= minTenure) {
+        return false;
       }
-
       return true;
-    }
-  },
+    }, {
+      message: "Maximum tenure must be greater than minimum tenure",
+      path: ["maxTenure"]
+    }),
 
-  minAge: {
-    required: "Minimum age is required",
-    validate: (value) =>
-      parseInt(value) >= 18 || "Minimum age must be at least 18"
-  },
+  minAge: z.number()
+    .min(18, "Minimum age must be at least 18"),
 
-  maxAge: {
-    required: "Maximum age is required",
-    validate: (value) => {
-      if (parseInt(value) > 100) return "Maximum age is too high";
-
-      const minAge = getValues("minAge");
-
-      if (minAge && parseInt(value) <= parseInt(minAge)) {
-        return "Must be greater than minimum age";
+  maxAge: z.number()
+    .max(100, "Maximum age is too high")
+    .refine((value, ctx) => {
+      const minAge = ctx.parent.minAge;
+      if (minAge && value <= minAge) {
+        return false;
       }
-
       return true;
-    }
-  }
+    }, {
+      message: "Maximum age must be greater than minimum age",
+      path: ["maxAge"]
+    })
 });

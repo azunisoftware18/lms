@@ -1,63 +1,51 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChevronDown, Menu, X, Phone, MapPin, Clock, User } from "lucide-react";
-import { navigationItems } from "../../lib/dumyData"; // ✅ Import navigation items
-// import LoginPopup from "./LoginPopup";
-import { useSelector, useDispatch } from "react-redux"; // ✅ Redux hooks import karo
-// import { logout } from "../redux/slices/authSlice"; // ✅ Logout action import karo
+import { navigationItems } from "../../lib/dumyData";
+import { useSelector, useDispatch } from "react-redux";
+import { clearUser } from "../../store/slices/authSlice"; // ✅ Import clearUser action
 // import ApplyLoanModal from "./admin/modals/ApplyLoanModal";
 
 export default function Header() {
   const [showModal, setShowModal] = useState(false);
-  const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileSubmenu, setMobileSubmenu] = useState(null);
-  const [showUserDropdown, setShowUserDropdown] = useState(false); // ✅ User dropdown state
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false); // ✅ Loading state for logout
 
   // ✅ Redux hooks
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { user, isAuthenticated } = useSelector((state) => state.auth);
+
   // 🔥 ROLE CHECK
   const role = user?.role?.toUpperCase();
-
-const isSuperAdmin = role === "SUPER_ADMIN";
-
-const isBranchAdmin =
-  role === "ADMIN" && user?.branchId;
-
-
-  // const handleApplyLoanModal = () => {
-  //   setShowModal(true);
-  //   setIsMobileMenuOpen(false);
-  // };
-
-  const handleLoginClick = () => {
-    setShowLoginPopup(true);
-    setIsMobileMenuOpen(false);
-  };
+  const isSuperAdmin = role === "SUPER_ADMIN";
+  const isBranchAdmin = role === "ADMIN" && user?.branchId;
 
   const closeModal = () => {
     setShowModal(false);
   };
-
-  // const closeLoginPopup = () => {
-  //   setShowLoginPopup(false);
-  // };
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
     setMobileSubmenu(null);
   };
 
-  // ✅ Handle logout
-  // const handleLogout = () => {
-  //   dispatch(logout());
-  //   setShowUserDropdown(false);
-  //   setIsMobileMenuOpen(false);
-  //   // Optional: Redirect to home page
-  //   // navigate("/");
-  // };
+  // ✅ Handle logout - Direct Redux action
+  const handleLogout = () => {
+    setIsLoggingOut(true);
+    
+    // Simulate API call or directly clear user
+    setTimeout(() => {
+      dispatch(clearUser()); // Clear user from Redux store
+      setIsLoggingOut(false);
+      setShowUserDropdown(false);
+      setIsMobileMenuOpen(false);
+      navigate("/"); // Redirect to home page
+    }, 500); // Small delay for UX
+  };
 
   // ✅ Close user dropdown when clicking outside
   useEffect(() => {
@@ -91,13 +79,12 @@ const isBranchAdmin =
         </div>
       </div>
       <div className="flex items-center space-x-4">
-        {/* Login button removed from here - only Branch Locator remains */}
         <Link to="/branch-locator" className="hover:text-blue-200 transition">Branch Locator</Link>
       </div>
     </div>
   );
 
-  // ✅ User Profile Component (Desktop)
+  // ✅ User Profile Component (Desktop) - WITH LOGOUT
   const UserProfile = () => {
     // Get user initials for avatar
     const getInitials = () => {
@@ -120,6 +107,7 @@ const isBranchAdmin =
         <button
           onClick={() => setShowUserDropdown(!showUserDropdown)}
           className="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-blue-50 transition-all"
+          disabled={isLoggingOut}
         >
           {/* User Avatar */}
           <div className="w-9 h-9 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 flex items-center justify-center text-white font-semibold">
@@ -174,13 +162,12 @@ const isBranchAdmin =
               </Link>
 
               {["ADMIN", "SUPER_ADMIN"].includes(user?.role?.toUpperCase()) && (
-
                 <Link
                   to="/admin"
                   className="flex items-center space-x-2 px-4 py-3 text-gray-700 hover:bg-blue-50 transition-all"
                   onClick={() => setShowUserDropdown(false)}
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
@@ -188,15 +175,17 @@ const isBranchAdmin =
                 </Link>
               )}
 
-              {/* <button
+              {/* Logout Button */}
+              <button
                 onClick={handleLogout}
-                className="w-full flex items-center space-x-2 px-4 py-3 text-red-600 hover:bg-red-50 transition-all border-t border-gray-100 mt-1"
+                disabled={isLoggingOut}
+                className="w-full flex items-center space-x-2 px-4 py-3 text-red-600 hover:bg-red-50 transition-all border-t border-gray-100 mt-1 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
-                <span>Logout</span>
-              </button> */}
+                <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
+              </button>
             </div>
           </div>
         )}
@@ -204,7 +193,7 @@ const isBranchAdmin =
     );
   };
 
-  // ✅ Mobile User Profile Component
+  // ✅ Mobile User Profile Component - WITH LOGOUT
   const MobileUserProfile = () => {
     const getInitials = () => {
       if (user?.fullName) {
@@ -242,18 +231,19 @@ const isBranchAdmin =
 
         <div className="flex space-x-2 mt-3">
           <Link
-            to="/admin/profile"
+            to="/profile"
             className="flex-1 bg-white text-blue-600 py-2 rounded-lg text-center font-medium hover:bg-blue-50 transition"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Profile
           </Link>
-          {/* <button
+          <button
             onClick={handleLogout}
-            className="flex-1 bg-red-50 text-red-600 py-2 rounded-lg font-medium hover:bg-red-100 transition"
+            disabled={isLoggingOut}
+            className="flex-1 bg-red-50 text-red-600 py-2 rounded-lg font-medium hover:bg-red-100 transition disabled:opacity-50"
           >
-            Logout
-          </button> */}
+            {isLoggingOut ? "Logging out..." : "Logout"}
+          </button>
         </div>
       </div>
     );
@@ -306,12 +296,14 @@ const isBranchAdmin =
             {title}
           </h4>
           <div className="space-y-2">
-            {/* DASHBOARD MOBILE */}
             {(isSuperAdmin || isBranchAdmin) && (
               <Link
                 to="/admin"
                 className="block py-4 px-4 bg-gradient-to-r from-blue-50 to-white rounded-xl hover:from-blue-100 hover:to-blue-50 transition-all font-semibold text-gray-900 border border-blue-100"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => {
+                  setActiveDropdown(null);
+                  setIsMobileMenuOpen(false);
+                }}
               >
                 Dashboard
               </Link>
@@ -441,15 +433,16 @@ const isBranchAdmin =
           Contact Us
         </Link>
 
-        {/* Login/Logout button for mobile when not logged in */}
-        {/* {!isAuthenticated && (
-          <button
-            onClick={handleLoginClick}
-            className="w-full border border-blue-600 text-blue-600 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-all text-center"
+        {/* Login link for mobile when not logged in */}
+        {!isAuthenticated && (
+          <Link
+            to="/login"
+            className="block w-full border border-blue-600 text-blue-600 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-all text-center"
+            onClick={() => setIsMobileMenuOpen(false)}
           >
             Login
-          </button>
-        )} */}
+          </Link>
+        )}
       </div>
     );
   };
@@ -463,7 +456,7 @@ const isBranchAdmin =
       <header className="bg-white shadow-lg sticky top-0 z-50">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between py-4">
-            {/* Logo - Home page link */}
+            {/* Logo */}
             <Link
               to="/"
               className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
@@ -478,9 +471,8 @@ const isBranchAdmin =
               </div>
             </Link>
 
-            {/* Desktop Navigation (1024px and above) */}
+            {/* Desktop Navigation */}
             <nav className="hidden xl:flex items-center space-x-1">
-              {/* DASHBOARD LINK */}
               {(isSuperAdmin || isBranchAdmin) && (
                 <Link
                   to="/admin"
@@ -503,7 +495,6 @@ const isBranchAdmin =
                 Products
               </Link>
 
-              {/* Desktop Dropdown Menus */}
               {Object.entries(navigationItems).map(([title, items]) => (
                 <div key={title} className="relative group">
                   <button className="flex items-center space-x-1 px-4 py-2 text-gray-700 hover:text-blue-600 transition-all font-medium rounded-lg hover:bg-blue-50">
@@ -522,7 +513,7 @@ const isBranchAdmin =
               </Link>
             </nav>
 
-            {/* Tablet Navigation (768px - 1279px) */}
+            {/* Tablet Navigation */}
             <nav className="hidden lg:flex xl:hidden items-center space-x-1">
               {(isSuperAdmin || isBranchAdmin) && (
                 <Link
@@ -540,7 +531,6 @@ const isBranchAdmin =
                 Products
               </Link>
 
-              {/* Tablet Dropdown Menus */}
               {Object.entries(navigationItems).map(([title, items]) => (
                 <div key={title} className="relative">
                   <button
@@ -548,8 +538,7 @@ const isBranchAdmin =
                     onClick={() => setActiveDropdown(activeDropdown === title ? null : title)}
                   >
                     <span>{title}</span>
-                    <ChevronDown className={`w-3 h-3 transition-transform ${activeDropdown === title ? 'rotate-180' : ''
-                      }`} />
+                    <ChevronDown className={`w-3 h-3 transition-transform ${activeDropdown === title ? 'rotate-180' : ''}`} />
                   </button>
                   {activeDropdown === title && (
                     <TabletDropdownMenu items={items} title={title} />
@@ -562,28 +551,18 @@ const isBranchAdmin =
               </Link>
             </nav>
 
-            {/* CTA Buttons - Updated with user profile */}
+            {/* CTA Buttons */}
             <div className="hidden lg:flex items-center space-x-3">
               {isAuthenticated && user ? (
-                // Show user profile when logged in
                 <UserProfile />
               ) : (
-                // Show login button when not logged in
-                <button
-                  onClick={handleLoginClick}
+                <Link
+                  to="/login"
                   className="border border-blue-600 text-blue-600 px-6 py-2.5 rounded-lg hover:bg-blue-50 transition-all font-semibold"
                 >
                   Login
-                </button>
+                </Link>
               )}
-
-              {/* Apply For Loan Button (always visible) */}
-              {/* <button
-                onClick={handleApplyLoanModal}
-                className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2.5 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl font-semibold"
-              >
-                Apply For Loan
-              </button> */}
             </div>
 
             {/* Mobile Menu Button */}
@@ -602,7 +581,6 @@ const isBranchAdmin =
       {isMobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-xs bg-opacity-50">
           <div className="fixed top-0 left-0 w-4/5 sm:w-80 h-full bg-white shadow-2xl transform transition-transform duration-300 ease-in-out overflow-y-auto">
-            {/* Header with Home link */}
             <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
               <div className="flex items-center justify-between mb-6">
                 <Link
@@ -614,7 +592,7 @@ const isBranchAdmin =
                     <span className="text-white font-bold text-lg">F</span>
                   </div>
                   <div>
-                    <h2 className="font-bold text-lg">Finova Capital</h2>
+                    <h2 className="font-bold text-lg">Azzunique Capital</h2>
                     <p className="text-blue-100 text-sm">Financial Solutions</p>
                   </div>
                 </Link>
@@ -625,26 +603,12 @@ const isBranchAdmin =
                   <X size={20} />
                 </button>
               </div>
-
-              {/* Quick Actions - Only show Apply Loan button if not logged in */}
-              {/* {!isAuthenticated && (
-                <div className="space-y-3">
-                  <button
-                    onClick={handleApplyLoanModal}
-                    className="w-full bg-white text-blue-600 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-all text-center"
-                  >
-                    Apply For Loan
-                  </button>
-                </div>
-              )} */}
             </div>
 
-            {/* Navigation Content */}
             <div className="p-6">
               <MobileMenu />
             </div>
 
-            {/* Footer Info */}
             <div className="p-6 border-t border-gray-200">
               <div className="space-y-3 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
@@ -668,10 +632,6 @@ const isBranchAdmin =
           onClick={() => setActiveDropdown(null)}
         />
       )}
-
-      {/* Modals */}
-      {/* {showModal && <ApplyLoanModal onClose={closeModal} />} */}
-      {/* {showLoginPopup && <LoginPopup isOpen={showLoginPopup} onClose={closeLoginPopup} />} */}
     </>
   );
 }

@@ -37,6 +37,7 @@ import ShareholderInformationPage from '../app/pubilc/ShareholderInformationPage
 import UnderRegulationPage from '../app/pubilc/UnderRegulationPage.jsx';
 import VisionAndMissionPage from '../app/pubilc/VisionAndMissionPage.jsx';
 import WelcometoFinovaPage from '../app/pubilc/WelcometoFinovaPage.jsx';
+import LoginForm from '../components/forms/LoginForm.jsx';
 
 export default function AppRoutes() {
 	return (
@@ -80,6 +81,7 @@ export default function AppRoutes() {
 		<Route path="disclosures-under-regulation-62-of-lodr" element={<UnderRegulationPage />} />
 		<Route path="vision-and-mission" element={<VisionAndMissionPage />} />
 		<Route path="welcome-to-finova" element={<WelcometoFinovaPage />} />
+		<Route path="login" element={<LoginForm />} />
 
 
 			</Route>
@@ -88,7 +90,7 @@ export default function AppRoutes() {
 			<Route
 				path="/dashboard"
 				element={
-					<PrivateRoute>
+					<PrivateRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']}>
 						<DashboardPage />
 					</PrivateRoute>
 				}
