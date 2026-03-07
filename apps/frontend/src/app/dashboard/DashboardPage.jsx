@@ -3,11 +3,13 @@ import { useState, useMemo } from "react";
 import { Icons } from "../../components/common/Icon";
 import { dashboardStats, recentLoans } from "../../lib/dashboardDummyData";
 
-import Table from "../../components/tables/Table";
-import TableHead from "../../components/tables/TableHead";
-import TableBody from "../../components/tables/TableBody";
-import TableRow from "../../components/tables/TableRow";
-import TableCell from "../../components/tables/TableCell";
+import {
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "../../components/tables/core";
 
 export default function DashboardPage() {
   const [loanAmount, setLoanAmount] = useState(500000);
