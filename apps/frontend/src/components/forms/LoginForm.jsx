@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { clearError } from "../../store/slices/authSlice";
 import { useLogin } from "../../hooks/useAuth"; 
-import { loginSchema } from "../../app/validations/LoginValidations"; // ✅ Import Zod schema
+import { loginSchema } from "../../app/validations/LoginValidations"; //  Import Zod schema
 
 // Aapke Custom Components
 import InputField from "../ui/InputField";
@@ -19,7 +19,6 @@ export default function LoginForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   
-  // Redux state
   const { isAuthenticated, user, error } = useSelector((state) => state.auth);
   
   // React Query mutation
@@ -29,9 +28,9 @@ export default function LoginForm() {
     register,
     handleSubmit,
     formState: { errors },
-    reset // ✅ Reset form on error
+    reset //  Reset form on error
   } = useForm({
-    resolver: zodResolver(loginSchema), // ✅ Zod resolver
+    resolver: zodResolver(loginSchema), //  Zod resolver
     defaultValues: {
       email: "",
       password: "",
@@ -43,7 +42,7 @@ export default function LoginForm() {
     if (isAuthenticated && user) {
       setShowSuccess(true);
       const timer = setTimeout(() => {
-        // ✅ Role-based redirect
+        //  Role-based redirect
         const role = user?.role?.toUpperCase();
         
         if (role === "SUPER_ADMIN" || role === "ADMIN") {
@@ -113,8 +112,8 @@ export default function LoginForm() {
           icon={Mail}
           isRequired
           isDisabled={loginMutation.isLoading || showSuccess}
-          error={errors.email?.message} // ✅ Error from Zod
-          {...register("email")} // ✅ No validation rules here
+          error={errors.email?.message} //  Error from Zod
+          {...register("email")} //  No validation rules here
         />
 
         {/* Password Field - No inline validation */}
@@ -125,8 +124,8 @@ export default function LoginForm() {
           icon={Lock}
           isRequired
           isDisabled={loginMutation.isLoading || showSuccess}
-          error={errors.password?.message} // ✅ Error from Zod
-          {...register("password")} // ✅ No validation rules here
+          error={errors.password?.message} //  Error from Zod
+          {...register("password")} //  No validation rules here
         />
 
         {/* API Error Display */}
