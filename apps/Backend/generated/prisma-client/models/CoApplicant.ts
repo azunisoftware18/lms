@@ -20,18 +20,8 @@ export type CoApplicantModel = runtime.Types.Result.DefaultSelection<Prisma.$CoA
 
 export type AggregateCoApplicant = {
   _count: CoApplicantCountAggregateOutputType | null
-  _avg: CoApplicantAvgAggregateOutputType | null
-  _sum: CoApplicantSumAggregateOutputType | null
   _min: CoApplicantMinAggregateOutputType | null
   _max: CoApplicantMaxAggregateOutputType | null
-}
-
-export type CoApplicantAvgAggregateOutputType = {
-  monthlyIncome: number | null
-}
-
-export type CoApplicantSumAggregateOutputType = {
-  monthlyIncome: number | null
 }
 
 export type CoApplicantMinAggregateOutputType = {
@@ -41,13 +31,13 @@ export type CoApplicantMinAggregateOutputType = {
   LastName: string | null
   middleName: string | null
   relation: $Enums.CoApplicantRelation | null
+  relationOther: string | null
   contactNumber: string | null
   email: string | null
   dob: Date | null
   panNumber: string | null
   aadhaarNumber: string | null
   employmentType: $Enums.EmploymentType | null
-  monthlyIncome: number | null
   kycId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -60,13 +50,13 @@ export type CoApplicantMaxAggregateOutputType = {
   LastName: string | null
   middleName: string | null
   relation: $Enums.CoApplicantRelation | null
+  relationOther: string | null
   contactNumber: string | null
   email: string | null
   dob: Date | null
   panNumber: string | null
   aadhaarNumber: string | null
   employmentType: $Enums.EmploymentType | null
-  monthlyIncome: number | null
   kycId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -79,27 +69,19 @@ export type CoApplicantCountAggregateOutputType = {
   LastName: number
   middleName: number
   relation: number
+  relationOther: number
   contactNumber: number
   email: number
   dob: number
   panNumber: number
   aadhaarNumber: number
   employmentType: number
-  monthlyIncome: number
   kycId: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
-
-export type CoApplicantAvgAggregateInputType = {
-  monthlyIncome?: true
-}
-
-export type CoApplicantSumAggregateInputType = {
-  monthlyIncome?: true
-}
 
 export type CoApplicantMinAggregateInputType = {
   id?: true
@@ -108,13 +90,13 @@ export type CoApplicantMinAggregateInputType = {
   LastName?: true
   middleName?: true
   relation?: true
+  relationOther?: true
   contactNumber?: true
   email?: true
   dob?: true
   panNumber?: true
   aadhaarNumber?: true
   employmentType?: true
-  monthlyIncome?: true
   kycId?: true
   createdAt?: true
   updatedAt?: true
@@ -127,13 +109,13 @@ export type CoApplicantMaxAggregateInputType = {
   LastName?: true
   middleName?: true
   relation?: true
+  relationOther?: true
   contactNumber?: true
   email?: true
   dob?: true
   panNumber?: true
   aadhaarNumber?: true
   employmentType?: true
-  monthlyIncome?: true
   kycId?: true
   createdAt?: true
   updatedAt?: true
@@ -146,13 +128,13 @@ export type CoApplicantCountAggregateInputType = {
   LastName?: true
   middleName?: true
   relation?: true
+  relationOther?: true
   contactNumber?: true
   email?: true
   dob?: true
   panNumber?: true
   aadhaarNumber?: true
   employmentType?: true
-  monthlyIncome?: true
   kycId?: true
   createdAt?: true
   updatedAt?: true
@@ -197,18 +179,6 @@ export type CoApplicantAggregateArgs<ExtArgs extends runtime.Types.Extensions.In
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Select which fields to average
-  **/
-  _avg?: CoApplicantAvgAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
-   * Select which fields to sum
-  **/
-  _sum?: CoApplicantSumAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
    * Select which fields to find the minimum value
   **/
   _min?: CoApplicantMinAggregateInputType
@@ -239,8 +209,6 @@ export type CoApplicantGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   _count?: CoApplicantCountAggregateInputType | true
-  _avg?: CoApplicantAvgAggregateInputType
-  _sum?: CoApplicantSumAggregateInputType
   _min?: CoApplicantMinAggregateInputType
   _max?: CoApplicantMaxAggregateInputType
 }
@@ -252,19 +220,17 @@ export type CoApplicantGroupByOutputType = {
   LastName: string
   middleName: string | null
   relation: $Enums.CoApplicantRelation
+  relationOther: string | null
   contactNumber: string
   email: string | null
   dob: Date
   panNumber: string | null
   aadhaarNumber: string | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome: number | null
   kycId: string | null
   createdAt: Date
   updatedAt: Date
   _count: CoApplicantCountAggregateOutputType | null
-  _avg: CoApplicantAvgAggregateOutputType | null
-  _sum: CoApplicantSumAggregateOutputType | null
   _min: CoApplicantMinAggregateOutputType | null
   _max: CoApplicantMaxAggregateOutputType | null
 }
@@ -294,18 +260,21 @@ export type CoApplicantWhereInput = {
   LastName?: Prisma.StringFilter<"CoApplicant"> | string
   middleName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   relation?: Prisma.EnumCoApplicantRelationFilter<"CoApplicant"> | $Enums.CoApplicantRelation
+  relationOther?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   contactNumber?: Prisma.StringFilter<"CoApplicant"> | string
   email?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   dob?: Prisma.DateTimeFilter<"CoApplicant"> | Date | string
   panNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   aadhaarNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   employmentType?: Prisma.EnumEmploymentTypeFilter<"CoApplicant"> | $Enums.EmploymentType
-  monthlyIncome?: Prisma.FloatNullableFilter<"CoApplicant"> | number | null
   kycId?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CoApplicant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CoApplicant"> | Date | string
   loanApplication?: Prisma.XOR<Prisma.LoanApplicationScalarRelationFilter, Prisma.LoanApplicationWhereInput>
   kyc?: Prisma.XOR<Prisma.KycNullableScalarRelationFilter, Prisma.KycWhereInput> | null
+  addresses?: Prisma.AddressListRelationFilter
+  occupationalDetails?: Prisma.OccupationalDetailsListRelationFilter
+  employmentDetails?: Prisma.EmploymentDetailsListRelationFilter
   documents?: Prisma.DocumentListRelationFilter
 }
 
@@ -316,18 +285,21 @@ export type CoApplicantOrderByWithRelationInput = {
   LastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrderInput | Prisma.SortOrder
   relation?: Prisma.SortOrder
+  relationOther?: Prisma.SortOrderInput | Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   dob?: Prisma.SortOrder
   panNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   employmentType?: Prisma.SortOrder
-  monthlyIncome?: Prisma.SortOrderInput | Prisma.SortOrder
   kycId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   loanApplication?: Prisma.LoanApplicationOrderByWithRelationInput
   kyc?: Prisma.KycOrderByWithRelationInput
+  addresses?: Prisma.AddressOrderByRelationAggregateInput
+  occupationalDetails?: Prisma.OccupationalDetailsOrderByRelationAggregateInput
+  employmentDetails?: Prisma.EmploymentDetailsOrderByRelationAggregateInput
   documents?: Prisma.DocumentOrderByRelationAggregateInput
   _relevance?: Prisma.CoApplicantOrderByRelevanceInput
 }
@@ -343,17 +315,20 @@ export type CoApplicantWhereUniqueInput = Prisma.AtLeast<{
   LastName?: Prisma.StringFilter<"CoApplicant"> | string
   middleName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   relation?: Prisma.EnumCoApplicantRelationFilter<"CoApplicant"> | $Enums.CoApplicantRelation
+  relationOther?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   contactNumber?: Prisma.StringFilter<"CoApplicant"> | string
   email?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   dob?: Prisma.DateTimeFilter<"CoApplicant"> | Date | string
   panNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   aadhaarNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   employmentType?: Prisma.EnumEmploymentTypeFilter<"CoApplicant"> | $Enums.EmploymentType
-  monthlyIncome?: Prisma.FloatNullableFilter<"CoApplicant"> | number | null
   createdAt?: Prisma.DateTimeFilter<"CoApplicant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CoApplicant"> | Date | string
   loanApplication?: Prisma.XOR<Prisma.LoanApplicationScalarRelationFilter, Prisma.LoanApplicationWhereInput>
   kyc?: Prisma.XOR<Prisma.KycNullableScalarRelationFilter, Prisma.KycWhereInput> | null
+  addresses?: Prisma.AddressListRelationFilter
+  occupationalDetails?: Prisma.OccupationalDetailsListRelationFilter
+  employmentDetails?: Prisma.EmploymentDetailsListRelationFilter
   documents?: Prisma.DocumentListRelationFilter
 }, "id" | "kycId">
 
@@ -364,21 +339,19 @@ export type CoApplicantOrderByWithAggregationInput = {
   LastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrderInput | Prisma.SortOrder
   relation?: Prisma.SortOrder
+  relationOther?: Prisma.SortOrderInput | Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   dob?: Prisma.SortOrder
   panNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   employmentType?: Prisma.SortOrder
-  monthlyIncome?: Prisma.SortOrderInput | Prisma.SortOrder
   kycId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CoApplicantCountOrderByAggregateInput
-  _avg?: Prisma.CoApplicantAvgOrderByAggregateInput
   _max?: Prisma.CoApplicantMaxOrderByAggregateInput
   _min?: Prisma.CoApplicantMinOrderByAggregateInput
-  _sum?: Prisma.CoApplicantSumOrderByAggregateInput
 }
 
 export type CoApplicantScalarWhereWithAggregatesInput = {
@@ -391,13 +364,13 @@ export type CoApplicantScalarWhereWithAggregatesInput = {
   LastName?: Prisma.StringWithAggregatesFilter<"CoApplicant"> | string
   middleName?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
   relation?: Prisma.EnumCoApplicantRelationWithAggregatesFilter<"CoApplicant"> | $Enums.CoApplicantRelation
+  relationOther?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
   contactNumber?: Prisma.StringWithAggregatesFilter<"CoApplicant"> | string
   email?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
   dob?: Prisma.DateTimeWithAggregatesFilter<"CoApplicant"> | Date | string
   panNumber?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
   aadhaarNumber?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
   employmentType?: Prisma.EnumEmploymentTypeWithAggregatesFilter<"CoApplicant"> | $Enums.EmploymentType
-  monthlyIncome?: Prisma.FloatNullableWithAggregatesFilter<"CoApplicant"> | number | null
   kycId?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CoApplicant"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CoApplicant"> | Date | string
@@ -409,17 +382,20 @@ export type CoApplicantCreateInput = {
   LastName: string
   middleName?: string | null
   relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
   contactNumber: string
   email?: string | null
   dob: Date | string
   panNumber?: string | null
   aadhaarNumber?: string | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   loanApplication: Prisma.LoanApplicationCreateNestedOneWithoutCoapplicantsInput
   kyc?: Prisma.KycCreateNestedOneWithoutCoApplicantInput
+  addresses?: Prisma.AddressCreateNestedManyWithoutCoApplicantInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCoApplicantInput
+  employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCoApplicantInput
   documents?: Prisma.DocumentCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -430,16 +406,19 @@ export type CoApplicantUncheckedCreateInput = {
   LastName: string
   middleName?: string | null
   relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
   contactNumber: string
   email?: string | null
   dob: Date | string
   panNumber?: string | null
   aadhaarNumber?: string | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
   kycId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCoApplicantInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -449,17 +428,20 @@ export type CoApplicantUpdateInput = {
   LastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanApplication?: Prisma.LoanApplicationUpdateOneRequiredWithoutCoapplicantsNestedInput
   kyc?: Prisma.KycUpdateOneWithoutCoApplicantNestedInput
+  addresses?: Prisma.AddressUpdateManyWithoutCoApplicantNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCoApplicantNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -470,16 +452,19 @@ export type CoApplicantUncheckedUpdateInput = {
   LastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUncheckedUpdateManyWithoutCoApplicantNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -490,13 +475,13 @@ export type CoApplicantCreateManyInput = {
   LastName: string
   middleName?: string | null
   relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
   contactNumber: string
   email?: string | null
   dob: Date | string
   panNumber?: string | null
   aadhaarNumber?: string | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
   kycId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -508,13 +493,13 @@ export type CoApplicantUpdateManyMutationInput = {
   LastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -526,16 +511,21 @@ export type CoApplicantUncheckedUpdateManyInput = {
   LastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CoApplicantNullableScalarRelationFilter = {
+  is?: Prisma.CoApplicantWhereInput | null
+  isNot?: Prisma.CoApplicantWhereInput | null
 }
 
 export type CoApplicantListRelationFilter = {
@@ -546,11 +536,6 @@ export type CoApplicantListRelationFilter = {
 
 export type CoApplicantOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type CoApplicantNullableScalarRelationFilter = {
-  is?: Prisma.CoApplicantWhereInput | null
-  isNot?: Prisma.CoApplicantWhereInput | null
 }
 
 export type CoApplicantOrderByRelevanceInput = {
@@ -566,20 +551,16 @@ export type CoApplicantCountOrderByAggregateInput = {
   LastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrder
   relation?: Prisma.SortOrder
+  relationOther?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   email?: Prisma.SortOrder
   dob?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrder
   employmentType?: Prisma.SortOrder
-  monthlyIncome?: Prisma.SortOrder
   kycId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-}
-
-export type CoApplicantAvgOrderByAggregateInput = {
-  monthlyIncome?: Prisma.SortOrder
 }
 
 export type CoApplicantMaxOrderByAggregateInput = {
@@ -589,13 +570,13 @@ export type CoApplicantMaxOrderByAggregateInput = {
   LastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrder
   relation?: Prisma.SortOrder
+  relationOther?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   email?: Prisma.SortOrder
   dob?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrder
   employmentType?: Prisma.SortOrder
-  monthlyIncome?: Prisma.SortOrder
   kycId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -608,20 +589,32 @@ export type CoApplicantMinOrderByAggregateInput = {
   LastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrder
   relation?: Prisma.SortOrder
+  relationOther?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   email?: Prisma.SortOrder
   dob?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrder
   employmentType?: Prisma.SortOrder
-  monthlyIncome?: Prisma.SortOrder
   kycId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
-export type CoApplicantSumOrderByAggregateInput = {
-  monthlyIncome?: Prisma.SortOrder
+export type CoApplicantCreateNestedOneWithoutAddressesInput = {
+  create?: Prisma.XOR<Prisma.CoApplicantCreateWithoutAddressesInput, Prisma.CoApplicantUncheckedCreateWithoutAddressesInput>
+  connectOrCreate?: Prisma.CoApplicantCreateOrConnectWithoutAddressesInput
+  connect?: Prisma.CoApplicantWhereUniqueInput
+}
+
+export type CoApplicantUpdateOneWithoutAddressesNestedInput = {
+  create?: Prisma.XOR<Prisma.CoApplicantCreateWithoutAddressesInput, Prisma.CoApplicantUncheckedCreateWithoutAddressesInput>
+  connectOrCreate?: Prisma.CoApplicantCreateOrConnectWithoutAddressesInput
+  upsert?: Prisma.CoApplicantUpsertWithoutAddressesInput
+  disconnect?: Prisma.CoApplicantWhereInput | boolean
+  delete?: Prisma.CoApplicantWhereInput | boolean
+  connect?: Prisma.CoApplicantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CoApplicantUpdateToOneWithWhereWithoutAddressesInput, Prisma.CoApplicantUpdateWithoutAddressesInput>, Prisma.CoApplicantUncheckedUpdateWithoutAddressesInput>
 }
 
 export type CoApplicantCreateNestedManyWithoutLoanApplicationInput = {
@@ -722,22 +715,161 @@ export type EnumEmploymentTypeFieldUpdateOperationsInput = {
   set?: $Enums.EmploymentType
 }
 
-export type CoApplicantCreateWithoutLoanApplicationInput = {
+export type CoApplicantCreateNestedOneWithoutOccupationalDetailsInput = {
+  create?: Prisma.XOR<Prisma.CoApplicantCreateWithoutOccupationalDetailsInput, Prisma.CoApplicantUncheckedCreateWithoutOccupationalDetailsInput>
+  connectOrCreate?: Prisma.CoApplicantCreateOrConnectWithoutOccupationalDetailsInput
+  connect?: Prisma.CoApplicantWhereUniqueInput
+}
+
+export type CoApplicantUpdateOneWithoutOccupationalDetailsNestedInput = {
+  create?: Prisma.XOR<Prisma.CoApplicantCreateWithoutOccupationalDetailsInput, Prisma.CoApplicantUncheckedCreateWithoutOccupationalDetailsInput>
+  connectOrCreate?: Prisma.CoApplicantCreateOrConnectWithoutOccupationalDetailsInput
+  upsert?: Prisma.CoApplicantUpsertWithoutOccupationalDetailsInput
+  disconnect?: Prisma.CoApplicantWhereInput | boolean
+  delete?: Prisma.CoApplicantWhereInput | boolean
+  connect?: Prisma.CoApplicantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CoApplicantUpdateToOneWithWhereWithoutOccupationalDetailsInput, Prisma.CoApplicantUpdateWithoutOccupationalDetailsInput>, Prisma.CoApplicantUncheckedUpdateWithoutOccupationalDetailsInput>
+}
+
+export type CoApplicantCreateNestedOneWithoutEmploymentDetailsInput = {
+  create?: Prisma.XOR<Prisma.CoApplicantCreateWithoutEmploymentDetailsInput, Prisma.CoApplicantUncheckedCreateWithoutEmploymentDetailsInput>
+  connectOrCreate?: Prisma.CoApplicantCreateOrConnectWithoutEmploymentDetailsInput
+  connect?: Prisma.CoApplicantWhereUniqueInput
+}
+
+export type CoApplicantUpdateOneWithoutEmploymentDetailsNestedInput = {
+  create?: Prisma.XOR<Prisma.CoApplicantCreateWithoutEmploymentDetailsInput, Prisma.CoApplicantUncheckedCreateWithoutEmploymentDetailsInput>
+  connectOrCreate?: Prisma.CoApplicantCreateOrConnectWithoutEmploymentDetailsInput
+  upsert?: Prisma.CoApplicantUpsertWithoutEmploymentDetailsInput
+  disconnect?: Prisma.CoApplicantWhereInput | boolean
+  delete?: Prisma.CoApplicantWhereInput | boolean
+  connect?: Prisma.CoApplicantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CoApplicantUpdateToOneWithWhereWithoutEmploymentDetailsInput, Prisma.CoApplicantUpdateWithoutEmploymentDetailsInput>, Prisma.CoApplicantUncheckedUpdateWithoutEmploymentDetailsInput>
+}
+
+export type CoApplicantCreateWithoutAddressesInput = {
   id?: string
   firstName: string
   LastName: string
   middleName?: string | null
   relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
   contactNumber: string
   email?: string | null
   dob: Date | string
   panNumber?: string | null
   aadhaarNumber?: string | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  loanApplication: Prisma.LoanApplicationCreateNestedOneWithoutCoapplicantsInput
+  kyc?: Prisma.KycCreateNestedOneWithoutCoApplicantInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCoApplicantInput
+  employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCoApplicantInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutCoApplicantInput
+}
+
+export type CoApplicantUncheckedCreateWithoutAddressesInput = {
+  id?: string
+  loanApplicationId: string
+  firstName: string
+  LastName: string
+  middleName?: string | null
+  relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
+  contactNumber: string
+  email?: string | null
+  dob: Date | string
+  panNumber?: string | null
+  aadhaarNumber?: string | null
+  employmentType: $Enums.EmploymentType
+  kycId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutCoApplicantInput
+}
+
+export type CoApplicantCreateOrConnectWithoutAddressesInput = {
+  where: Prisma.CoApplicantWhereUniqueInput
+  create: Prisma.XOR<Prisma.CoApplicantCreateWithoutAddressesInput, Prisma.CoApplicantUncheckedCreateWithoutAddressesInput>
+}
+
+export type CoApplicantUpsertWithoutAddressesInput = {
+  update: Prisma.XOR<Prisma.CoApplicantUpdateWithoutAddressesInput, Prisma.CoApplicantUncheckedUpdateWithoutAddressesInput>
+  create: Prisma.XOR<Prisma.CoApplicantCreateWithoutAddressesInput, Prisma.CoApplicantUncheckedCreateWithoutAddressesInput>
+  where?: Prisma.CoApplicantWhereInput
+}
+
+export type CoApplicantUpdateToOneWithWhereWithoutAddressesInput = {
+  where?: Prisma.CoApplicantWhereInput
+  data: Prisma.XOR<Prisma.CoApplicantUpdateWithoutAddressesInput, Prisma.CoApplicantUncheckedUpdateWithoutAddressesInput>
+}
+
+export type CoApplicantUpdateWithoutAddressesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  LastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanApplication?: Prisma.LoanApplicationUpdateOneRequiredWithoutCoapplicantsNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutCoApplicantNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCoApplicantNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCoApplicantNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutCoApplicantNestedInput
+}
+
+export type CoApplicantUncheckedUpdateWithoutAddressesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  LastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutCoApplicantNestedInput
+}
+
+export type CoApplicantCreateWithoutLoanApplicationInput = {
+  id?: string
+  firstName: string
+  LastName: string
+  middleName?: string | null
+  relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
+  contactNumber: string
+  email?: string | null
+  dob: Date | string
+  panNumber?: string | null
+  aadhaarNumber?: string | null
+  employmentType: $Enums.EmploymentType
   createdAt?: Date | string
   updatedAt?: Date | string
   kyc?: Prisma.KycCreateNestedOneWithoutCoApplicantInput
+  addresses?: Prisma.AddressCreateNestedManyWithoutCoApplicantInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCoApplicantInput
+  employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCoApplicantInput
   documents?: Prisma.DocumentCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -747,16 +879,19 @@ export type CoApplicantUncheckedCreateWithoutLoanApplicationInput = {
   LastName: string
   middleName?: string | null
   relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
   contactNumber: string
   email?: string | null
   dob: Date | string
   panNumber?: string | null
   aadhaarNumber?: string | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
   kycId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCoApplicantInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -796,13 +931,13 @@ export type CoApplicantScalarWhereInput = {
   LastName?: Prisma.StringFilter<"CoApplicant"> | string
   middleName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   relation?: Prisma.EnumCoApplicantRelationFilter<"CoApplicant"> | $Enums.CoApplicantRelation
+  relationOther?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   contactNumber?: Prisma.StringFilter<"CoApplicant"> | string
   email?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   dob?: Prisma.DateTimeFilter<"CoApplicant"> | Date | string
   panNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   aadhaarNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   employmentType?: Prisma.EnumEmploymentTypeFilter<"CoApplicant"> | $Enums.EmploymentType
-  monthlyIncome?: Prisma.FloatNullableFilter<"CoApplicant"> | number | null
   kycId?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CoApplicant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CoApplicant"> | Date | string
@@ -814,17 +949,20 @@ export type CoApplicantCreateWithoutDocumentsInput = {
   LastName: string
   middleName?: string | null
   relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
   contactNumber: string
   email?: string | null
   dob: Date | string
   panNumber?: string | null
   aadhaarNumber?: string | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   loanApplication: Prisma.LoanApplicationCreateNestedOneWithoutCoapplicantsInput
   kyc?: Prisma.KycCreateNestedOneWithoutCoApplicantInput
+  addresses?: Prisma.AddressCreateNestedManyWithoutCoApplicantInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCoApplicantInput
+  employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCoApplicantInput
 }
 
 export type CoApplicantUncheckedCreateWithoutDocumentsInput = {
@@ -834,16 +972,19 @@ export type CoApplicantUncheckedCreateWithoutDocumentsInput = {
   LastName: string
   middleName?: string | null
   relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
   contactNumber: string
   email?: string | null
   dob: Date | string
   panNumber?: string | null
   aadhaarNumber?: string | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
   kycId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCoApplicantInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
 }
 
 export type CoApplicantCreateOrConnectWithoutDocumentsInput = {
@@ -868,17 +1009,20 @@ export type CoApplicantUpdateWithoutDocumentsInput = {
   LastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanApplication?: Prisma.LoanApplicationUpdateOneRequiredWithoutCoapplicantsNestedInput
   kyc?: Prisma.KycUpdateOneWithoutCoApplicantNestedInput
+  addresses?: Prisma.AddressUpdateManyWithoutCoApplicantNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCoApplicantNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCoApplicantNestedInput
 }
 
 export type CoApplicantUncheckedUpdateWithoutDocumentsInput = {
@@ -888,16 +1032,19 @@ export type CoApplicantUncheckedUpdateWithoutDocumentsInput = {
   LastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUncheckedUpdateManyWithoutCoApplicantNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
 }
 
 export type CoApplicantCreateWithoutKycInput = {
@@ -906,16 +1053,19 @@ export type CoApplicantCreateWithoutKycInput = {
   LastName: string
   middleName?: string | null
   relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
   contactNumber: string
   email?: string | null
   dob: Date | string
   panNumber?: string | null
   aadhaarNumber?: string | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   loanApplication: Prisma.LoanApplicationCreateNestedOneWithoutCoapplicantsInput
+  addresses?: Prisma.AddressCreateNestedManyWithoutCoApplicantInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCoApplicantInput
+  employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCoApplicantInput
   documents?: Prisma.DocumentCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -926,15 +1076,18 @@ export type CoApplicantUncheckedCreateWithoutKycInput = {
   LastName: string
   middleName?: string | null
   relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
   contactNumber: string
   email?: string | null
   dob: Date | string
   panNumber?: string | null
   aadhaarNumber?: string | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCoApplicantInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -960,16 +1113,19 @@ export type CoApplicantUpdateWithoutKycInput = {
   LastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanApplication?: Prisma.LoanApplicationUpdateOneRequiredWithoutCoapplicantsNestedInput
+  addresses?: Prisma.AddressUpdateManyWithoutCoApplicantNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCoApplicantNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -980,15 +1136,226 @@ export type CoApplicantUncheckedUpdateWithoutKycInput = {
   LastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUncheckedUpdateManyWithoutCoApplicantNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutCoApplicantNestedInput
+}
+
+export type CoApplicantCreateWithoutOccupationalDetailsInput = {
+  id?: string
+  firstName: string
+  LastName: string
+  middleName?: string | null
+  relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
+  contactNumber: string
+  email?: string | null
+  dob: Date | string
+  panNumber?: string | null
+  aadhaarNumber?: string | null
+  employmentType: $Enums.EmploymentType
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  loanApplication: Prisma.LoanApplicationCreateNestedOneWithoutCoapplicantsInput
+  kyc?: Prisma.KycCreateNestedOneWithoutCoApplicantInput
+  addresses?: Prisma.AddressCreateNestedManyWithoutCoApplicantInput
+  employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCoApplicantInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutCoApplicantInput
+}
+
+export type CoApplicantUncheckedCreateWithoutOccupationalDetailsInput = {
+  id?: string
+  loanApplicationId: string
+  firstName: string
+  LastName: string
+  middleName?: string | null
+  relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
+  contactNumber: string
+  email?: string | null
+  dob: Date | string
+  panNumber?: string | null
+  aadhaarNumber?: string | null
+  employmentType: $Enums.EmploymentType
+  kycId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCoApplicantInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutCoApplicantInput
+}
+
+export type CoApplicantCreateOrConnectWithoutOccupationalDetailsInput = {
+  where: Prisma.CoApplicantWhereUniqueInput
+  create: Prisma.XOR<Prisma.CoApplicantCreateWithoutOccupationalDetailsInput, Prisma.CoApplicantUncheckedCreateWithoutOccupationalDetailsInput>
+}
+
+export type CoApplicantUpsertWithoutOccupationalDetailsInput = {
+  update: Prisma.XOR<Prisma.CoApplicantUpdateWithoutOccupationalDetailsInput, Prisma.CoApplicantUncheckedUpdateWithoutOccupationalDetailsInput>
+  create: Prisma.XOR<Prisma.CoApplicantCreateWithoutOccupationalDetailsInput, Prisma.CoApplicantUncheckedCreateWithoutOccupationalDetailsInput>
+  where?: Prisma.CoApplicantWhereInput
+}
+
+export type CoApplicantUpdateToOneWithWhereWithoutOccupationalDetailsInput = {
+  where?: Prisma.CoApplicantWhereInput
+  data: Prisma.XOR<Prisma.CoApplicantUpdateWithoutOccupationalDetailsInput, Prisma.CoApplicantUncheckedUpdateWithoutOccupationalDetailsInput>
+}
+
+export type CoApplicantUpdateWithoutOccupationalDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  LastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanApplication?: Prisma.LoanApplicationUpdateOneRequiredWithoutCoapplicantsNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutCoApplicantNestedInput
+  addresses?: Prisma.AddressUpdateManyWithoutCoApplicantNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCoApplicantNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutCoApplicantNestedInput
+}
+
+export type CoApplicantUncheckedUpdateWithoutOccupationalDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  LastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUncheckedUpdateManyWithoutCoApplicantNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutCoApplicantNestedInput
+}
+
+export type CoApplicantCreateWithoutEmploymentDetailsInput = {
+  id?: string
+  firstName: string
+  LastName: string
+  middleName?: string | null
+  relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
+  contactNumber: string
+  email?: string | null
+  dob: Date | string
+  panNumber?: string | null
+  aadhaarNumber?: string | null
+  employmentType: $Enums.EmploymentType
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  loanApplication: Prisma.LoanApplicationCreateNestedOneWithoutCoapplicantsInput
+  kyc?: Prisma.KycCreateNestedOneWithoutCoApplicantInput
+  addresses?: Prisma.AddressCreateNestedManyWithoutCoApplicantInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCoApplicantInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutCoApplicantInput
+}
+
+export type CoApplicantUncheckedCreateWithoutEmploymentDetailsInput = {
+  id?: string
+  loanApplicationId: string
+  firstName: string
+  LastName: string
+  middleName?: string | null
+  relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
+  contactNumber: string
+  email?: string | null
+  dob: Date | string
+  panNumber?: string | null
+  aadhaarNumber?: string | null
+  employmentType: $Enums.EmploymentType
+  kycId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCoApplicantInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutCoApplicantInput
+}
+
+export type CoApplicantCreateOrConnectWithoutEmploymentDetailsInput = {
+  where: Prisma.CoApplicantWhereUniqueInput
+  create: Prisma.XOR<Prisma.CoApplicantCreateWithoutEmploymentDetailsInput, Prisma.CoApplicantUncheckedCreateWithoutEmploymentDetailsInput>
+}
+
+export type CoApplicantUpsertWithoutEmploymentDetailsInput = {
+  update: Prisma.XOR<Prisma.CoApplicantUpdateWithoutEmploymentDetailsInput, Prisma.CoApplicantUncheckedUpdateWithoutEmploymentDetailsInput>
+  create: Prisma.XOR<Prisma.CoApplicantCreateWithoutEmploymentDetailsInput, Prisma.CoApplicantUncheckedCreateWithoutEmploymentDetailsInput>
+  where?: Prisma.CoApplicantWhereInput
+}
+
+export type CoApplicantUpdateToOneWithWhereWithoutEmploymentDetailsInput = {
+  where?: Prisma.CoApplicantWhereInput
+  data: Prisma.XOR<Prisma.CoApplicantUpdateWithoutEmploymentDetailsInput, Prisma.CoApplicantUncheckedUpdateWithoutEmploymentDetailsInput>
+}
+
+export type CoApplicantUpdateWithoutEmploymentDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  LastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanApplication?: Prisma.LoanApplicationUpdateOneRequiredWithoutCoapplicantsNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutCoApplicantNestedInput
+  addresses?: Prisma.AddressUpdateManyWithoutCoApplicantNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCoApplicantNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutCoApplicantNestedInput
+}
+
+export type CoApplicantUncheckedUpdateWithoutEmploymentDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  LastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUncheckedUpdateManyWithoutCoApplicantNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -998,13 +1365,13 @@ export type CoApplicantCreateManyLoanApplicationInput = {
   LastName: string
   middleName?: string | null
   relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
   contactNumber: string
   email?: string | null
   dob: Date | string
   panNumber?: string | null
   aadhaarNumber?: string | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
   kycId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1016,16 +1383,19 @@ export type CoApplicantUpdateWithoutLoanApplicationInput = {
   LastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   kyc?: Prisma.KycUpdateOneWithoutCoApplicantNestedInput
+  addresses?: Prisma.AddressUpdateManyWithoutCoApplicantNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCoApplicantNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -1035,16 +1405,19 @@ export type CoApplicantUncheckedUpdateWithoutLoanApplicationInput = {
   LastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUncheckedUpdateManyWithoutCoApplicantNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -1054,13 +1427,13 @@ export type CoApplicantUncheckedUpdateManyWithoutLoanApplicationInput = {
   LastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1072,10 +1445,16 @@ export type CoApplicantUncheckedUpdateManyWithoutLoanApplicationInput = {
  */
 
 export type CoApplicantCountOutputType = {
+  addresses: number
+  occupationalDetails: number
+  employmentDetails: number
   documents: number
 }
 
 export type CoApplicantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  addresses?: boolean | CoApplicantCountOutputTypeCountAddressesArgs
+  occupationalDetails?: boolean | CoApplicantCountOutputTypeCountOccupationalDetailsArgs
+  employmentDetails?: boolean | CoApplicantCountOutputTypeCountEmploymentDetailsArgs
   documents?: boolean | CoApplicantCountOutputTypeCountDocumentsArgs
 }
 
@@ -1087,6 +1466,27 @@ export type CoApplicantCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.
    * Select specific fields to fetch from the CoApplicantCountOutputType
    */
   select?: Prisma.CoApplicantCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CoApplicantCountOutputType without action
+ */
+export type CoApplicantCountOutputTypeCountAddressesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AddressWhereInput
+}
+
+/**
+ * CoApplicantCountOutputType without action
+ */
+export type CoApplicantCountOutputTypeCountOccupationalDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OccupationalDetailsWhereInput
+}
+
+/**
+ * CoApplicantCountOutputType without action
+ */
+export type CoApplicantCountOutputTypeCountEmploymentDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmploymentDetailsWhereInput
 }
 
 /**
@@ -1104,18 +1504,21 @@ export type CoApplicantSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   LastName?: boolean
   middleName?: boolean
   relation?: boolean
+  relationOther?: boolean
   contactNumber?: boolean
   email?: boolean
   dob?: boolean
   panNumber?: boolean
   aadhaarNumber?: boolean
   employmentType?: boolean
-  monthlyIncome?: boolean
   kycId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   loanApplication?: boolean | Prisma.LoanApplicationDefaultArgs<ExtArgs>
   kyc?: boolean | Prisma.CoApplicant$kycArgs<ExtArgs>
+  addresses?: boolean | Prisma.CoApplicant$addressesArgs<ExtArgs>
+  occupationalDetails?: boolean | Prisma.CoApplicant$occupationalDetailsArgs<ExtArgs>
+  employmentDetails?: boolean | Prisma.CoApplicant$employmentDetailsArgs<ExtArgs>
   documents?: boolean | Prisma.CoApplicant$documentsArgs<ExtArgs>
   _count?: boolean | Prisma.CoApplicantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["coApplicant"]>
@@ -1129,22 +1532,25 @@ export type CoApplicantSelectScalar = {
   LastName?: boolean
   middleName?: boolean
   relation?: boolean
+  relationOther?: boolean
   contactNumber?: boolean
   email?: boolean
   dob?: boolean
   panNumber?: boolean
   aadhaarNumber?: boolean
   employmentType?: boolean
-  monthlyIncome?: boolean
   kycId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CoApplicantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "firstName" | "LastName" | "middleName" | "relation" | "contactNumber" | "email" | "dob" | "panNumber" | "aadhaarNumber" | "employmentType" | "monthlyIncome" | "kycId" | "createdAt" | "updatedAt", ExtArgs["result"]["coApplicant"]>
+export type CoApplicantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "firstName" | "LastName" | "middleName" | "relation" | "relationOther" | "contactNumber" | "email" | "dob" | "panNumber" | "aadhaarNumber" | "employmentType" | "kycId" | "createdAt" | "updatedAt", ExtArgs["result"]["coApplicant"]>
 export type CoApplicantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   loanApplication?: boolean | Prisma.LoanApplicationDefaultArgs<ExtArgs>
   kyc?: boolean | Prisma.CoApplicant$kycArgs<ExtArgs>
+  addresses?: boolean | Prisma.CoApplicant$addressesArgs<ExtArgs>
+  occupationalDetails?: boolean | Prisma.CoApplicant$occupationalDetailsArgs<ExtArgs>
+  employmentDetails?: boolean | Prisma.CoApplicant$employmentDetailsArgs<ExtArgs>
   documents?: boolean | Prisma.CoApplicant$documentsArgs<ExtArgs>
   _count?: boolean | Prisma.CoApplicantCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1154,6 +1560,9 @@ export type $CoApplicantPayload<ExtArgs extends runtime.Types.Extensions.Interna
   objects: {
     loanApplication: Prisma.$LoanApplicationPayload<ExtArgs>
     kyc: Prisma.$KycPayload<ExtArgs> | null
+    addresses: Prisma.$AddressPayload<ExtArgs>[]
+    occupationalDetails: Prisma.$OccupationalDetailsPayload<ExtArgs>[]
+    employmentDetails: Prisma.$EmploymentDetailsPayload<ExtArgs>[]
     documents: Prisma.$DocumentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1163,13 +1572,13 @@ export type $CoApplicantPayload<ExtArgs extends runtime.Types.Extensions.Interna
     LastName: string
     middleName: string | null
     relation: $Enums.CoApplicantRelation
+    relationOther: string | null
     contactNumber: string
     email: string | null
     dob: Date
     panNumber: string | null
     aadhaarNumber: string | null
     employmentType: $Enums.EmploymentType
-    monthlyIncome: number | null
     kycId: string | null
     createdAt: Date
     updatedAt: Date
@@ -1515,6 +1924,9 @@ export interface Prisma__CoApplicantClient<T, Null = never, ExtArgs extends runt
   readonly [Symbol.toStringTag]: "PrismaPromise"
   loanApplication<T extends Prisma.LoanApplicationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoanApplicationDefaultArgs<ExtArgs>>): Prisma.Prisma__LoanApplicationClient<runtime.Types.Result.GetResult<Prisma.$LoanApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   kyc<T extends Prisma.CoApplicant$kycArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CoApplicant$kycArgs<ExtArgs>>): Prisma.Prisma__KycClient<runtime.Types.Result.GetResult<Prisma.$KycPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  addresses<T extends Prisma.CoApplicant$addressesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CoApplicant$addressesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  occupationalDetails<T extends Prisma.CoApplicant$occupationalDetailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CoApplicant$occupationalDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OccupationalDetailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  employmentDetails<T extends Prisma.CoApplicant$employmentDetailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CoApplicant$employmentDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmploymentDetailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   documents<T extends Prisma.CoApplicant$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CoApplicant$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1551,13 +1963,13 @@ export interface CoApplicantFieldRefs {
   readonly LastName: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly middleName: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly relation: Prisma.FieldRef<"CoApplicant", 'CoApplicantRelation'>
+  readonly relationOther: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly contactNumber: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly email: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly dob: Prisma.FieldRef<"CoApplicant", 'DateTime'>
   readonly panNumber: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly aadhaarNumber: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly employmentType: Prisma.FieldRef<"CoApplicant", 'EmploymentType'>
-  readonly monthlyIncome: Prisma.FieldRef<"CoApplicant", 'Float'>
   readonly kycId: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly createdAt: Prisma.FieldRef<"CoApplicant", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CoApplicant", 'DateTime'>
@@ -1920,6 +2332,78 @@ export type CoApplicant$kycArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.KycInclude<ExtArgs> | null
   where?: Prisma.KycWhereInput
+}
+
+/**
+ * CoApplicant.addresses
+ */
+export type CoApplicant$addressesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Address
+   */
+  select?: Prisma.AddressSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Address
+   */
+  omit?: Prisma.AddressOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddressInclude<ExtArgs> | null
+  where?: Prisma.AddressWhereInput
+  orderBy?: Prisma.AddressOrderByWithRelationInput | Prisma.AddressOrderByWithRelationInput[]
+  cursor?: Prisma.AddressWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AddressScalarFieldEnum | Prisma.AddressScalarFieldEnum[]
+}
+
+/**
+ * CoApplicant.occupationalDetails
+ */
+export type CoApplicant$occupationalDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OccupationalDetails
+   */
+  select?: Prisma.OccupationalDetailsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OccupationalDetails
+   */
+  omit?: Prisma.OccupationalDetailsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OccupationalDetailsInclude<ExtArgs> | null
+  where?: Prisma.OccupationalDetailsWhereInput
+  orderBy?: Prisma.OccupationalDetailsOrderByWithRelationInput | Prisma.OccupationalDetailsOrderByWithRelationInput[]
+  cursor?: Prisma.OccupationalDetailsWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OccupationalDetailsScalarFieldEnum | Prisma.OccupationalDetailsScalarFieldEnum[]
+}
+
+/**
+ * CoApplicant.employmentDetails
+ */
+export type CoApplicant$employmentDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmploymentDetails
+   */
+  select?: Prisma.EmploymentDetailsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmploymentDetails
+   */
+  omit?: Prisma.EmploymentDetailsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmploymentDetailsInclude<ExtArgs> | null
+  where?: Prisma.EmploymentDetailsWhereInput
+  orderBy?: Prisma.EmploymentDetailsOrderByWithRelationInput | Prisma.EmploymentDetailsOrderByWithRelationInput[]
+  cursor?: Prisma.EmploymentDetailsWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmploymentDetailsScalarFieldEnum | Prisma.EmploymentDetailsScalarFieldEnum[]
 }
 
 /**

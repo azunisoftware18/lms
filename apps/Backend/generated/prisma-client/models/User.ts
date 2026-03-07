@@ -249,6 +249,7 @@ export type UserWhereInput = {
   leadsAssignedBy?: Prisma.LeadsListRelationFilter
   verifiedKycs?: Prisma.KycListRelationFilter
   loanApplications?: Prisma.LoanApplicationListRelationFilter
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -275,6 +276,7 @@ export type UserOrderByWithRelationInput = {
   leadsAssignedBy?: Prisma.LeadsOrderByRelationAggregateInput
   verifiedKycs?: Prisma.KycOrderByRelationAggregateInput
   loanApplications?: Prisma.LoanApplicationOrderByRelationAggregateInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -305,6 +307,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   leadsAssignedBy?: Prisma.LeadsListRelationFilter
   verifiedKycs?: Prisma.KycListRelationFilter
   loanApplications?: Prisma.LoanApplicationListRelationFilter
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftListRelationFilter
 }, "id" | "userName" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -366,6 +369,7 @@ export type UserCreateInput = {
   leadsAssignedBy?: Prisma.LeadsCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -391,6 +395,7 @@ export type UserUncheckedCreateInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycUncheckedCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -416,6 +421,7 @@ export type UserUpdateInput = {
   leadsAssignedBy?: Prisma.LeadsUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -441,6 +447,7 @@ export type UserUncheckedUpdateInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUncheckedUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -704,6 +711,20 @@ export type UserUpdateOneWithoutLeadsAssignedByNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLeadsAssignedByInput, Prisma.UserUpdateWithoutLeadsAssignedByInput>, Prisma.UserUncheckedUpdateWithoutLeadsAssignedByInput>
 }
 
+export type UserCreateNestedOneWithoutLoanApplicationDraftsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLoanApplicationDraftsInput, Prisma.UserUncheckedCreateWithoutLoanApplicationDraftsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLoanApplicationDraftsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutLoanApplicationDraftsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLoanApplicationDraftsInput, Prisma.UserUncheckedCreateWithoutLoanApplicationDraftsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLoanApplicationDraftsInput
+  upsert?: Prisma.UserUpsertWithoutLoanApplicationDraftsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLoanApplicationDraftsInput, Prisma.UserUpdateWithoutLoanApplicationDraftsInput>, Prisma.UserUncheckedUpdateWithoutLoanApplicationDraftsInput>
+}
+
 export type UserCreateNestedOneWithoutLoanApplicationsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutLoanApplicationsInput, Prisma.UserUncheckedCreateWithoutLoanApplicationsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutLoanApplicationsInput
@@ -786,6 +807,7 @@ export type UserCreateWithoutProfileInput = {
   leadsAssignedBy?: Prisma.LeadsCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProfileInput = {
@@ -810,6 +832,7 @@ export type UserUncheckedCreateWithoutProfileInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycUncheckedCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProfileInput = {
@@ -850,6 +873,7 @@ export type UserUpdateWithoutProfileInput = {
   leadsAssignedBy?: Prisma.LeadsUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileInput = {
@@ -874,6 +898,7 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUncheckedUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAdminInput = {
@@ -898,6 +923,7 @@ export type UserCreateWithoutAdminInput = {
   leadsAssignedBy?: Prisma.LeadsCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAdminInput = {
@@ -922,6 +948,7 @@ export type UserUncheckedCreateWithoutAdminInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycUncheckedCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAdminInput = {
@@ -962,6 +989,7 @@ export type UserUpdateWithoutAdminInput = {
   leadsAssignedBy?: Prisma.LeadsUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminInput = {
@@ -986,6 +1014,7 @@ export type UserUncheckedUpdateWithoutAdminInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUncheckedUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEmployeeInput = {
@@ -1010,6 +1039,7 @@ export type UserCreateWithoutEmployeeInput = {
   leadsAssignedBy?: Prisma.LeadsCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEmployeeInput = {
@@ -1034,6 +1064,7 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycUncheckedCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEmployeeInput = {
@@ -1074,6 +1105,7 @@ export type UserUpdateWithoutEmployeeInput = {
   leadsAssignedBy?: Prisma.LeadsUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEmployeeInput = {
@@ -1098,6 +1130,7 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUncheckedUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPartnerInput = {
@@ -1122,6 +1155,7 @@ export type UserCreateWithoutPartnerInput = {
   leadsAssignedBy?: Prisma.LeadsCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPartnerInput = {
@@ -1146,6 +1180,7 @@ export type UserUncheckedCreateWithoutPartnerInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycUncheckedCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPartnerInput = {
@@ -1186,6 +1221,7 @@ export type UserUpdateWithoutPartnerInput = {
   leadsAssignedBy?: Prisma.LeadsUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPartnerInput = {
@@ -1210,6 +1246,7 @@ export type UserUncheckedUpdateWithoutPartnerInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUncheckedUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBranchInput = {
@@ -1234,6 +1271,7 @@ export type UserCreateWithoutBranchInput = {
   leadsAssignedBy?: Prisma.LeadsCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBranchInput = {
@@ -1258,6 +1296,7 @@ export type UserUncheckedCreateWithoutBranchInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycUncheckedCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBranchInput = {
@@ -1326,6 +1365,7 @@ export type UserCreateWithoutLeadsAssignedToInput = {
   leadsAssignedBy?: Prisma.LeadsCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLeadsAssignedToInput = {
@@ -1350,6 +1390,7 @@ export type UserUncheckedCreateWithoutLeadsAssignedToInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycUncheckedCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLeadsAssignedToInput = {
@@ -1379,6 +1420,7 @@ export type UserCreateWithoutLeadsAssignedByInput = {
   leadsAssignedTo?: Prisma.LeadsCreateNestedManyWithoutAssignedToUserInput
   verifiedKycs?: Prisma.KycCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLeadsAssignedByInput = {
@@ -1403,6 +1445,7 @@ export type UserUncheckedCreateWithoutLeadsAssignedByInput = {
   leadsAssignedTo?: Prisma.LeadsUncheckedCreateNestedManyWithoutAssignedToUserInput
   verifiedKycs?: Prisma.KycUncheckedCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLeadsAssignedByInput = {
@@ -1443,6 +1486,7 @@ export type UserUpdateWithoutLeadsAssignedToInput = {
   leadsAssignedBy?: Prisma.LeadsUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLeadsAssignedToInput = {
@@ -1467,6 +1511,7 @@ export type UserUncheckedUpdateWithoutLeadsAssignedToInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUncheckedUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutLeadsAssignedByInput = {
@@ -1502,6 +1547,7 @@ export type UserUpdateWithoutLeadsAssignedByInput = {
   leadsAssignedTo?: Prisma.LeadsUpdateManyWithoutAssignedToUserNestedInput
   verifiedKycs?: Prisma.KycUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLeadsAssignedByInput = {
@@ -1524,6 +1570,123 @@ export type UserUncheckedUpdateWithoutLeadsAssignedByInput = {
   kycs?: Prisma.KycUncheckedUpdateManyWithoutUserNestedInput
   permissions?: Prisma.UserPermissionUncheckedUpdateManyWithoutUserNestedInput
   leadsAssignedTo?: Prisma.LeadsUncheckedUpdateManyWithoutAssignedToUserNestedInput
+  verifiedKycs?: Prisma.KycUncheckedUpdateManyWithoutVerifiedByUserNestedInput
+  loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutLoanApplicationDraftsInput = {
+  id?: string
+  fullName: string
+  userName: string
+  email: string
+  password: string
+  role: $Enums.Role
+  contactNumber: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  kycStatus?: $Enums.KycStatus
+  branch: Prisma.BranchCreateNestedOneWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  admin?: Prisma.AdminCreateNestedOneWithoutUserInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutUserInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  kycs?: Prisma.KycCreateNestedManyWithoutUserInput
+  permissions?: Prisma.UserPermissionCreateNestedManyWithoutUserInput
+  leadsAssignedTo?: Prisma.LeadsCreateNestedManyWithoutAssignedToUserInput
+  leadsAssignedBy?: Prisma.LeadsCreateNestedManyWithoutAssignedByUserInput
+  verifiedKycs?: Prisma.KycCreateNestedManyWithoutVerifiedByUserInput
+  loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutLoanApplicationDraftsInput = {
+  id?: string
+  fullName: string
+  userName: string
+  email: string
+  password: string
+  role: $Enums.Role
+  contactNumber: string
+  branchId: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  kycStatus?: $Enums.KycStatus
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  admin?: Prisma.AdminUncheckedCreateNestedOneWithoutUserInput
+  partner?: Prisma.PartnerUncheckedCreateNestedOneWithoutUserInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  kycs?: Prisma.KycUncheckedCreateNestedManyWithoutUserInput
+  permissions?: Prisma.UserPermissionUncheckedCreateNestedManyWithoutUserInput
+  leadsAssignedTo?: Prisma.LeadsUncheckedCreateNestedManyWithoutAssignedToUserInput
+  leadsAssignedBy?: Prisma.LeadsUncheckedCreateNestedManyWithoutAssignedByUserInput
+  verifiedKycs?: Prisma.KycUncheckedCreateNestedManyWithoutVerifiedByUserInput
+  loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutLoanApplicationDraftsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutLoanApplicationDraftsInput, Prisma.UserUncheckedCreateWithoutLoanApplicationDraftsInput>
+}
+
+export type UserUpsertWithoutLoanApplicationDraftsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutLoanApplicationDraftsInput, Prisma.UserUncheckedUpdateWithoutLoanApplicationDraftsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutLoanApplicationDraftsInput, Prisma.UserUncheckedCreateWithoutLoanApplicationDraftsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutLoanApplicationDraftsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutLoanApplicationDraftsInput, Prisma.UserUncheckedUpdateWithoutLoanApplicationDraftsInput>
+}
+
+export type UserUpdateWithoutLoanApplicationDraftsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  userName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  kycStatus?: Prisma.EnumKycStatusFieldUpdateOperationsInput | $Enums.KycStatus
+  branch?: Prisma.BranchUpdateOneRequiredWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  admin?: Prisma.AdminUpdateOneWithoutUserNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutUserNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  kycs?: Prisma.KycUpdateManyWithoutUserNestedInput
+  permissions?: Prisma.UserPermissionUpdateManyWithoutUserNestedInput
+  leadsAssignedTo?: Prisma.LeadsUpdateManyWithoutAssignedToUserNestedInput
+  leadsAssignedBy?: Prisma.LeadsUpdateManyWithoutAssignedByUserNestedInput
+  verifiedKycs?: Prisma.KycUpdateManyWithoutVerifiedByUserNestedInput
+  loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutLoanApplicationDraftsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  userName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  kycStatus?: Prisma.EnumKycStatusFieldUpdateOperationsInput | $Enums.KycStatus
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  admin?: Prisma.AdminUncheckedUpdateOneWithoutUserNestedInput
+  partner?: Prisma.PartnerUncheckedUpdateOneWithoutUserNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  kycs?: Prisma.KycUncheckedUpdateManyWithoutUserNestedInput
+  permissions?: Prisma.UserPermissionUncheckedUpdateManyWithoutUserNestedInput
+  leadsAssignedTo?: Prisma.LeadsUncheckedUpdateManyWithoutAssignedToUserNestedInput
+  leadsAssignedBy?: Prisma.LeadsUncheckedUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUncheckedUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCreatedByNestedInput
 }
@@ -1550,6 +1713,7 @@ export type UserCreateWithoutLoanApplicationsInput = {
   leadsAssignedTo?: Prisma.LeadsCreateNestedManyWithoutAssignedToUserInput
   leadsAssignedBy?: Prisma.LeadsCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycCreateNestedManyWithoutVerifiedByUserInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLoanApplicationsInput = {
@@ -1574,6 +1738,7 @@ export type UserUncheckedCreateWithoutLoanApplicationsInput = {
   leadsAssignedTo?: Prisma.LeadsUncheckedCreateNestedManyWithoutAssignedToUserInput
   leadsAssignedBy?: Prisma.LeadsUncheckedCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycUncheckedCreateNestedManyWithoutVerifiedByUserInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLoanApplicationsInput = {
@@ -1614,6 +1779,7 @@ export type UserUpdateWithoutLoanApplicationsInput = {
   leadsAssignedTo?: Prisma.LeadsUpdateManyWithoutAssignedToUserNestedInput
   leadsAssignedBy?: Prisma.LeadsUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUpdateManyWithoutVerifiedByUserNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLoanApplicationsInput = {
@@ -1638,6 +1804,7 @@ export type UserUncheckedUpdateWithoutLoanApplicationsInput = {
   leadsAssignedTo?: Prisma.LeadsUncheckedUpdateManyWithoutAssignedToUserNestedInput
   leadsAssignedBy?: Prisma.LeadsUncheckedUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUncheckedUpdateManyWithoutVerifiedByUserNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPermissionsInput = {
@@ -1662,6 +1829,7 @@ export type UserCreateWithoutPermissionsInput = {
   leadsAssignedBy?: Prisma.LeadsCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPermissionsInput = {
@@ -1686,6 +1854,7 @@ export type UserUncheckedCreateWithoutPermissionsInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycUncheckedCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPermissionsInput = {
@@ -1726,6 +1895,7 @@ export type UserUpdateWithoutPermissionsInput = {
   leadsAssignedBy?: Prisma.LeadsUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPermissionsInput = {
@@ -1750,6 +1920,7 @@ export type UserUncheckedUpdateWithoutPermissionsInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUncheckedUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVerifiedKycsInput = {
@@ -1774,6 +1945,7 @@ export type UserCreateWithoutVerifiedKycsInput = {
   leadsAssignedTo?: Prisma.LeadsCreateNestedManyWithoutAssignedToUserInput
   leadsAssignedBy?: Prisma.LeadsCreateNestedManyWithoutAssignedByUserInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVerifiedKycsInput = {
@@ -1798,6 +1970,7 @@ export type UserUncheckedCreateWithoutVerifiedKycsInput = {
   leadsAssignedTo?: Prisma.LeadsUncheckedCreateNestedManyWithoutAssignedToUserInput
   leadsAssignedBy?: Prisma.LeadsUncheckedCreateNestedManyWithoutAssignedByUserInput
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVerifiedKycsInput = {
@@ -1827,6 +2000,7 @@ export type UserCreateWithoutKycsInput = {
   leadsAssignedBy?: Prisma.LeadsCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutKycsInput = {
@@ -1851,6 +2025,7 @@ export type UserUncheckedCreateWithoutKycsInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedCreateNestedManyWithoutAssignedByUserInput
   verifiedKycs?: Prisma.KycUncheckedCreateNestedManyWithoutVerifiedByUserInput
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCreatedByInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutKycsInput = {
@@ -1891,6 +2066,7 @@ export type UserUpdateWithoutVerifiedKycsInput = {
   leadsAssignedTo?: Prisma.LeadsUpdateManyWithoutAssignedToUserNestedInput
   leadsAssignedBy?: Prisma.LeadsUpdateManyWithoutAssignedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVerifiedKycsInput = {
@@ -1915,6 +2091,7 @@ export type UserUncheckedUpdateWithoutVerifiedKycsInput = {
   leadsAssignedTo?: Prisma.LeadsUncheckedUpdateManyWithoutAssignedToUserNestedInput
   leadsAssignedBy?: Prisma.LeadsUncheckedUpdateManyWithoutAssignedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutKycsInput = {
@@ -1950,6 +2127,7 @@ export type UserUpdateWithoutKycsInput = {
   leadsAssignedBy?: Prisma.LeadsUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutKycsInput = {
@@ -1974,6 +2152,7 @@ export type UserUncheckedUpdateWithoutKycsInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUncheckedUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyBranchInput = {
@@ -2012,6 +2191,7 @@ export type UserUpdateWithoutBranchInput = {
   leadsAssignedBy?: Prisma.LeadsUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBranchInput = {
@@ -2036,6 +2216,7 @@ export type UserUncheckedUpdateWithoutBranchInput = {
   leadsAssignedBy?: Prisma.LeadsUncheckedUpdateManyWithoutAssignedByUserNestedInput
   verifiedKycs?: Prisma.KycUncheckedUpdateManyWithoutVerifiedByUserNestedInput
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCreatedByNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutBranchInput = {
@@ -2064,6 +2245,7 @@ export type UserCountOutputType = {
   leadsAssignedBy: number
   verifiedKycs: number
   loanApplications: number
+  loanApplicationDrafts: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2073,6 +2255,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   leadsAssignedBy?: boolean | UserCountOutputTypeCountLeadsAssignedByArgs
   verifiedKycs?: boolean | UserCountOutputTypeCountVerifiedKycsArgs
   loanApplications?: boolean | UserCountOutputTypeCountLoanApplicationsArgs
+  loanApplicationDrafts?: boolean | UserCountOutputTypeCountLoanApplicationDraftsArgs
 }
 
 /**
@@ -2127,6 +2310,13 @@ export type UserCountOutputTypeCountLoanApplicationsArgs<ExtArgs extends runtime
   where?: Prisma.LoanApplicationWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountLoanApplicationDraftsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LoanApplicationDraftWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2152,6 +2342,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   leadsAssignedBy?: boolean | Prisma.User$leadsAssignedByArgs<ExtArgs>
   verifiedKycs?: boolean | Prisma.User$verifiedKycsArgs<ExtArgs>
   loanApplications?: boolean | Prisma.User$loanApplicationsArgs<ExtArgs>
+  loanApplicationDrafts?: boolean | Prisma.User$loanApplicationDraftsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2185,6 +2376,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   leadsAssignedBy?: boolean | Prisma.User$leadsAssignedByArgs<ExtArgs>
   verifiedKycs?: boolean | Prisma.User$verifiedKycsArgs<ExtArgs>
   loanApplications?: boolean | Prisma.User$loanApplicationsArgs<ExtArgs>
+  loanApplicationDrafts?: boolean | Prisma.User$loanApplicationDraftsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -2202,6 +2394,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     leadsAssignedBy: Prisma.$LeadsPayload<ExtArgs>[]
     verifiedKycs: Prisma.$KycPayload<ExtArgs>[]
     loanApplications: Prisma.$LoanApplicationPayload<ExtArgs>[]
+    loanApplicationDrafts: Prisma.$LoanApplicationDraftPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2567,6 +2760,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   leadsAssignedBy<T extends Prisma.User$leadsAssignedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leadsAssignedByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   verifiedKycs<T extends Prisma.User$verifiedKycsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$verifiedKycsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KycPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   loanApplications<T extends Prisma.User$loanApplicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$loanApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoanApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  loanApplicationDrafts<T extends Prisma.User$loanApplicationDraftsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$loanApplicationDraftsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoanApplicationDraftPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3168,6 +3362,30 @@ export type User$loanApplicationsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.LoanApplicationScalarFieldEnum | Prisma.LoanApplicationScalarFieldEnum[]
+}
+
+/**
+ * User.loanApplicationDrafts
+ */
+export type User$loanApplicationDraftsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LoanApplicationDraft
+   */
+  select?: Prisma.LoanApplicationDraftSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LoanApplicationDraft
+   */
+  omit?: Prisma.LoanApplicationDraftOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoanApplicationDraftInclude<ExtArgs> | null
+  where?: Prisma.LoanApplicationDraftWhereInput
+  orderBy?: Prisma.LoanApplicationDraftOrderByWithRelationInput | Prisma.LoanApplicationDraftOrderByWithRelationInput[]
+  cursor?: Prisma.LoanApplicationDraftWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LoanApplicationDraftScalarFieldEnum | Prisma.LoanApplicationDraftScalarFieldEnum[]
 }
 
 /**

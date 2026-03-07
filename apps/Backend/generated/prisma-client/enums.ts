@@ -32,6 +32,14 @@ export const DisbursementMode = {
 export type DisbursementMode = (typeof DisbursementMode)[keyof typeof DisbursementMode]
 
 
+export const DraftStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED'
+} as const
+
+export type DraftStatus = (typeof DraftStatus)[keyof typeof DraftStatus]
+
+
 export const NachStatus = {
   PENDING: 'PENDING',
   ACTIVE: 'ACTIVE',
@@ -149,6 +157,7 @@ export const Category = {
   GENERAL: 'GENERAL',
   SC: 'SC',
   ST: 'ST',
+  NT: 'NT',
   OBC: 'OBC',
   OTHER: 'OTHER'
 } as const
@@ -239,6 +248,34 @@ export const Relationship = {
 export type Relationship = (typeof Relationship)[keyof typeof Relationship]
 
 
+export const AccommodationType = {
+  OWN: 'OWN',
+  FAMILY: 'FAMILY',
+  RENTED: 'RENTED',
+  EMPLOYER: 'EMPLOYER'
+} as const
+
+export type AccommodationType = (typeof AccommodationType)[keyof typeof AccommodationType]
+
+
+export const CorrespondenceAddressType = {
+  RESIDENCE: 'RESIDENCE',
+  OFFICE: 'OFFICE'
+} as const
+
+export type CorrespondenceAddressType = (typeof CorrespondenceAddressType)[keyof typeof CorrespondenceAddressType]
+
+
+export const AddressType = {
+  CURRENT_RESIDENTIAL: 'CURRENT_RESIDENTIAL',
+  PERMANENT: 'PERMANENT',
+  CORRESPONDENCE: 'CORRESPONDENCE',
+  OFFICE: 'OFFICE'
+} as const
+
+export type AddressType = (typeof AddressType)[keyof typeof AddressType]
+
+
 export const WorkLocation = {
   OFFICE: 'OFFICE',
   REMOTE: 'REMOTE',
@@ -321,10 +358,55 @@ export type Title = (typeof Title)[keyof typeof Title]
 export const EmploymentType = {
   salaried: 'salaried',
   self_employed: 'self_employed',
-  business: 'business'
+  business: 'business',
+  professional: 'professional'
 } as const
 
 export type EmploymentType = (typeof EmploymentType)[keyof typeof EmploymentType]
+
+
+export const OccupationalCategory = {
+  SALARIED: 'SALARIED',
+  BUSINESS: 'BUSINESS',
+  PROFESSIONAL: 'PROFESSIONAL',
+  OTHER: 'OTHER'
+} as const
+
+export type OccupationalCategory = (typeof OccupationalCategory)[keyof typeof OccupationalCategory]
+
+
+export const ProfessionalType = {
+  DOCTOR: 'DOCTOR',
+  CA_ICWA_CS: 'CA_ICWA_CS',
+  ARCHITECT: 'ARCHITECT',
+  OTHER: 'OTHER'
+} as const
+
+export type ProfessionalType = (typeof ProfessionalType)[keyof typeof ProfessionalType]
+
+
+export const BusinessType = {
+  TRADER: 'TRADER',
+  MANUFACTURER: 'MANUFACTURER',
+  WHOLESELLER: 'WHOLESELLER',
+  OTHER: 'OTHER'
+} as const
+
+export type BusinessType = (typeof BusinessType)[keyof typeof BusinessType]
+
+
+export const EmployerType = {
+  PUBLIC_LTD: 'PUBLIC_LTD',
+  MNC: 'MNC',
+  EDUCATIONAL_INST: 'EDUCATIONAL_INST',
+  CENTRAL_STATE_GOVT: 'CENTRAL_STATE_GOVT',
+  PUBLIC_SECTOR_UNIT: 'PUBLIC_SECTOR_UNIT',
+  PROPRIETOR_PARTNERSHIP: 'PROPRIETOR_PARTNERSHIP',
+  PRIVATE_LTD: 'PRIVATE_LTD',
+  OTHER: 'OTHER'
+} as const
+
+export type EmployerType = (typeof EmployerType)[keyof typeof EmployerType]
 
 
 export const CustomerStatus = {
