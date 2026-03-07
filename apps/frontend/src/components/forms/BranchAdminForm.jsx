@@ -4,6 +4,8 @@ import { Loader, AlertCircle, User, Mail, Phone, Lock, Building2 } from "lucide-
 import InputField from "../ui/InputField"; // Reusable input
 import SelectField from "../ui/SelectField"; // Reusable select
 import Button from "../ui/Button"; // Reusable button
+import { zodResolver } from "@hookform/resolvers/zod";
+import { branchAdminSchema } from "../../app/validations/BranchAdminValidation";
 
 const BranchAdminForm = ({ admin = null, branches = [], onSave, onClose, loading = false }) => {
   const isEditMode = !!admin;
@@ -13,6 +15,7 @@ const BranchAdminForm = ({ admin = null, branches = [], onSave, onClose, loading
     handleSubmit,
     formState: { errors },
   } = useForm({
+    resolver: zodResolver(branchAdminSchema(isEditMode)),
     defaultValues: {
       fullName: admin?.fullName || "",
       email: admin?.email || "",
@@ -44,7 +47,7 @@ const BranchAdminForm = ({ admin = null, branches = [], onSave, onClose, loading
               icon={User}
               placeholder="e.g. Rahul Sharma"
               required
-              {...register("fullName", { required: "Full name is required" })}
+              {...register("fullName")}
               error={errors.fullName?.message}
             />
           </div>
@@ -55,10 +58,7 @@ const BranchAdminForm = ({ admin = null, branches = [], onSave, onClose, loading
             icon={Mail}
             placeholder="rahul@example.com"
             required
-            {...register("email", {
-              required: "Email is required",
-              pattern: { value: /^\S+@\S+$/i, message: "Invalid email format" }
-            })}
+            {...register("email")}
             error={errors.email?.message}
           />
 
@@ -67,7 +67,7 @@ const BranchAdminForm = ({ admin = null, branches = [], onSave, onClose, loading
             icon={User}
             placeholder="rahul_admin"
             required
-            {...register("userName", { required: "Username is required" })}
+            {...register("userName")}
             error={errors.userName?.message}
           />
 
@@ -77,7 +77,7 @@ const BranchAdminForm = ({ admin = null, branches = [], onSave, onClose, loading
             icon={Phone}
             placeholder="9876543210"
             required
-            {...register("contactNumber", { required: "Contact number is required" })}
+            {...register("contactNumber")}
             error={errors.contactNumber?.message}
           />
 
@@ -85,7 +85,7 @@ const BranchAdminForm = ({ admin = null, branches = [], onSave, onClose, loading
             label="Assign Branch"
             icon={Building2}
             required
-            {...register("branchId", { required: "Please select a branch" })}
+            {...register("branchId")}
             error={errors.branchId?.message}
           >
             <option value="">Select a branch</option>
@@ -103,10 +103,7 @@ const BranchAdminForm = ({ admin = null, branches = [], onSave, onClose, loading
               icon={Lock}
               placeholder={isEditMode ? "Leave blank to keep current" : "Minimum 6 characters"}
               required={!isEditMode}
-              {...register("password", {
-                required: !isEditMode ? "Password is required" : false,
-                minLength: { value: 6, message: "Min 6 characters required" }
-              })}
+              {...register("password")}
               error={errors.password?.message}
             />
           </div>

@@ -5,6 +5,8 @@ import Button from "../ui/Button";
 import SelectField from "../ui/SelectField";
 import InputField from "../ui/InputField";
 import TextAreaField from "../ui/TextAreaField";
+import { leadSchema } from "../../app/validations/LeadValidation";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 function LeadForm({ onSuccess }) {
   // 1. Initialize useForm
@@ -15,17 +17,18 @@ function LeadForm({ onSuccess }) {
     watch,
     formState: { errors, isSubmitting },
   } = useForm({
+    resolver: zodResolver(leadSchema),
     defaultValues: {
-      fullName: "", 
-      email: "", 
-      contactNumber: "", 
-      dob: "", 
+      fullName: "",
+      email: "",
+      contactNumber: "",
+      dob: "",
       gender: "",
-      state: "", 
-      city: "", 
-      pinCode: "", 
-      address: "", 
-      loanTypeId: "", 
+      state: "",
+      city: "",
+      pinCode: "",
+      address: "",
+      loanTypeId: "",
       loanAmount: "",
     }
   });
@@ -78,14 +81,14 @@ function LeadForm({ onSuccess }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-        
+
         {/* Full Name */}
         <InputField
           label="Full Name *"
           placeholder="John Doe"
           icon={User}
           error={errors.fullName?.message}
-          {...register("fullName", { required: "Name is required" })}
+          {...register("fullName")}
         />
 
         {/* Email */}
@@ -95,10 +98,7 @@ function LeadForm({ onSuccess }) {
           placeholder="john@example.com"
           icon={Mail}
           error={errors.email?.message}
-          {...register("email", { 
-            required: "Email is required",
-            pattern: { value: /^\S+@\S+$/i, message: "Invalid email" }
-          })}
+          {...register("email")}
         />
 
         {/* Contact */}
@@ -108,13 +108,7 @@ function LeadForm({ onSuccess }) {
           placeholder="9876543210"
           icon={Phone}
           error={errors.contactNumber?.message}
-          {...register("contactNumber", { 
-            required: "Number is required",
-            pattern: { 
-              value: /^[0-9]{10}$/, 
-              message: "Enter valid 10-digit number" 
-            }
-          })}
+          {...register("contactNumber")}
         />
 
         {/* Date of Birth */}
@@ -123,7 +117,7 @@ function LeadForm({ onSuccess }) {
           type="date"
           icon={Calendar}
           error={errors.dob?.message}
-          {...register("dob", { required: "DOB is required" })}
+          {...register("dob")}
         />
 
         {/* Gender Select - FIXED */}
@@ -132,7 +126,7 @@ function LeadForm({ onSuccess }) {
           placeholder="Select Gender"
           error={errors.gender?.message}
           value={watch("gender")}
-          onChange={(value) => setValue("gender", value)}
+          onChange={(value) => setValue("gender", value, { shouldValidate: true })}
           options={genderOptions}
           isRequired
         />
@@ -143,7 +137,7 @@ function LeadForm({ onSuccess }) {
           placeholder="Select State"
           error={errors.state?.message}
           value={watch("state")}
-          onChange={(value) => setValue("state", value)}
+          onChange={(value) => setValue("state", value, { shouldValidate: true })}
           options={stateOptions}
           isRequired
         />
@@ -154,7 +148,7 @@ function LeadForm({ onSuccess }) {
           placeholder="Select City"
           error={errors.city?.message}
           value={watch("city")}
-          onChange={(value) => setValue("city", value)}
+          onChange={(value) => setValue("city", value, { shouldValidate: true })}
           options={cityOptions}
           isRequired
         />
@@ -164,10 +158,7 @@ function LeadForm({ onSuccess }) {
           label="Pincode *"
           placeholder="302001"
           error={errors.pinCode?.message}
-          {...register("pinCode", { 
-            required: "Pincode is required",
-            pattern: { value: /^[0-9]{6}$/, message: "Enter valid 6-digit pincode" }
-          })}
+          {...register("pinCode")}
         />
 
         {/* Loan Type - FIXED: No icon in SelectField */}
@@ -176,7 +167,7 @@ function LeadForm({ onSuccess }) {
           placeholder="Select Loan Type"
           error={errors.loanTypeId?.message}
           value={watch("loanTypeId")}
-          onChange={(value) => setValue("loanTypeId", value)}
+          onChange={(value) => setValue("loanTypeId", value, { shouldValidate: true })}
           options={loanOptions}
           isRequired
         />
@@ -188,10 +179,7 @@ function LeadForm({ onSuccess }) {
           placeholder="e.g. 50000"
           icon={CreditCard}
           error={errors.loanAmount?.message}
-          {...register("loanAmount", { 
-            required: "Amount is required", 
-            min: { value: 1000, message: "Minimum amount is ₹1000" }
-          })}
+          {...register("loanAmount")}
         />
 
         {/* Address */}
@@ -201,7 +189,7 @@ function LeadForm({ onSuccess }) {
             rows={3}
             placeholder="House No, Street, Landmark..."
             error={errors.address?.message}
-            {...register("address", { required: "Address is required" })}
+            {...register("address")}
           />
         </div>
       </div>

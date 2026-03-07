@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form"; 
+import { useForm, Controller } from "react-hook-form";
 import { MapPin, Building2 } from "lucide-react";
 import InputField from "../ui/InputField";
 import SelectField from "../ui/SelectField";
@@ -16,6 +16,7 @@ const AddBranchForm = ({ branch = null, mainBranches = [], onClose, onSave }) =>
     control, // Controller ke liye zaroori hai
     formState: { errors, isSubmitting },
   } = useForm({
+    resolver: zodResolver(branchSchema),
     defaultValues: {
       name: branch?.name || "",
       code: branch?.code || "",
@@ -54,7 +55,7 @@ const AddBranchForm = ({ branch = null, mainBranches = [], onClose, onSave }) =>
 
   return (
     <div className="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-      
+
       {/* Header Section */}
       <div className="p-6 border-b bg-slate-50/50 flex items-center gap-3">
         <div className="p-2 bg-blue-100 rounded-lg">
@@ -70,7 +71,7 @@ const AddBranchForm = ({ branch = null, mainBranches = [], onClose, onSave }) =>
 
       <form onSubmit={handleSubmit(onSubmit)} className="divide-y divide-slate-100">
         <div className="p-8 space-y-8">
-          
+
           {/* Section 1: Basic Info */}
           <div className="space-y-6">
             <h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Basic Information</h4>
@@ -79,7 +80,7 @@ const AddBranchForm = ({ branch = null, mainBranches = [], onClose, onSave }) =>
                 <InputField
                   label="Branch Name"
                   required
-                  {...register("name", { required: "Branch name is required" })}
+                  {...register("name")}
                   error={errors.name?.message}
                 />
               </div>
@@ -101,7 +102,7 @@ const AddBranchForm = ({ branch = null, mainBranches = [], onClose, onSave }) =>
               <SelectField
                 label="Parent Branch"
                 required
-                {...register("parentBranchId", { required: "Please select a parent branch" })}
+                {...register("parentBranchId")}
                 error={errors.parentBranchId?.message}
               >
                 <option value="">Select Main Branch</option>
