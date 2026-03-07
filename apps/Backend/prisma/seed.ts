@@ -35,8 +35,18 @@ async function main(): Promise<void> {
   let password: string = "Admin@123";
   password = await hashPassword(password);
 
-  const user = await prisma.user.create({
-    data: {
+  const user = await prisma.user.upsert({
+    where: { userName: "admin123" },
+    update: {
+      fullName: "Samir Akhtar",
+      email: "admin@gmail.com",
+      password,
+      role: "SUPER_ADMIN",
+      contactNumber: "9999999999",
+      branchId: superBranch.id,
+      isActive: true,
+    },
+    create: {
       fullName: "Samir Akhtar",
       email: "admin@gmail.com",
       userName: "admin123",

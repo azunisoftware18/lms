@@ -1,10 +1,17 @@
-import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 export default function PublicRoute({ children }) {
-    const token = useSelector((state) => state.auth.token);
-    if (token) {
-        return <Navigate to="/" replace />;
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+
+  if (isAuthenticated) {
+    // Redirect based on role
+    const role = user?.role?.toUpperCase();
+    if (role === 'ADMIN' || role === 'SUPER_ADMIN') {
+      return <Navigate to="/admin" replace />;
     }
-    return children;
-};
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+}

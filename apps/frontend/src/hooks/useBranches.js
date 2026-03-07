@@ -1,5 +1,16 @@
-import  {useQuery,useMutation,useQueryClient} from '@tanstack/react-query';
-
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useDispatch, useSelector } from 'react-redux';
+import { showSuccess, showError, dismissToast } from '../lib/utils/toastService';
+import {
+    setBranches,
+    setMainBranches,
+    setLoading,
+    setError,
+    addBranch,
+    updateBranchInList,
+    removeBranchFromList,
+    clearError,
+} from '../store/slices/branchSlice';
 import {
     getBranches,
     createbranch,
@@ -9,62 +20,155 @@ import {
     getMainBranches
 } from '../lib/api/branch.api';
 
+export const useCreateBranch = () => {
+    const queryClient = useQueryClient();
+    const dispatch = useDispatch();
 
-export const useCreateBranch = ()=>{
-    const queryClient = useQueryClient()
-    return useMutation(createbranch,{
-        onSuccess:()=>{
-            queryClient.invalidateQueries(['branches'])
+    return useMutation(createbranch, {
+        onMutate: () => {
+            dispatch(setLoading(true));
         },
-        onError:(error)=>{
-            console.error('Error creating branch:', error)
+        onSuccess: (data) => {
+            dispatch(addBranch(data));
+            queryClient.invalidateQueries(['branches']);
+            dispatch(setLoading(false));
+            dispatch(clearError());
+            showSuccess('Branch created successfully!');
         },
-    })
-}  
-   
-export const useUpdateBranch = ()=>{
-    const queryClient = useQueryClient()
-    return useMutation(({id,branchData})=>updateBranch(id,branchData),{
-        onSuccess:()=>{
-            queryClient.invalidateQueries(['branches'])
+        onError: (error) => {
+            const message = error?.message || 'Failed to create branch';
+            dispatch(setError(message));
+            dispatch(setLoading(false));
+            showError(message);
         },
-        onError:(error)=>{
-            console.error('Error updating branch:', error)
-        },
-    })
-}
+    });
+};
 
-export const useDeleteBranch = ()=>{
-    const queryClient = useQueryClient()
-    return useMutation(deleteBranch,{
-        onSuccess:()=>{
-            queryClient.invalidateQueries(['branches'])
+export const useUpdateBranch = () => {
+    const queryClient = useQueryClient();
+    const dispatch = useDispatch();
+
+    return useMutation(
+        ({ id, branchData }) => updateBranch(id, branchData),
+        {
+            onMutate: () => {
+                dispatch(setLoading(true));
+            },
+            onSuccess: (data) => {
+                dispatch(updateBranchInList(data));
+                queryClient.invalidateQueries(['branches']);
+                dispatch(setLoading(false));
+                dispatch(clearError());
+                showSuccess('Branch updated successfully!');
+            },
+            onError: (error) => {
+                const message = error?.message || 'Failed to update branch';
+                dispatch(setError(message));
+                dispatch(setLoading(false));
+                showError(message);
+            },
         }
-    })
-}
+    );
+};
 
+export const useDeleteBranch = () => {
+    const queryClient = useQueryClient();
+    const dispatch = useDispatch();
 
-export const useBranches = ()=>{
-    return useQuery(['branches'],getBranches,{
-        onError:(error)=>{
-            console.error('Error fetching branches:', error)
+    return useMutation(deleteBranch, {
+        onMutate: () => {
+            dispatch(setLoading(true));
         },
-    })
-}
+        onSuccess: (data, variables) => {
+            dispatch(removeBranchFromList(variables));
+            queryClient.invalidateQueries(['branches']);
+            dispatch(setLoading(false));
+            dispatch(clearError());
+            showSuccess('Branch deleted successfully!');
+        },
+        onError: (error) => {
+            const message = error?.message || 'Failed to delete branch';
+            dispatch(setError(message));
+            dispatch(setLoading(false));
+            showError(message);
+        },
+    });
+};
 
-export const useBranchById = (id)=>{
-    return useQuery(['branch',id],()=>getBranchById(id),{
-        enabled:!!id,
-        onError:(error)=>{
-            console.error(`Error fetching branch with id ${id}:`, error)
-        }
-    })
-}
+export const useBranches = () => {
+    const dispatch = useDispatch();
+    const branches = useSelector(state => state.branch.branches);
+    const loading = useSelector(state => state.branch.loading);
+    const error = useSelector(state => state.branch.error);
 
-export const useMainBranches = ()=>{
-    return useQuery(['mainBranches'],getMainBranches,{
-        onError:(error)=>{
-            console.error('Error fetching main branches:', error)
+    const query = useQuery(['branches'], getBranches, {
+        onSuccess: (data) => {
+            dispatch(setBranches(data));
+            dispatch(clearError());
+        },
+        onError: (error) => {
+            const message = error?.message || 'Failed to fetch branches';
+            dispatch(setError(message));
+            showError(message);
+        },
+        staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+
+    return {
+        branches,
+        loading: query.isLoading || loading,
+        error: error || query.error,
+        isFetching: query.isFetching,
+        refetch: query.refetch,
+    };
+};
+
+export const useBranchById = (id) => {
+    const dispatch = useDispatch();
+    const queryClient = useQueryClient();
+
+    return useQuery(
+        ['branch', id],
+        () => getBranchById(id),
+        {
+            enabled: !!id,
+            onSuccess: (data) => {
+                dispatch(clearError());
+            },
+            onError: (error) => {
+                const message = error?.message || `Failed to fetch branch`;
+                dispatch(setError(message));
+                showError(message);
+            },
+            staleTime: 1000 * 60 * 5,
         }
-    })
-}
+    );
+};
+
+export const useMainBranches = () => {
+    const dispatch = useDispatch();
+    const mainBranches = useSelector(state => state.branch.mainBranches);
+    const loading = useSelector(state => state.branch.loading);
+    const error = useSelector(state => state.branch.error);
+
+    const query = useQuery(['mainBranches'], getMainBranches, {
+        onSuccess: (data) => {
+            dispatch(setMainBranches(data));
+            dispatch(clearError());
+        },
+        onError: (error) => {
+            const message = error?.message || 'Failed to fetch main branches';
+            dispatch(setError(message));
+            showError(message);
+        },
+        staleTime: 1000 * 60 * 5,
+    });
+
+    return {
+        mainBranches,
+        loading: query.isLoading || loading,
+        error: error || query.error,
+        isFetching: query.isFetching,
+        refetch: query.refetch,
+    };
+};
