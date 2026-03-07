@@ -5,7 +5,7 @@ export default function VisionAndMissionPage() {
 	return (
 		<div className="font-sans leading-relaxed">
 			{/* ===== Our Vision Section (Dark Background - High Contrast) ===== */}
-			<section className=" bg-gradient-to-r from-blue-100 to-blue-300 py-20 px-6 text-center">
+			<section className="bg-gradient-to-r from-blue-100 to-blue-300 py-20 px-6 text-center">
 				<div className="max-w-4xl mx-auto text-blue-600">
 					<h1 className="text-sm font-semibold uppercase tracking-widest text-black mb-2">
 						Investing in a brighter future, with purpose

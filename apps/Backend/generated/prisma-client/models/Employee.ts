@@ -42,13 +42,13 @@ export type EmployeeMinAggregateOutputType = {
   dob: Date | null
   designation: string | null
   gender: $Enums.Gender | null
+  genderOther: string | null
   maritalStatus: $Enums.MaritalStatus | null
-  address: string | null
-  city: string | null
-  state: string | null
-  pinCode: string | null
+  maritalStatusOther: string | null
+  addressId: string | null
   emergencyContact: string | null
   emergencyRelationship: $Enums.Relationship | null
+  emergencyRelationshipOther: string | null
   department: string | null
   dateOfJoining: Date | null
   experience: string | null
@@ -68,13 +68,13 @@ export type EmployeeMaxAggregateOutputType = {
   dob: Date | null
   designation: string | null
   gender: $Enums.Gender | null
+  genderOther: string | null
   maritalStatus: $Enums.MaritalStatus | null
-  address: string | null
-  city: string | null
-  state: string | null
-  pinCode: string | null
+  maritalStatusOther: string | null
+  addressId: string | null
   emergencyContact: string | null
   emergencyRelationship: $Enums.Relationship | null
+  emergencyRelationshipOther: string | null
   department: string | null
   dateOfJoining: Date | null
   experience: string | null
@@ -94,13 +94,13 @@ export type EmployeeCountAggregateOutputType = {
   dob: number
   designation: number
   gender: number
+  genderOther: number
   maritalStatus: number
-  address: number
-  city: number
-  state: number
-  pinCode: number
+  maritalStatusOther: number
+  addressId: number
   emergencyContact: number
   emergencyRelationship: number
+  emergencyRelationshipOther: number
   department: number
   dateOfJoining: number
   experience: number
@@ -130,13 +130,13 @@ export type EmployeeMinAggregateInputType = {
   dob?: true
   designation?: true
   gender?: true
+  genderOther?: true
   maritalStatus?: true
-  address?: true
-  city?: true
-  state?: true
-  pinCode?: true
+  maritalStatusOther?: true
+  addressId?: true
   emergencyContact?: true
   emergencyRelationship?: true
+  emergencyRelationshipOther?: true
   department?: true
   dateOfJoining?: true
   experience?: true
@@ -156,13 +156,13 @@ export type EmployeeMaxAggregateInputType = {
   dob?: true
   designation?: true
   gender?: true
+  genderOther?: true
   maritalStatus?: true
-  address?: true
-  city?: true
-  state?: true
-  pinCode?: true
+  maritalStatusOther?: true
+  addressId?: true
   emergencyContact?: true
   emergencyRelationship?: true
+  emergencyRelationshipOther?: true
   department?: true
   dateOfJoining?: true
   experience?: true
@@ -182,13 +182,13 @@ export type EmployeeCountAggregateInputType = {
   dob?: true
   designation?: true
   gender?: true
+  genderOther?: true
   maritalStatus?: true
-  address?: true
-  city?: true
-  state?: true
-  pinCode?: true
+  maritalStatusOther?: true
+  addressId?: true
   emergencyContact?: true
   emergencyRelationship?: true
+  emergencyRelationshipOther?: true
   department?: true
   dateOfJoining?: true
   experience?: true
@@ -295,13 +295,13 @@ export type EmployeeGroupByOutputType = {
   dob: Date
   designation: string
   gender: $Enums.Gender
+  genderOther: string | null
   maritalStatus: $Enums.MaritalStatus
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  maritalStatusOther: string | null
+  addressId: string | null
   emergencyContact: string
   emergencyRelationship: $Enums.Relationship
+  emergencyRelationshipOther: string | null
   department: string
   dateOfJoining: Date
   experience: string
@@ -344,13 +344,13 @@ export type EmployeeWhereInput = {
   dob?: Prisma.DateTimeFilter<"Employee"> | Date | string
   designation?: Prisma.StringFilter<"Employee"> | string
   gender?: Prisma.EnumGenderFilter<"Employee"> | $Enums.Gender
+  genderOther?: Prisma.StringNullableFilter<"Employee"> | string | null
   maritalStatus?: Prisma.EnumMaritalStatusFilter<"Employee"> | $Enums.MaritalStatus
-  address?: Prisma.StringFilter<"Employee"> | string
-  city?: Prisma.StringFilter<"Employee"> | string
-  state?: Prisma.StringFilter<"Employee"> | string
-  pinCode?: Prisma.StringFilter<"Employee"> | string
+  maritalStatusOther?: Prisma.StringNullableFilter<"Employee"> | string | null
+  addressId?: Prisma.StringNullableFilter<"Employee"> | string | null
   emergencyContact?: Prisma.StringFilter<"Employee"> | string
   emergencyRelationship?: Prisma.EnumRelationshipFilter<"Employee"> | $Enums.Relationship
+  emergencyRelationshipOther?: Prisma.StringNullableFilter<"Employee"> | string | null
   department?: Prisma.StringFilter<"Employee"> | string
   dateOfJoining?: Prisma.DateTimeFilter<"Employee"> | Date | string
   experience?: Prisma.StringFilter<"Employee"> | string
@@ -360,6 +360,7 @@ export type EmployeeWhereInput = {
   branchId?: Prisma.StringFilter<"Employee"> | string
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
+  address?: Prisma.XOR<Prisma.AddressNullableScalarRelationFilter, Prisma.AddressWhereInput> | null
   branch?: Prisma.XOR<Prisma.BranchScalarRelationFilter, Prisma.BranchWhereInput>
   loanAssignments?: Prisma.LoanAssignmentListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -373,13 +374,13 @@ export type EmployeeOrderByWithRelationInput = {
   dob?: Prisma.SortOrder
   designation?: Prisma.SortOrder
   gender?: Prisma.SortOrder
+  genderOther?: Prisma.SortOrderInput | Prisma.SortOrder
   maritalStatus?: Prisma.SortOrder
-  address?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  pinCode?: Prisma.SortOrder
+  maritalStatusOther?: Prisma.SortOrderInput | Prisma.SortOrder
+  addressId?: Prisma.SortOrderInput | Prisma.SortOrder
   emergencyContact?: Prisma.SortOrder
   emergencyRelationship?: Prisma.SortOrder
+  emergencyRelationshipOther?: Prisma.SortOrderInput | Prisma.SortOrder
   department?: Prisma.SortOrder
   dateOfJoining?: Prisma.SortOrder
   experience?: Prisma.SortOrder
@@ -389,6 +390,7 @@ export type EmployeeOrderByWithRelationInput = {
   branchId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  address?: Prisma.AddressOrderByWithRelationInput
   branch?: Prisma.BranchOrderByWithRelationInput
   loanAssignments?: Prisma.LoanAssignmentOrderByRelationAggregateInput
   user?: Prisma.UserOrderByWithRelationInput
@@ -399,6 +401,7 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   userId?: string
   employeeId?: string
+  addressId?: string
   AND?: Prisma.EmployeeWhereInput | Prisma.EmployeeWhereInput[]
   OR?: Prisma.EmployeeWhereInput[]
   NOT?: Prisma.EmployeeWhereInput | Prisma.EmployeeWhereInput[]
@@ -406,13 +409,12 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   dob?: Prisma.DateTimeFilter<"Employee"> | Date | string
   designation?: Prisma.StringFilter<"Employee"> | string
   gender?: Prisma.EnumGenderFilter<"Employee"> | $Enums.Gender
+  genderOther?: Prisma.StringNullableFilter<"Employee"> | string | null
   maritalStatus?: Prisma.EnumMaritalStatusFilter<"Employee"> | $Enums.MaritalStatus
-  address?: Prisma.StringFilter<"Employee"> | string
-  city?: Prisma.StringFilter<"Employee"> | string
-  state?: Prisma.StringFilter<"Employee"> | string
-  pinCode?: Prisma.StringFilter<"Employee"> | string
+  maritalStatusOther?: Prisma.StringNullableFilter<"Employee"> | string | null
   emergencyContact?: Prisma.StringFilter<"Employee"> | string
   emergencyRelationship?: Prisma.EnumRelationshipFilter<"Employee"> | $Enums.Relationship
+  emergencyRelationshipOther?: Prisma.StringNullableFilter<"Employee"> | string | null
   department?: Prisma.StringFilter<"Employee"> | string
   dateOfJoining?: Prisma.DateTimeFilter<"Employee"> | Date | string
   experience?: Prisma.StringFilter<"Employee"> | string
@@ -422,10 +424,11 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   branchId?: Prisma.StringFilter<"Employee"> | string
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
+  address?: Prisma.XOR<Prisma.AddressNullableScalarRelationFilter, Prisma.AddressWhereInput> | null
   branch?: Prisma.XOR<Prisma.BranchScalarRelationFilter, Prisma.BranchWhereInput>
   loanAssignments?: Prisma.LoanAssignmentListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "userId" | "employeeId">
+}, "id" | "userId" | "employeeId" | "addressId">
 
 export type EmployeeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -435,13 +438,13 @@ export type EmployeeOrderByWithAggregationInput = {
   dob?: Prisma.SortOrder
   designation?: Prisma.SortOrder
   gender?: Prisma.SortOrder
+  genderOther?: Prisma.SortOrderInput | Prisma.SortOrder
   maritalStatus?: Prisma.SortOrder
-  address?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  pinCode?: Prisma.SortOrder
+  maritalStatusOther?: Prisma.SortOrderInput | Prisma.SortOrder
+  addressId?: Prisma.SortOrderInput | Prisma.SortOrder
   emergencyContact?: Prisma.SortOrder
   emergencyRelationship?: Prisma.SortOrder
+  emergencyRelationshipOther?: Prisma.SortOrderInput | Prisma.SortOrder
   department?: Prisma.SortOrder
   dateOfJoining?: Prisma.SortOrder
   experience?: Prisma.SortOrder
@@ -469,13 +472,13 @@ export type EmployeeScalarWhereWithAggregatesInput = {
   dob?: Prisma.DateTimeWithAggregatesFilter<"Employee"> | Date | string
   designation?: Prisma.StringWithAggregatesFilter<"Employee"> | string
   gender?: Prisma.EnumGenderWithAggregatesFilter<"Employee"> | $Enums.Gender
+  genderOther?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
   maritalStatus?: Prisma.EnumMaritalStatusWithAggregatesFilter<"Employee"> | $Enums.MaritalStatus
-  address?: Prisma.StringWithAggregatesFilter<"Employee"> | string
-  city?: Prisma.StringWithAggregatesFilter<"Employee"> | string
-  state?: Prisma.StringWithAggregatesFilter<"Employee"> | string
-  pinCode?: Prisma.StringWithAggregatesFilter<"Employee"> | string
+  maritalStatusOther?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
+  addressId?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
   emergencyContact?: Prisma.StringWithAggregatesFilter<"Employee"> | string
   emergencyRelationship?: Prisma.EnumRelationshipWithAggregatesFilter<"Employee"> | $Enums.Relationship
+  emergencyRelationshipOther?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
   department?: Prisma.StringWithAggregatesFilter<"Employee"> | string
   dateOfJoining?: Prisma.DateTimeWithAggregatesFilter<"Employee"> | Date | string
   experience?: Prisma.StringWithAggregatesFilter<"Employee"> | string
@@ -494,13 +497,12 @@ export type EmployeeCreateInput = {
   dob: Date | string
   designation: string
   gender: $Enums.Gender
+  genderOther?: string | null
   maritalStatus: $Enums.MaritalStatus
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  maritalStatusOther?: string | null
   emergencyContact: string
   emergencyRelationship: $Enums.Relationship
+  emergencyRelationshipOther?: string | null
   department: string
   dateOfJoining: Date | string
   experience: string
@@ -509,6 +511,7 @@ export type EmployeeCreateInput = {
   salary: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  address?: Prisma.AddressCreateNestedOneWithoutEmployeeInput
   branch: Prisma.BranchCreateNestedOneWithoutEmployeesInput
   loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutEmployeeInput
   user: Prisma.UserCreateNestedOneWithoutEmployeeInput
@@ -522,13 +525,13 @@ export type EmployeeUncheckedCreateInput = {
   dob: Date | string
   designation: string
   gender: $Enums.Gender
+  genderOther?: string | null
   maritalStatus: $Enums.MaritalStatus
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  maritalStatusOther?: string | null
+  addressId?: string | null
   emergencyContact: string
   emergencyRelationship: $Enums.Relationship
+  emergencyRelationshipOther?: string | null
   department: string
   dateOfJoining: Date | string
   experience: string
@@ -548,13 +551,12 @@ export type EmployeeUpdateInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   designation?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
   emergencyRelationship?: Prisma.EnumRelationshipFieldUpdateOperationsInput | $Enums.Relationship
+  emergencyRelationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   department?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfJoining?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   experience?: Prisma.StringFieldUpdateOperationsInput | string
@@ -563,6 +565,7 @@ export type EmployeeUpdateInput = {
   salary?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.AddressUpdateOneWithoutEmployeeNestedInput
   branch?: Prisma.BranchUpdateOneRequiredWithoutEmployeesNestedInput
   loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutEmployeeNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
@@ -576,13 +579,13 @@ export type EmployeeUncheckedUpdateInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   designation?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
   emergencyRelationship?: Prisma.EnumRelationshipFieldUpdateOperationsInput | $Enums.Relationship
+  emergencyRelationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   department?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfJoining?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   experience?: Prisma.StringFieldUpdateOperationsInput | string
@@ -603,13 +606,13 @@ export type EmployeeCreateManyInput = {
   dob: Date | string
   designation: string
   gender: $Enums.Gender
+  genderOther?: string | null
   maritalStatus: $Enums.MaritalStatus
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  maritalStatusOther?: string | null
+  addressId?: string | null
   emergencyContact: string
   emergencyRelationship: $Enums.Relationship
+  emergencyRelationshipOther?: string | null
   department: string
   dateOfJoining: Date | string
   experience: string
@@ -628,13 +631,12 @@ export type EmployeeUpdateManyMutationInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   designation?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
   emergencyRelationship?: Prisma.EnumRelationshipFieldUpdateOperationsInput | $Enums.Relationship
+  emergencyRelationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   department?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfJoining?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   experience?: Prisma.StringFieldUpdateOperationsInput | string
@@ -653,13 +655,13 @@ export type EmployeeUncheckedUpdateManyInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   designation?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
   emergencyRelationship?: Prisma.EnumRelationshipFieldUpdateOperationsInput | $Enums.Relationship
+  emergencyRelationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   department?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfJoining?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   experience?: Prisma.StringFieldUpdateOperationsInput | string
@@ -690,13 +692,13 @@ export type EmployeeCountOrderByAggregateInput = {
   dob?: Prisma.SortOrder
   designation?: Prisma.SortOrder
   gender?: Prisma.SortOrder
+  genderOther?: Prisma.SortOrder
   maritalStatus?: Prisma.SortOrder
-  address?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  pinCode?: Prisma.SortOrder
+  maritalStatusOther?: Prisma.SortOrder
+  addressId?: Prisma.SortOrder
   emergencyContact?: Prisma.SortOrder
   emergencyRelationship?: Prisma.SortOrder
+  emergencyRelationshipOther?: Prisma.SortOrder
   department?: Prisma.SortOrder
   dateOfJoining?: Prisma.SortOrder
   experience?: Prisma.SortOrder
@@ -720,13 +722,13 @@ export type EmployeeMaxOrderByAggregateInput = {
   dob?: Prisma.SortOrder
   designation?: Prisma.SortOrder
   gender?: Prisma.SortOrder
+  genderOther?: Prisma.SortOrder
   maritalStatus?: Prisma.SortOrder
-  address?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  pinCode?: Prisma.SortOrder
+  maritalStatusOther?: Prisma.SortOrder
+  addressId?: Prisma.SortOrder
   emergencyContact?: Prisma.SortOrder
   emergencyRelationship?: Prisma.SortOrder
+  emergencyRelationshipOther?: Prisma.SortOrder
   department?: Prisma.SortOrder
   dateOfJoining?: Prisma.SortOrder
   experience?: Prisma.SortOrder
@@ -746,13 +748,13 @@ export type EmployeeMinOrderByAggregateInput = {
   dob?: Prisma.SortOrder
   designation?: Prisma.SortOrder
   gender?: Prisma.SortOrder
+  genderOther?: Prisma.SortOrder
   maritalStatus?: Prisma.SortOrder
-  address?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  pinCode?: Prisma.SortOrder
+  maritalStatusOther?: Prisma.SortOrder
+  addressId?: Prisma.SortOrder
   emergencyContact?: Prisma.SortOrder
   emergencyRelationship?: Prisma.SortOrder
+  emergencyRelationshipOther?: Prisma.SortOrder
   department?: Prisma.SortOrder
   dateOfJoining?: Prisma.SortOrder
   experience?: Prisma.SortOrder
@@ -819,6 +821,10 @@ export type EnumGenderFieldUpdateOperationsInput = {
   set?: $Enums.Gender
 }
 
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
 export type EnumMaritalStatusFieldUpdateOperationsInput = {
   set?: $Enums.MaritalStatus
 }
@@ -837,6 +843,38 @@ export type FloatFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type EmployeeCreateNestedOneWithoutAddressInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutAddressInput, Prisma.EmployeeUncheckedCreateWithoutAddressInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutAddressInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+}
+
+export type EmployeeUncheckedCreateNestedOneWithoutAddressInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutAddressInput, Prisma.EmployeeUncheckedCreateWithoutAddressInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutAddressInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+}
+
+export type EmployeeUpdateOneWithoutAddressNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutAddressInput, Prisma.EmployeeUncheckedCreateWithoutAddressInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutAddressInput
+  upsert?: Prisma.EmployeeUpsertWithoutAddressInput
+  disconnect?: Prisma.EmployeeWhereInput | boolean
+  delete?: Prisma.EmployeeWhereInput | boolean
+  connect?: Prisma.EmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutAddressInput, Prisma.EmployeeUpdateWithoutAddressInput>, Prisma.EmployeeUncheckedUpdateWithoutAddressInput>
+}
+
+export type EmployeeUncheckedUpdateOneWithoutAddressNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutAddressInput, Prisma.EmployeeUncheckedCreateWithoutAddressInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutAddressInput
+  upsert?: Prisma.EmployeeUpsertWithoutAddressInput
+  disconnect?: Prisma.EmployeeWhereInput | boolean
+  delete?: Prisma.EmployeeWhereInput | boolean
+  connect?: Prisma.EmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutAddressInput, Prisma.EmployeeUpdateWithoutAddressInput>, Prisma.EmployeeUncheckedUpdateWithoutAddressInput>
 }
 
 export type EmployeeCreateNestedManyWithoutBranchInput = {
@@ -902,13 +940,12 @@ export type EmployeeCreateWithoutUserInput = {
   dob: Date | string
   designation: string
   gender: $Enums.Gender
+  genderOther?: string | null
   maritalStatus: $Enums.MaritalStatus
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  maritalStatusOther?: string | null
   emergencyContact: string
   emergencyRelationship: $Enums.Relationship
+  emergencyRelationshipOther?: string | null
   department: string
   dateOfJoining: Date | string
   experience: string
@@ -917,6 +954,7 @@ export type EmployeeCreateWithoutUserInput = {
   salary: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  address?: Prisma.AddressCreateNestedOneWithoutEmployeeInput
   branch: Prisma.BranchCreateNestedOneWithoutEmployeesInput
   loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutEmployeeInput
 }
@@ -928,13 +966,13 @@ export type EmployeeUncheckedCreateWithoutUserInput = {
   dob: Date | string
   designation: string
   gender: $Enums.Gender
+  genderOther?: string | null
   maritalStatus: $Enums.MaritalStatus
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  maritalStatusOther?: string | null
+  addressId?: string | null
   emergencyContact: string
   emergencyRelationship: $Enums.Relationship
+  emergencyRelationshipOther?: string | null
   department: string
   dateOfJoining: Date | string
   experience: string
@@ -970,13 +1008,12 @@ export type EmployeeUpdateWithoutUserInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   designation?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
   emergencyRelationship?: Prisma.EnumRelationshipFieldUpdateOperationsInput | $Enums.Relationship
+  emergencyRelationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   department?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfJoining?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   experience?: Prisma.StringFieldUpdateOperationsInput | string
@@ -985,6 +1022,7 @@ export type EmployeeUpdateWithoutUserInput = {
   salary?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.AddressUpdateOneWithoutEmployeeNestedInput
   branch?: Prisma.BranchUpdateOneRequiredWithoutEmployeesNestedInput
   loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutEmployeeNestedInput
 }
@@ -996,13 +1034,133 @@ export type EmployeeUncheckedUpdateWithoutUserInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   designation?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
   emergencyRelationship?: Prisma.EnumRelationshipFieldUpdateOperationsInput | $Enums.Relationship
+  emergencyRelationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  department?: Prisma.StringFieldUpdateOperationsInput | string
+  dateOfJoining?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  experience?: Prisma.StringFieldUpdateOperationsInput | string
+  reportingManagerId?: Prisma.StringFieldUpdateOperationsInput | string
+  workLocation?: Prisma.EnumWorkLocationFieldUpdateOperationsInput | $Enums.WorkLocation
+  salary?: Prisma.FloatFieldUpdateOperationsInput | number
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeCreateWithoutAddressInput = {
+  id?: string
+  employeeId: string
+  atlMobileNumber: string
+  dob: Date | string
+  designation: string
+  gender: $Enums.Gender
+  genderOther?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  emergencyContact: string
+  emergencyRelationship: $Enums.Relationship
+  emergencyRelationshipOther?: string | null
+  department: string
+  dateOfJoining: Date | string
+  experience: string
+  reportingManagerId: string
+  workLocation: $Enums.WorkLocation
+  salary: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branch: Prisma.BranchCreateNestedOneWithoutEmployeesInput
+  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutEmployeeInput
+  user: Prisma.UserCreateNestedOneWithoutEmployeeInput
+}
+
+export type EmployeeUncheckedCreateWithoutAddressInput = {
+  id?: string
+  userId: string
+  employeeId: string
+  atlMobileNumber: string
+  dob: Date | string
+  designation: string
+  gender: $Enums.Gender
+  genderOther?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  emergencyContact: string
+  emergencyRelationship: $Enums.Relationship
+  emergencyRelationshipOther?: string | null
+  department: string
+  dateOfJoining: Date | string
+  experience: string
+  reportingManagerId: string
+  workLocation: $Enums.WorkLocation
+  salary: number
+  branchId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeCreateOrConnectWithoutAddressInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutAddressInput, Prisma.EmployeeUncheckedCreateWithoutAddressInput>
+}
+
+export type EmployeeUpsertWithoutAddressInput = {
+  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutAddressInput, Prisma.EmployeeUncheckedUpdateWithoutAddressInput>
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutAddressInput, Prisma.EmployeeUncheckedCreateWithoutAddressInput>
+  where?: Prisma.EmployeeWhereInput
+}
+
+export type EmployeeUpdateToOneWithWhereWithoutAddressInput = {
+  where?: Prisma.EmployeeWhereInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutAddressInput, Prisma.EmployeeUncheckedUpdateWithoutAddressInput>
+}
+
+export type EmployeeUpdateWithoutAddressInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeId?: Prisma.StringFieldUpdateOperationsInput | string
+  atlMobileNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  designation?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
+  emergencyRelationship?: Prisma.EnumRelationshipFieldUpdateOperationsInput | $Enums.Relationship
+  emergencyRelationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  department?: Prisma.StringFieldUpdateOperationsInput | string
+  dateOfJoining?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  experience?: Prisma.StringFieldUpdateOperationsInput | string
+  reportingManagerId?: Prisma.StringFieldUpdateOperationsInput | string
+  workLocation?: Prisma.EnumWorkLocationFieldUpdateOperationsInput | $Enums.WorkLocation
+  salary?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branch?: Prisma.BranchUpdateOneRequiredWithoutEmployeesNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutEmployeeNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateWithoutAddressInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeId?: Prisma.StringFieldUpdateOperationsInput | string
+  atlMobileNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  designation?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
+  emergencyRelationship?: Prisma.EnumRelationshipFieldUpdateOperationsInput | $Enums.Relationship
+  emergencyRelationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   department?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfJoining?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   experience?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1022,13 +1180,12 @@ export type EmployeeCreateWithoutBranchInput = {
   dob: Date | string
   designation: string
   gender: $Enums.Gender
+  genderOther?: string | null
   maritalStatus: $Enums.MaritalStatus
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  maritalStatusOther?: string | null
   emergencyContact: string
   emergencyRelationship: $Enums.Relationship
+  emergencyRelationshipOther?: string | null
   department: string
   dateOfJoining: Date | string
   experience: string
@@ -1037,6 +1194,7 @@ export type EmployeeCreateWithoutBranchInput = {
   salary: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  address?: Prisma.AddressCreateNestedOneWithoutEmployeeInput
   loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutEmployeeInput
   user: Prisma.UserCreateNestedOneWithoutEmployeeInput
 }
@@ -1049,13 +1207,13 @@ export type EmployeeUncheckedCreateWithoutBranchInput = {
   dob: Date | string
   designation: string
   gender: $Enums.Gender
+  genderOther?: string | null
   maritalStatus: $Enums.MaritalStatus
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  maritalStatusOther?: string | null
+  addressId?: string | null
   emergencyContact: string
   emergencyRelationship: $Enums.Relationship
+  emergencyRelationshipOther?: string | null
   department: string
   dateOfJoining: Date | string
   experience: string
@@ -1104,13 +1262,13 @@ export type EmployeeScalarWhereInput = {
   dob?: Prisma.DateTimeFilter<"Employee"> | Date | string
   designation?: Prisma.StringFilter<"Employee"> | string
   gender?: Prisma.EnumGenderFilter<"Employee"> | $Enums.Gender
+  genderOther?: Prisma.StringNullableFilter<"Employee"> | string | null
   maritalStatus?: Prisma.EnumMaritalStatusFilter<"Employee"> | $Enums.MaritalStatus
-  address?: Prisma.StringFilter<"Employee"> | string
-  city?: Prisma.StringFilter<"Employee"> | string
-  state?: Prisma.StringFilter<"Employee"> | string
-  pinCode?: Prisma.StringFilter<"Employee"> | string
+  maritalStatusOther?: Prisma.StringNullableFilter<"Employee"> | string | null
+  addressId?: Prisma.StringNullableFilter<"Employee"> | string | null
   emergencyContact?: Prisma.StringFilter<"Employee"> | string
   emergencyRelationship?: Prisma.EnumRelationshipFilter<"Employee"> | $Enums.Relationship
+  emergencyRelationshipOther?: Prisma.StringNullableFilter<"Employee"> | string | null
   department?: Prisma.StringFilter<"Employee"> | string
   dateOfJoining?: Prisma.DateTimeFilter<"Employee"> | Date | string
   experience?: Prisma.StringFilter<"Employee"> | string
@@ -1129,13 +1287,12 @@ export type EmployeeCreateWithoutLoanAssignmentsInput = {
   dob: Date | string
   designation: string
   gender: $Enums.Gender
+  genderOther?: string | null
   maritalStatus: $Enums.MaritalStatus
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  maritalStatusOther?: string | null
   emergencyContact: string
   emergencyRelationship: $Enums.Relationship
+  emergencyRelationshipOther?: string | null
   department: string
   dateOfJoining: Date | string
   experience: string
@@ -1144,6 +1301,7 @@ export type EmployeeCreateWithoutLoanAssignmentsInput = {
   salary: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  address?: Prisma.AddressCreateNestedOneWithoutEmployeeInput
   branch: Prisma.BranchCreateNestedOneWithoutEmployeesInput
   user: Prisma.UserCreateNestedOneWithoutEmployeeInput
 }
@@ -1156,13 +1314,13 @@ export type EmployeeUncheckedCreateWithoutLoanAssignmentsInput = {
   dob: Date | string
   designation: string
   gender: $Enums.Gender
+  genderOther?: string | null
   maritalStatus: $Enums.MaritalStatus
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  maritalStatusOther?: string | null
+  addressId?: string | null
   emergencyContact: string
   emergencyRelationship: $Enums.Relationship
+  emergencyRelationshipOther?: string | null
   department: string
   dateOfJoining: Date | string
   experience: string
@@ -1197,13 +1355,12 @@ export type EmployeeUpdateWithoutLoanAssignmentsInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   designation?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
   emergencyRelationship?: Prisma.EnumRelationshipFieldUpdateOperationsInput | $Enums.Relationship
+  emergencyRelationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   department?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfJoining?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   experience?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1212,6 +1369,7 @@ export type EmployeeUpdateWithoutLoanAssignmentsInput = {
   salary?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.AddressUpdateOneWithoutEmployeeNestedInput
   branch?: Prisma.BranchUpdateOneRequiredWithoutEmployeesNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
 }
@@ -1224,13 +1382,13 @@ export type EmployeeUncheckedUpdateWithoutLoanAssignmentsInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   designation?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
   emergencyRelationship?: Prisma.EnumRelationshipFieldUpdateOperationsInput | $Enums.Relationship
+  emergencyRelationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   department?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfJoining?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   experience?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1250,13 +1408,13 @@ export type EmployeeCreateManyBranchInput = {
   dob: Date | string
   designation: string
   gender: $Enums.Gender
+  genderOther?: string | null
   maritalStatus: $Enums.MaritalStatus
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  maritalStatusOther?: string | null
+  addressId?: string | null
   emergencyContact: string
   emergencyRelationship: $Enums.Relationship
+  emergencyRelationshipOther?: string | null
   department: string
   dateOfJoining: Date | string
   experience: string
@@ -1274,13 +1432,12 @@ export type EmployeeUpdateWithoutBranchInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   designation?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
   emergencyRelationship?: Prisma.EnumRelationshipFieldUpdateOperationsInput | $Enums.Relationship
+  emergencyRelationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   department?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfJoining?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   experience?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1289,6 +1446,7 @@ export type EmployeeUpdateWithoutBranchInput = {
   salary?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.AddressUpdateOneWithoutEmployeeNestedInput
   loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutEmployeeNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
 }
@@ -1301,13 +1459,13 @@ export type EmployeeUncheckedUpdateWithoutBranchInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   designation?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
   emergencyRelationship?: Prisma.EnumRelationshipFieldUpdateOperationsInput | $Enums.Relationship
+  emergencyRelationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   department?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfJoining?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   experience?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1327,13 +1485,13 @@ export type EmployeeUncheckedUpdateManyWithoutBranchInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   designation?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
   emergencyRelationship?: Prisma.EnumRelationshipFieldUpdateOperationsInput | $Enums.Relationship
+  emergencyRelationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   department?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfJoining?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   experience?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1383,13 +1541,13 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   dob?: boolean
   designation?: boolean
   gender?: boolean
+  genderOther?: boolean
   maritalStatus?: boolean
-  address?: boolean
-  city?: boolean
-  state?: boolean
-  pinCode?: boolean
+  maritalStatusOther?: boolean
+  addressId?: boolean
   emergencyContact?: boolean
   emergencyRelationship?: boolean
+  emergencyRelationshipOther?: boolean
   department?: boolean
   dateOfJoining?: boolean
   experience?: boolean
@@ -1399,6 +1557,7 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   branchId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  address?: boolean | Prisma.Employee$addressArgs<ExtArgs>
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   loanAssignments?: boolean | Prisma.Employee$loanAssignmentsArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1415,13 +1574,13 @@ export type EmployeeSelectScalar = {
   dob?: boolean
   designation?: boolean
   gender?: boolean
+  genderOther?: boolean
   maritalStatus?: boolean
-  address?: boolean
-  city?: boolean
-  state?: boolean
-  pinCode?: boolean
+  maritalStatusOther?: boolean
+  addressId?: boolean
   emergencyContact?: boolean
   emergencyRelationship?: boolean
+  emergencyRelationshipOther?: boolean
   department?: boolean
   dateOfJoining?: boolean
   experience?: boolean
@@ -1433,8 +1592,9 @@ export type EmployeeSelectScalar = {
   updatedAt?: boolean
 }
 
-export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "employeeId" | "atlMobileNumber" | "dob" | "designation" | "gender" | "maritalStatus" | "address" | "city" | "state" | "pinCode" | "emergencyContact" | "emergencyRelationship" | "department" | "dateOfJoining" | "experience" | "reportingManagerId" | "workLocation" | "salary" | "branchId" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
+export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "employeeId" | "atlMobileNumber" | "dob" | "designation" | "gender" | "genderOther" | "maritalStatus" | "maritalStatusOther" | "addressId" | "emergencyContact" | "emergencyRelationship" | "emergencyRelationshipOther" | "department" | "dateOfJoining" | "experience" | "reportingManagerId" | "workLocation" | "salary" | "branchId" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
 export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  address?: boolean | Prisma.Employee$addressArgs<ExtArgs>
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   loanAssignments?: boolean | Prisma.Employee$loanAssignmentsArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1444,6 +1604,7 @@ export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Employee"
   objects: {
+    address: Prisma.$AddressPayload<ExtArgs> | null
     branch: Prisma.$BranchPayload<ExtArgs>
     loanAssignments: Prisma.$LoanAssignmentPayload<ExtArgs>[]
     user: Prisma.$UserPayload<ExtArgs>
@@ -1456,13 +1617,13 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     dob: Date
     designation: string
     gender: $Enums.Gender
+    genderOther: string | null
     maritalStatus: $Enums.MaritalStatus
-    address: string
-    city: string
-    state: string
-    pinCode: string
+    maritalStatusOther: string | null
+    addressId: string | null
     emergencyContact: string
     emergencyRelationship: $Enums.Relationship
+    emergencyRelationshipOther: string | null
     department: string
     dateOfJoining: Date
     experience: string
@@ -1812,6 +1973,7 @@ readonly fields: EmployeeFieldRefs;
  */
 export interface Prisma__EmployeeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  address<T extends Prisma.Employee$addressArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$addressArgs<ExtArgs>>): Prisma.Prisma__AddressClient<runtime.Types.Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   branch<T extends Prisma.BranchDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BranchDefaultArgs<ExtArgs>>): Prisma.Prisma__BranchClient<runtime.Types.Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   loanAssignments<T extends Prisma.Employee$loanAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$loanAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoanAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -1851,13 +2013,13 @@ export interface EmployeeFieldRefs {
   readonly dob: Prisma.FieldRef<"Employee", 'DateTime'>
   readonly designation: Prisma.FieldRef<"Employee", 'String'>
   readonly gender: Prisma.FieldRef<"Employee", 'Gender'>
+  readonly genderOther: Prisma.FieldRef<"Employee", 'String'>
   readonly maritalStatus: Prisma.FieldRef<"Employee", 'MaritalStatus'>
-  readonly address: Prisma.FieldRef<"Employee", 'String'>
-  readonly city: Prisma.FieldRef<"Employee", 'String'>
-  readonly state: Prisma.FieldRef<"Employee", 'String'>
-  readonly pinCode: Prisma.FieldRef<"Employee", 'String'>
+  readonly maritalStatusOther: Prisma.FieldRef<"Employee", 'String'>
+  readonly addressId: Prisma.FieldRef<"Employee", 'String'>
   readonly emergencyContact: Prisma.FieldRef<"Employee", 'String'>
   readonly emergencyRelationship: Prisma.FieldRef<"Employee", 'Relationship'>
+  readonly emergencyRelationshipOther: Prisma.FieldRef<"Employee", 'String'>
   readonly department: Prisma.FieldRef<"Employee", 'String'>
   readonly dateOfJoining: Prisma.FieldRef<"Employee", 'DateTime'>
   readonly experience: Prisma.FieldRef<"Employee", 'String'>
@@ -2207,6 +2369,25 @@ export type EmployeeDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many Employees to delete.
    */
   limit?: number
+}
+
+/**
+ * Employee.address
+ */
+export type Employee$addressArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Address
+   */
+  select?: Prisma.AddressSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Address
+   */
+  omit?: Prisma.AddressOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddressInclude<ExtArgs> | null
+  where?: Prisma.AddressWhereInput
 }
 
 /**

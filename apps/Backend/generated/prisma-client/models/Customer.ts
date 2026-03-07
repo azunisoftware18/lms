@@ -27,15 +27,15 @@ export type AggregateCustomer = {
 }
 
 export type CustomerAvgAggregateOutputType = {
-  monthlyIncome: number | null
-  annualIncome: number | null
-  otherIncome: number | null
+  noOfFamilyDependents: number | null
+  noOfChildren: number | null
+  rentPerMonth: number | null
 }
 
 export type CustomerSumAggregateOutputType = {
-  monthlyIncome: number | null
-  annualIncome: number | null
-  otherIncome: number | null
+  noOfFamilyDependents: number | null
+  noOfChildren: number | null
+  rentPerMonth: number | null
 }
 
 export type CustomerMinAggregateOutputType = {
@@ -44,29 +44,35 @@ export type CustomerMinAggregateOutputType = {
   firstName: string | null
   lastName: string | null
   middleName: string | null
+  fatherName: string | null
+  motherName: string | null
   gender: $Enums.Gender | null
+  genderOther: string | null
   dob: Date | null
   aadhaarNumber: string | null
   panNumber: string | null
   voterId: string | null
+  drivingLicenceNo: string | null
   maritalStatus: $Enums.MaritalStatus | null
+  maritalStatusOther: string | null
   nationality: string | null
   category: $Enums.Category | null
-  spouseName: string | null
+  categoryOther: string | null
   passportNumber: string | null
   contactNumber: string | null
   alternateNumber: string | null
   email: string | null
-  address: string | null
-  city: string | null
-  state: string | null
-  pinCode: string | null
+  phoneNumber: string | null
+  noOfFamilyDependents: number | null
+  noOfChildren: number | null
+  qualification: string | null
+  correspondenceAddressType: $Enums.CorrespondenceAddressType | null
+  presentAccommodation: $Enums.AccommodationType | null
+  periodOfStay: string | null
+  rentPerMonth: number | null
   employmentType: $Enums.EmploymentType | null
-  monthlyIncome: number | null
-  annualIncome: number | null
   bankName: string | null
   bankAccountNumber: string | null
-  otherIncome: number | null
   ifscCode: string | null
   accountType: string | null
   status: $Enums.CustomerStatus | null
@@ -80,29 +86,35 @@ export type CustomerMaxAggregateOutputType = {
   firstName: string | null
   lastName: string | null
   middleName: string | null
+  fatherName: string | null
+  motherName: string | null
   gender: $Enums.Gender | null
+  genderOther: string | null
   dob: Date | null
   aadhaarNumber: string | null
   panNumber: string | null
   voterId: string | null
+  drivingLicenceNo: string | null
   maritalStatus: $Enums.MaritalStatus | null
+  maritalStatusOther: string | null
   nationality: string | null
   category: $Enums.Category | null
-  spouseName: string | null
+  categoryOther: string | null
   passportNumber: string | null
   contactNumber: string | null
   alternateNumber: string | null
   email: string | null
-  address: string | null
-  city: string | null
-  state: string | null
-  pinCode: string | null
+  phoneNumber: string | null
+  noOfFamilyDependents: number | null
+  noOfChildren: number | null
+  qualification: string | null
+  correspondenceAddressType: $Enums.CorrespondenceAddressType | null
+  presentAccommodation: $Enums.AccommodationType | null
+  periodOfStay: string | null
+  rentPerMonth: number | null
   employmentType: $Enums.EmploymentType | null
-  monthlyIncome: number | null
-  annualIncome: number | null
   bankName: string | null
   bankAccountNumber: string | null
-  otherIncome: number | null
   ifscCode: string | null
   accountType: string | null
   status: $Enums.CustomerStatus | null
@@ -116,29 +128,35 @@ export type CustomerCountAggregateOutputType = {
   firstName: number
   lastName: number
   middleName: number
+  fatherName: number
+  motherName: number
   gender: number
+  genderOther: number
   dob: number
   aadhaarNumber: number
   panNumber: number
   voterId: number
+  drivingLicenceNo: number
   maritalStatus: number
+  maritalStatusOther: number
   nationality: number
   category: number
-  spouseName: number
+  categoryOther: number
   passportNumber: number
   contactNumber: number
   alternateNumber: number
   email: number
-  address: number
-  city: number
-  state: number
-  pinCode: number
+  phoneNumber: number
+  noOfFamilyDependents: number
+  noOfChildren: number
+  qualification: number
+  correspondenceAddressType: number
+  presentAccommodation: number
+  periodOfStay: number
+  rentPerMonth: number
   employmentType: number
-  monthlyIncome: number
-  annualIncome: number
   bankName: number
   bankAccountNumber: number
-  otherIncome: number
   ifscCode: number
   accountType: number
   status: number
@@ -149,15 +167,15 @@ export type CustomerCountAggregateOutputType = {
 
 
 export type CustomerAvgAggregateInputType = {
-  monthlyIncome?: true
-  annualIncome?: true
-  otherIncome?: true
+  noOfFamilyDependents?: true
+  noOfChildren?: true
+  rentPerMonth?: true
 }
 
 export type CustomerSumAggregateInputType = {
-  monthlyIncome?: true
-  annualIncome?: true
-  otherIncome?: true
+  noOfFamilyDependents?: true
+  noOfChildren?: true
+  rentPerMonth?: true
 }
 
 export type CustomerMinAggregateInputType = {
@@ -166,29 +184,35 @@ export type CustomerMinAggregateInputType = {
   firstName?: true
   lastName?: true
   middleName?: true
+  fatherName?: true
+  motherName?: true
   gender?: true
+  genderOther?: true
   dob?: true
   aadhaarNumber?: true
   panNumber?: true
   voterId?: true
+  drivingLicenceNo?: true
   maritalStatus?: true
+  maritalStatusOther?: true
   nationality?: true
   category?: true
-  spouseName?: true
+  categoryOther?: true
   passportNumber?: true
   contactNumber?: true
   alternateNumber?: true
   email?: true
-  address?: true
-  city?: true
-  state?: true
-  pinCode?: true
+  phoneNumber?: true
+  noOfFamilyDependents?: true
+  noOfChildren?: true
+  qualification?: true
+  correspondenceAddressType?: true
+  presentAccommodation?: true
+  periodOfStay?: true
+  rentPerMonth?: true
   employmentType?: true
-  monthlyIncome?: true
-  annualIncome?: true
   bankName?: true
   bankAccountNumber?: true
-  otherIncome?: true
   ifscCode?: true
   accountType?: true
   status?: true
@@ -202,29 +226,35 @@ export type CustomerMaxAggregateInputType = {
   firstName?: true
   lastName?: true
   middleName?: true
+  fatherName?: true
+  motherName?: true
   gender?: true
+  genderOther?: true
   dob?: true
   aadhaarNumber?: true
   panNumber?: true
   voterId?: true
+  drivingLicenceNo?: true
   maritalStatus?: true
+  maritalStatusOther?: true
   nationality?: true
   category?: true
-  spouseName?: true
+  categoryOther?: true
   passportNumber?: true
   contactNumber?: true
   alternateNumber?: true
   email?: true
-  address?: true
-  city?: true
-  state?: true
-  pinCode?: true
+  phoneNumber?: true
+  noOfFamilyDependents?: true
+  noOfChildren?: true
+  qualification?: true
+  correspondenceAddressType?: true
+  presentAccommodation?: true
+  periodOfStay?: true
+  rentPerMonth?: true
   employmentType?: true
-  monthlyIncome?: true
-  annualIncome?: true
   bankName?: true
   bankAccountNumber?: true
-  otherIncome?: true
   ifscCode?: true
   accountType?: true
   status?: true
@@ -238,29 +268,35 @@ export type CustomerCountAggregateInputType = {
   firstName?: true
   lastName?: true
   middleName?: true
+  fatherName?: true
+  motherName?: true
   gender?: true
+  genderOther?: true
   dob?: true
   aadhaarNumber?: true
   panNumber?: true
   voterId?: true
+  drivingLicenceNo?: true
   maritalStatus?: true
+  maritalStatusOther?: true
   nationality?: true
   category?: true
-  spouseName?: true
+  categoryOther?: true
   passportNumber?: true
   contactNumber?: true
   alternateNumber?: true
   email?: true
-  address?: true
-  city?: true
-  state?: true
-  pinCode?: true
+  phoneNumber?: true
+  noOfFamilyDependents?: true
+  noOfChildren?: true
+  qualification?: true
+  correspondenceAddressType?: true
+  presentAccommodation?: true
+  periodOfStay?: true
+  rentPerMonth?: true
   employmentType?: true
-  monthlyIncome?: true
-  annualIncome?: true
   bankName?: true
   bankAccountNumber?: true
-  otherIncome?: true
   ifscCode?: true
   accountType?: true
   status?: true
@@ -361,29 +397,35 @@ export type CustomerGroupByOutputType = {
   firstName: string
   lastName: string
   middleName: string | null
+  fatherName: string
+  motherName: string
   gender: $Enums.Gender
+  genderOther: string | null
   dob: Date
   aadhaarNumber: string | null
   panNumber: string | null
   voterId: string | null
-  maritalStatus: $Enums.MaritalStatus | null
-  nationality: string | null
-  category: $Enums.Category | null
-  spouseName: string | null
+  drivingLicenceNo: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther: string | null
   passportNumber: string | null
   contactNumber: string
   alternateNumber: string | null
   email: string | null
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  phoneNumber: string | null
+  noOfFamilyDependents: number | null
+  noOfChildren: number | null
+  qualification: string | null
+  correspondenceAddressType: $Enums.CorrespondenceAddressType | null
+  presentAccommodation: $Enums.AccommodationType | null
+  periodOfStay: string | null
+  rentPerMonth: number | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome: number | null
-  annualIncome: number | null
   bankName: string | null
   bankAccountNumber: string | null
-  otherIncome: number | null
   ifscCode: string | null
   accountType: string | null
   status: $Enums.CustomerStatus
@@ -420,38 +462,48 @@ export type CustomerWhereInput = {
   firstName?: Prisma.StringFilter<"Customer"> | string
   lastName?: Prisma.StringFilter<"Customer"> | string
   middleName?: Prisma.StringNullableFilter<"Customer"> | string | null
+  fatherName?: Prisma.StringFilter<"Customer"> | string
+  motherName?: Prisma.StringFilter<"Customer"> | string
   gender?: Prisma.EnumGenderFilter<"Customer"> | $Enums.Gender
+  genderOther?: Prisma.StringNullableFilter<"Customer"> | string | null
   dob?: Prisma.DateTimeFilter<"Customer"> | Date | string
   aadhaarNumber?: Prisma.StringNullableFilter<"Customer"> | string | null
   panNumber?: Prisma.StringNullableFilter<"Customer"> | string | null
   voterId?: Prisma.StringNullableFilter<"Customer"> | string | null
-  maritalStatus?: Prisma.EnumMaritalStatusNullableFilter<"Customer"> | $Enums.MaritalStatus | null
-  nationality?: Prisma.StringNullableFilter<"Customer"> | string | null
-  category?: Prisma.EnumCategoryNullableFilter<"Customer"> | $Enums.Category | null
-  spouseName?: Prisma.StringNullableFilter<"Customer"> | string | null
+  drivingLicenceNo?: Prisma.StringNullableFilter<"Customer"> | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFilter<"Customer"> | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.StringNullableFilter<"Customer"> | string | null
+  nationality?: Prisma.StringFilter<"Customer"> | string
+  category?: Prisma.EnumCategoryFilter<"Customer"> | $Enums.Category
+  categoryOther?: Prisma.StringNullableFilter<"Customer"> | string | null
   passportNumber?: Prisma.StringNullableFilter<"Customer"> | string | null
   contactNumber?: Prisma.StringFilter<"Customer"> | string
   alternateNumber?: Prisma.StringNullableFilter<"Customer"> | string | null
   email?: Prisma.StringNullableFilter<"Customer"> | string | null
-  address?: Prisma.StringFilter<"Customer"> | string
-  city?: Prisma.StringFilter<"Customer"> | string
-  state?: Prisma.StringFilter<"Customer"> | string
-  pinCode?: Prisma.StringFilter<"Customer"> | string
+  phoneNumber?: Prisma.StringNullableFilter<"Customer"> | string | null
+  noOfFamilyDependents?: Prisma.IntNullableFilter<"Customer"> | number | null
+  noOfChildren?: Prisma.IntNullableFilter<"Customer"> | number | null
+  qualification?: Prisma.StringNullableFilter<"Customer"> | string | null
+  correspondenceAddressType?: Prisma.EnumCorrespondenceAddressTypeNullableFilter<"Customer"> | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.EnumAccommodationTypeNullableFilter<"Customer"> | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.StringNullableFilter<"Customer"> | string | null
+  rentPerMonth?: Prisma.FloatNullableFilter<"Customer"> | number | null
   employmentType?: Prisma.EnumEmploymentTypeFilter<"Customer"> | $Enums.EmploymentType
-  monthlyIncome?: Prisma.FloatNullableFilter<"Customer"> | number | null
-  annualIncome?: Prisma.FloatNullableFilter<"Customer"> | number | null
   bankName?: Prisma.StringNullableFilter<"Customer"> | string | null
   bankAccountNumber?: Prisma.StringNullableFilter<"Customer"> | string | null
-  otherIncome?: Prisma.FloatNullableFilter<"Customer"> | number | null
   ifscCode?: Prisma.StringNullableFilter<"Customer"> | string | null
   accountType?: Prisma.StringNullableFilter<"Customer"> | string | null
   status?: Prisma.EnumCustomerStatusFilter<"Customer"> | $Enums.CustomerStatus
   createdAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
+  addresses?: Prisma.AddressListRelationFilter
   loanApplications?: Prisma.LoanApplicationListRelationFilter
   loanRecoveries?: Prisma.LoanRecoveryListRelationFilter
   nachMandates?: Prisma.NachMandateListRelationFilter
   creditReport?: Prisma.XOR<Prisma.CreditReportNullableScalarRelationFilter, Prisma.CreditReportWhereInput> | null
+  occupationalDetails?: Prisma.OccupationalDetailsListRelationFilter
+  employmentDetails?: Prisma.EmploymentDetailsListRelationFilter
+  financialDetails?: Prisma.XOR<Prisma.FinancialDetailsNullableScalarRelationFilter, Prisma.FinancialDetailsWhereInput> | null
 }
 
 export type CustomerOrderByWithRelationInput = {
@@ -460,38 +512,48 @@ export type CustomerOrderByWithRelationInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrderInput | Prisma.SortOrder
+  fatherName?: Prisma.SortOrder
+  motherName?: Prisma.SortOrder
   gender?: Prisma.SortOrder
+  genderOther?: Prisma.SortOrderInput | Prisma.SortOrder
   dob?: Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   panNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   voterId?: Prisma.SortOrderInput | Prisma.SortOrder
-  maritalStatus?: Prisma.SortOrderInput | Prisma.SortOrder
-  nationality?: Prisma.SortOrderInput | Prisma.SortOrder
-  category?: Prisma.SortOrderInput | Prisma.SortOrder
-  spouseName?: Prisma.SortOrderInput | Prisma.SortOrder
+  drivingLicenceNo?: Prisma.SortOrderInput | Prisma.SortOrder
+  maritalStatus?: Prisma.SortOrder
+  maritalStatusOther?: Prisma.SortOrderInput | Prisma.SortOrder
+  nationality?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  categoryOther?: Prisma.SortOrderInput | Prisma.SortOrder
   passportNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   alternateNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
-  address?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  pinCode?: Prisma.SortOrder
+  phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  noOfFamilyDependents?: Prisma.SortOrderInput | Prisma.SortOrder
+  noOfChildren?: Prisma.SortOrderInput | Prisma.SortOrder
+  qualification?: Prisma.SortOrderInput | Prisma.SortOrder
+  correspondenceAddressType?: Prisma.SortOrderInput | Prisma.SortOrder
+  presentAccommodation?: Prisma.SortOrderInput | Prisma.SortOrder
+  periodOfStay?: Prisma.SortOrderInput | Prisma.SortOrder
+  rentPerMonth?: Prisma.SortOrderInput | Prisma.SortOrder
   employmentType?: Prisma.SortOrder
-  monthlyIncome?: Prisma.SortOrderInput | Prisma.SortOrder
-  annualIncome?: Prisma.SortOrderInput | Prisma.SortOrder
   bankName?: Prisma.SortOrderInput | Prisma.SortOrder
   bankAccountNumber?: Prisma.SortOrderInput | Prisma.SortOrder
-  otherIncome?: Prisma.SortOrderInput | Prisma.SortOrder
   ifscCode?: Prisma.SortOrderInput | Prisma.SortOrder
   accountType?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  addresses?: Prisma.AddressOrderByRelationAggregateInput
   loanApplications?: Prisma.LoanApplicationOrderByRelationAggregateInput
   loanRecoveries?: Prisma.LoanRecoveryOrderByRelationAggregateInput
   nachMandates?: Prisma.NachMandateOrderByRelationAggregateInput
   creditReport?: Prisma.CreditReportOrderByWithRelationInput
+  occupationalDetails?: Prisma.OccupationalDetailsOrderByRelationAggregateInput
+  employmentDetails?: Prisma.EmploymentDetailsOrderByRelationAggregateInput
+  financialDetails?: Prisma.FinancialDetailsOrderByWithRelationInput
   _relevance?: Prisma.CustomerOrderByRelevanceInput
 }
 
@@ -504,38 +566,48 @@ export type CustomerWhereUniqueInput = Prisma.AtLeast<{
   firstName?: Prisma.StringFilter<"Customer"> | string
   lastName?: Prisma.StringFilter<"Customer"> | string
   middleName?: Prisma.StringNullableFilter<"Customer"> | string | null
+  fatherName?: Prisma.StringFilter<"Customer"> | string
+  motherName?: Prisma.StringFilter<"Customer"> | string
   gender?: Prisma.EnumGenderFilter<"Customer"> | $Enums.Gender
+  genderOther?: Prisma.StringNullableFilter<"Customer"> | string | null
   dob?: Prisma.DateTimeFilter<"Customer"> | Date | string
   aadhaarNumber?: Prisma.StringNullableFilter<"Customer"> | string | null
   panNumber?: Prisma.StringNullableFilter<"Customer"> | string | null
   voterId?: Prisma.StringNullableFilter<"Customer"> | string | null
-  maritalStatus?: Prisma.EnumMaritalStatusNullableFilter<"Customer"> | $Enums.MaritalStatus | null
-  nationality?: Prisma.StringNullableFilter<"Customer"> | string | null
-  category?: Prisma.EnumCategoryNullableFilter<"Customer"> | $Enums.Category | null
-  spouseName?: Prisma.StringNullableFilter<"Customer"> | string | null
+  drivingLicenceNo?: Prisma.StringNullableFilter<"Customer"> | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFilter<"Customer"> | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.StringNullableFilter<"Customer"> | string | null
+  nationality?: Prisma.StringFilter<"Customer"> | string
+  category?: Prisma.EnumCategoryFilter<"Customer"> | $Enums.Category
+  categoryOther?: Prisma.StringNullableFilter<"Customer"> | string | null
   passportNumber?: Prisma.StringNullableFilter<"Customer"> | string | null
   contactNumber?: Prisma.StringFilter<"Customer"> | string
   alternateNumber?: Prisma.StringNullableFilter<"Customer"> | string | null
   email?: Prisma.StringNullableFilter<"Customer"> | string | null
-  address?: Prisma.StringFilter<"Customer"> | string
-  city?: Prisma.StringFilter<"Customer"> | string
-  state?: Prisma.StringFilter<"Customer"> | string
-  pinCode?: Prisma.StringFilter<"Customer"> | string
+  phoneNumber?: Prisma.StringNullableFilter<"Customer"> | string | null
+  noOfFamilyDependents?: Prisma.IntNullableFilter<"Customer"> | number | null
+  noOfChildren?: Prisma.IntNullableFilter<"Customer"> | number | null
+  qualification?: Prisma.StringNullableFilter<"Customer"> | string | null
+  correspondenceAddressType?: Prisma.EnumCorrespondenceAddressTypeNullableFilter<"Customer"> | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.EnumAccommodationTypeNullableFilter<"Customer"> | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.StringNullableFilter<"Customer"> | string | null
+  rentPerMonth?: Prisma.FloatNullableFilter<"Customer"> | number | null
   employmentType?: Prisma.EnumEmploymentTypeFilter<"Customer"> | $Enums.EmploymentType
-  monthlyIncome?: Prisma.FloatNullableFilter<"Customer"> | number | null
-  annualIncome?: Prisma.FloatNullableFilter<"Customer"> | number | null
   bankName?: Prisma.StringNullableFilter<"Customer"> | string | null
   bankAccountNumber?: Prisma.StringNullableFilter<"Customer"> | string | null
-  otherIncome?: Prisma.FloatNullableFilter<"Customer"> | number | null
   ifscCode?: Prisma.StringNullableFilter<"Customer"> | string | null
   accountType?: Prisma.StringNullableFilter<"Customer"> | string | null
   status?: Prisma.EnumCustomerStatusFilter<"Customer"> | $Enums.CustomerStatus
   createdAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
+  addresses?: Prisma.AddressListRelationFilter
   loanApplications?: Prisma.LoanApplicationListRelationFilter
   loanRecoveries?: Prisma.LoanRecoveryListRelationFilter
   nachMandates?: Prisma.NachMandateListRelationFilter
   creditReport?: Prisma.XOR<Prisma.CreditReportNullableScalarRelationFilter, Prisma.CreditReportWhereInput> | null
+  occupationalDetails?: Prisma.OccupationalDetailsListRelationFilter
+  employmentDetails?: Prisma.EmploymentDetailsListRelationFilter
+  financialDetails?: Prisma.XOR<Prisma.FinancialDetailsNullableScalarRelationFilter, Prisma.FinancialDetailsWhereInput> | null
 }, "id">
 
 export type CustomerOrderByWithAggregationInput = {
@@ -544,29 +616,35 @@ export type CustomerOrderByWithAggregationInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrderInput | Prisma.SortOrder
+  fatherName?: Prisma.SortOrder
+  motherName?: Prisma.SortOrder
   gender?: Prisma.SortOrder
+  genderOther?: Prisma.SortOrderInput | Prisma.SortOrder
   dob?: Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   panNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   voterId?: Prisma.SortOrderInput | Prisma.SortOrder
-  maritalStatus?: Prisma.SortOrderInput | Prisma.SortOrder
-  nationality?: Prisma.SortOrderInput | Prisma.SortOrder
-  category?: Prisma.SortOrderInput | Prisma.SortOrder
-  spouseName?: Prisma.SortOrderInput | Prisma.SortOrder
+  drivingLicenceNo?: Prisma.SortOrderInput | Prisma.SortOrder
+  maritalStatus?: Prisma.SortOrder
+  maritalStatusOther?: Prisma.SortOrderInput | Prisma.SortOrder
+  nationality?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  categoryOther?: Prisma.SortOrderInput | Prisma.SortOrder
   passportNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   alternateNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
-  address?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  pinCode?: Prisma.SortOrder
+  phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  noOfFamilyDependents?: Prisma.SortOrderInput | Prisma.SortOrder
+  noOfChildren?: Prisma.SortOrderInput | Prisma.SortOrder
+  qualification?: Prisma.SortOrderInput | Prisma.SortOrder
+  correspondenceAddressType?: Prisma.SortOrderInput | Prisma.SortOrder
+  presentAccommodation?: Prisma.SortOrderInput | Prisma.SortOrder
+  periodOfStay?: Prisma.SortOrderInput | Prisma.SortOrder
+  rentPerMonth?: Prisma.SortOrderInput | Prisma.SortOrder
   employmentType?: Prisma.SortOrder
-  monthlyIncome?: Prisma.SortOrderInput | Prisma.SortOrder
-  annualIncome?: Prisma.SortOrderInput | Prisma.SortOrder
   bankName?: Prisma.SortOrderInput | Prisma.SortOrder
   bankAccountNumber?: Prisma.SortOrderInput | Prisma.SortOrder
-  otherIncome?: Prisma.SortOrderInput | Prisma.SortOrder
   ifscCode?: Prisma.SortOrderInput | Prisma.SortOrder
   accountType?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -588,29 +666,35 @@ export type CustomerScalarWhereWithAggregatesInput = {
   firstName?: Prisma.StringWithAggregatesFilter<"Customer"> | string
   lastName?: Prisma.StringWithAggregatesFilter<"Customer"> | string
   middleName?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
+  fatherName?: Prisma.StringWithAggregatesFilter<"Customer"> | string
+  motherName?: Prisma.StringWithAggregatesFilter<"Customer"> | string
   gender?: Prisma.EnumGenderWithAggregatesFilter<"Customer"> | $Enums.Gender
+  genderOther?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   dob?: Prisma.DateTimeWithAggregatesFilter<"Customer"> | Date | string
   aadhaarNumber?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   panNumber?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   voterId?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
-  maritalStatus?: Prisma.EnumMaritalStatusNullableWithAggregatesFilter<"Customer"> | $Enums.MaritalStatus | null
-  nationality?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
-  category?: Prisma.EnumCategoryNullableWithAggregatesFilter<"Customer"> | $Enums.Category | null
-  spouseName?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
+  drivingLicenceNo?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusWithAggregatesFilter<"Customer"> | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
+  nationality?: Prisma.StringWithAggregatesFilter<"Customer"> | string
+  category?: Prisma.EnumCategoryWithAggregatesFilter<"Customer"> | $Enums.Category
+  categoryOther?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   passportNumber?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   contactNumber?: Prisma.StringWithAggregatesFilter<"Customer"> | string
   alternateNumber?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   email?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
-  address?: Prisma.StringWithAggregatesFilter<"Customer"> | string
-  city?: Prisma.StringWithAggregatesFilter<"Customer"> | string
-  state?: Prisma.StringWithAggregatesFilter<"Customer"> | string
-  pinCode?: Prisma.StringWithAggregatesFilter<"Customer"> | string
+  phoneNumber?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
+  noOfFamilyDependents?: Prisma.IntNullableWithAggregatesFilter<"Customer"> | number | null
+  noOfChildren?: Prisma.IntNullableWithAggregatesFilter<"Customer"> | number | null
+  qualification?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
+  correspondenceAddressType?: Prisma.EnumCorrespondenceAddressTypeNullableWithAggregatesFilter<"Customer"> | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.EnumAccommodationTypeNullableWithAggregatesFilter<"Customer"> | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
+  rentPerMonth?: Prisma.FloatNullableWithAggregatesFilter<"Customer"> | number | null
   employmentType?: Prisma.EnumEmploymentTypeWithAggregatesFilter<"Customer"> | $Enums.EmploymentType
-  monthlyIncome?: Prisma.FloatNullableWithAggregatesFilter<"Customer"> | number | null
-  annualIncome?: Prisma.FloatNullableWithAggregatesFilter<"Customer"> | number | null
   bankName?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   bankAccountNumber?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
-  otherIncome?: Prisma.FloatNullableWithAggregatesFilter<"Customer"> | number | null
   ifscCode?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   accountType?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   status?: Prisma.EnumCustomerStatusWithAggregatesFilter<"Customer"> | $Enums.CustomerStatus
@@ -624,38 +708,48 @@ export type CustomerCreateInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName: string
+  motherName: string
   gender: $Enums.Gender
+  genderOther?: string | null
   dob: Date | string
   aadhaarNumber?: string | null
   panNumber?: string | null
   voterId?: string | null
-  maritalStatus?: $Enums.MaritalStatus | null
-  nationality?: string | null
-  category?: $Enums.Category | null
-  spouseName?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
   passportNumber?: string | null
   contactNumber: string
   alternateNumber?: string | null
   email?: string | null
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
-  annualIncome?: number | null
   bankName?: string | null
   bankAccountNumber?: string | null
-  otherIncome?: number | null
   ifscCode?: string | null
   accountType?: string | null
   status?: $Enums.CustomerStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  addresses?: Prisma.AddressCreateNestedManyWithoutCustomerInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCustomerInput
   loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutCustomerInput
   nachMandates?: Prisma.NachMandateCreateNestedManyWithoutCustomerInput
   creditReport?: Prisma.CreditReportCreateNestedOneWithoutCustomerInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCustomerInput
+  employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCustomerInput
+  financialDetails?: Prisma.FinancialDetailsCreateNestedOneWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateInput = {
@@ -664,38 +758,48 @@ export type CustomerUncheckedCreateInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName: string
+  motherName: string
   gender: $Enums.Gender
+  genderOther?: string | null
   dob: Date | string
   aadhaarNumber?: string | null
   panNumber?: string | null
   voterId?: string | null
-  maritalStatus?: $Enums.MaritalStatus | null
-  nationality?: string | null
-  category?: $Enums.Category | null
-  spouseName?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
   passportNumber?: string | null
   contactNumber: string
   alternateNumber?: string | null
   email?: string | null
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
-  annualIncome?: number | null
   bankName?: string | null
   bankAccountNumber?: string | null
-  otherIncome?: number | null
   ifscCode?: string | null
   accountType?: string | null
   status?: $Enums.CustomerStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCustomerInput
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCustomerInput
   loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutCustomerInput
   nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutCustomerInput
   creditReport?: Prisma.CreditReportUncheckedCreateNestedOneWithoutCustomerInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCustomerInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCustomerInput
+  financialDetails?: Prisma.FinancialDetailsUncheckedCreateNestedOneWithoutCustomerInput
 }
 
 export type CustomerUpdateInput = {
@@ -704,38 +808,48 @@ export type CustomerUpdateInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
-  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
-  spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  annualIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUpdateManyWithoutCustomerNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCustomerNestedInput
   loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutCustomerNestedInput
   nachMandates?: Prisma.NachMandateUpdateManyWithoutCustomerNestedInput
   creditReport?: Prisma.CreditReportUpdateOneWithoutCustomerNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCustomerNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCustomerNestedInput
+  financialDetails?: Prisma.FinancialDetailsUpdateOneWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateInput = {
@@ -744,38 +858,48 @@ export type CustomerUncheckedUpdateInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
-  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
-  spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  annualIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUncheckedUpdateManyWithoutCustomerNestedInput
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCustomerNestedInput
   loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutCustomerNestedInput
   nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutCustomerNestedInput
   creditReport?: Prisma.CreditReportUncheckedUpdateOneWithoutCustomerNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCustomerNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCustomerNestedInput
+  financialDetails?: Prisma.FinancialDetailsUncheckedUpdateOneWithoutCustomerNestedInput
 }
 
 export type CustomerCreateManyInput = {
@@ -784,29 +908,35 @@ export type CustomerCreateManyInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName: string
+  motherName: string
   gender: $Enums.Gender
+  genderOther?: string | null
   dob: Date | string
   aadhaarNumber?: string | null
   panNumber?: string | null
   voterId?: string | null
-  maritalStatus?: $Enums.MaritalStatus | null
-  nationality?: string | null
-  category?: $Enums.Category | null
-  spouseName?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
   passportNumber?: string | null
   contactNumber: string
   alternateNumber?: string | null
   email?: string | null
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
-  annualIncome?: number | null
   bankName?: string | null
   bankAccountNumber?: string | null
-  otherIncome?: number | null
   ifscCode?: string | null
   accountType?: string | null
   status?: $Enums.CustomerStatus
@@ -820,29 +950,35 @@ export type CustomerUpdateManyMutationInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
-  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
-  spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  annualIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
@@ -856,34 +992,45 @@ export type CustomerUncheckedUpdateManyInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
-  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
-  spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  annualIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CustomerNullableScalarRelationFilter = {
+  is?: Prisma.CustomerWhereInput | null
+  isNot?: Prisma.CustomerWhereInput | null
 }
 
 export type CustomerScalarRelationFilter = {
@@ -903,29 +1050,35 @@ export type CustomerCountOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrder
+  fatherName?: Prisma.SortOrder
+  motherName?: Prisma.SortOrder
   gender?: Prisma.SortOrder
+  genderOther?: Prisma.SortOrder
   dob?: Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
   voterId?: Prisma.SortOrder
+  drivingLicenceNo?: Prisma.SortOrder
   maritalStatus?: Prisma.SortOrder
+  maritalStatusOther?: Prisma.SortOrder
   nationality?: Prisma.SortOrder
   category?: Prisma.SortOrder
-  spouseName?: Prisma.SortOrder
+  categoryOther?: Prisma.SortOrder
   passportNumber?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   alternateNumber?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  address?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  pinCode?: Prisma.SortOrder
+  phoneNumber?: Prisma.SortOrder
+  noOfFamilyDependents?: Prisma.SortOrder
+  noOfChildren?: Prisma.SortOrder
+  qualification?: Prisma.SortOrder
+  correspondenceAddressType?: Prisma.SortOrder
+  presentAccommodation?: Prisma.SortOrder
+  periodOfStay?: Prisma.SortOrder
+  rentPerMonth?: Prisma.SortOrder
   employmentType?: Prisma.SortOrder
-  monthlyIncome?: Prisma.SortOrder
-  annualIncome?: Prisma.SortOrder
   bankName?: Prisma.SortOrder
   bankAccountNumber?: Prisma.SortOrder
-  otherIncome?: Prisma.SortOrder
   ifscCode?: Prisma.SortOrder
   accountType?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -934,9 +1087,9 @@ export type CustomerCountOrderByAggregateInput = {
 }
 
 export type CustomerAvgOrderByAggregateInput = {
-  monthlyIncome?: Prisma.SortOrder
-  annualIncome?: Prisma.SortOrder
-  otherIncome?: Prisma.SortOrder
+  noOfFamilyDependents?: Prisma.SortOrder
+  noOfChildren?: Prisma.SortOrder
+  rentPerMonth?: Prisma.SortOrder
 }
 
 export type CustomerMaxOrderByAggregateInput = {
@@ -945,29 +1098,35 @@ export type CustomerMaxOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrder
+  fatherName?: Prisma.SortOrder
+  motherName?: Prisma.SortOrder
   gender?: Prisma.SortOrder
+  genderOther?: Prisma.SortOrder
   dob?: Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
   voterId?: Prisma.SortOrder
+  drivingLicenceNo?: Prisma.SortOrder
   maritalStatus?: Prisma.SortOrder
+  maritalStatusOther?: Prisma.SortOrder
   nationality?: Prisma.SortOrder
   category?: Prisma.SortOrder
-  spouseName?: Prisma.SortOrder
+  categoryOther?: Prisma.SortOrder
   passportNumber?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   alternateNumber?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  address?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  pinCode?: Prisma.SortOrder
+  phoneNumber?: Prisma.SortOrder
+  noOfFamilyDependents?: Prisma.SortOrder
+  noOfChildren?: Prisma.SortOrder
+  qualification?: Prisma.SortOrder
+  correspondenceAddressType?: Prisma.SortOrder
+  presentAccommodation?: Prisma.SortOrder
+  periodOfStay?: Prisma.SortOrder
+  rentPerMonth?: Prisma.SortOrder
   employmentType?: Prisma.SortOrder
-  monthlyIncome?: Prisma.SortOrder
-  annualIncome?: Prisma.SortOrder
   bankName?: Prisma.SortOrder
   bankAccountNumber?: Prisma.SortOrder
-  otherIncome?: Prisma.SortOrder
   ifscCode?: Prisma.SortOrder
   accountType?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -981,29 +1140,35 @@ export type CustomerMinOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrder
+  fatherName?: Prisma.SortOrder
+  motherName?: Prisma.SortOrder
   gender?: Prisma.SortOrder
+  genderOther?: Prisma.SortOrder
   dob?: Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
   voterId?: Prisma.SortOrder
+  drivingLicenceNo?: Prisma.SortOrder
   maritalStatus?: Prisma.SortOrder
+  maritalStatusOther?: Prisma.SortOrder
   nationality?: Prisma.SortOrder
   category?: Prisma.SortOrder
-  spouseName?: Prisma.SortOrder
+  categoryOther?: Prisma.SortOrder
   passportNumber?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
   alternateNumber?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  address?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  pinCode?: Prisma.SortOrder
+  phoneNumber?: Prisma.SortOrder
+  noOfFamilyDependents?: Prisma.SortOrder
+  noOfChildren?: Prisma.SortOrder
+  qualification?: Prisma.SortOrder
+  correspondenceAddressType?: Prisma.SortOrder
+  presentAccommodation?: Prisma.SortOrder
+  periodOfStay?: Prisma.SortOrder
+  rentPerMonth?: Prisma.SortOrder
   employmentType?: Prisma.SortOrder
-  monthlyIncome?: Prisma.SortOrder
-  annualIncome?: Prisma.SortOrder
   bankName?: Prisma.SortOrder
   bankAccountNumber?: Prisma.SortOrder
-  otherIncome?: Prisma.SortOrder
   ifscCode?: Prisma.SortOrder
   accountType?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -1012,9 +1177,25 @@ export type CustomerMinOrderByAggregateInput = {
 }
 
 export type CustomerSumOrderByAggregateInput = {
-  monthlyIncome?: Prisma.SortOrder
-  annualIncome?: Prisma.SortOrder
-  otherIncome?: Prisma.SortOrder
+  noOfFamilyDependents?: Prisma.SortOrder
+  noOfChildren?: Prisma.SortOrder
+  rentPerMonth?: Prisma.SortOrder
+}
+
+export type CustomerCreateNestedOneWithoutAddressesInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutAddressesInput, Prisma.CustomerUncheckedCreateWithoutAddressesInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutAddressesInput
+  connect?: Prisma.CustomerWhereUniqueInput
+}
+
+export type CustomerUpdateOneWithoutAddressesNestedInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutAddressesInput, Prisma.CustomerUncheckedCreateWithoutAddressesInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutAddressesInput
+  upsert?: Prisma.CustomerUpsertWithoutAddressesInput
+  disconnect?: Prisma.CustomerWhereInput | boolean
+  delete?: Prisma.CustomerWhereInput | boolean
+  connect?: Prisma.CustomerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutAddressesInput, Prisma.CustomerUpdateWithoutAddressesInput>, Prisma.CustomerUncheckedUpdateWithoutAddressesInput>
 }
 
 export type CustomerCreateNestedOneWithoutLoanApplicationsInput = {
@@ -1063,16 +1244,62 @@ export type EnumTitleFieldUpdateOperationsInput = {
   set?: $Enums.Title
 }
 
-export type NullableEnumMaritalStatusFieldUpdateOperationsInput = {
-  set?: $Enums.MaritalStatus | null
+export type EnumCategoryFieldUpdateOperationsInput = {
+  set?: $Enums.Category
 }
 
-export type NullableEnumCategoryFieldUpdateOperationsInput = {
-  set?: $Enums.Category | null
+export type NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput = {
+  set?: $Enums.CorrespondenceAddressType | null
+}
+
+export type NullableEnumAccommodationTypeFieldUpdateOperationsInput = {
+  set?: $Enums.AccommodationType | null
 }
 
 export type EnumCustomerStatusFieldUpdateOperationsInput = {
   set?: $Enums.CustomerStatus
+}
+
+export type CustomerCreateNestedOneWithoutOccupationalDetailsInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutOccupationalDetailsInput, Prisma.CustomerUncheckedCreateWithoutOccupationalDetailsInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutOccupationalDetailsInput
+  connect?: Prisma.CustomerWhereUniqueInput
+}
+
+export type CustomerUpdateOneRequiredWithoutOccupationalDetailsNestedInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutOccupationalDetailsInput, Prisma.CustomerUncheckedCreateWithoutOccupationalDetailsInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutOccupationalDetailsInput
+  upsert?: Prisma.CustomerUpsertWithoutOccupationalDetailsInput
+  connect?: Prisma.CustomerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutOccupationalDetailsInput, Prisma.CustomerUpdateWithoutOccupationalDetailsInput>, Prisma.CustomerUncheckedUpdateWithoutOccupationalDetailsInput>
+}
+
+export type CustomerCreateNestedOneWithoutEmploymentDetailsInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutEmploymentDetailsInput, Prisma.CustomerUncheckedCreateWithoutEmploymentDetailsInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutEmploymentDetailsInput
+  connect?: Prisma.CustomerWhereUniqueInput
+}
+
+export type CustomerUpdateOneRequiredWithoutEmploymentDetailsNestedInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutEmploymentDetailsInput, Prisma.CustomerUncheckedCreateWithoutEmploymentDetailsInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutEmploymentDetailsInput
+  upsert?: Prisma.CustomerUpsertWithoutEmploymentDetailsInput
+  connect?: Prisma.CustomerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutEmploymentDetailsInput, Prisma.CustomerUpdateWithoutEmploymentDetailsInput>, Prisma.CustomerUncheckedUpdateWithoutEmploymentDetailsInput>
+}
+
+export type CustomerCreateNestedOneWithoutFinancialDetailsInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutFinancialDetailsInput, Prisma.CustomerUncheckedCreateWithoutFinancialDetailsInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutFinancialDetailsInput
+  connect?: Prisma.CustomerWhereUniqueInput
+}
+
+export type CustomerUpdateOneRequiredWithoutFinancialDetailsNestedInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutFinancialDetailsInput, Prisma.CustomerUncheckedCreateWithoutFinancialDetailsInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutFinancialDetailsInput
+  upsert?: Prisma.CustomerUpsertWithoutFinancialDetailsInput
+  connect?: Prisma.CustomerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutFinancialDetailsInput, Prisma.CustomerUpdateWithoutFinancialDetailsInput>, Prisma.CustomerUncheckedUpdateWithoutFinancialDetailsInput>
 }
 
 export type CustomerCreateNestedOneWithoutNachMandatesInput = {
@@ -1089,43 +1316,265 @@ export type CustomerUpdateOneRequiredWithoutNachMandatesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutNachMandatesInput, Prisma.CustomerUpdateWithoutNachMandatesInput>, Prisma.CustomerUncheckedUpdateWithoutNachMandatesInput>
 }
 
+export type CustomerCreateWithoutAddressesInput = {
+  id?: string
+  title: $Enums.Title
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  fatherName: string
+  motherName: string
+  gender: $Enums.Gender
+  genderOther?: string | null
+  dob: Date | string
+  aadhaarNumber?: string | null
+  panNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
+  passportNumber?: string | null
+  contactNumber: string
+  alternateNumber?: string | null
+  email?: string | null
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
+  employmentType: $Enums.EmploymentType
+  bankName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  accountType?: string | null
+  status?: $Enums.CustomerStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCustomerInput
+  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutCustomerInput
+  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutCustomerInput
+  creditReport?: Prisma.CreditReportCreateNestedOneWithoutCustomerInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCustomerInput
+  employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCustomerInput
+  financialDetails?: Prisma.FinancialDetailsCreateNestedOneWithoutCustomerInput
+}
+
+export type CustomerUncheckedCreateWithoutAddressesInput = {
+  id?: string
+  title: $Enums.Title
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  fatherName: string
+  motherName: string
+  gender: $Enums.Gender
+  genderOther?: string | null
+  dob: Date | string
+  aadhaarNumber?: string | null
+  panNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
+  passportNumber?: string | null
+  contactNumber: string
+  alternateNumber?: string | null
+  email?: string | null
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
+  employmentType: $Enums.EmploymentType
+  bankName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  accountType?: string | null
+  status?: $Enums.CustomerStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCustomerInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutCustomerInput
+  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutCustomerInput
+  creditReport?: Prisma.CreditReportUncheckedCreateNestedOneWithoutCustomerInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCustomerInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCustomerInput
+  financialDetails?: Prisma.FinancialDetailsUncheckedCreateNestedOneWithoutCustomerInput
+}
+
+export type CustomerCreateOrConnectWithoutAddressesInput = {
+  where: Prisma.CustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutAddressesInput, Prisma.CustomerUncheckedCreateWithoutAddressesInput>
+}
+
+export type CustomerUpsertWithoutAddressesInput = {
+  update: Prisma.XOR<Prisma.CustomerUpdateWithoutAddressesInput, Prisma.CustomerUncheckedUpdateWithoutAddressesInput>
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutAddressesInput, Prisma.CustomerUncheckedCreateWithoutAddressesInput>
+  where?: Prisma.CustomerWhereInput
+}
+
+export type CustomerUpdateToOneWithWhereWithoutAddressesInput = {
+  where?: Prisma.CustomerWhereInput
+  data: Prisma.XOR<Prisma.CustomerUpdateWithoutAddressesInput, Prisma.CustomerUncheckedUpdateWithoutAddressesInput>
+}
+
+export type CustomerUpdateWithoutAddressesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCustomerNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutCustomerNestedInput
+  nachMandates?: Prisma.NachMandateUpdateManyWithoutCustomerNestedInput
+  creditReport?: Prisma.CreditReportUpdateOneWithoutCustomerNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCustomerNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCustomerNestedInput
+  financialDetails?: Prisma.FinancialDetailsUpdateOneWithoutCustomerNestedInput
+}
+
+export type CustomerUncheckedUpdateWithoutAddressesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCustomerNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutCustomerNestedInput
+  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutCustomerNestedInput
+  creditReport?: Prisma.CreditReportUncheckedUpdateOneWithoutCustomerNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCustomerNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCustomerNestedInput
+  financialDetails?: Prisma.FinancialDetailsUncheckedUpdateOneWithoutCustomerNestedInput
+}
+
 export type CustomerCreateWithoutLoanApplicationsInput = {
   id?: string
   title: $Enums.Title
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName: string
+  motherName: string
   gender: $Enums.Gender
+  genderOther?: string | null
   dob: Date | string
   aadhaarNumber?: string | null
   panNumber?: string | null
   voterId?: string | null
-  maritalStatus?: $Enums.MaritalStatus | null
-  nationality?: string | null
-  category?: $Enums.Category | null
-  spouseName?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
   passportNumber?: string | null
   contactNumber: string
   alternateNumber?: string | null
   email?: string | null
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
-  annualIncome?: number | null
   bankName?: string | null
   bankAccountNumber?: string | null
-  otherIncome?: number | null
   ifscCode?: string | null
   accountType?: string | null
   status?: $Enums.CustomerStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  addresses?: Prisma.AddressCreateNestedManyWithoutCustomerInput
   loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutCustomerInput
   nachMandates?: Prisma.NachMandateCreateNestedManyWithoutCustomerInput
   creditReport?: Prisma.CreditReportCreateNestedOneWithoutCustomerInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCustomerInput
+  employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCustomerInput
+  financialDetails?: Prisma.FinancialDetailsCreateNestedOneWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutLoanApplicationsInput = {
@@ -1134,37 +1583,47 @@ export type CustomerUncheckedCreateWithoutLoanApplicationsInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName: string
+  motherName: string
   gender: $Enums.Gender
+  genderOther?: string | null
   dob: Date | string
   aadhaarNumber?: string | null
   panNumber?: string | null
   voterId?: string | null
-  maritalStatus?: $Enums.MaritalStatus | null
-  nationality?: string | null
-  category?: $Enums.Category | null
-  spouseName?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
   passportNumber?: string | null
   contactNumber: string
   alternateNumber?: string | null
   email?: string | null
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
-  annualIncome?: number | null
   bankName?: string | null
   bankAccountNumber?: string | null
-  otherIncome?: number | null
   ifscCode?: string | null
   accountType?: string | null
   status?: $Enums.CustomerStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCustomerInput
   loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutCustomerInput
   nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutCustomerInput
   creditReport?: Prisma.CreditReportUncheckedCreateNestedOneWithoutCustomerInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCustomerInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCustomerInput
+  financialDetails?: Prisma.FinancialDetailsUncheckedCreateNestedOneWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutLoanApplicationsInput = {
@@ -1189,37 +1648,47 @@ export type CustomerUpdateWithoutLoanApplicationsInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
-  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
-  spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  annualIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUpdateManyWithoutCustomerNestedInput
   loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutCustomerNestedInput
   nachMandates?: Prisma.NachMandateUpdateManyWithoutCustomerNestedInput
   creditReport?: Prisma.CreditReportUpdateOneWithoutCustomerNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCustomerNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCustomerNestedInput
+  financialDetails?: Prisma.FinancialDetailsUpdateOneWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutLoanApplicationsInput = {
@@ -1228,37 +1697,47 @@ export type CustomerUncheckedUpdateWithoutLoanApplicationsInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
-  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
-  spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  annualIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUncheckedUpdateManyWithoutCustomerNestedInput
   loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutCustomerNestedInput
   nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutCustomerNestedInput
   creditReport?: Prisma.CreditReportUncheckedUpdateOneWithoutCustomerNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCustomerNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCustomerNestedInput
+  financialDetails?: Prisma.FinancialDetailsUncheckedUpdateOneWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutLoanRecoveriesInput = {
@@ -1267,37 +1746,47 @@ export type CustomerCreateWithoutLoanRecoveriesInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName: string
+  motherName: string
   gender: $Enums.Gender
+  genderOther?: string | null
   dob: Date | string
   aadhaarNumber?: string | null
   panNumber?: string | null
   voterId?: string | null
-  maritalStatus?: $Enums.MaritalStatus | null
-  nationality?: string | null
-  category?: $Enums.Category | null
-  spouseName?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
   passportNumber?: string | null
   contactNumber: string
   alternateNumber?: string | null
   email?: string | null
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
-  annualIncome?: number | null
   bankName?: string | null
   bankAccountNumber?: string | null
-  otherIncome?: number | null
   ifscCode?: string | null
   accountType?: string | null
   status?: $Enums.CustomerStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  addresses?: Prisma.AddressCreateNestedManyWithoutCustomerInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCustomerInput
   nachMandates?: Prisma.NachMandateCreateNestedManyWithoutCustomerInput
   creditReport?: Prisma.CreditReportCreateNestedOneWithoutCustomerInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCustomerInput
+  employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCustomerInput
+  financialDetails?: Prisma.FinancialDetailsCreateNestedOneWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutLoanRecoveriesInput = {
@@ -1306,37 +1795,47 @@ export type CustomerUncheckedCreateWithoutLoanRecoveriesInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName: string
+  motherName: string
   gender: $Enums.Gender
+  genderOther?: string | null
   dob: Date | string
   aadhaarNumber?: string | null
   panNumber?: string | null
   voterId?: string | null
-  maritalStatus?: $Enums.MaritalStatus | null
-  nationality?: string | null
-  category?: $Enums.Category | null
-  spouseName?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
   passportNumber?: string | null
   contactNumber: string
   alternateNumber?: string | null
   email?: string | null
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
-  annualIncome?: number | null
   bankName?: string | null
   bankAccountNumber?: string | null
-  otherIncome?: number | null
   ifscCode?: string | null
   accountType?: string | null
   status?: $Enums.CustomerStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCustomerInput
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCustomerInput
   nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutCustomerInput
   creditReport?: Prisma.CreditReportUncheckedCreateNestedOneWithoutCustomerInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCustomerInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCustomerInput
+  financialDetails?: Prisma.FinancialDetailsUncheckedCreateNestedOneWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutLoanRecoveriesInput = {
@@ -1361,37 +1860,47 @@ export type CustomerUpdateWithoutLoanRecoveriesInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
-  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
-  spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  annualIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUpdateManyWithoutCustomerNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCustomerNestedInput
   nachMandates?: Prisma.NachMandateUpdateManyWithoutCustomerNestedInput
   creditReport?: Prisma.CreditReportUpdateOneWithoutCustomerNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCustomerNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCustomerNestedInput
+  financialDetails?: Prisma.FinancialDetailsUpdateOneWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutLoanRecoveriesInput = {
@@ -1400,37 +1909,47 @@ export type CustomerUncheckedUpdateWithoutLoanRecoveriesInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
-  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
-  spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  annualIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUncheckedUpdateManyWithoutCustomerNestedInput
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCustomerNestedInput
   nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutCustomerNestedInput
   creditReport?: Prisma.CreditReportUncheckedUpdateOneWithoutCustomerNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCustomerNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCustomerNestedInput
+  financialDetails?: Prisma.FinancialDetailsUncheckedUpdateOneWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutCreditReportInput = {
@@ -1439,37 +1958,47 @@ export type CustomerCreateWithoutCreditReportInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName: string
+  motherName: string
   gender: $Enums.Gender
+  genderOther?: string | null
   dob: Date | string
   aadhaarNumber?: string | null
   panNumber?: string | null
   voterId?: string | null
-  maritalStatus?: $Enums.MaritalStatus | null
-  nationality?: string | null
-  category?: $Enums.Category | null
-  spouseName?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
   passportNumber?: string | null
   contactNumber: string
   alternateNumber?: string | null
   email?: string | null
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
-  annualIncome?: number | null
   bankName?: string | null
   bankAccountNumber?: string | null
-  otherIncome?: number | null
   ifscCode?: string | null
   accountType?: string | null
   status?: $Enums.CustomerStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  addresses?: Prisma.AddressCreateNestedManyWithoutCustomerInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCustomerInput
   loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutCustomerInput
   nachMandates?: Prisma.NachMandateCreateNestedManyWithoutCustomerInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCustomerInput
+  employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCustomerInput
+  financialDetails?: Prisma.FinancialDetailsCreateNestedOneWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutCreditReportInput = {
@@ -1478,37 +2007,47 @@ export type CustomerUncheckedCreateWithoutCreditReportInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName: string
+  motherName: string
   gender: $Enums.Gender
+  genderOther?: string | null
   dob: Date | string
   aadhaarNumber?: string | null
   panNumber?: string | null
   voterId?: string | null
-  maritalStatus?: $Enums.MaritalStatus | null
-  nationality?: string | null
-  category?: $Enums.Category | null
-  spouseName?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
   passportNumber?: string | null
   contactNumber: string
   alternateNumber?: string | null
   email?: string | null
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
-  annualIncome?: number | null
   bankName?: string | null
   bankAccountNumber?: string | null
-  otherIncome?: number | null
   ifscCode?: string | null
   accountType?: string | null
   status?: $Enums.CustomerStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCustomerInput
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCustomerInput
   loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutCustomerInput
   nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutCustomerInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCustomerInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCustomerInput
+  financialDetails?: Prisma.FinancialDetailsUncheckedCreateNestedOneWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutCreditReportInput = {
@@ -1533,37 +2072,47 @@ export type CustomerUpdateWithoutCreditReportInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
-  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
-  spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  annualIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUpdateManyWithoutCustomerNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCustomerNestedInput
   loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutCustomerNestedInput
   nachMandates?: Prisma.NachMandateUpdateManyWithoutCustomerNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCustomerNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCustomerNestedInput
+  financialDetails?: Prisma.FinancialDetailsUpdateOneWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutCreditReportInput = {
@@ -1572,37 +2121,683 @@ export type CustomerUncheckedUpdateWithoutCreditReportInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
-  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
-  spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  annualIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUncheckedUpdateManyWithoutCustomerNestedInput
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCustomerNestedInput
   loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutCustomerNestedInput
   nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutCustomerNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCustomerNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCustomerNestedInput
+  financialDetails?: Prisma.FinancialDetailsUncheckedUpdateOneWithoutCustomerNestedInput
+}
+
+export type CustomerCreateWithoutOccupationalDetailsInput = {
+  id?: string
+  title: $Enums.Title
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  fatherName: string
+  motherName: string
+  gender: $Enums.Gender
+  genderOther?: string | null
+  dob: Date | string
+  aadhaarNumber?: string | null
+  panNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
+  passportNumber?: string | null
+  contactNumber: string
+  alternateNumber?: string | null
+  email?: string | null
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
+  employmentType: $Enums.EmploymentType
+  bankName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  accountType?: string | null
+  status?: $Enums.CustomerStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  addresses?: Prisma.AddressCreateNestedManyWithoutCustomerInput
+  loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCustomerInput
+  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutCustomerInput
+  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutCustomerInput
+  creditReport?: Prisma.CreditReportCreateNestedOneWithoutCustomerInput
+  employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCustomerInput
+  financialDetails?: Prisma.FinancialDetailsCreateNestedOneWithoutCustomerInput
+}
+
+export type CustomerUncheckedCreateWithoutOccupationalDetailsInput = {
+  id?: string
+  title: $Enums.Title
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  fatherName: string
+  motherName: string
+  gender: $Enums.Gender
+  genderOther?: string | null
+  dob: Date | string
+  aadhaarNumber?: string | null
+  panNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
+  passportNumber?: string | null
+  contactNumber: string
+  alternateNumber?: string | null
+  email?: string | null
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
+  employmentType: $Enums.EmploymentType
+  bankName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  accountType?: string | null
+  status?: $Enums.CustomerStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCustomerInput
+  loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCustomerInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutCustomerInput
+  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutCustomerInput
+  creditReport?: Prisma.CreditReportUncheckedCreateNestedOneWithoutCustomerInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCustomerInput
+  financialDetails?: Prisma.FinancialDetailsUncheckedCreateNestedOneWithoutCustomerInput
+}
+
+export type CustomerCreateOrConnectWithoutOccupationalDetailsInput = {
+  where: Prisma.CustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutOccupationalDetailsInput, Prisma.CustomerUncheckedCreateWithoutOccupationalDetailsInput>
+}
+
+export type CustomerUpsertWithoutOccupationalDetailsInput = {
+  update: Prisma.XOR<Prisma.CustomerUpdateWithoutOccupationalDetailsInput, Prisma.CustomerUncheckedUpdateWithoutOccupationalDetailsInput>
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutOccupationalDetailsInput, Prisma.CustomerUncheckedCreateWithoutOccupationalDetailsInput>
+  where?: Prisma.CustomerWhereInput
+}
+
+export type CustomerUpdateToOneWithWhereWithoutOccupationalDetailsInput = {
+  where?: Prisma.CustomerWhereInput
+  data: Prisma.XOR<Prisma.CustomerUpdateWithoutOccupationalDetailsInput, Prisma.CustomerUncheckedUpdateWithoutOccupationalDetailsInput>
+}
+
+export type CustomerUpdateWithoutOccupationalDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUpdateManyWithoutCustomerNestedInput
+  loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCustomerNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutCustomerNestedInput
+  nachMandates?: Prisma.NachMandateUpdateManyWithoutCustomerNestedInput
+  creditReport?: Prisma.CreditReportUpdateOneWithoutCustomerNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCustomerNestedInput
+  financialDetails?: Prisma.FinancialDetailsUpdateOneWithoutCustomerNestedInput
+}
+
+export type CustomerUncheckedUpdateWithoutOccupationalDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUncheckedUpdateManyWithoutCustomerNestedInput
+  loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCustomerNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutCustomerNestedInput
+  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutCustomerNestedInput
+  creditReport?: Prisma.CreditReportUncheckedUpdateOneWithoutCustomerNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCustomerNestedInput
+  financialDetails?: Prisma.FinancialDetailsUncheckedUpdateOneWithoutCustomerNestedInput
+}
+
+export type CustomerCreateWithoutEmploymentDetailsInput = {
+  id?: string
+  title: $Enums.Title
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  fatherName: string
+  motherName: string
+  gender: $Enums.Gender
+  genderOther?: string | null
+  dob: Date | string
+  aadhaarNumber?: string | null
+  panNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
+  passportNumber?: string | null
+  contactNumber: string
+  alternateNumber?: string | null
+  email?: string | null
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
+  employmentType: $Enums.EmploymentType
+  bankName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  accountType?: string | null
+  status?: $Enums.CustomerStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  addresses?: Prisma.AddressCreateNestedManyWithoutCustomerInput
+  loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCustomerInput
+  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutCustomerInput
+  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutCustomerInput
+  creditReport?: Prisma.CreditReportCreateNestedOneWithoutCustomerInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCustomerInput
+  financialDetails?: Prisma.FinancialDetailsCreateNestedOneWithoutCustomerInput
+}
+
+export type CustomerUncheckedCreateWithoutEmploymentDetailsInput = {
+  id?: string
+  title: $Enums.Title
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  fatherName: string
+  motherName: string
+  gender: $Enums.Gender
+  genderOther?: string | null
+  dob: Date | string
+  aadhaarNumber?: string | null
+  panNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
+  passportNumber?: string | null
+  contactNumber: string
+  alternateNumber?: string | null
+  email?: string | null
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
+  employmentType: $Enums.EmploymentType
+  bankName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  accountType?: string | null
+  status?: $Enums.CustomerStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCustomerInput
+  loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCustomerInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutCustomerInput
+  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutCustomerInput
+  creditReport?: Prisma.CreditReportUncheckedCreateNestedOneWithoutCustomerInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCustomerInput
+  financialDetails?: Prisma.FinancialDetailsUncheckedCreateNestedOneWithoutCustomerInput
+}
+
+export type CustomerCreateOrConnectWithoutEmploymentDetailsInput = {
+  where: Prisma.CustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutEmploymentDetailsInput, Prisma.CustomerUncheckedCreateWithoutEmploymentDetailsInput>
+}
+
+export type CustomerUpsertWithoutEmploymentDetailsInput = {
+  update: Prisma.XOR<Prisma.CustomerUpdateWithoutEmploymentDetailsInput, Prisma.CustomerUncheckedUpdateWithoutEmploymentDetailsInput>
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutEmploymentDetailsInput, Prisma.CustomerUncheckedCreateWithoutEmploymentDetailsInput>
+  where?: Prisma.CustomerWhereInput
+}
+
+export type CustomerUpdateToOneWithWhereWithoutEmploymentDetailsInput = {
+  where?: Prisma.CustomerWhereInput
+  data: Prisma.XOR<Prisma.CustomerUpdateWithoutEmploymentDetailsInput, Prisma.CustomerUncheckedUpdateWithoutEmploymentDetailsInput>
+}
+
+export type CustomerUpdateWithoutEmploymentDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUpdateManyWithoutCustomerNestedInput
+  loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCustomerNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutCustomerNestedInput
+  nachMandates?: Prisma.NachMandateUpdateManyWithoutCustomerNestedInput
+  creditReport?: Prisma.CreditReportUpdateOneWithoutCustomerNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCustomerNestedInput
+  financialDetails?: Prisma.FinancialDetailsUpdateOneWithoutCustomerNestedInput
+}
+
+export type CustomerUncheckedUpdateWithoutEmploymentDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUncheckedUpdateManyWithoutCustomerNestedInput
+  loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCustomerNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutCustomerNestedInput
+  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutCustomerNestedInput
+  creditReport?: Prisma.CreditReportUncheckedUpdateOneWithoutCustomerNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCustomerNestedInput
+  financialDetails?: Prisma.FinancialDetailsUncheckedUpdateOneWithoutCustomerNestedInput
+}
+
+export type CustomerCreateWithoutFinancialDetailsInput = {
+  id?: string
+  title: $Enums.Title
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  fatherName: string
+  motherName: string
+  gender: $Enums.Gender
+  genderOther?: string | null
+  dob: Date | string
+  aadhaarNumber?: string | null
+  panNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
+  passportNumber?: string | null
+  contactNumber: string
+  alternateNumber?: string | null
+  email?: string | null
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
+  employmentType: $Enums.EmploymentType
+  bankName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  accountType?: string | null
+  status?: $Enums.CustomerStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  addresses?: Prisma.AddressCreateNestedManyWithoutCustomerInput
+  loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCustomerInput
+  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutCustomerInput
+  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutCustomerInput
+  creditReport?: Prisma.CreditReportCreateNestedOneWithoutCustomerInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCustomerInput
+  employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerUncheckedCreateWithoutFinancialDetailsInput = {
+  id?: string
+  title: $Enums.Title
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  fatherName: string
+  motherName: string
+  gender: $Enums.Gender
+  genderOther?: string | null
+  dob: Date | string
+  aadhaarNumber?: string | null
+  panNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
+  passportNumber?: string | null
+  contactNumber: string
+  alternateNumber?: string | null
+  email?: string | null
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
+  employmentType: $Enums.EmploymentType
+  bankName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  accountType?: string | null
+  status?: $Enums.CustomerStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCustomerInput
+  loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCustomerInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutCustomerInput
+  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutCustomerInput
+  creditReport?: Prisma.CreditReportUncheckedCreateNestedOneWithoutCustomerInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCustomerInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerCreateOrConnectWithoutFinancialDetailsInput = {
+  where: Prisma.CustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutFinancialDetailsInput, Prisma.CustomerUncheckedCreateWithoutFinancialDetailsInput>
+}
+
+export type CustomerUpsertWithoutFinancialDetailsInput = {
+  update: Prisma.XOR<Prisma.CustomerUpdateWithoutFinancialDetailsInput, Prisma.CustomerUncheckedUpdateWithoutFinancialDetailsInput>
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutFinancialDetailsInput, Prisma.CustomerUncheckedCreateWithoutFinancialDetailsInput>
+  where?: Prisma.CustomerWhereInput
+}
+
+export type CustomerUpdateToOneWithWhereWithoutFinancialDetailsInput = {
+  where?: Prisma.CustomerWhereInput
+  data: Prisma.XOR<Prisma.CustomerUpdateWithoutFinancialDetailsInput, Prisma.CustomerUncheckedUpdateWithoutFinancialDetailsInput>
+}
+
+export type CustomerUpdateWithoutFinancialDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUpdateManyWithoutCustomerNestedInput
+  loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCustomerNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutCustomerNestedInput
+  nachMandates?: Prisma.NachMandateUpdateManyWithoutCustomerNestedInput
+  creditReport?: Prisma.CreditReportUpdateOneWithoutCustomerNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCustomerNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerUncheckedUpdateWithoutFinancialDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUncheckedUpdateManyWithoutCustomerNestedInput
+  loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCustomerNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutCustomerNestedInput
+  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutCustomerNestedInput
+  creditReport?: Prisma.CreditReportUncheckedUpdateOneWithoutCustomerNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCustomerNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutNachMandatesInput = {
@@ -1611,37 +2806,47 @@ export type CustomerCreateWithoutNachMandatesInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName: string
+  motherName: string
   gender: $Enums.Gender
+  genderOther?: string | null
   dob: Date | string
   aadhaarNumber?: string | null
   panNumber?: string | null
   voterId?: string | null
-  maritalStatus?: $Enums.MaritalStatus | null
-  nationality?: string | null
-  category?: $Enums.Category | null
-  spouseName?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
   passportNumber?: string | null
   contactNumber: string
   alternateNumber?: string | null
   email?: string | null
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
-  annualIncome?: number | null
   bankName?: string | null
   bankAccountNumber?: string | null
-  otherIncome?: number | null
   ifscCode?: string | null
   accountType?: string | null
   status?: $Enums.CustomerStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  addresses?: Prisma.AddressCreateNestedManyWithoutCustomerInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutCustomerInput
   loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutCustomerInput
   creditReport?: Prisma.CreditReportCreateNestedOneWithoutCustomerInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCustomerInput
+  employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCustomerInput
+  financialDetails?: Prisma.FinancialDetailsCreateNestedOneWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutNachMandatesInput = {
@@ -1650,37 +2855,47 @@ export type CustomerUncheckedCreateWithoutNachMandatesInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName: string
+  motherName: string
   gender: $Enums.Gender
+  genderOther?: string | null
   dob: Date | string
   aadhaarNumber?: string | null
   panNumber?: string | null
   voterId?: string | null
-  maritalStatus?: $Enums.MaritalStatus | null
-  nationality?: string | null
-  category?: $Enums.Category | null
-  spouseName?: string | null
+  drivingLicenceNo?: string | null
+  maritalStatus: $Enums.MaritalStatus
+  maritalStatusOther?: string | null
+  nationality: string
+  category: $Enums.Category
+  categoryOther?: string | null
   passportNumber?: string | null
   contactNumber: string
   alternateNumber?: string | null
   email?: string | null
-  address: string
-  city: string
-  state: string
-  pinCode: string
+  phoneNumber?: string | null
+  noOfFamilyDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
-  monthlyIncome?: number | null
-  annualIncome?: number | null
   bankName?: string | null
   bankAccountNumber?: string | null
-  otherIncome?: number | null
   ifscCode?: string | null
   accountType?: string | null
   status?: $Enums.CustomerStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCustomerInput
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutCustomerInput
   loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutCustomerInput
   creditReport?: Prisma.CreditReportUncheckedCreateNestedOneWithoutCustomerInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCustomerInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCustomerInput
+  financialDetails?: Prisma.FinancialDetailsUncheckedCreateNestedOneWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutNachMandatesInput = {
@@ -1705,37 +2920,47 @@ export type CustomerUpdateWithoutNachMandatesInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
-  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
-  spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  annualIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUpdateManyWithoutCustomerNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutCustomerNestedInput
   loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutCustomerNestedInput
   creditReport?: Prisma.CreditReportUpdateOneWithoutCustomerNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCustomerNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCustomerNestedInput
+  financialDetails?: Prisma.FinancialDetailsUpdateOneWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutNachMandatesInput = {
@@ -1744,37 +2969,47 @@ export type CustomerUncheckedUpdateWithoutNachMandatesInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.StringFieldUpdateOperationsInput | string
+  motherName?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  genderOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
-  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
-  spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.EnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus
+  maritalStatusOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
+  categoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noOfFamilyDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
-  monthlyIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  annualIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherIncome?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUncheckedUpdateManyWithoutCustomerNestedInput
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutCustomerNestedInput
   loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutCustomerNestedInput
   creditReport?: Prisma.CreditReportUncheckedUpdateOneWithoutCustomerNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCustomerNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCustomerNestedInput
+  financialDetails?: Prisma.FinancialDetailsUncheckedUpdateOneWithoutCustomerNestedInput
 }
 
 
@@ -1783,15 +3018,21 @@ export type CustomerUncheckedUpdateWithoutNachMandatesInput = {
  */
 
 export type CustomerCountOutputType = {
+  addresses: number
   loanApplications: number
   loanRecoveries: number
   nachMandates: number
+  occupationalDetails: number
+  employmentDetails: number
 }
 
 export type CustomerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  addresses?: boolean | CustomerCountOutputTypeCountAddressesArgs
   loanApplications?: boolean | CustomerCountOutputTypeCountLoanApplicationsArgs
   loanRecoveries?: boolean | CustomerCountOutputTypeCountLoanRecoveriesArgs
   nachMandates?: boolean | CustomerCountOutputTypeCountNachMandatesArgs
+  occupationalDetails?: boolean | CustomerCountOutputTypeCountOccupationalDetailsArgs
+  employmentDetails?: boolean | CustomerCountOutputTypeCountEmploymentDetailsArgs
 }
 
 /**
@@ -1802,6 +3043,13 @@ export type CustomerCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ext
    * Select specific fields to fetch from the CustomerCountOutputType
    */
   select?: Prisma.CustomerCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CustomerCountOutputType without action
+ */
+export type CustomerCountOutputTypeCountAddressesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AddressWhereInput
 }
 
 /**
@@ -1825,6 +3073,20 @@ export type CustomerCountOutputTypeCountNachMandatesArgs<ExtArgs extends runtime
   where?: Prisma.NachMandateWhereInput
 }
 
+/**
+ * CustomerCountOutputType without action
+ */
+export type CustomerCountOutputTypeCountOccupationalDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OccupationalDetailsWhereInput
+}
+
+/**
+ * CustomerCountOutputType without action
+ */
+export type CustomerCountOutputTypeCountEmploymentDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmploymentDetailsWhereInput
+}
+
 
 export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1832,38 +3094,48 @@ export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   firstName?: boolean
   lastName?: boolean
   middleName?: boolean
+  fatherName?: boolean
+  motherName?: boolean
   gender?: boolean
+  genderOther?: boolean
   dob?: boolean
   aadhaarNumber?: boolean
   panNumber?: boolean
   voterId?: boolean
+  drivingLicenceNo?: boolean
   maritalStatus?: boolean
+  maritalStatusOther?: boolean
   nationality?: boolean
   category?: boolean
-  spouseName?: boolean
+  categoryOther?: boolean
   passportNumber?: boolean
   contactNumber?: boolean
   alternateNumber?: boolean
   email?: boolean
-  address?: boolean
-  city?: boolean
-  state?: boolean
-  pinCode?: boolean
+  phoneNumber?: boolean
+  noOfFamilyDependents?: boolean
+  noOfChildren?: boolean
+  qualification?: boolean
+  correspondenceAddressType?: boolean
+  presentAccommodation?: boolean
+  periodOfStay?: boolean
+  rentPerMonth?: boolean
   employmentType?: boolean
-  monthlyIncome?: boolean
-  annualIncome?: boolean
   bankName?: boolean
   bankAccountNumber?: boolean
-  otherIncome?: boolean
   ifscCode?: boolean
   accountType?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  addresses?: boolean | Prisma.Customer$addressesArgs<ExtArgs>
   loanApplications?: boolean | Prisma.Customer$loanApplicationsArgs<ExtArgs>
   loanRecoveries?: boolean | Prisma.Customer$loanRecoveriesArgs<ExtArgs>
   nachMandates?: boolean | Prisma.Customer$nachMandatesArgs<ExtArgs>
   creditReport?: boolean | Prisma.Customer$creditReportArgs<ExtArgs>
+  occupationalDetails?: boolean | Prisma.Customer$occupationalDetailsArgs<ExtArgs>
+  employmentDetails?: boolean | Prisma.Customer$employmentDetailsArgs<ExtArgs>
+  financialDetails?: boolean | Prisma.Customer$financialDetailsArgs<ExtArgs>
   _count?: boolean | Prisma.CustomerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["customer"]>
 
@@ -1875,29 +3147,35 @@ export type CustomerSelectScalar = {
   firstName?: boolean
   lastName?: boolean
   middleName?: boolean
+  fatherName?: boolean
+  motherName?: boolean
   gender?: boolean
+  genderOther?: boolean
   dob?: boolean
   aadhaarNumber?: boolean
   panNumber?: boolean
   voterId?: boolean
+  drivingLicenceNo?: boolean
   maritalStatus?: boolean
+  maritalStatusOther?: boolean
   nationality?: boolean
   category?: boolean
-  spouseName?: boolean
+  categoryOther?: boolean
   passportNumber?: boolean
   contactNumber?: boolean
   alternateNumber?: boolean
   email?: boolean
-  address?: boolean
-  city?: boolean
-  state?: boolean
-  pinCode?: boolean
+  phoneNumber?: boolean
+  noOfFamilyDependents?: boolean
+  noOfChildren?: boolean
+  qualification?: boolean
+  correspondenceAddressType?: boolean
+  presentAccommodation?: boolean
+  periodOfStay?: boolean
+  rentPerMonth?: boolean
   employmentType?: boolean
-  monthlyIncome?: boolean
-  annualIncome?: boolean
   bankName?: boolean
   bankAccountNumber?: boolean
-  otherIncome?: boolean
   ifscCode?: boolean
   accountType?: boolean
   status?: boolean
@@ -1905,22 +3183,30 @@ export type CustomerSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "firstName" | "lastName" | "middleName" | "gender" | "dob" | "aadhaarNumber" | "panNumber" | "voterId" | "maritalStatus" | "nationality" | "category" | "spouseName" | "passportNumber" | "contactNumber" | "alternateNumber" | "email" | "address" | "city" | "state" | "pinCode" | "employmentType" | "monthlyIncome" | "annualIncome" | "bankName" | "bankAccountNumber" | "otherIncome" | "ifscCode" | "accountType" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
+export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "firstName" | "lastName" | "middleName" | "fatherName" | "motherName" | "gender" | "genderOther" | "dob" | "aadhaarNumber" | "panNumber" | "voterId" | "drivingLicenceNo" | "maritalStatus" | "maritalStatusOther" | "nationality" | "category" | "categoryOther" | "passportNumber" | "contactNumber" | "alternateNumber" | "email" | "phoneNumber" | "noOfFamilyDependents" | "noOfChildren" | "qualification" | "correspondenceAddressType" | "presentAccommodation" | "periodOfStay" | "rentPerMonth" | "employmentType" | "bankName" | "bankAccountNumber" | "ifscCode" | "accountType" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
 export type CustomerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  addresses?: boolean | Prisma.Customer$addressesArgs<ExtArgs>
   loanApplications?: boolean | Prisma.Customer$loanApplicationsArgs<ExtArgs>
   loanRecoveries?: boolean | Prisma.Customer$loanRecoveriesArgs<ExtArgs>
   nachMandates?: boolean | Prisma.Customer$nachMandatesArgs<ExtArgs>
   creditReport?: boolean | Prisma.Customer$creditReportArgs<ExtArgs>
+  occupationalDetails?: boolean | Prisma.Customer$occupationalDetailsArgs<ExtArgs>
+  employmentDetails?: boolean | Prisma.Customer$employmentDetailsArgs<ExtArgs>
+  financialDetails?: boolean | Prisma.Customer$financialDetailsArgs<ExtArgs>
   _count?: boolean | Prisma.CustomerCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $CustomerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Customer"
   objects: {
+    addresses: Prisma.$AddressPayload<ExtArgs>[]
     loanApplications: Prisma.$LoanApplicationPayload<ExtArgs>[]
     loanRecoveries: Prisma.$LoanRecoveryPayload<ExtArgs>[]
     nachMandates: Prisma.$NachMandatePayload<ExtArgs>[]
     creditReport: Prisma.$CreditReportPayload<ExtArgs> | null
+    occupationalDetails: Prisma.$OccupationalDetailsPayload<ExtArgs>[]
+    employmentDetails: Prisma.$EmploymentDetailsPayload<ExtArgs>[]
+    financialDetails: Prisma.$FinancialDetailsPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1928,29 +3214,35 @@ export type $CustomerPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     firstName: string
     lastName: string
     middleName: string | null
+    fatherName: string
+    motherName: string
     gender: $Enums.Gender
+    genderOther: string | null
     dob: Date
     aadhaarNumber: string | null
     panNumber: string | null
     voterId: string | null
-    maritalStatus: $Enums.MaritalStatus | null
-    nationality: string | null
-    category: $Enums.Category | null
-    spouseName: string | null
+    drivingLicenceNo: string | null
+    maritalStatus: $Enums.MaritalStatus
+    maritalStatusOther: string | null
+    nationality: string
+    category: $Enums.Category
+    categoryOther: string | null
     passportNumber: string | null
     contactNumber: string
     alternateNumber: string | null
     email: string | null
-    address: string
-    city: string
-    state: string
-    pinCode: string
+    phoneNumber: string | null
+    noOfFamilyDependents: number | null
+    noOfChildren: number | null
+    qualification: string | null
+    correspondenceAddressType: $Enums.CorrespondenceAddressType | null
+    presentAccommodation: $Enums.AccommodationType | null
+    periodOfStay: string | null
+    rentPerMonth: number | null
     employmentType: $Enums.EmploymentType
-    monthlyIncome: number | null
-    annualIncome: number | null
     bankName: string | null
     bankAccountNumber: string | null
-    otherIncome: number | null
     ifscCode: string | null
     accountType: string | null
     status: $Enums.CustomerStatus
@@ -2296,10 +3588,14 @@ readonly fields: CustomerFieldRefs;
  */
 export interface Prisma__CustomerClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  addresses<T extends Prisma.Customer$addressesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$addressesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   loanApplications<T extends Prisma.Customer$loanApplicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$loanApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoanApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   loanRecoveries<T extends Prisma.Customer$loanRecoveriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$loanRecoveriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoanRecoveryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   nachMandates<T extends Prisma.Customer$nachMandatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$nachMandatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NachMandatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   creditReport<T extends Prisma.Customer$creditReportArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$creditReportArgs<ExtArgs>>): Prisma.Prisma__CreditReportClient<runtime.Types.Result.GetResult<Prisma.$CreditReportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  occupationalDetails<T extends Prisma.Customer$occupationalDetailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$occupationalDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OccupationalDetailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  employmentDetails<T extends Prisma.Customer$employmentDetailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$employmentDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmploymentDetailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  financialDetails<T extends Prisma.Customer$financialDetailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$financialDetailsArgs<ExtArgs>>): Prisma.Prisma__FinancialDetailsClient<runtime.Types.Result.GetResult<Prisma.$FinancialDetailsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2334,29 +3630,35 @@ export interface CustomerFieldRefs {
   readonly firstName: Prisma.FieldRef<"Customer", 'String'>
   readonly lastName: Prisma.FieldRef<"Customer", 'String'>
   readonly middleName: Prisma.FieldRef<"Customer", 'String'>
+  readonly fatherName: Prisma.FieldRef<"Customer", 'String'>
+  readonly motherName: Prisma.FieldRef<"Customer", 'String'>
   readonly gender: Prisma.FieldRef<"Customer", 'Gender'>
+  readonly genderOther: Prisma.FieldRef<"Customer", 'String'>
   readonly dob: Prisma.FieldRef<"Customer", 'DateTime'>
   readonly aadhaarNumber: Prisma.FieldRef<"Customer", 'String'>
   readonly panNumber: Prisma.FieldRef<"Customer", 'String'>
   readonly voterId: Prisma.FieldRef<"Customer", 'String'>
+  readonly drivingLicenceNo: Prisma.FieldRef<"Customer", 'String'>
   readonly maritalStatus: Prisma.FieldRef<"Customer", 'MaritalStatus'>
+  readonly maritalStatusOther: Prisma.FieldRef<"Customer", 'String'>
   readonly nationality: Prisma.FieldRef<"Customer", 'String'>
   readonly category: Prisma.FieldRef<"Customer", 'Category'>
-  readonly spouseName: Prisma.FieldRef<"Customer", 'String'>
+  readonly categoryOther: Prisma.FieldRef<"Customer", 'String'>
   readonly passportNumber: Prisma.FieldRef<"Customer", 'String'>
   readonly contactNumber: Prisma.FieldRef<"Customer", 'String'>
   readonly alternateNumber: Prisma.FieldRef<"Customer", 'String'>
   readonly email: Prisma.FieldRef<"Customer", 'String'>
-  readonly address: Prisma.FieldRef<"Customer", 'String'>
-  readonly city: Prisma.FieldRef<"Customer", 'String'>
-  readonly state: Prisma.FieldRef<"Customer", 'String'>
-  readonly pinCode: Prisma.FieldRef<"Customer", 'String'>
+  readonly phoneNumber: Prisma.FieldRef<"Customer", 'String'>
+  readonly noOfFamilyDependents: Prisma.FieldRef<"Customer", 'Int'>
+  readonly noOfChildren: Prisma.FieldRef<"Customer", 'Int'>
+  readonly qualification: Prisma.FieldRef<"Customer", 'String'>
+  readonly correspondenceAddressType: Prisma.FieldRef<"Customer", 'CorrespondenceAddressType'>
+  readonly presentAccommodation: Prisma.FieldRef<"Customer", 'AccommodationType'>
+  readonly periodOfStay: Prisma.FieldRef<"Customer", 'String'>
+  readonly rentPerMonth: Prisma.FieldRef<"Customer", 'Float'>
   readonly employmentType: Prisma.FieldRef<"Customer", 'EmploymentType'>
-  readonly monthlyIncome: Prisma.FieldRef<"Customer", 'Float'>
-  readonly annualIncome: Prisma.FieldRef<"Customer", 'Float'>
   readonly bankName: Prisma.FieldRef<"Customer", 'String'>
   readonly bankAccountNumber: Prisma.FieldRef<"Customer", 'String'>
-  readonly otherIncome: Prisma.FieldRef<"Customer", 'Float'>
   readonly ifscCode: Prisma.FieldRef<"Customer", 'String'>
   readonly accountType: Prisma.FieldRef<"Customer", 'String'>
   readonly status: Prisma.FieldRef<"Customer", 'CustomerStatus'>
@@ -2705,6 +4007,30 @@ export type CustomerDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
+ * Customer.addresses
+ */
+export type Customer$addressesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Address
+   */
+  select?: Prisma.AddressSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Address
+   */
+  omit?: Prisma.AddressOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddressInclude<ExtArgs> | null
+  where?: Prisma.AddressWhereInput
+  orderBy?: Prisma.AddressOrderByWithRelationInput | Prisma.AddressOrderByWithRelationInput[]
+  cursor?: Prisma.AddressWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AddressScalarFieldEnum | Prisma.AddressScalarFieldEnum[]
+}
+
+/**
  * Customer.loanApplications
  */
 export type Customer$loanApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2793,6 +4119,73 @@ export type Customer$creditReportArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   include?: Prisma.CreditReportInclude<ExtArgs> | null
   where?: Prisma.CreditReportWhereInput
+}
+
+/**
+ * Customer.occupationalDetails
+ */
+export type Customer$occupationalDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OccupationalDetails
+   */
+  select?: Prisma.OccupationalDetailsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OccupationalDetails
+   */
+  omit?: Prisma.OccupationalDetailsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OccupationalDetailsInclude<ExtArgs> | null
+  where?: Prisma.OccupationalDetailsWhereInput
+  orderBy?: Prisma.OccupationalDetailsOrderByWithRelationInput | Prisma.OccupationalDetailsOrderByWithRelationInput[]
+  cursor?: Prisma.OccupationalDetailsWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OccupationalDetailsScalarFieldEnum | Prisma.OccupationalDetailsScalarFieldEnum[]
+}
+
+/**
+ * Customer.employmentDetails
+ */
+export type Customer$employmentDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmploymentDetails
+   */
+  select?: Prisma.EmploymentDetailsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmploymentDetails
+   */
+  omit?: Prisma.EmploymentDetailsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmploymentDetailsInclude<ExtArgs> | null
+  where?: Prisma.EmploymentDetailsWhereInput
+  orderBy?: Prisma.EmploymentDetailsOrderByWithRelationInput | Prisma.EmploymentDetailsOrderByWithRelationInput[]
+  cursor?: Prisma.EmploymentDetailsWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmploymentDetailsScalarFieldEnum | Prisma.EmploymentDetailsScalarFieldEnum[]
+}
+
+/**
+ * Customer.financialDetails
+ */
+export type Customer$financialDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FinancialDetails
+   */
+  select?: Prisma.FinancialDetailsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FinancialDetails
+   */
+  omit?: Prisma.FinancialDetailsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FinancialDetailsInclude<ExtArgs> | null
+  where?: Prisma.FinancialDetailsWhereInput
 }
 
 /**

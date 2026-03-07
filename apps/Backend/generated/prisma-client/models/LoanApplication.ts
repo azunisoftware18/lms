@@ -27,6 +27,7 @@ export type AggregateLoanApplication = {
 }
 
 export type LoanApplicationAvgAggregateOutputType = {
+  processingFees: number | null
   requestedAmount: number | null
   approvedAmount: number | null
   tenureMonths: number | null
@@ -43,6 +44,7 @@ export type LoanApplicationAvgAggregateOutputType = {
 }
 
 export type LoanApplicationSumAggregateOutputType = {
+  processingFees: number | null
   requestedAmount: number | null
   approvedAmount: number | null
   tenureMonths: number | null
@@ -62,6 +64,12 @@ export type LoanApplicationMinAggregateOutputType = {
   id: string | null
   applicationDate: Date | null
   loanNumber: string | null
+  serviceCentre: string | null
+  processingFees: number | null
+  executiveName: string | null
+  EmployeeCode: string | null
+  schemeGroup: string | null
+  referrerFileNo: string | null
   customerId: string | null
   leadId: string | null
   loanTypeId: string | null
@@ -111,6 +119,12 @@ export type LoanApplicationMaxAggregateOutputType = {
   id: string | null
   applicationDate: Date | null
   loanNumber: string | null
+  serviceCentre: string | null
+  processingFees: number | null
+  executiveName: string | null
+  EmployeeCode: string | null
+  schemeGroup: string | null
+  referrerFileNo: string | null
   customerId: string | null
   leadId: string | null
   loanTypeId: string | null
@@ -160,6 +174,12 @@ export type LoanApplicationCountAggregateOutputType = {
   id: number
   applicationDate: number
   loanNumber: number
+  serviceCentre: number
+  processingFees: number
+  executiveName: number
+  EmployeeCode: number
+  schemeGroup: number
+  referrerFileNo: number
   customerId: number
   leadId: number
   loanTypeId: number
@@ -208,6 +228,7 @@ export type LoanApplicationCountAggregateOutputType = {
 
 
 export type LoanApplicationAvgAggregateInputType = {
+  processingFees?: true
   requestedAmount?: true
   approvedAmount?: true
   tenureMonths?: true
@@ -224,6 +245,7 @@ export type LoanApplicationAvgAggregateInputType = {
 }
 
 export type LoanApplicationSumAggregateInputType = {
+  processingFees?: true
   requestedAmount?: true
   approvedAmount?: true
   tenureMonths?: true
@@ -243,6 +265,12 @@ export type LoanApplicationMinAggregateInputType = {
   id?: true
   applicationDate?: true
   loanNumber?: true
+  serviceCentre?: true
+  processingFees?: true
+  executiveName?: true
+  EmployeeCode?: true
+  schemeGroup?: true
+  referrerFileNo?: true
   customerId?: true
   leadId?: true
   loanTypeId?: true
@@ -292,6 +320,12 @@ export type LoanApplicationMaxAggregateInputType = {
   id?: true
   applicationDate?: true
   loanNumber?: true
+  serviceCentre?: true
+  processingFees?: true
+  executiveName?: true
+  EmployeeCode?: true
+  schemeGroup?: true
+  referrerFileNo?: true
   customerId?: true
   leadId?: true
   loanTypeId?: true
@@ -341,6 +375,12 @@ export type LoanApplicationCountAggregateInputType = {
   id?: true
   applicationDate?: true
   loanNumber?: true
+  serviceCentre?: true
+  processingFees?: true
+  executiveName?: true
+  EmployeeCode?: true
+  schemeGroup?: true
+  referrerFileNo?: true
   customerId?: true
   leadId?: true
   loanTypeId?: true
@@ -477,6 +517,12 @@ export type LoanApplicationGroupByOutputType = {
   id: string
   applicationDate: Date
   loanNumber: string
+  serviceCentre: string | null
+  processingFees: number | null
+  executiveName: string | null
+  EmployeeCode: string | null
+  schemeGroup: string | null
+  referrerFileNo: string | null
   customerId: string
   leadId: string | null
   loanTypeId: string
@@ -549,6 +595,12 @@ export type LoanApplicationWhereInput = {
   id?: Prisma.StringFilter<"LoanApplication"> | string
   applicationDate?: Prisma.DateTimeFilter<"LoanApplication"> | Date | string
   loanNumber?: Prisma.StringFilter<"LoanApplication"> | string
+  serviceCentre?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
+  processingFees?: Prisma.FloatNullableFilter<"LoanApplication"> | number | null
+  executiveName?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
+  EmployeeCode?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
+  schemeGroup?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
+  referrerFileNo?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
   customerId?: Prisma.StringFilter<"LoanApplication"> | string
   leadId?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
   loanTypeId?: Prisma.StringFilter<"LoanApplication"> | string
@@ -615,6 +667,12 @@ export type LoanApplicationOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   applicationDate?: Prisma.SortOrder
   loanNumber?: Prisma.SortOrder
+  serviceCentre?: Prisma.SortOrderInput | Prisma.SortOrder
+  processingFees?: Prisma.SortOrderInput | Prisma.SortOrder
+  executiveName?: Prisma.SortOrderInput | Prisma.SortOrder
+  EmployeeCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  schemeGroup?: Prisma.SortOrderInput | Prisma.SortOrder
+  referrerFileNo?: Prisma.SortOrderInput | Prisma.SortOrder
   customerId?: Prisma.SortOrder
   leadId?: Prisma.SortOrderInput | Prisma.SortOrder
   loanTypeId?: Prisma.SortOrder
@@ -686,6 +744,12 @@ export type LoanApplicationWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.LoanApplicationWhereInput[]
   NOT?: Prisma.LoanApplicationWhereInput | Prisma.LoanApplicationWhereInput[]
   applicationDate?: Prisma.DateTimeFilter<"LoanApplication"> | Date | string
+  serviceCentre?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
+  processingFees?: Prisma.FloatNullableFilter<"LoanApplication"> | number | null
+  executiveName?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
+  EmployeeCode?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
+  schemeGroup?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
+  referrerFileNo?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
   customerId?: Prisma.StringFilter<"LoanApplication"> | string
   leadId?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
   loanTypeId?: Prisma.StringFilter<"LoanApplication"> | string
@@ -751,6 +815,12 @@ export type LoanApplicationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   applicationDate?: Prisma.SortOrder
   loanNumber?: Prisma.SortOrder
+  serviceCentre?: Prisma.SortOrderInput | Prisma.SortOrder
+  processingFees?: Prisma.SortOrderInput | Prisma.SortOrder
+  executiveName?: Prisma.SortOrderInput | Prisma.SortOrder
+  EmployeeCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  schemeGroup?: Prisma.SortOrderInput | Prisma.SortOrder
+  referrerFileNo?: Prisma.SortOrderInput | Prisma.SortOrder
   customerId?: Prisma.SortOrder
   leadId?: Prisma.SortOrderInput | Prisma.SortOrder
   loanTypeId?: Prisma.SortOrder
@@ -808,6 +878,12 @@ export type LoanApplicationScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"LoanApplication"> | string
   applicationDate?: Prisma.DateTimeWithAggregatesFilter<"LoanApplication"> | Date | string
   loanNumber?: Prisma.StringWithAggregatesFilter<"LoanApplication"> | string
+  serviceCentre?: Prisma.StringNullableWithAggregatesFilter<"LoanApplication"> | string | null
+  processingFees?: Prisma.FloatNullableWithAggregatesFilter<"LoanApplication"> | number | null
+  executiveName?: Prisma.StringNullableWithAggregatesFilter<"LoanApplication"> | string | null
+  EmployeeCode?: Prisma.StringNullableWithAggregatesFilter<"LoanApplication"> | string | null
+  schemeGroup?: Prisma.StringNullableWithAggregatesFilter<"LoanApplication"> | string | null
+  referrerFileNo?: Prisma.StringNullableWithAggregatesFilter<"LoanApplication"> | string | null
   customerId?: Prisma.StringWithAggregatesFilter<"LoanApplication"> | string
   leadId?: Prisma.StringNullableWithAggregatesFilter<"LoanApplication"> | string | null
   loanTypeId?: Prisma.StringWithAggregatesFilter<"LoanApplication"> | string
@@ -857,6 +933,12 @@ export type LoanApplicationCreateInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -916,6 +998,12 @@ export type LoanApplicationUncheckedCreateInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -975,6 +1063,12 @@ export type LoanApplicationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1034,6 +1128,12 @@ export type LoanApplicationUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1093,6 +1193,12 @@ export type LoanApplicationCreateManyInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -1142,6 +1248,12 @@ export type LoanApplicationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1184,6 +1296,12 @@ export type LoanApplicationUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1254,6 +1372,12 @@ export type LoanApplicationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   applicationDate?: Prisma.SortOrder
   loanNumber?: Prisma.SortOrder
+  serviceCentre?: Prisma.SortOrder
+  processingFees?: Prisma.SortOrder
+  executiveName?: Prisma.SortOrder
+  EmployeeCode?: Prisma.SortOrder
+  schemeGroup?: Prisma.SortOrder
+  referrerFileNo?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
   loanTypeId?: Prisma.SortOrder
@@ -1300,6 +1424,7 @@ export type LoanApplicationCountOrderByAggregateInput = {
 }
 
 export type LoanApplicationAvgOrderByAggregateInput = {
+  processingFees?: Prisma.SortOrder
   requestedAmount?: Prisma.SortOrder
   approvedAmount?: Prisma.SortOrder
   tenureMonths?: Prisma.SortOrder
@@ -1319,6 +1444,12 @@ export type LoanApplicationMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   applicationDate?: Prisma.SortOrder
   loanNumber?: Prisma.SortOrder
+  serviceCentre?: Prisma.SortOrder
+  processingFees?: Prisma.SortOrder
+  executiveName?: Prisma.SortOrder
+  EmployeeCode?: Prisma.SortOrder
+  schemeGroup?: Prisma.SortOrder
+  referrerFileNo?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
   loanTypeId?: Prisma.SortOrder
@@ -1368,6 +1499,12 @@ export type LoanApplicationMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   applicationDate?: Prisma.SortOrder
   loanNumber?: Prisma.SortOrder
+  serviceCentre?: Prisma.SortOrder
+  processingFees?: Prisma.SortOrder
+  executiveName?: Prisma.SortOrder
+  EmployeeCode?: Prisma.SortOrder
+  schemeGroup?: Prisma.SortOrder
+  referrerFileNo?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
   loanTypeId?: Prisma.SortOrder
@@ -1414,6 +1551,7 @@ export type LoanApplicationMinOrderByAggregateInput = {
 }
 
 export type LoanApplicationSumOrderByAggregateInput = {
+  processingFees?: Prisma.SortOrder
   requestedAmount?: Prisma.SortOrder
   approvedAmount?: Prisma.SortOrder
   tenureMonths?: Prisma.SortOrder
@@ -1878,6 +2016,12 @@ export type LoanApplicationCreateWithoutCreatedByInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -1936,6 +2080,12 @@ export type LoanApplicationUncheckedCreateWithoutCreatedByInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -2023,6 +2173,12 @@ export type LoanApplicationScalarWhereInput = {
   id?: Prisma.StringFilter<"LoanApplication"> | string
   applicationDate?: Prisma.DateTimeFilter<"LoanApplication"> | Date | string
   loanNumber?: Prisma.StringFilter<"LoanApplication"> | string
+  serviceCentre?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
+  processingFees?: Prisma.FloatNullableFilter<"LoanApplication"> | number | null
+  executiveName?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
+  EmployeeCode?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
+  schemeGroup?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
+  referrerFileNo?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
   customerId?: Prisma.StringFilter<"LoanApplication"> | string
   leadId?: Prisma.StringNullableFilter<"LoanApplication"> | string | null
   loanTypeId?: Prisma.StringFilter<"LoanApplication"> | string
@@ -2072,6 +2228,12 @@ export type LoanApplicationCreateWithoutPartnerInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -2130,6 +2292,12 @@ export type LoanApplicationUncheckedCreateWithoutPartnerInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -2214,6 +2382,12 @@ export type LoanApplicationCreateWithoutCommissionPaymentsInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -2272,6 +2446,12 @@ export type LoanApplicationUncheckedCreateWithoutCommissionPaymentsInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -2346,6 +2526,12 @@ export type LoanApplicationUpdateWithoutCommissionPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2404,6 +2590,12 @@ export type LoanApplicationUncheckedUpdateWithoutCommissionPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2462,6 +2654,12 @@ export type LoanApplicationCreateWithoutBranchInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -2520,6 +2718,12 @@ export type LoanApplicationUncheckedCreateWithoutBranchInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -2604,6 +2808,12 @@ export type LoanApplicationCreateWithoutLeadInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -2662,6 +2872,12 @@ export type LoanApplicationUncheckedCreateWithoutLeadInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   loanTypeId: string
   partnerId?: string | null
@@ -2746,6 +2962,12 @@ export type LoanApplicationCreateWithoutLoanRecoveriesInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -2804,6 +3026,12 @@ export type LoanApplicationUncheckedCreateWithoutLoanRecoveriesInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -2878,6 +3106,12 @@ export type LoanApplicationUpdateWithoutLoanRecoveriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2936,6 +3170,12 @@ export type LoanApplicationUncheckedUpdateWithoutLoanRecoveriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2994,6 +3234,12 @@ export type LoanApplicationCreateWithoutDocumentsInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -3052,6 +3298,12 @@ export type LoanApplicationUncheckedCreateWithoutDocumentsInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -3126,6 +3378,12 @@ export type LoanApplicationUpdateWithoutDocumentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -3184,6 +3442,12 @@ export type LoanApplicationUncheckedUpdateWithoutDocumentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3242,6 +3506,12 @@ export type LoanApplicationCreateWithoutKycInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -3300,6 +3570,12 @@ export type LoanApplicationUncheckedCreateWithoutKycInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -3374,6 +3650,12 @@ export type LoanApplicationUpdateWithoutKycInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -3432,6 +3714,12 @@ export type LoanApplicationUncheckedUpdateWithoutKycInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3490,6 +3778,12 @@ export type LoanApplicationCreateWithoutCoapplicantsInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -3548,6 +3842,12 @@ export type LoanApplicationUncheckedCreateWithoutCoapplicantsInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -3622,6 +3922,12 @@ export type LoanApplicationUpdateWithoutCoapplicantsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -3680,6 +3986,12 @@ export type LoanApplicationUncheckedUpdateWithoutCoapplicantsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3738,6 +4050,12 @@ export type LoanApplicationCreateWithoutEmisInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -3796,6 +4114,12 @@ export type LoanApplicationUncheckedCreateWithoutEmisInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -3870,6 +4194,12 @@ export type LoanApplicationUpdateWithoutEmisInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -3928,6 +4258,12 @@ export type LoanApplicationUncheckedUpdateWithoutEmisInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3986,6 +4322,12 @@ export type LoanApplicationCreateWithoutLoanTypeInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -4044,6 +4386,12 @@ export type LoanApplicationUncheckedCreateWithoutLoanTypeInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   partnerId?: string | null
@@ -4128,6 +4476,12 @@ export type LoanApplicationCreateWithoutCustomerInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -4186,6 +4540,12 @@ export type LoanApplicationUncheckedCreateWithoutCustomerInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   leadId?: string | null
   loanTypeId: string
   partnerId?: string | null
@@ -4270,6 +4630,12 @@ export type LoanApplicationCreateWithoutTechnicalReportsInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -4328,6 +4694,12 @@ export type LoanApplicationUncheckedCreateWithoutTechnicalReportsInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -4402,6 +4774,12 @@ export type LoanApplicationUpdateWithoutTechnicalReportsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -4460,6 +4838,12 @@ export type LoanApplicationUncheckedUpdateWithoutTechnicalReportsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4518,6 +4902,12 @@ export type LoanApplicationCreateWithoutLegalReportsInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -4576,6 +4966,12 @@ export type LoanApplicationUncheckedCreateWithoutLegalReportsInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -4650,6 +5046,12 @@ export type LoanApplicationUpdateWithoutLegalReportsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -4708,6 +5110,12 @@ export type LoanApplicationUncheckedUpdateWithoutLegalReportsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4766,6 +5174,12 @@ export type LoanApplicationCreateWithoutLoanAssignmentsInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -4824,6 +5238,12 @@ export type LoanApplicationUncheckedCreateWithoutLoanAssignmentsInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -4898,6 +5318,12 @@ export type LoanApplicationUpdateWithoutLoanAssignmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -4956,6 +5382,12 @@ export type LoanApplicationUncheckedUpdateWithoutLoanAssignmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5014,6 +5446,12 @@ export type LoanApplicationCreateWithoutLoanDisbursementInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -5072,6 +5510,12 @@ export type LoanApplicationUncheckedCreateWithoutLoanDisbursementInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -5146,6 +5590,12 @@ export type LoanApplicationUpdateWithoutLoanDisbursementInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -5204,6 +5654,12 @@ export type LoanApplicationUncheckedUpdateWithoutLoanDisbursementInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5262,6 +5718,12 @@ export type LoanApplicationCreateWithoutNachMandatesInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   ownerPartnerId?: string | null
   requestedAmount: number
   approvedAmount?: number | null
@@ -5320,6 +5782,12 @@ export type LoanApplicationUncheckedCreateWithoutNachMandatesInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -5394,6 +5862,12 @@ export type LoanApplicationUpdateWithoutNachMandatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -5452,6 +5926,12 @@ export type LoanApplicationUncheckedUpdateWithoutNachMandatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5510,6 +5990,12 @@ export type LoanApplicationCreateManyCreatedByInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -5558,6 +6044,12 @@ export type LoanApplicationUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -5616,6 +6108,12 @@ export type LoanApplicationUncheckedUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5674,6 +6172,12 @@ export type LoanApplicationUncheckedUpdateManyWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5722,6 +6226,12 @@ export type LoanApplicationCreateManyPartnerInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -5770,6 +6280,12 @@ export type LoanApplicationUpdateWithoutPartnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -5828,6 +6344,12 @@ export type LoanApplicationUncheckedUpdateWithoutPartnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5886,6 +6408,12 @@ export type LoanApplicationUncheckedUpdateManyWithoutPartnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5934,6 +6462,12 @@ export type LoanApplicationCreateManyBranchInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   loanTypeId: string
@@ -5982,6 +6516,12 @@ export type LoanApplicationUpdateWithoutBranchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -6040,6 +6580,12 @@ export type LoanApplicationUncheckedUpdateWithoutBranchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -6098,6 +6644,12 @@ export type LoanApplicationUncheckedUpdateManyWithoutBranchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -6146,6 +6698,12 @@ export type LoanApplicationCreateManyLeadInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   loanTypeId: string
   partnerId?: string | null
@@ -6194,6 +6752,12 @@ export type LoanApplicationUpdateWithoutLeadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -6252,6 +6816,12 @@ export type LoanApplicationUncheckedUpdateWithoutLeadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6310,6 +6880,12 @@ export type LoanApplicationUncheckedUpdateManyWithoutLeadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6358,6 +6934,12 @@ export type LoanApplicationCreateManyLoanTypeInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   customerId: string
   leadId?: string | null
   partnerId?: string | null
@@ -6406,6 +6988,12 @@ export type LoanApplicationUpdateWithoutLoanTypeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -6464,6 +7052,12 @@ export type LoanApplicationUncheckedUpdateWithoutLoanTypeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6522,6 +7116,12 @@ export type LoanApplicationUncheckedUpdateManyWithoutLoanTypeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6570,6 +7170,12 @@ export type LoanApplicationCreateManyCustomerInput = {
   id?: string
   applicationDate?: Date | string
   loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
   leadId?: string | null
   loanTypeId: string
   partnerId?: string | null
@@ -6618,6 +7224,12 @@ export type LoanApplicationUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -6676,6 +7288,12 @@ export type LoanApplicationUncheckedUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6734,6 +7352,12 @@ export type LoanApplicationUncheckedUpdateManyWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6894,6 +7518,12 @@ export type LoanApplicationSelect<ExtArgs extends runtime.Types.Extensions.Inter
   id?: boolean
   applicationDate?: boolean
   loanNumber?: boolean
+  serviceCentre?: boolean
+  processingFees?: boolean
+  executiveName?: boolean
+  EmployeeCode?: boolean
+  schemeGroup?: boolean
+  referrerFileNo?: boolean
   customerId?: boolean
   leadId?: boolean
   loanTypeId?: boolean
@@ -6963,6 +7593,12 @@ export type LoanApplicationSelectScalar = {
   id?: boolean
   applicationDate?: boolean
   loanNumber?: boolean
+  serviceCentre?: boolean
+  processingFees?: boolean
+  executiveName?: boolean
+  EmployeeCode?: boolean
+  schemeGroup?: boolean
+  referrerFileNo?: boolean
   customerId?: boolean
   leadId?: boolean
   loanTypeId?: boolean
@@ -7008,7 +7644,7 @@ export type LoanApplicationSelectScalar = {
   branchId?: boolean
 }
 
-export type LoanApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "applicationDate" | "loanNumber" | "customerId" | "leadId" | "loanTypeId" | "partnerId" | "ownerPartnerId" | "requestedAmount" | "approvedAmount" | "tenureMonths" | "interestRate" | "interestType" | "emiAmount" | "purposeDetails" | "totalPayable" | "loanPurpose" | "cibilScore" | "status" | "approvalDate" | "activationDate" | "rejectionReason" | "approvedBy" | "approvedAt" | "rejectedBy" | "rejectedAt" | "kycId" | "latePaymentFeeType" | "latePaymentFee" | "bounceCharges" | "emiStartDate" | "emiPaymentAmount" | "foreclosureDate" | "foreclosureChargesType" | "foreclosureAllowed" | "foreclosureCharges" | "prepaymentChargeType" | "prepaymentAllowed" | "prepaymentDate" | "prepaymentCharges" | "defaultedAt" | "dpd" | "createdById" | "createdAt" | "updatedAt" | "branchId", ExtArgs["result"]["loanApplication"]>
+export type LoanApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "applicationDate" | "loanNumber" | "serviceCentre" | "processingFees" | "executiveName" | "EmployeeCode" | "schemeGroup" | "referrerFileNo" | "customerId" | "leadId" | "loanTypeId" | "partnerId" | "ownerPartnerId" | "requestedAmount" | "approvedAmount" | "tenureMonths" | "interestRate" | "interestType" | "emiAmount" | "purposeDetails" | "totalPayable" | "loanPurpose" | "cibilScore" | "status" | "approvalDate" | "activationDate" | "rejectionReason" | "approvedBy" | "approvedAt" | "rejectedBy" | "rejectedAt" | "kycId" | "latePaymentFeeType" | "latePaymentFee" | "bounceCharges" | "emiStartDate" | "emiPaymentAmount" | "foreclosureDate" | "foreclosureChargesType" | "foreclosureAllowed" | "foreclosureCharges" | "prepaymentChargeType" | "prepaymentAllowed" | "prepaymentDate" | "prepaymentCharges" | "defaultedAt" | "dpd" | "createdById" | "createdAt" | "updatedAt" | "branchId", ExtArgs["result"]["loanApplication"]>
 export type LoanApplicationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   lead?: boolean | Prisma.LoanApplication$leadArgs<ExtArgs>
@@ -7055,6 +7691,12 @@ export type $LoanApplicationPayload<ExtArgs extends runtime.Types.Extensions.Int
     id: string
     applicationDate: Date
     loanNumber: string
+    serviceCentre: string | null
+    processingFees: number | null
+    executiveName: string | null
+    EmployeeCode: string | null
+    schemeGroup: string | null
+    referrerFileNo: string | null
     customerId: string
     leadId: string | null
     loanTypeId: string
@@ -7487,6 +8129,12 @@ export interface LoanApplicationFieldRefs {
   readonly id: Prisma.FieldRef<"LoanApplication", 'String'>
   readonly applicationDate: Prisma.FieldRef<"LoanApplication", 'DateTime'>
   readonly loanNumber: Prisma.FieldRef<"LoanApplication", 'String'>
+  readonly serviceCentre: Prisma.FieldRef<"LoanApplication", 'String'>
+  readonly processingFees: Prisma.FieldRef<"LoanApplication", 'Float'>
+  readonly executiveName: Prisma.FieldRef<"LoanApplication", 'String'>
+  readonly EmployeeCode: Prisma.FieldRef<"LoanApplication", 'String'>
+  readonly schemeGroup: Prisma.FieldRef<"LoanApplication", 'String'>
+  readonly referrerFileNo: Prisma.FieldRef<"LoanApplication", 'String'>
   readonly customerId: Prisma.FieldRef<"LoanApplication", 'String'>
   readonly leadId: Prisma.FieldRef<"LoanApplication", 'String'>
   readonly loanTypeId: Prisma.FieldRef<"LoanApplication", 'String'>
