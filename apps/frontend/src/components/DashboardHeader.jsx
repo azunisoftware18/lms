@@ -8,8 +8,8 @@ import {
   Settings
 } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../store/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { logout } from '../store/slices/authSlice';
 
 export default function DashboardHeader({ toggleSidebar }) {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -25,7 +25,7 @@ export default function DashboardHeader({ toggleSidebar }) {
   };
 
   const handleSearch = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (searchQuery.trim()) {
       console.log('Searching for:', searchQuery);
     }

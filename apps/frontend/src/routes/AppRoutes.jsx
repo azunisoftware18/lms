@@ -37,6 +37,7 @@ import SarfaesiAuctionNoticesPage from '../app/public/SarfaesiAuctionNoticesPage
 import ShareholderInformationPage from '../app/public/ShareholderInformationPage.jsx';
 import VisionAndMissionPage from '../app/public/VisionAndMissionPage.jsx';
 import WelcometoFinovaPage from '../app/public/WelcometoFinovaPage.jsx';
+import UnderRegulationPage from '../app/public/UnderRegulationPage.jsx';
 
 export default function AppRoutes() {
 	return (
