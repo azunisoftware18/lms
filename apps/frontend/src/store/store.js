@@ -6,6 +6,7 @@ import createBranchAdminReducer from './slices/branchAdminSlice'
 import coApplicationReducer from './slices/coApplicationSlice'
 import creditReportReducer from './slices/creditReportSlice'
 import emiReducer from './slices/emiSlice'
+import loanApplicationReducer from './slices/loanApplicationSlice'
 
 
 export const store = configureStore({
@@ -16,7 +17,8 @@ export const store = configureStore({
     branchAdmin: createBranchAdminReducer,
     coApplication: coApplicationReducer,
     creditReport: creditReportReducer,
-    emi:emiReducer
+    emi:emiReducer,
+    loanApplication: loanApplicationReducer
 }
 })
 

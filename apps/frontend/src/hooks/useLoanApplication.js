@@ -5,10 +5,10 @@ import {
   getLoanApplications,
   getLoanApplicationById,
   createLoanApplication,
-  updateLoanStatus,
-  approveLoan,
-  rejectLoan,
-  uploadDocuments,
+  updateLoanApplicationStatus,
+  approveLoanApplication,
+  rejectLoanApplication,
+  uploadLoanApplicationDocument,
   verifyDocument,
   rejectDocument
 } from "../lib/api/loanApplication.api";
@@ -30,6 +30,7 @@ export const useLoanApplications = (params) => {
   return useQuery({
     queryKey: ["loanApplications", params],
     queryFn: () => getLoanApplications(params),
+    keepPreviousData: true, 
     onSuccess: (data) => {
       dispatch(setLoanApplications(data));
     },
@@ -89,7 +90,7 @@ export const useUpdateLoanStatus = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: updateLoanStatus,
+    mutationFn: updateLoanApplicationStatus,
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -114,7 +115,7 @@ export const useApproveLoan = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: approveLoan,
+    mutationFn: approveLoanApplication,
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -139,7 +140,7 @@ export const useRejectLoan = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: rejectLoan,
+    mutationFn: rejectLoanApplication,
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -164,7 +165,7 @@ export const useUploadDocuments = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: uploadDocuments,
+    mutationFn: uploadLoanApplicationDocument,
     onMutate: () => {
       dispatch(setLoading(true));
     },

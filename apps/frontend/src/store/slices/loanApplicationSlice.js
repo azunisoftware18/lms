@@ -4,6 +4,7 @@ const loanApplicationSlice = createSlice({
     name: 'loanApplication',
     initialState: {
         loanApplications: [],
+        meta: null,
         selectedLoanApplication: null,
         loading: false,
         error: null,
@@ -19,7 +20,14 @@ const loanApplicationSlice = createSlice({
             state.error = null;
         },
         setLoanApplications: (state, action) => {
-            state.loanApplications = action.payload;
+            const payload = action.payload;
+            if (Array.isArray(payload)) {
+                state.loanApplications = payload;
+                state.meta = null;
+            } else {
+                state.loanApplications = Array.isArray(payload?.data) ? payload.data : [];
+                state.meta = payload?.meta ?? null;
+            }
             state.loading = false;
             state.error = null;
         }
@@ -30,7 +38,7 @@ const loanApplicationSlice = createSlice({
             state.selectedLoanApplication = null;
         },
         setLoanApplication: (state, action) => {
-            state.selectedLoanApplication = action.payload;
+            state.selectedLoanApplication = action.payload?.data ?? action.payload;
             state.loading = false;
             state.error = null;
         },

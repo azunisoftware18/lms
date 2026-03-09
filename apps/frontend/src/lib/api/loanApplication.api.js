@@ -14,7 +14,11 @@ export const createLoanApplication = async (data) => {
 
 export const getLoanApplications = async (params) => {
     try {
-        const res = await api.get('/loan-applications', { params });
+        const res = await api.get('/loan-applications', { params:{
+        page: params?.page || 1,
+            limit: params?.limit || 10,
+            q:params?.q|| "",
+        } });
         return res.data;
     }
     catch (error) {
@@ -93,6 +97,16 @@ export const uploadLoanApplicationDocument = async (id, file) => {
 export const rejectDocument = async (applicationId, documentId, reason) => {
     try {
         const res = await api.post(`/loan-applications/${applicationId}/documents/${documentId}/reject`, { reason });
+        return res.data;
+    }
+    catch (error) {
+        throw new Error(getErrorMessage(error));
+    }
+};
+
+export const verifyDocument = async (documentId) => {
+    try {
+        const res = await api.post(`/loan-applications/documents/${documentId}/verify`);
         return res.data;
     }
     catch (error) {

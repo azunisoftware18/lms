@@ -175,7 +175,7 @@ export type UpdateLoanApplicationBody = z.infer<
 
 export default createLoanApplicationSchema;
 
-export const apperoveLoanInputSchema = z.object({
+export const approveLoanInputSchema = z.object({
   latePaymentFeeType: z.nativeEnum(CommissionType),
   latePaymentFee: z.number().min(0),
   bounceCharges: z.number().min(0),
@@ -200,7 +200,7 @@ export const apperoveLoanInputSchema = z.object({
   emiAmount: z.number().min(0).optional(),
 });
 
-export type ApperoveLoanInput = z.infer<typeof apperoveLoanInputSchema>;
+export type ApproveLoanInput = z.infer<typeof approveLoanInputSchema>;
 
 export const createCoApplicantSchema = z.object({
   firstName: z.string().trim().min(1),

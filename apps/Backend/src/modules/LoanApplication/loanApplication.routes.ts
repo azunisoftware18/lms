@@ -1,7 +1,6 @@
 import { Router } from "express";
 const loanApplicationRouter = Router();
 import {
-  createLoanApplicationController,
   getAllLoanApplicationsController,
   getLoanApplicationByIdController,
   reviewLoanController,
@@ -20,7 +19,7 @@ import {
   createLoanApplicationSchema,
   updateLoanApplicationSchema,
   loanApplicationIdParamSchema,
-  apperoveLoanInputSchema,
+  approveLoanInputSchema,
   createFullLoanApplicationSchema,
 } from "./loanApplication.schema.js";
 import { authMiddleware } from "../../common/middlewares/auth.middleware.js";
@@ -29,13 +28,7 @@ import { checkPermissionMiddleware } from "../../common/middlewares/permission.m
 import { markLoanDefaultController } from "../loanDefault/loanDefault.controller.js";
 
 // Define your loan application routes here
-loanApplicationRouter.post(
-  "/",
-  authMiddleware,
-  validate(createLoanApplicationSchema),
-  //checkPermissionMiddleware("CREATE_LOAN_APPLICATION"),
-  createLoanApplicationController,
-);
+
 loanApplicationRouter.get(
   "/",
   authMiddleware,
@@ -71,7 +64,7 @@ loanApplicationRouter.post(
   authMiddleware,
   checkPermissionMiddleware("APPROVE_LOAN"),
   validate(loanApplicationIdParamSchema, "params"),
-  validate(apperoveLoanInputSchema, "body"),
+  validate(approveLoanInputSchema, "body"),
   approveLoanController,
 );
 loanApplicationRouter.put(
@@ -136,9 +129,10 @@ loanApplicationRouter.post(
 
 
 loanApplicationRouter.post(
-  "/loan/full",
+  "/loan/create",
   authMiddleware,
   validate(createFullLoanApplicationSchema),
+  checkPermissionMiddleware("CREATE_LOAN_APPLICATION"),
   createFullLoanApplicationController
 )
 export default loanApplicationRouter;

@@ -1,6 +1,5 @@
 import { Response, Request } from "express";
 import {
-  createLoanApplicationService,
   getAllLoanApplicationsService,
   getLoanApplicationByIdService,
   reviewLoanService,
@@ -19,30 +18,7 @@ import { prisma } from "../../db/prismaService.js";
 import { cleanupFiles } from "../../common/utils/cleanup.js";
 import path from "path";
 
-export const createLoanApplicationController = async (
-  req: Request,
-  res: Response,
-) => {
-  try {
-    if (!req.user)
-      return res.status(401).json({ success: false, message: "Unauthorized" });
-    const loanApplication = await createLoanApplicationService(req.body, {
-      id: req.user.id,
-      role: req.user.role as any,
-    });
 
-    res.status(201).json({
-      success: true,
-      message: "Loan application created successfully",
-      data: loanApplication,
-    });
-  } catch (error: any) {
-    res.status(error.statusCode || 500).json({
-      success: false,
-      message: error.message || "Loan application creation failed",
-    });
-  }
-};
 
 export const getAllLoanApplicationsController = async (
   req: Request,
