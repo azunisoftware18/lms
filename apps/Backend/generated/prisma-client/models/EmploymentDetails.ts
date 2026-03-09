@@ -28,6 +28,7 @@ export type EmploymentDetailsMinAggregateOutputType = {
   id: string | null
   customerId: string | null
   coApplicantId: string | null
+  guarantorId: string | null
   employerType: $Enums.EmployerType | null
   employerTypeOther: string | null
   designation: string | null
@@ -42,6 +43,7 @@ export type EmploymentDetailsMaxAggregateOutputType = {
   id: string | null
   customerId: string | null
   coApplicantId: string | null
+  guarantorId: string | null
   employerType: $Enums.EmployerType | null
   employerTypeOther: string | null
   designation: string | null
@@ -56,6 +58,7 @@ export type EmploymentDetailsCountAggregateOutputType = {
   id: number
   customerId: number
   coApplicantId: number
+  guarantorId: number
   employerType: number
   employerTypeOther: number
   designation: number
@@ -72,6 +75,7 @@ export type EmploymentDetailsMinAggregateInputType = {
   id?: true
   customerId?: true
   coApplicantId?: true
+  guarantorId?: true
   employerType?: true
   employerTypeOther?: true
   designation?: true
@@ -86,6 +90,7 @@ export type EmploymentDetailsMaxAggregateInputType = {
   id?: true
   customerId?: true
   coApplicantId?: true
+  guarantorId?: true
   employerType?: true
   employerTypeOther?: true
   designation?: true
@@ -100,6 +105,7 @@ export type EmploymentDetailsCountAggregateInputType = {
   id?: true
   customerId?: true
   coApplicantId?: true
+  guarantorId?: true
   employerType?: true
   employerTypeOther?: true
   designation?: true
@@ -187,6 +193,7 @@ export type EmploymentDetailsGroupByOutputType = {
   id: string
   customerId: string
   coApplicantId: string | null
+  guarantorId: string | null
   employerType: $Enums.EmployerType
   employerTypeOther: string | null
   designation: string | null
@@ -222,6 +229,7 @@ export type EmploymentDetailsWhereInput = {
   id?: Prisma.StringFilter<"EmploymentDetails"> | string
   customerId?: Prisma.StringFilter<"EmploymentDetails"> | string
   coApplicantId?: Prisma.StringNullableFilter<"EmploymentDetails"> | string | null
+  guarantorId?: Prisma.StringNullableFilter<"EmploymentDetails"> | string | null
   employerType?: Prisma.EnumEmployerTypeFilter<"EmploymentDetails"> | $Enums.EmployerType
   employerTypeOther?: Prisma.StringNullableFilter<"EmploymentDetails"> | string | null
   designation?: Prisma.StringNullableFilter<"EmploymentDetails"> | string | null
@@ -232,12 +240,14 @@ export type EmploymentDetailsWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"EmploymentDetails"> | Date | string
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
   coApplicant?: Prisma.XOR<Prisma.CoApplicantNullableScalarRelationFilter, Prisma.CoApplicantWhereInput> | null
+  guarantor?: Prisma.XOR<Prisma.GuarantorNullableScalarRelationFilter, Prisma.GuarantorWhereInput> | null
 }
 
 export type EmploymentDetailsOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   coApplicantId?: Prisma.SortOrderInput | Prisma.SortOrder
+  guarantorId?: Prisma.SortOrderInput | Prisma.SortOrder
   employerType?: Prisma.SortOrder
   employerTypeOther?: Prisma.SortOrderInput | Prisma.SortOrder
   designation?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -248,6 +258,7 @@ export type EmploymentDetailsOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   customer?: Prisma.CustomerOrderByWithRelationInput
   coApplicant?: Prisma.CoApplicantOrderByWithRelationInput
+  guarantor?: Prisma.GuarantorOrderByWithRelationInput
   _relevance?: Prisma.EmploymentDetailsOrderByRelevanceInput
 }
 
@@ -258,6 +269,7 @@ export type EmploymentDetailsWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.EmploymentDetailsWhereInput | Prisma.EmploymentDetailsWhereInput[]
   customerId?: Prisma.StringFilter<"EmploymentDetails"> | string
   coApplicantId?: Prisma.StringNullableFilter<"EmploymentDetails"> | string | null
+  guarantorId?: Prisma.StringNullableFilter<"EmploymentDetails"> | string | null
   employerType?: Prisma.EnumEmployerTypeFilter<"EmploymentDetails"> | $Enums.EmployerType
   employerTypeOther?: Prisma.StringNullableFilter<"EmploymentDetails"> | string | null
   designation?: Prisma.StringNullableFilter<"EmploymentDetails"> | string | null
@@ -268,12 +280,14 @@ export type EmploymentDetailsWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"EmploymentDetails"> | Date | string
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
   coApplicant?: Prisma.XOR<Prisma.CoApplicantNullableScalarRelationFilter, Prisma.CoApplicantWhereInput> | null
+  guarantor?: Prisma.XOR<Prisma.GuarantorNullableScalarRelationFilter, Prisma.GuarantorWhereInput> | null
 }, "id">
 
 export type EmploymentDetailsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   coApplicantId?: Prisma.SortOrderInput | Prisma.SortOrder
+  guarantorId?: Prisma.SortOrderInput | Prisma.SortOrder
   employerType?: Prisma.SortOrder
   employerTypeOther?: Prisma.SortOrderInput | Prisma.SortOrder
   designation?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -294,6 +308,7 @@ export type EmploymentDetailsScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"EmploymentDetails"> | string
   customerId?: Prisma.StringWithAggregatesFilter<"EmploymentDetails"> | string
   coApplicantId?: Prisma.StringNullableWithAggregatesFilter<"EmploymentDetails"> | string | null
+  guarantorId?: Prisma.StringNullableWithAggregatesFilter<"EmploymentDetails"> | string | null
   employerType?: Prisma.EnumEmployerTypeWithAggregatesFilter<"EmploymentDetails"> | $Enums.EmployerType
   employerTypeOther?: Prisma.StringNullableWithAggregatesFilter<"EmploymentDetails"> | string | null
   designation?: Prisma.StringNullableWithAggregatesFilter<"EmploymentDetails"> | string | null
@@ -316,12 +331,14 @@ export type EmploymentDetailsCreateInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutEmploymentDetailsInput
   coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutEmploymentDetailsInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutEmploymentDetailsInput
 }
 
 export type EmploymentDetailsUncheckedCreateInput = {
   id?: string
   customerId: string
   coApplicantId?: string | null
+  guarantorId?: string | null
   employerType: $Enums.EmployerType
   employerTypeOther?: string | null
   designation?: string | null
@@ -344,12 +361,14 @@ export type EmploymentDetailsUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutEmploymentDetailsNestedInput
   coApplicant?: Prisma.CoApplicantUpdateOneWithoutEmploymentDetailsNestedInput
+  guarantor?: Prisma.GuarantorUpdateOneWithoutEmploymentDetailsNestedInput
 }
 
 export type EmploymentDetailsUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employerType?: Prisma.EnumEmployerTypeFieldUpdateOperationsInput | $Enums.EmployerType
   employerTypeOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -364,6 +383,7 @@ export type EmploymentDetailsCreateManyInput = {
   id?: string
   customerId: string
   coApplicantId?: string | null
+  guarantorId?: string | null
   employerType: $Enums.EmployerType
   employerTypeOther?: string | null
   designation?: string | null
@@ -390,6 +410,7 @@ export type EmploymentDetailsUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employerType?: Prisma.EnumEmployerTypeFieldUpdateOperationsInput | $Enums.EmployerType
   employerTypeOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -420,6 +441,7 @@ export type EmploymentDetailsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   coApplicantId?: Prisma.SortOrder
+  guarantorId?: Prisma.SortOrder
   employerType?: Prisma.SortOrder
   employerTypeOther?: Prisma.SortOrder
   designation?: Prisma.SortOrder
@@ -434,6 +456,7 @@ export type EmploymentDetailsMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   coApplicantId?: Prisma.SortOrder
+  guarantorId?: Prisma.SortOrder
   employerType?: Prisma.SortOrder
   employerTypeOther?: Prisma.SortOrder
   designation?: Prisma.SortOrder
@@ -448,6 +471,7 @@ export type EmploymentDetailsMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   coApplicantId?: Prisma.SortOrder
+  guarantorId?: Prisma.SortOrder
   employerType?: Prisma.SortOrder
   employerTypeOther?: Prisma.SortOrder
   designation?: Prisma.SortOrder
@@ -546,6 +570,48 @@ export type EnumEmployerTypeFieldUpdateOperationsInput = {
   set?: $Enums.EmployerType
 }
 
+export type EmploymentDetailsCreateNestedManyWithoutGuarantorInput = {
+  create?: Prisma.XOR<Prisma.EmploymentDetailsCreateWithoutGuarantorInput, Prisma.EmploymentDetailsUncheckedCreateWithoutGuarantorInput> | Prisma.EmploymentDetailsCreateWithoutGuarantorInput[] | Prisma.EmploymentDetailsUncheckedCreateWithoutGuarantorInput[]
+  connectOrCreate?: Prisma.EmploymentDetailsCreateOrConnectWithoutGuarantorInput | Prisma.EmploymentDetailsCreateOrConnectWithoutGuarantorInput[]
+  createMany?: Prisma.EmploymentDetailsCreateManyGuarantorInputEnvelope
+  connect?: Prisma.EmploymentDetailsWhereUniqueInput | Prisma.EmploymentDetailsWhereUniqueInput[]
+}
+
+export type EmploymentDetailsUncheckedCreateNestedManyWithoutGuarantorInput = {
+  create?: Prisma.XOR<Prisma.EmploymentDetailsCreateWithoutGuarantorInput, Prisma.EmploymentDetailsUncheckedCreateWithoutGuarantorInput> | Prisma.EmploymentDetailsCreateWithoutGuarantorInput[] | Prisma.EmploymentDetailsUncheckedCreateWithoutGuarantorInput[]
+  connectOrCreate?: Prisma.EmploymentDetailsCreateOrConnectWithoutGuarantorInput | Prisma.EmploymentDetailsCreateOrConnectWithoutGuarantorInput[]
+  createMany?: Prisma.EmploymentDetailsCreateManyGuarantorInputEnvelope
+  connect?: Prisma.EmploymentDetailsWhereUniqueInput | Prisma.EmploymentDetailsWhereUniqueInput[]
+}
+
+export type EmploymentDetailsUpdateManyWithoutGuarantorNestedInput = {
+  create?: Prisma.XOR<Prisma.EmploymentDetailsCreateWithoutGuarantorInput, Prisma.EmploymentDetailsUncheckedCreateWithoutGuarantorInput> | Prisma.EmploymentDetailsCreateWithoutGuarantorInput[] | Prisma.EmploymentDetailsUncheckedCreateWithoutGuarantorInput[]
+  connectOrCreate?: Prisma.EmploymentDetailsCreateOrConnectWithoutGuarantorInput | Prisma.EmploymentDetailsCreateOrConnectWithoutGuarantorInput[]
+  upsert?: Prisma.EmploymentDetailsUpsertWithWhereUniqueWithoutGuarantorInput | Prisma.EmploymentDetailsUpsertWithWhereUniqueWithoutGuarantorInput[]
+  createMany?: Prisma.EmploymentDetailsCreateManyGuarantorInputEnvelope
+  set?: Prisma.EmploymentDetailsWhereUniqueInput | Prisma.EmploymentDetailsWhereUniqueInput[]
+  disconnect?: Prisma.EmploymentDetailsWhereUniqueInput | Prisma.EmploymentDetailsWhereUniqueInput[]
+  delete?: Prisma.EmploymentDetailsWhereUniqueInput | Prisma.EmploymentDetailsWhereUniqueInput[]
+  connect?: Prisma.EmploymentDetailsWhereUniqueInput | Prisma.EmploymentDetailsWhereUniqueInput[]
+  update?: Prisma.EmploymentDetailsUpdateWithWhereUniqueWithoutGuarantorInput | Prisma.EmploymentDetailsUpdateWithWhereUniqueWithoutGuarantorInput[]
+  updateMany?: Prisma.EmploymentDetailsUpdateManyWithWhereWithoutGuarantorInput | Prisma.EmploymentDetailsUpdateManyWithWhereWithoutGuarantorInput[]
+  deleteMany?: Prisma.EmploymentDetailsScalarWhereInput | Prisma.EmploymentDetailsScalarWhereInput[]
+}
+
+export type EmploymentDetailsUncheckedUpdateManyWithoutGuarantorNestedInput = {
+  create?: Prisma.XOR<Prisma.EmploymentDetailsCreateWithoutGuarantorInput, Prisma.EmploymentDetailsUncheckedCreateWithoutGuarantorInput> | Prisma.EmploymentDetailsCreateWithoutGuarantorInput[] | Prisma.EmploymentDetailsUncheckedCreateWithoutGuarantorInput[]
+  connectOrCreate?: Prisma.EmploymentDetailsCreateOrConnectWithoutGuarantorInput | Prisma.EmploymentDetailsCreateOrConnectWithoutGuarantorInput[]
+  upsert?: Prisma.EmploymentDetailsUpsertWithWhereUniqueWithoutGuarantorInput | Prisma.EmploymentDetailsUpsertWithWhereUniqueWithoutGuarantorInput[]
+  createMany?: Prisma.EmploymentDetailsCreateManyGuarantorInputEnvelope
+  set?: Prisma.EmploymentDetailsWhereUniqueInput | Prisma.EmploymentDetailsWhereUniqueInput[]
+  disconnect?: Prisma.EmploymentDetailsWhereUniqueInput | Prisma.EmploymentDetailsWhereUniqueInput[]
+  delete?: Prisma.EmploymentDetailsWhereUniqueInput | Prisma.EmploymentDetailsWhereUniqueInput[]
+  connect?: Prisma.EmploymentDetailsWhereUniqueInput | Prisma.EmploymentDetailsWhereUniqueInput[]
+  update?: Prisma.EmploymentDetailsUpdateWithWhereUniqueWithoutGuarantorInput | Prisma.EmploymentDetailsUpdateWithWhereUniqueWithoutGuarantorInput[]
+  updateMany?: Prisma.EmploymentDetailsUpdateManyWithWhereWithoutGuarantorInput | Prisma.EmploymentDetailsUpdateManyWithWhereWithoutGuarantorInput[]
+  deleteMany?: Prisma.EmploymentDetailsScalarWhereInput | Prisma.EmploymentDetailsScalarWhereInput[]
+}
+
 export type EmploymentDetailsCreateWithoutCoApplicantInput = {
   id?: string
   employerType: $Enums.EmployerType
@@ -557,11 +623,13 @@ export type EmploymentDetailsCreateWithoutCoApplicantInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutEmploymentDetailsInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutEmploymentDetailsInput
 }
 
 export type EmploymentDetailsUncheckedCreateWithoutCoApplicantInput = {
   id?: string
   customerId: string
+  guarantorId?: string | null
   employerType: $Enums.EmployerType
   employerTypeOther?: string | null
   designation?: string | null
@@ -605,6 +673,7 @@ export type EmploymentDetailsScalarWhereInput = {
   id?: Prisma.StringFilter<"EmploymentDetails"> | string
   customerId?: Prisma.StringFilter<"EmploymentDetails"> | string
   coApplicantId?: Prisma.StringNullableFilter<"EmploymentDetails"> | string | null
+  guarantorId?: Prisma.StringNullableFilter<"EmploymentDetails"> | string | null
   employerType?: Prisma.EnumEmployerTypeFilter<"EmploymentDetails"> | $Enums.EmployerType
   employerTypeOther?: Prisma.StringNullableFilter<"EmploymentDetails"> | string | null
   designation?: Prisma.StringNullableFilter<"EmploymentDetails"> | string | null
@@ -626,11 +695,13 @@ export type EmploymentDetailsCreateWithoutCustomerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutEmploymentDetailsInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutEmploymentDetailsInput
 }
 
 export type EmploymentDetailsUncheckedCreateWithoutCustomerInput = {
   id?: string
   coApplicantId?: string | null
+  guarantorId?: string | null
   employerType: $Enums.EmployerType
   employerTypeOther?: string | null
   designation?: string | null
@@ -667,9 +738,64 @@ export type EmploymentDetailsUpdateManyWithWhereWithoutCustomerInput = {
   data: Prisma.XOR<Prisma.EmploymentDetailsUpdateManyMutationInput, Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCustomerInput>
 }
 
+export type EmploymentDetailsCreateWithoutGuarantorInput = {
+  id?: string
+  employerType: $Enums.EmployerType
+  employerTypeOther?: string | null
+  designation?: string | null
+  department?: string | null
+  dateOfJoining?: Date | string | null
+  dateOfRetirement?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutEmploymentDetailsInput
+  coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutEmploymentDetailsInput
+}
+
+export type EmploymentDetailsUncheckedCreateWithoutGuarantorInput = {
+  id?: string
+  customerId: string
+  coApplicantId?: string | null
+  employerType: $Enums.EmployerType
+  employerTypeOther?: string | null
+  designation?: string | null
+  department?: string | null
+  dateOfJoining?: Date | string | null
+  dateOfRetirement?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type EmploymentDetailsCreateOrConnectWithoutGuarantorInput = {
+  where: Prisma.EmploymentDetailsWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmploymentDetailsCreateWithoutGuarantorInput, Prisma.EmploymentDetailsUncheckedCreateWithoutGuarantorInput>
+}
+
+export type EmploymentDetailsCreateManyGuarantorInputEnvelope = {
+  data: Prisma.EmploymentDetailsCreateManyGuarantorInput | Prisma.EmploymentDetailsCreateManyGuarantorInput[]
+  skipDuplicates?: boolean
+}
+
+export type EmploymentDetailsUpsertWithWhereUniqueWithoutGuarantorInput = {
+  where: Prisma.EmploymentDetailsWhereUniqueInput
+  update: Prisma.XOR<Prisma.EmploymentDetailsUpdateWithoutGuarantorInput, Prisma.EmploymentDetailsUncheckedUpdateWithoutGuarantorInput>
+  create: Prisma.XOR<Prisma.EmploymentDetailsCreateWithoutGuarantorInput, Prisma.EmploymentDetailsUncheckedCreateWithoutGuarantorInput>
+}
+
+export type EmploymentDetailsUpdateWithWhereUniqueWithoutGuarantorInput = {
+  where: Prisma.EmploymentDetailsWhereUniqueInput
+  data: Prisma.XOR<Prisma.EmploymentDetailsUpdateWithoutGuarantorInput, Prisma.EmploymentDetailsUncheckedUpdateWithoutGuarantorInput>
+}
+
+export type EmploymentDetailsUpdateManyWithWhereWithoutGuarantorInput = {
+  where: Prisma.EmploymentDetailsScalarWhereInput
+  data: Prisma.XOR<Prisma.EmploymentDetailsUpdateManyMutationInput, Prisma.EmploymentDetailsUncheckedUpdateManyWithoutGuarantorInput>
+}
+
 export type EmploymentDetailsCreateManyCoApplicantInput = {
   id?: string
   customerId: string
+  guarantorId?: string | null
   employerType: $Enums.EmployerType
   employerTypeOther?: string | null
   designation?: string | null
@@ -691,11 +817,13 @@ export type EmploymentDetailsUpdateWithoutCoApplicantInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutEmploymentDetailsNestedInput
+  guarantor?: Prisma.GuarantorUpdateOneWithoutEmploymentDetailsNestedInput
 }
 
 export type EmploymentDetailsUncheckedUpdateWithoutCoApplicantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employerType?: Prisma.EnumEmployerTypeFieldUpdateOperationsInput | $Enums.EmployerType
   employerTypeOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -709,6 +837,7 @@ export type EmploymentDetailsUncheckedUpdateWithoutCoApplicantInput = {
 export type EmploymentDetailsUncheckedUpdateManyWithoutCoApplicantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employerType?: Prisma.EnumEmployerTypeFieldUpdateOperationsInput | $Enums.EmployerType
   employerTypeOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -722,6 +851,7 @@ export type EmploymentDetailsUncheckedUpdateManyWithoutCoApplicantInput = {
 export type EmploymentDetailsCreateManyCustomerInput = {
   id?: string
   coApplicantId?: string | null
+  guarantorId?: string | null
   employerType: $Enums.EmployerType
   employerTypeOther?: string | null
   designation?: string | null
@@ -743,11 +873,13 @@ export type EmploymentDetailsUpdateWithoutCustomerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coApplicant?: Prisma.CoApplicantUpdateOneWithoutEmploymentDetailsNestedInput
+  guarantor?: Prisma.GuarantorUpdateOneWithoutEmploymentDetailsNestedInput
 }
 
 export type EmploymentDetailsUncheckedUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employerType?: Prisma.EnumEmployerTypeFieldUpdateOperationsInput | $Enums.EmployerType
   employerTypeOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -760,6 +892,63 @@ export type EmploymentDetailsUncheckedUpdateWithoutCustomerInput = {
 
 export type EmploymentDetailsUncheckedUpdateManyWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employerType?: Prisma.EnumEmployerTypeFieldUpdateOperationsInput | $Enums.EmployerType
+  employerTypeOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfJoining?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dateOfRetirement?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type EmploymentDetailsCreateManyGuarantorInput = {
+  id?: string
+  customerId: string
+  coApplicantId?: string | null
+  employerType: $Enums.EmployerType
+  employerTypeOther?: string | null
+  designation?: string | null
+  department?: string | null
+  dateOfJoining?: Date | string | null
+  dateOfRetirement?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type EmploymentDetailsUpdateWithoutGuarantorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employerType?: Prisma.EnumEmployerTypeFieldUpdateOperationsInput | $Enums.EmployerType
+  employerTypeOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfJoining?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dateOfRetirement?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutEmploymentDetailsNestedInput
+  coApplicant?: Prisma.CoApplicantUpdateOneWithoutEmploymentDetailsNestedInput
+}
+
+export type EmploymentDetailsUncheckedUpdateWithoutGuarantorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employerType?: Prisma.EnumEmployerTypeFieldUpdateOperationsInput | $Enums.EmployerType
+  employerTypeOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfJoining?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dateOfRetirement?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type EmploymentDetailsUncheckedUpdateManyWithoutGuarantorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employerType?: Prisma.EnumEmployerTypeFieldUpdateOperationsInput | $Enums.EmployerType
   employerTypeOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -777,6 +966,7 @@ export type EmploymentDetailsSelect<ExtArgs extends runtime.Types.Extensions.Int
   id?: boolean
   customerId?: boolean
   coApplicantId?: boolean
+  guarantorId?: boolean
   employerType?: boolean
   employerTypeOther?: boolean
   designation?: boolean
@@ -787,6 +977,7 @@ export type EmploymentDetailsSelect<ExtArgs extends runtime.Types.Extensions.Int
   updatedAt?: boolean
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   coApplicant?: boolean | Prisma.EmploymentDetails$coApplicantArgs<ExtArgs>
+  guarantor?: boolean | Prisma.EmploymentDetails$guarantorArgs<ExtArgs>
 }, ExtArgs["result"]["employmentDetails"]>
 
 
@@ -795,6 +986,7 @@ export type EmploymentDetailsSelectScalar = {
   id?: boolean
   customerId?: boolean
   coApplicantId?: boolean
+  guarantorId?: boolean
   employerType?: boolean
   employerTypeOther?: boolean
   designation?: boolean
@@ -805,10 +997,11 @@ export type EmploymentDetailsSelectScalar = {
   updatedAt?: boolean
 }
 
-export type EmploymentDetailsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerId" | "coApplicantId" | "employerType" | "employerTypeOther" | "designation" | "department" | "dateOfJoining" | "dateOfRetirement" | "createdAt" | "updatedAt", ExtArgs["result"]["employmentDetails"]>
+export type EmploymentDetailsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerId" | "coApplicantId" | "guarantorId" | "employerType" | "employerTypeOther" | "designation" | "department" | "dateOfJoining" | "dateOfRetirement" | "createdAt" | "updatedAt", ExtArgs["result"]["employmentDetails"]>
 export type EmploymentDetailsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   coApplicant?: boolean | Prisma.EmploymentDetails$coApplicantArgs<ExtArgs>
+  guarantor?: boolean | Prisma.EmploymentDetails$guarantorArgs<ExtArgs>
 }
 
 export type $EmploymentDetailsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -816,11 +1009,13 @@ export type $EmploymentDetailsPayload<ExtArgs extends runtime.Types.Extensions.I
   objects: {
     customer: Prisma.$CustomerPayload<ExtArgs>
     coApplicant: Prisma.$CoApplicantPayload<ExtArgs> | null
+    guarantor: Prisma.$GuarantorPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     customerId: string
     coApplicantId: string | null
+    guarantorId: string | null
     employerType: $Enums.EmployerType
     employerTypeOther: string | null
     designation: string | null
@@ -1171,6 +1366,7 @@ export interface Prisma__EmploymentDetailsClient<T, Null = never, ExtArgs extend
   readonly [Symbol.toStringTag]: "PrismaPromise"
   customer<T extends Prisma.CustomerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerDefaultArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   coApplicant<T extends Prisma.EmploymentDetails$coApplicantArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmploymentDetails$coApplicantArgs<ExtArgs>>): Prisma.Prisma__CoApplicantClient<runtime.Types.Result.GetResult<Prisma.$CoApplicantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  guarantor<T extends Prisma.EmploymentDetails$guarantorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmploymentDetails$guarantorArgs<ExtArgs>>): Prisma.Prisma__GuarantorClient<runtime.Types.Result.GetResult<Prisma.$GuarantorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1203,6 +1399,7 @@ export interface EmploymentDetailsFieldRefs {
   readonly id: Prisma.FieldRef<"EmploymentDetails", 'String'>
   readonly customerId: Prisma.FieldRef<"EmploymentDetails", 'String'>
   readonly coApplicantId: Prisma.FieldRef<"EmploymentDetails", 'String'>
+  readonly guarantorId: Prisma.FieldRef<"EmploymentDetails", 'String'>
   readonly employerType: Prisma.FieldRef<"EmploymentDetails", 'EmployerType'>
   readonly employerTypeOther: Prisma.FieldRef<"EmploymentDetails", 'String'>
   readonly designation: Prisma.FieldRef<"EmploymentDetails", 'String'>
@@ -1570,6 +1767,25 @@ export type EmploymentDetails$coApplicantArgs<ExtArgs extends runtime.Types.Exte
    */
   include?: Prisma.CoApplicantInclude<ExtArgs> | null
   where?: Prisma.CoApplicantWhereInput
+}
+
+/**
+ * EmploymentDetails.guarantor
+ */
+export type EmploymentDetails$guarantorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Guarantor
+   */
+  select?: Prisma.GuarantorSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Guarantor
+   */
+  omit?: Prisma.GuarantorOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GuarantorInclude<ExtArgs> | null
+  where?: Prisma.GuarantorWhereInput
 }
 
 /**

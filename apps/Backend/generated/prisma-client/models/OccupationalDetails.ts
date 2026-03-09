@@ -40,6 +40,7 @@ export type OccupationalDetailsMinAggregateOutputType = {
   id: string | null
   customerId: string | null
   coApplicantId: string | null
+  guarantorId: string | null
   occupationalCategory: $Enums.OccupationalCategory | null
   occupationalCategoryOther: string | null
   companyBusinessName: string | null
@@ -61,6 +62,7 @@ export type OccupationalDetailsMaxAggregateOutputType = {
   id: string | null
   customerId: string | null
   coApplicantId: string | null
+  guarantorId: string | null
   occupationalCategory: $Enums.OccupationalCategory | null
   occupationalCategoryOther: string | null
   companyBusinessName: string | null
@@ -82,6 +84,7 @@ export type OccupationalDetailsCountAggregateOutputType = {
   id: number
   customerId: number
   coApplicantId: number
+  guarantorId: number
   occupationalCategory: number
   occupationalCategoryOther: number
   companyBusinessName: number
@@ -115,6 +118,7 @@ export type OccupationalDetailsMinAggregateInputType = {
   id?: true
   customerId?: true
   coApplicantId?: true
+  guarantorId?: true
   occupationalCategory?: true
   occupationalCategoryOther?: true
   companyBusinessName?: true
@@ -136,6 +140,7 @@ export type OccupationalDetailsMaxAggregateInputType = {
   id?: true
   customerId?: true
   coApplicantId?: true
+  guarantorId?: true
   occupationalCategory?: true
   occupationalCategoryOther?: true
   companyBusinessName?: true
@@ -157,6 +162,7 @@ export type OccupationalDetailsCountAggregateInputType = {
   id?: true
   customerId?: true
   coApplicantId?: true
+  guarantorId?: true
   occupationalCategory?: true
   occupationalCategoryOther?: true
   companyBusinessName?: true
@@ -265,6 +271,7 @@ export type OccupationalDetailsGroupByOutputType = {
   id: string
   customerId: string
   coApplicantId: string | null
+  guarantorId: string | null
   occupationalCategory: $Enums.OccupationalCategory
   occupationalCategoryOther: string | null
   companyBusinessName: string | null
@@ -309,6 +316,7 @@ export type OccupationalDetailsWhereInput = {
   id?: Prisma.StringFilter<"OccupationalDetails"> | string
   customerId?: Prisma.StringFilter<"OccupationalDetails"> | string
   coApplicantId?: Prisma.StringNullableFilter<"OccupationalDetails"> | string | null
+  guarantorId?: Prisma.StringNullableFilter<"OccupationalDetails"> | string | null
   occupationalCategory?: Prisma.EnumOccupationalCategoryFilter<"OccupationalDetails"> | $Enums.OccupationalCategory
   occupationalCategoryOther?: Prisma.StringNullableFilter<"OccupationalDetails"> | string | null
   companyBusinessName?: Prisma.StringNullableFilter<"OccupationalDetails"> | string | null
@@ -326,6 +334,7 @@ export type OccupationalDetailsWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"OccupationalDetails"> | Date | string
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
   coApplicant?: Prisma.XOR<Prisma.CoApplicantNullableScalarRelationFilter, Prisma.CoApplicantWhereInput> | null
+  guarantor?: Prisma.XOR<Prisma.GuarantorNullableScalarRelationFilter, Prisma.GuarantorWhereInput> | null
   address?: Prisma.XOR<Prisma.AddressNullableScalarRelationFilter, Prisma.AddressWhereInput> | null
 }
 
@@ -333,6 +342,7 @@ export type OccupationalDetailsOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   coApplicantId?: Prisma.SortOrderInput | Prisma.SortOrder
+  guarantorId?: Prisma.SortOrderInput | Prisma.SortOrder
   occupationalCategory?: Prisma.SortOrder
   occupationalCategoryOther?: Prisma.SortOrderInput | Prisma.SortOrder
   companyBusinessName?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -350,6 +360,7 @@ export type OccupationalDetailsOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   customer?: Prisma.CustomerOrderByWithRelationInput
   coApplicant?: Prisma.CoApplicantOrderByWithRelationInput
+  guarantor?: Prisma.GuarantorOrderByWithRelationInput
   address?: Prisma.AddressOrderByWithRelationInput
   _relevance?: Prisma.OccupationalDetailsOrderByRelevanceInput
 }
@@ -361,6 +372,7 @@ export type OccupationalDetailsWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.OccupationalDetailsWhereInput | Prisma.OccupationalDetailsWhereInput[]
   customerId?: Prisma.StringFilter<"OccupationalDetails"> | string
   coApplicantId?: Prisma.StringNullableFilter<"OccupationalDetails"> | string | null
+  guarantorId?: Prisma.StringNullableFilter<"OccupationalDetails"> | string | null
   occupationalCategory?: Prisma.EnumOccupationalCategoryFilter<"OccupationalDetails"> | $Enums.OccupationalCategory
   occupationalCategoryOther?: Prisma.StringNullableFilter<"OccupationalDetails"> | string | null
   companyBusinessName?: Prisma.StringNullableFilter<"OccupationalDetails"> | string | null
@@ -378,6 +390,7 @@ export type OccupationalDetailsWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"OccupationalDetails"> | Date | string
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
   coApplicant?: Prisma.XOR<Prisma.CoApplicantNullableScalarRelationFilter, Prisma.CoApplicantWhereInput> | null
+  guarantor?: Prisma.XOR<Prisma.GuarantorNullableScalarRelationFilter, Prisma.GuarantorWhereInput> | null
   address?: Prisma.XOR<Prisma.AddressNullableScalarRelationFilter, Prisma.AddressWhereInput> | null
 }, "id">
 
@@ -385,6 +398,7 @@ export type OccupationalDetailsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   coApplicantId?: Prisma.SortOrderInput | Prisma.SortOrder
+  guarantorId?: Prisma.SortOrderInput | Prisma.SortOrder
   occupationalCategory?: Prisma.SortOrder
   occupationalCategoryOther?: Prisma.SortOrderInput | Prisma.SortOrder
   companyBusinessName?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -414,6 +428,7 @@ export type OccupationalDetailsScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"OccupationalDetails"> | string
   customerId?: Prisma.StringWithAggregatesFilter<"OccupationalDetails"> | string
   coApplicantId?: Prisma.StringNullableWithAggregatesFilter<"OccupationalDetails"> | string | null
+  guarantorId?: Prisma.StringNullableWithAggregatesFilter<"OccupationalDetails"> | string | null
   occupationalCategory?: Prisma.EnumOccupationalCategoryWithAggregatesFilter<"OccupationalDetails"> | $Enums.OccupationalCategory
   occupationalCategoryOther?: Prisma.StringNullableWithAggregatesFilter<"OccupationalDetails"> | string | null
   companyBusinessName?: Prisma.StringNullableWithAggregatesFilter<"OccupationalDetails"> | string | null
@@ -449,6 +464,7 @@ export type OccupationalDetailsCreateInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutOccupationalDetailsInput
   coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutOccupationalDetailsInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutOccupationalDetailsInput
   address?: Prisma.AddressCreateNestedOneWithoutOccupationalDetailsInput
 }
 
@@ -456,6 +472,7 @@ export type OccupationalDetailsUncheckedCreateInput = {
   id?: string
   customerId: string
   coApplicantId?: string | null
+  guarantorId?: string | null
   occupationalCategory: $Enums.OccupationalCategory
   occupationalCategoryOther?: string | null
   companyBusinessName?: string | null
@@ -491,6 +508,7 @@ export type OccupationalDetailsUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOccupationalDetailsNestedInput
   coApplicant?: Prisma.CoApplicantUpdateOneWithoutOccupationalDetailsNestedInput
+  guarantor?: Prisma.GuarantorUpdateOneWithoutOccupationalDetailsNestedInput
   address?: Prisma.AddressUpdateOneWithoutOccupationalDetailsNestedInput
 }
 
@@ -498,6 +516,7 @@ export type OccupationalDetailsUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupationalCategory?: Prisma.EnumOccupationalCategoryFieldUpdateOperationsInput | $Enums.OccupationalCategory
   occupationalCategoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyBusinessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -519,6 +538,7 @@ export type OccupationalDetailsCreateManyInput = {
   id?: string
   customerId: string
   coApplicantId?: string | null
+  guarantorId?: string | null
   occupationalCategory: $Enums.OccupationalCategory
   occupationalCategoryOther?: string | null
   companyBusinessName?: string | null
@@ -558,6 +578,7 @@ export type OccupationalDetailsUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupationalCategory?: Prisma.EnumOccupationalCategoryFieldUpdateOperationsInput | $Enums.OccupationalCategory
   occupationalCategoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyBusinessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -595,6 +616,7 @@ export type OccupationalDetailsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   coApplicantId?: Prisma.SortOrder
+  guarantorId?: Prisma.SortOrder
   occupationalCategory?: Prisma.SortOrder
   occupationalCategoryOther?: Prisma.SortOrder
   companyBusinessName?: Prisma.SortOrder
@@ -621,6 +643,7 @@ export type OccupationalDetailsMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   coApplicantId?: Prisma.SortOrder
+  guarantorId?: Prisma.SortOrder
   occupationalCategory?: Prisma.SortOrder
   occupationalCategoryOther?: Prisma.SortOrder
   companyBusinessName?: Prisma.SortOrder
@@ -642,6 +665,7 @@ export type OccupationalDetailsMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   coApplicantId?: Prisma.SortOrder
+  guarantorId?: Prisma.SortOrder
   occupationalCategory?: Prisma.SortOrder
   occupationalCategoryOther?: Prisma.SortOrder
   companyBusinessName?: Prisma.SortOrder
@@ -802,6 +826,48 @@ export type NullableEnumBusinessTypeFieldUpdateOperationsInput = {
   set?: $Enums.BusinessType | null
 }
 
+export type OccupationalDetailsCreateNestedManyWithoutGuarantorInput = {
+  create?: Prisma.XOR<Prisma.OccupationalDetailsCreateWithoutGuarantorInput, Prisma.OccupationalDetailsUncheckedCreateWithoutGuarantorInput> | Prisma.OccupationalDetailsCreateWithoutGuarantorInput[] | Prisma.OccupationalDetailsUncheckedCreateWithoutGuarantorInput[]
+  connectOrCreate?: Prisma.OccupationalDetailsCreateOrConnectWithoutGuarantorInput | Prisma.OccupationalDetailsCreateOrConnectWithoutGuarantorInput[]
+  createMany?: Prisma.OccupationalDetailsCreateManyGuarantorInputEnvelope
+  connect?: Prisma.OccupationalDetailsWhereUniqueInput | Prisma.OccupationalDetailsWhereUniqueInput[]
+}
+
+export type OccupationalDetailsUncheckedCreateNestedManyWithoutGuarantorInput = {
+  create?: Prisma.XOR<Prisma.OccupationalDetailsCreateWithoutGuarantorInput, Prisma.OccupationalDetailsUncheckedCreateWithoutGuarantorInput> | Prisma.OccupationalDetailsCreateWithoutGuarantorInput[] | Prisma.OccupationalDetailsUncheckedCreateWithoutGuarantorInput[]
+  connectOrCreate?: Prisma.OccupationalDetailsCreateOrConnectWithoutGuarantorInput | Prisma.OccupationalDetailsCreateOrConnectWithoutGuarantorInput[]
+  createMany?: Prisma.OccupationalDetailsCreateManyGuarantorInputEnvelope
+  connect?: Prisma.OccupationalDetailsWhereUniqueInput | Prisma.OccupationalDetailsWhereUniqueInput[]
+}
+
+export type OccupationalDetailsUpdateManyWithoutGuarantorNestedInput = {
+  create?: Prisma.XOR<Prisma.OccupationalDetailsCreateWithoutGuarantorInput, Prisma.OccupationalDetailsUncheckedCreateWithoutGuarantorInput> | Prisma.OccupationalDetailsCreateWithoutGuarantorInput[] | Prisma.OccupationalDetailsUncheckedCreateWithoutGuarantorInput[]
+  connectOrCreate?: Prisma.OccupationalDetailsCreateOrConnectWithoutGuarantorInput | Prisma.OccupationalDetailsCreateOrConnectWithoutGuarantorInput[]
+  upsert?: Prisma.OccupationalDetailsUpsertWithWhereUniqueWithoutGuarantorInput | Prisma.OccupationalDetailsUpsertWithWhereUniqueWithoutGuarantorInput[]
+  createMany?: Prisma.OccupationalDetailsCreateManyGuarantorInputEnvelope
+  set?: Prisma.OccupationalDetailsWhereUniqueInput | Prisma.OccupationalDetailsWhereUniqueInput[]
+  disconnect?: Prisma.OccupationalDetailsWhereUniqueInput | Prisma.OccupationalDetailsWhereUniqueInput[]
+  delete?: Prisma.OccupationalDetailsWhereUniqueInput | Prisma.OccupationalDetailsWhereUniqueInput[]
+  connect?: Prisma.OccupationalDetailsWhereUniqueInput | Prisma.OccupationalDetailsWhereUniqueInput[]
+  update?: Prisma.OccupationalDetailsUpdateWithWhereUniqueWithoutGuarantorInput | Prisma.OccupationalDetailsUpdateWithWhereUniqueWithoutGuarantorInput[]
+  updateMany?: Prisma.OccupationalDetailsUpdateManyWithWhereWithoutGuarantorInput | Prisma.OccupationalDetailsUpdateManyWithWhereWithoutGuarantorInput[]
+  deleteMany?: Prisma.OccupationalDetailsScalarWhereInput | Prisma.OccupationalDetailsScalarWhereInput[]
+}
+
+export type OccupationalDetailsUncheckedUpdateManyWithoutGuarantorNestedInput = {
+  create?: Prisma.XOR<Prisma.OccupationalDetailsCreateWithoutGuarantorInput, Prisma.OccupationalDetailsUncheckedCreateWithoutGuarantorInput> | Prisma.OccupationalDetailsCreateWithoutGuarantorInput[] | Prisma.OccupationalDetailsUncheckedCreateWithoutGuarantorInput[]
+  connectOrCreate?: Prisma.OccupationalDetailsCreateOrConnectWithoutGuarantorInput | Prisma.OccupationalDetailsCreateOrConnectWithoutGuarantorInput[]
+  upsert?: Prisma.OccupationalDetailsUpsertWithWhereUniqueWithoutGuarantorInput | Prisma.OccupationalDetailsUpsertWithWhereUniqueWithoutGuarantorInput[]
+  createMany?: Prisma.OccupationalDetailsCreateManyGuarantorInputEnvelope
+  set?: Prisma.OccupationalDetailsWhereUniqueInput | Prisma.OccupationalDetailsWhereUniqueInput[]
+  disconnect?: Prisma.OccupationalDetailsWhereUniqueInput | Prisma.OccupationalDetailsWhereUniqueInput[]
+  delete?: Prisma.OccupationalDetailsWhereUniqueInput | Prisma.OccupationalDetailsWhereUniqueInput[]
+  connect?: Prisma.OccupationalDetailsWhereUniqueInput | Prisma.OccupationalDetailsWhereUniqueInput[]
+  update?: Prisma.OccupationalDetailsUpdateWithWhereUniqueWithoutGuarantorInput | Prisma.OccupationalDetailsUpdateWithWhereUniqueWithoutGuarantorInput[]
+  updateMany?: Prisma.OccupationalDetailsUpdateManyWithWhereWithoutGuarantorInput | Prisma.OccupationalDetailsUpdateManyWithWhereWithoutGuarantorInput[]
+  deleteMany?: Prisma.OccupationalDetailsScalarWhereInput | Prisma.OccupationalDetailsScalarWhereInput[]
+}
+
 export type OccupationalDetailsCreateWithoutAddressInput = {
   id?: string
   occupationalCategory: $Enums.OccupationalCategory
@@ -820,12 +886,14 @@ export type OccupationalDetailsCreateWithoutAddressInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutOccupationalDetailsInput
   coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutOccupationalDetailsInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutOccupationalDetailsInput
 }
 
 export type OccupationalDetailsUncheckedCreateWithoutAddressInput = {
   id?: string
   customerId: string
   coApplicantId?: string | null
+  guarantorId?: string | null
   occupationalCategory: $Enums.OccupationalCategory
   occupationalCategoryOther?: string | null
   companyBusinessName?: string | null
@@ -875,6 +943,7 @@ export type OccupationalDetailsScalarWhereInput = {
   id?: Prisma.StringFilter<"OccupationalDetails"> | string
   customerId?: Prisma.StringFilter<"OccupationalDetails"> | string
   coApplicantId?: Prisma.StringNullableFilter<"OccupationalDetails"> | string | null
+  guarantorId?: Prisma.StringNullableFilter<"OccupationalDetails"> | string | null
   occupationalCategory?: Prisma.EnumOccupationalCategoryFilter<"OccupationalDetails"> | $Enums.OccupationalCategory
   occupationalCategoryOther?: Prisma.StringNullableFilter<"OccupationalDetails"> | string | null
   companyBusinessName?: Prisma.StringNullableFilter<"OccupationalDetails"> | string | null
@@ -909,12 +978,14 @@ export type OccupationalDetailsCreateWithoutCoApplicantInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutOccupationalDetailsInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutOccupationalDetailsInput
   address?: Prisma.AddressCreateNestedOneWithoutOccupationalDetailsInput
 }
 
 export type OccupationalDetailsUncheckedCreateWithoutCoApplicantInput = {
   id?: string
   customerId: string
+  guarantorId?: string | null
   occupationalCategory: $Enums.OccupationalCategory
   occupationalCategoryOther?: string | null
   companyBusinessName?: string | null
@@ -975,12 +1046,14 @@ export type OccupationalDetailsCreateWithoutCustomerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutOccupationalDetailsInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutOccupationalDetailsInput
   address?: Prisma.AddressCreateNestedOneWithoutOccupationalDetailsInput
 }
 
 export type OccupationalDetailsUncheckedCreateWithoutCustomerInput = {
   id?: string
   coApplicantId?: string | null
+  guarantorId?: string | null
   occupationalCategory: $Enums.OccupationalCategory
   occupationalCategoryOther?: string | null
   companyBusinessName?: string | null
@@ -1024,10 +1097,79 @@ export type OccupationalDetailsUpdateManyWithWhereWithoutCustomerInput = {
   data: Prisma.XOR<Prisma.OccupationalDetailsUpdateManyMutationInput, Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCustomerInput>
 }
 
+export type OccupationalDetailsCreateWithoutGuarantorInput = {
+  id?: string
+  occupationalCategory: $Enums.OccupationalCategory
+  occupationalCategoryOther?: string | null
+  companyBusinessName?: string | null
+  phoneNumber?: string | null
+  extensionNumber?: string | null
+  totalWorkExperience?: number | null
+  noOfEmployees?: number | null
+  commencementDate?: Date | string | null
+  professionalType?: $Enums.ProfessionalType | null
+  professionalSpecify?: string | null
+  businessType?: $Enums.BusinessType | null
+  businessSpecify?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutOccupationalDetailsInput
+  coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutOccupationalDetailsInput
+  address?: Prisma.AddressCreateNestedOneWithoutOccupationalDetailsInput
+}
+
+export type OccupationalDetailsUncheckedCreateWithoutGuarantorInput = {
+  id?: string
+  customerId: string
+  coApplicantId?: string | null
+  occupationalCategory: $Enums.OccupationalCategory
+  occupationalCategoryOther?: string | null
+  companyBusinessName?: string | null
+  addressId?: string | null
+  phoneNumber?: string | null
+  extensionNumber?: string | null
+  totalWorkExperience?: number | null
+  noOfEmployees?: number | null
+  commencementDate?: Date | string | null
+  professionalType?: $Enums.ProfessionalType | null
+  professionalSpecify?: string | null
+  businessType?: $Enums.BusinessType | null
+  businessSpecify?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OccupationalDetailsCreateOrConnectWithoutGuarantorInput = {
+  where: Prisma.OccupationalDetailsWhereUniqueInput
+  create: Prisma.XOR<Prisma.OccupationalDetailsCreateWithoutGuarantorInput, Prisma.OccupationalDetailsUncheckedCreateWithoutGuarantorInput>
+}
+
+export type OccupationalDetailsCreateManyGuarantorInputEnvelope = {
+  data: Prisma.OccupationalDetailsCreateManyGuarantorInput | Prisma.OccupationalDetailsCreateManyGuarantorInput[]
+  skipDuplicates?: boolean
+}
+
+export type OccupationalDetailsUpsertWithWhereUniqueWithoutGuarantorInput = {
+  where: Prisma.OccupationalDetailsWhereUniqueInput
+  update: Prisma.XOR<Prisma.OccupationalDetailsUpdateWithoutGuarantorInput, Prisma.OccupationalDetailsUncheckedUpdateWithoutGuarantorInput>
+  create: Prisma.XOR<Prisma.OccupationalDetailsCreateWithoutGuarantorInput, Prisma.OccupationalDetailsUncheckedCreateWithoutGuarantorInput>
+}
+
+export type OccupationalDetailsUpdateWithWhereUniqueWithoutGuarantorInput = {
+  where: Prisma.OccupationalDetailsWhereUniqueInput
+  data: Prisma.XOR<Prisma.OccupationalDetailsUpdateWithoutGuarantorInput, Prisma.OccupationalDetailsUncheckedUpdateWithoutGuarantorInput>
+}
+
+export type OccupationalDetailsUpdateManyWithWhereWithoutGuarantorInput = {
+  where: Prisma.OccupationalDetailsScalarWhereInput
+  data: Prisma.XOR<Prisma.OccupationalDetailsUpdateManyMutationInput, Prisma.OccupationalDetailsUncheckedUpdateManyWithoutGuarantorInput>
+}
+
 export type OccupationalDetailsCreateManyAddressInput = {
   id?: string
   customerId: string
   coApplicantId?: string | null
+  guarantorId?: string | null
   occupationalCategory: $Enums.OccupationalCategory
   occupationalCategoryOther?: string | null
   companyBusinessName?: string | null
@@ -1062,12 +1204,14 @@ export type OccupationalDetailsUpdateWithoutAddressInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOccupationalDetailsNestedInput
   coApplicant?: Prisma.CoApplicantUpdateOneWithoutOccupationalDetailsNestedInput
+  guarantor?: Prisma.GuarantorUpdateOneWithoutOccupationalDetailsNestedInput
 }
 
 export type OccupationalDetailsUncheckedUpdateWithoutAddressInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupationalCategory?: Prisma.EnumOccupationalCategoryFieldUpdateOperationsInput | $Enums.OccupationalCategory
   occupationalCategoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyBusinessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1088,6 +1232,7 @@ export type OccupationalDetailsUncheckedUpdateManyWithoutAddressInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupationalCategory?: Prisma.EnumOccupationalCategoryFieldUpdateOperationsInput | $Enums.OccupationalCategory
   occupationalCategoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyBusinessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1107,6 +1252,7 @@ export type OccupationalDetailsUncheckedUpdateManyWithoutAddressInput = {
 export type OccupationalDetailsCreateManyCoApplicantInput = {
   id?: string
   customerId: string
+  guarantorId?: string | null
   occupationalCategory: $Enums.OccupationalCategory
   occupationalCategoryOther?: string | null
   companyBusinessName?: string | null
@@ -1141,12 +1287,14 @@ export type OccupationalDetailsUpdateWithoutCoApplicantInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOccupationalDetailsNestedInput
+  guarantor?: Prisma.GuarantorUpdateOneWithoutOccupationalDetailsNestedInput
   address?: Prisma.AddressUpdateOneWithoutOccupationalDetailsNestedInput
 }
 
 export type OccupationalDetailsUncheckedUpdateWithoutCoApplicantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupationalCategory?: Prisma.EnumOccupationalCategoryFieldUpdateOperationsInput | $Enums.OccupationalCategory
   occupationalCategoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyBusinessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1167,6 +1315,7 @@ export type OccupationalDetailsUncheckedUpdateWithoutCoApplicantInput = {
 export type OccupationalDetailsUncheckedUpdateManyWithoutCoApplicantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupationalCategory?: Prisma.EnumOccupationalCategoryFieldUpdateOperationsInput | $Enums.OccupationalCategory
   occupationalCategoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyBusinessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1187,6 +1336,7 @@ export type OccupationalDetailsUncheckedUpdateManyWithoutCoApplicantInput = {
 export type OccupationalDetailsCreateManyCustomerInput = {
   id?: string
   coApplicantId?: string | null
+  guarantorId?: string | null
   occupationalCategory: $Enums.OccupationalCategory
   occupationalCategoryOther?: string | null
   companyBusinessName?: string | null
@@ -1221,12 +1371,14 @@ export type OccupationalDetailsUpdateWithoutCustomerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coApplicant?: Prisma.CoApplicantUpdateOneWithoutOccupationalDetailsNestedInput
+  guarantor?: Prisma.GuarantorUpdateOneWithoutOccupationalDetailsNestedInput
   address?: Prisma.AddressUpdateOneWithoutOccupationalDetailsNestedInput
 }
 
 export type OccupationalDetailsUncheckedUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupationalCategory?: Prisma.EnumOccupationalCategoryFieldUpdateOperationsInput | $Enums.OccupationalCategory
   occupationalCategoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyBusinessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1246,6 +1398,91 @@ export type OccupationalDetailsUncheckedUpdateWithoutCustomerInput = {
 
 export type OccupationalDetailsUncheckedUpdateManyWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occupationalCategory?: Prisma.EnumOccupationalCategoryFieldUpdateOperationsInput | $Enums.OccupationalCategory
+  occupationalCategoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyBusinessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalWorkExperience?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfEmployees?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  commencementDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  professionalType?: Prisma.NullableEnumProfessionalTypeFieldUpdateOperationsInput | $Enums.ProfessionalType | null
+  professionalSpecify?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessType?: Prisma.NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
+  businessSpecify?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type OccupationalDetailsCreateManyGuarantorInput = {
+  id?: string
+  customerId: string
+  coApplicantId?: string | null
+  occupationalCategory: $Enums.OccupationalCategory
+  occupationalCategoryOther?: string | null
+  companyBusinessName?: string | null
+  addressId?: string | null
+  phoneNumber?: string | null
+  extensionNumber?: string | null
+  totalWorkExperience?: number | null
+  noOfEmployees?: number | null
+  commencementDate?: Date | string | null
+  professionalType?: $Enums.ProfessionalType | null
+  professionalSpecify?: string | null
+  businessType?: $Enums.BusinessType | null
+  businessSpecify?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OccupationalDetailsUpdateWithoutGuarantorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  occupationalCategory?: Prisma.EnumOccupationalCategoryFieldUpdateOperationsInput | $Enums.OccupationalCategory
+  occupationalCategoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyBusinessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalWorkExperience?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfEmployees?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  commencementDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  professionalType?: Prisma.NullableEnumProfessionalTypeFieldUpdateOperationsInput | $Enums.ProfessionalType | null
+  professionalSpecify?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessType?: Prisma.NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
+  businessSpecify?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutOccupationalDetailsNestedInput
+  coApplicant?: Prisma.CoApplicantUpdateOneWithoutOccupationalDetailsNestedInput
+  address?: Prisma.AddressUpdateOneWithoutOccupationalDetailsNestedInput
+}
+
+export type OccupationalDetailsUncheckedUpdateWithoutGuarantorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occupationalCategory?: Prisma.EnumOccupationalCategoryFieldUpdateOperationsInput | $Enums.OccupationalCategory
+  occupationalCategoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyBusinessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  extensionNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalWorkExperience?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfEmployees?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  commencementDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  professionalType?: Prisma.NullableEnumProfessionalTypeFieldUpdateOperationsInput | $Enums.ProfessionalType | null
+  professionalSpecify?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessType?: Prisma.NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
+  businessSpecify?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type OccupationalDetailsUncheckedUpdateManyWithoutGuarantorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupationalCategory?: Prisma.EnumOccupationalCategoryFieldUpdateOperationsInput | $Enums.OccupationalCategory
   occupationalCategoryOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1270,6 +1507,7 @@ export type OccupationalDetailsSelect<ExtArgs extends runtime.Types.Extensions.I
   id?: boolean
   customerId?: boolean
   coApplicantId?: boolean
+  guarantorId?: boolean
   occupationalCategory?: boolean
   occupationalCategoryOther?: boolean
   companyBusinessName?: boolean
@@ -1287,6 +1525,7 @@ export type OccupationalDetailsSelect<ExtArgs extends runtime.Types.Extensions.I
   updatedAt?: boolean
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   coApplicant?: boolean | Prisma.OccupationalDetails$coApplicantArgs<ExtArgs>
+  guarantor?: boolean | Prisma.OccupationalDetails$guarantorArgs<ExtArgs>
   address?: boolean | Prisma.OccupationalDetails$addressArgs<ExtArgs>
 }, ExtArgs["result"]["occupationalDetails"]>
 
@@ -1296,6 +1535,7 @@ export type OccupationalDetailsSelectScalar = {
   id?: boolean
   customerId?: boolean
   coApplicantId?: boolean
+  guarantorId?: boolean
   occupationalCategory?: boolean
   occupationalCategoryOther?: boolean
   companyBusinessName?: boolean
@@ -1313,10 +1553,11 @@ export type OccupationalDetailsSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OccupationalDetailsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerId" | "coApplicantId" | "occupationalCategory" | "occupationalCategoryOther" | "companyBusinessName" | "addressId" | "phoneNumber" | "extensionNumber" | "totalWorkExperience" | "noOfEmployees" | "commencementDate" | "professionalType" | "professionalSpecify" | "businessType" | "businessSpecify" | "createdAt" | "updatedAt", ExtArgs["result"]["occupationalDetails"]>
+export type OccupationalDetailsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerId" | "coApplicantId" | "guarantorId" | "occupationalCategory" | "occupationalCategoryOther" | "companyBusinessName" | "addressId" | "phoneNumber" | "extensionNumber" | "totalWorkExperience" | "noOfEmployees" | "commencementDate" | "professionalType" | "professionalSpecify" | "businessType" | "businessSpecify" | "createdAt" | "updatedAt", ExtArgs["result"]["occupationalDetails"]>
 export type OccupationalDetailsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   coApplicant?: boolean | Prisma.OccupationalDetails$coApplicantArgs<ExtArgs>
+  guarantor?: boolean | Prisma.OccupationalDetails$guarantorArgs<ExtArgs>
   address?: boolean | Prisma.OccupationalDetails$addressArgs<ExtArgs>
 }
 
@@ -1325,12 +1566,14 @@ export type $OccupationalDetailsPayload<ExtArgs extends runtime.Types.Extensions
   objects: {
     customer: Prisma.$CustomerPayload<ExtArgs>
     coApplicant: Prisma.$CoApplicantPayload<ExtArgs> | null
+    guarantor: Prisma.$GuarantorPayload<ExtArgs> | null
     address: Prisma.$AddressPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     customerId: string
     coApplicantId: string | null
+    guarantorId: string | null
     occupationalCategory: $Enums.OccupationalCategory
     occupationalCategoryOther: string | null
     companyBusinessName: string | null
@@ -1688,6 +1931,7 @@ export interface Prisma__OccupationalDetailsClient<T, Null = never, ExtArgs exte
   readonly [Symbol.toStringTag]: "PrismaPromise"
   customer<T extends Prisma.CustomerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerDefaultArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   coApplicant<T extends Prisma.OccupationalDetails$coApplicantArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OccupationalDetails$coApplicantArgs<ExtArgs>>): Prisma.Prisma__CoApplicantClient<runtime.Types.Result.GetResult<Prisma.$CoApplicantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  guarantor<T extends Prisma.OccupationalDetails$guarantorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OccupationalDetails$guarantorArgs<ExtArgs>>): Prisma.Prisma__GuarantorClient<runtime.Types.Result.GetResult<Prisma.$GuarantorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   address<T extends Prisma.OccupationalDetails$addressArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OccupationalDetails$addressArgs<ExtArgs>>): Prisma.Prisma__AddressClient<runtime.Types.Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1721,6 +1965,7 @@ export interface OccupationalDetailsFieldRefs {
   readonly id: Prisma.FieldRef<"OccupationalDetails", 'String'>
   readonly customerId: Prisma.FieldRef<"OccupationalDetails", 'String'>
   readonly coApplicantId: Prisma.FieldRef<"OccupationalDetails", 'String'>
+  readonly guarantorId: Prisma.FieldRef<"OccupationalDetails", 'String'>
   readonly occupationalCategory: Prisma.FieldRef<"OccupationalDetails", 'OccupationalCategory'>
   readonly occupationalCategoryOther: Prisma.FieldRef<"OccupationalDetails", 'String'>
   readonly companyBusinessName: Prisma.FieldRef<"OccupationalDetails", 'String'>
@@ -2095,6 +2340,25 @@ export type OccupationalDetails$coApplicantArgs<ExtArgs extends runtime.Types.Ex
    */
   include?: Prisma.CoApplicantInclude<ExtArgs> | null
   where?: Prisma.CoApplicantWhereInput
+}
+
+/**
+ * OccupationalDetails.guarantor
+ */
+export type OccupationalDetails$guarantorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Guarantor
+   */
+  select?: Prisma.GuarantorSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Guarantor
+   */
+  omit?: Prisma.GuarantorOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GuarantorInclude<ExtArgs> | null
+  where?: Prisma.GuarantorWhereInput
 }
 
 /**

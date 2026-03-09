@@ -13,6 +13,7 @@ import {
   rejectDocumentController,
   reuploadLoanDocumentController,
   getAlldoumentsforLoanApplicationController,
+  createFullLoanApplicationController,
 } from "./loanApplication.controller.js";
 import { validate } from "../../common/middlewares/zod.middleware.js";
 import {
@@ -20,6 +21,7 @@ import {
   updateLoanApplicationSchema,
   loanApplicationIdParamSchema,
   apperoveLoanInputSchema,
+  createFullLoanApplicationSchema,
 } from "./loanApplication.schema.js";
 import { authMiddleware } from "../../common/middlewares/auth.middleware.js";
 import upload from "../../common/middlewares/multer.middleware.js";
@@ -131,4 +133,12 @@ loanApplicationRouter.post(
   reuploadLoanDocumentController,
 );
 
+
+
+loanApplicationRouter.post(
+  "/loan/full",
+  authMiddleware,
+  validate(createFullLoanApplicationSchema),
+  createFullLoanApplicationController
+)
 export default loanApplicationRouter;

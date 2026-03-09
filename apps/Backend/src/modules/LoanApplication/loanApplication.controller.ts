@@ -11,7 +11,8 @@ import {
   verifyDocumentService,
   rejectDocumentService,
   reuploadLoanDocumentService,
-  getAlldoumentsforLoanApplicationService
+  getAlldoumentsforLoanApplicationService,
+  createFullLoanApplicationService
 } from "./loanApplication.service.js";
 import { prisma } from "../../db/prismaService.js";
 
@@ -424,3 +425,41 @@ export const reuploadLoanDocumentController = async (
     next(error);
   }
 };
+
+
+
+export const createFullLoanApplicationController = async (
+  req: Request,
+  res: Response
+) => {
+
+  try {
+
+    if(!req.user){
+      return res.status(401).json({
+        success:false,
+        message:"Unauthorized"
+      })
+    }
+
+    const result = await createFullLoanApplicationService(
+      req.body,
+      req.user.id
+    )
+
+    res.status(201).json({
+      success:true,
+      message:"Loan Application Created",
+      data: result
+    })
+
+  } catch(error:any){
+
+    res.status(500).json({
+      success:false,
+      message:error.message
+    })
+
+  }
+
+}

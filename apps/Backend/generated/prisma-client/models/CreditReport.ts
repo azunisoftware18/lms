@@ -697,6 +697,11 @@ export type CreditReportUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type CreditReportNullableScalarRelationFilter = {
+  is?: Prisma.CreditReportWhereInput | null
+  isNot?: Prisma.CreditReportWhereInput | null
+}
+
 export type CreditReportOrderByRelevanceInput = {
   fields: Prisma.CreditReportOrderByRelevanceFieldEnum | Prisma.CreditReportOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
@@ -808,29 +813,6 @@ export type CreditReportScalarRelationFilter = {
   isNot?: Prisma.CreditReportWhereInput
 }
 
-export type CreditReportNullableScalarRelationFilter = {
-  is?: Prisma.CreditReportWhereInput | null
-  isNot?: Prisma.CreditReportWhereInput | null
-}
-
-export type EnumCreditProviderFieldUpdateOperationsInput = {
-  set?: $Enums.CreditProvider
-}
-
-export type CreditReportCreateNestedOneWithoutCreditAccountInput = {
-  create?: Prisma.XOR<Prisma.CreditReportCreateWithoutCreditAccountInput, Prisma.CreditReportUncheckedCreateWithoutCreditAccountInput>
-  connectOrCreate?: Prisma.CreditReportCreateOrConnectWithoutCreditAccountInput
-  connect?: Prisma.CreditReportWhereUniqueInput
-}
-
-export type CreditReportUpdateOneRequiredWithoutCreditAccountNestedInput = {
-  create?: Prisma.XOR<Prisma.CreditReportCreateWithoutCreditAccountInput, Prisma.CreditReportUncheckedCreateWithoutCreditAccountInput>
-  connectOrCreate?: Prisma.CreditReportCreateOrConnectWithoutCreditAccountInput
-  upsert?: Prisma.CreditReportUpsertWithoutCreditAccountInput
-  connect?: Prisma.CreditReportWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.CreditReportUpdateToOneWithWhereWithoutCreditAccountInput, Prisma.CreditReportUpdateWithoutCreditAccountInput>, Prisma.CreditReportUncheckedUpdateWithoutCreditAccountInput>
-}
-
 export type CreditReportCreateNestedOneWithoutCustomerInput = {
   create?: Prisma.XOR<Prisma.CreditReportCreateWithoutCustomerInput, Prisma.CreditReportUncheckedCreateWithoutCustomerInput>
   connectOrCreate?: Prisma.CreditReportCreateOrConnectWithoutCustomerInput
@@ -863,124 +845,22 @@ export type CreditReportUncheckedUpdateOneWithoutCustomerNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CreditReportUpdateToOneWithWhereWithoutCustomerInput, Prisma.CreditReportUpdateWithoutCustomerInput>, Prisma.CreditReportUncheckedUpdateWithoutCustomerInput>
 }
 
-export type CreditReportCreateWithoutCreditAccountInput = {
-  id?: string
-  provider: $Enums.CreditProvider
-  bureauReferenceId?: string | null
-  fetchedAt?: Date | string
-  creditScore?: number | null
-  scoreBand?: string | null
-  totalAtiveLoans?: number | null
-  totalClosedLoans?: number | null
-  totalOutstandingLoans?: number | null
-  totalMonthlyEmi?: number | null
-  maxDPD?: number | null
-  overdueAccounts?: number | null
-  wittenOffCounts?: number | null
-  settledCounts?: number | null
-  isThinFile?: boolean
-  isNTC?: boolean
-  isValid?: boolean
-  isExpired?: boolean
-  pulledFor?: string | null
-  rowRawData: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  customer: Prisma.CustomerCreateNestedOneWithoutCreditReportInput
+export type EnumCreditProviderFieldUpdateOperationsInput = {
+  set?: $Enums.CreditProvider
 }
 
-export type CreditReportUncheckedCreateWithoutCreditAccountInput = {
-  id?: string
-  customerId: string
-  provider: $Enums.CreditProvider
-  bureauReferenceId?: string | null
-  fetchedAt?: Date | string
-  creditScore?: number | null
-  scoreBand?: string | null
-  totalAtiveLoans?: number | null
-  totalClosedLoans?: number | null
-  totalOutstandingLoans?: number | null
-  totalMonthlyEmi?: number | null
-  maxDPD?: number | null
-  overdueAccounts?: number | null
-  wittenOffCounts?: number | null
-  settledCounts?: number | null
-  isThinFile?: boolean
-  isNTC?: boolean
-  isValid?: boolean
-  isExpired?: boolean
-  pulledFor?: string | null
-  rowRawData: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-  updatedAt?: Date | string
+export type CreditReportCreateNestedOneWithoutCreditAccountInput = {
+  create?: Prisma.XOR<Prisma.CreditReportCreateWithoutCreditAccountInput, Prisma.CreditReportUncheckedCreateWithoutCreditAccountInput>
+  connectOrCreate?: Prisma.CreditReportCreateOrConnectWithoutCreditAccountInput
+  connect?: Prisma.CreditReportWhereUniqueInput
 }
 
-export type CreditReportCreateOrConnectWithoutCreditAccountInput = {
-  where: Prisma.CreditReportWhereUniqueInput
-  create: Prisma.XOR<Prisma.CreditReportCreateWithoutCreditAccountInput, Prisma.CreditReportUncheckedCreateWithoutCreditAccountInput>
-}
-
-export type CreditReportUpsertWithoutCreditAccountInput = {
-  update: Prisma.XOR<Prisma.CreditReportUpdateWithoutCreditAccountInput, Prisma.CreditReportUncheckedUpdateWithoutCreditAccountInput>
-  create: Prisma.XOR<Prisma.CreditReportCreateWithoutCreditAccountInput, Prisma.CreditReportUncheckedCreateWithoutCreditAccountInput>
-  where?: Prisma.CreditReportWhereInput
-}
-
-export type CreditReportUpdateToOneWithWhereWithoutCreditAccountInput = {
-  where?: Prisma.CreditReportWhereInput
-  data: Prisma.XOR<Prisma.CreditReportUpdateWithoutCreditAccountInput, Prisma.CreditReportUncheckedUpdateWithoutCreditAccountInput>
-}
-
-export type CreditReportUpdateWithoutCreditAccountInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  provider?: Prisma.EnumCreditProviderFieldUpdateOperationsInput | $Enums.CreditProvider
-  bureauReferenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fetchedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  creditScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  scoreBand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalAtiveLoans?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  totalClosedLoans?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  totalOutstandingLoans?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalMonthlyEmi?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  maxDPD?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  overdueAccounts?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  wittenOffCounts?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  settledCounts?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  isThinFile?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isNTC?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isValid?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isExpired?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  pulledFor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rowRawData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  customer?: Prisma.CustomerUpdateOneRequiredWithoutCreditReportNestedInput
-}
-
-export type CreditReportUncheckedUpdateWithoutCreditAccountInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  customerId?: Prisma.StringFieldUpdateOperationsInput | string
-  provider?: Prisma.EnumCreditProviderFieldUpdateOperationsInput | $Enums.CreditProvider
-  bureauReferenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fetchedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  creditScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  scoreBand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalAtiveLoans?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  totalClosedLoans?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  totalOutstandingLoans?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  totalMonthlyEmi?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  maxDPD?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  overdueAccounts?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  wittenOffCounts?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  settledCounts?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  isThinFile?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isNTC?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isValid?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isExpired?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  pulledFor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rowRawData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type CreditReportUpdateOneRequiredWithoutCreditAccountNestedInput = {
+  create?: Prisma.XOR<Prisma.CreditReportCreateWithoutCreditAccountInput, Prisma.CreditReportUncheckedCreateWithoutCreditAccountInput>
+  connectOrCreate?: Prisma.CreditReportCreateOrConnectWithoutCreditAccountInput
+  upsert?: Prisma.CreditReportUpsertWithoutCreditAccountInput
+  connect?: Prisma.CreditReportWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CreditReportUpdateToOneWithWhereWithoutCreditAccountInput, Prisma.CreditReportUpdateWithoutCreditAccountInput>, Prisma.CreditReportUncheckedUpdateWithoutCreditAccountInput>
 }
 
 export type CreditReportCreateWithoutCustomerInput = {
@@ -1101,6 +981,126 @@ export type CreditReportUncheckedUpdateWithoutCustomerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   creditAccount?: Prisma.CreditAccountUncheckedUpdateManyWithoutCreditReportNestedInput
+}
+
+export type CreditReportCreateWithoutCreditAccountInput = {
+  id?: string
+  provider: $Enums.CreditProvider
+  bureauReferenceId?: string | null
+  fetchedAt?: Date | string
+  creditScore?: number | null
+  scoreBand?: string | null
+  totalAtiveLoans?: number | null
+  totalClosedLoans?: number | null
+  totalOutstandingLoans?: number | null
+  totalMonthlyEmi?: number | null
+  maxDPD?: number | null
+  overdueAccounts?: number | null
+  wittenOffCounts?: number | null
+  settledCounts?: number | null
+  isThinFile?: boolean
+  isNTC?: boolean
+  isValid?: boolean
+  isExpired?: boolean
+  pulledFor?: string | null
+  rowRawData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutCreditReportInput
+}
+
+export type CreditReportUncheckedCreateWithoutCreditAccountInput = {
+  id?: string
+  customerId: string
+  provider: $Enums.CreditProvider
+  bureauReferenceId?: string | null
+  fetchedAt?: Date | string
+  creditScore?: number | null
+  scoreBand?: string | null
+  totalAtiveLoans?: number | null
+  totalClosedLoans?: number | null
+  totalOutstandingLoans?: number | null
+  totalMonthlyEmi?: number | null
+  maxDPD?: number | null
+  overdueAccounts?: number | null
+  wittenOffCounts?: number | null
+  settledCounts?: number | null
+  isThinFile?: boolean
+  isNTC?: boolean
+  isValid?: boolean
+  isExpired?: boolean
+  pulledFor?: string | null
+  rowRawData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type CreditReportCreateOrConnectWithoutCreditAccountInput = {
+  where: Prisma.CreditReportWhereUniqueInput
+  create: Prisma.XOR<Prisma.CreditReportCreateWithoutCreditAccountInput, Prisma.CreditReportUncheckedCreateWithoutCreditAccountInput>
+}
+
+export type CreditReportUpsertWithoutCreditAccountInput = {
+  update: Prisma.XOR<Prisma.CreditReportUpdateWithoutCreditAccountInput, Prisma.CreditReportUncheckedUpdateWithoutCreditAccountInput>
+  create: Prisma.XOR<Prisma.CreditReportCreateWithoutCreditAccountInput, Prisma.CreditReportUncheckedCreateWithoutCreditAccountInput>
+  where?: Prisma.CreditReportWhereInput
+}
+
+export type CreditReportUpdateToOneWithWhereWithoutCreditAccountInput = {
+  where?: Prisma.CreditReportWhereInput
+  data: Prisma.XOR<Prisma.CreditReportUpdateWithoutCreditAccountInput, Prisma.CreditReportUncheckedUpdateWithoutCreditAccountInput>
+}
+
+export type CreditReportUpdateWithoutCreditAccountInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.EnumCreditProviderFieldUpdateOperationsInput | $Enums.CreditProvider
+  bureauReferenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fetchedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  creditScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  scoreBand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalAtiveLoans?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalClosedLoans?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalOutstandingLoans?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  totalMonthlyEmi?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  maxDPD?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  overdueAccounts?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wittenOffCounts?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  settledCounts?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isThinFile?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isNTC?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isValid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isExpired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pulledFor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rowRawData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutCreditReportNestedInput
+}
+
+export type CreditReportUncheckedUpdateWithoutCreditAccountInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.EnumCreditProviderFieldUpdateOperationsInput | $Enums.CreditProvider
+  bureauReferenceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fetchedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  creditScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  scoreBand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalAtiveLoans?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalClosedLoans?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalOutstandingLoans?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  totalMonthlyEmi?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  maxDPD?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  overdueAccounts?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wittenOffCounts?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  settledCounts?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isThinFile?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isNTC?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isValid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isExpired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pulledFor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rowRawData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 

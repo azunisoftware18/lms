@@ -63,23 +63,33 @@ export const ModelName = {
   Leads: 'Leads',
   LoanApplicationDraft: 'LoanApplicationDraft',
   LoanApplication: 'LoanApplication',
+  CoApplicant: 'CoApplicant',
+  Customer: 'Customer',
+  OccupationalDetails: 'OccupationalDetails',
+  EmploymentDetails: 'EmploymentDetails',
+  FinancialDetails: 'FinancialDetails',
+  Guarantor: 'Guarantor',
+  GuarantorFinancialDetails: 'GuarantorFinancialDetails',
+  ExistingLoan: 'ExistingLoan',
+  CreditCard: 'CreditCard',
+  BankAccount: 'BankAccount',
+  InsurancePolicy: 'InsurancePolicy',
+  Property: 'Property',
+  Reference: 'Reference',
+  LoanRequirement: 'LoanRequirement',
+  LoanQuestionnaire: 'LoanQuestionnaire',
   LoanRecovery: 'LoanRecovery',
   RecoveryPayment: 'RecoveryPayment',
   Permission: 'Permission',
   UserPermission: 'UserPermission',
   Document: 'Document',
   Kyc: 'Kyc',
-  CoApplicant: 'CoApplicant',
   LoanEmiSchedule: 'LoanEmiSchedule',
   EmiPayment: 'EmiPayment',
   EmiMoratorium: 'EmiMoratorium',
   CreditReport: 'CreditReport',
   CreditAccount: 'CreditAccount',
   LoanType: 'LoanType',
-  Customer: 'Customer',
-  OccupationalDetails: 'OccupationalDetails',
-  EmploymentDetails: 'EmploymentDetails',
-  FinancialDetails: 'FinancialDetails',
   TechnicalReport: 'TechnicalReport',
   LegalReport: 'LegalReport',
   LoanAssignment: 'LoanAssignment',
@@ -237,9 +247,9 @@ export const AddressScalarFieldEnum = {
   pinCode: 'pinCode',
   landmark: 'landmark',
   phoneNumber: 'phoneNumber',
-  stdCode: 'stdCode',
   customerId: 'customerId',
   coApplicantId: 'coApplicantId',
+  guarantorId: 'guarantorId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -375,6 +385,335 @@ export const LoanApplicationScalarFieldEnum = {
 export type LoanApplicationScalarFieldEnum = (typeof LoanApplicationScalarFieldEnum)[keyof typeof LoanApplicationScalarFieldEnum]
 
 
+export const CoApplicantScalarFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  middleName: 'middleName',
+  relation: 'relation',
+  relationOther: 'relationOther',
+  contactNumber: 'contactNumber',
+  email: 'email',
+  dob: 'dob',
+  panNumber: 'panNumber',
+  aadhaarNumber: 'aadhaarNumber',
+  employmentType: 'employmentType',
+  kycId: 'kycId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CoApplicantScalarFieldEnum = (typeof CoApplicantScalarFieldEnum)[keyof typeof CoApplicantScalarFieldEnum]
+
+
+export const CustomerScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  middleName: 'middleName',
+  fatherName: 'fatherName',
+  motherName: 'motherName',
+  woname: 'woname',
+  gender: 'gender',
+  genderOther: 'genderOther',
+  dob: 'dob',
+  aadhaarNumber: 'aadhaarNumber',
+  panNumber: 'panNumber',
+  voterId: 'voterId',
+  drivingLicenceNo: 'drivingLicenceNo',
+  maritalStatus: 'maritalStatus',
+  maritalStatusOther: 'maritalStatusOther',
+  nationality: 'nationality',
+  category: 'category',
+  categoryOther: 'categoryOther',
+  passportNumber: 'passportNumber',
+  contactNumber: 'contactNumber',
+  alternateNumber: 'alternateNumber',
+  email: 'email',
+  phoneNumber: 'phoneNumber',
+  relationshipWithCoApplicant: 'relationshipWithCoApplicant',
+  relationWithCoApplicantOther: 'relationWithCoApplicantOther',
+  noOfFamilyDependents: 'noOfFamilyDependents',
+  noOfChildren: 'noOfChildren',
+  qualification: 'qualification',
+  correspondenceAddressType: 'correspondenceAddressType',
+  presentAccommodation: 'presentAccommodation',
+  periodOfStay: 'periodOfStay',
+  rentPerMonth: 'rentPerMonth',
+  employmentType: 'employmentType',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
+
+
+export const OccupationalDetailsScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  coApplicantId: 'coApplicantId',
+  guarantorId: 'guarantorId',
+  occupationalCategory: 'occupationalCategory',
+  occupationalCategoryOther: 'occupationalCategoryOther',
+  companyBusinessName: 'companyBusinessName',
+  addressId: 'addressId',
+  phoneNumber: 'phoneNumber',
+  extensionNumber: 'extensionNumber',
+  totalWorkExperience: 'totalWorkExperience',
+  noOfEmployees: 'noOfEmployees',
+  commencementDate: 'commencementDate',
+  professionalType: 'professionalType',
+  professionalSpecify: 'professionalSpecify',
+  businessType: 'businessType',
+  businessSpecify: 'businessSpecify',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OccupationalDetailsScalarFieldEnum = (typeof OccupationalDetailsScalarFieldEnum)[keyof typeof OccupationalDetailsScalarFieldEnum]
+
+
+export const EmploymentDetailsScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  coApplicantId: 'coApplicantId',
+  guarantorId: 'guarantorId',
+  employerType: 'employerType',
+  employerTypeOther: 'employerTypeOther',
+  designation: 'designation',
+  department: 'department',
+  dateOfJoining: 'dateOfJoining',
+  dateOfRetirement: 'dateOfRetirement',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmploymentDetailsScalarFieldEnum = (typeof EmploymentDetailsScalarFieldEnum)[keyof typeof EmploymentDetailsScalarFieldEnum]
+
+
+export const FinancialDetailsScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  grossMonthlyIncome: 'grossMonthlyIncome',
+  netMonthlyIncome: 'netMonthlyIncome',
+  averageMonthlyExpenses: 'averageMonthlyExpenses',
+  savingBankBalance: 'savingBankBalance',
+  valueOfImmovableProperty: 'valueOfImmovableProperty',
+  currentBalanceInPF: 'currentBalanceInPF',
+  valueOfSharesSecurities: 'valueOfSharesSecurities',
+  fixedDeposits: 'fixedDeposits',
+  otherAssets: 'otherAssets',
+  totalAssets: 'totalAssets',
+  creditSocietyLoan: 'creditSocietyLoan',
+  employerLoan: 'employerLoan',
+  homeLoan: 'homeLoan',
+  pfLoan: 'pfLoan',
+  vehicleLoan: 'vehicleLoan',
+  personalLoan: 'personalLoan',
+  otherLoan: 'otherLoan',
+  totalLiabilities: 'totalLiabilities',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FinancialDetailsScalarFieldEnum = (typeof FinancialDetailsScalarFieldEnum)[keyof typeof FinancialDetailsScalarFieldEnum]
+
+
+export const GuarantorScalarFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  firstName: 'firstName',
+  middleName: 'middleName',
+  lastName: 'lastName',
+  fatherName: 'fatherName',
+  motherName: 'motherName',
+  woname: 'woname',
+  dob: 'dob',
+  contactNumber: 'contactNumber',
+  phoneNumber: 'phoneNumber',
+  email: 'email',
+  panNumber: 'panNumber',
+  aadhaarNumber: 'aadhaarNumber',
+  voterId: 'voterId',
+  drivingLicence: 'drivingLicence',
+  passportNumber: 'passportNumber',
+  category: 'category',
+  maritalStatus: 'maritalStatus',
+  noOfDependents: 'noOfDependents',
+  noOfChildren: 'noOfChildren',
+  qualification: 'qualification',
+  accommodationType: 'accommodationType',
+  periodOfStay: 'periodOfStay',
+  rentPerMonth: 'rentPerMonth',
+  employmentType: 'employmentType',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GuarantorScalarFieldEnum = (typeof GuarantorScalarFieldEnum)[keyof typeof GuarantorScalarFieldEnum]
+
+
+export const GuarantorFinancialDetailsScalarFieldEnum = {
+  id: 'id',
+  guarantorId: 'guarantorId',
+  grossMonthlyIncome: 'grossMonthlyIncome',
+  netMonthlyIncome: 'netMonthlyIncome',
+  averageMonthlyExpenses: 'averageMonthlyExpenses',
+  savingBankBalance: 'savingBankBalance',
+  valueOfImmovableProperty: 'valueOfImmovableProperty',
+  currentBalanceInPF: 'currentBalanceInPF',
+  valueOfSharesSecurities: 'valueOfSharesSecurities',
+  fixedDeposits: 'fixedDeposits',
+  otherAssets: 'otherAssets',
+  totalAssets: 'totalAssets',
+  creditSocietyLoan: 'creditSocietyLoan',
+  employerLoan: 'employerLoan',
+  homeLoan: 'homeLoan',
+  pfLoan: 'pfLoan',
+  vehicleLoan: 'vehicleLoan',
+  personalLoan: 'personalLoan',
+  otherLoan: 'otherLoan',
+  totalLiabilities: 'totalLiabilities',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GuarantorFinancialDetailsScalarFieldEnum = (typeof GuarantorFinancialDetailsScalarFieldEnum)[keyof typeof GuarantorFinancialDetailsScalarFieldEnum]
+
+
+export const ExistingLoanScalarFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  institutionName: 'institutionName',
+  purpose: 'purpose',
+  disbursedAmount: 'disbursedAmount',
+  emi: 'emi',
+  balanceTerm: 'balanceTerm',
+  balanceOutstanding: 'balanceOutstanding',
+  createdAt: 'createdAt'
+} as const
+
+export type ExistingLoanScalarFieldEnum = (typeof ExistingLoanScalarFieldEnum)[keyof typeof ExistingLoanScalarFieldEnum]
+
+
+export const CreditCardScalarFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  holderName: 'holderName',
+  cardNumber: 'cardNumber',
+  issuingBank: 'issuingBank',
+  holderSince: 'holderSince',
+  creditLimit: 'creditLimit',
+  outstandingAmount: 'outstandingAmount',
+  createdAt: 'createdAt'
+} as const
+
+export type CreditCardScalarFieldEnum = (typeof CreditCardScalarFieldEnum)[keyof typeof CreditCardScalarFieldEnum]
+
+
+export const BankAccountScalarFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  holderName: 'holderName',
+  bankName: 'bankName',
+  branchName: 'branchName',
+  accountType: 'accountType',
+  accountNumber: 'accountNumber',
+  openingDate: 'openingDate',
+  balanceAmount: 'balanceAmount',
+  createdAt: 'createdAt'
+} as const
+
+export type BankAccountScalarFieldEnum = (typeof BankAccountScalarFieldEnum)[keyof typeof BankAccountScalarFieldEnum]
+
+
+export const InsurancePolicyScalarFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  issuedBy: 'issuedBy',
+  branchName: 'branchName',
+  holderName: 'holderName',
+  policyNumber: 'policyNumber',
+  maturityDate: 'maturityDate',
+  policyValue: 'policyValue',
+  policyType: 'policyType',
+  yearlyPremium: 'yearlyPremium',
+  paidUpValue: 'paidUpValue',
+  createdAt: 'createdAt'
+} as const
+
+export type InsurancePolicyScalarFieldEnum = (typeof InsurancePolicyScalarFieldEnum)[keyof typeof InsurancePolicyScalarFieldEnum]
+
+
+export const PropertyScalarFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  propertySelected: 'propertySelected',
+  addressId: 'addressId',
+  landArea: 'landArea',
+  buildUpArea: 'buildUpArea',
+  ownershipType: 'ownershipType',
+  landType: 'landType',
+  purchaseFrom: 'purchaseFrom',
+  purchaseOther: 'purchaseOther',
+  constructionStage: 'constructionStage',
+  constructionPercent: 'constructionPercent',
+  createdAt: 'createdAt'
+} as const
+
+export type PropertyScalarFieldEnum = (typeof PropertyScalarFieldEnum)[keyof typeof PropertyScalarFieldEnum]
+
+
+export const ReferenceScalarFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  name: 'name',
+  fatherName: 'fatherName',
+  address: 'address',
+  city: 'city',
+  state: 'state',
+  pinCode: 'pinCode',
+  phone: 'phone',
+  occupation: 'occupation',
+  createdAt: 'createdAt'
+} as const
+
+export type ReferenceScalarFieldEnum = (typeof ReferenceScalarFieldEnum)[keyof typeof ReferenceScalarFieldEnum]
+
+
+export const LoanRequirementScalarFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  loanAmount: 'loanAmount',
+  tenure: 'tenure',
+  interestOption: 'interestOption',
+  loanPurpose: 'loanPurpose',
+  loanPurposeOther: 'loanPurposeOther',
+  repaymentMethod: 'repaymentMethod',
+  createdAt: 'createdAt'
+} as const
+
+export type LoanRequirementScalarFieldEnum = (typeof LoanRequirementScalarFieldEnum)[keyof typeof LoanRequirementScalarFieldEnum]
+
+
+export const LoanQuestionnaireScalarFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  legalPropertyClear: 'legalPropertyClear',
+  mortgagedElsewhere: 'mortgagedElsewhere',
+  residentOfIndia: 'residentOfIndia',
+  otherLoans: 'otherLoans',
+  guarantorAnywhere: 'guarantorAnywhere',
+  mppLifeInsurance: 'mppLifeInsurance',
+  createdAt: 'createdAt'
+} as const
+
+export type LoanQuestionnaireScalarFieldEnum = (typeof LoanQuestionnaireScalarFieldEnum)[keyof typeof LoanQuestionnaireScalarFieldEnum]
+
+
 export const LoanRecoveryScalarFieldEnum = {
   id: 'id',
   loanApplicationId: 'loanApplicationId',
@@ -468,28 +807,6 @@ export const KycScalarFieldEnum = {
 } as const
 
 export type KycScalarFieldEnum = (typeof KycScalarFieldEnum)[keyof typeof KycScalarFieldEnum]
-
-
-export const CoApplicantScalarFieldEnum = {
-  id: 'id',
-  loanApplicationId: 'loanApplicationId',
-  firstName: 'firstName',
-  LastName: 'LastName',
-  middleName: 'middleName',
-  relation: 'relation',
-  relationOther: 'relationOther',
-  contactNumber: 'contactNumber',
-  email: 'email',
-  dob: 'dob',
-  panNumber: 'panNumber',
-  aadhaarNumber: 'aadhaarNumber',
-  employmentType: 'employmentType',
-  kycId: 'kycId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type CoApplicantScalarFieldEnum = (typeof CoApplicantScalarFieldEnum)[keyof typeof CoApplicantScalarFieldEnum]
 
 
 export const LoanEmiScheduleScalarFieldEnum = {
@@ -637,120 +954,6 @@ export const LoanTypeScalarFieldEnum = {
 } as const
 
 export type LoanTypeScalarFieldEnum = (typeof LoanTypeScalarFieldEnum)[keyof typeof LoanTypeScalarFieldEnum]
-
-
-export const CustomerScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  firstName: 'firstName',
-  lastName: 'lastName',
-  middleName: 'middleName',
-  fatherName: 'fatherName',
-  motherName: 'motherName',
-  gender: 'gender',
-  genderOther: 'genderOther',
-  dob: 'dob',
-  aadhaarNumber: 'aadhaarNumber',
-  panNumber: 'panNumber',
-  voterId: 'voterId',
-  drivingLicenceNo: 'drivingLicenceNo',
-  maritalStatus: 'maritalStatus',
-  maritalStatusOther: 'maritalStatusOther',
-  nationality: 'nationality',
-  category: 'category',
-  categoryOther: 'categoryOther',
-  passportNumber: 'passportNumber',
-  contactNumber: 'contactNumber',
-  alternateNumber: 'alternateNumber',
-  email: 'email',
-  phoneNumber: 'phoneNumber',
-  noOfFamilyDependents: 'noOfFamilyDependents',
-  noOfChildren: 'noOfChildren',
-  qualification: 'qualification',
-  correspondenceAddressType: 'correspondenceAddressType',
-  presentAccommodation: 'presentAccommodation',
-  periodOfStay: 'periodOfStay',
-  rentPerMonth: 'rentPerMonth',
-  employmentType: 'employmentType',
-  bankName: 'bankName',
-  bankAccountNumber: 'bankAccountNumber',
-  ifscCode: 'ifscCode',
-  accountType: 'accountType',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
-
-
-export const OccupationalDetailsScalarFieldEnum = {
-  id: 'id',
-  customerId: 'customerId',
-  coApplicantId: 'coApplicantId',
-  occupationalCategory: 'occupationalCategory',
-  occupationalCategoryOther: 'occupationalCategoryOther',
-  companyBusinessName: 'companyBusinessName',
-  addressId: 'addressId',
-  phoneNumber: 'phoneNumber',
-  extensionNumber: 'extensionNumber',
-  totalWorkExperience: 'totalWorkExperience',
-  noOfEmployees: 'noOfEmployees',
-  commencementDate: 'commencementDate',
-  professionalType: 'professionalType',
-  professionalSpecify: 'professionalSpecify',
-  businessType: 'businessType',
-  businessSpecify: 'businessSpecify',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type OccupationalDetailsScalarFieldEnum = (typeof OccupationalDetailsScalarFieldEnum)[keyof typeof OccupationalDetailsScalarFieldEnum]
-
-
-export const EmploymentDetailsScalarFieldEnum = {
-  id: 'id',
-  customerId: 'customerId',
-  coApplicantId: 'coApplicantId',
-  employerType: 'employerType',
-  employerTypeOther: 'employerTypeOther',
-  designation: 'designation',
-  department: 'department',
-  dateOfJoining: 'dateOfJoining',
-  dateOfRetirement: 'dateOfRetirement',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type EmploymentDetailsScalarFieldEnum = (typeof EmploymentDetailsScalarFieldEnum)[keyof typeof EmploymentDetailsScalarFieldEnum]
-
-
-export const FinancialDetailsScalarFieldEnum = {
-  id: 'id',
-  customerId: 'customerId',
-  grossMonthlyIncome: 'grossMonthlyIncome',
-  netMonthlyIncome: 'netMonthlyIncome',
-  averageMonthlyExpenses: 'averageMonthlyExpenses',
-  savingBankBalance: 'savingBankBalance',
-  valueOfImmovableProperty: 'valueOfImmovableProperty',
-  currentBalanceInPF: 'currentBalanceInPF',
-  valueOfSharesSecurities: 'valueOfSharesSecurities',
-  fixedDeposits: 'fixedDeposits',
-  otherAssets: 'otherAssets',
-  totalAssets: 'totalAssets',
-  creditSocietyLoan: 'creditSocietyLoan',
-  employerLoan: 'employerLoan',
-  homeLoan: 'homeLoan',
-  pfLoan: 'pfLoan',
-  vehicleLoan: 'vehicleLoan',
-  personalLoan: 'personalLoan',
-  otherLoan: 'otherLoan',
-  totalLiabilities: 'totalLiabilities',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type FinancialDetailsScalarFieldEnum = (typeof FinancialDetailsScalarFieldEnum)[keyof typeof FinancialDetailsScalarFieldEnum]
 
 
 export const TechnicalReportScalarFieldEnum = {
@@ -1040,9 +1243,9 @@ export const AddressOrderByRelevanceFieldEnum = {
   pinCode: 'pinCode',
   landmark: 'landmark',
   phoneNumber: 'phoneNumber',
-  stdCode: 'stdCode',
   customerId: 'customerId',
-  coApplicantId: 'coApplicantId'
+  coApplicantId: 'coApplicantId',
+  guarantorId: 'guarantorId'
 } as const
 
 export type AddressOrderByRelevanceFieldEnum = (typeof AddressOrderByRelevanceFieldEnum)[keyof typeof AddressOrderByRelevanceFieldEnum]
@@ -1137,6 +1340,212 @@ export const LoanApplicationOrderByRelevanceFieldEnum = {
 export type LoanApplicationOrderByRelevanceFieldEnum = (typeof LoanApplicationOrderByRelevanceFieldEnum)[keyof typeof LoanApplicationOrderByRelevanceFieldEnum]
 
 
+export const CoApplicantOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  middleName: 'middleName',
+  relationOther: 'relationOther',
+  contactNumber: 'contactNumber',
+  email: 'email',
+  panNumber: 'panNumber',
+  aadhaarNumber: 'aadhaarNumber',
+  kycId: 'kycId'
+} as const
+
+export type CoApplicantOrderByRelevanceFieldEnum = (typeof CoApplicantOrderByRelevanceFieldEnum)[keyof typeof CoApplicantOrderByRelevanceFieldEnum]
+
+
+export const CustomerOrderByRelevanceFieldEnum = {
+  id: 'id',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  middleName: 'middleName',
+  fatherName: 'fatherName',
+  motherName: 'motherName',
+  woname: 'woname',
+  genderOther: 'genderOther',
+  aadhaarNumber: 'aadhaarNumber',
+  panNumber: 'panNumber',
+  voterId: 'voterId',
+  drivingLicenceNo: 'drivingLicenceNo',
+  maritalStatusOther: 'maritalStatusOther',
+  nationality: 'nationality',
+  categoryOther: 'categoryOther',
+  passportNumber: 'passportNumber',
+  contactNumber: 'contactNumber',
+  alternateNumber: 'alternateNumber',
+  email: 'email',
+  phoneNumber: 'phoneNumber',
+  relationWithCoApplicantOther: 'relationWithCoApplicantOther',
+  qualification: 'qualification',
+  periodOfStay: 'periodOfStay'
+} as const
+
+export type CustomerOrderByRelevanceFieldEnum = (typeof CustomerOrderByRelevanceFieldEnum)[keyof typeof CustomerOrderByRelevanceFieldEnum]
+
+
+export const OccupationalDetailsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  coApplicantId: 'coApplicantId',
+  guarantorId: 'guarantorId',
+  occupationalCategoryOther: 'occupationalCategoryOther',
+  companyBusinessName: 'companyBusinessName',
+  addressId: 'addressId',
+  phoneNumber: 'phoneNumber',
+  extensionNumber: 'extensionNumber',
+  professionalSpecify: 'professionalSpecify',
+  businessSpecify: 'businessSpecify'
+} as const
+
+export type OccupationalDetailsOrderByRelevanceFieldEnum = (typeof OccupationalDetailsOrderByRelevanceFieldEnum)[keyof typeof OccupationalDetailsOrderByRelevanceFieldEnum]
+
+
+export const EmploymentDetailsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  coApplicantId: 'coApplicantId',
+  guarantorId: 'guarantorId',
+  employerTypeOther: 'employerTypeOther',
+  designation: 'designation',
+  department: 'department'
+} as const
+
+export type EmploymentDetailsOrderByRelevanceFieldEnum = (typeof EmploymentDetailsOrderByRelevanceFieldEnum)[keyof typeof EmploymentDetailsOrderByRelevanceFieldEnum]
+
+
+export const FinancialDetailsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  customerId: 'customerId'
+} as const
+
+export type FinancialDetailsOrderByRelevanceFieldEnum = (typeof FinancialDetailsOrderByRelevanceFieldEnum)[keyof typeof FinancialDetailsOrderByRelevanceFieldEnum]
+
+
+export const GuarantorOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  firstName: 'firstName',
+  middleName: 'middleName',
+  lastName: 'lastName',
+  fatherName: 'fatherName',
+  motherName: 'motherName',
+  woname: 'woname',
+  contactNumber: 'contactNumber',
+  phoneNumber: 'phoneNumber',
+  email: 'email',
+  panNumber: 'panNumber',
+  aadhaarNumber: 'aadhaarNumber',
+  voterId: 'voterId',
+  drivingLicence: 'drivingLicence',
+  passportNumber: 'passportNumber',
+  qualification: 'qualification',
+  periodOfStay: 'periodOfStay'
+} as const
+
+export type GuarantorOrderByRelevanceFieldEnum = (typeof GuarantorOrderByRelevanceFieldEnum)[keyof typeof GuarantorOrderByRelevanceFieldEnum]
+
+
+export const GuarantorFinancialDetailsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  guarantorId: 'guarantorId'
+} as const
+
+export type GuarantorFinancialDetailsOrderByRelevanceFieldEnum = (typeof GuarantorFinancialDetailsOrderByRelevanceFieldEnum)[keyof typeof GuarantorFinancialDetailsOrderByRelevanceFieldEnum]
+
+
+export const ExistingLoanOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  institutionName: 'institutionName',
+  purpose: 'purpose'
+} as const
+
+export type ExistingLoanOrderByRelevanceFieldEnum = (typeof ExistingLoanOrderByRelevanceFieldEnum)[keyof typeof ExistingLoanOrderByRelevanceFieldEnum]
+
+
+export const CreditCardOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  holderName: 'holderName',
+  cardNumber: 'cardNumber',
+  issuingBank: 'issuingBank'
+} as const
+
+export type CreditCardOrderByRelevanceFieldEnum = (typeof CreditCardOrderByRelevanceFieldEnum)[keyof typeof CreditCardOrderByRelevanceFieldEnum]
+
+
+export const BankAccountOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  holderName: 'holderName',
+  bankName: 'bankName',
+  branchName: 'branchName',
+  accountType: 'accountType',
+  accountNumber: 'accountNumber'
+} as const
+
+export type BankAccountOrderByRelevanceFieldEnum = (typeof BankAccountOrderByRelevanceFieldEnum)[keyof typeof BankAccountOrderByRelevanceFieldEnum]
+
+
+export const InsurancePolicyOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  issuedBy: 'issuedBy',
+  branchName: 'branchName',
+  holderName: 'holderName',
+  policyNumber: 'policyNumber',
+  policyType: 'policyType'
+} as const
+
+export type InsurancePolicyOrderByRelevanceFieldEnum = (typeof InsurancePolicyOrderByRelevanceFieldEnum)[keyof typeof InsurancePolicyOrderByRelevanceFieldEnum]
+
+
+export const PropertyOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  addressId: 'addressId',
+  purchaseOther: 'purchaseOther'
+} as const
+
+export type PropertyOrderByRelevanceFieldEnum = (typeof PropertyOrderByRelevanceFieldEnum)[keyof typeof PropertyOrderByRelevanceFieldEnum]
+
+
+export const ReferenceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  name: 'name',
+  fatherName: 'fatherName',
+  address: 'address',
+  city: 'city',
+  state: 'state',
+  pinCode: 'pinCode',
+  phone: 'phone',
+  occupation: 'occupation'
+} as const
+
+export type ReferenceOrderByRelevanceFieldEnum = (typeof ReferenceOrderByRelevanceFieldEnum)[keyof typeof ReferenceOrderByRelevanceFieldEnum]
+
+
+export const LoanRequirementOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  loanPurposeOther: 'loanPurposeOther'
+} as const
+
+export type LoanRequirementOrderByRelevanceFieldEnum = (typeof LoanRequirementOrderByRelevanceFieldEnum)[keyof typeof LoanRequirementOrderByRelevanceFieldEnum]
+
+
+export const LoanQuestionnaireOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId'
+} as const
+
+export type LoanQuestionnaireOrderByRelevanceFieldEnum = (typeof LoanQuestionnaireOrderByRelevanceFieldEnum)[keyof typeof LoanQuestionnaireOrderByRelevanceFieldEnum]
+
+
 export const LoanRecoveryOrderByRelevanceFieldEnum = {
   id: 'id',
   loanApplicationId: 'loanApplicationId',
@@ -1204,23 +1613,6 @@ export const KycOrderByRelevanceFieldEnum = {
 export type KycOrderByRelevanceFieldEnum = (typeof KycOrderByRelevanceFieldEnum)[keyof typeof KycOrderByRelevanceFieldEnum]
 
 
-export const CoApplicantOrderByRelevanceFieldEnum = {
-  id: 'id',
-  loanApplicationId: 'loanApplicationId',
-  firstName: 'firstName',
-  LastName: 'LastName',
-  middleName: 'middleName',
-  relationOther: 'relationOther',
-  contactNumber: 'contactNumber',
-  email: 'email',
-  panNumber: 'panNumber',
-  aadhaarNumber: 'aadhaarNumber',
-  kycId: 'kycId'
-} as const
-
-export type CoApplicantOrderByRelevanceFieldEnum = (typeof CoApplicantOrderByRelevanceFieldEnum)[keyof typeof CoApplicantOrderByRelevanceFieldEnum]
-
-
 export const LoanEmiScheduleOrderByRelevanceFieldEnum = {
   id: 'id',
   loanApplicationId: 'loanApplicationId'
@@ -1276,73 +1668,6 @@ export const LoanTypeOrderByRelevanceFieldEnum = {
 } as const
 
 export type LoanTypeOrderByRelevanceFieldEnum = (typeof LoanTypeOrderByRelevanceFieldEnum)[keyof typeof LoanTypeOrderByRelevanceFieldEnum]
-
-
-export const CustomerOrderByRelevanceFieldEnum = {
-  id: 'id',
-  firstName: 'firstName',
-  lastName: 'lastName',
-  middleName: 'middleName',
-  fatherName: 'fatherName',
-  motherName: 'motherName',
-  genderOther: 'genderOther',
-  aadhaarNumber: 'aadhaarNumber',
-  panNumber: 'panNumber',
-  voterId: 'voterId',
-  drivingLicenceNo: 'drivingLicenceNo',
-  maritalStatusOther: 'maritalStatusOther',
-  nationality: 'nationality',
-  categoryOther: 'categoryOther',
-  passportNumber: 'passportNumber',
-  contactNumber: 'contactNumber',
-  alternateNumber: 'alternateNumber',
-  email: 'email',
-  phoneNumber: 'phoneNumber',
-  qualification: 'qualification',
-  periodOfStay: 'periodOfStay',
-  bankName: 'bankName',
-  bankAccountNumber: 'bankAccountNumber',
-  ifscCode: 'ifscCode',
-  accountType: 'accountType'
-} as const
-
-export type CustomerOrderByRelevanceFieldEnum = (typeof CustomerOrderByRelevanceFieldEnum)[keyof typeof CustomerOrderByRelevanceFieldEnum]
-
-
-export const OccupationalDetailsOrderByRelevanceFieldEnum = {
-  id: 'id',
-  customerId: 'customerId',
-  coApplicantId: 'coApplicantId',
-  occupationalCategoryOther: 'occupationalCategoryOther',
-  companyBusinessName: 'companyBusinessName',
-  addressId: 'addressId',
-  phoneNumber: 'phoneNumber',
-  extensionNumber: 'extensionNumber',
-  professionalSpecify: 'professionalSpecify',
-  businessSpecify: 'businessSpecify'
-} as const
-
-export type OccupationalDetailsOrderByRelevanceFieldEnum = (typeof OccupationalDetailsOrderByRelevanceFieldEnum)[keyof typeof OccupationalDetailsOrderByRelevanceFieldEnum]
-
-
-export const EmploymentDetailsOrderByRelevanceFieldEnum = {
-  id: 'id',
-  customerId: 'customerId',
-  coApplicantId: 'coApplicantId',
-  employerTypeOther: 'employerTypeOther',
-  designation: 'designation',
-  department: 'department'
-} as const
-
-export type EmploymentDetailsOrderByRelevanceFieldEnum = (typeof EmploymentDetailsOrderByRelevanceFieldEnum)[keyof typeof EmploymentDetailsOrderByRelevanceFieldEnum]
-
-
-export const FinancialDetailsOrderByRelevanceFieldEnum = {
-  id: 'id',
-  customerId: 'customerId'
-} as const
-
-export type FinancialDetailsOrderByRelevanceFieldEnum = (typeof FinancialDetailsOrderByRelevanceFieldEnum)[keyof typeof FinancialDetailsOrderByRelevanceFieldEnum]
 
 
 export const TechnicalReportOrderByRelevanceFieldEnum = {

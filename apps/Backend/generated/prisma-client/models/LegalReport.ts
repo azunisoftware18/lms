@@ -850,10 +850,6 @@ export type LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput = {
   deleteMany?: Prisma.LegalReportScalarWhereInput | Prisma.LegalReportScalarWhereInput[]
 }
 
-export type NullableBoolFieldUpdateOperationsInput = {
-  set?: boolean | null
-}
-
 export type LegalReportCreateWithoutBranchInput = {
   id?: string
   advocateId?: string | null

@@ -661,6 +661,15 @@ export type LoanApplicationWhereInput = {
   branch?: Prisma.XOR<Prisma.BranchScalarRelationFilter, Prisma.BranchWhereInput>
   loanType?: Prisma.XOR<Prisma.LoanTypeNullableScalarRelationFilter, Prisma.LoanTypeWhereInput> | null
   loanAssignments?: Prisma.LoanAssignmentListRelationFilter
+  guarantors?: Prisma.GuarantorListRelationFilter
+  existingLoans?: Prisma.ExistingLoanListRelationFilter
+  creditCards?: Prisma.CreditCardListRelationFilter
+  bankAccounts?: Prisma.BankAccountListRelationFilter
+  insurancePolicies?: Prisma.InsurancePolicyListRelationFilter
+  properties?: Prisma.PropertyListRelationFilter
+  references?: Prisma.ReferenceListRelationFilter
+  loanRequirement?: Prisma.XOR<Prisma.LoanRequirementNullableScalarRelationFilter, Prisma.LoanRequirementWhereInput> | null
+  loanQuestionnaire?: Prisma.XOR<Prisma.LoanQuestionnaireNullableScalarRelationFilter, Prisma.LoanQuestionnaireWhereInput> | null
 }
 
 export type LoanApplicationOrderByWithRelationInput = {
@@ -733,6 +742,15 @@ export type LoanApplicationOrderByWithRelationInput = {
   branch?: Prisma.BranchOrderByWithRelationInput
   loanType?: Prisma.LoanTypeOrderByWithRelationInput
   loanAssignments?: Prisma.LoanAssignmentOrderByRelationAggregateInput
+  guarantors?: Prisma.GuarantorOrderByRelationAggregateInput
+  existingLoans?: Prisma.ExistingLoanOrderByRelationAggregateInput
+  creditCards?: Prisma.CreditCardOrderByRelationAggregateInput
+  bankAccounts?: Prisma.BankAccountOrderByRelationAggregateInput
+  insurancePolicies?: Prisma.InsurancePolicyOrderByRelationAggregateInput
+  properties?: Prisma.PropertyOrderByRelationAggregateInput
+  references?: Prisma.ReferenceOrderByRelationAggregateInput
+  loanRequirement?: Prisma.LoanRequirementOrderByWithRelationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireOrderByWithRelationInput
   _relevance?: Prisma.LoanApplicationOrderByRelevanceInput
 }
 
@@ -809,6 +827,15 @@ export type LoanApplicationWhereUniqueInput = Prisma.AtLeast<{
   branch?: Prisma.XOR<Prisma.BranchScalarRelationFilter, Prisma.BranchWhereInput>
   loanType?: Prisma.XOR<Prisma.LoanTypeNullableScalarRelationFilter, Prisma.LoanTypeWhereInput> | null
   loanAssignments?: Prisma.LoanAssignmentListRelationFilter
+  guarantors?: Prisma.GuarantorListRelationFilter
+  existingLoans?: Prisma.ExistingLoanListRelationFilter
+  creditCards?: Prisma.CreditCardListRelationFilter
+  bankAccounts?: Prisma.BankAccountListRelationFilter
+  insurancePolicies?: Prisma.InsurancePolicyListRelationFilter
+  properties?: Prisma.PropertyListRelationFilter
+  references?: Prisma.ReferenceListRelationFilter
+  loanRequirement?: Prisma.XOR<Prisma.LoanRequirementNullableScalarRelationFilter, Prisma.LoanRequirementWhereInput> | null
+  loanQuestionnaire?: Prisma.XOR<Prisma.LoanQuestionnaireNullableScalarRelationFilter, Prisma.LoanQuestionnaireWhereInput> | null
 }, "id" | "loanNumber" | "kycId">
 
 export type LoanApplicationOrderByWithAggregationInput = {
@@ -992,6 +1019,15 @@ export type LoanApplicationCreateInput = {
   branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
   loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
   loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationUncheckedCreateInput = {
@@ -1057,6 +1093,15 @@ export type LoanApplicationUncheckedCreateInput = {
   nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationUpdateInput = {
@@ -1122,6 +1167,15 @@ export type LoanApplicationUpdateInput = {
   branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
   loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
   loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateInput = {
@@ -1187,6 +1241,15 @@ export type LoanApplicationUncheckedUpdateInput = {
   nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationCreateManyInput = {
@@ -1766,6 +1829,188 @@ export type NullableEnumCommissionTypeFieldUpdateOperationsInput = {
   set?: $Enums.CommissionType | null
 }
 
+export type LoanApplicationCreateNestedOneWithoutCoapplicantsInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCoapplicantsInput, Prisma.LoanApplicationUncheckedCreateWithoutCoapplicantsInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutCoapplicantsInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+}
+
+export type LoanApplicationUpdateOneRequiredWithoutCoapplicantsNestedInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCoapplicantsInput, Prisma.LoanApplicationUncheckedCreateWithoutCoapplicantsInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutCoapplicantsInput
+  upsert?: Prisma.LoanApplicationUpsertWithoutCoapplicantsInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LoanApplicationUpdateToOneWithWhereWithoutCoapplicantsInput, Prisma.LoanApplicationUpdateWithoutCoapplicantsInput>, Prisma.LoanApplicationUncheckedUpdateWithoutCoapplicantsInput>
+}
+
+export type LoanApplicationCreateNestedManyWithoutCustomerInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCustomerInput, Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput> | Prisma.LoanApplicationCreateWithoutCustomerInput[] | Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput[]
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutCustomerInput | Prisma.LoanApplicationCreateOrConnectWithoutCustomerInput[]
+  createMany?: Prisma.LoanApplicationCreateManyCustomerInputEnvelope
+  connect?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
+}
+
+export type LoanApplicationUncheckedCreateNestedManyWithoutCustomerInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCustomerInput, Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput> | Prisma.LoanApplicationCreateWithoutCustomerInput[] | Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput[]
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutCustomerInput | Prisma.LoanApplicationCreateOrConnectWithoutCustomerInput[]
+  createMany?: Prisma.LoanApplicationCreateManyCustomerInputEnvelope
+  connect?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
+}
+
+export type LoanApplicationUpdateManyWithoutCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCustomerInput, Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput> | Prisma.LoanApplicationCreateWithoutCustomerInput[] | Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput[]
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutCustomerInput | Prisma.LoanApplicationCreateOrConnectWithoutCustomerInput[]
+  upsert?: Prisma.LoanApplicationUpsertWithWhereUniqueWithoutCustomerInput | Prisma.LoanApplicationUpsertWithWhereUniqueWithoutCustomerInput[]
+  createMany?: Prisma.LoanApplicationCreateManyCustomerInputEnvelope
+  set?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
+  disconnect?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
+  delete?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
+  connect?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
+  update?: Prisma.LoanApplicationUpdateWithWhereUniqueWithoutCustomerInput | Prisma.LoanApplicationUpdateWithWhereUniqueWithoutCustomerInput[]
+  updateMany?: Prisma.LoanApplicationUpdateManyWithWhereWithoutCustomerInput | Prisma.LoanApplicationUpdateManyWithWhereWithoutCustomerInput[]
+  deleteMany?: Prisma.LoanApplicationScalarWhereInput | Prisma.LoanApplicationScalarWhereInput[]
+}
+
+export type LoanApplicationUncheckedUpdateManyWithoutCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCustomerInput, Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput> | Prisma.LoanApplicationCreateWithoutCustomerInput[] | Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput[]
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutCustomerInput | Prisma.LoanApplicationCreateOrConnectWithoutCustomerInput[]
+  upsert?: Prisma.LoanApplicationUpsertWithWhereUniqueWithoutCustomerInput | Prisma.LoanApplicationUpsertWithWhereUniqueWithoutCustomerInput[]
+  createMany?: Prisma.LoanApplicationCreateManyCustomerInputEnvelope
+  set?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
+  disconnect?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
+  delete?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
+  connect?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
+  update?: Prisma.LoanApplicationUpdateWithWhereUniqueWithoutCustomerInput | Prisma.LoanApplicationUpdateWithWhereUniqueWithoutCustomerInput[]
+  updateMany?: Prisma.LoanApplicationUpdateManyWithWhereWithoutCustomerInput | Prisma.LoanApplicationUpdateManyWithWhereWithoutCustomerInput[]
+  deleteMany?: Prisma.LoanApplicationScalarWhereInput | Prisma.LoanApplicationScalarWhereInput[]
+}
+
+export type LoanApplicationCreateNestedOneWithoutGuarantorsInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutGuarantorsInput, Prisma.LoanApplicationUncheckedCreateWithoutGuarantorsInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutGuarantorsInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+}
+
+export type LoanApplicationUpdateOneRequiredWithoutGuarantorsNestedInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutGuarantorsInput, Prisma.LoanApplicationUncheckedCreateWithoutGuarantorsInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutGuarantorsInput
+  upsert?: Prisma.LoanApplicationUpsertWithoutGuarantorsInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LoanApplicationUpdateToOneWithWhereWithoutGuarantorsInput, Prisma.LoanApplicationUpdateWithoutGuarantorsInput>, Prisma.LoanApplicationUncheckedUpdateWithoutGuarantorsInput>
+}
+
+export type LoanApplicationCreateNestedOneWithoutExistingLoansInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutExistingLoansInput, Prisma.LoanApplicationUncheckedCreateWithoutExistingLoansInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutExistingLoansInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+}
+
+export type LoanApplicationUpdateOneRequiredWithoutExistingLoansNestedInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutExistingLoansInput, Prisma.LoanApplicationUncheckedCreateWithoutExistingLoansInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutExistingLoansInput
+  upsert?: Prisma.LoanApplicationUpsertWithoutExistingLoansInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LoanApplicationUpdateToOneWithWhereWithoutExistingLoansInput, Prisma.LoanApplicationUpdateWithoutExistingLoansInput>, Prisma.LoanApplicationUncheckedUpdateWithoutExistingLoansInput>
+}
+
+export type LoanApplicationCreateNestedOneWithoutCreditCardsInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCreditCardsInput, Prisma.LoanApplicationUncheckedCreateWithoutCreditCardsInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutCreditCardsInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+}
+
+export type LoanApplicationUpdateOneRequiredWithoutCreditCardsNestedInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCreditCardsInput, Prisma.LoanApplicationUncheckedCreateWithoutCreditCardsInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutCreditCardsInput
+  upsert?: Prisma.LoanApplicationUpsertWithoutCreditCardsInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LoanApplicationUpdateToOneWithWhereWithoutCreditCardsInput, Prisma.LoanApplicationUpdateWithoutCreditCardsInput>, Prisma.LoanApplicationUncheckedUpdateWithoutCreditCardsInput>
+}
+
+export type LoanApplicationCreateNestedOneWithoutBankAccountsInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutBankAccountsInput, Prisma.LoanApplicationUncheckedCreateWithoutBankAccountsInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutBankAccountsInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+}
+
+export type LoanApplicationUpdateOneRequiredWithoutBankAccountsNestedInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutBankAccountsInput, Prisma.LoanApplicationUncheckedCreateWithoutBankAccountsInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutBankAccountsInput
+  upsert?: Prisma.LoanApplicationUpsertWithoutBankAccountsInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LoanApplicationUpdateToOneWithWhereWithoutBankAccountsInput, Prisma.LoanApplicationUpdateWithoutBankAccountsInput>, Prisma.LoanApplicationUncheckedUpdateWithoutBankAccountsInput>
+}
+
+export type LoanApplicationCreateNestedOneWithoutInsurancePoliciesInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutInsurancePoliciesInput, Prisma.LoanApplicationUncheckedCreateWithoutInsurancePoliciesInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutInsurancePoliciesInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+}
+
+export type LoanApplicationUpdateOneRequiredWithoutInsurancePoliciesNestedInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutInsurancePoliciesInput, Prisma.LoanApplicationUncheckedCreateWithoutInsurancePoliciesInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutInsurancePoliciesInput
+  upsert?: Prisma.LoanApplicationUpsertWithoutInsurancePoliciesInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LoanApplicationUpdateToOneWithWhereWithoutInsurancePoliciesInput, Prisma.LoanApplicationUpdateWithoutInsurancePoliciesInput>, Prisma.LoanApplicationUncheckedUpdateWithoutInsurancePoliciesInput>
+}
+
+export type LoanApplicationCreateNestedOneWithoutPropertiesInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutPropertiesInput, Prisma.LoanApplicationUncheckedCreateWithoutPropertiesInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutPropertiesInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+}
+
+export type LoanApplicationUpdateOneRequiredWithoutPropertiesNestedInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutPropertiesInput, Prisma.LoanApplicationUncheckedCreateWithoutPropertiesInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutPropertiesInput
+  upsert?: Prisma.LoanApplicationUpsertWithoutPropertiesInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LoanApplicationUpdateToOneWithWhereWithoutPropertiesInput, Prisma.LoanApplicationUpdateWithoutPropertiesInput>, Prisma.LoanApplicationUncheckedUpdateWithoutPropertiesInput>
+}
+
+export type LoanApplicationCreateNestedOneWithoutReferencesInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutReferencesInput, Prisma.LoanApplicationUncheckedCreateWithoutReferencesInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutReferencesInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+}
+
+export type LoanApplicationUpdateOneRequiredWithoutReferencesNestedInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutReferencesInput, Prisma.LoanApplicationUncheckedCreateWithoutReferencesInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutReferencesInput
+  upsert?: Prisma.LoanApplicationUpsertWithoutReferencesInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LoanApplicationUpdateToOneWithWhereWithoutReferencesInput, Prisma.LoanApplicationUpdateWithoutReferencesInput>, Prisma.LoanApplicationUncheckedUpdateWithoutReferencesInput>
+}
+
+export type LoanApplicationCreateNestedOneWithoutLoanRequirementInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutLoanRequirementInput, Prisma.LoanApplicationUncheckedCreateWithoutLoanRequirementInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutLoanRequirementInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+}
+
+export type LoanApplicationUpdateOneRequiredWithoutLoanRequirementNestedInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutLoanRequirementInput, Prisma.LoanApplicationUncheckedCreateWithoutLoanRequirementInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutLoanRequirementInput
+  upsert?: Prisma.LoanApplicationUpsertWithoutLoanRequirementInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LoanApplicationUpdateToOneWithWhereWithoutLoanRequirementInput, Prisma.LoanApplicationUpdateWithoutLoanRequirementInput>, Prisma.LoanApplicationUncheckedUpdateWithoutLoanRequirementInput>
+}
+
+export type LoanApplicationCreateNestedOneWithoutLoanQuestionnaireInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutLoanQuestionnaireInput, Prisma.LoanApplicationUncheckedCreateWithoutLoanQuestionnaireInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutLoanQuestionnaireInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+}
+
+export type LoanApplicationUpdateOneRequiredWithoutLoanQuestionnaireNestedInput = {
+  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutLoanQuestionnaireInput, Prisma.LoanApplicationUncheckedCreateWithoutLoanQuestionnaireInput>
+  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutLoanQuestionnaireInput
+  upsert?: Prisma.LoanApplicationUpsertWithoutLoanQuestionnaireInput
+  connect?: Prisma.LoanApplicationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LoanApplicationUpdateToOneWithWhereWithoutLoanQuestionnaireInput, Prisma.LoanApplicationUpdateWithoutLoanQuestionnaireInput>, Prisma.LoanApplicationUncheckedUpdateWithoutLoanQuestionnaireInput>
+}
+
 export type LoanApplicationCreateNestedOneWithoutLoanRecoveriesInput = {
   create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutLoanRecoveriesInput, Prisma.LoanApplicationUncheckedCreateWithoutLoanRecoveriesInput>
   connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutLoanRecoveriesInput
@@ -1828,20 +2073,6 @@ export type LoanApplicationUncheckedUpdateOneWithoutKycNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.LoanApplicationUpdateToOneWithWhereWithoutKycInput, Prisma.LoanApplicationUpdateWithoutKycInput>, Prisma.LoanApplicationUncheckedUpdateWithoutKycInput>
 }
 
-export type LoanApplicationCreateNestedOneWithoutCoapplicantsInput = {
-  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCoapplicantsInput, Prisma.LoanApplicationUncheckedCreateWithoutCoapplicantsInput>
-  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutCoapplicantsInput
-  connect?: Prisma.LoanApplicationWhereUniqueInput
-}
-
-export type LoanApplicationUpdateOneRequiredWithoutCoapplicantsNestedInput = {
-  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCoapplicantsInput, Prisma.LoanApplicationUncheckedCreateWithoutCoapplicantsInput>
-  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutCoapplicantsInput
-  upsert?: Prisma.LoanApplicationUpsertWithoutCoapplicantsInput
-  connect?: Prisma.LoanApplicationWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.LoanApplicationUpdateToOneWithWhereWithoutCoapplicantsInput, Prisma.LoanApplicationUpdateWithoutCoapplicantsInput>, Prisma.LoanApplicationUncheckedUpdateWithoutCoapplicantsInput>
-}
-
 export type LoanApplicationCreateNestedOneWithoutEmisInput = {
   create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutEmisInput, Prisma.LoanApplicationUncheckedCreateWithoutEmisInput>
   connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutEmisInput
@@ -1895,48 +2126,6 @@ export type LoanApplicationUncheckedUpdateManyWithoutLoanTypeNestedInput = {
   connect?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
   update?: Prisma.LoanApplicationUpdateWithWhereUniqueWithoutLoanTypeInput | Prisma.LoanApplicationUpdateWithWhereUniqueWithoutLoanTypeInput[]
   updateMany?: Prisma.LoanApplicationUpdateManyWithWhereWithoutLoanTypeInput | Prisma.LoanApplicationUpdateManyWithWhereWithoutLoanTypeInput[]
-  deleteMany?: Prisma.LoanApplicationScalarWhereInput | Prisma.LoanApplicationScalarWhereInput[]
-}
-
-export type LoanApplicationCreateNestedManyWithoutCustomerInput = {
-  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCustomerInput, Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput> | Prisma.LoanApplicationCreateWithoutCustomerInput[] | Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput[]
-  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutCustomerInput | Prisma.LoanApplicationCreateOrConnectWithoutCustomerInput[]
-  createMany?: Prisma.LoanApplicationCreateManyCustomerInputEnvelope
-  connect?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
-}
-
-export type LoanApplicationUncheckedCreateNestedManyWithoutCustomerInput = {
-  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCustomerInput, Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput> | Prisma.LoanApplicationCreateWithoutCustomerInput[] | Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput[]
-  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutCustomerInput | Prisma.LoanApplicationCreateOrConnectWithoutCustomerInput[]
-  createMany?: Prisma.LoanApplicationCreateManyCustomerInputEnvelope
-  connect?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
-}
-
-export type LoanApplicationUpdateManyWithoutCustomerNestedInput = {
-  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCustomerInput, Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput> | Prisma.LoanApplicationCreateWithoutCustomerInput[] | Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput[]
-  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutCustomerInput | Prisma.LoanApplicationCreateOrConnectWithoutCustomerInput[]
-  upsert?: Prisma.LoanApplicationUpsertWithWhereUniqueWithoutCustomerInput | Prisma.LoanApplicationUpsertWithWhereUniqueWithoutCustomerInput[]
-  createMany?: Prisma.LoanApplicationCreateManyCustomerInputEnvelope
-  set?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
-  disconnect?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
-  delete?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
-  connect?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
-  update?: Prisma.LoanApplicationUpdateWithWhereUniqueWithoutCustomerInput | Prisma.LoanApplicationUpdateWithWhereUniqueWithoutCustomerInput[]
-  updateMany?: Prisma.LoanApplicationUpdateManyWithWhereWithoutCustomerInput | Prisma.LoanApplicationUpdateManyWithWhereWithoutCustomerInput[]
-  deleteMany?: Prisma.LoanApplicationScalarWhereInput | Prisma.LoanApplicationScalarWhereInput[]
-}
-
-export type LoanApplicationUncheckedUpdateManyWithoutCustomerNestedInput = {
-  create?: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCustomerInput, Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput> | Prisma.LoanApplicationCreateWithoutCustomerInput[] | Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput[]
-  connectOrCreate?: Prisma.LoanApplicationCreateOrConnectWithoutCustomerInput | Prisma.LoanApplicationCreateOrConnectWithoutCustomerInput[]
-  upsert?: Prisma.LoanApplicationUpsertWithWhereUniqueWithoutCustomerInput | Prisma.LoanApplicationUpsertWithWhereUniqueWithoutCustomerInput[]
-  createMany?: Prisma.LoanApplicationCreateManyCustomerInputEnvelope
-  set?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
-  disconnect?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
-  delete?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
-  connect?: Prisma.LoanApplicationWhereUniqueInput | Prisma.LoanApplicationWhereUniqueInput[]
-  update?: Prisma.LoanApplicationUpdateWithWhereUniqueWithoutCustomerInput | Prisma.LoanApplicationUpdateWithWhereUniqueWithoutCustomerInput[]
-  updateMany?: Prisma.LoanApplicationUpdateManyWithWhereWithoutCustomerInput | Prisma.LoanApplicationUpdateManyWithWhereWithoutCustomerInput[]
   deleteMany?: Prisma.LoanApplicationScalarWhereInput | Prisma.LoanApplicationScalarWhereInput[]
 }
 
@@ -2074,6 +2263,15 @@ export type LoanApplicationCreateWithoutCreatedByInput = {
   branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
   loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
   loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationUncheckedCreateWithoutCreatedByInput = {
@@ -2138,6 +2336,15 @@ export type LoanApplicationUncheckedCreateWithoutCreatedByInput = {
   nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationCreateOrConnectWithoutCreatedByInput = {
@@ -2286,6 +2493,15 @@ export type LoanApplicationCreateWithoutPartnerInput = {
   branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
   loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
   loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationUncheckedCreateWithoutPartnerInput = {
@@ -2350,6 +2566,15 @@ export type LoanApplicationUncheckedCreateWithoutPartnerInput = {
   nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationCreateOrConnectWithoutPartnerInput = {
@@ -2440,6 +2665,15 @@ export type LoanApplicationCreateWithoutCommissionPaymentsInput = {
   branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
   loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
   loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationUncheckedCreateWithoutCommissionPaymentsInput = {
@@ -2504,6 +2738,15 @@ export type LoanApplicationUncheckedCreateWithoutCommissionPaymentsInput = {
   emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
   nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationCreateOrConnectWithoutCommissionPaymentsInput = {
@@ -2584,6 +2827,15 @@ export type LoanApplicationUpdateWithoutCommissionPaymentsInput = {
   branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
   loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
   loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateWithoutCommissionPaymentsInput = {
@@ -2648,6 +2900,15 @@ export type LoanApplicationUncheckedUpdateWithoutCommissionPaymentsInput = {
   emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
   nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationCreateWithoutBranchInput = {
@@ -2712,6 +2973,15 @@ export type LoanApplicationCreateWithoutBranchInput = {
   createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
   loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
   loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationUncheckedCreateWithoutBranchInput = {
@@ -2776,6 +3046,15 @@ export type LoanApplicationUncheckedCreateWithoutBranchInput = {
   nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationCreateOrConnectWithoutBranchInput = {
@@ -2866,6 +3145,15 @@ export type LoanApplicationCreateWithoutLeadInput = {
   branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
   loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
   loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationUncheckedCreateWithoutLeadInput = {
@@ -2930,6 +3218,15 @@ export type LoanApplicationUncheckedCreateWithoutLeadInput = {
   nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationCreateOrConnectWithoutLeadInput = {
@@ -2956,822 +3253,6 @@ export type LoanApplicationUpdateWithWhereUniqueWithoutLeadInput = {
 export type LoanApplicationUpdateManyWithWhereWithoutLeadInput = {
   where: Prisma.LoanApplicationScalarWhereInput
   data: Prisma.XOR<Prisma.LoanApplicationUpdateManyMutationInput, Prisma.LoanApplicationUncheckedUpdateManyWithoutLeadInput>
-}
-
-export type LoanApplicationCreateWithoutLoanRecoveriesInput = {
-  id?: string
-  applicationDate?: Date | string
-  loanNumber: string
-  serviceCentre?: string | null
-  processingFees?: number | null
-  executiveName?: string | null
-  EmployeeCode?: string | null
-  schemeGroup?: string | null
-  referrerFileNo?: string | null
-  ownerPartnerId?: string | null
-  requestedAmount: number
-  approvedAmount?: number | null
-  tenureMonths?: number | null
-  interestRate?: number | null
-  interestType: $Enums.InterestType
-  emiAmount?: number | null
-  purposeDetails?: string | null
-  totalPayable?: number | null
-  loanPurpose?: string | null
-  cibilScore?: number | null
-  status?: $Enums.LoanStatus
-  approvalDate?: Date | string | null
-  activationDate?: Date | string | null
-  rejectionReason?: string | null
-  approvedBy?: string | null
-  approvedAt?: Date | string | null
-  rejectedBy?: string | null
-  rejectedAt?: Date | string | null
-  latePaymentFeeType?: $Enums.CommissionType | null
-  latePaymentFee?: number | null
-  bounceCharges?: number | null
-  emiStartDate?: Date | string | null
-  emiPaymentAmount?: number | null
-  foreclosureDate?: Date | string | null
-  foreclosureChargesType?: $Enums.CommissionType | null
-  foreclosureAllowed?: boolean
-  foreclosureCharges?: number | null
-  prepaymentChargeType?: $Enums.CommissionType | null
-  prepaymentAllowed?: boolean
-  prepaymentDate?: Date | string | null
-  prepaymentCharges?: number | null
-  defaultedAt?: Date | string | null
-  dpd?: number | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  customer: Prisma.CustomerCreateNestedOneWithoutLoanApplicationsInput
-  lead?: Prisma.LeadsCreateNestedOneWithoutLoanApplicationsInput
-  partner?: Prisma.PartnerCreateNestedOneWithoutLoanApplicationsInput
-  coapplicants?: Prisma.CoApplicantCreateNestedManyWithoutLoanApplicationInput
-  kyc?: Prisma.KycCreateNestedOneWithoutLoanApplicationInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutLoanApplicationInput
-  loanDisbursement?: Prisma.LoanDisbursementCreateNestedManyWithoutLoanApplicationInput
-  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutLoanApplicationInput
-  legalReports?: Prisma.LegalReportCreateNestedManyWithoutLoanApplicationInput
-  emis?: Prisma.LoanEmiScheduleCreateNestedManyWithoutLoanApplicationInput
-  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutLoanApplicationInput
-  commissionPayments?: Prisma.PartnerCommissionCreateNestedManyWithoutLoanInput
-  createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
-  branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
-  loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
-  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
-}
-
-export type LoanApplicationUncheckedCreateWithoutLoanRecoveriesInput = {
-  id?: string
-  applicationDate?: Date | string
-  loanNumber: string
-  serviceCentre?: string | null
-  processingFees?: number | null
-  executiveName?: string | null
-  EmployeeCode?: string | null
-  schemeGroup?: string | null
-  referrerFileNo?: string | null
-  customerId: string
-  leadId?: string | null
-  loanTypeId: string
-  partnerId?: string | null
-  ownerPartnerId?: string | null
-  requestedAmount: number
-  approvedAmount?: number | null
-  tenureMonths?: number | null
-  interestRate?: number | null
-  interestType: $Enums.InterestType
-  emiAmount?: number | null
-  purposeDetails?: string | null
-  totalPayable?: number | null
-  loanPurpose?: string | null
-  cibilScore?: number | null
-  status?: $Enums.LoanStatus
-  approvalDate?: Date | string | null
-  activationDate?: Date | string | null
-  rejectionReason?: string | null
-  approvedBy?: string | null
-  approvedAt?: Date | string | null
-  rejectedBy?: string | null
-  rejectedAt?: Date | string | null
-  kycId?: string | null
-  latePaymentFeeType?: $Enums.CommissionType | null
-  latePaymentFee?: number | null
-  bounceCharges?: number | null
-  emiStartDate?: Date | string | null
-  emiPaymentAmount?: number | null
-  foreclosureDate?: Date | string | null
-  foreclosureChargesType?: $Enums.CommissionType | null
-  foreclosureAllowed?: boolean
-  foreclosureCharges?: number | null
-  prepaymentChargeType?: $Enums.CommissionType | null
-  prepaymentAllowed?: boolean
-  prepaymentDate?: Date | string | null
-  prepaymentCharges?: number | null
-  defaultedAt?: Date | string | null
-  dpd?: number | null
-  createdById?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  branchId: string
-  coapplicants?: Prisma.CoApplicantUncheckedCreateNestedManyWithoutLoanApplicationInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutLoanApplicationInput
-  loanDisbursement?: Prisma.LoanDisbursementUncheckedCreateNestedManyWithoutLoanApplicationInput
-  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
-  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
-  emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
-  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
-  commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
-  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
-}
-
-export type LoanApplicationCreateOrConnectWithoutLoanRecoveriesInput = {
-  where: Prisma.LoanApplicationWhereUniqueInput
-  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutLoanRecoveriesInput, Prisma.LoanApplicationUncheckedCreateWithoutLoanRecoveriesInput>
-}
-
-export type LoanApplicationUpsertWithoutLoanRecoveriesInput = {
-  update: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutLoanRecoveriesInput, Prisma.LoanApplicationUncheckedUpdateWithoutLoanRecoveriesInput>
-  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutLoanRecoveriesInput, Prisma.LoanApplicationUncheckedCreateWithoutLoanRecoveriesInput>
-  where?: Prisma.LoanApplicationWhereInput
-}
-
-export type LoanApplicationUpdateToOneWithWhereWithoutLoanRecoveriesInput = {
-  where?: Prisma.LoanApplicationWhereInput
-  data: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutLoanRecoveriesInput, Prisma.LoanApplicationUncheckedUpdateWithoutLoanRecoveriesInput>
-}
-
-export type LoanApplicationUpdateWithoutLoanRecoveriesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
-  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
-  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  customer?: Prisma.CustomerUpdateOneRequiredWithoutLoanApplicationsNestedInput
-  lead?: Prisma.LeadsUpdateOneWithoutLoanApplicationsNestedInput
-  partner?: Prisma.PartnerUpdateOneWithoutLoanApplicationsNestedInput
-  coapplicants?: Prisma.CoApplicantUpdateManyWithoutLoanApplicationNestedInput
-  kyc?: Prisma.KycUpdateOneWithoutLoanApplicationNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutLoanApplicationNestedInput
-  loanDisbursement?: Prisma.LoanDisbursementUpdateManyWithoutLoanApplicationNestedInput
-  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutLoanApplicationNestedInput
-  legalReports?: Prisma.LegalReportUpdateManyWithoutLoanApplicationNestedInput
-  emis?: Prisma.LoanEmiScheduleUpdateManyWithoutLoanApplicationNestedInput
-  nachMandates?: Prisma.NachMandateUpdateManyWithoutLoanApplicationNestedInput
-  commissionPayments?: Prisma.PartnerCommissionUpdateManyWithoutLoanNestedInput
-  createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
-  branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
-  loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
-  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
-}
-
-export type LoanApplicationUncheckedUpdateWithoutLoanRecoveriesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customerId?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
-  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
-  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
-  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  branchId?: Prisma.StringFieldUpdateOperationsInput | string
-  coapplicants?: Prisma.CoApplicantUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  loanDisbursement?: Prisma.LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
-  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
-}
-
-export type LoanApplicationCreateWithoutDocumentsInput = {
-  id?: string
-  applicationDate?: Date | string
-  loanNumber: string
-  serviceCentre?: string | null
-  processingFees?: number | null
-  executiveName?: string | null
-  EmployeeCode?: string | null
-  schemeGroup?: string | null
-  referrerFileNo?: string | null
-  ownerPartnerId?: string | null
-  requestedAmount: number
-  approvedAmount?: number | null
-  tenureMonths?: number | null
-  interestRate?: number | null
-  interestType: $Enums.InterestType
-  emiAmount?: number | null
-  purposeDetails?: string | null
-  totalPayable?: number | null
-  loanPurpose?: string | null
-  cibilScore?: number | null
-  status?: $Enums.LoanStatus
-  approvalDate?: Date | string | null
-  activationDate?: Date | string | null
-  rejectionReason?: string | null
-  approvedBy?: string | null
-  approvedAt?: Date | string | null
-  rejectedBy?: string | null
-  rejectedAt?: Date | string | null
-  latePaymentFeeType?: $Enums.CommissionType | null
-  latePaymentFee?: number | null
-  bounceCharges?: number | null
-  emiStartDate?: Date | string | null
-  emiPaymentAmount?: number | null
-  foreclosureDate?: Date | string | null
-  foreclosureChargesType?: $Enums.CommissionType | null
-  foreclosureAllowed?: boolean
-  foreclosureCharges?: number | null
-  prepaymentChargeType?: $Enums.CommissionType | null
-  prepaymentAllowed?: boolean
-  prepaymentDate?: Date | string | null
-  prepaymentCharges?: number | null
-  defaultedAt?: Date | string | null
-  dpd?: number | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  customer: Prisma.CustomerCreateNestedOneWithoutLoanApplicationsInput
-  lead?: Prisma.LeadsCreateNestedOneWithoutLoanApplicationsInput
-  partner?: Prisma.PartnerCreateNestedOneWithoutLoanApplicationsInput
-  coapplicants?: Prisma.CoApplicantCreateNestedManyWithoutLoanApplicationInput
-  kyc?: Prisma.KycCreateNestedOneWithoutLoanApplicationInput
-  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutLoanApplicationInput
-  loanDisbursement?: Prisma.LoanDisbursementCreateNestedManyWithoutLoanApplicationInput
-  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutLoanApplicationInput
-  legalReports?: Prisma.LegalReportCreateNestedManyWithoutLoanApplicationInput
-  emis?: Prisma.LoanEmiScheduleCreateNestedManyWithoutLoanApplicationInput
-  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutLoanApplicationInput
-  commissionPayments?: Prisma.PartnerCommissionCreateNestedManyWithoutLoanInput
-  createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
-  branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
-  loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
-  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
-}
-
-export type LoanApplicationUncheckedCreateWithoutDocumentsInput = {
-  id?: string
-  applicationDate?: Date | string
-  loanNumber: string
-  serviceCentre?: string | null
-  processingFees?: number | null
-  executiveName?: string | null
-  EmployeeCode?: string | null
-  schemeGroup?: string | null
-  referrerFileNo?: string | null
-  customerId: string
-  leadId?: string | null
-  loanTypeId: string
-  partnerId?: string | null
-  ownerPartnerId?: string | null
-  requestedAmount: number
-  approvedAmount?: number | null
-  tenureMonths?: number | null
-  interestRate?: number | null
-  interestType: $Enums.InterestType
-  emiAmount?: number | null
-  purposeDetails?: string | null
-  totalPayable?: number | null
-  loanPurpose?: string | null
-  cibilScore?: number | null
-  status?: $Enums.LoanStatus
-  approvalDate?: Date | string | null
-  activationDate?: Date | string | null
-  rejectionReason?: string | null
-  approvedBy?: string | null
-  approvedAt?: Date | string | null
-  rejectedBy?: string | null
-  rejectedAt?: Date | string | null
-  kycId?: string | null
-  latePaymentFeeType?: $Enums.CommissionType | null
-  latePaymentFee?: number | null
-  bounceCharges?: number | null
-  emiStartDate?: Date | string | null
-  emiPaymentAmount?: number | null
-  foreclosureDate?: Date | string | null
-  foreclosureChargesType?: $Enums.CommissionType | null
-  foreclosureAllowed?: boolean
-  foreclosureCharges?: number | null
-  prepaymentChargeType?: $Enums.CommissionType | null
-  prepaymentAllowed?: boolean
-  prepaymentDate?: Date | string | null
-  prepaymentCharges?: number | null
-  defaultedAt?: Date | string | null
-  dpd?: number | null
-  createdById?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  branchId: string
-  coapplicants?: Prisma.CoApplicantUncheckedCreateNestedManyWithoutLoanApplicationInput
-  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutLoanApplicationInput
-  loanDisbursement?: Prisma.LoanDisbursementUncheckedCreateNestedManyWithoutLoanApplicationInput
-  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
-  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
-  emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
-  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
-  commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
-  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
-}
-
-export type LoanApplicationCreateOrConnectWithoutDocumentsInput = {
-  where: Prisma.LoanApplicationWhereUniqueInput
-  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutDocumentsInput, Prisma.LoanApplicationUncheckedCreateWithoutDocumentsInput>
-}
-
-export type LoanApplicationUpsertWithoutDocumentsInput = {
-  update: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutDocumentsInput, Prisma.LoanApplicationUncheckedUpdateWithoutDocumentsInput>
-  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutDocumentsInput, Prisma.LoanApplicationUncheckedCreateWithoutDocumentsInput>
-  where?: Prisma.LoanApplicationWhereInput
-}
-
-export type LoanApplicationUpdateToOneWithWhereWithoutDocumentsInput = {
-  where?: Prisma.LoanApplicationWhereInput
-  data: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutDocumentsInput, Prisma.LoanApplicationUncheckedUpdateWithoutDocumentsInput>
-}
-
-export type LoanApplicationUpdateWithoutDocumentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
-  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
-  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  customer?: Prisma.CustomerUpdateOneRequiredWithoutLoanApplicationsNestedInput
-  lead?: Prisma.LeadsUpdateOneWithoutLoanApplicationsNestedInput
-  partner?: Prisma.PartnerUpdateOneWithoutLoanApplicationsNestedInput
-  coapplicants?: Prisma.CoApplicantUpdateManyWithoutLoanApplicationNestedInput
-  kyc?: Prisma.KycUpdateOneWithoutLoanApplicationNestedInput
-  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutLoanApplicationNestedInput
-  loanDisbursement?: Prisma.LoanDisbursementUpdateManyWithoutLoanApplicationNestedInput
-  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutLoanApplicationNestedInput
-  legalReports?: Prisma.LegalReportUpdateManyWithoutLoanApplicationNestedInput
-  emis?: Prisma.LoanEmiScheduleUpdateManyWithoutLoanApplicationNestedInput
-  nachMandates?: Prisma.NachMandateUpdateManyWithoutLoanApplicationNestedInput
-  commissionPayments?: Prisma.PartnerCommissionUpdateManyWithoutLoanNestedInput
-  createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
-  branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
-  loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
-  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
-}
-
-export type LoanApplicationUncheckedUpdateWithoutDocumentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customerId?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
-  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
-  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
-  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  branchId?: Prisma.StringFieldUpdateOperationsInput | string
-  coapplicants?: Prisma.CoApplicantUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  loanDisbursement?: Prisma.LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
-  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
-}
-
-export type LoanApplicationCreateWithoutKycInput = {
-  id?: string
-  applicationDate?: Date | string
-  loanNumber: string
-  serviceCentre?: string | null
-  processingFees?: number | null
-  executiveName?: string | null
-  EmployeeCode?: string | null
-  schemeGroup?: string | null
-  referrerFileNo?: string | null
-  ownerPartnerId?: string | null
-  requestedAmount: number
-  approvedAmount?: number | null
-  tenureMonths?: number | null
-  interestRate?: number | null
-  interestType: $Enums.InterestType
-  emiAmount?: number | null
-  purposeDetails?: string | null
-  totalPayable?: number | null
-  loanPurpose?: string | null
-  cibilScore?: number | null
-  status?: $Enums.LoanStatus
-  approvalDate?: Date | string | null
-  activationDate?: Date | string | null
-  rejectionReason?: string | null
-  approvedBy?: string | null
-  approvedAt?: Date | string | null
-  rejectedBy?: string | null
-  rejectedAt?: Date | string | null
-  latePaymentFeeType?: $Enums.CommissionType | null
-  latePaymentFee?: number | null
-  bounceCharges?: number | null
-  emiStartDate?: Date | string | null
-  emiPaymentAmount?: number | null
-  foreclosureDate?: Date | string | null
-  foreclosureChargesType?: $Enums.CommissionType | null
-  foreclosureAllowed?: boolean
-  foreclosureCharges?: number | null
-  prepaymentChargeType?: $Enums.CommissionType | null
-  prepaymentAllowed?: boolean
-  prepaymentDate?: Date | string | null
-  prepaymentCharges?: number | null
-  defaultedAt?: Date | string | null
-  dpd?: number | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  customer: Prisma.CustomerCreateNestedOneWithoutLoanApplicationsInput
-  lead?: Prisma.LeadsCreateNestedOneWithoutLoanApplicationsInput
-  partner?: Prisma.PartnerCreateNestedOneWithoutLoanApplicationsInput
-  coapplicants?: Prisma.CoApplicantCreateNestedManyWithoutLoanApplicationInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutLoanApplicationInput
-  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutLoanApplicationInput
-  loanDisbursement?: Prisma.LoanDisbursementCreateNestedManyWithoutLoanApplicationInput
-  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutLoanApplicationInput
-  legalReports?: Prisma.LegalReportCreateNestedManyWithoutLoanApplicationInput
-  emis?: Prisma.LoanEmiScheduleCreateNestedManyWithoutLoanApplicationInput
-  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutLoanApplicationInput
-  commissionPayments?: Prisma.PartnerCommissionCreateNestedManyWithoutLoanInput
-  createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
-  branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
-  loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
-  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
-}
-
-export type LoanApplicationUncheckedCreateWithoutKycInput = {
-  id?: string
-  applicationDate?: Date | string
-  loanNumber: string
-  serviceCentre?: string | null
-  processingFees?: number | null
-  executiveName?: string | null
-  EmployeeCode?: string | null
-  schemeGroup?: string | null
-  referrerFileNo?: string | null
-  customerId: string
-  leadId?: string | null
-  loanTypeId: string
-  partnerId?: string | null
-  ownerPartnerId?: string | null
-  requestedAmount: number
-  approvedAmount?: number | null
-  tenureMonths?: number | null
-  interestRate?: number | null
-  interestType: $Enums.InterestType
-  emiAmount?: number | null
-  purposeDetails?: string | null
-  totalPayable?: number | null
-  loanPurpose?: string | null
-  cibilScore?: number | null
-  status?: $Enums.LoanStatus
-  approvalDate?: Date | string | null
-  activationDate?: Date | string | null
-  rejectionReason?: string | null
-  approvedBy?: string | null
-  approvedAt?: Date | string | null
-  rejectedBy?: string | null
-  rejectedAt?: Date | string | null
-  latePaymentFeeType?: $Enums.CommissionType | null
-  latePaymentFee?: number | null
-  bounceCharges?: number | null
-  emiStartDate?: Date | string | null
-  emiPaymentAmount?: number | null
-  foreclosureDate?: Date | string | null
-  foreclosureChargesType?: $Enums.CommissionType | null
-  foreclosureAllowed?: boolean
-  foreclosureCharges?: number | null
-  prepaymentChargeType?: $Enums.CommissionType | null
-  prepaymentAllowed?: boolean
-  prepaymentDate?: Date | string | null
-  prepaymentCharges?: number | null
-  defaultedAt?: Date | string | null
-  dpd?: number | null
-  createdById?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  branchId: string
-  coapplicants?: Prisma.CoApplicantUncheckedCreateNestedManyWithoutLoanApplicationInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutLoanApplicationInput
-  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutLoanApplicationInput
-  loanDisbursement?: Prisma.LoanDisbursementUncheckedCreateNestedManyWithoutLoanApplicationInput
-  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
-  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
-  emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
-  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
-  commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
-  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
-}
-
-export type LoanApplicationCreateOrConnectWithoutKycInput = {
-  where: Prisma.LoanApplicationWhereUniqueInput
-  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutKycInput, Prisma.LoanApplicationUncheckedCreateWithoutKycInput>
-}
-
-export type LoanApplicationUpsertWithoutKycInput = {
-  update: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutKycInput, Prisma.LoanApplicationUncheckedUpdateWithoutKycInput>
-  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutKycInput, Prisma.LoanApplicationUncheckedCreateWithoutKycInput>
-  where?: Prisma.LoanApplicationWhereInput
-}
-
-export type LoanApplicationUpdateToOneWithWhereWithoutKycInput = {
-  where?: Prisma.LoanApplicationWhereInput
-  data: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutKycInput, Prisma.LoanApplicationUncheckedUpdateWithoutKycInput>
-}
-
-export type LoanApplicationUpdateWithoutKycInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
-  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
-  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  customer?: Prisma.CustomerUpdateOneRequiredWithoutLoanApplicationsNestedInput
-  lead?: Prisma.LeadsUpdateOneWithoutLoanApplicationsNestedInput
-  partner?: Prisma.PartnerUpdateOneWithoutLoanApplicationsNestedInput
-  coapplicants?: Prisma.CoApplicantUpdateManyWithoutLoanApplicationNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutLoanApplicationNestedInput
-  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutLoanApplicationNestedInput
-  loanDisbursement?: Prisma.LoanDisbursementUpdateManyWithoutLoanApplicationNestedInput
-  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutLoanApplicationNestedInput
-  legalReports?: Prisma.LegalReportUpdateManyWithoutLoanApplicationNestedInput
-  emis?: Prisma.LoanEmiScheduleUpdateManyWithoutLoanApplicationNestedInput
-  nachMandates?: Prisma.NachMandateUpdateManyWithoutLoanApplicationNestedInput
-  commissionPayments?: Prisma.PartnerCommissionUpdateManyWithoutLoanNestedInput
-  createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
-  branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
-  loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
-  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
-}
-
-export type LoanApplicationUncheckedUpdateWithoutKycInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customerId?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
-  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
-  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
-  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  branchId?: Prisma.StringFieldUpdateOperationsInput | string
-  coapplicants?: Prisma.CoApplicantUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  loanDisbursement?: Prisma.LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
-  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationCreateWithoutCoapplicantsInput = {
@@ -3836,6 +3317,15 @@ export type LoanApplicationCreateWithoutCoapplicantsInput = {
   branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
   loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
   loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationUncheckedCreateWithoutCoapplicantsInput = {
@@ -3900,6 +3390,15 @@ export type LoanApplicationUncheckedCreateWithoutCoapplicantsInput = {
   nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationCreateOrConnectWithoutCoapplicantsInput = {
@@ -3980,6 +3479,15 @@ export type LoanApplicationUpdateWithoutCoapplicantsInput = {
   branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
   loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
   loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateWithoutCoapplicantsInput = {
@@ -4044,6 +3552,3883 @@ export type LoanApplicationUncheckedUpdateWithoutCoapplicantsInput = {
   nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationCreateWithoutCustomerInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lead?: Prisma.LeadsCreateNestedOneWithoutLoanApplicationsInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutLoanApplicationsInput
+  coapplicants?: Prisma.CoApplicantCreateNestedManyWithoutLoanApplicationInput
+  kyc?: Prisma.KycCreateNestedOneWithoutLoanApplicationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionCreateNestedManyWithoutLoanInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
+  branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
+  loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
+  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationUncheckedCreateWithoutCustomerInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  leadId?: string | null
+  loanTypeId: string
+  partnerId?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  kycId?: string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branchId: string
+  coapplicants?: Prisma.CoApplicantUncheckedCreateNestedManyWithoutLoanApplicationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationCreateOrConnectWithoutCustomerInput = {
+  where: Prisma.LoanApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCustomerInput, Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput>
+}
+
+export type LoanApplicationCreateManyCustomerInputEnvelope = {
+  data: Prisma.LoanApplicationCreateManyCustomerInput | Prisma.LoanApplicationCreateManyCustomerInput[]
+  skipDuplicates?: boolean
+}
+
+export type LoanApplicationUpsertWithWhereUniqueWithoutCustomerInput = {
+  where: Prisma.LoanApplicationWhereUniqueInput
+  update: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutCustomerInput, Prisma.LoanApplicationUncheckedUpdateWithoutCustomerInput>
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCustomerInput, Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput>
+}
+
+export type LoanApplicationUpdateWithWhereUniqueWithoutCustomerInput = {
+  where: Prisma.LoanApplicationWhereUniqueInput
+  data: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutCustomerInput, Prisma.LoanApplicationUncheckedUpdateWithoutCustomerInput>
+}
+
+export type LoanApplicationUpdateManyWithWhereWithoutCustomerInput = {
+  where: Prisma.LoanApplicationScalarWhereInput
+  data: Prisma.XOR<Prisma.LoanApplicationUpdateManyMutationInput, Prisma.LoanApplicationUncheckedUpdateManyWithoutCustomerInput>
+}
+
+export type LoanApplicationCreateWithoutGuarantorsInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutLoanApplicationsInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutLoanApplicationsInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutLoanApplicationsInput
+  coapplicants?: Prisma.CoApplicantCreateNestedManyWithoutLoanApplicationInput
+  kyc?: Prisma.KycCreateNestedOneWithoutLoanApplicationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionCreateNestedManyWithoutLoanInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
+  branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
+  loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
+  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationUncheckedCreateWithoutGuarantorsInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  customerId: string
+  leadId?: string | null
+  loanTypeId: string
+  partnerId?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  kycId?: string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branchId: string
+  coapplicants?: Prisma.CoApplicantUncheckedCreateNestedManyWithoutLoanApplicationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationCreateOrConnectWithoutGuarantorsInput = {
+  where: Prisma.LoanApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutGuarantorsInput, Prisma.LoanApplicationUncheckedCreateWithoutGuarantorsInput>
+}
+
+export type LoanApplicationUpsertWithoutGuarantorsInput = {
+  update: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutGuarantorsInput, Prisma.LoanApplicationUncheckedUpdateWithoutGuarantorsInput>
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutGuarantorsInput, Prisma.LoanApplicationUncheckedCreateWithoutGuarantorsInput>
+  where?: Prisma.LoanApplicationWhereInput
+}
+
+export type LoanApplicationUpdateToOneWithWhereWithoutGuarantorsInput = {
+  where?: Prisma.LoanApplicationWhereInput
+  data: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutGuarantorsInput, Prisma.LoanApplicationUncheckedUpdateWithoutGuarantorsInput>
+}
+
+export type LoanApplicationUpdateWithoutGuarantorsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  lead?: Prisma.LeadsUpdateOneWithoutLoanApplicationsNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutLoanApplicationsNestedInput
+  coapplicants?: Prisma.CoApplicantUpdateManyWithoutLoanApplicationNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUpdateManyWithoutLoanNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationUncheckedUpdateWithoutGuarantorsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  coapplicants?: Prisma.CoApplicantUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationCreateWithoutExistingLoansInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutLoanApplicationsInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutLoanApplicationsInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutLoanApplicationsInput
+  coapplicants?: Prisma.CoApplicantCreateNestedManyWithoutLoanApplicationInput
+  kyc?: Prisma.KycCreateNestedOneWithoutLoanApplicationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionCreateNestedManyWithoutLoanInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
+  branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
+  loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
+  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationUncheckedCreateWithoutExistingLoansInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  customerId: string
+  leadId?: string | null
+  loanTypeId: string
+  partnerId?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  kycId?: string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branchId: string
+  coapplicants?: Prisma.CoApplicantUncheckedCreateNestedManyWithoutLoanApplicationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationCreateOrConnectWithoutExistingLoansInput = {
+  where: Prisma.LoanApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutExistingLoansInput, Prisma.LoanApplicationUncheckedCreateWithoutExistingLoansInput>
+}
+
+export type LoanApplicationUpsertWithoutExistingLoansInput = {
+  update: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutExistingLoansInput, Prisma.LoanApplicationUncheckedUpdateWithoutExistingLoansInput>
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutExistingLoansInput, Prisma.LoanApplicationUncheckedCreateWithoutExistingLoansInput>
+  where?: Prisma.LoanApplicationWhereInput
+}
+
+export type LoanApplicationUpdateToOneWithWhereWithoutExistingLoansInput = {
+  where?: Prisma.LoanApplicationWhereInput
+  data: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutExistingLoansInput, Prisma.LoanApplicationUncheckedUpdateWithoutExistingLoansInput>
+}
+
+export type LoanApplicationUpdateWithoutExistingLoansInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  lead?: Prisma.LeadsUpdateOneWithoutLoanApplicationsNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutLoanApplicationsNestedInput
+  coapplicants?: Prisma.CoApplicantUpdateManyWithoutLoanApplicationNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUpdateManyWithoutLoanNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationUncheckedUpdateWithoutExistingLoansInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  coapplicants?: Prisma.CoApplicantUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationCreateWithoutCreditCardsInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutLoanApplicationsInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutLoanApplicationsInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutLoanApplicationsInput
+  coapplicants?: Prisma.CoApplicantCreateNestedManyWithoutLoanApplicationInput
+  kyc?: Prisma.KycCreateNestedOneWithoutLoanApplicationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionCreateNestedManyWithoutLoanInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
+  branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
+  loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
+  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationUncheckedCreateWithoutCreditCardsInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  customerId: string
+  leadId?: string | null
+  loanTypeId: string
+  partnerId?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  kycId?: string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branchId: string
+  coapplicants?: Prisma.CoApplicantUncheckedCreateNestedManyWithoutLoanApplicationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationCreateOrConnectWithoutCreditCardsInput = {
+  where: Prisma.LoanApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCreditCardsInput, Prisma.LoanApplicationUncheckedCreateWithoutCreditCardsInput>
+}
+
+export type LoanApplicationUpsertWithoutCreditCardsInput = {
+  update: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutCreditCardsInput, Prisma.LoanApplicationUncheckedUpdateWithoutCreditCardsInput>
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCreditCardsInput, Prisma.LoanApplicationUncheckedCreateWithoutCreditCardsInput>
+  where?: Prisma.LoanApplicationWhereInput
+}
+
+export type LoanApplicationUpdateToOneWithWhereWithoutCreditCardsInput = {
+  where?: Prisma.LoanApplicationWhereInput
+  data: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutCreditCardsInput, Prisma.LoanApplicationUncheckedUpdateWithoutCreditCardsInput>
+}
+
+export type LoanApplicationUpdateWithoutCreditCardsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  lead?: Prisma.LeadsUpdateOneWithoutLoanApplicationsNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutLoanApplicationsNestedInput
+  coapplicants?: Prisma.CoApplicantUpdateManyWithoutLoanApplicationNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUpdateManyWithoutLoanNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationUncheckedUpdateWithoutCreditCardsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  coapplicants?: Prisma.CoApplicantUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationCreateWithoutBankAccountsInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutLoanApplicationsInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutLoanApplicationsInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutLoanApplicationsInput
+  coapplicants?: Prisma.CoApplicantCreateNestedManyWithoutLoanApplicationInput
+  kyc?: Prisma.KycCreateNestedOneWithoutLoanApplicationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionCreateNestedManyWithoutLoanInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
+  branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
+  loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
+  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationUncheckedCreateWithoutBankAccountsInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  customerId: string
+  leadId?: string | null
+  loanTypeId: string
+  partnerId?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  kycId?: string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branchId: string
+  coapplicants?: Prisma.CoApplicantUncheckedCreateNestedManyWithoutLoanApplicationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationCreateOrConnectWithoutBankAccountsInput = {
+  where: Prisma.LoanApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutBankAccountsInput, Prisma.LoanApplicationUncheckedCreateWithoutBankAccountsInput>
+}
+
+export type LoanApplicationUpsertWithoutBankAccountsInput = {
+  update: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutBankAccountsInput, Prisma.LoanApplicationUncheckedUpdateWithoutBankAccountsInput>
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutBankAccountsInput, Prisma.LoanApplicationUncheckedCreateWithoutBankAccountsInput>
+  where?: Prisma.LoanApplicationWhereInput
+}
+
+export type LoanApplicationUpdateToOneWithWhereWithoutBankAccountsInput = {
+  where?: Prisma.LoanApplicationWhereInput
+  data: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutBankAccountsInput, Prisma.LoanApplicationUncheckedUpdateWithoutBankAccountsInput>
+}
+
+export type LoanApplicationUpdateWithoutBankAccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  lead?: Prisma.LeadsUpdateOneWithoutLoanApplicationsNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutLoanApplicationsNestedInput
+  coapplicants?: Prisma.CoApplicantUpdateManyWithoutLoanApplicationNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUpdateManyWithoutLoanNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationUncheckedUpdateWithoutBankAccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  coapplicants?: Prisma.CoApplicantUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationCreateWithoutInsurancePoliciesInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutLoanApplicationsInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutLoanApplicationsInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutLoanApplicationsInput
+  coapplicants?: Prisma.CoApplicantCreateNestedManyWithoutLoanApplicationInput
+  kyc?: Prisma.KycCreateNestedOneWithoutLoanApplicationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionCreateNestedManyWithoutLoanInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
+  branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
+  loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
+  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationUncheckedCreateWithoutInsurancePoliciesInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  customerId: string
+  leadId?: string | null
+  loanTypeId: string
+  partnerId?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  kycId?: string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branchId: string
+  coapplicants?: Prisma.CoApplicantUncheckedCreateNestedManyWithoutLoanApplicationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationCreateOrConnectWithoutInsurancePoliciesInput = {
+  where: Prisma.LoanApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutInsurancePoliciesInput, Prisma.LoanApplicationUncheckedCreateWithoutInsurancePoliciesInput>
+}
+
+export type LoanApplicationUpsertWithoutInsurancePoliciesInput = {
+  update: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutInsurancePoliciesInput, Prisma.LoanApplicationUncheckedUpdateWithoutInsurancePoliciesInput>
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutInsurancePoliciesInput, Prisma.LoanApplicationUncheckedCreateWithoutInsurancePoliciesInput>
+  where?: Prisma.LoanApplicationWhereInput
+}
+
+export type LoanApplicationUpdateToOneWithWhereWithoutInsurancePoliciesInput = {
+  where?: Prisma.LoanApplicationWhereInput
+  data: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutInsurancePoliciesInput, Prisma.LoanApplicationUncheckedUpdateWithoutInsurancePoliciesInput>
+}
+
+export type LoanApplicationUpdateWithoutInsurancePoliciesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  lead?: Prisma.LeadsUpdateOneWithoutLoanApplicationsNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutLoanApplicationsNestedInput
+  coapplicants?: Prisma.CoApplicantUpdateManyWithoutLoanApplicationNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUpdateManyWithoutLoanNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationUncheckedUpdateWithoutInsurancePoliciesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  coapplicants?: Prisma.CoApplicantUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationCreateWithoutPropertiesInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutLoanApplicationsInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutLoanApplicationsInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutLoanApplicationsInput
+  coapplicants?: Prisma.CoApplicantCreateNestedManyWithoutLoanApplicationInput
+  kyc?: Prisma.KycCreateNestedOneWithoutLoanApplicationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionCreateNestedManyWithoutLoanInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
+  branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
+  loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
+  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationUncheckedCreateWithoutPropertiesInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  customerId: string
+  leadId?: string | null
+  loanTypeId: string
+  partnerId?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  kycId?: string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branchId: string
+  coapplicants?: Prisma.CoApplicantUncheckedCreateNestedManyWithoutLoanApplicationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationCreateOrConnectWithoutPropertiesInput = {
+  where: Prisma.LoanApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutPropertiesInput, Prisma.LoanApplicationUncheckedCreateWithoutPropertiesInput>
+}
+
+export type LoanApplicationUpsertWithoutPropertiesInput = {
+  update: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutPropertiesInput, Prisma.LoanApplicationUncheckedUpdateWithoutPropertiesInput>
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutPropertiesInput, Prisma.LoanApplicationUncheckedCreateWithoutPropertiesInput>
+  where?: Prisma.LoanApplicationWhereInput
+}
+
+export type LoanApplicationUpdateToOneWithWhereWithoutPropertiesInput = {
+  where?: Prisma.LoanApplicationWhereInput
+  data: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutPropertiesInput, Prisma.LoanApplicationUncheckedUpdateWithoutPropertiesInput>
+}
+
+export type LoanApplicationUpdateWithoutPropertiesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  lead?: Prisma.LeadsUpdateOneWithoutLoanApplicationsNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutLoanApplicationsNestedInput
+  coapplicants?: Prisma.CoApplicantUpdateManyWithoutLoanApplicationNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUpdateManyWithoutLoanNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationUncheckedUpdateWithoutPropertiesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  coapplicants?: Prisma.CoApplicantUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationCreateWithoutReferencesInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutLoanApplicationsInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutLoanApplicationsInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutLoanApplicationsInput
+  coapplicants?: Prisma.CoApplicantCreateNestedManyWithoutLoanApplicationInput
+  kyc?: Prisma.KycCreateNestedOneWithoutLoanApplicationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionCreateNestedManyWithoutLoanInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
+  branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
+  loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
+  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationUncheckedCreateWithoutReferencesInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  customerId: string
+  leadId?: string | null
+  loanTypeId: string
+  partnerId?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  kycId?: string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branchId: string
+  coapplicants?: Prisma.CoApplicantUncheckedCreateNestedManyWithoutLoanApplicationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationCreateOrConnectWithoutReferencesInput = {
+  where: Prisma.LoanApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutReferencesInput, Prisma.LoanApplicationUncheckedCreateWithoutReferencesInput>
+}
+
+export type LoanApplicationUpsertWithoutReferencesInput = {
+  update: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutReferencesInput, Prisma.LoanApplicationUncheckedUpdateWithoutReferencesInput>
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutReferencesInput, Prisma.LoanApplicationUncheckedCreateWithoutReferencesInput>
+  where?: Prisma.LoanApplicationWhereInput
+}
+
+export type LoanApplicationUpdateToOneWithWhereWithoutReferencesInput = {
+  where?: Prisma.LoanApplicationWhereInput
+  data: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutReferencesInput, Prisma.LoanApplicationUncheckedUpdateWithoutReferencesInput>
+}
+
+export type LoanApplicationUpdateWithoutReferencesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  lead?: Prisma.LeadsUpdateOneWithoutLoanApplicationsNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutLoanApplicationsNestedInput
+  coapplicants?: Prisma.CoApplicantUpdateManyWithoutLoanApplicationNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUpdateManyWithoutLoanNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationUncheckedUpdateWithoutReferencesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  coapplicants?: Prisma.CoApplicantUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationCreateWithoutLoanRequirementInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutLoanApplicationsInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutLoanApplicationsInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutLoanApplicationsInput
+  coapplicants?: Prisma.CoApplicantCreateNestedManyWithoutLoanApplicationInput
+  kyc?: Prisma.KycCreateNestedOneWithoutLoanApplicationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionCreateNestedManyWithoutLoanInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
+  branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
+  loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
+  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationUncheckedCreateWithoutLoanRequirementInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  customerId: string
+  leadId?: string | null
+  loanTypeId: string
+  partnerId?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  kycId?: string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branchId: string
+  coapplicants?: Prisma.CoApplicantUncheckedCreateNestedManyWithoutLoanApplicationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationCreateOrConnectWithoutLoanRequirementInput = {
+  where: Prisma.LoanApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutLoanRequirementInput, Prisma.LoanApplicationUncheckedCreateWithoutLoanRequirementInput>
+}
+
+export type LoanApplicationUpsertWithoutLoanRequirementInput = {
+  update: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutLoanRequirementInput, Prisma.LoanApplicationUncheckedUpdateWithoutLoanRequirementInput>
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutLoanRequirementInput, Prisma.LoanApplicationUncheckedCreateWithoutLoanRequirementInput>
+  where?: Prisma.LoanApplicationWhereInput
+}
+
+export type LoanApplicationUpdateToOneWithWhereWithoutLoanRequirementInput = {
+  where?: Prisma.LoanApplicationWhereInput
+  data: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutLoanRequirementInput, Prisma.LoanApplicationUncheckedUpdateWithoutLoanRequirementInput>
+}
+
+export type LoanApplicationUpdateWithoutLoanRequirementInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  lead?: Prisma.LeadsUpdateOneWithoutLoanApplicationsNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutLoanApplicationsNestedInput
+  coapplicants?: Prisma.CoApplicantUpdateManyWithoutLoanApplicationNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUpdateManyWithoutLoanNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationUncheckedUpdateWithoutLoanRequirementInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  coapplicants?: Prisma.CoApplicantUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationCreateWithoutLoanQuestionnaireInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutLoanApplicationsInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutLoanApplicationsInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutLoanApplicationsInput
+  coapplicants?: Prisma.CoApplicantCreateNestedManyWithoutLoanApplicationInput
+  kyc?: Prisma.KycCreateNestedOneWithoutLoanApplicationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionCreateNestedManyWithoutLoanInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
+  branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
+  loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
+  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationUncheckedCreateWithoutLoanQuestionnaireInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  customerId: string
+  leadId?: string | null
+  loanTypeId: string
+  partnerId?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  kycId?: string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branchId: string
+  coapplicants?: Prisma.CoApplicantUncheckedCreateNestedManyWithoutLoanApplicationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationCreateOrConnectWithoutLoanQuestionnaireInput = {
+  where: Prisma.LoanApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutLoanQuestionnaireInput, Prisma.LoanApplicationUncheckedCreateWithoutLoanQuestionnaireInput>
+}
+
+export type LoanApplicationUpsertWithoutLoanQuestionnaireInput = {
+  update: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutLoanQuestionnaireInput, Prisma.LoanApplicationUncheckedUpdateWithoutLoanQuestionnaireInput>
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutLoanQuestionnaireInput, Prisma.LoanApplicationUncheckedCreateWithoutLoanQuestionnaireInput>
+  where?: Prisma.LoanApplicationWhereInput
+}
+
+export type LoanApplicationUpdateToOneWithWhereWithoutLoanQuestionnaireInput = {
+  where?: Prisma.LoanApplicationWhereInput
+  data: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutLoanQuestionnaireInput, Prisma.LoanApplicationUncheckedUpdateWithoutLoanQuestionnaireInput>
+}
+
+export type LoanApplicationUpdateWithoutLoanQuestionnaireInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  lead?: Prisma.LeadsUpdateOneWithoutLoanApplicationsNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutLoanApplicationsNestedInput
+  coapplicants?: Prisma.CoApplicantUpdateManyWithoutLoanApplicationNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUpdateManyWithoutLoanNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationUncheckedUpdateWithoutLoanQuestionnaireInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  coapplicants?: Prisma.CoApplicantUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationCreateWithoutLoanRecoveriesInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutLoanApplicationsInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutLoanApplicationsInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutLoanApplicationsInput
+  coapplicants?: Prisma.CoApplicantCreateNestedManyWithoutLoanApplicationInput
+  kyc?: Prisma.KycCreateNestedOneWithoutLoanApplicationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionCreateNestedManyWithoutLoanInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
+  branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
+  loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
+  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationUncheckedCreateWithoutLoanRecoveriesInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  customerId: string
+  leadId?: string | null
+  loanTypeId: string
+  partnerId?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  kycId?: string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branchId: string
+  coapplicants?: Prisma.CoApplicantUncheckedCreateNestedManyWithoutLoanApplicationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationCreateOrConnectWithoutLoanRecoveriesInput = {
+  where: Prisma.LoanApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutLoanRecoveriesInput, Prisma.LoanApplicationUncheckedCreateWithoutLoanRecoveriesInput>
+}
+
+export type LoanApplicationUpsertWithoutLoanRecoveriesInput = {
+  update: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutLoanRecoveriesInput, Prisma.LoanApplicationUncheckedUpdateWithoutLoanRecoveriesInput>
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutLoanRecoveriesInput, Prisma.LoanApplicationUncheckedCreateWithoutLoanRecoveriesInput>
+  where?: Prisma.LoanApplicationWhereInput
+}
+
+export type LoanApplicationUpdateToOneWithWhereWithoutLoanRecoveriesInput = {
+  where?: Prisma.LoanApplicationWhereInput
+  data: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutLoanRecoveriesInput, Prisma.LoanApplicationUncheckedUpdateWithoutLoanRecoveriesInput>
+}
+
+export type LoanApplicationUpdateWithoutLoanRecoveriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  lead?: Prisma.LeadsUpdateOneWithoutLoanApplicationsNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutLoanApplicationsNestedInput
+  coapplicants?: Prisma.CoApplicantUpdateManyWithoutLoanApplicationNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUpdateManyWithoutLoanNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationUncheckedUpdateWithoutLoanRecoveriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  coapplicants?: Prisma.CoApplicantUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationCreateWithoutDocumentsInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutLoanApplicationsInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutLoanApplicationsInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutLoanApplicationsInput
+  coapplicants?: Prisma.CoApplicantCreateNestedManyWithoutLoanApplicationInput
+  kyc?: Prisma.KycCreateNestedOneWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionCreateNestedManyWithoutLoanInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
+  branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
+  loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
+  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationUncheckedCreateWithoutDocumentsInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  customerId: string
+  leadId?: string | null
+  loanTypeId: string
+  partnerId?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  kycId?: string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branchId: string
+  coapplicants?: Prisma.CoApplicantUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationCreateOrConnectWithoutDocumentsInput = {
+  where: Prisma.LoanApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutDocumentsInput, Prisma.LoanApplicationUncheckedCreateWithoutDocumentsInput>
+}
+
+export type LoanApplicationUpsertWithoutDocumentsInput = {
+  update: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutDocumentsInput, Prisma.LoanApplicationUncheckedUpdateWithoutDocumentsInput>
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutDocumentsInput, Prisma.LoanApplicationUncheckedCreateWithoutDocumentsInput>
+  where?: Prisma.LoanApplicationWhereInput
+}
+
+export type LoanApplicationUpdateToOneWithWhereWithoutDocumentsInput = {
+  where?: Prisma.LoanApplicationWhereInput
+  data: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutDocumentsInput, Prisma.LoanApplicationUncheckedUpdateWithoutDocumentsInput>
+}
+
+export type LoanApplicationUpdateWithoutDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  lead?: Prisma.LeadsUpdateOneWithoutLoanApplicationsNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutLoanApplicationsNestedInput
+  coapplicants?: Prisma.CoApplicantUpdateManyWithoutLoanApplicationNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUpdateManyWithoutLoanNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationUncheckedUpdateWithoutDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  coapplicants?: Prisma.CoApplicantUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationCreateWithoutKycInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutLoanApplicationsInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutLoanApplicationsInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutLoanApplicationsInput
+  coapplicants?: Prisma.CoApplicantCreateNestedManyWithoutLoanApplicationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionCreateNestedManyWithoutLoanInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
+  branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
+  loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
+  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationUncheckedCreateWithoutKycInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  customerId: string
+  leadId?: string | null
+  loanTypeId: string
+  partnerId?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branchId: string
+  coapplicants?: Prisma.CoApplicantUncheckedCreateNestedManyWithoutLoanApplicationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedCreateNestedManyWithoutLoanApplicationInput
+  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
+  emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
+  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
+}
+
+export type LoanApplicationCreateOrConnectWithoutKycInput = {
+  where: Prisma.LoanApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutKycInput, Prisma.LoanApplicationUncheckedCreateWithoutKycInput>
+}
+
+export type LoanApplicationUpsertWithoutKycInput = {
+  update: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutKycInput, Prisma.LoanApplicationUncheckedUpdateWithoutKycInput>
+  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutKycInput, Prisma.LoanApplicationUncheckedCreateWithoutKycInput>
+  where?: Prisma.LoanApplicationWhereInput
+}
+
+export type LoanApplicationUpdateToOneWithWhereWithoutKycInput = {
+  where?: Prisma.LoanApplicationWhereInput
+  data: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutKycInput, Prisma.LoanApplicationUncheckedUpdateWithoutKycInput>
+}
+
+export type LoanApplicationUpdateWithoutKycInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  lead?: Prisma.LeadsUpdateOneWithoutLoanApplicationsNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutLoanApplicationsNestedInput
+  coapplicants?: Prisma.CoApplicantUpdateManyWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUpdateManyWithoutLoanNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationUncheckedUpdateWithoutKycInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  coapplicants?: Prisma.CoApplicantUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationCreateWithoutEmisInput = {
@@ -4108,6 +7493,15 @@ export type LoanApplicationCreateWithoutEmisInput = {
   branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
   loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
   loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationUncheckedCreateWithoutEmisInput = {
@@ -4172,6 +7566,15 @@ export type LoanApplicationUncheckedCreateWithoutEmisInput = {
   nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationCreateOrConnectWithoutEmisInput = {
@@ -4252,6 +7655,15 @@ export type LoanApplicationUpdateWithoutEmisInput = {
   branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
   loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
   loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateWithoutEmisInput = {
@@ -4316,6 +7728,15 @@ export type LoanApplicationUncheckedUpdateWithoutEmisInput = {
   nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationCreateWithoutLoanTypeInput = {
@@ -4380,6 +7801,15 @@ export type LoanApplicationCreateWithoutLoanTypeInput = {
   createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
   branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
   loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationUncheckedCreateWithoutLoanTypeInput = {
@@ -4444,6 +7874,15 @@ export type LoanApplicationUncheckedCreateWithoutLoanTypeInput = {
   nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationCreateOrConnectWithoutLoanTypeInput = {
@@ -4470,160 +7909,6 @@ export type LoanApplicationUpdateWithWhereUniqueWithoutLoanTypeInput = {
 export type LoanApplicationUpdateManyWithWhereWithoutLoanTypeInput = {
   where: Prisma.LoanApplicationScalarWhereInput
   data: Prisma.XOR<Prisma.LoanApplicationUpdateManyMutationInput, Prisma.LoanApplicationUncheckedUpdateManyWithoutLoanTypeInput>
-}
-
-export type LoanApplicationCreateWithoutCustomerInput = {
-  id?: string
-  applicationDate?: Date | string
-  loanNumber: string
-  serviceCentre?: string | null
-  processingFees?: number | null
-  executiveName?: string | null
-  EmployeeCode?: string | null
-  schemeGroup?: string | null
-  referrerFileNo?: string | null
-  ownerPartnerId?: string | null
-  requestedAmount: number
-  approvedAmount?: number | null
-  tenureMonths?: number | null
-  interestRate?: number | null
-  interestType: $Enums.InterestType
-  emiAmount?: number | null
-  purposeDetails?: string | null
-  totalPayable?: number | null
-  loanPurpose?: string | null
-  cibilScore?: number | null
-  status?: $Enums.LoanStatus
-  approvalDate?: Date | string | null
-  activationDate?: Date | string | null
-  rejectionReason?: string | null
-  approvedBy?: string | null
-  approvedAt?: Date | string | null
-  rejectedBy?: string | null
-  rejectedAt?: Date | string | null
-  latePaymentFeeType?: $Enums.CommissionType | null
-  latePaymentFee?: number | null
-  bounceCharges?: number | null
-  emiStartDate?: Date | string | null
-  emiPaymentAmount?: number | null
-  foreclosureDate?: Date | string | null
-  foreclosureChargesType?: $Enums.CommissionType | null
-  foreclosureAllowed?: boolean
-  foreclosureCharges?: number | null
-  prepaymentChargeType?: $Enums.CommissionType | null
-  prepaymentAllowed?: boolean
-  prepaymentDate?: Date | string | null
-  prepaymentCharges?: number | null
-  defaultedAt?: Date | string | null
-  dpd?: number | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  lead?: Prisma.LeadsCreateNestedOneWithoutLoanApplicationsInput
-  partner?: Prisma.PartnerCreateNestedOneWithoutLoanApplicationsInput
-  coapplicants?: Prisma.CoApplicantCreateNestedManyWithoutLoanApplicationInput
-  kyc?: Prisma.KycCreateNestedOneWithoutLoanApplicationInput
-  documents?: Prisma.DocumentCreateNestedManyWithoutLoanApplicationInput
-  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutLoanApplicationInput
-  loanDisbursement?: Prisma.LoanDisbursementCreateNestedManyWithoutLoanApplicationInput
-  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutLoanApplicationInput
-  legalReports?: Prisma.LegalReportCreateNestedManyWithoutLoanApplicationInput
-  emis?: Prisma.LoanEmiScheduleCreateNestedManyWithoutLoanApplicationInput
-  nachMandates?: Prisma.NachMandateCreateNestedManyWithoutLoanApplicationInput
-  commissionPayments?: Prisma.PartnerCommissionCreateNestedManyWithoutLoanInput
-  createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
-  branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
-  loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
-  loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
-}
-
-export type LoanApplicationUncheckedCreateWithoutCustomerInput = {
-  id?: string
-  applicationDate?: Date | string
-  loanNumber: string
-  serviceCentre?: string | null
-  processingFees?: number | null
-  executiveName?: string | null
-  EmployeeCode?: string | null
-  schemeGroup?: string | null
-  referrerFileNo?: string | null
-  leadId?: string | null
-  loanTypeId: string
-  partnerId?: string | null
-  ownerPartnerId?: string | null
-  requestedAmount: number
-  approvedAmount?: number | null
-  tenureMonths?: number | null
-  interestRate?: number | null
-  interestType: $Enums.InterestType
-  emiAmount?: number | null
-  purposeDetails?: string | null
-  totalPayable?: number | null
-  loanPurpose?: string | null
-  cibilScore?: number | null
-  status?: $Enums.LoanStatus
-  approvalDate?: Date | string | null
-  activationDate?: Date | string | null
-  rejectionReason?: string | null
-  approvedBy?: string | null
-  approvedAt?: Date | string | null
-  rejectedBy?: string | null
-  rejectedAt?: Date | string | null
-  kycId?: string | null
-  latePaymentFeeType?: $Enums.CommissionType | null
-  latePaymentFee?: number | null
-  bounceCharges?: number | null
-  emiStartDate?: Date | string | null
-  emiPaymentAmount?: number | null
-  foreclosureDate?: Date | string | null
-  foreclosureChargesType?: $Enums.CommissionType | null
-  foreclosureAllowed?: boolean
-  foreclosureCharges?: number | null
-  prepaymentChargeType?: $Enums.CommissionType | null
-  prepaymentAllowed?: boolean
-  prepaymentDate?: Date | string | null
-  prepaymentCharges?: number | null
-  defaultedAt?: Date | string | null
-  dpd?: number | null
-  createdById?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  branchId: string
-  coapplicants?: Prisma.CoApplicantUncheckedCreateNestedManyWithoutLoanApplicationInput
-  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutLoanApplicationInput
-  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutLoanApplicationInput
-  loanDisbursement?: Prisma.LoanDisbursementUncheckedCreateNestedManyWithoutLoanApplicationInput
-  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
-  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutLoanApplicationInput
-  emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
-  nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
-  commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
-  loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
-}
-
-export type LoanApplicationCreateOrConnectWithoutCustomerInput = {
-  where: Prisma.LoanApplicationWhereUniqueInput
-  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCustomerInput, Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput>
-}
-
-export type LoanApplicationCreateManyCustomerInputEnvelope = {
-  data: Prisma.LoanApplicationCreateManyCustomerInput | Prisma.LoanApplicationCreateManyCustomerInput[]
-  skipDuplicates?: boolean
-}
-
-export type LoanApplicationUpsertWithWhereUniqueWithoutCustomerInput = {
-  where: Prisma.LoanApplicationWhereUniqueInput
-  update: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutCustomerInput, Prisma.LoanApplicationUncheckedUpdateWithoutCustomerInput>
-  create: Prisma.XOR<Prisma.LoanApplicationCreateWithoutCustomerInput, Prisma.LoanApplicationUncheckedCreateWithoutCustomerInput>
-}
-
-export type LoanApplicationUpdateWithWhereUniqueWithoutCustomerInput = {
-  where: Prisma.LoanApplicationWhereUniqueInput
-  data: Prisma.XOR<Prisma.LoanApplicationUpdateWithoutCustomerInput, Prisma.LoanApplicationUncheckedUpdateWithoutCustomerInput>
-}
-
-export type LoanApplicationUpdateManyWithWhereWithoutCustomerInput = {
-  where: Prisma.LoanApplicationScalarWhereInput
-  data: Prisma.XOR<Prisma.LoanApplicationUpdateManyMutationInput, Prisma.LoanApplicationUncheckedUpdateManyWithoutCustomerInput>
 }
 
 export type LoanApplicationCreateWithoutTechnicalReportsInput = {
@@ -4688,6 +7973,15 @@ export type LoanApplicationCreateWithoutTechnicalReportsInput = {
   branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
   loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
   loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationUncheckedCreateWithoutTechnicalReportsInput = {
@@ -4752,6 +8046,15 @@ export type LoanApplicationUncheckedCreateWithoutTechnicalReportsInput = {
   nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationCreateOrConnectWithoutTechnicalReportsInput = {
@@ -4832,6 +8135,15 @@ export type LoanApplicationUpdateWithoutTechnicalReportsInput = {
   branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
   loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
   loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateWithoutTechnicalReportsInput = {
@@ -4896,6 +8208,15 @@ export type LoanApplicationUncheckedUpdateWithoutTechnicalReportsInput = {
   nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationCreateWithoutLegalReportsInput = {
@@ -4960,6 +8281,15 @@ export type LoanApplicationCreateWithoutLegalReportsInput = {
   branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
   loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
   loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationUncheckedCreateWithoutLegalReportsInput = {
@@ -5024,6 +8354,15 @@ export type LoanApplicationUncheckedCreateWithoutLegalReportsInput = {
   nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationCreateOrConnectWithoutLegalReportsInput = {
@@ -5104,6 +8443,15 @@ export type LoanApplicationUpdateWithoutLegalReportsInput = {
   branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
   loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
   loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateWithoutLegalReportsInput = {
@@ -5168,6 +8516,15 @@ export type LoanApplicationUncheckedUpdateWithoutLegalReportsInput = {
   nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationCreateWithoutLoanAssignmentsInput = {
@@ -5232,6 +8589,15 @@ export type LoanApplicationCreateWithoutLoanAssignmentsInput = {
   createdBy?: Prisma.UserCreateNestedOneWithoutLoanApplicationsInput
   branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
   loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationUncheckedCreateWithoutLoanAssignmentsInput = {
@@ -5296,6 +8662,15 @@ export type LoanApplicationUncheckedCreateWithoutLoanAssignmentsInput = {
   emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
   nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationCreateOrConnectWithoutLoanAssignmentsInput = {
@@ -5376,6 +8751,15 @@ export type LoanApplicationUpdateWithoutLoanAssignmentsInput = {
   createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
   branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
   loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateWithoutLoanAssignmentsInput = {
@@ -5440,6 +8824,15 @@ export type LoanApplicationUncheckedUpdateWithoutLoanAssignmentsInput = {
   emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
   nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationCreateWithoutLoanDisbursementInput = {
@@ -5504,6 +8897,15 @@ export type LoanApplicationCreateWithoutLoanDisbursementInput = {
   branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
   loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
   loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationUncheckedCreateWithoutLoanDisbursementInput = {
@@ -5568,6 +8970,15 @@ export type LoanApplicationUncheckedCreateWithoutLoanDisbursementInput = {
   nachMandates?: Prisma.NachMandateUncheckedCreateNestedManyWithoutLoanApplicationInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationCreateOrConnectWithoutLoanDisbursementInput = {
@@ -5648,6 +9059,15 @@ export type LoanApplicationUpdateWithoutLoanDisbursementInput = {
   branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
   loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
   loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateWithoutLoanDisbursementInput = {
@@ -5712,6 +9132,15 @@ export type LoanApplicationUncheckedUpdateWithoutLoanDisbursementInput = {
   nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationCreateWithoutNachMandatesInput = {
@@ -5776,6 +9205,15 @@ export type LoanApplicationCreateWithoutNachMandatesInput = {
   branch: Prisma.BranchCreateNestedOneWithoutLoanApplicationsInput
   loanType?: Prisma.LoanTypeCreateNestedOneWithoutLoanApplicationsInput
   loanAssignments?: Prisma.LoanAssignmentCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationUncheckedCreateWithoutNachMandatesInput = {
@@ -5840,6 +9278,15 @@ export type LoanApplicationUncheckedCreateWithoutNachMandatesInput = {
   emis?: Prisma.LoanEmiScheduleUncheckedCreateNestedManyWithoutLoanApplicationInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedCreateNestedManyWithoutLoanInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedCreateNestedManyWithoutLoanApplicationInput
+  guarantors?: Prisma.GuarantorUncheckedCreateNestedManyWithoutLoanApplicationInput
+  existingLoans?: Prisma.ExistingLoanUncheckedCreateNestedManyWithoutLoanApplicationInput
+  creditCards?: Prisma.CreditCardUncheckedCreateNestedManyWithoutLoanApplicationInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutLoanApplicationInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutLoanApplicationInput
+  references?: Prisma.ReferenceUncheckedCreateNestedManyWithoutLoanApplicationInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedCreateNestedOneWithoutLoanApplicationInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedCreateNestedOneWithoutLoanApplicationInput
 }
 
 export type LoanApplicationCreateOrConnectWithoutNachMandatesInput = {
@@ -5920,6 +9367,15 @@ export type LoanApplicationUpdateWithoutNachMandatesInput = {
   branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
   loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
   loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateWithoutNachMandatesInput = {
@@ -5984,6 +9440,15 @@ export type LoanApplicationUncheckedUpdateWithoutNachMandatesInput = {
   emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationCreateManyCreatedByInput = {
@@ -6102,6 +9567,15 @@ export type LoanApplicationUpdateWithoutCreatedByInput = {
   branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
   loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
   loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateWithoutCreatedByInput = {
@@ -6166,6 +9640,15 @@ export type LoanApplicationUncheckedUpdateWithoutCreatedByInput = {
   nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateManyWithoutCreatedByInput = {
@@ -6338,6 +9821,15 @@ export type LoanApplicationUpdateWithoutPartnerInput = {
   branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
   loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
   loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateWithoutPartnerInput = {
@@ -6402,6 +9894,15 @@ export type LoanApplicationUncheckedUpdateWithoutPartnerInput = {
   nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateManyWithoutPartnerInput = {
@@ -6574,6 +10075,15 @@ export type LoanApplicationUpdateWithoutBranchInput = {
   createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
   loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
   loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateWithoutBranchInput = {
@@ -6638,6 +10148,15 @@ export type LoanApplicationUncheckedUpdateWithoutBranchInput = {
   nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateManyWithoutBranchInput = {
@@ -6810,6 +10329,15 @@ export type LoanApplicationUpdateWithoutLeadInput = {
   branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
   loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
   loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateWithoutLeadInput = {
@@ -6874,6 +10402,15 @@ export type LoanApplicationUncheckedUpdateWithoutLeadInput = {
   nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateManyWithoutLeadInput = {
@@ -6887,6 +10424,260 @@ export type LoanApplicationUncheckedUpdateManyWithoutLeadInput = {
   schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type LoanApplicationCreateManyCustomerInput = {
+  id?: string
+  applicationDate?: Date | string
+  loanNumber: string
+  serviceCentre?: string | null
+  processingFees?: number | null
+  executiveName?: string | null
+  EmployeeCode?: string | null
+  schemeGroup?: string | null
+  referrerFileNo?: string | null
+  leadId?: string | null
+  loanTypeId: string
+  partnerId?: string | null
+  ownerPartnerId?: string | null
+  requestedAmount: number
+  approvedAmount?: number | null
+  tenureMonths?: number | null
+  interestRate?: number | null
+  interestType: $Enums.InterestType
+  emiAmount?: number | null
+  purposeDetails?: string | null
+  totalPayable?: number | null
+  loanPurpose?: string | null
+  cibilScore?: number | null
+  status?: $Enums.LoanStatus
+  approvalDate?: Date | string | null
+  activationDate?: Date | string | null
+  rejectionReason?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  kycId?: string | null
+  latePaymentFeeType?: $Enums.CommissionType | null
+  latePaymentFee?: number | null
+  bounceCharges?: number | null
+  emiStartDate?: Date | string | null
+  emiPaymentAmount?: number | null
+  foreclosureDate?: Date | string | null
+  foreclosureChargesType?: $Enums.CommissionType | null
+  foreclosureAllowed?: boolean
+  foreclosureCharges?: number | null
+  prepaymentChargeType?: $Enums.CommissionType | null
+  prepaymentAllowed?: boolean
+  prepaymentDate?: Date | string | null
+  prepaymentCharges?: number | null
+  defaultedAt?: Date | string | null
+  dpd?: number | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branchId: string
+}
+
+export type LoanApplicationUpdateWithoutCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lead?: Prisma.LeadsUpdateOneWithoutLoanApplicationsNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutLoanApplicationsNestedInput
+  coapplicants?: Prisma.CoApplicantUpdateManyWithoutLoanApplicationNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUpdateManyWithoutLoanNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
+  loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationUncheckedUpdateWithoutCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
+  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
+  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
+  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  coapplicants?: Prisma.CoApplicantUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanDisbursement?: Prisma.LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
+  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
+}
+
+export type LoanApplicationUncheckedUpdateManyWithoutCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7046,6 +10837,15 @@ export type LoanApplicationUpdateWithoutLoanTypeInput = {
   createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
   branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
   loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateWithoutLoanTypeInput = {
@@ -7110,6 +10910,15 @@ export type LoanApplicationUncheckedUpdateWithoutLoanTypeInput = {
   nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
   commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
   loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  guarantors?: Prisma.GuarantorUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  existingLoans?: Prisma.ExistingLoanUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  creditCards?: Prisma.CreditCardUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  insurancePolicies?: Prisma.InsurancePolicyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  references?: Prisma.ReferenceUncheckedUpdateManyWithoutLoanApplicationNestedInput
+  loanRequirement?: Prisma.LoanRequirementUncheckedUpdateOneWithoutLoanApplicationNestedInput
+  loanQuestionnaire?: Prisma.LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
 }
 
 export type LoanApplicationUncheckedUpdateManyWithoutLoanTypeInput = {
@@ -7124,242 +10933,6 @@ export type LoanApplicationUncheckedUpdateManyWithoutLoanTypeInput = {
   referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
-  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
-  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  branchId?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-export type LoanApplicationCreateManyCustomerInput = {
-  id?: string
-  applicationDate?: Date | string
-  loanNumber: string
-  serviceCentre?: string | null
-  processingFees?: number | null
-  executiveName?: string | null
-  EmployeeCode?: string | null
-  schemeGroup?: string | null
-  referrerFileNo?: string | null
-  leadId?: string | null
-  loanTypeId: string
-  partnerId?: string | null
-  ownerPartnerId?: string | null
-  requestedAmount: number
-  approvedAmount?: number | null
-  tenureMonths?: number | null
-  interestRate?: number | null
-  interestType: $Enums.InterestType
-  emiAmount?: number | null
-  purposeDetails?: string | null
-  totalPayable?: number | null
-  loanPurpose?: string | null
-  cibilScore?: number | null
-  status?: $Enums.LoanStatus
-  approvalDate?: Date | string | null
-  activationDate?: Date | string | null
-  rejectionReason?: string | null
-  approvedBy?: string | null
-  approvedAt?: Date | string | null
-  rejectedBy?: string | null
-  rejectedAt?: Date | string | null
-  kycId?: string | null
-  latePaymentFeeType?: $Enums.CommissionType | null
-  latePaymentFee?: number | null
-  bounceCharges?: number | null
-  emiStartDate?: Date | string | null
-  emiPaymentAmount?: number | null
-  foreclosureDate?: Date | string | null
-  foreclosureChargesType?: $Enums.CommissionType | null
-  foreclosureAllowed?: boolean
-  foreclosureCharges?: number | null
-  prepaymentChargeType?: $Enums.CommissionType | null
-  prepaymentAllowed?: boolean
-  prepaymentDate?: Date | string | null
-  prepaymentCharges?: number | null
-  defaultedAt?: Date | string | null
-  dpd?: number | null
-  createdById?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  branchId: string
-}
-
-export type LoanApplicationUpdateWithoutCustomerInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
-  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
-  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lead?: Prisma.LeadsUpdateOneWithoutLoanApplicationsNestedInput
-  partner?: Prisma.PartnerUpdateOneWithoutLoanApplicationsNestedInput
-  coapplicants?: Prisma.CoApplicantUpdateManyWithoutLoanApplicationNestedInput
-  kyc?: Prisma.KycUpdateOneWithoutLoanApplicationNestedInput
-  documents?: Prisma.DocumentUpdateManyWithoutLoanApplicationNestedInput
-  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutLoanApplicationNestedInput
-  loanDisbursement?: Prisma.LoanDisbursementUpdateManyWithoutLoanApplicationNestedInput
-  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutLoanApplicationNestedInput
-  legalReports?: Prisma.LegalReportUpdateManyWithoutLoanApplicationNestedInput
-  emis?: Prisma.LoanEmiScheduleUpdateManyWithoutLoanApplicationNestedInput
-  nachMandates?: Prisma.NachMandateUpdateManyWithoutLoanApplicationNestedInput
-  commissionPayments?: Prisma.PartnerCommissionUpdateManyWithoutLoanNestedInput
-  createdBy?: Prisma.UserUpdateOneWithoutLoanApplicationsNestedInput
-  branch?: Prisma.BranchUpdateOneRequiredWithoutLoanApplicationsNestedInput
-  loanType?: Prisma.LoanTypeUpdateOneWithoutLoanApplicationsNestedInput
-  loanAssignments?: Prisma.LoanAssignmentUpdateManyWithoutLoanApplicationNestedInput
-}
-
-export type LoanApplicationUncheckedUpdateWithoutCustomerInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
-  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  approvedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  tenureMonths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  interestRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  interestType?: Prisma.EnumInterestTypeFieldUpdateOperationsInput | $Enums.InterestType
-  emiAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  purposeDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  totalPayable?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  loanPurpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cibilScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status?: Prisma.EnumLoanStatusFieldUpdateOperationsInput | $Enums.LoanStatus
-  approvalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  activationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  latePaymentFeeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  latePaymentFee?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  bounceCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  foreclosureDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  foreclosureChargesType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  foreclosureAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  foreclosureCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  prepaymentChargeType?: Prisma.NullableEnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType | null
-  prepaymentAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prepaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  prepaymentCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  defaultedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dpd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  branchId?: Prisma.StringFieldUpdateOperationsInput | string
-  coapplicants?: Prisma.CoApplicantUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  documents?: Prisma.DocumentUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  loanDisbursement?: Prisma.LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  emis?: Prisma.LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  nachMandates?: Prisma.NachMandateUncheckedUpdateManyWithoutLoanApplicationNestedInput
-  commissionPayments?: Prisma.PartnerCommissionUncheckedUpdateManyWithoutLoanNestedInput
-  loanAssignments?: Prisma.LoanAssignmentUncheckedUpdateManyWithoutLoanApplicationNestedInput
-}
-
-export type LoanApplicationUncheckedUpdateManyWithoutCustomerInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  applicationDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  serviceCentre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  processingFees?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  executiveName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  EmployeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  schemeGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referrerFileNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerPartnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -7418,6 +10991,13 @@ export type LoanApplicationCountOutputType = {
   nachMandates: number
   commissionPayments: number
   loanAssignments: number
+  guarantors: number
+  existingLoans: number
+  creditCards: number
+  bankAccounts: number
+  insurancePolicies: number
+  properties: number
+  references: number
 }
 
 export type LoanApplicationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -7431,6 +11011,13 @@ export type LoanApplicationCountOutputTypeSelect<ExtArgs extends runtime.Types.E
   nachMandates?: boolean | LoanApplicationCountOutputTypeCountNachMandatesArgs
   commissionPayments?: boolean | LoanApplicationCountOutputTypeCountCommissionPaymentsArgs
   loanAssignments?: boolean | LoanApplicationCountOutputTypeCountLoanAssignmentsArgs
+  guarantors?: boolean | LoanApplicationCountOutputTypeCountGuarantorsArgs
+  existingLoans?: boolean | LoanApplicationCountOutputTypeCountExistingLoansArgs
+  creditCards?: boolean | LoanApplicationCountOutputTypeCountCreditCardsArgs
+  bankAccounts?: boolean | LoanApplicationCountOutputTypeCountBankAccountsArgs
+  insurancePolicies?: boolean | LoanApplicationCountOutputTypeCountInsurancePoliciesArgs
+  properties?: boolean | LoanApplicationCountOutputTypeCountPropertiesArgs
+  references?: boolean | LoanApplicationCountOutputTypeCountReferencesArgs
 }
 
 /**
@@ -7513,6 +11100,55 @@ export type LoanApplicationCountOutputTypeCountLoanAssignmentsArgs<ExtArgs exten
   where?: Prisma.LoanAssignmentWhereInput
 }
 
+/**
+ * LoanApplicationCountOutputType without action
+ */
+export type LoanApplicationCountOutputTypeCountGuarantorsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GuarantorWhereInput
+}
+
+/**
+ * LoanApplicationCountOutputType without action
+ */
+export type LoanApplicationCountOutputTypeCountExistingLoansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExistingLoanWhereInput
+}
+
+/**
+ * LoanApplicationCountOutputType without action
+ */
+export type LoanApplicationCountOutputTypeCountCreditCardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CreditCardWhereInput
+}
+
+/**
+ * LoanApplicationCountOutputType without action
+ */
+export type LoanApplicationCountOutputTypeCountBankAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BankAccountWhereInput
+}
+
+/**
+ * LoanApplicationCountOutputType without action
+ */
+export type LoanApplicationCountOutputTypeCountInsurancePoliciesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InsurancePolicyWhereInput
+}
+
+/**
+ * LoanApplicationCountOutputType without action
+ */
+export type LoanApplicationCountOutputTypeCountPropertiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PropertyWhereInput
+}
+
+/**
+ * LoanApplicationCountOutputType without action
+ */
+export type LoanApplicationCountOutputTypeCountReferencesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReferenceWhereInput
+}
+
 
 export type LoanApplicationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -7584,6 +11220,15 @@ export type LoanApplicationSelect<ExtArgs extends runtime.Types.Extensions.Inter
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   loanType?: boolean | Prisma.LoanApplication$loanTypeArgs<ExtArgs>
   loanAssignments?: boolean | Prisma.LoanApplication$loanAssignmentsArgs<ExtArgs>
+  guarantors?: boolean | Prisma.LoanApplication$guarantorsArgs<ExtArgs>
+  existingLoans?: boolean | Prisma.LoanApplication$existingLoansArgs<ExtArgs>
+  creditCards?: boolean | Prisma.LoanApplication$creditCardsArgs<ExtArgs>
+  bankAccounts?: boolean | Prisma.LoanApplication$bankAccountsArgs<ExtArgs>
+  insurancePolicies?: boolean | Prisma.LoanApplication$insurancePoliciesArgs<ExtArgs>
+  properties?: boolean | Prisma.LoanApplication$propertiesArgs<ExtArgs>
+  references?: boolean | Prisma.LoanApplication$referencesArgs<ExtArgs>
+  loanRequirement?: boolean | Prisma.LoanApplication$loanRequirementArgs<ExtArgs>
+  loanQuestionnaire?: boolean | Prisma.LoanApplication$loanQuestionnaireArgs<ExtArgs>
   _count?: boolean | Prisma.LoanApplicationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["loanApplication"]>
 
@@ -7663,6 +11308,15 @@ export type LoanApplicationInclude<ExtArgs extends runtime.Types.Extensions.Inte
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   loanType?: boolean | Prisma.LoanApplication$loanTypeArgs<ExtArgs>
   loanAssignments?: boolean | Prisma.LoanApplication$loanAssignmentsArgs<ExtArgs>
+  guarantors?: boolean | Prisma.LoanApplication$guarantorsArgs<ExtArgs>
+  existingLoans?: boolean | Prisma.LoanApplication$existingLoansArgs<ExtArgs>
+  creditCards?: boolean | Prisma.LoanApplication$creditCardsArgs<ExtArgs>
+  bankAccounts?: boolean | Prisma.LoanApplication$bankAccountsArgs<ExtArgs>
+  insurancePolicies?: boolean | Prisma.LoanApplication$insurancePoliciesArgs<ExtArgs>
+  properties?: boolean | Prisma.LoanApplication$propertiesArgs<ExtArgs>
+  references?: boolean | Prisma.LoanApplication$referencesArgs<ExtArgs>
+  loanRequirement?: boolean | Prisma.LoanApplication$loanRequirementArgs<ExtArgs>
+  loanQuestionnaire?: boolean | Prisma.LoanApplication$loanQuestionnaireArgs<ExtArgs>
   _count?: boolean | Prisma.LoanApplicationCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -7686,6 +11340,15 @@ export type $LoanApplicationPayload<ExtArgs extends runtime.Types.Extensions.Int
     branch: Prisma.$BranchPayload<ExtArgs>
     loanType: Prisma.$LoanTypePayload<ExtArgs> | null
     loanAssignments: Prisma.$LoanAssignmentPayload<ExtArgs>[]
+    guarantors: Prisma.$GuarantorPayload<ExtArgs>[]
+    existingLoans: Prisma.$ExistingLoanPayload<ExtArgs>[]
+    creditCards: Prisma.$CreditCardPayload<ExtArgs>[]
+    bankAccounts: Prisma.$BankAccountPayload<ExtArgs>[]
+    insurancePolicies: Prisma.$InsurancePolicyPayload<ExtArgs>[]
+    properties: Prisma.$PropertyPayload<ExtArgs>[]
+    references: Prisma.$ReferencePayload<ExtArgs>[]
+    loanRequirement: Prisma.$LoanRequirementPayload<ExtArgs> | null
+    loanQuestionnaire: Prisma.$LoanQuestionnairePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -8097,6 +11760,15 @@ export interface Prisma__LoanApplicationClient<T, Null = never, ExtArgs extends 
   branch<T extends Prisma.BranchDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BranchDefaultArgs<ExtArgs>>): Prisma.Prisma__BranchClient<runtime.Types.Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   loanType<T extends Prisma.LoanApplication$loanTypeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoanApplication$loanTypeArgs<ExtArgs>>): Prisma.Prisma__LoanTypeClient<runtime.Types.Result.GetResult<Prisma.$LoanTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   loanAssignments<T extends Prisma.LoanApplication$loanAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoanApplication$loanAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoanAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  guarantors<T extends Prisma.LoanApplication$guarantorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoanApplication$guarantorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GuarantorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  existingLoans<T extends Prisma.LoanApplication$existingLoansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoanApplication$existingLoansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExistingLoanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  creditCards<T extends Prisma.LoanApplication$creditCardsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoanApplication$creditCardsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CreditCardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bankAccounts<T extends Prisma.LoanApplication$bankAccountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoanApplication$bankAccountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BankAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  insurancePolicies<T extends Prisma.LoanApplication$insurancePoliciesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoanApplication$insurancePoliciesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InsurancePolicyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  properties<T extends Prisma.LoanApplication$propertiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoanApplication$propertiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  references<T extends Prisma.LoanApplication$referencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoanApplication$referencesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  loanRequirement<T extends Prisma.LoanApplication$loanRequirementArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoanApplication$loanRequirementArgs<ExtArgs>>): Prisma.Prisma__LoanRequirementClient<runtime.Types.Result.GetResult<Prisma.$LoanRequirementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  loanQuestionnaire<T extends Prisma.LoanApplication$loanQuestionnaireArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoanApplication$loanQuestionnaireArgs<ExtArgs>>): Prisma.Prisma__LoanQuestionnaireClient<runtime.Types.Result.GetResult<Prisma.$LoanQuestionnairePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8853,6 +12525,212 @@ export type LoanApplication$loanAssignmentsArgs<ExtArgs extends runtime.Types.Ex
   take?: number
   skip?: number
   distinct?: Prisma.LoanAssignmentScalarFieldEnum | Prisma.LoanAssignmentScalarFieldEnum[]
+}
+
+/**
+ * LoanApplication.guarantors
+ */
+export type LoanApplication$guarantorsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Guarantor
+   */
+  select?: Prisma.GuarantorSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Guarantor
+   */
+  omit?: Prisma.GuarantorOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GuarantorInclude<ExtArgs> | null
+  where?: Prisma.GuarantorWhereInput
+  orderBy?: Prisma.GuarantorOrderByWithRelationInput | Prisma.GuarantorOrderByWithRelationInput[]
+  cursor?: Prisma.GuarantorWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GuarantorScalarFieldEnum | Prisma.GuarantorScalarFieldEnum[]
+}
+
+/**
+ * LoanApplication.existingLoans
+ */
+export type LoanApplication$existingLoansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExistingLoan
+   */
+  select?: Prisma.ExistingLoanSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExistingLoan
+   */
+  omit?: Prisma.ExistingLoanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExistingLoanInclude<ExtArgs> | null
+  where?: Prisma.ExistingLoanWhereInput
+  orderBy?: Prisma.ExistingLoanOrderByWithRelationInput | Prisma.ExistingLoanOrderByWithRelationInput[]
+  cursor?: Prisma.ExistingLoanWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExistingLoanScalarFieldEnum | Prisma.ExistingLoanScalarFieldEnum[]
+}
+
+/**
+ * LoanApplication.creditCards
+ */
+export type LoanApplication$creditCardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CreditCard
+   */
+  select?: Prisma.CreditCardSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CreditCard
+   */
+  omit?: Prisma.CreditCardOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CreditCardInclude<ExtArgs> | null
+  where?: Prisma.CreditCardWhereInput
+  orderBy?: Prisma.CreditCardOrderByWithRelationInput | Prisma.CreditCardOrderByWithRelationInput[]
+  cursor?: Prisma.CreditCardWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CreditCardScalarFieldEnum | Prisma.CreditCardScalarFieldEnum[]
+}
+
+/**
+ * LoanApplication.bankAccounts
+ */
+export type LoanApplication$bankAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BankAccount
+   */
+  select?: Prisma.BankAccountSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BankAccount
+   */
+  omit?: Prisma.BankAccountOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BankAccountInclude<ExtArgs> | null
+  where?: Prisma.BankAccountWhereInput
+  orderBy?: Prisma.BankAccountOrderByWithRelationInput | Prisma.BankAccountOrderByWithRelationInput[]
+  cursor?: Prisma.BankAccountWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BankAccountScalarFieldEnum | Prisma.BankAccountScalarFieldEnum[]
+}
+
+/**
+ * LoanApplication.insurancePolicies
+ */
+export type LoanApplication$insurancePoliciesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InsurancePolicy
+   */
+  select?: Prisma.InsurancePolicySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InsurancePolicy
+   */
+  omit?: Prisma.InsurancePolicyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InsurancePolicyInclude<ExtArgs> | null
+  where?: Prisma.InsurancePolicyWhereInput
+  orderBy?: Prisma.InsurancePolicyOrderByWithRelationInput | Prisma.InsurancePolicyOrderByWithRelationInput[]
+  cursor?: Prisma.InsurancePolicyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InsurancePolicyScalarFieldEnum | Prisma.InsurancePolicyScalarFieldEnum[]
+}
+
+/**
+ * LoanApplication.properties
+ */
+export type LoanApplication$propertiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Property
+   */
+  select?: Prisma.PropertySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Property
+   */
+  omit?: Prisma.PropertyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PropertyInclude<ExtArgs> | null
+  where?: Prisma.PropertyWhereInput
+  orderBy?: Prisma.PropertyOrderByWithRelationInput | Prisma.PropertyOrderByWithRelationInput[]
+  cursor?: Prisma.PropertyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PropertyScalarFieldEnum | Prisma.PropertyScalarFieldEnum[]
+}
+
+/**
+ * LoanApplication.references
+ */
+export type LoanApplication$referencesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Reference
+   */
+  select?: Prisma.ReferenceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Reference
+   */
+  omit?: Prisma.ReferenceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReferenceInclude<ExtArgs> | null
+  where?: Prisma.ReferenceWhereInput
+  orderBy?: Prisma.ReferenceOrderByWithRelationInput | Prisma.ReferenceOrderByWithRelationInput[]
+  cursor?: Prisma.ReferenceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReferenceScalarFieldEnum | Prisma.ReferenceScalarFieldEnum[]
+}
+
+/**
+ * LoanApplication.loanRequirement
+ */
+export type LoanApplication$loanRequirementArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LoanRequirement
+   */
+  select?: Prisma.LoanRequirementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LoanRequirement
+   */
+  omit?: Prisma.LoanRequirementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoanRequirementInclude<ExtArgs> | null
+  where?: Prisma.LoanRequirementWhereInput
+}
+
+/**
+ * LoanApplication.loanQuestionnaire
+ */
+export type LoanApplication$loanQuestionnaireArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LoanQuestionnaire
+   */
+  select?: Prisma.LoanQuestionnaireSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LoanQuestionnaire
+   */
+  omit?: Prisma.LoanQuestionnaireOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoanQuestionnaireInclude<ExtArgs> | null
+  where?: Prisma.LoanQuestionnaireWhereInput
 }
 
 /**

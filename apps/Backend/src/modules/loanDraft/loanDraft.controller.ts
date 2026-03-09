@@ -15,7 +15,10 @@ const getRouteId = (id: string | string[] | undefined): string => {
 
 export const createDraftController = async (req:Request, res:Response) => {
   if (!req.user?.id || !req.user?.branchId) {
-    throw new Error("Unauthorized user context");
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized user context",
+    });
   }
 
   const draft = await createLoanDraftService(

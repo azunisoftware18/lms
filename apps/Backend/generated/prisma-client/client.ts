@@ -28,7 +28,9 @@ export * from "./enums.js"
  * Type-safe database client for TypeScript
  * @example
  * ```
- * const prisma = new PrismaClient()
+ * const prisma = new PrismaClient({
+ *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+ * })
  * // Fetch zero or more LoanNumberCounters
  * const loanNumberCounters = await prisma.loanNumberCounter.findMany()
  * ```
@@ -100,6 +102,81 @@ export type LoanApplicationDraft = Prisma.LoanApplicationDraftModel
  */
 export type LoanApplication = Prisma.LoanApplicationModel
 /**
+ * Model CoApplicant
+ * 
+ */
+export type CoApplicant = Prisma.CoApplicantModel
+/**
+ * Model Customer
+ * 
+ */
+export type Customer = Prisma.CustomerModel
+/**
+ * Model OccupationalDetails
+ * 
+ */
+export type OccupationalDetails = Prisma.OccupationalDetailsModel
+/**
+ * Model EmploymentDetails
+ * 
+ */
+export type EmploymentDetails = Prisma.EmploymentDetailsModel
+/**
+ * Model FinancialDetails
+ * 
+ */
+export type FinancialDetails = Prisma.FinancialDetailsModel
+/**
+ * Model Guarantor
+ * 
+ */
+export type Guarantor = Prisma.GuarantorModel
+/**
+ * Model GuarantorFinancialDetails
+ * 
+ */
+export type GuarantorFinancialDetails = Prisma.GuarantorFinancialDetailsModel
+/**
+ * Model ExistingLoan
+ * 
+ */
+export type ExistingLoan = Prisma.ExistingLoanModel
+/**
+ * Model CreditCard
+ * 
+ */
+export type CreditCard = Prisma.CreditCardModel
+/**
+ * Model BankAccount
+ * 
+ */
+export type BankAccount = Prisma.BankAccountModel
+/**
+ * Model InsurancePolicy
+ * 
+ */
+export type InsurancePolicy = Prisma.InsurancePolicyModel
+/**
+ * Model Property
+ * 
+ */
+export type Property = Prisma.PropertyModel
+/**
+ * Model Reference
+ * 
+ */
+export type Reference = Prisma.ReferenceModel
+/**
+ * Model LoanRequirement
+ * 
+ */
+export type LoanRequirement = Prisma.LoanRequirementModel
+/**
+ * Model LoanQuestionnaire
+ * 
+ */
+export type LoanQuestionnaire = Prisma.LoanQuestionnaireModel
+/**
  * Model LoanRecovery
  * 
  */
@@ -130,11 +207,6 @@ export type Document = Prisma.DocumentModel
  */
 export type Kyc = Prisma.KycModel
 /**
- * Model CoApplicant
- * 
- */
-export type CoApplicant = Prisma.CoApplicantModel
-/**
  * Model LoanEmiSchedule
  * 
  */
@@ -164,26 +236,6 @@ export type CreditAccount = Prisma.CreditAccountModel
  * 
  */
 export type LoanType = Prisma.LoanTypeModel
-/**
- * Model Customer
- * 
- */
-export type Customer = Prisma.CustomerModel
-/**
- * Model OccupationalDetails
- * 
- */
-export type OccupationalDetails = Prisma.OccupationalDetailsModel
-/**
- * Model EmploymentDetails
- * 
- */
-export type EmploymentDetails = Prisma.EmploymentDetailsModel
-/**
- * Model FinancialDetails
- * 
- */
-export type FinancialDetails = Prisma.FinancialDetailsModel
 /**
  * Model TechnicalReport
  * 

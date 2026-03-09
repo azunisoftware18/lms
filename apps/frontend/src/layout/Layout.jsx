@@ -8,6 +8,7 @@ export default function Layout() {
       <main className="grow">
         <Outlet />
       </main>
+      
       <Footer />
     </div>
   );

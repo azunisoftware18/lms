@@ -778,28 +778,6 @@ export type LoanRecoveryUncheckedUpdateManyWithoutLoanApplicationNestedInput = {
   deleteMany?: Prisma.LoanRecoveryScalarWhereInput | Prisma.LoanRecoveryScalarWhereInput[]
 }
 
-export type Enumrecovery_stageFieldUpdateOperationsInput = {
-  set?: $Enums.recovery_stage
-}
-
-export type Enumrecovery_statusFieldUpdateOperationsInput = {
-  set?: $Enums.recovery_status
-}
-
-export type LoanRecoveryCreateNestedOneWithoutRecoveryPaymentsInput = {
-  create?: Prisma.XOR<Prisma.LoanRecoveryCreateWithoutRecoveryPaymentsInput, Prisma.LoanRecoveryUncheckedCreateWithoutRecoveryPaymentsInput>
-  connectOrCreate?: Prisma.LoanRecoveryCreateOrConnectWithoutRecoveryPaymentsInput
-  connect?: Prisma.LoanRecoveryWhereUniqueInput
-}
-
-export type LoanRecoveryUpdateOneRequiredWithoutRecoveryPaymentsNestedInput = {
-  create?: Prisma.XOR<Prisma.LoanRecoveryCreateWithoutRecoveryPaymentsInput, Prisma.LoanRecoveryUncheckedCreateWithoutRecoveryPaymentsInput>
-  connectOrCreate?: Prisma.LoanRecoveryCreateOrConnectWithoutRecoveryPaymentsInput
-  upsert?: Prisma.LoanRecoveryUpsertWithoutRecoveryPaymentsInput
-  connect?: Prisma.LoanRecoveryWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.LoanRecoveryUpdateToOneWithWhereWithoutRecoveryPaymentsInput, Prisma.LoanRecoveryUpdateWithoutRecoveryPaymentsInput>, Prisma.LoanRecoveryUncheckedUpdateWithoutRecoveryPaymentsInput>
-}
-
 export type LoanRecoveryCreateNestedManyWithoutCustomerInput = {
   create?: Prisma.XOR<Prisma.LoanRecoveryCreateWithoutCustomerInput, Prisma.LoanRecoveryUncheckedCreateWithoutCustomerInput> | Prisma.LoanRecoveryCreateWithoutCustomerInput[] | Prisma.LoanRecoveryUncheckedCreateWithoutCustomerInput[]
   connectOrCreate?: Prisma.LoanRecoveryCreateOrConnectWithoutCustomerInput | Prisma.LoanRecoveryCreateOrConnectWithoutCustomerInput[]
@@ -840,6 +818,28 @@ export type LoanRecoveryUncheckedUpdateManyWithoutCustomerNestedInput = {
   update?: Prisma.LoanRecoveryUpdateWithWhereUniqueWithoutCustomerInput | Prisma.LoanRecoveryUpdateWithWhereUniqueWithoutCustomerInput[]
   updateMany?: Prisma.LoanRecoveryUpdateManyWithWhereWithoutCustomerInput | Prisma.LoanRecoveryUpdateManyWithWhereWithoutCustomerInput[]
   deleteMany?: Prisma.LoanRecoveryScalarWhereInput | Prisma.LoanRecoveryScalarWhereInput[]
+}
+
+export type Enumrecovery_stageFieldUpdateOperationsInput = {
+  set?: $Enums.recovery_stage
+}
+
+export type Enumrecovery_statusFieldUpdateOperationsInput = {
+  set?: $Enums.recovery_status
+}
+
+export type LoanRecoveryCreateNestedOneWithoutRecoveryPaymentsInput = {
+  create?: Prisma.XOR<Prisma.LoanRecoveryCreateWithoutRecoveryPaymentsInput, Prisma.LoanRecoveryUncheckedCreateWithoutRecoveryPaymentsInput>
+  connectOrCreate?: Prisma.LoanRecoveryCreateOrConnectWithoutRecoveryPaymentsInput
+  connect?: Prisma.LoanRecoveryWhereUniqueInput
+}
+
+export type LoanRecoveryUpdateOneRequiredWithoutRecoveryPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.LoanRecoveryCreateWithoutRecoveryPaymentsInput, Prisma.LoanRecoveryUncheckedCreateWithoutRecoveryPaymentsInput>
+  connectOrCreate?: Prisma.LoanRecoveryCreateOrConnectWithoutRecoveryPaymentsInput
+  upsert?: Prisma.LoanRecoveryUpsertWithoutRecoveryPaymentsInput
+  connect?: Prisma.LoanRecoveryWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LoanRecoveryUpdateToOneWithWhereWithoutRecoveryPaymentsInput, Prisma.LoanRecoveryUpdateWithoutRecoveryPaymentsInput>, Prisma.LoanRecoveryUncheckedUpdateWithoutRecoveryPaymentsInput>
 }
 
 export type LoanRecoveryCreateWithoutBranchInput = {
@@ -1002,6 +1002,74 @@ export type LoanRecoveryUpdateManyWithWhereWithoutLoanApplicationInput = {
   data: Prisma.XOR<Prisma.LoanRecoveryUpdateManyMutationInput, Prisma.LoanRecoveryUncheckedUpdateManyWithoutLoanApplicationInput>
 }
 
+export type LoanRecoveryCreateWithoutCustomerInput = {
+  id?: string
+  recoveryStage: $Enums.recovery_stage
+  recoveryStatus: $Enums.recovery_status
+  totalOutstandingAmount: number
+  recoveredAmount: number
+  balanceAmount: number
+  settlementAmount?: number | null
+  settlementDate?: Date | string | null
+  settlementApprovedBy?: string | null
+  dpd: number
+  defaultedAt?: Date | string | null
+  assignedTo?: string | null
+  remarks?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  loanApplication: Prisma.LoanApplicationCreateNestedOneWithoutLoanRecoveriesInput
+  branch: Prisma.BranchCreateNestedOneWithoutLoanRecoveriesInput
+  recoveryPayments?: Prisma.RecoveryPaymentCreateNestedManyWithoutLoanRecoveryInput
+}
+
+export type LoanRecoveryUncheckedCreateWithoutCustomerInput = {
+  id?: string
+  loanApplicationId: string
+  branchId: string
+  recoveryStage: $Enums.recovery_stage
+  recoveryStatus: $Enums.recovery_status
+  totalOutstandingAmount: number
+  recoveredAmount: number
+  balanceAmount: number
+  settlementAmount?: number | null
+  settlementDate?: Date | string | null
+  settlementApprovedBy?: string | null
+  dpd: number
+  defaultedAt?: Date | string | null
+  assignedTo?: string | null
+  remarks?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  recoveryPayments?: Prisma.RecoveryPaymentUncheckedCreateNestedManyWithoutLoanRecoveryInput
+}
+
+export type LoanRecoveryCreateOrConnectWithoutCustomerInput = {
+  where: Prisma.LoanRecoveryWhereUniqueInput
+  create: Prisma.XOR<Prisma.LoanRecoveryCreateWithoutCustomerInput, Prisma.LoanRecoveryUncheckedCreateWithoutCustomerInput>
+}
+
+export type LoanRecoveryCreateManyCustomerInputEnvelope = {
+  data: Prisma.LoanRecoveryCreateManyCustomerInput | Prisma.LoanRecoveryCreateManyCustomerInput[]
+  skipDuplicates?: boolean
+}
+
+export type LoanRecoveryUpsertWithWhereUniqueWithoutCustomerInput = {
+  where: Prisma.LoanRecoveryWhereUniqueInput
+  update: Prisma.XOR<Prisma.LoanRecoveryUpdateWithoutCustomerInput, Prisma.LoanRecoveryUncheckedUpdateWithoutCustomerInput>
+  create: Prisma.XOR<Prisma.LoanRecoveryCreateWithoutCustomerInput, Prisma.LoanRecoveryUncheckedCreateWithoutCustomerInput>
+}
+
+export type LoanRecoveryUpdateWithWhereUniqueWithoutCustomerInput = {
+  where: Prisma.LoanRecoveryWhereUniqueInput
+  data: Prisma.XOR<Prisma.LoanRecoveryUpdateWithoutCustomerInput, Prisma.LoanRecoveryUncheckedUpdateWithoutCustomerInput>
+}
+
+export type LoanRecoveryUpdateManyWithWhereWithoutCustomerInput = {
+  where: Prisma.LoanRecoveryScalarWhereInput
+  data: Prisma.XOR<Prisma.LoanRecoveryUpdateManyMutationInput, Prisma.LoanRecoveryUncheckedUpdateManyWithoutCustomerInput>
+}
+
 export type LoanRecoveryCreateWithoutRecoveryPaymentsInput = {
   id?: string
   recoveryStage: $Enums.recovery_stage
@@ -1100,74 +1168,6 @@ export type LoanRecoveryUncheckedUpdateWithoutRecoveryPaymentsInput = {
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type LoanRecoveryCreateWithoutCustomerInput = {
-  id?: string
-  recoveryStage: $Enums.recovery_stage
-  recoveryStatus: $Enums.recovery_status
-  totalOutstandingAmount: number
-  recoveredAmount: number
-  balanceAmount: number
-  settlementAmount?: number | null
-  settlementDate?: Date | string | null
-  settlementApprovedBy?: string | null
-  dpd: number
-  defaultedAt?: Date | string | null
-  assignedTo?: string | null
-  remarks?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  loanApplication: Prisma.LoanApplicationCreateNestedOneWithoutLoanRecoveriesInput
-  branch: Prisma.BranchCreateNestedOneWithoutLoanRecoveriesInput
-  recoveryPayments?: Prisma.RecoveryPaymentCreateNestedManyWithoutLoanRecoveryInput
-}
-
-export type LoanRecoveryUncheckedCreateWithoutCustomerInput = {
-  id?: string
-  loanApplicationId: string
-  branchId: string
-  recoveryStage: $Enums.recovery_stage
-  recoveryStatus: $Enums.recovery_status
-  totalOutstandingAmount: number
-  recoveredAmount: number
-  balanceAmount: number
-  settlementAmount?: number | null
-  settlementDate?: Date | string | null
-  settlementApprovedBy?: string | null
-  dpd: number
-  defaultedAt?: Date | string | null
-  assignedTo?: string | null
-  remarks?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  recoveryPayments?: Prisma.RecoveryPaymentUncheckedCreateNestedManyWithoutLoanRecoveryInput
-}
-
-export type LoanRecoveryCreateOrConnectWithoutCustomerInput = {
-  where: Prisma.LoanRecoveryWhereUniqueInput
-  create: Prisma.XOR<Prisma.LoanRecoveryCreateWithoutCustomerInput, Prisma.LoanRecoveryUncheckedCreateWithoutCustomerInput>
-}
-
-export type LoanRecoveryCreateManyCustomerInputEnvelope = {
-  data: Prisma.LoanRecoveryCreateManyCustomerInput | Prisma.LoanRecoveryCreateManyCustomerInput[]
-  skipDuplicates?: boolean
-}
-
-export type LoanRecoveryUpsertWithWhereUniqueWithoutCustomerInput = {
-  where: Prisma.LoanRecoveryWhereUniqueInput
-  update: Prisma.XOR<Prisma.LoanRecoveryUpdateWithoutCustomerInput, Prisma.LoanRecoveryUncheckedUpdateWithoutCustomerInput>
-  create: Prisma.XOR<Prisma.LoanRecoveryCreateWithoutCustomerInput, Prisma.LoanRecoveryUncheckedCreateWithoutCustomerInput>
-}
-
-export type LoanRecoveryUpdateWithWhereUniqueWithoutCustomerInput = {
-  where: Prisma.LoanRecoveryWhereUniqueInput
-  data: Prisma.XOR<Prisma.LoanRecoveryUpdateWithoutCustomerInput, Prisma.LoanRecoveryUncheckedUpdateWithoutCustomerInput>
-}
-
-export type LoanRecoveryUpdateManyWithWhereWithoutCustomerInput = {
-  where: Prisma.LoanRecoveryScalarWhereInput
-  data: Prisma.XOR<Prisma.LoanRecoveryUpdateManyMutationInput, Prisma.LoanRecoveryUncheckedUpdateManyWithoutCustomerInput>
 }
 
 export type LoanRecoveryCreateManyBranchInput = {

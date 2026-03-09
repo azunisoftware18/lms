@@ -216,3 +216,91 @@ export const createCoApplicantSchema = z.object({
   employmentTypeEnum: employmentTypeEnum,
   monthlyIncome: z.coerce.number().optional(),
 });
+
+
+
+export const addressSchema = z.object({
+  addressLine1: z.string().min(1),
+  addressLine2: z.string().optional(),
+  city: z.string(),
+  district: z.string(),
+  state: z.string(),
+  pinCode: z.string(),
+  landmark: z.string().optional(),
+  phoneNumber: z.string().optional()
+})
+
+export const createFullLoanApplicationSchema = z.object({
+
+  loanTypeId: z.string().min(1, "loanTypeId is required"),
+
+  applicant: z.object({
+    title: z.enum(["MR","MRS","MS","DR","PROF"]),
+    firstName: z.string(),
+    middleName: z.string().optional(),
+    lastName: z.string(),
+    fatherName: z.string(),
+    motherName: z.string(),
+    woname: z.string().optional(),
+    dob: z.coerce.date(),
+    gender: z.enum(["MALE","FEMALE","OTHER"]),
+    maritalStatus: z.enum(["SINGLE","MARRIED","DIVORCED","WIDOWED","OTHER"]),
+    nationality: z.string(),
+    category: z.enum(["GENERAL","SC","ST","NT","OBC","OTHER"]),
+
+    aadhaarNumber: z.string(),
+    panNumber: z.string(),
+    voterId: z.string().optional(),
+    drivingLicenceNo: z.string().optional(),
+    passportNumber: z.string().optional(),
+
+    contactNumber: z.string(),
+    alternateNumber: z.string().optional(),
+    email: z.string().email().optional(),
+
+    qualification: z.string().optional(),
+    employmentType: z.enum(["salaried","self_employed","business","professional"])
+  }),
+
+  addresses: z.object({
+    currentAddress: addressSchema,
+    permanentAddress: addressSchema.optional()
+  }),
+
+  coApplicants: z.array(z.any()).optional(),
+
+  guarantors: z.array(z.any()).optional(),
+
+  existingLoans: z.array(z.any()).optional(),
+
+  creditCards: z.array(z.any()).optional(),
+
+  bankAccounts: z.array(z.any()).optional(),
+
+  insurancePolicies: z.array(z.any()).optional(),
+
+  properties: z.array(z.any()).optional(),
+
+  references: z.array(z.any()).optional(),
+
+  loanRequirement: z.object({
+    loanAmount: z.number(),
+    tenure: z.number(),
+    interestOption: z.enum(["FIXED","VARIABLE"]),
+    loanPurpose: z.enum([
+      "HOME",
+      "HOME_IMPROVEMENT",
+      "LAND_PURCHASE"
+    ]),
+    repaymentMethod: z.enum(["SALARY_DEDUCTION", "ECS", "CHEQUE"])
+  }),
+
+  questionnaire: z.object({
+    legalPropertyClear: z.boolean().optional(),
+    mortgagedElsewhere: z.boolean().optional(),
+    residentOfIndia: z.boolean().optional(),
+    otherLoans: z.boolean().optional(),
+    guarantorAnywhere: z.boolean().optional(),
+    mppLifeInsurance: z.boolean().optional()
+  }).optional()
+})

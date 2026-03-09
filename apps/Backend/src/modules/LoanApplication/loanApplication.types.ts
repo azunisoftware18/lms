@@ -182,3 +182,240 @@ export interface apperoveLoanInput {
   emiPaymentAmount?: number;
   emiAmount?: number;
 }
+
+
+
+export interface FullLoanApplicationInput {
+
+  loanTypeId: string
+
+  applicant: {
+    title: Enums.Title
+    firstName: string
+    middleName?: string
+    lastName: string
+    fatherName: string
+    motherName: string
+    woname?: string
+    dob: Date
+    gender: Enums.Gender
+    maritalStatus: Enums.MaritalStatus
+    nationality: string
+    category: Enums.Category
+
+    aadhaarNumber: string
+    panNumber: string
+    voterId?: string
+    drivingLicenceNo?: string
+    passportNumber?: string
+
+    contactNumber: string
+    alternateNumber?: string
+    email?: string
+
+    qualification?: string
+
+    noOfFamilyDependents?: number
+    noOfChildren?: number
+
+    employmentType: Enums.EmploymentType
+  }
+
+  addresses: {
+    currentAddress: AddressInput
+    permanentAddress?: AddressInput
+  }
+
+  occupationalDetails?: OccupationalInput
+
+  employmentDetails?: EmploymentInput
+
+  financialDetails?: FinancialInput
+
+  coApplicants?: CoApplicantInput[]
+
+  guarantors?: GuarantorInput[]
+
+  existingLoans?: ExistingLoanInput[]
+
+  creditCards?: CreditCardInput[]
+
+  bankAccounts?: BankAccountInput[]
+
+  insurancePolicies?: InsurancePolicyInput[]
+
+  properties?: PropertyInput[]
+
+  references?: ReferenceInput[]
+
+  loanRequirement: LoanRequirementInput
+
+  questionnaire?: LoanQuestionnaireInput
+}
+
+export interface AddressInput {
+  addressLine1: string
+  addressLine2?: string
+  city: string
+  district: string
+  state: string
+  pinCode: string
+  landmark?: string
+  phoneNumber?: string
+}
+
+export interface OccupationalInput {
+  occupationalCategory?: string
+  companyBusinessName?: string
+  phoneNumber?: string
+  extensionNumber?: string
+  totalWorkExperience?: number
+  yearsInCurrentEmployment?: number
+  monthlyIncome?: number
+  annualIncome?: number
+}
+
+export interface EmploymentInput {
+  employerType?: string
+  designation?: string
+  department?: string
+  dateOfJoining?: Date | string
+  dateOfRetirement?: Date | string
+}
+
+export interface FinancialInput {
+  grossMonthlyIncome: number
+  netMonthlyIncome: number
+  averageMonthlyExpenses: number
+  savingBankBalance?: number
+  valueOfImmovableProperty?: number
+  currentBalanceInPF?: number
+  valueOfSharesSecurities?: number
+  fixedDeposits?: number
+  otherAssets?: number
+  totalAssets?: number
+  creditSocietyLoan?: number
+  employerLoan?: number
+  homeLoan?: number
+  pfLoan?: number
+  vehicleLoan?: number
+  personalLoan?: number
+  otherLoan?: number
+  totalLiabilities?: number
+}
+
+export interface CoApplicantInput {
+  firstName: string
+  middleName?: string
+  lastName: string
+  relation: Enums.CoApplicantRelation
+  relationOther?: string
+  contactNumber: string
+  email?: string
+  dob: Date | string
+  panNumber?: string
+  aadhaarNumber?: string
+  employmentType: Enums.EmploymentType
+}
+
+export interface GuarantorInput {
+  firstName: string
+  middleName?: string
+  lastName: string
+  fatherName?: string
+  motherName?: string
+  woname?: string
+  dob?: Date | string
+  contactNumber?: string
+  phoneNumber?: string
+  email?: string
+  panNumber?: string
+  aadhaarNumber?: string
+  voterId?: string
+  drivingLicence?: string
+  passportNumber?: string
+  category?: Enums.Category
+  maritalStatus?: Enums.MaritalStatus
+  noOfDependents?: number
+  noOfChildren?: number
+  qualification?: string
+  accommodationType?: string
+  periodOfStay?: string
+  rentPerMonth?: number
+  employmentType?: Enums.EmploymentType
+}
+
+export interface ExistingLoanInput {
+  institutionName: string
+  purpose?: string
+  disbursedAmount?: number
+  emi?: number
+  balanceTerm?: number
+  balanceOutstanding?: number
+}
+
+export interface CreditCardInput {
+  holderName: string
+  cardNumber: string
+  issuingBank?: string
+  holderSince?: Date | string
+  creditLimit?: number
+  outstandingAmount?: number
+}
+
+export interface BankAccountInput {
+  holderName: string
+  bankName: string
+  branchName?: string
+  accountType: string
+  accountNumber: string
+  openingDate?: Date | string
+  balanceAmount?: number
+}
+
+export interface InsurancePolicyInput {
+  issuedBy?: string
+  branchName?: string
+  holderName?: string
+  policyNumber?: string
+  maturityDate?: Date | string
+  policyValue?: number
+  policyType?: string
+  yearlyPremium?: number
+  paidUpValue?: number
+}
+
+export interface PropertyInput {
+  propertySelected: boolean
+  landArea?: number
+  buildUpArea?: number
+  ownershipType: Enums.OwnershipType
+  landType: Enums.LandType
+  purchaseFrom: Enums.PurchaseSource
+  purchaseOther?: string
+  constructionStage: Enums.ConstructionStage
+  constructionPercent?: number
+}
+
+export interface ReferenceInput {
+  name: string
+  relation?: string
+  contactNumber: string
+  address?: string
+}
+
+export interface LoanRequirementInput {
+  loanAmount: number
+  tenure?: number
+  interestOption: Enums.InterestOption
+  loanPurpose: Enums.LoanPurpose
+  repaymentMethod: Enums.RepaymentMethod
+  interestType?: Enums.InterestType
+}
+
+export interface LoanQuestionnaireInput {
+  existingCustomer?: boolean
+  hasPastDefaults?: boolean
+  isPoliticallyExposed?: boolean
+  remarks?: string
+}

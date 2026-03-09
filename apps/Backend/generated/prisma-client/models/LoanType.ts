@@ -1276,10 +1276,6 @@ export type EnumLoanTypesFieldUpdateOperationsInput = {
   set?: $Enums.LoanTypes
 }
 
-export type NullableEnumEmploymentTypeFieldUpdateOperationsInput = {
-  set?: $Enums.EmploymentType | null
-}
-
 export type LoanTypeCreateWithoutLeadsInput = {
   id?: string
   code: string

@@ -40,6 +40,35 @@ export const DraftStatus = {
 export type DraftStatus = (typeof DraftStatus)[keyof typeof DraftStatus]
 
 
+export const InterestOption = {
+  FIXED: 'FIXED',
+  VARIABLE: 'VARIABLE'
+} as const
+
+export type InterestOption = (typeof InterestOption)[keyof typeof InterestOption]
+
+
+export const LoanPurpose = {
+  HOME: 'HOME',
+  HOME_IMPROVEMENT: 'HOME_IMPROVEMENT',
+  LAND_PURCHASE: 'LAND_PURCHASE',
+  NRPL: 'NRPL',
+  POST_DATED_CHEQUE: 'POST_DATED_CHEQUE',
+  STANDING_INSTRUCTION: 'STANDING_INSTRUCTION'
+} as const
+
+export type LoanPurpose = (typeof LoanPurpose)[keyof typeof LoanPurpose]
+
+
+export const RepaymentMethod = {
+  SALARY_DEDUCTION: 'SALARY_DEDUCTION',
+  ECS: 'ECS',
+  CHEQUE: 'CHEQUE'
+} as const
+
+export type RepaymentMethod = (typeof RepaymentMethod)[keyof typeof RepaymentMethod]
+
+
 export const NachStatus = {
   PENDING: 'PENDING',
   ACTIVE: 'ACTIVE',
@@ -80,6 +109,42 @@ export const CommissionStatus = {
 } as const
 
 export type CommissionStatus = (typeof CommissionStatus)[keyof typeof CommissionStatus]
+
+
+export const OwnershipType = {
+  SOLE: 'SOLE',
+  JOINT: 'JOINT'
+} as const
+
+export type OwnershipType = (typeof OwnershipType)[keyof typeof OwnershipType]
+
+
+export const LandType = {
+  FREEHOLD: 'FREEHOLD',
+  LEASEHOLD: 'LEASEHOLD'
+} as const
+
+export type LandType = (typeof LandType)[keyof typeof LandType]
+
+
+export const PurchaseSource = {
+  BUILDER: 'BUILDER',
+  SOCIETY: 'SOCIETY',
+  DEVELOPMENT_AUTHORITY: 'DEVELOPMENT_AUTHORITY',
+  RESALE: 'RESALE',
+  SELF_CONSTRUCTION: 'SELF_CONSTRUCTION',
+  OTHER: 'OTHER'
+} as const
+
+export type PurchaseSource = (typeof PurchaseSource)[keyof typeof PurchaseSource]
+
+
+export const ConstructionStage = {
+  READY: 'READY',
+  UNDER_CONSTRUCTION: 'UNDER_CONSTRUCTION'
+} as const
+
+export type ConstructionStage = (typeof ConstructionStage)[keyof typeof ConstructionStage]
 
 
 export const AssignedRole = {
@@ -388,7 +453,7 @@ export type ProfessionalType = (typeof ProfessionalType)[keyof typeof Profession
 export const BusinessType = {
   TRADER: 'TRADER',
   MANUFACTURER: 'MANUFACTURER',
-  WHOLESELLER: 'WHOLESELLER',
+  WHOLESALER: 'WHOLESALER',
   OTHER: 'OTHER'
 } as const
 

@@ -18,10 +18,6 @@ datasource db {
   // Connection URL moved to prisma.config.ts per Prisma 7+ requirements
 }
 
-// 🔴 Soft Delete
-// deletedAt DateTime?
-// deletedBy String?
-// @@index([deletedAt])
 // =================================USERS=====================================
 
 model User {
@@ -181,13 +177,14 @@ model Address {
   pinCode      String
   landmark     String?
   phoneNumber  String? // With STD Code
-  stdCode      String?
 
   // Relations to Customer and CoApplicant (can have multiple addresses)
   customerId          String?
   customer            Customer?             @relation(fields: [customerId], references: [id])
   coApplicantId       String?
   coApplicant         CoApplicant?          @relation(fields: [coApplicantId], references: [id])
+  guarantorId         String?
+  guarantor           Guarantor?            @relation(fields: [guarantorId], references: [id])
   occupationalDetails OccupationalDetails[] // For office/business addresses
 
   // Relations to other entities (one address per entity)
@@ -195,6 +192,7 @@ model Address {
   partner         Partner?         @relation("PartnerAddress")
   lead            Leads?           @relation("LeadAddress")
   technicalReport TechnicalReport? @relation("TechnicalReportAddress")
+  properties      Property[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -279,6 +277,10 @@ model Leads {
 
   @@index([leadNumber])
 }
+
+
+
+
 
 model LoanApplicationDraft {
   id       String @id @default(cuid())
@@ -379,8 +381,17 @@ model LoanApplication {
   branch               Branch              @relation(fields: [branchId], references: [id])
 
   // Relations
-  loanType        LoanType?        @relation(fields: [loanTypeId], references: [id])
-  loanAssignments LoanAssignment[]
+  loanType           LoanType?             @relation(fields: [loanTypeId], references: [id])
+  loanAssignments    LoanAssignment[]
+  guarantors         Guarantor[]
+  existingLoans      ExistingLoan[]
+  creditCards        CreditCard[]
+  bankAccounts       BankAccount[]
+  insurancePolicies  InsurancePolicy[]
+  properties         Property[]
+  references         Reference[]
+  loanRequirement    LoanRequirement?
+  loanQuestionnaire  LoanQuestionnaire?
 
   @@index([loanNumber])
 }
@@ -392,7 +403,7 @@ model CoApplicant {
 
   // Personal Details
   firstName     String
-  LastName      String
+  lastName      String
   middleName    String?
   relation      CoApplicantRelation
   relationOther String? // Specify if relation is OTHER
@@ -494,6 +505,8 @@ model OccupationalDetails {
   customer      Customer     @relation(fields: [customerId], references: [id])
   coApplicantId String?
   coApplicant   CoApplicant? @relation(fields: [coApplicantId], references: [id])
+  guarantorId   String?
+  guarantor     Guarantor?   @relation(fields: [guarantorId], references: [id])
 
   occupationalCategory      OccupationalCategory
   occupationalCategoryOther String? // Specify if category is OTHER
@@ -521,6 +534,7 @@ model OccupationalDetails {
 
   @@index([customerId])
   @@index([coApplicantId])
+  @@index([guarantorId])
 }
 
 //===================================EMPLOYMENT DETAILS (For Salaried)=====================================
@@ -531,6 +545,8 @@ model EmploymentDetails {
   customer      Customer     @relation(fields: [customerId], references: [id])
   coApplicantId String?
   coApplicant   CoApplicant? @relation(fields: [coApplicantId], references: [id])
+  guarantorId   String?
+  guarantor     Guarantor?   @relation(fields: [guarantorId], references: [id])
 
   employerType      EmployerType
   employerTypeOther String? // Specify if employer type is OTHER
@@ -544,6 +560,7 @@ model EmploymentDetails {
 
   @@index([customerId])
   @@index([coApplicantId])
+  @@index([guarantorId])
 }
 
 //===================================FINANCIAL DETAILS=====================================
@@ -582,8 +599,239 @@ model FinancialDetails {
 }
 
 
+//===================================GUARANTOR DETAILS=====================================
+model Guarantor {
+  id                String          @id @default(cuid())
+  loanApplicationId String
+  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
+
+  firstName  String
+  middleName String?
+  lastName   String
+
+  fatherName String?
+  motherName String?
+  woname     String?
+
+  dob DateTime?
+
+  contactNumber String?
+  phoneNumber   String?
+  email         String?
+
+  panNumber     String?
+  aadhaarNumber String?
+  voterId       String?
+  drivingLicence String?
+  passportNumber String?
+
+  category Category?
+  maritalStatus MaritalStatus?
+
+  noOfDependents Int?
+  noOfChildren   Int?
+
+  qualification String?
+
+  accommodationType AccommodationType?
+  periodOfStay      String?
+  rentPerMonth      Float?
+
+  employmentType EmploymentType?
+
+  addresses Address[]
+
+  occupationalDetails OccupationalDetails[]
+  employmentDetails   EmploymentDetails[]
+  financialDetails    GuarantorFinancialDetails?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//==============================GUARANTOR FINANCIAL DETAILS=====================================
+
+model GuarantorFinancialDetails {
+  id          String    @id @default(cuid())
+  guarantorId String    @unique
+  guarantor   Guarantor @relation(fields: [guarantorId], references: [id])
+
+  grossMonthlyIncome     Float?
+  netMonthlyIncome       Float?
+  averageMonthlyExpenses Float?
+
+  savingBankBalance        Float?
+  valueOfImmovableProperty Float?
+  currentBalanceInPF       Float?
+  valueOfSharesSecurities  Float?
+  fixedDeposits            Float?
+  otherAssets              Float?
+  totalAssets              Float?
+
+  creditSocietyLoan Float?
+  employerLoan      Float?
+  homeLoan          Float?
+  pfLoan            Float?
+  vehicleLoan       Float?
+  personalLoan      Float?
+  otherLoan         Float?
+  totalLiabilities  Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
 
+//===================================EXISTING LOANS=====================================
+model ExistingLoan {
+  id                String          @id @default(cuid())
+  loanApplicationId String
+  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
+
+  institutionName   String
+  purpose           String?
+  disbursedAmount   Float?
+  emi               Float?
+  balanceTerm       Int?
+  balanceOutstanding Float?
+
+  createdAt DateTime @default(now())
+}
+//===================================CREDIT CARD DETAILS=====================================
+model CreditCard {
+  id                String          @id @default(cuid())
+  loanApplicationId String
+  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
+
+  holderName        String
+  cardNumber        String
+  issuingBank       String?
+  holderSince       DateTime?
+  creditLimit       Float?
+  outstandingAmount Float?
+
+  createdAt DateTime @default(now())
+}
+
+//===================================BANK ACCOUNT DETAILS=====================================
+
+model BankAccount {
+  id                String          @id @default(cuid())
+  loanApplicationId String
+  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
+
+  holderName     String
+  bankName       String
+  branchName     String?
+  accountType    String
+  accountNumber  String
+  openingDate    DateTime?
+  balanceAmount  Float?
+
+  createdAt DateTime @default(now())
+}
+
+//===================================INSURANCE POLICY DETAILS=====================================
+
+model InsurancePolicy {
+  id                String          @id @default(cuid())
+  loanApplicationId String
+  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
+
+  issuedBy     String?
+  branchName   String?
+  holderName   String?
+  policyNumber String?
+
+  maturityDate DateTime?
+  policyValue  Float?
+  policyType   String?
+  yearlyPremium Float?
+  paidUpValue  Float?
+
+  createdAt DateTime @default(now())
+}
+
+//===================================PROPERTY DETAILS=====================================
+model Property {
+  id                String          @id @default(cuid())
+  loanApplicationId String
+  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
+
+  propertySelected Boolean
+
+  addressId String?
+  address   Address? @relation(fields: [addressId], references: [id])
+
+  landArea        Float?
+  buildUpArea     Float?
+
+  ownershipType   OwnershipType
+  landType        LandType
+
+  purchaseFrom    PurchaseSource
+  purchaseOther   String?
+
+  constructionStage ConstructionStage
+  constructionPercent Float?
+
+  createdAt DateTime @default(now())
+}
+
+//===================================REFERENCES=====================================
+model Reference {
+  id                String          @id @default(cuid())
+  loanApplicationId String
+  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
+
+  name      String
+  fatherName String?
+  address   String?
+  city      String?
+  state     String?
+  pinCode   String?
+  phone     String?
+  occupation String?
+
+  createdAt DateTime @default(now())
+}
+
+//===================================LOAN REQUIREMENTS=====================================
+model LoanRequirement {
+  id                String          @id @default(cuid())
+  loanApplicationId String          @unique
+  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
+
+  loanAmount Float?
+  tenure     Int?
+
+  interestOption InterestOption
+
+  loanPurpose LoanPurpose
+  loanPurposeOther String?
+
+  repaymentMethod RepaymentMethod
+
+  createdAt DateTime @default(now())
+}
+
+
+//===========================LOAN QUESTIONNAIRE=====================================
+model LoanQuestionnaire {
+  id                String          @id @default(cuid())
+  loanApplicationId String          @unique
+  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
+
+  legalPropertyClear Boolean?
+  mortgagedElsewhere Boolean?
+  residentOfIndia    Boolean?
+  otherLoans         Boolean?
+  guarantorAnywhere  Boolean?
+
+  mppLifeInsurance   Boolean?
+
+  createdAt DateTime @default(now())
+}
 
 
 
@@ -1149,6 +1397,27 @@ enum DraftStatus {
   SUBMITTED
 }
 
+
+enum InterestOption {
+  FIXED
+  VARIABLE
+}
+
+enum LoanPurpose {
+  HOME
+  HOME_IMPROVEMENT
+  LAND_PURCHASE
+  NRPL
+  POST_DATED_CHEQUE
+  STANDING_INSTRUCTION
+}
+
+enum RepaymentMethod {
+  SALARY_DEDUCTION
+  ECS
+  CHEQUE
+}
+
 enum NachStatus {
   PENDING
   ACTIVE
@@ -1177,6 +1446,32 @@ enum CommissionStatus {
   APPROVED
   REJECTED
   PAID
+}
+
+
+
+enum OwnershipType {
+  SOLE
+  JOINT
+}
+
+enum LandType {
+  FREEHOLD
+  LEASEHOLD
+}
+
+enum PurchaseSource {
+  BUILDER
+  SOCIETY
+  DEVELOPMENT_AUTHORITY
+  RESALE
+  SELF_CONSTRUCTION
+  OTHER
+}
+
+enum ConstructionStage {
+  READY
+  UNDER_CONSTRUCTION
 }
 
 enum AssignedRole {
@@ -1398,7 +1693,7 @@ enum ProfessionalType {
 enum BusinessType {
   TRADER
   MANUFACTURER
-  WHOLESELLER
+  WHOLESALER
   OTHER
 }
 

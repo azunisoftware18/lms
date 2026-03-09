@@ -1,5 +1,5 @@
 import { prisma } from "../../db/prismaService.js";
-import { CreateLoanApplication } from "./loanApplication.types.js";
+import { CreateLoanApplication, FullLoanApplicationInput } from "./loanApplication.types.js";
 import createLoanApplicationSchema, {
   ApperoveLoanInput,
 } from "./loanApplication.schema.js";
@@ -67,6 +67,9 @@ export async function createLoanApplicationService(
             firstName: parsed.firstName,
             lastName: parsed.lastName ?? "",
             middleName: parsed.middleName,
+            fatherName: "",
+            motherName: "",
+            woname: parsed.spouseName,
             gender: parsed.gender as Enums.Gender,
             dob: dobValue,
             aadhaarNumber: parsed.aadhaarNumber,
@@ -77,18 +80,11 @@ export async function createLoanApplicationService(
             category: parsed.category,
             contactNumber: parsed.contactNumber,
             alternateNumber: parsed.alternateNumber,
+            relationshipWithCoApplicant:
+              (parsed.coApplicantRelation as Enums.CoApplicantRelation) ??
+              Enums.CoApplicantRelation.OTHER,
             employmentType: parsed.employmentType,
-            monthlyIncome: parsed.monthlyIncome,
-            annualIncome: parsed.annualIncome,
-            bankName: parsed.bankName,
-            bankAccountNumber: parsed.bankAccountNumber,
-            ifscCode: parsed.ifscCode,
-            accountType: parsed.accountType,
             email: parsed.email,
-            address: parsed.address,
-            city: parsed.city,
-            state: parsed.state,
-            pinCode: parsed.pinCode,
             status: "ACTIVE",
           },
         });
@@ -156,7 +152,7 @@ export async function createLoanApplicationService(
             data: {
               loanApplicationId: loanApplication.id,
               firstName: co.firstName,
-              LastName: co.lastName ?? "",
+              lastName: co.lastName ?? "",
               relation: co.relation as Enums.CoApplicantRelation,
               contactNumber: co.contactNumber,
               email: co.email,
@@ -164,7 +160,6 @@ export async function createLoanApplicationService(
               aadhaarNumber: co.aadhaarNumber,
               panNumber: co.panNumber,
               employmentType: co.employmentType as Enums.EmploymentType,
-              monthlyIncome: co.monthlyIncome,
             },
           });
 
@@ -957,3 +952,257 @@ export const rejectLoanService = async (
 
   return updatedLoan;
 };
+
+
+
+export const createFullLoanApplicationService = async (
+  data: FullLoanApplicationInput,
+  userId: string
+) => {
+
+  return prisma.$transaction(async(tx)=>{
+
+    if (!data.loanTypeId) {
+      throw new Error("loanTypeId is required")
+    }
+
+    const user = await tx.user.findUnique({
+      where: { id: userId },
+      select: { branchId: true },
+    })
+
+    if (!user?.branchId) {
+      throw new Error("User branch information not found")
+    }
+
+    const loanType = await tx.loanType.findFirst({
+      where: { id: data.loanTypeId, isActive: true },
+      select: { id: true },
+    })
+
+    if (!loanType) {
+      throw new Error("Invalid loan type")
+    }
+
+    const loanNumber = await generateLoanNumber(tx)
+
+    /* 1️⃣ Create Customer */
+
+    const customer = await tx.customer.create({
+      data:{
+        title:data.applicant.title,
+        firstName:data.applicant.firstName,
+        middleName:data.applicant.middleName,
+        lastName:data.applicant.lastName,
+        fatherName:data.applicant.fatherName,
+        motherName:data.applicant.motherName,
+        woname:data.applicant.woname,
+        dob:data.applicant.dob,
+        gender:data.applicant.gender,
+        aadhaarNumber:data.applicant.aadhaarNumber,
+        panNumber:data.applicant.panNumber,
+        voterId:data.applicant.voterId,
+        drivingLicenceNo:data.applicant.drivingLicenceNo,
+        passportNumber:data.applicant.passportNumber,
+        maritalStatus:data.applicant.maritalStatus,
+        nationality:data.applicant.nationality,
+        category:data.applicant.category,
+        contactNumber:data.applicant.contactNumber,
+        email:data.applicant.email,
+        relationshipWithCoApplicant:
+          data.coApplicants?.length
+            ? data.coApplicants[0].relation
+            : Enums.CoApplicantRelation.OTHER,
+        employmentType:data.applicant.employmentType
+      }
+    })
+
+    /* 2️⃣ Create Address */
+
+    await tx.address.create({
+      data:{
+        ...data.addresses.currentAddress,
+        addressType:"CURRENT_RESIDENTIAL",
+        customerId:customer.id
+      }
+    })
+
+    if(data.addresses.permanentAddress){
+
+      await tx.address.create({
+        data:{
+          ...data.addresses.permanentAddress,
+          addressType:"PERMANENT",
+          customerId:customer.id
+        }
+      })
+
+    }
+
+    /* 3️⃣ Create Loan */
+
+    const loan = await tx.loanApplication.create({
+
+      data:{
+        loanNumber,
+        requestedAmount:data.loanRequirement.loanAmount,
+        tenureMonths:data.loanRequirement.tenure,
+        interestType:data.loanRequirement.interestType ?? Enums.InterestType.FLAT,
+        loanPurpose:data.loanRequirement.loanPurpose,
+        customer:{ connect: { id: customer.id } },
+        loanType:{ connect: { id: loanType.id } },
+        branch:{ connect: { id: user.branchId } },
+        createdBy:{ connect: { id: userId } },
+        status:"application_in_progress",
+      }
+
+    })
+
+    /* 4️⃣ Existing Loans */
+
+    if(data.existingLoans?.length){
+
+      await tx.existingLoan.createMany({
+        data:data.existingLoans.map(
+          (l:any)=>({
+          ...l,
+          loanApplicationId:loan.id
+        }))
+      })
+
+    }
+
+    /* 5️⃣ Credit Cards */
+
+    if(data.creditCards?.length){
+
+      await tx.creditCard.createMany({
+        data:data.creditCards.map((c:any)=>({
+          holderName: c.holderName,
+          cardNumber: c.cardNumber,
+          issuingBank: c.issuingBank,
+          holderSince: c.holderSince ? new Date(c.holderSince) : null,
+          creditLimit: c.creditLimit,
+          outstandingAmount: c.outstandingAmount,
+          loanApplicationId:loan.id
+        }))
+      })
+
+    }
+
+    /* 6️⃣ Bank Accounts */
+
+    if(data.bankAccounts?.length){
+
+      await tx.bankAccount.createMany({
+        data:data.bankAccounts.map((b:any)=>({
+          holderName: b.holderName,
+          bankName: b.bankName,
+          branchName: b.branchName,
+          accountType: b.accountType,
+          accountNumber: b.accountNumber,
+          openingDate: b.openingDate ? new Date(b.openingDate) : null,
+          balanceAmount: b.balanceAmount,
+          loanApplicationId:loan.id
+        }))
+      })
+
+    }
+
+    /* 7️⃣ Insurance */
+
+    if(data.insurancePolicies?.length){
+
+      await tx.insurancePolicy.createMany({
+        data:data.insurancePolicies.map((p:any)=>({
+          issuedBy: p.issuedBy,
+          branchName: p.branchName,
+          holderName: p.holderName,
+          policyNumber: p.policyNumber,
+          maturityDate: p.maturityDate ? new Date(p.maturityDate) : null,
+          policyValue: p.policyValue,
+          policyType: p.policyType,
+          yearlyPremium: p.yearlyPremium,
+          paidUpValue: p.paidUpValue,
+          loanApplicationId:loan.id
+        }))
+      })
+
+    }
+
+    /* 8️⃣ Property */
+
+    if(data.properties?.length){
+
+      await tx.property.createMany({
+        data:data.properties.map((p:any)=>({
+          propertySelected: p.propertySelected,
+          landArea: p.landArea,
+          buildUpArea: p.buildUpArea,
+          ownershipType: p.ownershipType,
+          landType: p.landType,
+          purchaseFrom: p.purchaseFrom,
+          purchaseOther: p.purchaseOther,
+          constructionStage: p.constructionStage,
+          constructionPercent: p.constructionPercent,
+          loanApplicationId:loan.id
+        }))
+      })
+
+    }
+
+    /* 9️⃣ References */
+
+    if(data.references?.length){
+
+      await tx.reference.createMany({
+        data:data.references.map((r:any)=>({
+          name: r.name,
+          fatherName: r.fatherName,
+          address: r.address,
+          city: r.city,
+          state: r.state,
+          pinCode: r.pinCode,
+          phone: r.phone,
+          occupation: r.occupation,
+          loanApplicationId:loan.id
+        }))
+      })
+
+    }
+
+    /* 10️⃣ Loan Requirement */
+
+    await tx.loanRequirement.create({
+
+      data:{
+        loanApplicationId:loan.id,
+        loanAmount:data.loanRequirement.loanAmount,
+        tenure:data.loanRequirement.tenure,
+        interestOption:data.loanRequirement.interestOption,
+        loanPurpose:data.loanRequirement.loanPurpose,
+        repaymentMethod:data.loanRequirement.repaymentMethod,
+      }
+
+    })
+
+    /* 11️⃣ Questionnaire */
+
+    if(data.questionnaire){
+
+      await tx.loanQuestionnaire.create({
+
+        data:{
+          loanApplicationId:loan.id,
+          ...data.questionnaire
+        }
+
+      })
+
+    }
+
+    return loan
+
+  })
+
+}

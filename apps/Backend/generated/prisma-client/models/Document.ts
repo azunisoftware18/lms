@@ -640,6 +640,48 @@ export type DocumentUncheckedUpdateManyWithoutLoanApplicationNestedInput = {
   deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[]
 }
 
+export type DocumentCreateNestedManyWithoutCoApplicantInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutCoApplicantInput, Prisma.DocumentUncheckedCreateWithoutCoApplicantInput> | Prisma.DocumentCreateWithoutCoApplicantInput[] | Prisma.DocumentUncheckedCreateWithoutCoApplicantInput[]
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutCoApplicantInput | Prisma.DocumentCreateOrConnectWithoutCoApplicantInput[]
+  createMany?: Prisma.DocumentCreateManyCoApplicantInputEnvelope
+  connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+}
+
+export type DocumentUncheckedCreateNestedManyWithoutCoApplicantInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutCoApplicantInput, Prisma.DocumentUncheckedCreateWithoutCoApplicantInput> | Prisma.DocumentCreateWithoutCoApplicantInput[] | Prisma.DocumentUncheckedCreateWithoutCoApplicantInput[]
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutCoApplicantInput | Prisma.DocumentCreateOrConnectWithoutCoApplicantInput[]
+  createMany?: Prisma.DocumentCreateManyCoApplicantInputEnvelope
+  connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+}
+
+export type DocumentUpdateManyWithoutCoApplicantNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutCoApplicantInput, Prisma.DocumentUncheckedCreateWithoutCoApplicantInput> | Prisma.DocumentCreateWithoutCoApplicantInput[] | Prisma.DocumentUncheckedCreateWithoutCoApplicantInput[]
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutCoApplicantInput | Prisma.DocumentCreateOrConnectWithoutCoApplicantInput[]
+  upsert?: Prisma.DocumentUpsertWithWhereUniqueWithoutCoApplicantInput | Prisma.DocumentUpsertWithWhereUniqueWithoutCoApplicantInput[]
+  createMany?: Prisma.DocumentCreateManyCoApplicantInputEnvelope
+  set?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  disconnect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  delete?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  update?: Prisma.DocumentUpdateWithWhereUniqueWithoutCoApplicantInput | Prisma.DocumentUpdateWithWhereUniqueWithoutCoApplicantInput[]
+  updateMany?: Prisma.DocumentUpdateManyWithWhereWithoutCoApplicantInput | Prisma.DocumentUpdateManyWithWhereWithoutCoApplicantInput[]
+  deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[]
+}
+
+export type DocumentUncheckedUpdateManyWithoutCoApplicantNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutCoApplicantInput, Prisma.DocumentUncheckedCreateWithoutCoApplicantInput> | Prisma.DocumentCreateWithoutCoApplicantInput[] | Prisma.DocumentUncheckedCreateWithoutCoApplicantInput[]
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutCoApplicantInput | Prisma.DocumentCreateOrConnectWithoutCoApplicantInput[]
+  upsert?: Prisma.DocumentUpsertWithWhereUniqueWithoutCoApplicantInput | Prisma.DocumentUpsertWithWhereUniqueWithoutCoApplicantInput[]
+  createMany?: Prisma.DocumentCreateManyCoApplicantInputEnvelope
+  set?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  disconnect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  delete?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  update?: Prisma.DocumentUpdateWithWhereUniqueWithoutCoApplicantInput | Prisma.DocumentUpdateWithWhereUniqueWithoutCoApplicantInput[]
+  updateMany?: Prisma.DocumentUpdateManyWithWhereWithoutCoApplicantInput | Prisma.DocumentUpdateManyWithWhereWithoutCoApplicantInput[]
+  deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[]
+}
+
 export type EnumVerificationStatusFieldUpdateOperationsInput = {
   set?: $Enums.VerificationStatus
 }
@@ -683,48 +725,6 @@ export type DocumentUncheckedUpdateManyWithoutKycNestedInput = {
   connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
   update?: Prisma.DocumentUpdateWithWhereUniqueWithoutKycInput | Prisma.DocumentUpdateWithWhereUniqueWithoutKycInput[]
   updateMany?: Prisma.DocumentUpdateManyWithWhereWithoutKycInput | Prisma.DocumentUpdateManyWithWhereWithoutKycInput[]
-  deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[]
-}
-
-export type DocumentCreateNestedManyWithoutCoApplicantInput = {
-  create?: Prisma.XOR<Prisma.DocumentCreateWithoutCoApplicantInput, Prisma.DocumentUncheckedCreateWithoutCoApplicantInput> | Prisma.DocumentCreateWithoutCoApplicantInput[] | Prisma.DocumentUncheckedCreateWithoutCoApplicantInput[]
-  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutCoApplicantInput | Prisma.DocumentCreateOrConnectWithoutCoApplicantInput[]
-  createMany?: Prisma.DocumentCreateManyCoApplicantInputEnvelope
-  connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
-}
-
-export type DocumentUncheckedCreateNestedManyWithoutCoApplicantInput = {
-  create?: Prisma.XOR<Prisma.DocumentCreateWithoutCoApplicantInput, Prisma.DocumentUncheckedCreateWithoutCoApplicantInput> | Prisma.DocumentCreateWithoutCoApplicantInput[] | Prisma.DocumentUncheckedCreateWithoutCoApplicantInput[]
-  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutCoApplicantInput | Prisma.DocumentCreateOrConnectWithoutCoApplicantInput[]
-  createMany?: Prisma.DocumentCreateManyCoApplicantInputEnvelope
-  connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
-}
-
-export type DocumentUpdateManyWithoutCoApplicantNestedInput = {
-  create?: Prisma.XOR<Prisma.DocumentCreateWithoutCoApplicantInput, Prisma.DocumentUncheckedCreateWithoutCoApplicantInput> | Prisma.DocumentCreateWithoutCoApplicantInput[] | Prisma.DocumentUncheckedCreateWithoutCoApplicantInput[]
-  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutCoApplicantInput | Prisma.DocumentCreateOrConnectWithoutCoApplicantInput[]
-  upsert?: Prisma.DocumentUpsertWithWhereUniqueWithoutCoApplicantInput | Prisma.DocumentUpsertWithWhereUniqueWithoutCoApplicantInput[]
-  createMany?: Prisma.DocumentCreateManyCoApplicantInputEnvelope
-  set?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
-  disconnect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
-  delete?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
-  connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
-  update?: Prisma.DocumentUpdateWithWhereUniqueWithoutCoApplicantInput | Prisma.DocumentUpdateWithWhereUniqueWithoutCoApplicantInput[]
-  updateMany?: Prisma.DocumentUpdateManyWithWhereWithoutCoApplicantInput | Prisma.DocumentUpdateManyWithWhereWithoutCoApplicantInput[]
-  deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[]
-}
-
-export type DocumentUncheckedUpdateManyWithoutCoApplicantNestedInput = {
-  create?: Prisma.XOR<Prisma.DocumentCreateWithoutCoApplicantInput, Prisma.DocumentUncheckedCreateWithoutCoApplicantInput> | Prisma.DocumentCreateWithoutCoApplicantInput[] | Prisma.DocumentUncheckedCreateWithoutCoApplicantInput[]
-  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutCoApplicantInput | Prisma.DocumentCreateOrConnectWithoutCoApplicantInput[]
-  upsert?: Prisma.DocumentUpsertWithWhereUniqueWithoutCoApplicantInput | Prisma.DocumentUpsertWithWhereUniqueWithoutCoApplicantInput[]
-  createMany?: Prisma.DocumentCreateManyCoApplicantInputEnvelope
-  set?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
-  disconnect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
-  delete?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
-  connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
-  update?: Prisma.DocumentUpdateWithWhereUniqueWithoutCoApplicantInput | Prisma.DocumentUpdateWithWhereUniqueWithoutCoApplicantInput[]
-  updateMany?: Prisma.DocumentUpdateManyWithWhereWithoutCoApplicantInput | Prisma.DocumentUpdateManyWithWhereWithoutCoApplicantInput[]
   deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[]
 }
 
@@ -869,66 +869,6 @@ export type DocumentUpdateManyWithWhereWithoutLoanApplicationInput = {
   data: Prisma.XOR<Prisma.DocumentUpdateManyMutationInput, Prisma.DocumentUncheckedUpdateManyWithoutLoanApplicationInput>
 }
 
-export type DocumentCreateWithoutKycInput = {
-  id?: string
-  documentType: string
-  documentPath: string
-  verificationStatus?: $Enums.VerificationStatus
-  rejectionReason?: string | null
-  uploadedBy: string
-  verified?: boolean
-  verifiedBy?: string | null
-  verifiedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  loanApplication?: Prisma.LoanApplicationCreateNestedOneWithoutDocumentsInput
-  coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutDocumentsInput
-  branch: Prisma.BranchCreateNestedOneWithoutDocumentsInput
-}
-
-export type DocumentUncheckedCreateWithoutKycInput = {
-  id?: string
-  loanApplicationId?: string | null
-  coApplicantId?: string | null
-  documentType: string
-  documentPath: string
-  verificationStatus?: $Enums.VerificationStatus
-  rejectionReason?: string | null
-  branchId: string
-  uploadedBy: string
-  verified?: boolean
-  verifiedBy?: string | null
-  verifiedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type DocumentCreateOrConnectWithoutKycInput = {
-  where: Prisma.DocumentWhereUniqueInput
-  create: Prisma.XOR<Prisma.DocumentCreateWithoutKycInput, Prisma.DocumentUncheckedCreateWithoutKycInput>
-}
-
-export type DocumentCreateManyKycInputEnvelope = {
-  data: Prisma.DocumentCreateManyKycInput | Prisma.DocumentCreateManyKycInput[]
-  skipDuplicates?: boolean
-}
-
-export type DocumentUpsertWithWhereUniqueWithoutKycInput = {
-  where: Prisma.DocumentWhereUniqueInput
-  update: Prisma.XOR<Prisma.DocumentUpdateWithoutKycInput, Prisma.DocumentUncheckedUpdateWithoutKycInput>
-  create: Prisma.XOR<Prisma.DocumentCreateWithoutKycInput, Prisma.DocumentUncheckedCreateWithoutKycInput>
-}
-
-export type DocumentUpdateWithWhereUniqueWithoutKycInput = {
-  where: Prisma.DocumentWhereUniqueInput
-  data: Prisma.XOR<Prisma.DocumentUpdateWithoutKycInput, Prisma.DocumentUncheckedUpdateWithoutKycInput>
-}
-
-export type DocumentUpdateManyWithWhereWithoutKycInput = {
-  where: Prisma.DocumentScalarWhereInput
-  data: Prisma.XOR<Prisma.DocumentUpdateManyMutationInput, Prisma.DocumentUncheckedUpdateManyWithoutKycInput>
-}
-
 export type DocumentCreateWithoutCoApplicantInput = {
   id?: string
   documentType: string
@@ -987,6 +927,66 @@ export type DocumentUpdateWithWhereUniqueWithoutCoApplicantInput = {
 export type DocumentUpdateManyWithWhereWithoutCoApplicantInput = {
   where: Prisma.DocumentScalarWhereInput
   data: Prisma.XOR<Prisma.DocumentUpdateManyMutationInput, Prisma.DocumentUncheckedUpdateManyWithoutCoApplicantInput>
+}
+
+export type DocumentCreateWithoutKycInput = {
+  id?: string
+  documentType: string
+  documentPath: string
+  verificationStatus?: $Enums.VerificationStatus
+  rejectionReason?: string | null
+  uploadedBy: string
+  verified?: boolean
+  verifiedBy?: string | null
+  verifiedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  loanApplication?: Prisma.LoanApplicationCreateNestedOneWithoutDocumentsInput
+  coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutDocumentsInput
+  branch: Prisma.BranchCreateNestedOneWithoutDocumentsInput
+}
+
+export type DocumentUncheckedCreateWithoutKycInput = {
+  id?: string
+  loanApplicationId?: string | null
+  coApplicantId?: string | null
+  documentType: string
+  documentPath: string
+  verificationStatus?: $Enums.VerificationStatus
+  rejectionReason?: string | null
+  branchId: string
+  uploadedBy: string
+  verified?: boolean
+  verifiedBy?: string | null
+  verifiedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DocumentCreateOrConnectWithoutKycInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutKycInput, Prisma.DocumentUncheckedCreateWithoutKycInput>
+}
+
+export type DocumentCreateManyKycInputEnvelope = {
+  data: Prisma.DocumentCreateManyKycInput | Prisma.DocumentCreateManyKycInput[]
+  skipDuplicates?: boolean
+}
+
+export type DocumentUpsertWithWhereUniqueWithoutKycInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  update: Prisma.XOR<Prisma.DocumentUpdateWithoutKycInput, Prisma.DocumentUncheckedUpdateWithoutKycInput>
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutKycInput, Prisma.DocumentUncheckedCreateWithoutKycInput>
+}
+
+export type DocumentUpdateWithWhereUniqueWithoutKycInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  data: Prisma.XOR<Prisma.DocumentUpdateWithoutKycInput, Prisma.DocumentUncheckedUpdateWithoutKycInput>
+}
+
+export type DocumentUpdateManyWithWhereWithoutKycInput = {
+  where: Prisma.DocumentScalarWhereInput
+  data: Prisma.XOR<Prisma.DocumentUpdateManyMutationInput, Prisma.DocumentUncheckedUpdateManyWithoutKycInput>
 }
 
 export type DocumentCreateManyBranchInput = {
@@ -1125,74 +1125,6 @@ export type DocumentUncheckedUpdateManyWithoutLoanApplicationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type DocumentCreateManyKycInput = {
-  id?: string
-  loanApplicationId?: string | null
-  coApplicantId?: string | null
-  documentType: string
-  documentPath: string
-  verificationStatus?: $Enums.VerificationStatus
-  rejectionReason?: string | null
-  branchId: string
-  uploadedBy: string
-  verified?: boolean
-  verifiedBy?: string | null
-  verifiedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type DocumentUpdateWithoutKycInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  documentType?: Prisma.StringFieldUpdateOperationsInput | string
-  documentPath?: Prisma.StringFieldUpdateOperationsInput | string
-  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
-  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  uploadedBy?: Prisma.StringFieldUpdateOperationsInput | string
-  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  loanApplication?: Prisma.LoanApplicationUpdateOneWithoutDocumentsNestedInput
-  coApplicant?: Prisma.CoApplicantUpdateOneWithoutDocumentsNestedInput
-  branch?: Prisma.BranchUpdateOneRequiredWithoutDocumentsNestedInput
-}
-
-export type DocumentUncheckedUpdateWithoutKycInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  loanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  documentType?: Prisma.StringFieldUpdateOperationsInput | string
-  documentPath?: Prisma.StringFieldUpdateOperationsInput | string
-  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
-  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  branchId?: Prisma.StringFieldUpdateOperationsInput | string
-  uploadedBy?: Prisma.StringFieldUpdateOperationsInput | string
-  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type DocumentUncheckedUpdateManyWithoutKycInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  loanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  documentType?: Prisma.StringFieldUpdateOperationsInput | string
-  documentPath?: Prisma.StringFieldUpdateOperationsInput | string
-  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
-  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  branchId?: Prisma.StringFieldUpdateOperationsInput | string
-  uploadedBy?: Prisma.StringFieldUpdateOperationsInput | string
-  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
 export type DocumentCreateManyCoApplicantInput = {
   id?: string
   loanApplicationId?: string | null
@@ -1252,6 +1184,74 @@ export type DocumentUncheckedUpdateManyWithoutCoApplicantInput = {
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  uploadedBy?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type DocumentCreateManyKycInput = {
+  id?: string
+  loanApplicationId?: string | null
+  coApplicantId?: string | null
+  documentType: string
+  documentPath: string
+  verificationStatus?: $Enums.VerificationStatus
+  rejectionReason?: string | null
+  branchId: string
+  uploadedBy: string
+  verified?: boolean
+  verifiedBy?: string | null
+  verifiedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DocumentUpdateWithoutKycInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.StringFieldUpdateOperationsInput | string
+  documentPath?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  uploadedBy?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanApplication?: Prisma.LoanApplicationUpdateOneWithoutDocumentsNestedInput
+  coApplicant?: Prisma.CoApplicantUpdateOneWithoutDocumentsNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutDocumentsNestedInput
+}
+
+export type DocumentUncheckedUpdateWithoutKycInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  loanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentType?: Prisma.StringFieldUpdateOperationsInput | string
+  documentPath?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  uploadedBy?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type DocumentUncheckedUpdateManyWithoutKycInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  loanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentType?: Prisma.StringFieldUpdateOperationsInput | string
+  documentPath?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   uploadedBy?: Prisma.StringFieldUpdateOperationsInput | string
   verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
