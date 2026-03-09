@@ -6,8 +6,9 @@ import PublicRoute from './publicRoute';
 import DashboardPage from '../app/dashboard/DashboardPage';
 
 // Public Pages
-
 import Layout from '../layout/Layout.jsx';
+import LoginForm from '../components/forms/LoginForm.jsx';
+import AdminLayout from '../layout/AdminLayout.jsx';
 import HomePage from '../app/public/HomePage.jsx';
 import AboutUsPage from '../app/public/AboutUsPage.jsx';
 import AnnualReportPage from '../app/public/AnnualReportPage.jsx';
@@ -34,10 +35,9 @@ import ProductsPage from '../app/public/ProductsPage.jsx';
 import PublicDisclosureUnderLiquidityRiskPage from '../app/public/PublicDisclosureUnderLiquidityRiskPage.jsx';
 import SarfaesiAuctionNoticesPage from '../app/public/SarfaesiAuctionNoticesPage.jsx';
 import ShareholderInformationPage from '../app/public/ShareholderInformationPage.jsx';
-import UnderRegulationPage from '../app/public/UnderRegulationPage.jsx';
 import VisionAndMissionPage from '../app/public/VisionAndMissionPage.jsx';
 import WelcometoFinovaPage from '../app/public/WelcometoFinovaPage.jsx';
-import SarfaesiPage from '../app/public/SarfaesiPage.jsx';
+import UnderRegulationPage from '../app/public/UnderRegulationPage.jsx';
 
 export default function AppRoutes() {
 	return (
@@ -91,7 +91,7 @@ export default function AppRoutes() {
 					path="sarfaesi-auction-notices"
 					element={<SarfaesiAuctionNoticesPage />}
 				/>
-				<Route path="sarfaesi-secured-assets" element={<SarfaesiPage />} />
+				{/* <Route path="sarfaesi-secured-assets" element={<SarfaesiPage />} /> */}
 				<Route
 					path="shareholder-information"
 					element={<ShareholderInformationPage />}
@@ -102,9 +102,19 @@ export default function AppRoutes() {
 				/>
 				<Route path="vision-and-mission" element={<VisionAndMissionPage />} />
 				<Route path="welcome-to-finova" element={<WelcometoFinovaPage />} />
+				<Route path="login" element={<LoginForm />} />
+
 			</Route>
+
 			{/* Private Dashboard */}
-			<Route path="/dashboard" element={<PrivateRoute />}>
+			<Route
+				path="/admin"
+				element={
+					<PrivateRoute>
+						<AdminLayout />
+					</PrivateRoute>
+				}>
+				{/* Dashboard page */}
 				<Route index element={<DashboardPage />} />
 			</Route>
 		</Routes>
