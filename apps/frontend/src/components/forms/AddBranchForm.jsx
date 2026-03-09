@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { MapPin, Building2 } from "lucide-react";
 import InputField from "../ui/InputField";

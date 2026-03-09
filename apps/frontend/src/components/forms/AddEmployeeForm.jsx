@@ -1,16 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
   User, MapPin, Briefcase, FileText, Landmark, Key, ShieldCheck, Check,
   ChevronRight, ChevronLeft, UploadCloud, DollarSign, Phone, Mail
 } from 'lucide-react';
 
-// Import your custom components
 import Button from '../ui/Button';
 import InputField from '../ui/InputField';
 import SelectField from '../ui/SelectField';
 import ToggleSwitch from '../ui/ToggleSwitch';
 import TextAreaField from '../ui/TextAreaField';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { employeeSchema } from '../../validations/EmployeeValidation';
+import { ToasterProvider } from '../../providers/toasterProvider';
 
 export const AddEmployeeForm = ({
   initialFormState,
@@ -43,26 +45,28 @@ export const AddEmployeeForm = ({
     watch,
     setValue,
     getValues,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
     trigger
   } = useForm({
+  resolver: zodResolver(employeeSchema),
+  mode: "onChange",
     defaultValues: initialFormState || {
       fullName: '',
       email: '',
-      phone: '',
-      altPhone: '',
+      contactNumber: '',
+      atlMobileNumber: '',
       dob: '',
       gender: 'MALE',
       maritalStatus: 'SINGLE',
-      username: '',
+      userName: '',
       password: '',
 
       address: '',
       city: '',
       state: '',
-      pincode: '',
+      pinCode: '',
       emergencyContact: '',
-      emergencyRelation: 'FATHER',
+      emergencyRelationship: 'FATHER',
 
       department: 'Sales',
       designation: '',
@@ -110,10 +114,10 @@ export const AddEmployeeForm = ({
 
     switch (step) {
       case 1:
-        fieldsToValidate = ['fullName', 'email', 'phone'];
+        fieldsToValidate = ['fullName', 'email', 'contactNumber'];
         break;
       case 2:
-        fieldsToValidate = ['address', 'city', 'state', 'pincode', 'department', 'designation'];
+        fieldsToValidate = ['address', 'city', 'state', 'pinCode', 'department', 'designation'];
         break;
       case 3:
         fieldsToValidate = ['aadhaarNo', 'panNo', 'accountHolder', 'bankName', 'bankAccountNo', 'ifsc'];
@@ -150,11 +154,11 @@ export const AddEmployeeForm = ({
       const username = fullName.toLowerCase().replace(/\s+/g, '.') + Math.floor(Math.random() * 1000);
       const password = Math.random().toString(36).slice(-8) + Math.floor(Math.random() * 100);
 
-      setValue('username', username);
+      setValue('userName', username);
       setValue('password', password);
-      toast.success('Credentials generated!');
+      ToasterProvider.success('Credentials generated!');
     } else {
-      toast.error('Please enter full name first');
+      ToasterProvider.error('Please enter full name first');
     }
   };
 
@@ -182,9 +186,9 @@ export const AddEmployeeForm = ({
       email: data.email,
       password: data.password,
       role: "EMPLOYEE",
-      contactNumber: data.phone,
-      atlMobileNumber: data.altPhone || data.phone,
-      userName: data.username,
+      contactNumber: data.contactNumber,
+      atlMobileNumber: data.atlMobileNumber || data.contactNumber,
+      userName: data.userName,
       dob: data.dob,
       dateOfJoining: data.dateOfJoining,
       gender: data.gender,
@@ -192,11 +196,11 @@ export const AddEmployeeForm = ({
       designation: data.designation,
       department: data.department,
       emergencyContact: data.emergencyContact,
-      emergencyRelationship: data.emergencyRelation,
+      emergencyRelationship: data.emergencyRelationship,
       address: data.address,
       city: data.city,
       state: data.state,
-      pinCode: data.pincode,
+      pinCode: data.pinCode,
       isActive: data.status === "Active",
       workLocation: data.workLocation,
       salary: Number(data.basicSalary),
@@ -249,10 +253,7 @@ export const AddEmployeeForm = ({
 
             <InputField
               label="Full Name"
-              {...register('fullName', {
-                required: 'Full name is required',
-                minLength: { value: 3, message: 'Name must be at least 3 characters' }
-              })}
+              {...register('fullName')}
               error={errors.fullName?.message}
               isRequired
               icon={User}
@@ -262,13 +263,7 @@ export const AddEmployeeForm = ({
             <InputField
               label="Email Address"
               type="email"
-              {...register('email', {
-                required: 'Email is required',
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: 'Invalid email address'
-                }
-              })}
+              {...register('email')}
               error={errors.email?.message}
               isRequired
               icon={Mail}
@@ -278,11 +273,8 @@ export const AddEmployeeForm = ({
             <InputField
               label="Phone Number"
               type="tel"
-              {...register('phone', {
-                required: 'Phone number is required',
-                pattern: { value: /^[0-9]{10}$/, message: 'Enter valid 10-digit number' }
-              })}
-              error={errors.phone?.message}
+              {...register('contactNumber')}
+              error={errors.contactNumber?.message}
               isRequired
               icon={Phone}
               placeholder="9876543210"
@@ -291,7 +283,7 @@ export const AddEmployeeForm = ({
             <InputField
               label="Alternate Phone"
               type="tel"
-              {...register('altPhone')}
+              {...register('atlMobileNumber')}
               icon={Phone}
               placeholder="Optional"
             />
@@ -345,11 +337,8 @@ export const AddEmployeeForm = ({
 
             <InputField
               label="Username"
-              {...register('username', {
-                required: 'Username is required',
-                minLength: { value: 4, message: 'Username must be at least 4 characters' }
-              })}
-              error={errors.username?.message}
+              {...register('userName')}
+              error={errors.userName?.message}
               icon={User}
               placeholder="Create username"
             />
@@ -357,10 +346,7 @@ export const AddEmployeeForm = ({
             <InputField
               label="Password"
               type="password"
-              {...register('password', {
-                required: 'Password is required',
-                minLength: { value: 6, message: 'Password must be at least 6 characters' }
-              })}
+              {...register('password')}
               error={errors.password?.message}
               icon={Key}
               placeholder="••••••••"
@@ -390,7 +376,7 @@ export const AddEmployeeForm = ({
             <div className="md:col-span-3">
               <TextAreaField
                 label="Full Address"
-                {...register('address', { required: 'Address is required' })}
+                {...register('address')}
                 error={errors.address?.message}
                 rows={2}
                 placeholder="Complete address..."
@@ -399,14 +385,13 @@ export const AddEmployeeForm = ({
 
             <InputField
               label="City"
-              {...register('city', { required: 'City is required' })}
+              {...register('city')}
               error={errors.city?.message}
             />
 
             <Controller
               name="state"
               control={control}
-              rules={{ required: 'State is required' }}
               render={({ field }) => (
                 <SelectField
                   label="State"
@@ -429,11 +414,8 @@ export const AddEmployeeForm = ({
 
             <InputField
               label="Pin Code"
-              {...register('pincode', {
-                required: 'Pin code is required',
-                pattern: { value: /^[0-9]{6}$/, message: 'Enter valid 6-digit pincode' }
-              })}
-              error={errors.pincode?.message}
+              {...register('pinCode')}
+              error={errors.pinCode?.message}
             />
 
             <div className="md:col-span-3 pb-2 border-b border-gray-100 mb-2 mt-4">
@@ -444,15 +426,13 @@ export const AddEmployeeForm = ({
 
             <InputField
               label="Emergency Contact"
-              {...register('emergencyContact', {
-                pattern: { value: /^[0-9]{10}$/, message: 'Enter valid 10-digit number' }
-              })}
+              {...register('emergencyContact')}
               error={errors.emergencyContact?.message}
               placeholder="Emergency phone number"
             />
 
             <Controller
-              name="emergencyRelation"
+              name="emergencyRelationship"
               control={control}
               render={({ field }) => (
                 <SelectField
@@ -480,7 +460,6 @@ export const AddEmployeeForm = ({
             <Controller
               name="department"
               control={control}
-              rules={{ required: 'Department is required' }}
               render={({ field }) => (
                 <SelectField
                   label="Department"
@@ -503,7 +482,7 @@ export const AddEmployeeForm = ({
 
             <InputField
               label="Designation"
-              {...register('designation', { required: 'Designation is required' })}
+              {...register('designation')}
               error={errors.designation?.message}
               placeholder="e.g. Sales Executive"
             />
@@ -552,9 +531,7 @@ export const AddEmployeeForm = ({
                 <div>
                   <InputField
                     label="Aadhaar Number"
-                    {...register('aadhaarNo', {
-                      pattern: { value: /^[0-9]{12}$/, message: 'Enter valid 12-digit Aadhaar' }
-                    })}
+                    {...register('aadhaarNo')}
                     error={errors.aadhaarNo?.message}
                     placeholder="12 Digit Number"
                   />
@@ -619,9 +596,7 @@ export const AddEmployeeForm = ({
                 <div>
                   <InputField
                     label="PAN Number"
-                    {...register('panNo', {
-                      pattern: { value: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, message: 'Enter valid PAN format' }
-                    })}
+                    {...register('panNo')}
                     error={errors.panNo?.message}
                     placeholder="ABCDE1234F"
                   />
@@ -694,7 +669,7 @@ export const AddEmployeeForm = ({
               <div className="space-y-3">
                 <InputField
                   label="Account Holder Name"
-                  {...register('accountHolder', { required: 'Account holder name is required' })}
+                  {...register('accountHolder')}
                   error={errors.accountHolder?.message}
                 />
 
@@ -706,19 +681,13 @@ export const AddEmployeeForm = ({
 
                 <InputField
                   label="Account Number"
-                  {...register('bankAccountNo', {
-                    required: 'Account number is required',
-                    pattern: { value: /^[0-9]{9,18}$/, message: 'Enter valid account number' }
-                  })}
+                  {...register('bankAccountNo')}
                   error={errors.bankAccountNo?.message}
                 />
 
                 <InputField
                   label="IFSC Code"
-                  {...register('ifsc', {
-                    required: 'IFSC code is required',
-                    pattern: { value: /^[A-Z]{4}0[A-Z0-9]{6}$/, message: 'Enter valid IFSC code' }
-                  })}
+                  {...register('ifsc')}
                   error={errors.ifsc?.message}
                   placeholder="e.g. HDFC0001234"
                 />
@@ -747,10 +716,7 @@ export const AddEmployeeForm = ({
                   <InputField
                     label="Basic Salary"
                     type="number"
-                    {...register('basicSalary', {
-                      required: 'Basic salary is required',
-                      min: { value: 0, message: 'Salary must be positive' }
-                    })}
+                    {...register('basicSalary', { valueAsNumber: true })}
                     error={errors.basicSalary?.message}
                     isRequired
                     placeholder="e.g. 45000"
@@ -988,7 +954,7 @@ export const AddEmployeeForm = ({
           ) : (
             <Button
               type="submit"
-              disabled={isSubmitting}
+              disabled={!isValid || isSubmitting}
               className="bg-green-600 hover:bg-green-700 text-white"
             >
               {isSubmitting ? (

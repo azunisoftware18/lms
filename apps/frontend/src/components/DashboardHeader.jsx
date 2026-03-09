@@ -8,15 +8,16 @@ import {
   Settings
 } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../redux/slices/authSlice';
+import { logout } from '../../store/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 
-export const AdminHeader = ({ toggleSidebar }) => {
+export default function DashboardHeader({ toggleSidebar }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
+  
   const handleLogout = () => {
     dispatch(logout());
     setShowDropdown(false);
@@ -202,7 +203,6 @@ export const AdminHeader = ({ toggleSidebar }) => {
             >
               <Settings size={16} /> Settings
             </button>
-
 
             {/* Additional Admin Links */}
             {user?.role === 'ADMIN' && (

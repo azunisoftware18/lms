@@ -5,7 +5,7 @@ import InputField from "../ui/InputField"; // Reusable input
 import SelectField from "../ui/SelectField"; // Reusable select
 import Button from "../ui/Button"; // Reusable button
 import { zodResolver } from "@hookform/resolvers/zod";
-import { branchAdminSchema } from "../../app/validations/BranchAdminValidation";
+import { branchAdminSchema } from "../../validations/BranchAdminValidation";
 
 const BranchAdminForm = ({ admin = null, branches = [], onSave, onClose, loading = false }) => {
   const isEditMode = !!admin;
