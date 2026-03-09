@@ -2,7 +2,7 @@ import React from 'react';
 import { X } from 'lucide-react';
 import LoginForm from '../forms/LoginForm';
 
-const LoginFormModal = ({ isOpen, onClose }) => {
+export default function LoginFormModal ({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   React.useEffect(() => {
@@ -56,6 +56,4 @@ const LoginFormModal = ({ isOpen, onClose }) => {
       </div>
     </div>
   );
-};
-
-export default LoginFormModal;
+}

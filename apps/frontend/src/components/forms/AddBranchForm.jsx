@@ -6,8 +6,10 @@ import SelectField from "../ui/SelectField";
 import TextAreaField from "../ui/TextAreaField";
 import Button from "../ui/Button";
 import ToggleSwitch from "../ui/ToggleSwitch"; // Aapka switch component
+import { zodResolver } from "@hookform/resolvers/zod";
+import { branchSchema } from "../../validations/BranchValidation";
 
-const AddBranchForm = ({ branch = null, mainBranches = [], onClose, onSave }) => {
+export default function AddBranchForm  ({ branch = null, mainBranches = [], onClose, onSave })  {
   const {
     register,
     handleSubmit,
@@ -172,6 +174,4 @@ const AddBranchForm = ({ branch = null, mainBranches = [], onClose, onSave }) =>
       </form>
     </div>
   );
-};
-
-export default AddBranchForm;
+}

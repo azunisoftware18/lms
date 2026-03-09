@@ -2,22 +2,20 @@ import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom"; // Portal ke liye
 import { MoreVertical } from "lucide-react";
 
-const ActionMenu = ({
+export default function ActionMenu({
   actions = [],
   containerClassName = "",
   menuClassName = "",
   align = "right",
-}) => {
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [coords, setCoords] = useState({ top: 0, left: 0 }); // Menu ki position ke liye
   const menuRef = useRef(null);
   const triggerRef = useRef(null);
 
-  // Toggle function with position calculation
   const handleToggle = () => {
     if (!isOpen && triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
-      // Screen par button ki sahi location nikalna
       setCoords({
         top: rect.bottom + window.scrollY,
         left: align === "right" ? rect.right + window.scrollX : rect.left + window.scrollX,
@@ -105,10 +103,8 @@ const ActionMenu = ({
             ))}
           </div>
         </div>,
-        document.body // Seedha Body mein render hoga
+        document.body 
       )}
     </div>
   );
-};
-
-export default ActionMenu;
+}

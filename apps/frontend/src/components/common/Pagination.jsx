@@ -1,14 +1,13 @@
-import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const Pagination = ({
+export default function Pagination({
   currentPage = 1,
   totalPages = 1,
   onPageChange = () => {},
   containerClassName = "",
   showPrevNext = true,
-  maxVisiblePages = 5, // 5 is ideal for mobile & desktop mix
-}) => {
+  maxVisiblePages = 5, 
+}) {
   if (totalPages <= 1) return null;
 
   const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
@@ -105,6 +104,4 @@ const Pagination = ({
       )}
     </nav>
   );
-};
-
-export default Pagination;
+}

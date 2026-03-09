@@ -1,6 +1,3 @@
-// Footer.jsx
-
-import React from "react";
 import {
   Facebook,
   Twitter,
@@ -11,7 +8,7 @@ import {
 } from "lucide-react";
 import { HashLink } from "react-router-hash-link";
 
-const Footer = () => {
+export default function Footer () {
   const PRIMARY_COLOR = "text-blue-400";
   const DARK_BG = "bg-[#0b173e]";
   const ACCENT_COLOR_BG = "bg-blue-600";
@@ -252,6 +249,4 @@ const Footer = () => {
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}

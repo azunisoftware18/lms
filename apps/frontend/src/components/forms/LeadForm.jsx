@@ -8,7 +8,7 @@ import TextAreaField from "../ui/TextAreaField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { leadSchema } from "../../validations/LeadValidation";
 
-function LeadForm({ onSuccess }) {
+export default function LeadForm({ onSuccess }) {
   // 1. Initialize useForm
   const {
     register,
@@ -214,5 +214,3 @@ function LeadForm({ onSuccess }) {
     </form>
   );
 }
-
-export default LeadForm;

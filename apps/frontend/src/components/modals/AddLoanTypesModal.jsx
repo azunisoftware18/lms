@@ -2,7 +2,7 @@ import React from "react";
 import { X } from "lucide-react";
 import AddLoanTypesForm from "../forms/AddLoanTypesForm";
 
-function AddLoanTypesModal({ isOpen, onClose, editData }) {
+export default function AddLoanTypesModal({ isOpen, onClose, editData }) {
   if (!isOpen) return null;
 
   return (
@@ -32,5 +32,3 @@ function AddLoanTypesModal({ isOpen, onClose, editData }) {
     </div>
   );
 }
-
-export default AddLoanTypesModal;

@@ -30,7 +30,7 @@ import Button from '../ui/Button';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loanTypeSchema } from '../../validations/LoanTypeValidation';
 
-function AddLoanTypesForm({ onClose, editData }) {
+export default function AddLoanTypesForm ({ onClose, editData }) {
   const createLoanTypeMutation = useCreateLoanType();
   const updateLoanTypeMutation = useUpdateLoanType();
 
@@ -987,5 +987,3 @@ function AddLoanTypesForm({ onClose, editData }) {
     </div>
   );
 }
-
-export default AddLoanTypesForm;

@@ -14,13 +14,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { employeeSchema } from '../../validations/EmployeeValidation';
 import { ToasterProvider } from '../../providers/toasterProvider';
 
-export const AddEmployeeForm = ({
+export default function AddEmployeeForm ({
   initialFormState,
   isEditing,
   editId,
   onCancel,
   onSuccess
-}) => {
+}) {
   // Refs for file inputs
   const aadhaarFrontRef = useRef(null);
   const aadhaarBackRef = useRef(null);
@@ -968,4 +968,4 @@ export const AddEmployeeForm = ({
       </form>
     </div>
   );
-};
+}

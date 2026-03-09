@@ -1,15 +1,14 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Loader, AlertCircle, User, Mail, Phone, Lock, Building2 } from "lucide-react";
-import InputField from "../ui/InputField"; // Reusable input
-import SelectField from "../ui/SelectField"; // Reusable select
-import Button from "../ui/Button"; // Reusable button
+import InputField from "../ui/InputField"; 
+import SelectField from "../ui/SelectField"; 
+import Button from "../ui/Button"; 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { branchAdminSchema } from "../../validations/BranchAdminValidation";
 
-const BranchAdminForm = ({ admin = null, branches = [], onSave, onClose, loading = false }) => {
+export default function BranchAdminForm ({ admin = null, branches = [], onSave, onClose, loading = false }) {
   const isEditMode = !!admin;
-
   const {
     register,
     handleSubmit,
@@ -131,6 +130,4 @@ const BranchAdminForm = ({ admin = null, branches = [], onSave, onClose, loading
       </div>
     </form>
   );
-};
-
-export default BranchAdminForm;
+}
