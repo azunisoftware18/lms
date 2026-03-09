@@ -390,9 +390,11 @@ export const ModelName = {
   Admin: 'Admin',
   Employee: 'Employee',
   Partner: 'Partner',
+  Address: 'Address',
   PartnerCommission: 'PartnerCommission',
   Branch: 'Branch',
   Leads: 'Leads',
+  LoanApplicationDraft: 'LoanApplicationDraft',
   LoanApplication: 'LoanApplication',
   LoanRecovery: 'LoanRecovery',
   RecoveryPayment: 'RecoveryPayment',
@@ -408,6 +410,9 @@ export const ModelName = {
   CreditAccount: 'CreditAccount',
   LoanType: 'LoanType',
   Customer: 'Customer',
+  OccupationalDetails: 'OccupationalDetails',
+  EmploymentDetails: 'EmploymentDetails',
+  FinancialDetails: 'FinancialDetails',
   TechnicalReport: 'TechnicalReport',
   LegalReport: 'LegalReport',
   LoanAssignment: 'LoanAssignment',
@@ -432,7 +437,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "loanNumberCounter" | "user" | "userProfile" | "admin" | "employee" | "partner" | "partnerCommission" | "branch" | "leads" | "loanApplication" | "loanRecovery" | "recoveryPayment" | "permission" | "userPermission" | "document" | "kyc" | "coApplicant" | "loanEmiSchedule" | "emiPayment" | "emiMoratorium" | "creditReport" | "creditAccount" | "loanType" | "customer" | "technicalReport" | "legalReport" | "loanAssignment" | "auditLog" | "sLAPolicy" | "sLABreachLog" | "loanDisbursement" | "nachMandate" | "nachDebit"
+    modelProps: "loanNumberCounter" | "user" | "userProfile" | "admin" | "employee" | "partner" | "address" | "partnerCommission" | "branch" | "leads" | "loanApplicationDraft" | "loanApplication" | "loanRecovery" | "recoveryPayment" | "permission" | "userPermission" | "document" | "kyc" | "coApplicant" | "loanEmiSchedule" | "emiPayment" | "emiMoratorium" | "creditReport" | "creditAccount" | "loanType" | "customer" | "occupationalDetails" | "employmentDetails" | "financialDetails" | "technicalReport" | "legalReport" | "loanAssignment" | "auditLog" | "sLAPolicy" | "sLABreachLog" | "loanDisbursement" | "nachMandate" | "nachDebit"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -832,6 +837,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Address: {
+      payload: Prisma.$AddressPayload<ExtArgs>
+      fields: Prisma.AddressFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AddressFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddressPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AddressFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddressPayload>
+        }
+        findFirst: {
+          args: Prisma.AddressFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddressPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AddressFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddressPayload>
+        }
+        findMany: {
+          args: Prisma.AddressFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddressPayload>[]
+        }
+        create: {
+          args: Prisma.AddressCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddressPayload>
+        }
+        createMany: {
+          args: Prisma.AddressCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.AddressDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddressPayload>
+        }
+        update: {
+          args: Prisma.AddressUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddressPayload>
+        }
+        deleteMany: {
+          args: Prisma.AddressDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AddressUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.AddressUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddressPayload>
+        }
+        aggregate: {
+          args: Prisma.AddressAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAddress>
+        }
+        groupBy: {
+          args: Prisma.AddressGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AddressGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AddressCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AddressCountAggregateOutputType> | number
+        }
+      }
+    }
     PartnerCommission: {
       payload: Prisma.$PartnerCommissionPayload<ExtArgs>
       fields: Prisma.PartnerCommissionFieldRefs
@@ -1027,6 +1098,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.LeadsCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.LeadsCountAggregateOutputType> | number
+        }
+      }
+    }
+    LoanApplicationDraft: {
+      payload: Prisma.$LoanApplicationDraftPayload<ExtArgs>
+      fields: Prisma.LoanApplicationDraftFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LoanApplicationDraftFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanApplicationDraftPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LoanApplicationDraftFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanApplicationDraftPayload>
+        }
+        findFirst: {
+          args: Prisma.LoanApplicationDraftFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanApplicationDraftPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LoanApplicationDraftFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanApplicationDraftPayload>
+        }
+        findMany: {
+          args: Prisma.LoanApplicationDraftFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanApplicationDraftPayload>[]
+        }
+        create: {
+          args: Prisma.LoanApplicationDraftCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanApplicationDraftPayload>
+        }
+        createMany: {
+          args: Prisma.LoanApplicationDraftCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.LoanApplicationDraftDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanApplicationDraftPayload>
+        }
+        update: {
+          args: Prisma.LoanApplicationDraftUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanApplicationDraftPayload>
+        }
+        deleteMany: {
+          args: Prisma.LoanApplicationDraftDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LoanApplicationDraftUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.LoanApplicationDraftUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanApplicationDraftPayload>
+        }
+        aggregate: {
+          args: Prisma.LoanApplicationDraftAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLoanApplicationDraft>
+        }
+        groupBy: {
+          args: Prisma.LoanApplicationDraftGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoanApplicationDraftGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LoanApplicationDraftCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoanApplicationDraftCountAggregateOutputType> | number
         }
       }
     }
@@ -2020,6 +2157,204 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    OccupationalDetails: {
+      payload: Prisma.$OccupationalDetailsPayload<ExtArgs>
+      fields: Prisma.OccupationalDetailsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OccupationalDetailsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OccupationalDetailsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OccupationalDetailsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OccupationalDetailsPayload>
+        }
+        findFirst: {
+          args: Prisma.OccupationalDetailsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OccupationalDetailsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OccupationalDetailsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OccupationalDetailsPayload>
+        }
+        findMany: {
+          args: Prisma.OccupationalDetailsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OccupationalDetailsPayload>[]
+        }
+        create: {
+          args: Prisma.OccupationalDetailsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OccupationalDetailsPayload>
+        }
+        createMany: {
+          args: Prisma.OccupationalDetailsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.OccupationalDetailsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OccupationalDetailsPayload>
+        }
+        update: {
+          args: Prisma.OccupationalDetailsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OccupationalDetailsPayload>
+        }
+        deleteMany: {
+          args: Prisma.OccupationalDetailsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OccupationalDetailsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.OccupationalDetailsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OccupationalDetailsPayload>
+        }
+        aggregate: {
+          args: Prisma.OccupationalDetailsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOccupationalDetails>
+        }
+        groupBy: {
+          args: Prisma.OccupationalDetailsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OccupationalDetailsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OccupationalDetailsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OccupationalDetailsCountAggregateOutputType> | number
+        }
+      }
+    }
+    EmploymentDetails: {
+      payload: Prisma.$EmploymentDetailsPayload<ExtArgs>
+      fields: Prisma.EmploymentDetailsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmploymentDetailsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmploymentDetailsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmploymentDetailsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmploymentDetailsPayload>
+        }
+        findFirst: {
+          args: Prisma.EmploymentDetailsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmploymentDetailsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmploymentDetailsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmploymentDetailsPayload>
+        }
+        findMany: {
+          args: Prisma.EmploymentDetailsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmploymentDetailsPayload>[]
+        }
+        create: {
+          args: Prisma.EmploymentDetailsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmploymentDetailsPayload>
+        }
+        createMany: {
+          args: Prisma.EmploymentDetailsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.EmploymentDetailsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmploymentDetailsPayload>
+        }
+        update: {
+          args: Prisma.EmploymentDetailsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmploymentDetailsPayload>
+        }
+        deleteMany: {
+          args: Prisma.EmploymentDetailsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmploymentDetailsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.EmploymentDetailsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmploymentDetailsPayload>
+        }
+        aggregate: {
+          args: Prisma.EmploymentDetailsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmploymentDetails>
+        }
+        groupBy: {
+          args: Prisma.EmploymentDetailsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmploymentDetailsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmploymentDetailsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmploymentDetailsCountAggregateOutputType> | number
+        }
+      }
+    }
+    FinancialDetails: {
+      payload: Prisma.$FinancialDetailsPayload<ExtArgs>
+      fields: Prisma.FinancialDetailsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FinancialDetailsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialDetailsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FinancialDetailsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialDetailsPayload>
+        }
+        findFirst: {
+          args: Prisma.FinancialDetailsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialDetailsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FinancialDetailsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialDetailsPayload>
+        }
+        findMany: {
+          args: Prisma.FinancialDetailsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialDetailsPayload>[]
+        }
+        create: {
+          args: Prisma.FinancialDetailsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialDetailsPayload>
+        }
+        createMany: {
+          args: Prisma.FinancialDetailsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.FinancialDetailsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialDetailsPayload>
+        }
+        update: {
+          args: Prisma.FinancialDetailsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialDetailsPayload>
+        }
+        deleteMany: {
+          args: Prisma.FinancialDetailsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FinancialDetailsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.FinancialDetailsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialDetailsPayload>
+        }
+        aggregate: {
+          args: Prisma.FinancialDetailsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFinancialDetails>
+        }
+        groupBy: {
+          args: Prisma.FinancialDetailsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FinancialDetailsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FinancialDetailsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FinancialDetailsCountAggregateOutputType> | number
+        }
+      }
+    }
     TechnicalReport: {
       payload: Prisma.$TechnicalReportPayload<ExtArgs>
       fields: Prisma.TechnicalReportFieldRefs
@@ -2713,13 +3048,13 @@ export const EmployeeScalarFieldEnum = {
   dob: 'dob',
   designation: 'designation',
   gender: 'gender',
+  genderOther: 'genderOther',
   maritalStatus: 'maritalStatus',
-  address: 'address',
-  city: 'city',
-  state: 'state',
-  pinCode: 'pinCode',
+  maritalStatusOther: 'maritalStatusOther',
+  addressId: 'addressId',
   emergencyContact: 'emergencyContact',
   emergencyRelationship: 'emergencyRelationship',
+  emergencyRelationshipOther: 'emergencyRelationshipOther',
   department: 'department',
   dateOfJoining: 'dateOfJoining',
   experience: 'experience',
@@ -2751,10 +3086,7 @@ export const PartnerScalarFieldEnum = {
   establishedYear: 'establishedYear',
   partnerType: 'partnerType',
   businessNature: 'businessNature',
-  fullAddress: 'fullAddress',
-  city: 'city',
-  state: 'state',
-  pinCode: 'pinCode',
+  addressId: 'addressId',
   designation: 'designation',
   businessCategory: 'businessCategory',
   specialization: 'specialization',
@@ -2773,6 +3105,27 @@ export const PartnerScalarFieldEnum = {
 } as const
 
 export type PartnerScalarFieldEnum = (typeof PartnerScalarFieldEnum)[keyof typeof PartnerScalarFieldEnum]
+
+
+export const AddressScalarFieldEnum = {
+  id: 'id',
+  addressType: 'addressType',
+  addressLine1: 'addressLine1',
+  addressLine2: 'addressLine2',
+  city: 'city',
+  district: 'district',
+  state: 'state',
+  pinCode: 'pinCode',
+  landmark: 'landmark',
+  phoneNumber: 'phoneNumber',
+  stdCode: 'stdCode',
+  customerId: 'customerId',
+  coApplicantId: 'coApplicantId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AddressScalarFieldEnum = (typeof AddressScalarFieldEnum)[keyof typeof AddressScalarFieldEnum]
 
 
 export const PartnerCommissionScalarFieldEnum = {
@@ -2819,10 +3172,7 @@ export const LeadsScalarFieldEnum = {
   partnerId: 'partnerId',
   loanAmount: 'loanAmount',
   loanTypeId: 'loanTypeId',
-  city: 'city',
-  state: 'state',
-  pinCode: 'pinCode',
-  address: 'address',
+  addressId: 'addressId',
   assignedTo: 'assignedTo',
   assignedBy: 'assignedBy',
   convertedLoanApplicationId: 'convertedLoanApplicationId',
@@ -2834,10 +3184,30 @@ export const LeadsScalarFieldEnum = {
 export type LeadsScalarFieldEnum = (typeof LeadsScalarFieldEnum)[keyof typeof LeadsScalarFieldEnum]
 
 
+export const LoanApplicationDraftScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  branchId: 'branchId',
+  draftData: 'draftData',
+  step: 'step',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LoanApplicationDraftScalarFieldEnum = (typeof LoanApplicationDraftScalarFieldEnum)[keyof typeof LoanApplicationDraftScalarFieldEnum]
+
+
 export const LoanApplicationScalarFieldEnum = {
   id: 'id',
   applicationDate: 'applicationDate',
   loanNumber: 'loanNumber',
+  serviceCentre: 'serviceCentre',
+  processingFees: 'processingFees',
+  executiveName: 'executiveName',
+  EmployeeCode: 'EmployeeCode',
+  schemeGroup: 'schemeGroup',
+  referrerFileNo: 'referrerFileNo',
   customerId: 'customerId',
   leadId: 'leadId',
   loanTypeId: 'loanTypeId',
@@ -2988,13 +3358,13 @@ export const CoApplicantScalarFieldEnum = {
   LastName: 'LastName',
   middleName: 'middleName',
   relation: 'relation',
+  relationOther: 'relationOther',
   contactNumber: 'contactNumber',
   email: 'email',
   dob: 'dob',
   panNumber: 'panNumber',
   aadhaarNumber: 'aadhaarNumber',
   employmentType: 'employmentType',
-  monthlyIncome: 'monthlyIncome',
   kycId: 'kycId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -3156,29 +3526,35 @@ export const CustomerScalarFieldEnum = {
   firstName: 'firstName',
   lastName: 'lastName',
   middleName: 'middleName',
+  fatherName: 'fatherName',
+  motherName: 'motherName',
   gender: 'gender',
+  genderOther: 'genderOther',
   dob: 'dob',
   aadhaarNumber: 'aadhaarNumber',
   panNumber: 'panNumber',
   voterId: 'voterId',
+  drivingLicenceNo: 'drivingLicenceNo',
   maritalStatus: 'maritalStatus',
+  maritalStatusOther: 'maritalStatusOther',
   nationality: 'nationality',
   category: 'category',
-  spouseName: 'spouseName',
+  categoryOther: 'categoryOther',
   passportNumber: 'passportNumber',
   contactNumber: 'contactNumber',
   alternateNumber: 'alternateNumber',
   email: 'email',
-  address: 'address',
-  city: 'city',
-  state: 'state',
-  pinCode: 'pinCode',
+  phoneNumber: 'phoneNumber',
+  noOfFamilyDependents: 'noOfFamilyDependents',
+  noOfChildren: 'noOfChildren',
+  qualification: 'qualification',
+  correspondenceAddressType: 'correspondenceAddressType',
+  presentAccommodation: 'presentAccommodation',
+  periodOfStay: 'periodOfStay',
+  rentPerMonth: 'rentPerMonth',
   employmentType: 'employmentType',
-  monthlyIncome: 'monthlyIncome',
-  annualIncome: 'annualIncome',
   bankName: 'bankName',
   bankAccountNumber: 'bankAccountNumber',
-  otherIncome: 'otherIncome',
   ifscCode: 'ifscCode',
   accountType: 'accountType',
   status: 'status',
@@ -3189,6 +3565,75 @@ export const CustomerScalarFieldEnum = {
 export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
 
 
+export const OccupationalDetailsScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  coApplicantId: 'coApplicantId',
+  occupationalCategory: 'occupationalCategory',
+  occupationalCategoryOther: 'occupationalCategoryOther',
+  companyBusinessName: 'companyBusinessName',
+  addressId: 'addressId',
+  phoneNumber: 'phoneNumber',
+  extensionNumber: 'extensionNumber',
+  totalWorkExperience: 'totalWorkExperience',
+  noOfEmployees: 'noOfEmployees',
+  commencementDate: 'commencementDate',
+  professionalType: 'professionalType',
+  professionalSpecify: 'professionalSpecify',
+  businessType: 'businessType',
+  businessSpecify: 'businessSpecify',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OccupationalDetailsScalarFieldEnum = (typeof OccupationalDetailsScalarFieldEnum)[keyof typeof OccupationalDetailsScalarFieldEnum]
+
+
+export const EmploymentDetailsScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  coApplicantId: 'coApplicantId',
+  employerType: 'employerType',
+  employerTypeOther: 'employerTypeOther',
+  designation: 'designation',
+  department: 'department',
+  dateOfJoining: 'dateOfJoining',
+  dateOfRetirement: 'dateOfRetirement',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmploymentDetailsScalarFieldEnum = (typeof EmploymentDetailsScalarFieldEnum)[keyof typeof EmploymentDetailsScalarFieldEnum]
+
+
+export const FinancialDetailsScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  grossMonthlyIncome: 'grossMonthlyIncome',
+  netMonthlyIncome: 'netMonthlyIncome',
+  averageMonthlyExpenses: 'averageMonthlyExpenses',
+  savingBankBalance: 'savingBankBalance',
+  valueOfImmovableProperty: 'valueOfImmovableProperty',
+  currentBalanceInPF: 'currentBalanceInPF',
+  valueOfSharesSecurities: 'valueOfSharesSecurities',
+  fixedDeposits: 'fixedDeposits',
+  otherAssets: 'otherAssets',
+  totalAssets: 'totalAssets',
+  creditSocietyLoan: 'creditSocietyLoan',
+  employerLoan: 'employerLoan',
+  homeLoan: 'homeLoan',
+  pfLoan: 'pfLoan',
+  vehicleLoan: 'vehicleLoan',
+  personalLoan: 'personalLoan',
+  otherLoan: 'otherLoan',
+  totalLiabilities: 'totalLiabilities',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FinancialDetailsScalarFieldEnum = (typeof FinancialDetailsScalarFieldEnum)[keyof typeof FinancialDetailsScalarFieldEnum]
+
+
 export const TechnicalReportScalarFieldEnum = {
   id: 'id',
   loanApplicationId: 'loanApplicationId',
@@ -3196,10 +3641,7 @@ export const TechnicalReportScalarFieldEnum = {
   engineerName: 'engineerName',
   agencyName: 'agencyName',
   propertyType: 'propertyType',
-  propertyAddress: 'propertyAddress',
-  city: 'city',
-  state: 'state',
-  pincode: 'pincode',
+  addressId: 'addressId',
   marketValue: 'marketValue',
   discussionValue: 'discussionValue',
   forcesdSaleValue: 'forcesdSaleValue',
@@ -3418,17 +3860,25 @@ export const AdminOrderByRelevanceFieldEnum = {
 export type AdminOrderByRelevanceFieldEnum = (typeof AdminOrderByRelevanceFieldEnum)[keyof typeof AdminOrderByRelevanceFieldEnum]
 
 
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
 export const EmployeeOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
   employeeId: 'employeeId',
   atlMobileNumber: 'atlMobileNumber',
   designation: 'designation',
-  address: 'address',
-  city: 'city',
-  state: 'state',
-  pinCode: 'pinCode',
+  genderOther: 'genderOther',
+  maritalStatusOther: 'maritalStatusOther',
+  addressId: 'addressId',
   emergencyContact: 'emergencyContact',
+  emergencyRelationshipOther: 'emergencyRelationshipOther',
   department: 'department',
   experience: 'experience',
   reportingManagerId: 'reportingManagerId',
@@ -3436,14 +3886,6 @@ export const EmployeeOrderByRelevanceFieldEnum = {
 } as const
 
 export type EmployeeOrderByRelevanceFieldEnum = (typeof EmployeeOrderByRelevanceFieldEnum)[keyof typeof EmployeeOrderByRelevanceFieldEnum]
-
-
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 export const PartnerOrderByRelevanceFieldEnum = {
@@ -3458,10 +3900,7 @@ export const PartnerOrderByRelevanceFieldEnum = {
   gstNumber: 'gstNumber',
   branchId: 'branchId',
   businessNature: 'businessNature',
-  fullAddress: 'fullAddress',
-  city: 'city',
-  state: 'state',
-  pinCode: 'pinCode',
+  addressId: 'addressId',
   designation: 'designation',
   businessCategory: 'businessCategory',
   specialization: 'specialization',
@@ -3470,6 +3909,24 @@ export const PartnerOrderByRelevanceFieldEnum = {
 } as const
 
 export type PartnerOrderByRelevanceFieldEnum = (typeof PartnerOrderByRelevanceFieldEnum)[keyof typeof PartnerOrderByRelevanceFieldEnum]
+
+
+export const AddressOrderByRelevanceFieldEnum = {
+  id: 'id',
+  addressLine1: 'addressLine1',
+  addressLine2: 'addressLine2',
+  city: 'city',
+  district: 'district',
+  state: 'state',
+  pinCode: 'pinCode',
+  landmark: 'landmark',
+  phoneNumber: 'phoneNumber',
+  stdCode: 'stdCode',
+  customerId: 'customerId',
+  coApplicantId: 'coApplicantId'
+} as const
+
+export type AddressOrderByRelevanceFieldEnum = (typeof AddressOrderByRelevanceFieldEnum)[keyof typeof AddressOrderByRelevanceFieldEnum]
 
 
 export const PartnerCommissionOrderByRelevanceFieldEnum = {
@@ -3500,10 +3957,7 @@ export const LeadsOrderByRelevanceFieldEnum = {
   email: 'email',
   partnerId: 'partnerId',
   loanTypeId: 'loanTypeId',
-  city: 'city',
-  state: 'state',
-  pinCode: 'pinCode',
-  address: 'address',
+  addressId: 'addressId',
   assignedTo: 'assignedTo',
   assignedBy: 'assignedBy',
   convertedLoanApplicationId: 'convertedLoanApplicationId'
@@ -3512,9 +3966,40 @@ export const LeadsOrderByRelevanceFieldEnum = {
 export type LeadsOrderByRelevanceFieldEnum = (typeof LeadsOrderByRelevanceFieldEnum)[keyof typeof LeadsOrderByRelevanceFieldEnum]
 
 
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const LoanApplicationDraftOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  branchId: 'branchId'
+} as const
+
+export type LoanApplicationDraftOrderByRelevanceFieldEnum = (typeof LoanApplicationDraftOrderByRelevanceFieldEnum)[keyof typeof LoanApplicationDraftOrderByRelevanceFieldEnum]
+
+
 export const LoanApplicationOrderByRelevanceFieldEnum = {
   id: 'id',
   loanNumber: 'loanNumber',
+  serviceCentre: 'serviceCentre',
+  executiveName: 'executiveName',
+  EmployeeCode: 'EmployeeCode',
+  schemeGroup: 'schemeGroup',
+  referrerFileNo: 'referrerFileNo',
   customerId: 'customerId',
   leadId: 'leadId',
   loanTypeId: 'loanTypeId',
@@ -3606,6 +4091,7 @@ export const CoApplicantOrderByRelevanceFieldEnum = {
   firstName: 'firstName',
   LastName: 'LastName',
   middleName: 'middleName',
+  relationOther: 'relationOther',
   contactNumber: 'contactNumber',
   email: 'email',
   panNumber: 'panNumber',
@@ -3638,23 +4124,6 @@ export const EmiMoratoriumOrderByRelevanceFieldEnum = {
 } as const
 
 export type EmiMoratoriumOrderByRelevanceFieldEnum = (typeof EmiMoratoriumOrderByRelevanceFieldEnum)[keyof typeof EmiMoratoriumOrderByRelevanceFieldEnum]
-
-
-export const JsonNullValueFilter = {
-  DbNull: DbNull,
-  JsonNull: JsonNull,
-  AnyNull: AnyNull
-} as const
-
-export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-} as const
-
-export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
 export const CreditReportOrderByRelevanceFieldEnum = {
@@ -3695,19 +4164,23 @@ export const CustomerOrderByRelevanceFieldEnum = {
   firstName: 'firstName',
   lastName: 'lastName',
   middleName: 'middleName',
+  fatherName: 'fatherName',
+  motherName: 'motherName',
+  genderOther: 'genderOther',
   aadhaarNumber: 'aadhaarNumber',
   panNumber: 'panNumber',
   voterId: 'voterId',
+  drivingLicenceNo: 'drivingLicenceNo',
+  maritalStatusOther: 'maritalStatusOther',
   nationality: 'nationality',
-  spouseName: 'spouseName',
+  categoryOther: 'categoryOther',
   passportNumber: 'passportNumber',
   contactNumber: 'contactNumber',
   alternateNumber: 'alternateNumber',
   email: 'email',
-  address: 'address',
-  city: 'city',
-  state: 'state',
-  pinCode: 'pinCode',
+  phoneNumber: 'phoneNumber',
+  qualification: 'qualification',
+  periodOfStay: 'periodOfStay',
   bankName: 'bankName',
   bankAccountNumber: 'bankAccountNumber',
   ifscCode: 'ifscCode',
@@ -3717,6 +4190,42 @@ export const CustomerOrderByRelevanceFieldEnum = {
 export type CustomerOrderByRelevanceFieldEnum = (typeof CustomerOrderByRelevanceFieldEnum)[keyof typeof CustomerOrderByRelevanceFieldEnum]
 
 
+export const OccupationalDetailsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  coApplicantId: 'coApplicantId',
+  occupationalCategoryOther: 'occupationalCategoryOther',
+  companyBusinessName: 'companyBusinessName',
+  addressId: 'addressId',
+  phoneNumber: 'phoneNumber',
+  extensionNumber: 'extensionNumber',
+  professionalSpecify: 'professionalSpecify',
+  businessSpecify: 'businessSpecify'
+} as const
+
+export type OccupationalDetailsOrderByRelevanceFieldEnum = (typeof OccupationalDetailsOrderByRelevanceFieldEnum)[keyof typeof OccupationalDetailsOrderByRelevanceFieldEnum]
+
+
+export const EmploymentDetailsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  coApplicantId: 'coApplicantId',
+  employerTypeOther: 'employerTypeOther',
+  designation: 'designation',
+  department: 'department'
+} as const
+
+export type EmploymentDetailsOrderByRelevanceFieldEnum = (typeof EmploymentDetailsOrderByRelevanceFieldEnum)[keyof typeof EmploymentDetailsOrderByRelevanceFieldEnum]
+
+
+export const FinancialDetailsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  customerId: 'customerId'
+} as const
+
+export type FinancialDetailsOrderByRelevanceFieldEnum = (typeof FinancialDetailsOrderByRelevanceFieldEnum)[keyof typeof FinancialDetailsOrderByRelevanceFieldEnum]
+
+
 export const TechnicalReportOrderByRelevanceFieldEnum = {
   id: 'id',
   loanApplicationId: 'loanApplicationId',
@@ -3724,10 +4233,7 @@ export const TechnicalReportOrderByRelevanceFieldEnum = {
   engineerName: 'engineerName',
   agencyName: 'agencyName',
   propertyType: 'propertyType',
-  propertyAddress: 'propertyAddress',
-  city: 'city',
-  state: 'state',
-  pincode: 'pincode',
+  addressId: 'addressId',
   constructionStatus: 'constructionStatus',
   qualityOfConstruction: 'qualityOfConstruction',
   remarks: 'remarks',
@@ -3944,6 +4450,13 @@ export type EnumPaymentCycleFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 
 
 /**
+ * Reference to a field of type 'AddressType'
+ */
+export type EnumAddressTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AddressType'>
+    
+
+
+/**
  * Reference to a field of type 'CommissionStatus'
  */
 export type EnumCommissionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommissionStatus'>
@@ -3961,6 +4474,27 @@ export type EnumBranchTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
  * Reference to a field of type 'LeadStatus'
  */
 export type EnumLeadStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'DraftStatus'
+ */
+export type EnumDraftStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DraftStatus'>
     
 
 
@@ -4063,20 +4597,6 @@ export type EnumCreditProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-/**
  * Reference to a field of type 'LoanTypes'
  */
 export type EnumLoanTypesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoanTypes'>
@@ -4098,9 +4618,51 @@ export type EnumCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'CorrespondenceAddressType'
+ */
+export type EnumCorrespondenceAddressTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CorrespondenceAddressType'>
+    
+
+
+/**
+ * Reference to a field of type 'AccommodationType'
+ */
+export type EnumAccommodationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccommodationType'>
+    
+
+
+/**
  * Reference to a field of type 'CustomerStatus'
  */
 export type EnumCustomerStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'OccupationalCategory'
+ */
+export type EnumOccupationalCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OccupationalCategory'>
+    
+
+
+/**
+ * Reference to a field of type 'ProfessionalType'
+ */
+export type EnumProfessionalTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProfessionalType'>
+    
+
+
+/**
+ * Reference to a field of type 'BusinessType'
+ */
+export type EnumBusinessTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BusinessType'>
+    
+
+
+/**
+ * Reference to a field of type 'EmployerType'
+ */
+export type EnumEmployerTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmployerType'>
     
 
 
@@ -4239,9 +4801,11 @@ export type GlobalOmitConfig = {
   admin?: Prisma.AdminOmit
   employee?: Prisma.EmployeeOmit
   partner?: Prisma.PartnerOmit
+  address?: Prisma.AddressOmit
   partnerCommission?: Prisma.PartnerCommissionOmit
   branch?: Prisma.BranchOmit
   leads?: Prisma.LeadsOmit
+  loanApplicationDraft?: Prisma.LoanApplicationDraftOmit
   loanApplication?: Prisma.LoanApplicationOmit
   loanRecovery?: Prisma.LoanRecoveryOmit
   recoveryPayment?: Prisma.RecoveryPaymentOmit
@@ -4257,6 +4821,9 @@ export type GlobalOmitConfig = {
   creditAccount?: Prisma.CreditAccountOmit
   loanType?: Prisma.LoanTypeOmit
   customer?: Prisma.CustomerOmit
+  occupationalDetails?: Prisma.OccupationalDetailsOmit
+  employmentDetails?: Prisma.EmploymentDetailsOmit
+  financialDetails?: Prisma.FinancialDetailsOmit
   technicalReport?: Prisma.TechnicalReportOmit
   legalReport?: Prisma.LegalReportOmit
   loanAssignment?: Prisma.LoanAssignmentOmit

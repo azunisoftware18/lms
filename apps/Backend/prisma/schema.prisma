@@ -46,12 +46,13 @@ model User {
   partner  Partner?
   employee Employee?
 
-  kycs             Kyc[]
-  permissions      UserPermission[]
-  leadsAssignedTo  Leads[]           @relation("LeadAssignedTo")
-  leadsAssignedBy  Leads[]           @relation("LeadAssignedBy")
-  verifiedKycs     Kyc[]             @relation("KycVerifiedBy")
-  loanApplications LoanApplication[]
+  kycs                  Kyc[]
+  permissions           UserPermission[]
+  leadsAssignedTo       Leads[]                @relation("LeadAssignedTo")
+  leadsAssignedBy       Leads[]                @relation("LeadAssignedBy")
+  verifiedKycs          Kyc[]                  @relation("KycVerifiedBy")
+  loanApplications      LoanApplication[]
+  loanApplicationDrafts LoanApplicationDraft[]
 }
 
 model UserProfile {
@@ -79,24 +80,25 @@ model Admin {
 }
 
 model Employee {
-  id              String        @id @default(cuid())
-  userId          String        @unique
-  employeeId      String        @unique
-  atlMobileNumber String
-  dob             DateTime
-  designation     String
-  gender          Gender
-  maritalStatus   MaritalStatus
+  id                 String        @id @default(cuid())
+  userId             String        @unique
+  employeeId         String        @unique
+  atlMobileNumber    String
+  dob                DateTime
+  designation        String
+  gender             Gender
+  genderOther        String? // Specify if gender is OTHER
+  maritalStatus      MaritalStatus
+  maritalStatusOther String? // Specify if marital status is OTHER
 
   // Contact & address
-  address String
-  city    String
-  state   String
-  pinCode String
+  addressId String?  @unique
+  address   Address? @relation("EmployeeAddress", fields: [addressId], references: [id])
 
   // Emergency
-  emergencyContact      String
-  emergencyRelationship Relationship
+  emergencyContact           String
+  emergencyRelationship      Relationship
+  emergencyRelationshipOther String? // Specify if relationship is OTHER
 
   // Professional
   department         String
@@ -145,10 +147,8 @@ model Partner {
   establishedYear            Int?
   partnerType                PartnerType
   businessNature             String?
-  fullAddress                String?
-  city                       String?
-  state                      String?
-  pinCode                    String?
+  addressId                  String?             @unique
+  address                    Address?            @relation("PartnerAddress", fields: [addressId], references: [id])
   designation                String?
   businessCategory           String?
   specialization             String?
@@ -168,6 +168,39 @@ model Partner {
   // Relations
   loanApplications LoanApplication[]
   user             User              @relation(fields: [userId], references: [id])
+}
+
+model Address {
+  id           String      @id @default(cuid())
+  addressType  AddressType
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  district     String
+  state        String
+  pinCode      String
+  landmark     String?
+  phoneNumber  String? // With STD Code
+  stdCode      String?
+
+  // Relations to Customer and CoApplicant (can have multiple addresses)
+  customerId          String?
+  customer            Customer?             @relation(fields: [customerId], references: [id])
+  coApplicantId       String?
+  coApplicant         CoApplicant?          @relation(fields: [coApplicantId], references: [id])
+  occupationalDetails OccupationalDetails[] // For office/business addresses
+
+  // Relations to other entities (one address per entity)
+  employee        Employee?        @relation("EmployeeAddress")
+  partner         Partner?         @relation("PartnerAddress")
+  lead            Leads?           @relation("LeadAddress")
+  technicalReport TechnicalReport? @relation("TechnicalReportAddress")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([customerId])
+  @@index([coApplicantId])
 }
 
 model PartnerCommission {
@@ -200,19 +233,20 @@ model Branch {
   type           BranchType // MAIN | SUBSIDIARY 
   parentBranchId String? // null for main branches
 
-  parentBranch     Branch?           @relation("BranchHierarchy", fields: [parentBranchId], references: [id])
-  subBranches      Branch[]          @relation("BranchHierarchy")
-  isActive         Boolean           @default(true)
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
-  user             User[]
-  partners         Partner[]
-  employees        Employee[]
-  loanApplications LoanApplication[]
-  loanRecoveries   LoanRecovery[]
-  technicalReports TechnicalReport[]
-  legalReports     LegalReport[]
-  documents        Document[]
+  parentBranch          Branch?                @relation("BranchHierarchy", fields: [parentBranchId], references: [id])
+  subBranches           Branch[]               @relation("BranchHierarchy")
+  isActive              Boolean                @default(true)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  user                  User[]
+  partners              Partner[]
+  employees             Employee[]
+  loanApplications      LoanApplication[]
+  loanRecoveries        LoanRecovery[]
+  technicalReports      TechnicalReport[]
+  legalReports          LegalReport[]
+  documents             Document[]
+  loanApplicationDrafts LoanApplicationDraft[]
 
   @@index([parentBranchId])
 }
@@ -228,10 +262,8 @@ model Leads {
   partnerId                  String?
   loanAmount                 Float
   loanTypeId                 String
-  city                       String
-  state                      String
-  pinCode                    String
-  address                    String
+  addressId                  String?           @unique
+  address                    Address?          @relation("LeadAddress", fields: [addressId], references: [id])
   assignedTo                 String?
   assignedBy                 String?
   convertedLoanApplicationId String?
@@ -248,11 +280,35 @@ model Leads {
   @@index([leadNumber])
 }
 
+model LoanApplicationDraft {
+  id       String @id @default(cuid())
+  userId   String
+  branchId String
+
+  draftData Json
+  step      Int         @default(1) // to track which step of the application process the draft is in
+  status    DraftStatus @default(DRAFT)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  branch Branch @relation(fields: [branchId], references: [id])
+}
+
 model LoanApplication {
   id              String   @id @default(cuid())
   // leadId          String              @unique
   applicationDate DateTime @default(now())
   loanNumber      String   @unique
+
+  // Office Use Section
+  serviceCentre  String?
+  processingFees Float?
+  executiveName  String?
+  EmployeeCode   String?
+  schemeGroup    String?
+  referrerFileNo String?
+
   customerId      String
   customer        Customer @relation(fields: [customerId], references: [id])
   // loanProductId   String
@@ -328,6 +384,211 @@ model LoanApplication {
 
   @@index([loanNumber])
 }
+
+model CoApplicant {
+  id                String          @id @default(cuid())
+  loanApplicationId String
+  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
+
+  // Personal Details
+  firstName     String
+  LastName      String
+  middleName    String?
+  relation      CoApplicantRelation
+  relationOther String? // Specify if relation is OTHER
+  contactNumber String
+  email         String?
+  dob           DateTime
+  panNumber     String?
+  aadhaarNumber String?
+
+  employmentType EmploymentType
+
+  //kyc Details
+  kycId String? @unique
+  kyc   Kyc?    @relation("CoApplicantKyc", fields: [kycId], references: [id])
+
+  // Relations
+  addresses           Address[]
+  occupationalDetails OccupationalDetails[]
+  employmentDetails   EmploymentDetails[]
+  documents           Document[]
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+
+  @@index([loanApplicationId])
+}
+
+
+//===================================CUSTOMER=====================================
+
+model Customer {
+  id                 String        @id @default(cuid())
+  title              Title
+  firstName          String
+  lastName           String
+  middleName         String?
+  fatherName         String
+  motherName         String
+  woname           String? // Husband/Wife/Guardian name based on relation
+  gender             Gender
+  genderOther        String? // Specify if gender is OTHER
+  dob                DateTime
+  aadhaarNumber      String
+  panNumber          String
+  voterId            String?
+  drivingLicenceNo   String?
+  maritalStatus      MaritalStatus
+  maritalStatusOther String? // Specify if marital status is OTHER
+  nationality        String
+  category           Category
+  categoryOther      String? // Specify if category is OTHER
+  passportNumber     String?
+  contactNumber      String
+  alternateNumber    String?
+  email              String?
+  phoneNumber        String? // With STD Code
+  relationshipWithCoApplicant CoApplicantRelation // Relation with co-applicant if any
+  relationWithCoApplicantOther String? // Specify if relation is OTHER
+
+  // Additional Personal Details
+  noOfFamilyDependents      Int?
+  noOfChildren              Int?
+  qualification             String?
+  correspondenceAddressType CorrespondenceAddressType?
+
+  // Accommodation Details
+  presentAccommodation AccommodationType?
+  periodOfStay         String? // e.g., "2 years", "6 months"
+  rentPerMonth         Float?
+
+  employmentType EmploymentType
+
+
+
+  status CustomerStatus @default(ACTIVE)
+
+  // Relations
+  addresses        Address[]
+  loanApplications LoanApplication[]
+  loanRecoveries   LoanRecovery[]
+  nachMandates     NachMandate[]
+  creditReport     CreditReport?
+  // kycs             CustomerKYC[]
+
+  // Relations to new detailed tables
+  occupationalDetails OccupationalDetails[]
+  employmentDetails   EmploymentDetails[]
+  financialDetails    FinancialDetails?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+//===================================OCCUPATIONAL DETAILS=====================================
+
+model OccupationalDetails {
+  id            String       @id @default(cuid())
+  customerId    String
+  customer      Customer     @relation(fields: [customerId], references: [id])
+  coApplicantId String?
+  coApplicant   CoApplicant? @relation(fields: [coApplicantId], references: [id])
+
+  occupationalCategory      OccupationalCategory
+  occupationalCategoryOther String? // Specify if category is OTHER
+
+  // Common fields
+  companyBusinessName String?
+  addressId           String?
+  address             Address?  @relation(fields: [addressId], references: [id])
+  phoneNumber         String? // With STD Code
+  extensionNumber     String?
+  totalWorkExperience Int? // in years
+  noOfEmployees       Int?
+  commencementDate    DateTime? // Date of Commencement of Business/Profession
+
+  // Professional specific
+  professionalType    ProfessionalType?
+  professionalSpecify String? // Other specify
+
+  // Business specific
+  businessType    BusinessType?
+  businessSpecify String? // Other specify
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([customerId])
+  @@index([coApplicantId])
+}
+
+//===================================EMPLOYMENT DETAILS (For Salaried)=====================================
+
+model EmploymentDetails {
+  id            String       @id @default(cuid())
+  customerId    String
+  customer      Customer     @relation(fields: [customerId], references: [id])
+  coApplicantId String?
+  coApplicant   CoApplicant? @relation(fields: [coApplicantId], references: [id])
+
+  employerType      EmployerType
+  employerTypeOther String? // Specify if employer type is OTHER
+  designation       String?
+  department        String?
+  dateOfJoining     DateTime?
+  dateOfRetirement  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([customerId])
+  @@index([coApplicantId])
+}
+
+//===================================FINANCIAL DETAILS=====================================
+
+model FinancialDetails {
+  id         String   @id @default(cuid())
+  customerId String   @unique
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  // Income & Expenses
+  grossMonthlyIncome     Float
+  netMonthlyIncome       Float
+  averageMonthlyExpenses Float
+
+  // Assets
+  savingBankBalance        Float?
+  valueOfImmovableProperty Float?
+  currentBalanceInPF       Float?
+  valueOfSharesSecurities  Float?
+  fixedDeposits            Float?
+  otherAssets              Float?
+  totalAssets              Float?
+
+  // Liabilities
+  creditSocietyLoan Float?
+  employerLoan      Float?
+  homeLoan          Float?
+  pfLoan            Float?
+  vehicleLoan       Float?
+  personalLoan      Float?
+  otherLoan         Float?
+  totalLiabilities  Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+
+
+
+
+
+
+
 
 model LoanRecovery {
   id String @id @default(cuid())
@@ -450,34 +711,7 @@ model Kyc {
   user      User     @relation(fields: [userId], references: [id])
 }
 
-model CoApplicant {
-  id                String          @id @default(cuid())
-  loanApplicationId String
-  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
 
-  // Personal Details
-  firstName     String
-  LastName      String
-  middleName    String?
-  relation      CoApplicantRelation
-  contactNumber String
-  email         String?
-  dob           DateTime
-  panNumber     String?
-  aadhaarNumber String?
-
-  employmentType EmploymentType
-  monthlyIncome  Float?
-
-  //kyc Details
-  kycId     String?    @unique
-  kyc       Kyc?       @relation("CoApplicantKyc", fields: [kycId], references: [id])
-  documents Document[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-
-  @@index([loanApplicationId])
-}
 
 enum KycStatus {
   NOT_STARTED
@@ -605,19 +839,6 @@ model CreditAccount {
   @@index([creditReportId])
 }
 
-// STATUS HISTORY
-
-// model LoanStatusHistory {
-//   id                String     @id @default(cuid())
-//   loanApplicationId String
-//   oldStatus         LoanStatus
-//   newStatus         LoanStatus
-//   remarks           String?
-
-//   loanApplication LoanApplication @relation(fields: [loanApplicationId], references: [id])
-
-//   changedAt DateTime @default(now())
-// }
 model LoanType {
   id String @id @default(cuid())
 
@@ -693,52 +914,10 @@ model LoanType {
   loanApplications LoanApplication[]
 }
 
-//===================================CUSTOMER=====================================
 
-model Customer {
-  id              String         @id @default(cuid())
-  title           Title
-  firstName       String
-  lastName        String
-  middleName      String?
-  gender          Gender
-  dob             DateTime
-  aadhaarNumber   String?
-  panNumber       String?
-  voterId         String?
-  maritalStatus   MaritalStatus?
-  nationality     String?
-  category        Category?
-  spouseName      String?
-  passportNumber  String?
-  contactNumber   String
-  alternateNumber String?
-  email           String?
 
-  address String
-  city    String
-  state   String
-  pinCode String
 
-  employmentType EmploymentType
 
-  monthlyIncome     Float?
-  annualIncome      Float?
-  bankName          String?
-  bankAccountNumber String?
-  otherIncome       Float?
-  ifscCode          String?
-  accountType       String?
-
-  status           CustomerStatus    @default(ACTIVE)
-  loanApplications LoanApplication[]
-  loanRecoveries   LoanRecovery[]
-  nachMandates     NachMandate[]
-  creditReport     CreditReport?
-  // kycs             CustomerKYC[]
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
-}
 
 model TechnicalReport {
   id                String          @id @default(cuid())
@@ -751,11 +930,9 @@ model TechnicalReport {
   agencyName   String?
 
   //property details
-  propertyType    String // Residential, Commercial, Land Flat Villa etc.
-  propertyAddress String
-  city            String
-  state           String
-  pincode         String
+  propertyType String // Residential, Commercial, Land Flat Villa etc.
+  addressId    String?  @unique
+  address      Address? @relation("TechnicalReportAddress", fields: [addressId], references: [id])
 
   //Valuation details
   marketValue      Float
@@ -967,6 +1144,11 @@ enum DisbursementMode {
   UPI
 }
 
+enum DraftStatus {
+  DRAFT
+  SUBMITTED
+}
+
 enum NachStatus {
   PENDING
   ACTIVE
@@ -1051,6 +1233,7 @@ enum Category {
   GENERAL
   SC
   ST
+  NT
   OBC
   OTHER
 }
@@ -1112,6 +1295,25 @@ enum Relationship {
   SIBLING
   FRIEND
   OTHER
+}
+
+enum AccommodationType {
+  OWN
+  FAMILY
+  RENTED
+  EMPLOYER
+}
+
+enum CorrespondenceAddressType {
+  RESIDENCE
+  OFFICE
+}
+
+enum AddressType {
+  CURRENT_RESIDENTIAL
+  PERMANENT
+  CORRESPONDENCE
+  OFFICE
 }
 
 enum WorkLocation {
@@ -1176,6 +1378,39 @@ enum EmploymentType {
   salaried
   self_employed
   business
+  professional
+}
+
+enum OccupationalCategory {
+  SALARIED
+  BUSINESS
+  PROFESSIONAL
+  OTHER
+}
+
+enum ProfessionalType {
+  DOCTOR
+  CA_ICWA_CS
+  ARCHITECT
+  OTHER
+}
+
+enum BusinessType {
+  TRADER
+  MANUFACTURER
+  WHOLESELLER
+  OTHER
+}
+
+enum EmployerType {
+  PUBLIC_LTD
+  MNC
+  EDUCATIONAL_INST
+  CENTRAL_STATE_GOVT
+  PUBLIC_SECTOR_UNIT
+  PROPRIETOR_PARTNERSHIP
+  PRIVATE_LTD
+  OTHER
 }
 
 enum CustomerStatus {

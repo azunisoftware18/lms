@@ -57,7 +57,7 @@ const QuickActionCard = ({
     >
       {/* Icon Section */}
       <div className={`
-        flex-shrink-0 p-3 rounded-xl transition-all duration-300 
+        flex-0 p-3 rounded-xl transition-all duration-300 
         group-hover:rotate-6 ${theme.iconBox}
       `}>
         {isLoading ? (

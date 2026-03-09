@@ -43,57 +43,78 @@ import AdminLayout from '../layout/AdminLayout.jsx';
 export default function AppRoutes() {
 	return (
 		<Routes>
-
 			{/* Public Layout */}
-			<Route path="/" element={
+			<Route
+				path="/"
+				element={
 					<PublicRoute>
 						<Layout />
 					</PublicRoute>
 				}>
-
 				{/* Public Page  */}
 				<Route index element={<HomePage />} />
-        <Route path="about-us" element={<AboutUsPage />} />
-        <Route path="annual-report" element={<AnnualReportPage />} />
-        <Route path="board-of-directors" element={<BoardOfDirectorsPage />} />
-        <Route path="committees" element={<CommitteesPage />} />
-        <Route path="contact-us" element={<ContactUsPage />} />
-        <Route path="corporate-governance" element={<CorporateGovernancePage />} />
-        <Route path="credit-rating" element={<CreditRatingPage />} />
-        <Route path="investor-relations" element={<CsrPage />} />
-        <Route path="employee-benefits" element={<EmployeesBenefitPage />} />
-        <Route path="financial-information" element={<FinancialInformationPage />} />
-        <Route path="hr" element={<FinovaHrPage />} />
-        <Route path="join-the-finova-family" element={<JointheFinovaFaimilyPage />} />
-        <Route path="key-managerial-personnel" element={<KMP />} />
-        <Route path="news-and-media" element={<NewsAndMediaPage />} />
-        <Route path="notice-of-ballot" element={<NoticeOfBallotPage />} />
-        <Route path="opportunity" element={<OpportunityPage />} />
-        <Route path="other-disclosures" element={<OtherDisclosuresPage />} />
-        <Route path="our-investors" element={<OurInvestorsPage />} />
-        <Route path="our-method" element={<OurMethodPage />} />
-        <Route path="policies-and-codes" element={<PoliciesAndCodesPage />} />
-		<Route path="policies" element={<PoliciesPage />} />
-		<Route path="products" element={<ProductsPage />} />
-		<Route path="public-disclosure-under-liquidity-risk" element={<PublicDisclosureUnderLiquidityRiskPage />} />
-		<Route path="sarfaesi-auction-notices" element={<SarfaesiAuctionNoticesPage />} />
-		<Route path="sarfaesi-secured-assets" element={<SarfaesiPage />} />
-		<Route path="shareholder-information" element={<ShareholderInformationPage />} />
-		<Route path="disclosures-under-regulation-62-of-lodr" element={<UnderRegulationPage />} />
-		<Route path="vision-and-mission" element={<VisionAndMissionPage />} />
-		<Route path="welcome-to-finova" element={<WelcometoFinovaPage />} />
-		<Route path="login" element={<LoginForm />} />
-
-
+				<Route path="about-us" element={<AboutUsPage />} />
+				<Route path="annual-report" element={<AnnualReportPage />} />
+				<Route path="board-of-directors" element={<BoardOfDirectorsPage />} />
+				<Route path="committees" element={<CommitteesPage />} />
+				<Route path="contact-us" element={<ContactUsPage />} />
+				<Route
+					path="corporate-governance"
+					element={<CorporateGovernancePage />}
+				/>
+				<Route path="credit-rating" element={<CreditRatingPage />} />
+				<Route path="investor-relations" element={<CsrPage />} />
+				<Route path="employee-benefits" element={<EmployeesBenefitPage />} />
+				<Route
+					path="financial-information"
+					element={<FinancialInformationPage />}
+				/>
+				<Route path="hr" element={<FinovaHrPage />} />
+				<Route
+					path="join-the-finova-family"
+					element={<JointheFinovaFaimilyPage />}
+				/>
+				<Route path="key-managerial-personnel" element={<KMP />} />
+				<Route path="news-and-media" element={<NewsAndMediaPage />} />
+				<Route path="notice-of-ballot" element={<NoticeOfBallotPage />} />
+				<Route path="opportunity" element={<OpportunityPage />} />
+				<Route path="other-disclosures" element={<OtherDisclosuresPage />} />
+				<Route path="our-investors" element={<OurInvestorsPage />} />
+				<Route path="our-method" element={<OurMethodPage />} />
+				<Route path="policies-and-codes" element={<PoliciesAndCodesPage />} />
+				<Route path="policies" element={<PoliciesPage />} />
+				<Route path="products" element={<ProductsPage />} />
+				<Route
+					path="public-disclosure-under-liquidity-risk"
+					element={<PublicDisclosureUnderLiquidityRiskPage />}
+				/>
+				<Route
+					path="sarfaesi-auction-notices"
+					element={<SarfaesiAuctionNoticesPage />}
+				/>
+				<Route path="sarfaesi-secured-assets" element={<SarfaesiPage />} />
+				<Route
+					path="shareholder-information"
+					element={<ShareholderInformationPage />}
+				/>
+				<Route
+					path="disclosures-under-regulation-62-of-lodr"
+					element={<UnderRegulationPage />}
+				/>
+				<Route path="vision-and-mission" element={<VisionAndMissionPage />} />
+				<Route path="welcome-to-finova" element={<WelcometoFinovaPage />} />
+				<Route path="login" element={<LoginForm />} />
 			</Route>
 
 			{/* Private Dashboard */}
-			<Route path="/admin" element={
+			<Route
+				path="/admin"
+				element={
 					<PrivateRoute>
 						<AdminLayout />
 					</PrivateRoute>
 				}>
-					{/* Dashboard page */}
+				{/* Dashboard page */}
 				<Route index element={<DashboardPage />} />
 			</Route>
 		</Routes>

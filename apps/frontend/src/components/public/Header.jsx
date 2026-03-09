@@ -4,6 +4,8 @@ import { ChevronDown, Menu, X, Phone, MapPin, Clock, User } from "lucide-react";
 import { navigationItems } from "../../lib/dumyData";
 import { useSelector, useDispatch } from "react-redux";
 import { clearUser } from "../../store/slices/authSlice"; // ✅ Import clearUser action
+import Button from "../ui/Button";
+import LeadFormModal from "../modals/LeadFormModal";
 // import ApplyLoanModal from "./admin/modals/ApplyLoanModal";
 
 export default function Header() {
@@ -553,17 +555,26 @@ export default function Header() {
 
             {/* CTA Buttons */}
             <div className="hidden lg:flex items-center space-x-3">
-              {isAuthenticated && user ? (
-                <UserProfile />
-              ) : (
-                <Link
-                  to="/login"
-                  className="border border-blue-600 text-blue-600 px-6 py-2.5 rounded-lg hover:bg-blue-50 transition-all font-semibold"
-                >
-                  Login
-                </Link>
-              )}
-            </div>
+
+  {/* Apply Now Button */}
+  <Button
+    onClick={() => setShowModal(true)}
+    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5"
+  >
+    Apply Now
+  </Button>
+
+  {isAuthenticated && user ? (
+    <UserProfile />
+  ) : (
+    <Link
+      to="/login"
+      className="border border-blue-600 text-blue-600 px-6 py-2.5 rounded-lg hover:bg-blue-50 transition-all font-semibold"
+    >
+      Login
+    </Link>
+  )}
+</div>
 
             {/* Mobile Menu Button */}
             <button
@@ -632,6 +643,12 @@ export default function Header() {
           onClick={() => setActiveDropdown(null)}
         />
       )}
+      {showModal && (
+  <LeadFormModal
+    isOpen={showModal}
+    onClose={() => setShowModal(false)}
+  />
+)}
     </>
   );
 }

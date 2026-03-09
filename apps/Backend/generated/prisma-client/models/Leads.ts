@@ -45,10 +45,7 @@ export type LeadsMinAggregateOutputType = {
   partnerId: string | null
   loanAmount: number | null
   loanTypeId: string | null
-  city: string | null
-  state: string | null
-  pinCode: string | null
-  address: string | null
+  addressId: string | null
   assignedTo: string | null
   assignedBy: string | null
   convertedLoanApplicationId: string | null
@@ -68,10 +65,7 @@ export type LeadsMaxAggregateOutputType = {
   partnerId: string | null
   loanAmount: number | null
   loanTypeId: string | null
-  city: string | null
-  state: string | null
-  pinCode: string | null
-  address: string | null
+  addressId: string | null
   assignedTo: string | null
   assignedBy: string | null
   convertedLoanApplicationId: string | null
@@ -91,10 +85,7 @@ export type LeadsCountAggregateOutputType = {
   partnerId: number
   loanAmount: number
   loanTypeId: number
-  city: number
-  state: number
-  pinCode: number
-  address: number
+  addressId: number
   assignedTo: number
   assignedBy: number
   convertedLoanApplicationId: number
@@ -124,10 +115,7 @@ export type LeadsMinAggregateInputType = {
   partnerId?: true
   loanAmount?: true
   loanTypeId?: true
-  city?: true
-  state?: true
-  pinCode?: true
-  address?: true
+  addressId?: true
   assignedTo?: true
   assignedBy?: true
   convertedLoanApplicationId?: true
@@ -147,10 +135,7 @@ export type LeadsMaxAggregateInputType = {
   partnerId?: true
   loanAmount?: true
   loanTypeId?: true
-  city?: true
-  state?: true
-  pinCode?: true
-  address?: true
+  addressId?: true
   assignedTo?: true
   assignedBy?: true
   convertedLoanApplicationId?: true
@@ -170,10 +155,7 @@ export type LeadsCountAggregateInputType = {
   partnerId?: true
   loanAmount?: true
   loanTypeId?: true
-  city?: true
-  state?: true
-  pinCode?: true
-  address?: true
+  addressId?: true
   assignedTo?: true
   assignedBy?: true
   convertedLoanApplicationId?: true
@@ -280,10 +262,7 @@ export type LeadsGroupByOutputType = {
   partnerId: string | null
   loanAmount: number
   loanTypeId: string
-  city: string
-  state: string
-  pinCode: string
-  address: string
+  addressId: string | null
   assignedTo: string | null
   assignedBy: string | null
   convertedLoanApplicationId: string | null
@@ -326,16 +305,14 @@ export type LeadsWhereInput = {
   partnerId?: Prisma.StringNullableFilter<"Leads"> | string | null
   loanAmount?: Prisma.FloatFilter<"Leads"> | number
   loanTypeId?: Prisma.StringFilter<"Leads"> | string
-  city?: Prisma.StringFilter<"Leads"> | string
-  state?: Prisma.StringFilter<"Leads"> | string
-  pinCode?: Prisma.StringFilter<"Leads"> | string
-  address?: Prisma.StringFilter<"Leads"> | string
+  addressId?: Prisma.StringNullableFilter<"Leads"> | string | null
   assignedTo?: Prisma.StringNullableFilter<"Leads"> | string | null
   assignedBy?: Prisma.StringNullableFilter<"Leads"> | string | null
   convertedLoanApplicationId?: Prisma.StringNullableFilter<"Leads"> | string | null
   status?: Prisma.EnumLeadStatusFilter<"Leads"> | $Enums.LeadStatus
   createdAt?: Prisma.DateTimeFilter<"Leads"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Leads"> | Date | string
+  address?: Prisma.XOR<Prisma.AddressNullableScalarRelationFilter, Prisma.AddressWhereInput> | null
   partner?: Prisma.XOR<Prisma.PartnerNullableScalarRelationFilter, Prisma.PartnerWhereInput> | null
   assignedToUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   assignedByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -354,16 +331,14 @@ export type LeadsOrderByWithRelationInput = {
   partnerId?: Prisma.SortOrderInput | Prisma.SortOrder
   loanAmount?: Prisma.SortOrder
   loanTypeId?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  pinCode?: Prisma.SortOrder
-  address?: Prisma.SortOrder
+  addressId?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedTo?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   convertedLoanApplicationId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  address?: Prisma.AddressOrderByWithRelationInput
   partner?: Prisma.PartnerOrderByWithRelationInput
   assignedToUser?: Prisma.UserOrderByWithRelationInput
   assignedByUser?: Prisma.UserOrderByWithRelationInput
@@ -375,6 +350,7 @@ export type LeadsOrderByWithRelationInput = {
 export type LeadsWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   leadNumber?: string
+  addressId?: string
   AND?: Prisma.LeadsWhereInput | Prisma.LeadsWhereInput[]
   OR?: Prisma.LeadsWhereInput[]
   NOT?: Prisma.LeadsWhereInput | Prisma.LeadsWhereInput[]
@@ -386,22 +362,19 @@ export type LeadsWhereUniqueInput = Prisma.AtLeast<{
   partnerId?: Prisma.StringNullableFilter<"Leads"> | string | null
   loanAmount?: Prisma.FloatFilter<"Leads"> | number
   loanTypeId?: Prisma.StringFilter<"Leads"> | string
-  city?: Prisma.StringFilter<"Leads"> | string
-  state?: Prisma.StringFilter<"Leads"> | string
-  pinCode?: Prisma.StringFilter<"Leads"> | string
-  address?: Prisma.StringFilter<"Leads"> | string
   assignedTo?: Prisma.StringNullableFilter<"Leads"> | string | null
   assignedBy?: Prisma.StringNullableFilter<"Leads"> | string | null
   convertedLoanApplicationId?: Prisma.StringNullableFilter<"Leads"> | string | null
   status?: Prisma.EnumLeadStatusFilter<"Leads"> | $Enums.LeadStatus
   createdAt?: Prisma.DateTimeFilter<"Leads"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Leads"> | Date | string
+  address?: Prisma.XOR<Prisma.AddressNullableScalarRelationFilter, Prisma.AddressWhereInput> | null
   partner?: Prisma.XOR<Prisma.PartnerNullableScalarRelationFilter, Prisma.PartnerWhereInput> | null
   assignedToUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   assignedByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   loanApplications?: Prisma.LoanApplicationListRelationFilter
   loanType?: Prisma.XOR<Prisma.LoanTypeScalarRelationFilter, Prisma.LoanTypeWhereInput>
-}, "id" | "leadNumber">
+}, "id" | "leadNumber" | "addressId">
 
 export type LeadsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -414,10 +387,7 @@ export type LeadsOrderByWithAggregationInput = {
   partnerId?: Prisma.SortOrderInput | Prisma.SortOrder
   loanAmount?: Prisma.SortOrder
   loanTypeId?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  pinCode?: Prisma.SortOrder
-  address?: Prisma.SortOrder
+  addressId?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedTo?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   convertedLoanApplicationId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -445,10 +415,7 @@ export type LeadsScalarWhereWithAggregatesInput = {
   partnerId?: Prisma.StringNullableWithAggregatesFilter<"Leads"> | string | null
   loanAmount?: Prisma.FloatWithAggregatesFilter<"Leads"> | number
   loanTypeId?: Prisma.StringWithAggregatesFilter<"Leads"> | string
-  city?: Prisma.StringWithAggregatesFilter<"Leads"> | string
-  state?: Prisma.StringWithAggregatesFilter<"Leads"> | string
-  pinCode?: Prisma.StringWithAggregatesFilter<"Leads"> | string
-  address?: Prisma.StringWithAggregatesFilter<"Leads"> | string
+  addressId?: Prisma.StringNullableWithAggregatesFilter<"Leads"> | string | null
   assignedTo?: Prisma.StringNullableWithAggregatesFilter<"Leads"> | string | null
   assignedBy?: Prisma.StringNullableWithAggregatesFilter<"Leads"> | string | null
   convertedLoanApplicationId?: Prisma.StringNullableWithAggregatesFilter<"Leads"> | string | null
@@ -466,14 +433,11 @@ export type LeadsCreateInput = {
   dob: Date | string
   gender: $Enums.Gender
   loanAmount: number
-  city: string
-  state: string
-  pinCode: string
-  address: string
   convertedLoanApplicationId?: string | null
   status?: $Enums.LeadStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  address?: Prisma.AddressCreateNestedOneWithoutLeadInput
   partner?: Prisma.PartnerCreateNestedOneWithoutLeadsInput
   assignedToUser?: Prisma.UserCreateNestedOneWithoutLeadsAssignedToInput
   assignedByUser?: Prisma.UserCreateNestedOneWithoutLeadsAssignedByInput
@@ -492,10 +456,7 @@ export type LeadsUncheckedCreateInput = {
   partnerId?: string | null
   loanAmount: number
   loanTypeId: string
-  city: string
-  state: string
-  pinCode: string
-  address: string
+  addressId?: string | null
   assignedTo?: string | null
   assignedBy?: string | null
   convertedLoanApplicationId?: string | null
@@ -514,14 +475,11 @@ export type LeadsUpdateInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.AddressUpdateOneWithoutLeadNestedInput
   partner?: Prisma.PartnerUpdateOneWithoutLeadsNestedInput
   assignedToUser?: Prisma.UserUpdateOneWithoutLeadsAssignedToNestedInput
   assignedByUser?: Prisma.UserUpdateOneWithoutLeadsAssignedByNestedInput
@@ -540,10 +498,7 @@ export type LeadsUncheckedUpdateInput = {
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -564,10 +519,7 @@ export type LeadsCreateManyInput = {
   partnerId?: string | null
   loanAmount: number
   loanTypeId: string
-  city: string
-  state: string
-  pinCode: string
-  address: string
+  addressId?: string | null
   assignedTo?: string | null
   assignedBy?: string | null
   convertedLoanApplicationId?: string | null
@@ -585,10 +537,6 @@ export type LeadsUpdateManyMutationInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -606,10 +554,7 @@ export type LeadsUncheckedUpdateManyInput = {
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -626,6 +571,11 @@ export type LeadsListRelationFilter = {
 
 export type LeadsOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type LeadsNullableScalarRelationFilter = {
+  is?: Prisma.LeadsWhereInput | null
+  isNot?: Prisma.LeadsWhereInput | null
 }
 
 export type LeadsOrderByRelevanceInput = {
@@ -645,10 +595,7 @@ export type LeadsCountOrderByAggregateInput = {
   partnerId?: Prisma.SortOrder
   loanAmount?: Prisma.SortOrder
   loanTypeId?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  pinCode?: Prisma.SortOrder
-  address?: Prisma.SortOrder
+  addressId?: Prisma.SortOrder
   assignedTo?: Prisma.SortOrder
   assignedBy?: Prisma.SortOrder
   convertedLoanApplicationId?: Prisma.SortOrder
@@ -672,10 +619,7 @@ export type LeadsMaxOrderByAggregateInput = {
   partnerId?: Prisma.SortOrder
   loanAmount?: Prisma.SortOrder
   loanTypeId?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  pinCode?: Prisma.SortOrder
-  address?: Prisma.SortOrder
+  addressId?: Prisma.SortOrder
   assignedTo?: Prisma.SortOrder
   assignedBy?: Prisma.SortOrder
   convertedLoanApplicationId?: Prisma.SortOrder
@@ -695,10 +639,7 @@ export type LeadsMinOrderByAggregateInput = {
   partnerId?: Prisma.SortOrder
   loanAmount?: Prisma.SortOrder
   loanTypeId?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  pinCode?: Prisma.SortOrder
-  address?: Prisma.SortOrder
+  addressId?: Prisma.SortOrder
   assignedTo?: Prisma.SortOrder
   assignedBy?: Prisma.SortOrder
   convertedLoanApplicationId?: Prisma.SortOrder
@@ -709,11 +650,6 @@ export type LeadsMinOrderByAggregateInput = {
 
 export type LeadsSumOrderByAggregateInput = {
   loanAmount?: Prisma.SortOrder
-}
-
-export type LeadsNullableScalarRelationFilter = {
-  is?: Prisma.LeadsWhereInput | null
-  isNot?: Prisma.LeadsWhereInput | null
 }
 
 export type LeadsCreateNestedManyWithoutAssignedToUserInput = {
@@ -842,6 +778,38 @@ export type LeadsUncheckedUpdateManyWithoutPartnerNestedInput = {
   deleteMany?: Prisma.LeadsScalarWhereInput | Prisma.LeadsScalarWhereInput[]
 }
 
+export type LeadsCreateNestedOneWithoutAddressInput = {
+  create?: Prisma.XOR<Prisma.LeadsCreateWithoutAddressInput, Prisma.LeadsUncheckedCreateWithoutAddressInput>
+  connectOrCreate?: Prisma.LeadsCreateOrConnectWithoutAddressInput
+  connect?: Prisma.LeadsWhereUniqueInput
+}
+
+export type LeadsUncheckedCreateNestedOneWithoutAddressInput = {
+  create?: Prisma.XOR<Prisma.LeadsCreateWithoutAddressInput, Prisma.LeadsUncheckedCreateWithoutAddressInput>
+  connectOrCreate?: Prisma.LeadsCreateOrConnectWithoutAddressInput
+  connect?: Prisma.LeadsWhereUniqueInput
+}
+
+export type LeadsUpdateOneWithoutAddressNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadsCreateWithoutAddressInput, Prisma.LeadsUncheckedCreateWithoutAddressInput>
+  connectOrCreate?: Prisma.LeadsCreateOrConnectWithoutAddressInput
+  upsert?: Prisma.LeadsUpsertWithoutAddressInput
+  disconnect?: Prisma.LeadsWhereInput | boolean
+  delete?: Prisma.LeadsWhereInput | boolean
+  connect?: Prisma.LeadsWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LeadsUpdateToOneWithWhereWithoutAddressInput, Prisma.LeadsUpdateWithoutAddressInput>, Prisma.LeadsUncheckedUpdateWithoutAddressInput>
+}
+
+export type LeadsUncheckedUpdateOneWithoutAddressNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadsCreateWithoutAddressInput, Prisma.LeadsUncheckedCreateWithoutAddressInput>
+  connectOrCreate?: Prisma.LeadsCreateOrConnectWithoutAddressInput
+  upsert?: Prisma.LeadsUpsertWithoutAddressInput
+  disconnect?: Prisma.LeadsWhereInput | boolean
+  delete?: Prisma.LeadsWhereInput | boolean
+  connect?: Prisma.LeadsWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LeadsUpdateToOneWithWhereWithoutAddressInput, Prisma.LeadsUpdateWithoutAddressInput>, Prisma.LeadsUncheckedUpdateWithoutAddressInput>
+}
+
 export type EnumLeadStatusFieldUpdateOperationsInput = {
   set?: $Enums.LeadStatus
 }
@@ -913,14 +881,11 @@ export type LeadsCreateWithoutAssignedToUserInput = {
   dob: Date | string
   gender: $Enums.Gender
   loanAmount: number
-  city: string
-  state: string
-  pinCode: string
-  address: string
   convertedLoanApplicationId?: string | null
   status?: $Enums.LeadStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  address?: Prisma.AddressCreateNestedOneWithoutLeadInput
   partner?: Prisma.PartnerCreateNestedOneWithoutLeadsInput
   assignedByUser?: Prisma.UserCreateNestedOneWithoutLeadsAssignedByInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutLeadInput
@@ -938,10 +903,7 @@ export type LeadsUncheckedCreateWithoutAssignedToUserInput = {
   partnerId?: string | null
   loanAmount: number
   loanTypeId: string
-  city: string
-  state: string
-  pinCode: string
-  address: string
+  addressId?: string | null
   assignedBy?: string | null
   convertedLoanApplicationId?: string | null
   status?: $Enums.LeadStatus
@@ -969,14 +931,11 @@ export type LeadsCreateWithoutAssignedByUserInput = {
   dob: Date | string
   gender: $Enums.Gender
   loanAmount: number
-  city: string
-  state: string
-  pinCode: string
-  address: string
   convertedLoanApplicationId?: string | null
   status?: $Enums.LeadStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  address?: Prisma.AddressCreateNestedOneWithoutLeadInput
   partner?: Prisma.PartnerCreateNestedOneWithoutLeadsInput
   assignedToUser?: Prisma.UserCreateNestedOneWithoutLeadsAssignedToInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutLeadInput
@@ -994,10 +953,7 @@ export type LeadsUncheckedCreateWithoutAssignedByUserInput = {
   partnerId?: string | null
   loanAmount: number
   loanTypeId: string
-  city: string
-  state: string
-  pinCode: string
-  address: string
+  addressId?: string | null
   assignedTo?: string | null
   convertedLoanApplicationId?: string | null
   status?: $Enums.LeadStatus
@@ -1046,10 +1002,7 @@ export type LeadsScalarWhereInput = {
   partnerId?: Prisma.StringNullableFilter<"Leads"> | string | null
   loanAmount?: Prisma.FloatFilter<"Leads"> | number
   loanTypeId?: Prisma.StringFilter<"Leads"> | string
-  city?: Prisma.StringFilter<"Leads"> | string
-  state?: Prisma.StringFilter<"Leads"> | string
-  pinCode?: Prisma.StringFilter<"Leads"> | string
-  address?: Prisma.StringFilter<"Leads"> | string
+  addressId?: Prisma.StringNullableFilter<"Leads"> | string | null
   assignedTo?: Prisma.StringNullableFilter<"Leads"> | string | null
   assignedBy?: Prisma.StringNullableFilter<"Leads"> | string | null
   convertedLoanApplicationId?: Prisma.StringNullableFilter<"Leads"> | string | null
@@ -1083,14 +1036,11 @@ export type LeadsCreateWithoutPartnerInput = {
   dob: Date | string
   gender: $Enums.Gender
   loanAmount: number
-  city: string
-  state: string
-  pinCode: string
-  address: string
   convertedLoanApplicationId?: string | null
   status?: $Enums.LeadStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  address?: Prisma.AddressCreateNestedOneWithoutLeadInput
   assignedToUser?: Prisma.UserCreateNestedOneWithoutLeadsAssignedToInput
   assignedByUser?: Prisma.UserCreateNestedOneWithoutLeadsAssignedByInput
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutLeadInput
@@ -1107,10 +1057,7 @@ export type LeadsUncheckedCreateWithoutPartnerInput = {
   gender: $Enums.Gender
   loanAmount: number
   loanTypeId: string
-  city: string
-  state: string
-  pinCode: string
-  address: string
+  addressId?: string | null
   assignedTo?: string | null
   assignedBy?: string | null
   convertedLoanApplicationId?: string | null
@@ -1146,6 +1093,102 @@ export type LeadsUpdateManyWithWhereWithoutPartnerInput = {
   data: Prisma.XOR<Prisma.LeadsUpdateManyMutationInput, Prisma.LeadsUncheckedUpdateManyWithoutPartnerInput>
 }
 
+export type LeadsCreateWithoutAddressInput = {
+  id?: string
+  fullName: string
+  contactNumber: string
+  leadNumber: string
+  email: string
+  dob: Date | string
+  gender: $Enums.Gender
+  loanAmount: number
+  convertedLoanApplicationId?: string | null
+  status?: $Enums.LeadStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  partner?: Prisma.PartnerCreateNestedOneWithoutLeadsInput
+  assignedToUser?: Prisma.UserCreateNestedOneWithoutLeadsAssignedToInput
+  assignedByUser?: Prisma.UserCreateNestedOneWithoutLeadsAssignedByInput
+  loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutLeadInput
+  loanType: Prisma.LoanTypeCreateNestedOneWithoutLeadsInput
+}
+
+export type LeadsUncheckedCreateWithoutAddressInput = {
+  id?: string
+  fullName: string
+  contactNumber: string
+  leadNumber: string
+  email: string
+  dob: Date | string
+  gender: $Enums.Gender
+  partnerId?: string | null
+  loanAmount: number
+  loanTypeId: string
+  assignedTo?: string | null
+  assignedBy?: string | null
+  convertedLoanApplicationId?: string | null
+  status?: $Enums.LeadStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutLeadInput
+}
+
+export type LeadsCreateOrConnectWithoutAddressInput = {
+  where: Prisma.LeadsWhereUniqueInput
+  create: Prisma.XOR<Prisma.LeadsCreateWithoutAddressInput, Prisma.LeadsUncheckedCreateWithoutAddressInput>
+}
+
+export type LeadsUpsertWithoutAddressInput = {
+  update: Prisma.XOR<Prisma.LeadsUpdateWithoutAddressInput, Prisma.LeadsUncheckedUpdateWithoutAddressInput>
+  create: Prisma.XOR<Prisma.LeadsCreateWithoutAddressInput, Prisma.LeadsUncheckedCreateWithoutAddressInput>
+  where?: Prisma.LeadsWhereInput
+}
+
+export type LeadsUpdateToOneWithWhereWithoutAddressInput = {
+  where?: Prisma.LeadsWhereInput
+  data: Prisma.XOR<Prisma.LeadsUpdateWithoutAddressInput, Prisma.LeadsUncheckedUpdateWithoutAddressInput>
+}
+
+export type LeadsUpdateWithoutAddressInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  leadNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  partner?: Prisma.PartnerUpdateOneWithoutLeadsNestedInput
+  assignedToUser?: Prisma.UserUpdateOneWithoutLeadsAssignedToNestedInput
+  assignedByUser?: Prisma.UserUpdateOneWithoutLeadsAssignedByNestedInput
+  loanApplications?: Prisma.LoanApplicationUpdateManyWithoutLeadNestedInput
+  loanType?: Prisma.LoanTypeUpdateOneRequiredWithoutLeadsNestedInput
+}
+
+export type LeadsUncheckedUpdateWithoutAddressInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  leadNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  assignedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutLeadNestedInput
+}
+
 export type LeadsCreateWithoutLoanApplicationsInput = {
   id?: string
   fullName: string
@@ -1155,14 +1198,11 @@ export type LeadsCreateWithoutLoanApplicationsInput = {
   dob: Date | string
   gender: $Enums.Gender
   loanAmount: number
-  city: string
-  state: string
-  pinCode: string
-  address: string
   convertedLoanApplicationId?: string | null
   status?: $Enums.LeadStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  address?: Prisma.AddressCreateNestedOneWithoutLeadInput
   partner?: Prisma.PartnerCreateNestedOneWithoutLeadsInput
   assignedToUser?: Prisma.UserCreateNestedOneWithoutLeadsAssignedToInput
   assignedByUser?: Prisma.UserCreateNestedOneWithoutLeadsAssignedByInput
@@ -1180,10 +1220,7 @@ export type LeadsUncheckedCreateWithoutLoanApplicationsInput = {
   partnerId?: string | null
   loanAmount: number
   loanTypeId: string
-  city: string
-  state: string
-  pinCode: string
-  address: string
+  addressId?: string | null
   assignedTo?: string | null
   assignedBy?: string | null
   convertedLoanApplicationId?: string | null
@@ -1217,14 +1254,11 @@ export type LeadsUpdateWithoutLoanApplicationsInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.AddressUpdateOneWithoutLeadNestedInput
   partner?: Prisma.PartnerUpdateOneWithoutLeadsNestedInput
   assignedToUser?: Prisma.UserUpdateOneWithoutLeadsAssignedToNestedInput
   assignedByUser?: Prisma.UserUpdateOneWithoutLeadsAssignedByNestedInput
@@ -1242,10 +1276,7 @@ export type LeadsUncheckedUpdateWithoutLoanApplicationsInput = {
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1263,14 +1294,11 @@ export type LeadsCreateWithoutLoanTypeInput = {
   dob: Date | string
   gender: $Enums.Gender
   loanAmount: number
-  city: string
-  state: string
-  pinCode: string
-  address: string
   convertedLoanApplicationId?: string | null
   status?: $Enums.LeadStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  address?: Prisma.AddressCreateNestedOneWithoutLeadInput
   partner?: Prisma.PartnerCreateNestedOneWithoutLeadsInput
   assignedToUser?: Prisma.UserCreateNestedOneWithoutLeadsAssignedToInput
   assignedByUser?: Prisma.UserCreateNestedOneWithoutLeadsAssignedByInput
@@ -1287,10 +1315,7 @@ export type LeadsUncheckedCreateWithoutLoanTypeInput = {
   gender: $Enums.Gender
   partnerId?: string | null
   loanAmount: number
-  city: string
-  state: string
-  pinCode: string
-  address: string
+  addressId?: string | null
   assignedTo?: string | null
   assignedBy?: string | null
   convertedLoanApplicationId?: string | null
@@ -1337,10 +1362,7 @@ export type LeadsCreateManyAssignedToUserInput = {
   partnerId?: string | null
   loanAmount: number
   loanTypeId: string
-  city: string
-  state: string
-  pinCode: string
-  address: string
+  addressId?: string | null
   assignedBy?: string | null
   convertedLoanApplicationId?: string | null
   status?: $Enums.LeadStatus
@@ -1359,10 +1381,7 @@ export type LeadsCreateManyAssignedByUserInput = {
   partnerId?: string | null
   loanAmount: number
   loanTypeId: string
-  city: string
-  state: string
-  pinCode: string
-  address: string
+  addressId?: string | null
   assignedTo?: string | null
   convertedLoanApplicationId?: string | null
   status?: $Enums.LeadStatus
@@ -1379,14 +1398,11 @@ export type LeadsUpdateWithoutAssignedToUserInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.AddressUpdateOneWithoutLeadNestedInput
   partner?: Prisma.PartnerUpdateOneWithoutLeadsNestedInput
   assignedByUser?: Prisma.UserUpdateOneWithoutLeadsAssignedByNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutLeadNestedInput
@@ -1404,10 +1420,7 @@ export type LeadsUncheckedUpdateWithoutAssignedToUserInput = {
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
@@ -1427,10 +1440,7 @@ export type LeadsUncheckedUpdateManyWithoutAssignedToUserInput = {
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
@@ -1447,14 +1457,11 @@ export type LeadsUpdateWithoutAssignedByUserInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.AddressUpdateOneWithoutLeadNestedInput
   partner?: Prisma.PartnerUpdateOneWithoutLeadsNestedInput
   assignedToUser?: Prisma.UserUpdateOneWithoutLeadsAssignedToNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutLeadNestedInput
@@ -1472,10 +1479,7 @@ export type LeadsUncheckedUpdateWithoutAssignedByUserInput = {
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
@@ -1495,10 +1499,7 @@ export type LeadsUncheckedUpdateManyWithoutAssignedByUserInput = {
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
@@ -1516,10 +1517,7 @@ export type LeadsCreateManyPartnerInput = {
   gender: $Enums.Gender
   loanAmount: number
   loanTypeId: string
-  city: string
-  state: string
-  pinCode: string
-  address: string
+  addressId?: string | null
   assignedTo?: string | null
   assignedBy?: string | null
   convertedLoanApplicationId?: string | null
@@ -1537,14 +1535,11 @@ export type LeadsUpdateWithoutPartnerInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.AddressUpdateOneWithoutLeadNestedInput
   assignedToUser?: Prisma.UserUpdateOneWithoutLeadsAssignedToNestedInput
   assignedByUser?: Prisma.UserUpdateOneWithoutLeadsAssignedByNestedInput
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutLeadNestedInput
@@ -1561,10 +1556,7 @@ export type LeadsUncheckedUpdateWithoutPartnerInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1584,10 +1576,7 @@ export type LeadsUncheckedUpdateManyWithoutPartnerInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1606,10 +1595,7 @@ export type LeadsCreateManyLoanTypeInput = {
   gender: $Enums.Gender
   partnerId?: string | null
   loanAmount: number
-  city: string
-  state: string
-  pinCode: string
-  address: string
+  addressId?: string | null
   assignedTo?: string | null
   assignedBy?: string | null
   convertedLoanApplicationId?: string | null
@@ -1627,14 +1613,11 @@ export type LeadsUpdateWithoutLoanTypeInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.AddressUpdateOneWithoutLeadNestedInput
   partner?: Prisma.PartnerUpdateOneWithoutLeadsNestedInput
   assignedToUser?: Prisma.UserUpdateOneWithoutLeadsAssignedToNestedInput
   assignedByUser?: Prisma.UserUpdateOneWithoutLeadsAssignedByNestedInput
@@ -1651,10 +1634,7 @@ export type LeadsUncheckedUpdateWithoutLoanTypeInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1674,10 +1654,7 @@ export type LeadsUncheckedUpdateManyWithoutLoanTypeInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
+  addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1728,16 +1705,14 @@ export type LeadsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   partnerId?: boolean
   loanAmount?: boolean
   loanTypeId?: boolean
-  city?: boolean
-  state?: boolean
-  pinCode?: boolean
-  address?: boolean
+  addressId?: boolean
   assignedTo?: boolean
   assignedBy?: boolean
   convertedLoanApplicationId?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  address?: boolean | Prisma.Leads$addressArgs<ExtArgs>
   partner?: boolean | Prisma.Leads$partnerArgs<ExtArgs>
   assignedToUser?: boolean | Prisma.Leads$assignedToUserArgs<ExtArgs>
   assignedByUser?: boolean | Prisma.Leads$assignedByUserArgs<ExtArgs>
@@ -1759,10 +1734,7 @@ export type LeadsSelectScalar = {
   partnerId?: boolean
   loanAmount?: boolean
   loanTypeId?: boolean
-  city?: boolean
-  state?: boolean
-  pinCode?: boolean
-  address?: boolean
+  addressId?: boolean
   assignedTo?: boolean
   assignedBy?: boolean
   convertedLoanApplicationId?: boolean
@@ -1771,8 +1743,9 @@ export type LeadsSelectScalar = {
   updatedAt?: boolean
 }
 
-export type LeadsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "contactNumber" | "leadNumber" | "email" | "dob" | "gender" | "partnerId" | "loanAmount" | "loanTypeId" | "city" | "state" | "pinCode" | "address" | "assignedTo" | "assignedBy" | "convertedLoanApplicationId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["leads"]>
+export type LeadsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "contactNumber" | "leadNumber" | "email" | "dob" | "gender" | "partnerId" | "loanAmount" | "loanTypeId" | "addressId" | "assignedTo" | "assignedBy" | "convertedLoanApplicationId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["leads"]>
 export type LeadsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  address?: boolean | Prisma.Leads$addressArgs<ExtArgs>
   partner?: boolean | Prisma.Leads$partnerArgs<ExtArgs>
   assignedToUser?: boolean | Prisma.Leads$assignedToUserArgs<ExtArgs>
   assignedByUser?: boolean | Prisma.Leads$assignedByUserArgs<ExtArgs>
@@ -1784,6 +1757,7 @@ export type LeadsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 export type $LeadsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Leads"
   objects: {
+    address: Prisma.$AddressPayload<ExtArgs> | null
     partner: Prisma.$PartnerPayload<ExtArgs> | null
     assignedToUser: Prisma.$UserPayload<ExtArgs> | null
     assignedByUser: Prisma.$UserPayload<ExtArgs> | null
@@ -1801,10 +1775,7 @@ export type $LeadsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     partnerId: string | null
     loanAmount: number
     loanTypeId: string
-    city: string
-    state: string
-    pinCode: string
-    address: string
+    addressId: string | null
     assignedTo: string | null
     assignedBy: string | null
     convertedLoanApplicationId: string | null
@@ -2151,6 +2122,7 @@ readonly fields: LeadsFieldRefs;
  */
 export interface Prisma__LeadsClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  address<T extends Prisma.Leads$addressArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Leads$addressArgs<ExtArgs>>): Prisma.Prisma__AddressClient<runtime.Types.Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   partner<T extends Prisma.Leads$partnerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Leads$partnerArgs<ExtArgs>>): Prisma.Prisma__PartnerClient<runtime.Types.Result.GetResult<Prisma.$PartnerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   assignedToUser<T extends Prisma.Leads$assignedToUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Leads$assignedToUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   assignedByUser<T extends Prisma.Leads$assignedByUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Leads$assignedByUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -2195,10 +2167,7 @@ export interface LeadsFieldRefs {
   readonly partnerId: Prisma.FieldRef<"Leads", 'String'>
   readonly loanAmount: Prisma.FieldRef<"Leads", 'Float'>
   readonly loanTypeId: Prisma.FieldRef<"Leads", 'String'>
-  readonly city: Prisma.FieldRef<"Leads", 'String'>
-  readonly state: Prisma.FieldRef<"Leads", 'String'>
-  readonly pinCode: Prisma.FieldRef<"Leads", 'String'>
-  readonly address: Prisma.FieldRef<"Leads", 'String'>
+  readonly addressId: Prisma.FieldRef<"Leads", 'String'>
   readonly assignedTo: Prisma.FieldRef<"Leads", 'String'>
   readonly assignedBy: Prisma.FieldRef<"Leads", 'String'>
   readonly convertedLoanApplicationId: Prisma.FieldRef<"Leads", 'String'>
@@ -2545,6 +2514,25 @@ export type LeadsDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Limit how many Leads to delete.
    */
   limit?: number
+}
+
+/**
+ * Leads.address
+ */
+export type Leads$addressArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Address
+   */
+  select?: Prisma.AddressSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Address
+   */
+  omit?: Prisma.AddressOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddressInclude<ExtArgs> | null
+  where?: Prisma.AddressWhereInput
 }
 
 /**

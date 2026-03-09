@@ -70,6 +70,11 @@ export type Employee = Prisma.EmployeeModel
  */
 export type Partner = Prisma.PartnerModel
 /**
+ * Model Address
+ * 
+ */
+export type Address = Prisma.AddressModel
+/**
  * Model PartnerCommission
  * 
  */
@@ -84,6 +89,11 @@ export type Branch = Prisma.BranchModel
  * 
  */
 export type Leads = Prisma.LeadsModel
+/**
+ * Model LoanApplicationDraft
+ * 
+ */
+export type LoanApplicationDraft = Prisma.LoanApplicationDraftModel
 /**
  * Model LoanApplication
  * 
@@ -159,6 +169,21 @@ export type LoanType = Prisma.LoanTypeModel
  * 
  */
 export type Customer = Prisma.CustomerModel
+/**
+ * Model OccupationalDetails
+ * 
+ */
+export type OccupationalDetails = Prisma.OccupationalDetailsModel
+/**
+ * Model EmploymentDetails
+ * 
+ */
+export type EmploymentDetails = Prisma.EmploymentDetailsModel
+/**
+ * Model FinancialDetails
+ * 
+ */
+export type FinancialDetails = Prisma.FinancialDetailsModel
 /**
  * Model TechnicalReport
  * 
