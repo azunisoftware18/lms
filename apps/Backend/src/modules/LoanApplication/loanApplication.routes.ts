@@ -131,8 +131,7 @@ loanApplicationRouter.post(
 loanApplicationRouter.post(
   "/loan/create",
   authMiddleware,
-  validate(createFullLoanApplicationSchema),
+  validate(createFullLoanApplicationSchema, "body"),
   checkPermissionMiddleware("CREATE_LOAN_APPLICATION"),
   createFullLoanApplicationController
-)
-export default loanApplicationRouter;
+);export default loanApplicationRouter;

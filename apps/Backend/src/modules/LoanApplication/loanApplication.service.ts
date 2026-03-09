@@ -254,7 +254,7 @@ export async function rejectDocumentService(
 }
 
 
-export async function  getAlldoumentsforLoanApplicationService(loanApplicationId: string) {
+export async function  getAllDocumentsForLoanApplicationService(loanApplicationId: string) {
   try {
     const documents = await prisma.document.findMany({
       where: { loanApplicationId },
@@ -772,8 +772,8 @@ export const createFullLoanApplicationService = async (
   data: FullLoanApplicationInput,
   userId: string
 ) => {
-
-  return prisma.$transaction(async(tx)=>{
+  try {
+    return await prisma.$transaction(async(tx)=>{
 
     if (!data.loanTypeId) {
       throw new Error("loanTypeId is required")
@@ -799,36 +799,52 @@ export const createFullLoanApplicationService = async (
 
     const loanNumber = await generateLoanNumber(tx)
 
-    /* 1️⃣ Create Customer */
+    /* 1️⃣ Find or Create Customer */
 
-    const customer = await tx.customer.create({
-      data:{
-        title:data.applicant.title,
-        firstName:data.applicant.firstName,
-        middleName:data.applicant.middleName,
-        lastName:data.applicant.lastName,
-        fatherName:data.applicant.fatherName,
-        motherName:data.applicant.motherName,
-        woname:data.applicant.woname,
-        dob:data.applicant.dob,
-        gender:data.applicant.gender,
-        aadhaarNumber:data.applicant.aadhaarNumber,
-        panNumber:data.applicant.panNumber,
-        voterId:data.applicant.voterId,
-        drivingLicenceNo:data.applicant.drivingLicenceNo,
-        passportNumber:data.applicant.passportNumber,
-        maritalStatus:data.applicant.maritalStatus,
-        nationality:data.applicant.nationality,
-        category:data.applicant.category,
-        contactNumber:data.applicant.contactNumber,
-        email:data.applicant.email,
-        relationshipWithCoApplicant:
-          data.coApplicants?.length
-            ? data.coApplicants[0].relation
-            : Enums.CoApplicantRelation.OTHER,
-        employmentType:data.applicant.employmentType
-      }
-    })
+    let customer = await tx.customer.findFirst({
+      where: {
+        OR: [
+          data.applicant.panNumber ? { panNumber: data.applicant.panNumber } : undefined,
+          data.applicant.aadhaarNumber
+            ? { aadhaarNumber: data.applicant.aadhaarNumber }
+            : undefined,
+          data.applicant.contactNumber
+            ? { contactNumber: data.applicant.contactNumber }
+            : undefined,
+        ].filter(Boolean) as object[],
+      },
+    });
+
+    if (!customer) {
+      customer = await tx.customer.create({
+        data:{
+          title:data.applicant.title,
+          firstName:data.applicant.firstName,
+          middleName:data.applicant.middleName,
+          lastName:data.applicant.lastName,
+          fatherName:data.applicant.fatherName,
+          motherName:data.applicant.motherName,
+          woname:data.applicant.woname,
+          dob:data.applicant.dob,
+          gender:data.applicant.gender,
+          aadhaarNumber:data.applicant.aadhaarNumber,
+          panNumber:data.applicant.panNumber,
+          voterId:data.applicant.voterId,
+          drivingLicenceNo:data.applicant.drivingLicenceNo,
+          passportNumber:data.applicant.passportNumber,
+          maritalStatus:data.applicant.maritalStatus,
+          nationality:data.applicant.nationality,
+          category:data.applicant.category,
+          contactNumber:data.applicant.contactNumber,
+          email:data.applicant.email,
+          relationshipWithCoApplicant:
+            data.coApplicants?.length
+              ? data.coApplicants[0].relation
+              : Enums.CoApplicantRelation.OTHER,
+          employmentType:data.applicant.employmentType
+        }
+      })
+    }
 
     /* 2️⃣ Create Address */
 
@@ -852,6 +868,31 @@ export const createFullLoanApplicationService = async (
 
     }
 
+    /* 2a️⃣ Prevent duplicate active loan */
+
+    const existingLoan = await tx.loanApplication.findFirst({
+      where: {
+        customerId: customer.id,
+        status: {
+          in: [
+            "application_in_progress",
+            "kyc_pending",
+            "under_review",
+            "approved",
+            "active",
+          ],
+        },
+      },
+    });
+
+    if (existingLoan) {
+      const err: any = new Error(
+        "Customer already has an active loan application",
+      );
+      err.statusCode = 409;
+      throw err;
+    }
+
     /* 3️⃣ Create Loan */
 
     const loan = await tx.loanApplication.create({
@@ -870,6 +911,56 @@ export const createFullLoanApplicationService = async (
       }
 
     })
+
+    /* 3a️⃣ Create KYC for Loan Application */
+
+    const kyc = await tx.kyc.create({
+      data: {
+        userId: userId,
+        status: Enums.KycStatus.PENDING,
+      }
+    })
+
+    // Link KYC to Loan Application
+    await tx.loanApplication.update({
+      where: { id: loan.id },
+      data: { kycId: kyc.id }
+    })
+
+    /* 3b️⃣ Create Co-Applicants and their KYC */
+
+    if (data.coApplicants?.length) {
+      for (const co of data.coApplicants) {
+        const coApplication = await tx.coApplicant.create({
+          data: {
+            loanApplicationId: loan.id,
+            firstName: co.firstName,
+            lastName: co.lastName ?? "",
+            middleName: co.middleName,
+            relation: co.relation as Enums.CoApplicantRelation,
+            relationOther: co.relationOther,
+            contactNumber: co.contactNumber,
+            email: co.email,
+            dob: co.dob,
+            aadhaarNumber: co.aadhaarNumber,
+            panNumber: co.panNumber,
+            employmentType: co.employmentType as Enums.EmploymentType,
+          },
+        });
+
+        const coKyc = await tx.kyc.create({
+          data: {
+            userId: userId,
+            status: Enums.KycStatus.PENDING,
+          },
+        });
+
+        await tx.coApplicant.update({
+          where: { id: coApplication.id },
+          data: { kycId: coKyc.id },
+        });
+      }
+    }
 
     /* 4️⃣ Existing Loans */
 
@@ -890,14 +981,14 @@ export const createFullLoanApplicationService = async (
     if(data.creditCards?.length){
 
       await tx.creditCard.createMany({
-        data:data.creditCards.map((c:any)=>({
-          holderName: c.holderName,
-          cardNumber: c.cardNumber,
-          issuingBank: c.issuingBank,
-          holderSince: c.holderSince ? new Date(c.holderSince) : null,
-          creditLimit: c.creditLimit,
-          outstandingAmount: c.outstandingAmount,
-          loanApplicationId:loan.id
+        data:data.creditCards.map((c)=>({
+            holderName: c.holderName,
+            cardNumber: c.lastFourDigits, // Persist only masked representation
+            issuingBank: c.issuingBank,
+            holderSince: c.holderSince ? new Date(c.holderSince) : null,
+            creditLimit: c.creditLimit,
+            outstandingAmount: c.outstandingAmount,
+            loanApplicationId:loan.id
         }))
       })
 
@@ -1014,8 +1105,34 @@ export const createFullLoanApplicationService = async (
 
     }
 
+    /* 12️⃣ Audit Log */
+
+    await logAction({
+      entityType: "LOAN",
+      entityId: loan.id,
+      action: "CREATE_LOAN",
+      performedBy: userId,
+      branchId: user.branchId,
+      oldValue: null,
+      newValue: {
+        loanNumber: loan.loanNumber,
+        status: loan.status,
+        loanTypeId: data.loanTypeId,
+        requestedAmount: data.loanRequirement.loanAmount,
+      },
+    });
+
     return loan
 
-  })
+    })
+  } catch (error) {
+    const err: any = error;
+    if (err?.code === "P2002") {
+      const constraintError: any = new Error("Loan number already exists");
+      constraintError.statusCode = 409;
+      throw constraintError;
+    }
+    throw error;
+  }
 
 }

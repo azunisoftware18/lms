@@ -59,7 +59,10 @@ export const getDraftController = async (req: Request, res: Response) => {
 
 export const submitDraftController = async (req:Request, res:Response) => {
   if (!req.user?.id) {
-    throw new Error("Unauthorized user context");
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized user context",
+    });
   }
 
   const draftId = getRouteId(req.params.id);

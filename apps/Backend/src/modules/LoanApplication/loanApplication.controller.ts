@@ -10,7 +10,7 @@ import {
   verifyDocumentService,
   rejectDocumentService,
   reuploadLoanDocumentService,
-  getAlldoumentsforLoanApplicationService,
+  getAllDocumentsForLoanApplicationService,
   createFullLoanApplicationService
 } from "./loanApplication.service.js";
 import { prisma } from "../../db/prismaService.js";
@@ -246,7 +246,7 @@ export const getAlldoumentsforLoanApplicationController = async (req: Request, r
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
     const loanApplicationId = typeof req.params.id === 'string' ? req.params.id : (Array.isArray(req.params.id) ? req.params.id[0] : '');
-    const documents = await getAlldoumentsforLoanApplicationService(loanApplicationId);
+    const documents = await getAllDocumentsForLoanApplicationService(loanApplicationId);
     res.status(200).json({
       success: true,
       message: "Documents retrieved successfully",
@@ -431,9 +431,9 @@ export const createFullLoanApplicationController = async (
 
   } catch(error:any){
 
-    res.status(500).json({
+    res.status(error.statusCode || 500).json({
       success:false,
-      message:error.message
+      message:error.message || "Loan application creation failed"
     })
 
   }

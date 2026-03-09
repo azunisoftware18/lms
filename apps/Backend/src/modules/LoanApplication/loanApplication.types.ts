@@ -356,7 +356,8 @@ export interface ExistingLoanInput {
 
 export interface CreditCardInput {
   holderName: string
-  cardNumber: string
+  lastFourDigits: string // e.g., "4532"
+  token?: string // Tokenized card reference from PCI-compliant service
   issuingBank?: string
   holderSince?: Date | string
   creditLimit?: number

@@ -207,14 +207,122 @@ export const createCoApplicantSchema = z.object({
   lastName: z.string().trim().min(1).optional(),
   middleName: z.string().trim().min(1).optional(),
   relation: CoApplicantRelationEnum,
-  contactName: z.string().trim().min(10),
+  relationOther: z.string().trim().min(1).optional(),
+  contactNumber: z.string().trim().min(10),
   email: z.string().trim().email().optional(),
 
-  dob: z.coerce.date().optional(),
+  dob: z.coerce.date(),
   panNumber: z.string().trim().min(1).optional(),
   aadhaarNumber: z.string().trim().min(1).optional(),
-  employmentTypeEnum: employmentTypeEnum,
-  monthlyIncome: z.coerce.number().optional(),
+  employmentType: z.enum(["salaried", "self_employed", "business", "professional"]),
+});
+
+const guarantorSchema = z.object({
+  firstName: z.string().trim().min(1),
+  middleName: z.string().trim().min(1).optional(),
+  lastName: z.string().trim().min(1),
+  fatherName: z.string().trim().min(1).optional(),
+  motherName: z.string().trim().min(1).optional(),
+  woname: z.string().trim().min(1).optional(),
+  dob: z.coerce.date().optional(),
+  contactNumber: z.string().trim().min(10).optional(),
+  phoneNumber: z.string().trim().min(10).optional(),
+  email: z.string().trim().email().optional(),
+  panNumber: z.string().trim().min(1).optional(),
+  aadhaarNumber: z.string().trim().min(1).optional(),
+  voterId: z.string().trim().min(1).optional(),
+  drivingLicence: z.string().trim().min(1).optional(),
+  passportNumber: z.string().trim().min(1).optional(),
+  category: z.enum(["GENERAL", "SC", "ST", "NT", "OBC", "OTHER"]).optional(),
+  maritalStatus: z.enum(["SINGLE", "MARRIED", "DIVORCED", "WIDOWED", "OTHER"]).optional(),
+  noOfDependents: z.coerce.number().int().min(0).optional(),
+  noOfChildren: z.coerce.number().int().min(0).optional(),
+  qualification: z.string().trim().min(1).optional(),
+  accommodationType: z.string().trim().min(1).optional(),
+  periodOfStay: z.string().trim().min(1).optional(),
+  rentPerMonth: z.coerce.number().min(0).optional(),
+  employmentType: z.enum(["salaried", "self_employed", "business", "professional"]).optional(),
+});
+
+const existingLoanSchema = z.object({
+  institutionName: z.string().trim().min(1),
+  purpose: z.string().trim().min(1).optional(),
+  disbursedAmount: z.coerce.number().min(0).optional(),
+  emi: z.coerce.number().min(0).optional(),
+  balanceTerm: z.coerce.number().int().min(0).optional(),
+  balanceOutstanding: z.coerce.number().min(0).optional(),
+});
+
+const creditCardSchema = z
+  .object({
+    holderName: z.string().trim().min(1),
+    // Accepted only to detect and reject raw PAN input with a clear validation message.
+    cardNumber: z.string().trim().optional(),
+    lastFourDigits: z.string().trim().regex(/^\d{4}$/, "lastFourDigits must be 4 digits"),
+    token: z.string().trim().min(1).optional(),
+    issuingBank: z.string().trim().min(1).optional(),
+    holderSince: z.coerce.date().optional(),
+    creditLimit: z.coerce.number().min(0).optional(),
+    outstandingAmount: z.coerce.number().min(0).optional(),
+  })
+  .superRefine((value, ctx) => {
+    if (!value.cardNumber) return;
+    const normalized = value.cardNumber.replace(/[\s-]/g, "");
+    if (/^\d{12,19}$/.test(normalized)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["cardNumber"],
+        message:
+          "Full card number is not allowed. Send only lastFourDigits and optional token.",
+      });
+    }
+  })
+  .transform(({ cardNumber: _cardNumber, ...rest }) => rest);
+
+const bankAccountSchema = z.object({
+  holderName: z.string().trim().min(1),
+  bankName: z.string().trim().min(1),
+  branchName: z.string().trim().min(1).optional(),
+  accountType: z.string().trim().min(1),
+  accountNumber: z.string().trim().min(1),
+  openingDate: z.coerce.date().optional(),
+  balanceAmount: z.coerce.number().min(0).optional(),
+});
+
+const insurancePolicySchema = z.object({
+  issuedBy: z.string().trim().min(1).optional(),
+  branchName: z.string().trim().min(1).optional(),
+  holderName: z.string().trim().min(1).optional(),
+  policyNumber: z.string().trim().min(1).optional(),
+  maturityDate: z.coerce.date().optional(),
+  policyValue: z.coerce.number().min(0).optional(),
+  policyType: z.string().trim().min(1).optional(),
+  yearlyPremium: z.coerce.number().min(0).optional(),
+  paidUpValue: z.coerce.number().min(0).optional(),
+});
+
+const propertySchema = z.object({
+  propertySelected: z.boolean(),
+  landArea: z.coerce.number().min(0).optional(),
+  buildUpArea: z.coerce.number().min(0).optional(),
+  ownershipType: z.string().trim().min(1),
+  landType: z.string().trim().min(1),
+  purchaseFrom: z.string().trim().min(1),
+  purchaseOther: z.string().trim().min(1).optional(),
+  constructionStage: z.string().trim().min(1),
+  constructionPercent: z.coerce.number().min(0).max(100).optional(),
+});
+
+const referenceSchema = z.object({
+  name: z.string().trim().min(1),
+  relation: z.string().trim().min(1).optional(),
+  contactNumber: z.string().trim().min(10),
+  address: z.string().trim().min(1).optional(),
+  city: z.string().trim().min(1).optional(),
+  state: z.string().trim().min(1).optional(),
+  pinCode: z.string().trim().min(1).optional(),
+  phone: z.string().trim().min(10).optional(),
+  occupation: z.string().trim().min(1).optional(),
 });
 
 
@@ -267,25 +375,25 @@ export const createFullLoanApplicationSchema = z.object({
     permanentAddress: addressSchema.optional()
   }),
 
-  coApplicants: z.array(z.any()).optional(),
+  coApplicants: z.array(createCoApplicantSchema).optional(),
 
-  guarantors: z.array(z.any()).optional(),
+  guarantors: z.array(guarantorSchema).optional(),
 
-  existingLoans: z.array(z.any()).optional(),
+  existingLoans: z.array(existingLoanSchema).optional(),
 
-  creditCards: z.array(z.any()).optional(),
+  creditCards: z.array(creditCardSchema).optional(),
 
-  bankAccounts: z.array(z.any()).optional(),
+  bankAccounts: z.array(bankAccountSchema).optional(),
 
-  insurancePolicies: z.array(z.any()).optional(),
+  insurancePolicies: z.array(insurancePolicySchema).optional(),
 
-  properties: z.array(z.any()).optional(),
+  properties: z.array(propertySchema).optional(),
 
-  references: z.array(z.any()).optional(),
+  references: z.array(referenceSchema).optional(),
 
   loanRequirement: z.object({
-    loanAmount: z.number(),
-    tenure: z.number(),
+    loanAmount: z.number().positive(),
+    tenure: z.number().int().positive(),
     interestOption: z.enum(["FIXED","VARIABLE"]),
     loanPurpose: z.enum([
       "HOME",
