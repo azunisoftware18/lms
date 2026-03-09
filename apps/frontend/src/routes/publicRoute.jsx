@@ -10,7 +10,7 @@ export default function PublicRoute({ children }) {
     if (role === 'ADMIN' || role === 'SUPER_ADMIN') {
       return <Navigate to="/admin" replace />;
     }
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/admin" replace />;
   }
 
   return children;

@@ -38,6 +38,7 @@ import UnderRegulationPage from '../app/pubilc/UnderRegulationPage.jsx';
 import VisionAndMissionPage from '../app/pubilc/VisionAndMissionPage.jsx';
 import WelcometoFinovaPage from '../app/pubilc/WelcometoFinovaPage.jsx';
 import LoginForm from '../components/forms/LoginForm.jsx';
+import AdminLayout from '../layout/AdminLayout.jsx';
 
 export default function AppRoutes() {
 	return (
@@ -87,14 +88,14 @@ export default function AppRoutes() {
 			</Route>
 
 			{/* Private Dashboard */}
-			<Route
-				path="/dashboard"
-				element={
-					<PrivateRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']}>
-						<DashboardPage />
+			<Route path="/admin" element={
+					<PrivateRoute>
+						<AdminLayout />
 					</PrivateRoute>
-				}
-			/>
+				}>
+					{/* Dashboard page */}
+				<Route index element={<DashboardPage />} />
+			</Route>
 		</Routes>
 	);
 }
