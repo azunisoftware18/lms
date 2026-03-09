@@ -39,6 +39,11 @@ import UnderRegulationPage from "../app/public/UnderRegulationPage.jsx";
 import VisionAndMissionPage from "../app/public/VisionAndMissionPage.jsx";
 import WelcometoFinovaPage from "../app/public/WelcometoFinovaPage.jsx";
 
+// Cheking Only
+import LoanConfigrationPage from "../app/dashboard/LoanConfigrationPage.jsx";
+import CompanyDetailsPage from "../app/dashboard/CompanyDetailsPage.jsx";
+import BorrowerPage from "../app/dashboard/BorrowerPage.jsx";
+import LoanRequestPage from "../app/dashboard/LoanRequestPage.jsx";
 export default function AppRoutes() {
   return (
     <Routes>
@@ -104,16 +109,10 @@ export default function AppRoutes() {
         <Route path="vision-and-mission" element={<VisionAndMissionPage />} />
         <Route path="welcome-to-finova" element={<WelcometoFinovaPage />} />
       </Route>
-
       {/* Private Dashboard */}
-      <Route
-        path="/dashboard"
-        element={
-          <PrivateRoute>
-            <DashboardPage />
-          </PrivateRoute>
-        }
-      />
+      <Route path="/dashboard" element={<PrivateRoute />}>
+        <Route index element={<DashboardPage />} />
+      </Route>
     </Routes>
   );
 }
