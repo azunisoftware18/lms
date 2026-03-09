@@ -2,7 +2,7 @@ import React from 'react';
 import { X } from 'lucide-react';
 import LeadForm from '../forms/LeadForm';
 
-const LeadFormModal = ({ isOpen, onClose }) => {
+export default function LeadFormModal ({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
@@ -37,6 +37,4 @@ const LeadFormModal = ({ isOpen, onClose }) => {
       </div>
     </div>
   );
-};
-
-export default LeadFormModal;
+}

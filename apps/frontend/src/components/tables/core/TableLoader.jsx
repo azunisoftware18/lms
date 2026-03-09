@@ -1,4 +1,4 @@
-export const TableLoader = ({ colSpan }) => {
+export default function TableLoader({ colSpan }) {
   return (
     <tbody>
       <tr>
@@ -11,4 +11,4 @@ export const TableLoader = ({ colSpan }) => {
       </tr>
     </tbody>
   );
-};
+}

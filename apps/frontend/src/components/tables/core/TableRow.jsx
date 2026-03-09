@@ -1,6 +1,6 @@
 import ActionMenu from "../../common/ActionMenu";
 
-export const TableRow = ({ columns, row, actions = [] }) => {
+export default function TableRow ({ columns, row, actions = [] }) {
   return (
     <tr className="hover:bg-blue-50 transition-colors duration-150 group">
       {columns.map((col) => (
@@ -26,4 +26,4 @@ export const TableRow = ({ columns, row, actions = [] }) => {
       </td>
     </tr>
   );
-};
+}

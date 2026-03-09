@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-
 import {
   X,
   Info,
-  DollarSign,
   Percent,
-  Calendar,
   Users,
   Shield,
   Eye,
@@ -21,8 +18,6 @@ import {
   FileText,
   Clock,
   CreditCard,
-  FileCheck,
-  ChevronDown,
   IndianRupee
 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -32,9 +27,10 @@ import ToggleSwitch from '../ui/ToggleSwitch';
 import TextAreaField from '../ui/TextAreaField';
 import SelectField from '../ui/SelectField';
 import Button from '../ui/Button';
-import { loanTypeValidation } from '../../app/validations/LoanTypeValidation';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loanTypeSchema } from '../../validations/LoanTypeValidation';
 
-function AddLoanTypesForm({ onClose, editData }) {
+export default function AddLoanTypesForm ({ onClose, editData }) {
   const createLoanTypeMutation = useCreateLoanType();
   const updateLoanTypeMutation = useUpdateLoanType();
 
@@ -80,9 +76,11 @@ function AddLoanTypesForm({ onClose, editData }) {
     watch,
     setValue,
     getValues,
-    formState: { errors },
+    formState: { errors, isValid },
     reset
-  } = useForm({
+ } = useForm({
+  resolver: zodResolver(loanTypeSchema),
+  mode: "onChange",
     defaultValues: {
       // Section 1: Basic Information
       loanCode: '',
@@ -203,9 +201,6 @@ function AddLoanTypesForm({ onClose, editData }) {
     }
   }, [watchLoanCategory, setValue]);
 
-  // Validation rules
-  const validationRules = loanTypeValidation(getValues);
-
   const handleDocumentChange = (doc) => {
     const currentDocs = watchDocumentsRequired || [];
     if (currentDocs.includes(doc)) {
@@ -215,21 +210,6 @@ function AddLoanTypesForm({ onClose, editData }) {
     }
   };
 
-  // Check if form is valid
-  const isFormValid = () => {
-    const requiredFields = [
-      'loanName',
-      'loanCategory',
-      'minLoanAmount',
-      'maxLoanAmount',
-      'minTenure',
-      'maxTenure',
-      'minAge',
-      'maxAge',
-    ];
-    
-    return requiredFields.every(field => !errors[field]);
-  };
 
   // Handle form submission
   const onSubmit = async (data) => {
@@ -378,7 +358,6 @@ function AddLoanTypesForm({ onClose, editData }) {
                 <Controller
                   name="loanName"
                   control={control}
-                  rules={validationRules.loanName}
                   render={({ field }) => (
                     <InputField
                       label="Loan Name"
@@ -403,7 +382,7 @@ function AddLoanTypesForm({ onClose, editData }) {
                       <button
                         key={category.value}
                         type="button"
-                        onClick={() => setValue('loanCategory', category.value, { shouldValidate: true })}
+                        onClick={() => setValue('loanCategory', category.value, { shouldValidate: true, shouldDirty: true })}
                         className={`p-4 border rounded-lg text-center transition-all ${
                           isSelected
                             ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-100'
@@ -430,7 +409,6 @@ function AddLoanTypesForm({ onClose, editData }) {
               <Controller
                 name="description"
                 control={control}
-                rules={validationRules.description}
                 render={({ field }) => (
                   <TextAreaField
                     label="Description (optional)"
@@ -472,7 +450,6 @@ function AddLoanTypesForm({ onClose, editData }) {
               <Controller
                 name="minLoanAmount"
                 control={control}
-                rules={validationRules.minLoanAmount}
                 render={({ field }) => (
                   <InputField
                     label="Minimum Loan Amount"
@@ -489,7 +466,6 @@ function AddLoanTypesForm({ onClose, editData }) {
               <Controller
                 name="maxLoanAmount"
                 control={control}
-                rules={validationRules.maxLoanAmount}
                 render={({ field }) => (
                   <InputField
                     label="Maximum Loan Amount"
@@ -506,7 +482,6 @@ function AddLoanTypesForm({ onClose, editData }) {
               <Controller
                 name="minTenure"
                 control={control}
-                rules={validationRules.minTenure}
                 render={({ field }) => (
                   <InputField
                     label="Minimum Tenure (months)"
@@ -523,7 +498,6 @@ function AddLoanTypesForm({ onClose, editData }) {
               <Controller
                 name="maxTenure"
                 control={control}
-                rules={validationRules.maxTenure}
                 render={({ field }) => (
                   <InputField
                     label="Maximum Tenure (months)"
@@ -693,7 +667,6 @@ function AddLoanTypesForm({ onClose, editData }) {
               <Controller
                 name="minAge"
                 control={control}
-                rules={validationRules.minAge}
                 render={({ field }) => (
                   <InputField
                     label="Minimum Age"
@@ -710,7 +683,6 @@ function AddLoanTypesForm({ onClose, editData }) {
               <Controller
                 name="maxAge"
                 control={control}
-                rules={validationRules.maxAge}
                 render={({ field }) => (
                   <InputField
                     label="Maximum Age"
@@ -757,7 +729,6 @@ function AddLoanTypesForm({ onClose, editData }) {
               <Controller
                 name="minCibilScore"
                 control={control}
-                rules={validationRules.minCibilScore}
                 render={({ field }) => (
                   <InputField
                     label="Minimum CIBIL Score (optional)"
@@ -774,7 +745,6 @@ function AddLoanTypesForm({ onClose, editData }) {
               <Controller
                 name="maxCibilScore"
                 control={control}
-                rules={validationRules.maxCibilScore}
                 render={({ field }) => (
                   <InputField
                     label="Maximum CIBIL Score (optional)"
@@ -929,7 +899,6 @@ function AddLoanTypesForm({ onClose, editData }) {
                 <Controller
                   name="estimatedProcessingTimeDays"
                   control={control}
-                  rules={validationRules.estimatedProcessingTimeDays}
                   render={({ field }) => (
                     <InputField
                       label="Estimated Processing Time (days)"
@@ -985,7 +954,7 @@ function AddLoanTypesForm({ onClose, editData }) {
           <div className="flex flex-col sm:flex-row-reverse sm:justify-start gap-3">
             <Button
               type="submit"
-              disabled={!isFormValid() || createLoanTypeMutation.isLoading || updateLoanTypeMutation.isLoading}
+              disabled={!isValid || createLoanTypeMutation.isLoading || updateLoanTypeMutation.isLoading}
             >
               {createLoanTypeMutation.isLoading || updateLoanTypeMutation.isLoading ? (
                 <div className="flex items-center gap-2">
@@ -1005,7 +974,7 @@ function AddLoanTypesForm({ onClose, editData }) {
             </Button>
           </div>
           
-          {!isFormValid() && (
+          {!isValid && (
             <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
               <p className="text-sm text-yellow-800 flex items-center">
                 <AlertCircle className="w-4 h-4 mr-2" />
@@ -1018,5 +987,3 @@ function AddLoanTypesForm({ onClose, editData }) {
     </div>
   );
 }
-
-export default AddLoanTypesForm;

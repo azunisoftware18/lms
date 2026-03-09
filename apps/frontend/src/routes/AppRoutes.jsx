@@ -1,49 +1,45 @@
-import { Routes, Route } from "react-router-dom";
-import PrivateRoute from "./privateRouter";
-import PublicRoute from "./publicRoute";
+import { Routes, Route } from 'react-router-dom';
+import PrivateRoute from './privateRouter';
+import PublicRoute from './publicRoute';
 
 // Private pages
-import DashboardPage from "../app/dashboard/DashboardPage";
+import DashboardPage from '../app/dashboard/DashboardPage';
 
 // Public Pages
+import Layout from '../layout/Layout.jsx';
+import LoginForm from '../components/forms/LoginForm.jsx';
+import AdminLayout from '../layout/AdminLayout.jsx';
+import HomePage from '../app/public/HomePage.jsx';
+import AboutUsPage from '../app/public/AboutUsPage.jsx';
+import AnnualReportPage from '../app/public/AnnualReportPage.jsx';
+import BoardOfDirectorsPage from '../app/public/BoardOfDirectorsPage.jsx';
+import CommitteesPage from '../app/public/CommitteesPage.jsx';
+import ContactUsPage from '../app/public/ContactUsPage.jsx';
+import CorporateGovernancePage from '../app/public/CorporateGovernancePage.jsx';
+import CsrPage from '../app/public/CsrPage.jsx';
+import EmployeesBenefitPage from '../app/public/EmployeesBenefitPage.jsx';
+import CreditRatingPage from '../app/public/CreditRatingPage.jsx';
+import FinancialInformationPage from '../app/public/FinancialInformationPage.jsx';
+import FinovaHrPage from '../app/public/FinovaHrPage.jsx';
+import JointheFinovaFaimilyPage from '../app/public/JointheFinovaFaimilyPage.jsx';
+import KMP from '../app/public/KeyManagerialPersonnelPage.jsx';
+import NewsAndMediaPage from '../app/public/NewsAndMediaPage.jsx';
+import NoticeOfBallotPage from '../app/public/NoticeOfBallotPage.jsx';
+import OpportunityPage from '../app/public/OpportunityPage.jsx';
+import OtherDisclosuresPage from '../app/public/OtherDisclosuresPage.jsx';
+import OurInvestorsPage from '../app/public/OurInvestorsPage.jsx';
+import OurMethodPage from '../app/public/OurMethodPage.jsx';
+import PoliciesAndCodesPage from '../app/public/PoliciesAndCodesPage.jsx';
+import PoliciesPage from '../app/public/PoliciesPage.jsx';
+import ProductsPage from '../app/public/ProductsPage.jsx';
+import PublicDisclosureUnderLiquidityRiskPage from '../app/public/PublicDisclosureUnderLiquidityRiskPage.jsx';
+import SarfaesiAuctionNoticesPage from '../app/public/SarfaesiAuctionNoticesPage.jsx';
+import ShareholderInformationPage from '../app/public/ShareholderInformationPage.jsx';
+import VisionAndMissionPage from '../app/public/VisionAndMissionPage.jsx';
+import WelcometoFinovaPage from '../app/public/WelcometoFinovaPage.jsx';
+import UnderRegulationPage from '../app/public/UnderRegulationPage.jsx';
 
-import Layout from "../layout/Layout.jsx";
-import HomePage from "../app/public/HomePage.jsx";
-import AboutUsPage from "../app/public/AboutUsPage.jsx";
-import AnnualReportPage from "../app/public/AnnualReportPage.jsx";
-import BoardOfDirectorsPage from "../app/public/BoardOfDirectorsPage.jsx";
-import CommitteesPage from "../app/public/CommitteesPage.jsx";
-import ContactUsPage from "../app/public/ContactUsPage.jsx";
-import CorporateGovernancePage from "../app/public/CorporateGovernancePage.jsx";
-import CsrPage from "../app/public/CsrPage.jsx";
-import EmployeesBenefitPage from "../app/public/EmployeesBenefitPage.jsx";
-import CreditRatingPage from "../app/public/CreditRatingPage.jsx";
-import FinancialInformationPage from "../app/public/FinancialInformationPage.jsx";
-import FinovaHrPage from "../app/public/FinovaHrPage.jsx";
-import JointheFinovaFaimilyPage from "../app/public/JointheFinovaFaimilyPage.jsx";
-import KMP from "../app/public/KeyManagerialPersonnelPage.jsx";
-import NewsAndMediaPage from "../app/public/NewsAndMediaPage.jsx";
-import NoticeOfBallotPage from "../app/public/NoticeOfBallotPage.jsx";
-import OpportunityPage from "../app/public/OpportunityPage.jsx";
-import OtherDisclosuresPage from "../app/public/OtherDisclosuresPage.jsx";
-import OurInvestorsPage from "../app/public/OurInvestorsPage.jsx";
-import OurMethodPage from "../app/public/OurMethodPage.jsx";
-import PoliciesAndCodesPage from "../app/public/PoliciesAndCodesPage.jsx";
-import PoliciesPage from "../app/public/PoliciesPage.jsx";
-import ProductsPage from "../app/public/ProductsPage.jsx";
-import PublicDisclosureUnderLiquidityRiskPage from "../app/public/PublicDisclosureUnderLiquidityRiskPage.jsx";
-import SarfaesiAuctionNoticesPage from "../app/public/SarfaesiAuctionNoticesPage.jsx";
-import SarfaesiPage from "../app/public/SarfaesiPage.jsx";
-import ShareholderInformationPage from "../app/public/ShareholderInformationPage.jsx";
-import UnderRegulationPage from "../app/public/UnderRegulationPage.jsx";
-import VisionAndMissionPage from "../app/public/VisionAndMissionPage.jsx";
-import WelcometoFinovaPage from "../app/public/WelcometoFinovaPage.jsx";
 
-// Cheking Only
-import LoanConfigrationPage from "../app/dashboard/LoanConfigrationPage.jsx";
-import CompanyDetailsPage from "../app/dashboard/CompanyDetailsPage.jsx";
-import BorrowerPage from "../app/dashboard/BorrowerPage.jsx";
-import LoanRequestPage from "../app/dashboard/LoanRequestPage.jsx";
 export default function AppRoutes() {
   return (
     <Routes>
@@ -109,10 +105,16 @@ export default function AppRoutes() {
         <Route path="vision-and-mission" element={<VisionAndMissionPage />} />
         <Route path="welcome-to-finova" element={<WelcometoFinovaPage />} />
       </Route>
+
       {/* Private Dashboard */}
-      <Route path="/dashboard" element={<PrivateRoute />}>
-        <Route index element={<DashboardPage />} />
-      </Route>
+      <Route
+        path="/dashboard"
+        element={
+          <PrivateRoute>
+            <DashboardPage />
+          </PrivateRoute>
+        }
+      />
     </Routes>
   );
 }

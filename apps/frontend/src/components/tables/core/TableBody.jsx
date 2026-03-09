@@ -1,7 +1,7 @@
-import { TableEmpty } from "./TableEmpty";
-import { TableRow } from "./TableRow";
+import TableEmpty from "./TableEmpty";
+import TableRow from "./TableRow";
 
-export const TableBody = ({ columns = [], data = [], actions = [] }) => {
+export default function TableBody({ columns = [], data = [], actions = [] }) {
   if (!data.length) {
     return <TableEmpty colSpan={columns.length + 1} />;
   }

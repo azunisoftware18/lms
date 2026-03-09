@@ -1,12 +1,12 @@
 import React from 'react';
 
-const ToggleSwitch = ({ 
+export default function ToggleSwitch ({ 
   checked = false,
   onChange,
   label,
   size = "md",
   className = ""
-}) => {
+}) {
 
   const sizes = {
     sm: { track: "w-8 h-4", dot: "w-3 h-3", translate: "translate-x-4" },
@@ -49,6 +49,4 @@ const ToggleSwitch = ({
       )}
     </div>
   );
-};
-
-export default ToggleSwitch;
+}

@@ -1,4 +1,4 @@
-export const TableEmpty = ({ colSpan }) => {
+export default function TableEmpty({ colSpan }) {
   return (
     <tbody>
       <tr>
@@ -14,4 +14,4 @@ export const TableEmpty = ({ colSpan }) => {
       </tr>
     </tbody>
   );
-};
+}

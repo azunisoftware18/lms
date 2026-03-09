@@ -1,4 +1,4 @@
-export const TableHead = ({ columns = [] }) => {
+export default function TableHead({ columns = [] }) {
   return (
     <thead className="bg-slate-50/80 backdrop-blur-sm border-b border-slate-200">
       <tr>
@@ -16,4 +16,4 @@ export const TableHead = ({ columns = [] }) => {
       </tr>
     </thead>
   );
-};
+}

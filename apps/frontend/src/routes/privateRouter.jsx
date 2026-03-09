@@ -11,7 +11,7 @@ export default function PrivateRoute({ children, allowedRoles = [] }) {
   if (allowedRoles.length > 0) {
     const userRole = user?.role?.toUpperCase();
     if (!allowedRoles.includes(userRole)) {
-      return <Navigate to="/unauthorized" replace />;
+      return <Navigate to="/admin" replace />;
     }
   }
 

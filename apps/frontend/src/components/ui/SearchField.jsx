@@ -2,7 +2,7 @@ import React, { useId, useRef, useState, useEffect } from 'react';
 import { Search, X, Loader2, User, ChevronRight } from 'lucide-react';
 import Button from './Button';
 
-const SearchField = ({
+export default function  SearchField ({
   value,
   onChange,
   onClear,
@@ -17,7 +17,7 @@ const SearchField = ({
   containerClassName = "",
   onResultClick,
   ...props
-}) => {
+}) {
   const id = useId();
   const inputRef = useRef(null);
   const containerRef = useRef(null);
@@ -131,6 +131,4 @@ const SearchField = ({
       )}
     </div>
   );
-};
-
-export default SearchField;
+}

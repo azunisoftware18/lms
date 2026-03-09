@@ -5,10 +5,10 @@ import Button from "../ui/Button";
 import SelectField from "../ui/SelectField";
 import InputField from "../ui/InputField";
 import TextAreaField from "../ui/TextAreaField";
-import { leadSchema } from "../../app/validations/LeadValidation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { leadSchema } from "../../validations/LeadValidation";
 
-function LeadForm({ onSuccess }) {
+export default function LeadForm({ onSuccess }) {
   // 1. Initialize useForm
   const {
     register,
@@ -214,5 +214,3 @@ function LeadForm({ onSuccess }) {
     </form>
   );
 }
-
-export default LeadForm;

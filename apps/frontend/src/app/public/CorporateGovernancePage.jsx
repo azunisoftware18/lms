@@ -1,8 +1,7 @@
 
-const CorporateGovernancePage = () => {
+export default function CorporateGovernancePage() {
   return (
     <div>CorporateGovernancePage</div>
   )
 }
 
-export default CorporateGovernancePage

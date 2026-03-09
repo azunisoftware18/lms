@@ -7,11 +7,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { clearError } from "../../store/slices/authSlice";
 import { useLogin } from "../../hooks/useAuth"; 
-import { loginSchema } from "../../app/validations/LoginValidations"; //  Import Zod schema
 
 // Aapke Custom Components
 import InputField from "../ui/InputField";
 import Button from "../ui/Button";
+import { loginSchema } from "../../validations/LoginValidations";
 
 export default function LoginForm() {
   const [showSuccess, setShowSuccess] = useState(false);
@@ -30,7 +30,7 @@ export default function LoginForm() {
     formState: { errors },
     reset //  Reset form on error
   } = useForm({
-    resolver: zodResolver(loginSchema), //  Zod resolver
+    resolver: zodResolver(loginSchema), 
     defaultValues: {
       email: "",
       password: "",
