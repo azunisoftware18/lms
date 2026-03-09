@@ -7,38 +7,36 @@ import DashboardPage from '../app/dashboard/DashboardPage';
 
 // Public Pages
 import Layout from '../layout/Layout.jsx';
-import HomePage from '../app/pubilc/HomePage.jsx';
-import AboutUsPage from '../app/pubilc/AboutUsPage.jsx';
-import AnnualReportPage from '../app/pubilc/AnnualReportPage.jsx';
-import BoardOfDirectorsPage from '../app/pubilc/BoardOfDirectorsPage.jsx';
-import CommitteesPage from '../app/pubilc/CommitteesPage.jsx';
-import ContactUsPage from '../app/pubilc/ContactUsPage.jsx';
-import CorporateGovernancePage from '../app/pubilc/CorporateGovernancePage.jsx';
-import CsrPage from '../app/pubilc/CsrPage.jsx';
-import EmployeesBenefitPage from '../app/pubilc/EmployeesBenefitPage.jsx';
-import CreditRatingPage from '../app/pubilc/CreditRatingPage.jsx';
-import FinancialInformationPage from '../app/pubilc/FinancialInformationPage.jsx';
-import FinovaHrPage from '../app/pubilc/FinovaHrPage.jsx';
-import JointheFinovaFaimilyPage from '../app/pubilc/JointheFinovaFaimilyPage.jsx';
-import KMP from '../app/pubilc/KeyManagerialPersonnelPage.jsx';
-import NewsAndMediaPage from '../app/pubilc/NewsAndMediaPage.jsx';
-import NoticeOfBallotPage from '../app/pubilc/NoticeOfBallotPage.jsx';
-import OpportunityPage from '../app/pubilc/OpportunityPage.jsx';
-import OtherDisclosuresPage from '../app/pubilc/OtherDisclosuresPage.jsx';
-import OurInvestorsPage from '../app/pubilc/OurInvestorsPage.jsx';
-import OurMethodPage from '../app/pubilc/OurMethodPage.jsx';
-import PoliciesAndCodesPage from '../app/pubilc/PoliciesAndCodesPage.jsx';
-import PoliciesPage from '../app/pubilc/PoliciesPage.jsx';
-import ProductsPage from '../app/pubilc/ProductsPage.jsx';
-import PublicDisclosureUnderLiquidityRiskPage from '../app/pubilc/PublicDisclosureUnderLiquidityRiskPage.jsx';
-import SarfaesiAuctionNoticesPage from '../app/pubilc/SarfaesiAuctionNoticesPage.jsx';
-import SarfaesiPage from '../app/pubilc/SarfaesiPage.jsx';
-import ShareholderInformationPage from '../app/pubilc/ShareholderInformationPage.jsx';
-import UnderRegulationPage from '../app/pubilc/UnderRegulationPage.jsx';
-import VisionAndMissionPage from '../app/pubilc/VisionAndMissionPage.jsx';
-import WelcometoFinovaPage from '../app/pubilc/WelcometoFinovaPage.jsx';
 import LoginForm from '../components/forms/LoginForm.jsx';
 import AdminLayout from '../layout/AdminLayout.jsx';
+import HomePage from '../app/public/HomePage.jsx';
+import AboutUsPage from '../app/public/AboutUsPage.jsx';
+import AnnualReportPage from '../app/public/AnnualReportPage.jsx';
+import BoardOfDirectorsPage from '../app/public/BoardOfDirectorsPage.jsx';
+import CommitteesPage from '../app/public/CommitteesPage.jsx';
+import ContactUsPage from '../app/public/ContactUsPage.jsx';
+import CorporateGovernancePage from '../app/public/CorporateGovernancePage.jsx';
+import CsrPage from '../app/public/CsrPage.jsx';
+import EmployeesBenefitPage from '../app/public/EmployeesBenefitPage.jsx';
+import CreditRatingPage from '../app/public/CreditRatingPage.jsx';
+import FinancialInformationPage from '../app/public/FinancialInformationPage.jsx';
+import FinovaHrPage from '../app/public/FinovaHrPage.jsx';
+import JointheFinovaFaimilyPage from '../app/public/JointheFinovaFaimilyPage.jsx';
+import KMP from '../app/public/KeyManagerialPersonnelPage.jsx';
+import NewsAndMediaPage from '../app/public/NewsAndMediaPage.jsx';
+import NoticeOfBallotPage from '../app/public/NoticeOfBallotPage.jsx';
+import OpportunityPage from '../app/public/OpportunityPage.jsx';
+import OtherDisclosuresPage from '../app/public/OtherDisclosuresPage.jsx';
+import OurInvestorsPage from '../app/public/OurInvestorsPage.jsx';
+import OurMethodPage from '../app/public/OurMethodPage.jsx';
+import PoliciesAndCodesPage from '../app/public/PoliciesAndCodesPage.jsx';
+import PoliciesPage from '../app/public/PoliciesPage.jsx';
+import ProductsPage from '../app/public/ProductsPage.jsx';
+import PublicDisclosureUnderLiquidityRiskPage from '../app/public/PublicDisclosureUnderLiquidityRiskPage.jsx';
+import SarfaesiAuctionNoticesPage from '../app/public/SarfaesiAuctionNoticesPage.jsx';
+import ShareholderInformationPage from '../app/public/ShareholderInformationPage.jsx';
+import VisionAndMissionPage from '../app/public/VisionAndMissionPage.jsx';
+import WelcometoFinovaPage from '../app/public/WelcometoFinovaPage.jsx';
 
 export default function AppRoutes() {
 	return (
@@ -92,7 +90,7 @@ export default function AppRoutes() {
 					path="sarfaesi-auction-notices"
 					element={<SarfaesiAuctionNoticesPage />}
 				/>
-				<Route path="sarfaesi-secured-assets" element={<SarfaesiPage />} />
+				{/* <Route path="sarfaesi-secured-assets" element={<SarfaesiPage />} /> */}
 				<Route
 					path="shareholder-information"
 					element={<ShareholderInformationPage />}
@@ -104,6 +102,7 @@ export default function AppRoutes() {
 				<Route path="vision-and-mission" element={<VisionAndMissionPage />} />
 				<Route path="welcome-to-finova" element={<WelcometoFinovaPage />} />
 				<Route path="login" element={<LoginForm />} />
+				
 			</Route>
 
 			{/* Private Dashboard */}
