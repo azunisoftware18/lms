@@ -11,7 +11,7 @@ export default function HomePage() {
 			{/* ===== Hero Section ===== */}
 			<section
 				id="home"
-				className="relative pt-16 md:pt-20 pb-12 md:pb-20 overflow-hidden bg-gradient-to-r from-blue-50 to-blue-200">
+				className="relative pt-16 md:pt-20 pb-12 md:pb-20 overflow-hidden bg-linear-to-r from-blue-50 to-blue-200">
 				<div className="container mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between">
 					<div className="md:w-1/2 mb-8 md:mb-0 text-center md:text-left">
 						<h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-gray-900 mb-4 sm:mb-6 leading-tight">

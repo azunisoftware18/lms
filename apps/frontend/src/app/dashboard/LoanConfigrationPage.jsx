@@ -843,7 +843,7 @@ export default function LoanConfigurationPage() {
                       ].map((item) => (
                         <div
                           key={item.field}
-                          className={`bg-gradient-to-br ${item.color} border ${item.border} rounded-xl p-5 hover:shadow-sm transition-shadow`}
+                          className={`bg-linear-to-br ${item.color} border ${item.border} rounded-xl p-5 hover:shadow-sm transition-shadow`}
                         >
                           <div className="flex items-center justify-between mb-4">
                             <div>
