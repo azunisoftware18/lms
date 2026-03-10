@@ -7,7 +7,7 @@ export default function TableRow ({ columns, row, actions = [] }) {
         <td 
           key={col.accessor} 
           // Yahan border color wahi rakhein jo aapko puri row mein chahiye
-          className="px-6 py-4 whitespace-nowrap border-b border-slate-200 group-last:border-none font-medium text-slate-700"
+          className="px-6 py-4 whitespace-nowrap border-b border-slate-400 group-last:border-none font-medium text-slate-700"
         >
           {col.render
             ? col.render(row[col.accessor], row)
@@ -16,7 +16,7 @@ export default function TableRow ({ columns, row, actions = [] }) {
       ))}
       
       {/* Action Menu Column - Iski border class bhi match karni chahiye */}
-      <td className="px-6 py-4 text-right border-b border-slate-200 group-last:border-none">
+      <td className="px-6 py-4 text-right border-b border-slate-400 group-last:border-none">
         <ActionMenu
           actions={actions.map((action) => ({
             ...action,

@@ -290,3 +290,30 @@ export const leadDummyData = [
     status: "PENDING",
   }
 ];
+
+export const loanApplications = [
+  {
+    customer: "Sohail Ahmed",
+    email: "sohail@gmail.com",
+    type: "Home Loan",
+    amount: 500000,
+    date: "12 Mar 2026",
+    loanNo: "LN1001",
+  },
+  {
+    customer: "Ali Khan",
+    email: "ali@gmail.com",
+    type: "Car Loan",
+    amount: 300000,
+    date: "10 Mar 2026",
+    loanNo: "LN1002",
+  },
+  {
+    customer: "Rahul Sharma",
+    email: "rahul@gmail.com",
+    type: "Personal Loan",
+    amount: 200000,
+    date: "08 Mar 2026",
+    loanNo: "LN1003",
+  },
+];

@@ -11,7 +11,7 @@ export default function TableHead({
   filterOptions = [],
 }) {
   return (
-    <thead className="bg-slate-50 border-b border-slate-200">
+    <thead className="bg-slate-50 border-b border-slate-400">
 
       {/* Toolbar Row */}
       <tr>
@@ -51,7 +51,7 @@ export default function TableHead({
       </tr>
 
       {/* Column Headers */}
-      <tr className="border-t border-slate-200">
+      <tr className="border-t border-slate-300">
         {columns.map((col) => (
           <th
             key={col.accessor}
