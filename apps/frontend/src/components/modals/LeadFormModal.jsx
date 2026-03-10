@@ -19,8 +19,8 @@ export default function LeadFormModal ({ isOpen, onClose }) {
         {/* Header Section */}
         <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-slate-50/50 rounded-t-2xl">
           <div>
-            <h2 className="text-xl font-bold text-slate-800">New Loan Application</h2>
-            <p className="text-sm text-slate-500">Fill in the details to create a new lead</p>
+            <h2 className="text-xl font-bold text-slate-800">Apply Now</h2>
+            <p className="text-sm text-slate-500">Fill in the details to apply loan</p>
           </div>
           <button 
             onClick={onClose}
