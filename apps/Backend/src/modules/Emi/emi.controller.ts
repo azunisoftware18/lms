@@ -22,8 +22,8 @@ export const getAllEmisController = async (req: Request, res: Response) => {
     const result = await getAllEmisService({
       page: Number(req.query.page),
       limit: Number(req.query.limit),
-      q: req.query.q?.toString(),
-      status: req.query.status?.toString(),
+      q: typeof req.query.q === 'string' ? req.query.q : undefined,
+      status: typeof req.query.status === 'string' ? req.query.status : undefined,
     });
 
     return res.status(200).json({
@@ -46,7 +46,7 @@ export const generateEmiScheduleController = async (
   res: Response,
 ) => {
   try {
-    const loanId = req.params.id;
+    const loanId = typeof req.params.id === 'string' ? req.params.id : req.params.id[0];
     const userId = req.user?.id;
     const branchId = req.user?.branchId;
 
@@ -88,7 +88,7 @@ export const getThisMonthEmiAmountController = async (
   res: Response,
 ) => {
   try {
-    const loanApplicationId = req.params.loanApplicationId;
+    const loanApplicationId = typeof req.params.loanApplicationId === 'string' ? req.params.loanApplicationId : req.params.loanApplicationId[0];
 
     const result = await getThisMonthEmiAmountService(loanApplicationId);
 
@@ -107,7 +107,7 @@ export const getThisMonthEmiAmountController = async (
 
 export const getLoanEmiController = async (req: Request, res: Response) => {
   try {
-    const loanId = req.params.id;
+    const loanId = typeof req.params.id === 'string' ? req.params.id : req.params.id[0];
     const emis = await getLoanEmiService(loanId);
     res.status(200).json({
       success: true,
@@ -125,7 +125,7 @@ export const getLoanEmiController = async (req: Request, res: Response) => {
 export const markEmiPaidController = async (req: Request, res: Response) => {
   try {
     const { amountPaid, paymentMode, isBounce } = req.body;
-    const emiId = req.params.emiId;
+    const emiId = typeof req.params.emiId === 'string' ? req.params.emiId : req.params.emiId[0];
 
     const emi = await markEmiPaidService({
       emiId,
@@ -148,7 +148,7 @@ export const getEmiPayableAmountController = async (
   res: Response,
 ) => {
   try {
-    const emiId = req.params.emiId;
+    const emiId = typeof req.params.emiId === 'string' ? req.params.emiId : req.params.emiId[0];
     const emi = await getPayableEmiAmountService(emiId);
     res.status(200).json({ success: true, data: emi });
   } catch (error: any) {
@@ -206,7 +206,7 @@ export const generateEmiAmount = async (req: Request, res: Response) => {
 
 export const payEmiServiceController = async (req: Request, res: Response) => {
   try {
-    const emiId = req.params.emiId;
+    const emiId = typeof req.params.emiId === 'string' ? req.params.emiId : req.params.emiId[0];
     const { amount, paymentMode } = req.body;
     const emi = await payEmiService(emiId, amount, paymentMode);
 
@@ -246,7 +246,7 @@ export const payEmiServiceController = async (req: Request, res: Response) => {
 
 export const forecloseLoanController = async (req: Request, res: Response) => {
   try {
-    const loanId = req.params.loanId;
+    const loanId = typeof req.params.loanId === 'string' ? req.params.loanId : req.params.loanId[0];
     // Implement foreclose loan logic here
     const result = await forecloseLoanService(loanId);
     res.status(200).json({
@@ -268,7 +268,7 @@ export const payforecloseLoanController = async (
   res: Response,
 ) => {
   try {
-    const loanId = req.params.loanId;
+    const loanId = typeof req.params.loanId === 'string' ? req.params.loanId : req.params.loanId[0];
     const data = req.body;
     // Implement foreclose loan logic here
     const result = await payforecloseLoanService(loanId, data);
@@ -317,7 +317,7 @@ export const applyMoratoriumController = async (
   res: Response,
 ) => {
   try {
-    const { loanId } = req.params;
+    const loanId = typeof req.params.loanId === 'string' ? req.params.loanId : req.params.loanId[0];
     const { type, startDate, endDate } = req.body;
 
     if (!loanId || !type || !startDate || !endDate) {
@@ -351,7 +351,7 @@ export const getpayableEmiAmountController = async (
   res: Response,
 ) => {
   try {
-    const emiId = req.params.emiId;
+    const emiId = typeof req.params.emiId === 'string' ? req.params.emiId : req.params.emiId[0];
     const emi = await getPayableEmiAmountService(emiId);
     res.status(200).json({ success: true, data: emi });
   } catch (error: any) {
@@ -363,7 +363,7 @@ export const getpayableEmiAmountController = async (
 };
 export const editEmiController = async (req: Request, res: Response) => {
   try {
-    const emiId = req.params.emiId;
+    const emiId = typeof req.params.emiId === 'string' ? req.params.emiId : req.params.emiId[0];
 
     const { dueDate } = req.body;
 
