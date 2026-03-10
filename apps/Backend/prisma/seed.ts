@@ -22,11 +22,16 @@ async function main(): Promise<void> {
   // Create Super Branch for admin users
   const superBranch = await prisma.branch.upsert({
     where: { code: "HQ-SUPER" },
-    update: {},
+    update: {
+      name: "Headquarters - Super Admin",
+      type: "SUPER",
+      isActive: true,
+      parentBranchId: null,
+    },
     create: {
       name: "Headquarters - Super Admin",
       code: "HQ-SUPER",
-      type: "MAIN",
+      type: "SUPER",
       isActive: true,
       parentBranchId: null,
     },

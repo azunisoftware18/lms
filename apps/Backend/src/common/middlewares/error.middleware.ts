@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { handleError } from "../utils/handleError.js";
+import { AppError } from "../utils/apiError.js";
+import logger from "../logger.js";
 
 // Express error-handling middleware
 const errorMiddleware = (
@@ -8,12 +9,27 @@ const errorMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  const status =
-    typeof (err as any)?.statusCode === "number"
-      ? (err as any).statusCode
-      : 500;
-  const message = err instanceof Error ? err.message : "Something went wrong!";
-  return handleError(res, err, status, message);
+  if (err instanceof AppError) {
+    logger.error("AppError: %o", err);
+    return res.status(err.statusCode).json({
+      success: false,
+      message: err.message,
+    });
+  }
+  
+  if (err instanceof Error) {
+    logger.error("Error: %o", err);
+    return res.status(500).json({
+      success: false,
+      message: err.message || "Internal Server Error",
+    });
+  }
+  
+  logger.error("Unknown error: %o", err);
+  return res.status(500).json({
+    success: false,
+    message: "Something went wrong!",
+  });
 };
 
 export default errorMiddleware;
