@@ -21,7 +21,7 @@ export const useLogin = () => {
     },
 
     onSuccess: (data) => {
-      dispatch(setUser(data.user));
+      dispatch(setUser(data.data.user));
 
       toast.success("Login successful");
     },
