@@ -4,6 +4,7 @@ const emiSlice = createSlice({
     name: 'emi',
     initialState: {
         emis: [],
+        meta: null,
         selectedEmi: null,
         emiSchedule: null,
         payableAmount: null,
@@ -29,7 +30,16 @@ const emiSlice = createSlice({
 
         // Set all EMIs
         setEmis: (state, action) => {
-            state.emis = action.payload;
+            if (Array.isArray(action.payload)) {
+                state.emis = action.payload;
+                state.meta = null;
+            } else if (action.payload?.data) {
+                state.emis = action.payload.data;
+                state.meta = action.payload.meta || null;
+            } else {
+                state.emis = action.payload;
+                state.meta = null;
+            }
             state.loading = false;
             state.error = null;
         },
@@ -90,6 +100,7 @@ const emiSlice = createSlice({
         // Reset EMIs state
         resetEmis: (state) => {
             state.emis = [];
+            state.meta = null;
             state.selectedEmi = null;
             state.emiSchedule = null;
             state.payableAmount = null;

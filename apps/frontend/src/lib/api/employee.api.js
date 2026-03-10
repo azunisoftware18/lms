@@ -16,8 +16,17 @@ export const createEmployee = async (data) => {
 
 export const getEmployees = async (params) => {
     try {
-        const res = await api.get('/employee/all', { params });
-        return res.data;
+        const res = await api.get('/employee/all', {
+            params: {
+                page: params?.page || 1,
+                limit: params?.limit || 10,
+                q: params?.q || '',
+            },
+        });
+
+        // Backend currently responds with { success, message, data: { data, meta } }
+        // Return the normalized list payload so hooks/slices can consume pagination safely.
+        return res.data?.data ?? res.data;
     } catch (error) {
         throw new Error(getErrorMessage(error));
     }
