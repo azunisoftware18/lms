@@ -1,8 +1,8 @@
 import React from "react";
 import { X } from "lucide-react";
-import { AddEmployeeForm } from "../forms/AddEmployeeForm";
+import AddEmployeeForm from "../forms/AddEmployeeForm";
 
-export const EmployeeFormModal = ({ isOpen, onClose, isEditing, editId }) => {
+export default function EmployeeFormModal ({ isOpen, onClose, isEditing, editId }) {
 
   if (!isOpen) return null;
 
@@ -53,4 +53,4 @@ export const EmployeeFormModal = ({ isOpen, onClose, isEditing, editId }) => {
       </div>
     </div>
   );
-};
+}

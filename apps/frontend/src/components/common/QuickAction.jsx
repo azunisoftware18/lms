@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChevronRight, Loader2 } from 'lucide-react';
 
-const QuickActionCard = ({
+export default function QuickActionCard({
   title,
   subtitle,
   icon: Icon,
@@ -9,7 +9,7 @@ const QuickActionCard = ({
   variant = "blue", // "blue" | "indigo" | "sky" | "white"
   isLoading = false,
   className = ""
-}) => {
+}) {
   
   // Blue & White UI themed variants
   const variants = {
@@ -85,6 +85,4 @@ const QuickActionCard = ({
       </div>
     </button>
   );
-};
-
-export default QuickActionCard;
+}

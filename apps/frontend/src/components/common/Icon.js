@@ -47,6 +47,9 @@ import {
   ChevronRight,
   Filter,
   Info,
+  Building2,
+  Upload,
+  Image,
 } from "lucide-react";
 
 export const Icons = {
@@ -98,4 +101,7 @@ export const Icons = {
   ChevronRight,
   Filter,
   Info,
+  Building2,
+  Upload,
+  Image,
 };

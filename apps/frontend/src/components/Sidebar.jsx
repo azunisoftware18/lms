@@ -10,7 +10,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 
-export default function AdminSidebar() {
+export default function Sidebar() {
   const [expanded, setExpanded] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user } = useSelector((state) => state.auth);

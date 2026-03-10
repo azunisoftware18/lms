@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { MapPin, Building2 } from "lucide-react";
 import InputField from "../ui/InputField";
@@ -6,8 +6,10 @@ import SelectField from "../ui/SelectField";
 import TextAreaField from "../ui/TextAreaField";
 import Button from "../ui/Button";
 import ToggleSwitch from "../ui/ToggleSwitch"; // Aapka switch component
+import { zodResolver } from "@hookform/resolvers/zod";
+import { branchSchema } from "../../validations/BranchValidation";
 
-const AddBranchForm = ({ branch = null, mainBranches = [], onClose, onSave }) => {
+export default function AddBranchForm  ({ branch = null, mainBranches = [], onClose, onSave })  {
   const {
     register,
     handleSubmit,
@@ -172,6 +174,4 @@ const AddBranchForm = ({ branch = null, mainBranches = [], onClose, onSave }) =>
       </form>
     </div>
   );
-};
-
-export default AddBranchForm;
+}

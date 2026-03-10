@@ -10,7 +10,7 @@ import {
 import Button from "../../components/ui/Button";
 import SearchField from "../../components/ui/SearchField";
 
-import { Table } from "../../components/tables";
+import { TableShell } from "../../components/tables/core";
 
 import ActionMenu from "../../components/common/ActionMenu";
 
@@ -103,14 +103,14 @@ export default function LoanConfigurationPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-6">
+    <div className="min-h-screen bg-gray-50 to-gray-100 p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2.5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl shadow-sm">
+                <div className="p-2.5 bg-green-500 to-emerald-600 rounded-xl shadow-sm">
                   <Icons.CreditCard className="w-7 h-7 text-white" />
                 </div>
                 <h1 className="text-3xl font-bold text-gray-900">
@@ -202,45 +202,56 @@ export default function LoanConfigurationPage() {
               </div>
               <div className="p-2">
                 {categories.map((category) => (
-                  <button
+                  <Button
                     key={category.id}
                     onClick={() => setActiveCategory(category.id)}
-                    className={`flex items-center justify-between w-full p-3 rounded-xl mb-1 transition-all ${
+                    className={`w-full justify-between bg-transparent text-gray-700 shadow-none px-3 py-3 mb-1 ${
                       activeCategory === category.id
-                        ? "bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200"
+                        ? "bg-green-50 to-emerald-50 border border-green-200"
                         : "hover:bg-gray-50"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div
-                        className={`p-2 rounded-lg ${activeCategory === category.id ? "bg-green-100" : category.color}`}
+                        className={`p-2 rounded-lg ${
+                          activeCategory === category.id
+                            ? "bg-green-100"
+                            : category.color
+                        }`}
                       >
                         <category.icon
-                          className={`w-4 h-4 ${activeCategory === category.id ? "text-green-600" : category.color.replace("bg-", "text-")}`}
+                          className={`w-4 h-4 ${
+                            activeCategory === category.id
+                              ? "text-green-600"
+                              : category.color.replace("bg-", "text-")
+                          }`}
                         />
                       </div>
+
                       <span className="font-medium text-gray-700">
                         {category.label}
                       </span>
                     </div>
+
                     {activeCategory === category.id && (
                       <Icons.ChevronRight className="w-4 h-4 text-green-600" />
                     )}
-                  </button>
+                  </Button>
                 ))}
               </div>
               <div className="p-4 border-t border-gray-200">
-                <button
+                <Button
                   onClick={() => setShowAdvanced(!showAdvanced)}
-                  className="flex items-center justify-between w-full p-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+                  className="w-full justify-between bg-transparent text-gray-700 shadow-none px-3 py-3 hover:bg-gray-50"
                 >
                   <span>Advanced Settings</span>
+
                   {showAdvanced ? (
                     <Icons.EyeOff className="w-4 h-4" />
                   ) : (
                     <Icons.Eye className="w-4 h-4" />
                   )}
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -248,7 +259,7 @@ export default function LoanConfigurationPage() {
           {/* Configuration Panel */}
           <div className="flex-1">
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white">
+              <div className="p-6 border-b border-gray-100 bg-gray-50 ">
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-xl font-bold text-gray-900">
@@ -262,10 +273,10 @@ export default function LoanConfigurationPage() {
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors">
+                    <Button className="bg-white text-gray-700 shadow-none border border-gray-300 px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-50 transition">
                       <Icons.Download className="w-4 h-4" />
                       Export
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -339,7 +350,7 @@ export default function LoanConfigurationPage() {
                       ].map((item) => (
                         <div
                           key={item.field}
-                          className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl p-5 hover:shadow-sm transition-shadow"
+                          className="bg-gray-50 to-white border border-gray-200 rounded-xl p-5 hover:shadow-sm transition-shadow"
                         >
                           <div className="flex items-center justify-between mb-3">
                             <div>
@@ -427,7 +438,7 @@ export default function LoanConfigurationPage() {
                       ].map((item) => (
                         <div
                           key={item.field}
-                          className="bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-xl p-5 hover:shadow-sm transition-shadow"
+                          className="bg-blue-50 to-white border border-blue-100 rounded-xl p-5 hover:shadow-sm transition-shadow"
                         >
                           <div className="flex items-center justify-between mb-3">
                             <div>
@@ -507,7 +518,7 @@ export default function LoanConfigurationPage() {
                       ].map((item) => (
                         <div
                           key={item.field}
-                          className="bg-gradient-to-br from-green-50 to-white border border-green-100 rounded-xl p-5 hover:shadow-sm transition-shadow"
+                          className="bg-green-50 to-white border border-green-100 rounded-xl p-5 hover:shadow-sm transition-shadow"
                         >
                           <div className="flex items-center justify-between mb-3">
                             <div>
@@ -543,7 +554,7 @@ export default function LoanConfigurationPage() {
                       ))}
                     </div>
 
-                    <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl p-6">
+                    <div className="bg-gray-50 to-white border border-gray-200 rounded-xl p-6">
                       <div className="flex items-center justify-between mb-4">
                         <div>
                           <h3 className="font-semibold text-gray-900">
@@ -573,35 +584,37 @@ export default function LoanConfigurationPage() {
                             description: "Daily interest calculation",
                           },
                         ].map((method) => (
-                          <button
+                          <Button
                             key={method.value}
                             onClick={() =>
                               handleInputChange("emiMethod", method.value)
                             }
-                            className={`p-4 border rounded-xl text-left transition-all ${
+                            className={`w-full bg-transparent text-left shadow-none px-4 py-4 border rounded-xl transition-all ${
                               loanConfig.emiMethod === method.value
                                 ? "border-green-500 bg-green-50 ring-1 ring-green-500"
                                 : "border-gray-300 hover:border-gray-400"
                             }`}
                           >
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between w-full">
                               <span className="font-medium text-gray-900">
                                 {method.label}
                               </span>
+
                               {loanConfig.emiMethod === method.value && (
                                 <Icons.CheckCircle className="w-5 h-5 text-green-600" />
                               )}
                             </div>
+
                             <p className="text-sm text-gray-600 mt-2">
                               {method.description}
                             </p>
-                          </button>
+                          </Button>
                         ))}
                       </div>
                     </div>
 
                     {/* Tenure Steps */}
-                    <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl p-6">
+                    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                       <h3 className="font-semibold text-gray-900 mb-4">
                         Available Tenure Options
                       </h3>
@@ -611,7 +624,7 @@ export default function LoanConfigurationPage() {
                       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
                         {[3, 6, 12, 18, 24, 36, 48, 60, 72, 84, 96, 120].map(
                           (month) => (
-                            <button
+                            <Button
                               key={month}
                               type="button"
                               onClick={() => {
@@ -624,17 +637,18 @@ export default function LoanConfigurationPage() {
                                   : [...loanConfig.tenureSteps, month].sort(
                                       (a, b) => a - b,
                                     );
+
                                 handleInputChange("tenureSteps", steps);
                               }}
-                              className={`p-3 rounded-lg border flex flex-col items-center justify-center transition-all ${
+                              className={`p-3 rounded-lg border flex flex-col items-center justify-center transition-all duration-200 ${
                                 loanConfig.tenureSteps.includes(month)
-                                  ? "bg-green-100 border-green-300 text-green-800 shadow-sm"
+                                  ? "bg-green-100 border-green-400 text-green-800 ring-1 ring-green-300"
                                   : "bg-gray-100 border-gray-300 text-gray-600 hover:bg-gray-200"
                               }`}
                             >
                               <span className="text-lg font-bold">{month}</span>
                               <span className="text-xs">Months</span>
-                            </button>
+                            </Button>
                           ),
                         )}
                       </div>
@@ -691,7 +705,7 @@ export default function LoanConfigurationPage() {
                           key={item.field}
                           className={`p-5 border rounded-xl transition-all ${
                             loanConfig[item.field]
-                              ? "border-orange-200 bg-gradient-to-br from-orange-50 to-white"
+                              ? "border border-orange-200  from-orange-50 to-white"
                               : "border-gray-200 bg-white hover:bg-gray-50"
                           }`}
                         >
@@ -721,12 +735,12 @@ export default function LoanConfigurationPage() {
                                 </p>
                               </div>
                             </div>
-                            <button
+                            <Button
                               type="button"
                               onClick={() => handleToggleChange(item.field)}
-                              className={`w-12 h-6 rounded-full transition-all relative ${
+                              className={`w-12 h-6 rounded-full relative transition-all duration-200 ${
                                 loanConfig[item.field]
-                                  ? "bg-gradient-to-r from-orange-500 to-orange-600"
+                                  ? "bg-orange-500 to-orange-600"
                                   : "bg-gray-300"
                               }`}
                             >
@@ -736,8 +750,8 @@ export default function LoanConfigurationPage() {
                                     ? "translate-x-7"
                                     : "translate-x-1"
                                 } top-0.5`}
-                              ></div>
-                            </button>
+                              />
+                            </Button>
                           </div>
                         </div>
                       ))}
@@ -745,7 +759,7 @@ export default function LoanConfigurationPage() {
 
                     {/* Co-applicant Income Requirement */}
                     {loanConfig.coApplicantRequired && (
-                      <div className="bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-xl p-6">
+                      <div className="bg-blue-50 to-white border border-blue-100 rounded-xl p-6">
                         <div className="flex items-center justify-between mb-4">
                           <div>
                             <h3 className="font-semibold text-gray-900">
@@ -880,7 +894,7 @@ export default function LoanConfigurationPage() {
                     </div>
 
                     {showAdvanced && (
-                      <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl p-6">
+                      <div className="bg-gray-50 to-white border border-gray-200 rounded-xl p-6">
                         <h3 className="font-semibold text-gray-900 mb-4">
                           Advanced Risk Settings
                         </h3>
@@ -905,7 +919,7 @@ export default function LoanConfigurationPage() {
                           key={category.id}
                           className={`border rounded-xl overflow-hidden transition-all ${
                             category.active
-                              ? "border-gray-300 bg-gradient-to-br from-white to-gray-50 hover:shadow-sm"
+                              ? "border-gray-300 bg-white to-gray-50 hover:shadow-sm"
                               : "border-gray-200 bg-gray-50 opacity-75"
                           }`}
                         >
@@ -933,21 +947,21 @@ export default function LoanConfigurationPage() {
                                 </div>
                               </div>
                               <div className="flex items-center gap-3">
-                                <button
+                                <Button
                                   type="button"
                                   onClick={() =>
                                     updateLoanCategory(index, {
                                       active: !category.active,
                                     })
                                   }
-                                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                  className={`shadow-none px-4 py-2 rounded-lg text-sm font-medium ${
                                     category.active
                                       ? "bg-gray-100 text-gray-700 hover:bg-gray-200"
                                       : "bg-green-100 text-green-700 hover:bg-green-200"
                                   }`}
                                 >
                                   {category.active ? "Deactivate" : "Activate"}
-                                </button>
+                                </Button>
                               </div>
                             </div>
 
@@ -1009,7 +1023,7 @@ export default function LoanConfigurationPage() {
                       ))}
                     </div>
 
-                    <button
+                    <Button
                       type="button"
                       onClick={() => {
                         const colors = [
@@ -1020,6 +1034,7 @@ export default function LoanConfigurationPage() {
                           "bg-red-500",
                           "bg-pink-500",
                         ];
+
                         const newCategory = {
                           id: loanConfig.loanCategories.length + 1,
                           name: "New Loan Type",
@@ -1029,22 +1044,23 @@ export default function LoanConfigurationPage() {
                           color:
                             colors[Math.floor(Math.random() * colors.length)],
                         };
+
                         handleInputChange("loanCategories", [
                           ...loanConfig.loanCategories,
                           newCategory,
                         ]);
                       }}
-                      className="w-full p-4 border-2 border-dashed border-gray-300 text-gray-600 rounded-xl hover:border-green-400 hover:bg-green-50 transition-all flex items-center justify-center gap-2"
+                      className="w-full bg-transparent text-gray-600 shadow-none p-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-green-400 hover:bg-green-50 transition-all flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <Icons.Plus className="w-5 h-5" />
                       Add New Loan Type
-                    </button>
+                    </Button>
                   </div>
                 )}
               </div>
 
               {/* Action Buttons */}
-              <div className="p-6 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white">
+              <div className="p-6 border-t border-gray-200 bg-gray-50 to-white">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <div className="p-2.5 bg-green-100 rounded-lg">
@@ -1060,21 +1076,23 @@ export default function LoanConfigurationPage() {
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-3">
-                    <button
+                    <Button
+                      type="button"
                       onClick={resetForm}
-                      className="flex items-center gap-2 px-5 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all font-medium"
+                      className="bg-transparent text-gray-700 shadow-none flex items-center gap-2 px-5 py-3 border-2 border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 font-medium"
                     >
                       <Icons.RefreshCw className="w-4 h-4" />
                       Reset to Default
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      type="button"
                       onClick={saveSettings}
                       disabled={isSaving}
-                      className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all shadow-sm hover:shadow ${
+                      className={`text-white px-6 py-3 rounded-xl font-medium transition-all shadow-sm hover:shadow flex items-center gap-2 ${
                         isSaving
-                          ? "bg-gradient-to-r from-green-400 to-emerald-400 cursor-not-allowed"
-                          : "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
-                      } text-white`}
+                          ? "bg-green-400 to-emerald-400 cursor-not-allowed"
+                          : "bg-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                      }`}
                     >
                       {isSaving ? (
                         <>
@@ -1087,14 +1105,14 @@ export default function LoanConfigurationPage() {
                           Save Configuration
                         </>
                       )}
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Footer Note */}
-            <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl">
+            <div className="mt-6 p-4 bg-indigo-50 border border-blue-100 rounded-xl">
               <div className="flex items-center gap-3">
                 <Icons.Info className="w-5 h-5 text-blue-600" />
                 <p className="text-sm text-gray-700">

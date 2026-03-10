@@ -3,7 +3,7 @@ import { AlertTriangle, Loader2, MessageSquare } from "lucide-react";
 import TextAreaField from "../ui/TextAreaField";
 import Button from "../ui/Button";
 
-export const ConfirmationDialog = ({
+export default function ConfirmationDialog({
     open,
     title,
     description,
@@ -16,7 +16,7 @@ export const ConfirmationDialog = ({
     showRemark = false,
     isPopup = false,
     children,
-}) => {
+}) {
     const [remark, setRemark] = useState("");
 
     useEffect(() => {
@@ -102,4 +102,4 @@ export const ConfirmationDialog = ({
             </div>
         </div>
     );
-};
+}

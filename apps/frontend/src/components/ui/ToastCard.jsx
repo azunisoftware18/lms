@@ -2,7 +2,7 @@
 import React from 'react';
 import { CheckCircle, AlertCircle, AlertTriangle, X } from 'lucide-react';
 
-const OrderStatusModal = ({ 
+export default function OrderStatusModal ({ 
   isOpen, 
   onClose,
   type = 'success', // 'success', 'error', 'warning'
@@ -13,7 +13,7 @@ const OrderStatusModal = ({
   showDeliveryTime = true,
   buttonText = 'OK',
   onButtonClick
-}) => {
+}) {
   if (!isOpen) return null;
 
   // Default messages based on type
@@ -184,6 +184,4 @@ const OrderStatusModal = ({
       </div>
     </div>
   );
-};
-
-export default OrderStatusModal;
+}

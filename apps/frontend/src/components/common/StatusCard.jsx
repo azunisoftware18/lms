@@ -1,7 +1,7 @@
 import React from 'react';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
-const StatusCard = ({ 
+export default function StatusCard({
   title, 
   value, 
   subtext, 
@@ -10,7 +10,7 @@ const StatusCard = ({
   trend, // { value: number, isPositive: boolean }
   isLoading = false,
   className = "" 
-}) => {
+}) {
   
   const variants = {
     blue: "bg-blue-50 text-blue-600 border-blue-100",
@@ -66,6 +66,4 @@ const StatusCard = ({
       </div>
     </div>
   );
-};
-
-export default StatusCard;
+}

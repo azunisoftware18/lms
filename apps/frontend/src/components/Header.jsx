@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronDown, Menu, X, Phone, MapPin, Clock, User } from "lucide-react";
-import { navigationItems } from "../../lib/dumyData";
+import { navigationItems } from "../lib/dumyData";
 import { useSelector, useDispatch } from "react-redux";
-import { clearUser } from "../../store/slices/authSlice"; // ✅ Import clearUser action
-import Button from "../ui/Button";
-import LeadFormModal from "../modals/LeadFormModal";
+import { clearUser } from "../store/slices/authSlice"; 
+import Button from "./ui/Button";
+import LeadFormModal from "./modals/LeadFormModal";
 // import ApplyLoanModal from "./admin/modals/ApplyLoanModal";
 
 export default function Header() {
@@ -14,7 +14,7 @@ export default function Header() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileSubmenu, setMobileSubmenu] = useState(null);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
-  const [isLoggingOut, setIsLoggingOut] = useState(false); // ✅ Loading state for logout
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // ✅ Redux hooks
   const dispatch = useDispatch();

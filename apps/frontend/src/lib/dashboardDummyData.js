@@ -436,7 +436,6 @@ export const loanConfigCategories = [
   },
 ];
 
-
 // Stats data
 export const loanConfigStats = [
   {
@@ -462,5 +461,168 @@ export const loanConfigStats = [
     key: "creditScore",
     icon: "BarChart3",
     change: "+20",
+  },
+];
+
+export const companyDefaultDetails = {
+  name: "Quick Loan Finance Ltd.",
+  email: "support@quickloan.com",
+  phone: "+91 9876543210",
+  address: "123 Business Tower, Sector 18, Noida, UP - 201301",
+  website: "www.quickloan.com",
+  logo: null,
+  favicon: null,
+  panNumber: "ABCDE1234F",
+  gstNumber: "22ABCDE1234F1Z5",
+  cinNumber: "U67190MH2010PLC199123",
+  registrationDate: "2015-03-15",
+  businessType: "NBFC",
+  industry: "Financial Services",
+  contactPerson: "Rajesh Sharma",
+  contactPersonPhone: "+91 9876543211",
+  contactPersonEmail: "rajesh@quickloan.com",
+  timezone: "IST (UTC+5:30)",
+  currency: "INR (₹)",
+  description:
+    "A leading NBFC providing quick loan solutions to individuals and small businesses across India.",
+};
+
+export const businessTypes = [
+  "NBFC",
+  "Bank",
+  "FinTech",
+  "Cooperative Society",
+  "Microfinance",
+  "Insurance",
+  "Other",
+];
+
+export const industries = [
+  "Financial Services",
+  "Banking",
+  "Insurance",
+  "Investment",
+  "Wealth Management",
+  "Peer-to-Peer Lending",
+  "Digital Payments",
+  "Other",
+];
+
+export const companyTabs = [
+  { id: "basic", label: "Basic Info", icon: "Building2" },
+  { id: "contact", label: "Contact", icon: "Phone" },
+  { id: "legal", label: "Legal", icon: "Shield" },
+  { id: "branding", label: "Branding", icon: "ImageIcon" },
+];
+
+export const branches = [
+  "Mumbai",
+  "Delhi",
+  "Bangalore",
+  "Chennai",
+  "Kolkata",
+  "Hyderabad",
+];
+
+export const statusOptions = [
+  { value: "active", label: "Active", color: "bg-green-100 text-green-800" },
+  {
+    value: "pending",
+    label: "Pending",
+    color: "bg-yellow-100 text-yellow-800",
+  },
+  {
+    value: "overdue",
+    label: "Overdue",
+    color: "bg-orange-100 text-orange-800",
+  },
+  { value: "blocked", label: "Blocked", color: "bg-red-100 text-red-800" },
+  { value: "rejected", label: "Rejected", color: "bg-gray-100 text-gray-800" },
+  {
+    value: "blacklisted",
+    label: "Blacklisted",
+    color: "bg-purple-100 text-purple-800",
+  },
+];
+
+export const borrowersData = [
+  {
+    id: 1,
+    name: "Rahul Sharma",
+    phone: "9876543210",
+    email: "rahul@example.com",
+    branch: "Mumbai",
+    employment: "Software Engineer",
+    monthlyIncome: 75000,
+    status: "active",
+    totalLoans: 2,
+    activeLoans: 1,
+    totalAmount: 250000,
+    overdueAmount: 0,
+    creditScore: 720,
+    kycStatus: "verified",
+    tags: ["Premium"],
+  },
+  {
+    id: 2,
+    name: "Amit Kumar",
+    phone: "9876543222",
+    email: "amit@example.com",
+    branch: "Delhi",
+    employment: "Business Owner",
+    monthlyIncome: 90000,
+    status: "overdue",
+    totalLoans: 3,
+    activeLoans: 2,
+    totalAmount: 500000,
+    overdueAmount: 25000,
+    creditScore: 680,
+    kycStatus: "pending",
+    tags: ["VIP"],
+  },
+];
+
+export const MOCK_EMPLOYEES = [
+  "Ravi Sharma (Emp-001)",
+  "Priya Varma (Emp-002)",
+  "Admin",
+];
+
+export const MOCK_PARTNERS = [
+  "Connect FinTech",
+  "Global Loans Inc",
+  "Direct Channel",
+];
+
+export const INITIAL_ADMIN_LOAN_DATA = [
+  {
+    id: "LN-1678880000",
+    borrower: "Anil Kumar",
+    amount: "₹5,00,000",
+    type: "Personal Loan",
+    status: "Approved",
+    loanSource: "Ravi Sharma (Emp-001)",
+    approvedBy: "Admin",
+    details: {
+      mobile: "9876543210",
+      email: "anil@example.com",
+      loanCategory: "Unsecured",
+      tenure: "60 months",
+    },
+  },
+  {
+    id: "LN-1678880001",
+    borrower: "Sunita Mehra",
+    amount: "₹20,00,000",
+    type: "Home Loan",
+    status: "Pending",
+    loanSource: "Connect FinTech",
+    approvedBy: null,
+    details: {
+      mobile: "9988776655",
+      email: "sunita@example.com",
+      loanCategory: "Secured",
+      tenure: "240 months",
+    },
   },
 ];

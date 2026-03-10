@@ -1,7 +1,4 @@
-import React from 'react';
-
-// Props: children (text), onClick (function), type (button/submit), aur className (extra styles)
-function Button({ children, onClick, type = "button", className = "" }) {
+export default function Button({ children, onClick, type = "button", className = "" }) {
   return (
     <button
       type={type}
@@ -21,5 +18,3 @@ function Button({ children, onClick, type = "button", className = "" }) {
     </button>
   );
 }
-
-export default Button;
