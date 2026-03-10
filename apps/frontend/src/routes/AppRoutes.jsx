@@ -56,7 +56,7 @@ export default function AppRoutes() {
 				<Route path="annual-report" element={<AnnualReportPage />} />
 				<Route path="board-of-directors" element={<BoardOfDirectorsPage />} />
 				<Route path="committees" element={<CommitteesPage />} />
-				<Route path="contact-us" element={<ContactUsPage />} />
+				<Route path="contact" element={<ContactUsPage />} />
 				<Route
 					path="corporate-governance"
 					element={<CorporateGovernancePage />}
