@@ -11,10 +11,8 @@ import {
 
 import { validate } from "../../common/middlewares/zod.middleware.js";
 import {
-  CreateBranchInput,
-  updateBranchInput,
   branchIdParamSchema,
-} from "./branch.types.js";
+} from "./branch.schema.js";
 
 import { authMiddleware } from "../../common/middlewares/auth.middleware.js";
 import { createBranchSchema, updateBranchSchema } from "./branch.schema.js";
