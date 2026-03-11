@@ -83,6 +83,11 @@ export type LoanApplication = Prisma.LoanApplicationModel
  */
 export type CoApplicant = Prisma.CoApplicantModel
 /**
+ * Model CoApplicantFinancialDetails
+ * 
+ */
+export type CoApplicantFinancialDetails = Prisma.CoApplicantFinancialDetailsModel
+/**
  * Model Customer
  * 
  */

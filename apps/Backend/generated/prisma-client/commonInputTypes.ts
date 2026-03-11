@@ -603,6 +603,34 @@ export type EnumCoApplicantRelationFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumCoApplicantRelationFilter<$PrismaModel> | $Enums.CoApplicantRelation
 }
 
+export type EnumCategoryNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.Category | Prisma.EnumCategoryFieldRefInput<$PrismaModel> | null
+  in?: $Enums.Category[] | null
+  notIn?: $Enums.Category[] | null
+  not?: Prisma.NestedEnumCategoryNullableFilter<$PrismaModel> | $Enums.Category | null
+}
+
+export type EnumMaritalStatusNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.MaritalStatus | Prisma.EnumMaritalStatusFieldRefInput<$PrismaModel> | null
+  in?: $Enums.MaritalStatus[] | null
+  notIn?: $Enums.MaritalStatus[] | null
+  not?: Prisma.NestedEnumMaritalStatusNullableFilter<$PrismaModel> | $Enums.MaritalStatus | null
+}
+
+export type EnumCorrespondenceAddressTypeNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.CorrespondenceAddressType | Prisma.EnumCorrespondenceAddressTypeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.CorrespondenceAddressType[] | null
+  notIn?: $Enums.CorrespondenceAddressType[] | null
+  not?: Prisma.NestedEnumCorrespondenceAddressTypeNullableFilter<$PrismaModel> | $Enums.CorrespondenceAddressType | null
+}
+
+export type EnumAccommodationTypeNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.AccommodationType | Prisma.EnumAccommodationTypeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.AccommodationType[] | null
+  notIn?: $Enums.AccommodationType[] | null
+  not?: Prisma.NestedEnumAccommodationTypeNullableFilter<$PrismaModel> | $Enums.AccommodationType | null
+}
+
 export type EnumEmploymentTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.EmploymentType | Prisma.EnumEmploymentTypeFieldRefInput<$PrismaModel>
   in?: $Enums.EmploymentType[]
@@ -618,6 +646,46 @@ export type EnumCoApplicantRelationWithAggregatesFilter<$PrismaModel = never> = 
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumCoApplicantRelationFilter<$PrismaModel>
   _max?: Prisma.NestedEnumCoApplicantRelationFilter<$PrismaModel>
+}
+
+export type EnumCategoryNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.Category | Prisma.EnumCategoryFieldRefInput<$PrismaModel> | null
+  in?: $Enums.Category[] | null
+  notIn?: $Enums.Category[] | null
+  not?: Prisma.NestedEnumCategoryNullableWithAggregatesFilter<$PrismaModel> | $Enums.Category | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCategoryNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCategoryNullableFilter<$PrismaModel>
+}
+
+export type EnumMaritalStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MaritalStatus | Prisma.EnumMaritalStatusFieldRefInput<$PrismaModel> | null
+  in?: $Enums.MaritalStatus[] | null
+  notIn?: $Enums.MaritalStatus[] | null
+  not?: Prisma.NestedEnumMaritalStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.MaritalStatus | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMaritalStatusNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMaritalStatusNullableFilter<$PrismaModel>
+}
+
+export type EnumCorrespondenceAddressTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CorrespondenceAddressType | Prisma.EnumCorrespondenceAddressTypeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.CorrespondenceAddressType[] | null
+  notIn?: $Enums.CorrespondenceAddressType[] | null
+  not?: Prisma.NestedEnumCorrespondenceAddressTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.CorrespondenceAddressType | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCorrespondenceAddressTypeNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCorrespondenceAddressTypeNullableFilter<$PrismaModel>
+}
+
+export type EnumAccommodationTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AccommodationType | Prisma.EnumAccommodationTypeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.AccommodationType[] | null
+  notIn?: $Enums.AccommodationType[] | null
+  not?: Prisma.NestedEnumAccommodationTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.AccommodationType | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAccommodationTypeNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAccommodationTypeNullableFilter<$PrismaModel>
 }
 
 export type EnumEmploymentTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -642,20 +710,6 @@ export type EnumCategoryFilter<$PrismaModel = never> = {
   in?: $Enums.Category[]
   notIn?: $Enums.Category[]
   not?: Prisma.NestedEnumCategoryFilter<$PrismaModel> | $Enums.Category
-}
-
-export type EnumCorrespondenceAddressTypeNullableFilter<$PrismaModel = never> = {
-  equals?: $Enums.CorrespondenceAddressType | Prisma.EnumCorrespondenceAddressTypeFieldRefInput<$PrismaModel> | null
-  in?: $Enums.CorrespondenceAddressType[] | null
-  notIn?: $Enums.CorrespondenceAddressType[] | null
-  not?: Prisma.NestedEnumCorrespondenceAddressTypeNullableFilter<$PrismaModel> | $Enums.CorrespondenceAddressType | null
-}
-
-export type EnumAccommodationTypeNullableFilter<$PrismaModel = never> = {
-  equals?: $Enums.AccommodationType | Prisma.EnumAccommodationTypeFieldRefInput<$PrismaModel> | null
-  in?: $Enums.AccommodationType[] | null
-  notIn?: $Enums.AccommodationType[] | null
-  not?: Prisma.NestedEnumAccommodationTypeNullableFilter<$PrismaModel> | $Enums.AccommodationType | null
 }
 
 export type EnumCustomerStatusFilter<$PrismaModel = never> = {
@@ -683,26 +737,6 @@ export type EnumCategoryWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumCategoryFilter<$PrismaModel>
   _max?: Prisma.NestedEnumCategoryFilter<$PrismaModel>
-}
-
-export type EnumCorrespondenceAddressTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.CorrespondenceAddressType | Prisma.EnumCorrespondenceAddressTypeFieldRefInput<$PrismaModel> | null
-  in?: $Enums.CorrespondenceAddressType[] | null
-  notIn?: $Enums.CorrespondenceAddressType[] | null
-  not?: Prisma.NestedEnumCorrespondenceAddressTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.CorrespondenceAddressType | null
-  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumCorrespondenceAddressTypeNullableFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumCorrespondenceAddressTypeNullableFilter<$PrismaModel>
-}
-
-export type EnumAccommodationTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.AccommodationType | Prisma.EnumAccommodationTypeFieldRefInput<$PrismaModel> | null
-  in?: $Enums.AccommodationType[] | null
-  notIn?: $Enums.AccommodationType[] | null
-  not?: Prisma.NestedEnumAccommodationTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.AccommodationType | null
-  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumAccommodationTypeNullableFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumAccommodationTypeNullableFilter<$PrismaModel>
 }
 
 export type EnumCustomerStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -783,18 +817,11 @@ export type EnumEmployerTypeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumEmployerTypeFilter<$PrismaModel>
 }
 
-export type EnumCategoryNullableFilter<$PrismaModel = never> = {
-  equals?: $Enums.Category | Prisma.EnumCategoryFieldRefInput<$PrismaModel> | null
-  in?: $Enums.Category[] | null
-  notIn?: $Enums.Category[] | null
-  not?: Prisma.NestedEnumCategoryNullableFilter<$PrismaModel> | $Enums.Category | null
-}
-
-export type EnumMaritalStatusNullableFilter<$PrismaModel = never> = {
-  equals?: $Enums.MaritalStatus | Prisma.EnumMaritalStatusFieldRefInput<$PrismaModel> | null
-  in?: $Enums.MaritalStatus[] | null
-  notIn?: $Enums.MaritalStatus[] | null
-  not?: Prisma.NestedEnumMaritalStatusNullableFilter<$PrismaModel> | $Enums.MaritalStatus | null
+export type EnumCoApplicantRelationNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.CoApplicantRelation | Prisma.EnumCoApplicantRelationFieldRefInput<$PrismaModel> | null
+  in?: $Enums.CoApplicantRelation[] | null
+  notIn?: $Enums.CoApplicantRelation[] | null
+  not?: Prisma.NestedEnumCoApplicantRelationNullableFilter<$PrismaModel> | $Enums.CoApplicantRelation | null
 }
 
 export type EnumEmploymentTypeNullableFilter<$PrismaModel = never> = {
@@ -804,24 +831,14 @@ export type EnumEmploymentTypeNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumEmploymentTypeNullableFilter<$PrismaModel> | $Enums.EmploymentType | null
 }
 
-export type EnumCategoryNullableWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.Category | Prisma.EnumCategoryFieldRefInput<$PrismaModel> | null
-  in?: $Enums.Category[] | null
-  notIn?: $Enums.Category[] | null
-  not?: Prisma.NestedEnumCategoryNullableWithAggregatesFilter<$PrismaModel> | $Enums.Category | null
+export type EnumCoApplicantRelationNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CoApplicantRelation | Prisma.EnumCoApplicantRelationFieldRefInput<$PrismaModel> | null
+  in?: $Enums.CoApplicantRelation[] | null
+  notIn?: $Enums.CoApplicantRelation[] | null
+  not?: Prisma.NestedEnumCoApplicantRelationNullableWithAggregatesFilter<$PrismaModel> | $Enums.CoApplicantRelation | null
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumCategoryNullableFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumCategoryNullableFilter<$PrismaModel>
-}
-
-export type EnumMaritalStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.MaritalStatus | Prisma.EnumMaritalStatusFieldRefInput<$PrismaModel> | null
-  in?: $Enums.MaritalStatus[] | null
-  notIn?: $Enums.MaritalStatus[] | null
-  not?: Prisma.NestedEnumMaritalStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.MaritalStatus | null
-  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumMaritalStatusNullableFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumMaritalStatusNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCoApplicantRelationNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCoApplicantRelationNullableFilter<$PrismaModel>
 }
 
 export type EnumEmploymentTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -1863,6 +1880,34 @@ export type NestedEnumCoApplicantRelationFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumCoApplicantRelationFilter<$PrismaModel> | $Enums.CoApplicantRelation
 }
 
+export type NestedEnumCategoryNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.Category | Prisma.EnumCategoryFieldRefInput<$PrismaModel> | null
+  in?: $Enums.Category[] | null
+  notIn?: $Enums.Category[] | null
+  not?: Prisma.NestedEnumCategoryNullableFilter<$PrismaModel> | $Enums.Category | null
+}
+
+export type NestedEnumMaritalStatusNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.MaritalStatus | Prisma.EnumMaritalStatusFieldRefInput<$PrismaModel> | null
+  in?: $Enums.MaritalStatus[] | null
+  notIn?: $Enums.MaritalStatus[] | null
+  not?: Prisma.NestedEnumMaritalStatusNullableFilter<$PrismaModel> | $Enums.MaritalStatus | null
+}
+
+export type NestedEnumCorrespondenceAddressTypeNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.CorrespondenceAddressType | Prisma.EnumCorrespondenceAddressTypeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.CorrespondenceAddressType[] | null
+  notIn?: $Enums.CorrespondenceAddressType[] | null
+  not?: Prisma.NestedEnumCorrespondenceAddressTypeNullableFilter<$PrismaModel> | $Enums.CorrespondenceAddressType | null
+}
+
+export type NestedEnumAccommodationTypeNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.AccommodationType | Prisma.EnumAccommodationTypeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.AccommodationType[] | null
+  notIn?: $Enums.AccommodationType[] | null
+  not?: Prisma.NestedEnumAccommodationTypeNullableFilter<$PrismaModel> | $Enums.AccommodationType | null
+}
+
 export type NestedEnumEmploymentTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.EmploymentType | Prisma.EnumEmploymentTypeFieldRefInput<$PrismaModel>
   in?: $Enums.EmploymentType[]
@@ -1878,6 +1923,46 @@ export type NestedEnumCoApplicantRelationWithAggregatesFilter<$PrismaModel = nev
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumCoApplicantRelationFilter<$PrismaModel>
   _max?: Prisma.NestedEnumCoApplicantRelationFilter<$PrismaModel>
+}
+
+export type NestedEnumCategoryNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.Category | Prisma.EnumCategoryFieldRefInput<$PrismaModel> | null
+  in?: $Enums.Category[] | null
+  notIn?: $Enums.Category[] | null
+  not?: Prisma.NestedEnumCategoryNullableWithAggregatesFilter<$PrismaModel> | $Enums.Category | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCategoryNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCategoryNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumMaritalStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MaritalStatus | Prisma.EnumMaritalStatusFieldRefInput<$PrismaModel> | null
+  in?: $Enums.MaritalStatus[] | null
+  notIn?: $Enums.MaritalStatus[] | null
+  not?: Prisma.NestedEnumMaritalStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.MaritalStatus | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMaritalStatusNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMaritalStatusNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumCorrespondenceAddressTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CorrespondenceAddressType | Prisma.EnumCorrespondenceAddressTypeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.CorrespondenceAddressType[] | null
+  notIn?: $Enums.CorrespondenceAddressType[] | null
+  not?: Prisma.NestedEnumCorrespondenceAddressTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.CorrespondenceAddressType | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCorrespondenceAddressTypeNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCorrespondenceAddressTypeNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumAccommodationTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AccommodationType | Prisma.EnumAccommodationTypeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.AccommodationType[] | null
+  notIn?: $Enums.AccommodationType[] | null
+  not?: Prisma.NestedEnumAccommodationTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.AccommodationType | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAccommodationTypeNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAccommodationTypeNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumEmploymentTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -1902,20 +1987,6 @@ export type NestedEnumCategoryFilter<$PrismaModel = never> = {
   in?: $Enums.Category[]
   notIn?: $Enums.Category[]
   not?: Prisma.NestedEnumCategoryFilter<$PrismaModel> | $Enums.Category
-}
-
-export type NestedEnumCorrespondenceAddressTypeNullableFilter<$PrismaModel = never> = {
-  equals?: $Enums.CorrespondenceAddressType | Prisma.EnumCorrespondenceAddressTypeFieldRefInput<$PrismaModel> | null
-  in?: $Enums.CorrespondenceAddressType[] | null
-  notIn?: $Enums.CorrespondenceAddressType[] | null
-  not?: Prisma.NestedEnumCorrespondenceAddressTypeNullableFilter<$PrismaModel> | $Enums.CorrespondenceAddressType | null
-}
-
-export type NestedEnumAccommodationTypeNullableFilter<$PrismaModel = never> = {
-  equals?: $Enums.AccommodationType | Prisma.EnumAccommodationTypeFieldRefInput<$PrismaModel> | null
-  in?: $Enums.AccommodationType[] | null
-  notIn?: $Enums.AccommodationType[] | null
-  not?: Prisma.NestedEnumAccommodationTypeNullableFilter<$PrismaModel> | $Enums.AccommodationType | null
 }
 
 export type NestedEnumCustomerStatusFilter<$PrismaModel = never> = {
@@ -1943,26 +2014,6 @@ export type NestedEnumCategoryWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumCategoryFilter<$PrismaModel>
   _max?: Prisma.NestedEnumCategoryFilter<$PrismaModel>
-}
-
-export type NestedEnumCorrespondenceAddressTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.CorrespondenceAddressType | Prisma.EnumCorrespondenceAddressTypeFieldRefInput<$PrismaModel> | null
-  in?: $Enums.CorrespondenceAddressType[] | null
-  notIn?: $Enums.CorrespondenceAddressType[] | null
-  not?: Prisma.NestedEnumCorrespondenceAddressTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.CorrespondenceAddressType | null
-  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumCorrespondenceAddressTypeNullableFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumCorrespondenceAddressTypeNullableFilter<$PrismaModel>
-}
-
-export type NestedEnumAccommodationTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.AccommodationType | Prisma.EnumAccommodationTypeFieldRefInput<$PrismaModel> | null
-  in?: $Enums.AccommodationType[] | null
-  notIn?: $Enums.AccommodationType[] | null
-  not?: Prisma.NestedEnumAccommodationTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.AccommodationType | null
-  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumAccommodationTypeNullableFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumAccommodationTypeNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumCustomerStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -2043,18 +2094,11 @@ export type NestedEnumEmployerTypeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumEmployerTypeFilter<$PrismaModel>
 }
 
-export type NestedEnumCategoryNullableFilter<$PrismaModel = never> = {
-  equals?: $Enums.Category | Prisma.EnumCategoryFieldRefInput<$PrismaModel> | null
-  in?: $Enums.Category[] | null
-  notIn?: $Enums.Category[] | null
-  not?: Prisma.NestedEnumCategoryNullableFilter<$PrismaModel> | $Enums.Category | null
-}
-
-export type NestedEnumMaritalStatusNullableFilter<$PrismaModel = never> = {
-  equals?: $Enums.MaritalStatus | Prisma.EnumMaritalStatusFieldRefInput<$PrismaModel> | null
-  in?: $Enums.MaritalStatus[] | null
-  notIn?: $Enums.MaritalStatus[] | null
-  not?: Prisma.NestedEnumMaritalStatusNullableFilter<$PrismaModel> | $Enums.MaritalStatus | null
+export type NestedEnumCoApplicantRelationNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.CoApplicantRelation | Prisma.EnumCoApplicantRelationFieldRefInput<$PrismaModel> | null
+  in?: $Enums.CoApplicantRelation[] | null
+  notIn?: $Enums.CoApplicantRelation[] | null
+  not?: Prisma.NestedEnumCoApplicantRelationNullableFilter<$PrismaModel> | $Enums.CoApplicantRelation | null
 }
 
 export type NestedEnumEmploymentTypeNullableFilter<$PrismaModel = never> = {
@@ -2064,24 +2108,14 @@ export type NestedEnumEmploymentTypeNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumEmploymentTypeNullableFilter<$PrismaModel> | $Enums.EmploymentType | null
 }
 
-export type NestedEnumCategoryNullableWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.Category | Prisma.EnumCategoryFieldRefInput<$PrismaModel> | null
-  in?: $Enums.Category[] | null
-  notIn?: $Enums.Category[] | null
-  not?: Prisma.NestedEnumCategoryNullableWithAggregatesFilter<$PrismaModel> | $Enums.Category | null
+export type NestedEnumCoApplicantRelationNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CoApplicantRelation | Prisma.EnumCoApplicantRelationFieldRefInput<$PrismaModel> | null
+  in?: $Enums.CoApplicantRelation[] | null
+  notIn?: $Enums.CoApplicantRelation[] | null
+  not?: Prisma.NestedEnumCoApplicantRelationNullableWithAggregatesFilter<$PrismaModel> | $Enums.CoApplicantRelation | null
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumCategoryNullableFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumCategoryNullableFilter<$PrismaModel>
-}
-
-export type NestedEnumMaritalStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.MaritalStatus | Prisma.EnumMaritalStatusFieldRefInput<$PrismaModel> | null
-  in?: $Enums.MaritalStatus[] | null
-  notIn?: $Enums.MaritalStatus[] | null
-  not?: Prisma.NestedEnumMaritalStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.MaritalStatus | null
-  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumMaritalStatusNullableFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumMaritalStatusNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCoApplicantRelationNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCoApplicantRelationNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumEmploymentTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
