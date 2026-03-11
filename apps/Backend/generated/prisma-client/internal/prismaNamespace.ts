@@ -397,6 +397,7 @@ export const ModelName = {
   LoanApplicationDraft: 'LoanApplicationDraft',
   LoanApplication: 'LoanApplication',
   CoApplicant: 'CoApplicant',
+  CoApplicantFinancialDetails: 'CoApplicantFinancialDetails',
   Customer: 'Customer',
   OccupationalDetails: 'OccupationalDetails',
   EmploymentDetails: 'EmploymentDetails',
@@ -447,7 +448,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "loanNumberCounter" | "user" | "userProfile" | "admin" | "employee" | "partner" | "address" | "partnerCommission" | "branch" | "leads" | "loanApplicationDraft" | "loanApplication" | "coApplicant" | "customer" | "occupationalDetails" | "employmentDetails" | "financialDetails" | "guarantor" | "guarantorFinancialDetails" | "existingLoan" | "creditCard" | "bankAccount" | "insurancePolicy" | "property" | "reference" | "loanRequirement" | "loanQuestionnaire" | "loanRecovery" | "recoveryPayment" | "permission" | "userPermission" | "document" | "kyc" | "loanEmiSchedule" | "emiPayment" | "emiMoratorium" | "creditReport" | "creditAccount" | "loanType" | "technicalReport" | "legalReport" | "loanAssignment" | "auditLog" | "sLAPolicy" | "sLABreachLog" | "loanDisbursement" | "nachMandate" | "nachDebit"
+    modelProps: "loanNumberCounter" | "user" | "userProfile" | "admin" | "employee" | "partner" | "address" | "partnerCommission" | "branch" | "leads" | "loanApplicationDraft" | "loanApplication" | "coApplicant" | "coApplicantFinancialDetails" | "customer" | "occupationalDetails" | "employmentDetails" | "financialDetails" | "guarantor" | "guarantorFinancialDetails" | "existingLoan" | "creditCard" | "bankAccount" | "insurancePolicy" | "property" | "reference" | "loanRequirement" | "loanQuestionnaire" | "loanRecovery" | "recoveryPayment" | "permission" | "userPermission" | "document" | "kyc" | "loanEmiSchedule" | "emiPayment" | "emiMoratorium" | "creditReport" | "creditAccount" | "loanType" | "technicalReport" | "legalReport" | "loanAssignment" | "auditLog" | "sLAPolicy" | "sLABreachLog" | "loanDisbursement" | "nachMandate" | "nachDebit"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1306,6 +1307,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CoApplicantCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CoApplicantCountAggregateOutputType> | number
+        }
+      }
+    }
+    CoApplicantFinancialDetails: {
+      payload: Prisma.$CoApplicantFinancialDetailsPayload<ExtArgs>
+      fields: Prisma.CoApplicantFinancialDetailsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CoApplicantFinancialDetailsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoApplicantFinancialDetailsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CoApplicantFinancialDetailsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoApplicantFinancialDetailsPayload>
+        }
+        findFirst: {
+          args: Prisma.CoApplicantFinancialDetailsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoApplicantFinancialDetailsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CoApplicantFinancialDetailsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoApplicantFinancialDetailsPayload>
+        }
+        findMany: {
+          args: Prisma.CoApplicantFinancialDetailsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoApplicantFinancialDetailsPayload>[]
+        }
+        create: {
+          args: Prisma.CoApplicantFinancialDetailsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoApplicantFinancialDetailsPayload>
+        }
+        createMany: {
+          args: Prisma.CoApplicantFinancialDetailsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.CoApplicantFinancialDetailsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoApplicantFinancialDetailsPayload>
+        }
+        update: {
+          args: Prisma.CoApplicantFinancialDetailsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoApplicantFinancialDetailsPayload>
+        }
+        deleteMany: {
+          args: Prisma.CoApplicantFinancialDetailsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CoApplicantFinancialDetailsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.CoApplicantFinancialDetailsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoApplicantFinancialDetailsPayload>
+        }
+        aggregate: {
+          args: Prisma.CoApplicantFinancialDetailsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCoApplicantFinancialDetails>
+        }
+        groupBy: {
+          args: Prisma.CoApplicantFinancialDetailsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CoApplicantFinancialDetailsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CoApplicantFinancialDetailsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CoApplicantFinancialDetailsCountAggregateOutputType> | number
         }
       }
     }
@@ -3932,13 +3999,29 @@ export const CoApplicantScalarFieldEnum = {
   firstName: 'firstName',
   lastName: 'lastName',
   middleName: 'middleName',
+  fatherName: 'fatherName',
+  motherName: 'motherName',
+  woname: 'woname',
   relation: 'relation',
   relationOther: 'relationOther',
   contactNumber: 'contactNumber',
+  phoneNumber: 'phoneNumber',
   email: 'email',
   dob: 'dob',
+  category: 'category',
+  maritalStatus: 'maritalStatus',
+  noOfDependents: 'noOfDependents',
+  noOfChildren: 'noOfChildren',
+  qualification: 'qualification',
+  correspondenceAddressType: 'correspondenceAddressType',
   panNumber: 'panNumber',
   aadhaarNumber: 'aadhaarNumber',
+  voterId: 'voterId',
+  drivingLicenceNo: 'drivingLicenceNo',
+  passportNumber: 'passportNumber',
+  presentAccommodation: 'presentAccommodation',
+  periodOfStay: 'periodOfStay',
+  rentPerMonth: 'rentPerMonth',
   employmentType: 'employmentType',
   kycId: 'kycId',
   createdAt: 'createdAt',
@@ -3946,6 +4029,34 @@ export const CoApplicantScalarFieldEnum = {
 } as const
 
 export type CoApplicantScalarFieldEnum = (typeof CoApplicantScalarFieldEnum)[keyof typeof CoApplicantScalarFieldEnum]
+
+
+export const CoApplicantFinancialDetailsScalarFieldEnum = {
+  id: 'id',
+  coApplicantId: 'coApplicantId',
+  grossMonthlyIncome: 'grossMonthlyIncome',
+  netMonthlyIncome: 'netMonthlyIncome',
+  averageMonthlyExpenses: 'averageMonthlyExpenses',
+  savingBankBalance: 'savingBankBalance',
+  valueOfImmovableProperty: 'valueOfImmovableProperty',
+  currentBalanceInPF: 'currentBalanceInPF',
+  valueOfSharesSecurities: 'valueOfSharesSecurities',
+  fixedDeposits: 'fixedDeposits',
+  otherAssets: 'otherAssets',
+  totalAssets: 'totalAssets',
+  creditSocietyLoan: 'creditSocietyLoan',
+  employerLoan: 'employerLoan',
+  homeLoan: 'homeLoan',
+  pfLoan: 'pfLoan',
+  vehicleLoan: 'vehicleLoan',
+  personalLoan: 'personalLoan',
+  otherLoan: 'otherLoan',
+  totalLiabilities: 'totalLiabilities',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CoApplicantFinancialDetailsScalarFieldEnum = (typeof CoApplicantFinancialDetailsScalarFieldEnum)[keyof typeof CoApplicantFinancialDetailsScalarFieldEnum]
 
 
 export const CustomerScalarFieldEnum = {
@@ -3957,32 +4068,32 @@ export const CustomerScalarFieldEnum = {
   fatherName: 'fatherName',
   motherName: 'motherName',
   woname: 'woname',
-  gender: 'gender',
-  genderOther: 'genderOther',
+  email: 'email',
   dob: 'dob',
-  aadhaarNumber: 'aadhaarNumber',
-  panNumber: 'panNumber',
-  voterId: 'voterId',
-  drivingLicenceNo: 'drivingLicenceNo',
-  maritalStatus: 'maritalStatus',
-  maritalStatusOther: 'maritalStatusOther',
-  nationality: 'nationality',
-  category: 'category',
-  categoryOther: 'categoryOther',
-  passportNumber: 'passportNumber',
   contactNumber: 'contactNumber',
   alternateNumber: 'alternateNumber',
-  email: 'email',
-  phoneNumber: 'phoneNumber',
-  relationshipWithCoApplicant: 'relationshipWithCoApplicant',
-  relationWithCoApplicantOther: 'relationWithCoApplicantOther',
+  category: 'category',
+  categoryOther: 'categoryOther',
+  maritalStatus: 'maritalStatus',
+  maritalStatusOther: 'maritalStatusOther',
   noOfFamilyDependents: 'noOfFamilyDependents',
   noOfChildren: 'noOfChildren',
   qualification: 'qualification',
   correspondenceAddressType: 'correspondenceAddressType',
+  aadhaarNumber: 'aadhaarNumber',
+  panNumber: 'panNumber',
+  passportNumber: 'passportNumber',
+  voterId: 'voterId',
+  drivingLicenceNo: 'drivingLicenceNo',
+  gender: 'gender',
+  genderOther: 'genderOther',
   presentAccommodation: 'presentAccommodation',
   periodOfStay: 'periodOfStay',
   rentPerMonth: 'rentPerMonth',
+  nationality: 'nationality',
+  phoneNumber: 'phoneNumber',
+  relationshipWithCoApplicant: 'relationshipWithCoApplicant',
+  relationWithCoApplicantOther: 'relationWithCoApplicantOther',
   employmentType: 'employmentType',
   status: 'status',
   createdAt: 'createdAt',
@@ -4086,6 +4197,9 @@ export const GuarantorScalarFieldEnum = {
   noOfDependents: 'noOfDependents',
   noOfChildren: 'noOfChildren',
   qualification: 'qualification',
+  correspondenceAddressType: 'correspondenceAddressType',
+  relationshipWithApplicant: 'relationshipWithApplicant',
+  relationshipOther: 'relationshipOther',
   accommodationType: 'accommodationType',
   periodOfStay: 'periodOfStay',
   rentPerMonth: 'rentPerMonth',
@@ -4887,15 +5001,32 @@ export const CoApplicantOrderByRelevanceFieldEnum = {
   firstName: 'firstName',
   lastName: 'lastName',
   middleName: 'middleName',
+  fatherName: 'fatherName',
+  motherName: 'motherName',
+  woname: 'woname',
   relationOther: 'relationOther',
   contactNumber: 'contactNumber',
+  phoneNumber: 'phoneNumber',
   email: 'email',
+  qualification: 'qualification',
   panNumber: 'panNumber',
   aadhaarNumber: 'aadhaarNumber',
+  voterId: 'voterId',
+  drivingLicenceNo: 'drivingLicenceNo',
+  passportNumber: 'passportNumber',
+  periodOfStay: 'periodOfStay',
   kycId: 'kycId'
 } as const
 
 export type CoApplicantOrderByRelevanceFieldEnum = (typeof CoApplicantOrderByRelevanceFieldEnum)[keyof typeof CoApplicantOrderByRelevanceFieldEnum]
+
+
+export const CoApplicantFinancialDetailsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  coApplicantId: 'coApplicantId'
+} as const
+
+export type CoApplicantFinancialDetailsOrderByRelevanceFieldEnum = (typeof CoApplicantFinancialDetailsOrderByRelevanceFieldEnum)[keyof typeof CoApplicantFinancialDetailsOrderByRelevanceFieldEnum]
 
 
 export const CustomerOrderByRelevanceFieldEnum = {
@@ -4906,22 +5037,22 @@ export const CustomerOrderByRelevanceFieldEnum = {
   fatherName: 'fatherName',
   motherName: 'motherName',
   woname: 'woname',
-  genderOther: 'genderOther',
-  aadhaarNumber: 'aadhaarNumber',
-  panNumber: 'panNumber',
-  voterId: 'voterId',
-  drivingLicenceNo: 'drivingLicenceNo',
-  maritalStatusOther: 'maritalStatusOther',
-  nationality: 'nationality',
-  categoryOther: 'categoryOther',
-  passportNumber: 'passportNumber',
+  email: 'email',
   contactNumber: 'contactNumber',
   alternateNumber: 'alternateNumber',
-  email: 'email',
-  phoneNumber: 'phoneNumber',
-  relationWithCoApplicantOther: 'relationWithCoApplicantOther',
+  categoryOther: 'categoryOther',
+  maritalStatusOther: 'maritalStatusOther',
   qualification: 'qualification',
-  periodOfStay: 'periodOfStay'
+  aadhaarNumber: 'aadhaarNumber',
+  panNumber: 'panNumber',
+  passportNumber: 'passportNumber',
+  voterId: 'voterId',
+  drivingLicenceNo: 'drivingLicenceNo',
+  genderOther: 'genderOther',
+  periodOfStay: 'periodOfStay',
+  nationality: 'nationality',
+  phoneNumber: 'phoneNumber',
+  relationWithCoApplicantOther: 'relationWithCoApplicantOther'
 } as const
 
 export type CustomerOrderByRelevanceFieldEnum = (typeof CustomerOrderByRelevanceFieldEnum)[keyof typeof CustomerOrderByRelevanceFieldEnum]
@@ -4983,6 +5114,7 @@ export const GuarantorOrderByRelevanceFieldEnum = {
   drivingLicence: 'drivingLicence',
   passportNumber: 'passportNumber',
   qualification: 'qualification',
+  relationshipOther: 'relationshipOther',
   periodOfStay: 'periodOfStay'
 } as const
 
@@ -5505,20 +5637,6 @@ export type EnumCoApplicantRelationFieldRefInput<$PrismaModel> = FieldRefInputTy
 
 
 /**
- * Reference to a field of type 'EmploymentType'
- */
-export type EnumEmploymentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmploymentType'>
-    
-
-
-/**
- * Reference to a field of type 'Title'
- */
-export type EnumTitleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Title'>
-    
-
-
-/**
  * Reference to a field of type 'Category'
  */
 export type EnumCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Category'>
@@ -5536,6 +5654,20 @@ export type EnumCorrespondenceAddressTypeFieldRefInput<$PrismaModel> = FieldRefI
  * Reference to a field of type 'AccommodationType'
  */
 export type EnumAccommodationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccommodationType'>
+    
+
+
+/**
+ * Reference to a field of type 'EmploymentType'
+ */
+export type EnumEmploymentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmploymentType'>
+    
+
+
+/**
+ * Reference to a field of type 'Title'
+ */
+export type EnumTitleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Title'>
     
 
 
@@ -5842,6 +5974,7 @@ export type GlobalOmitConfig = {
   loanApplicationDraft?: Prisma.LoanApplicationDraftOmit
   loanApplication?: Prisma.LoanApplicationOmit
   coApplicant?: Prisma.CoApplicantOmit
+  coApplicantFinancialDetails?: Prisma.CoApplicantFinancialDetailsOmit
   customer?: Prisma.CustomerOmit
   occupationalDetails?: Prisma.OccupationalDetailsOmit
   employmentDetails?: Prisma.EmploymentDetailsOmit

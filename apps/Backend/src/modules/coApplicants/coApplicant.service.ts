@@ -150,7 +150,13 @@ export const getAllCoApplicantInLoanService = async (
 ) => {
   const coApplicants = await prisma.coApplicant.findMany({
     where: { loanApplicationId },
-    include: { documents: true },
+    include: {
+      documents: true,
+      addresses: true,
+      occupationalDetails: { include: { address: true } },
+      employmentDetails: true,
+      financialDetails: true,
+    },
   });
   return coApplicants;
 };
