@@ -15,6 +15,10 @@ const assertBranchAccess = (
   requester: RequestUserContext | undefined,
   branchId: string,
 ) => {
+  if (typeof branchId !== "string" || branchId.trim().length === 0) {
+    throw AppError.forbidden("Invalid branch context for branch resources");
+  }
+
   if (!requester) return;
   if (requester.role === "SUPER_ADMIN" || requester.role === "ADMIN") return;
 

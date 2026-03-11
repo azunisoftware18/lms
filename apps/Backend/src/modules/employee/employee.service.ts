@@ -11,26 +11,29 @@ import { generateUniqueEmployeeId } from "../../common/generateId/generateEmploy
 import { logAction } from "../../audit/audit.helper.js";
 import { getAccessibleBranchIds } from "../../common/utils/branchAccess.js";
 import { buildBranchFilter } from "../../common/utils/branchFilter.js";
+import { AppError } from "../../common/utils/apiError.js";
 //Todo: add permission checks where necessary
 
 export async function createEmployeeService(data: CreateEmployee) {
   // check if a user with the email already exists
-  const existingUser = await prisma.user.findUnique({
-    where: { email: data.email },
-  });
-  if (existingUser) {
-    const e: any = new Error("Email already exists");
-    e.statusCode = 409;
-    throw e;
+  const [existingEmailUser, existingUserNameUser] = await Promise.all([
+    prisma.user.findUnique({ where: { email: data.email } }),
+    prisma.user.findUnique({ where: { userName: data.userName } }),
+  ]);
+
+  if (existingEmailUser) {
+    throw AppError.conflict("Email already exists");
+  }
+
+  if (existingUserNameUser) {
+    throw AppError.conflict("Username already exists");
   }
 
   const hashedPassword = await hashPassword(data.password);
 
   // Add validation for branchId
   if (!data.branchId) {
-    const e: any = new Error("Branch assignment is required for employee");
-    e.statusCode = 400;
-    throw e;
+    throw AppError.badRequest("Branch assignment is required for employee");
   }
 
   // Verify branch exists
@@ -39,32 +42,12 @@ export async function createEmployeeService(data: CreateEmployee) {
   });
 
   if (!branch || !branch.isActive) {
-    const e: any = new Error("Invalid or inactive branch");
-    e.statusCode = 400;
-    throw e;
+    throw AppError.badRequest("Invalid or inactive branch");
   }
 
   try {
-    // create the user first
-    const user = await prisma.user.create({
-      data: {
-        fullName: data.fullName,
-        email: data.email,
-        userName: data.userName,
-        password: hashedPassword,
-        role: data.role,
-        contactNumber: data.contactNumber,
-        branchId: data.branchId,
-        isActive: typeof data.isActive === "boolean" ? data.isActive : true,
-      },
-    });
-
-    // generate a simple unique employee id
     const employeeId = await generateUniqueEmployeeId();
 
-    // derive a userName for the employee record if not provided
-
-    // normalize dates
     const dobVal = data.dob
       ? typeof data.dob === "string"
         ? new Date(data.dob)
@@ -76,30 +59,56 @@ export async function createEmployeeService(data: CreateEmployee) {
         : data.dateOfJoining
       : null;
 
-    // create the employee record (use sensible defaults for required fields)
-    const employee = await prisma.employee.create({
-      data: {
-        userId: user.id,
-        employeeId,
-        atlMobileNumber: data.atlMobileNumber ?? "",
-        dob: dobVal ?? new Date(),
-        gender: (data.gender ?? "OTHER") as any,
-        maritalStatus: (data.maritalStatus ?? "SINGLE") as any,
-        designation: data.designation ?? "",
-        emergencyContact: data.emergencyContact ?? "",
-        emergencyRelationship: (data.emergencyRelationship ?? "OTHER") as any,
-        experience: data.experience ?? "",
-        reportingManagerId: data.reportingManagerId ?? "",
-        workLocation: (data.workLocation ?? "OFFICE") as any,
-        department: data.department ?? "",
-        dateOfJoining: dojVal ?? new Date(),
-        salary: typeof data.salary === "number" ? data.salary : 0,
-        address: data.address ?? "",
-        city: data.city ?? "",
-        state: data.state ?? "",
-        pinCode: data.pinCode ?? "",
-        branchId: data.branchId, // Ensure this is set
-      },
+    const { user, employee } = await prisma.$transaction(async (tx) => {
+      const employeeAddress = data.address
+        ? await tx.address.create({
+            data: {
+              addressType: "CURRENT_RESIDENTIAL",
+              addressLine1: data.address,
+              city: data.city ?? "",
+              district: data.city ?? "",
+              state: data.state ?? "",
+              pinCode: data.pinCode ?? "",
+            },
+          })
+        : null;
+
+      const createdUser = await tx.user.create({
+        data: {
+          fullName: data.fullName,
+          email: data.email,
+          userName: data.userName,
+          password: hashedPassword,
+          role: data.role,
+          contactNumber: data.contactNumber,
+          branchId: data.branchId,
+          isActive: typeof data.isActive === "boolean" ? data.isActive : true,
+        },
+      });
+
+      const createdEmployee = await tx.employee.create({
+        data: {
+          userId: createdUser.id,
+          employeeId,
+          atlMobileNumber: data.atlMobileNumber ?? "",
+          dob: dobVal ?? new Date(),
+          gender: (data.gender ?? "OTHER") as any,
+          maritalStatus: (data.maritalStatus ?? "SINGLE") as any,
+          designation: data.designation ?? "",
+          emergencyContact: data.emergencyContact ?? "",
+          emergencyRelationship: (data.emergencyRelationship ?? "OTHER") as any,
+          experience: data.experience ?? "",
+          reportingManagerId: data.reportingManagerId ?? "",
+          workLocation: (data.workLocation ?? "OFFICE") as any,
+          department: data.department ?? "",
+          dateOfJoining: dojVal ?? new Date(),
+          salary: typeof data.salary === "number" ? data.salary : 0,
+          addressId: employeeAddress?.id,
+          branchId: data.branchId,
+        },
+      });
+
+      return { user: createdUser, employee: createdEmployee };
     });
 
     // hide password before returning
@@ -108,9 +117,7 @@ export async function createEmployeeService(data: CreateEmployee) {
   } catch (error: unknown) {
     const eAny = error as any;
     if (eAny && eAny.code === "P2002") {
-      const e: any = new Error("Duplicate entry");
-      e.statusCode = 409;
-      throw e;
+      throw AppError.conflict("Duplicate entry");
     }
     throw error;
   }
@@ -164,15 +171,11 @@ export async function getEmployeeByIdService(id: string) {
   });
 
   if (!employee) {
-    const e: any = new Error("Employee not found");
-    e.statusCode = 404;
-    throw e;
+    throw AppError.notFound("Employee not found");
   }
 
   if (!employee.user) {
-    const e: any = new Error("Associated user not found");
-    e.statusCode = 404;
-    throw e;
+    throw AppError.notFound("Associated user not found");
   }
 
   const { password, ...safeUser } = employee.user as any;
@@ -196,11 +199,12 @@ export async function updateEmployeeService(
   branchId?: string,
 ) {
   try {
-    const existing = await prisma.employee.findUnique({ where: { id } });
+    const existing = await prisma.employee.findUnique({
+      where: { id },
+      include: { user: { select: { id: true, email: true, userName: true } } },
+    });
     if (!existing) {
-      const e: any = new Error("Employee not found");
-      e.statusCode = 404;
-      throw e;
+      throw AppError.notFound("Employee not found");
     }
 
     const userUpdateData: Record<string, any> = {};
@@ -235,6 +239,35 @@ export async function updateEmployeeService(
 
     if (userUpdateData.password) {
       userUpdateData.password = await hashPassword(userUpdateData.password);
+    }
+
+    if (userUpdateData.email && userUpdateData.email !== existing.user?.email) {
+      const emailInUse = await prisma.user.findFirst({
+        where: {
+          email: userUpdateData.email,
+          NOT: { id: existing.userId },
+        },
+        select: { id: true },
+      });
+      if (emailInUse) {
+        throw AppError.conflict("Email already exists");
+      }
+    }
+
+    if (
+      userUpdateData.userName &&
+      userUpdateData.userName !== existing.user?.userName
+    ) {
+      const usernameInUse = await prisma.user.findFirst({
+        where: {
+          userName: userUpdateData.userName,
+          NOT: { id: existing.userId },
+        },
+        select: { id: true },
+      });
+      if (usernameInUse) {
+        throw AppError.conflict("Username already exists");
+      }
     }
 
     // employee-scoped fields
@@ -299,9 +332,7 @@ export async function updateEmployeeService(
   } catch (error: unknown) {
     const eAny = error as any;
     if (eAny && eAny.code === "P2002") {
-      const e: any = new Error("Duplicate entry");
-      e.statusCode = 409;
-      throw e;
+      throw AppError.conflict("Duplicate entry");
     }
     throw error;
   }
@@ -310,18 +341,21 @@ export async function updateEmployeeService(
 //Todo: delete employee service
 
 export const getEmployeeDashBoardService = async (employeeId: string) => {
-  const assignedLoanIds = await prisma.loanAssignment.findMany({
-    where: {
-      employeeId,
-      isActive: true,
+  const assignmentFilter = {
+    loanAssignments: {
+      some: {
+        employeeId,
+        isActive: true,
+      },
     },
-    select: {
-      loanApplicationId: true,
-    },
-  });
+  };
 
-  const loanIds = assignedLoanIds.map((l) => l.loanApplicationId);
-  if (loanIds.length === 0) {
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+
+  const assignedLoans = await prisma.loanApplication.count({ where: assignmentFilter });
+
+  if (assignedLoans === 0) {
     return {
       assignedLoans: 0,
       pendingKyc: 0,
@@ -331,59 +365,46 @@ export const getEmployeeDashBoardService = async (employeeId: string) => {
     };
   }
 
-  const [
-    assignedLoans,
-    pendingKyc,
-    underReview,
-    legalPending,
-    technicalPending,
-  ] = await Promise.all([
-    prisma.loanApplication.count({
-      where: { id: { in: loanIds } },
-    }),
-    prisma.loanApplication.count({
-      where: {
-        id: { in: loanIds },
-        status: "kyc_pending",
-      },
-    }),
-    prisma.loanApplication.count({
-      where: {
-        id: { in: loanIds },
-        status: "under_review",
-      },
-    }),
-    prisma.legalReport.count({
-      where: {
-        loanApplicationId: { in: loanIds },
-      },
-    }),
-    prisma.technicalReport.count({
-      where: {
-        loanApplicationId: { in: loanIds },
-      },
-    }),
-  ]);
+  const [groupedStatuses, legalPending, technicalPending, todaysTasks] =
+    await Promise.all([
+      prisma.loanApplication.groupBy({
+        by: ["status"],
+        where: {
+          ...assignmentFilter,
+          status: { in: ["kyc_pending", "under_review"] },
+        },
+        _count: { _all: true },
+      }),
+      prisma.legalReport.count({
+        where: {
+          loanApplication: assignmentFilter,
+        },
+      }),
+      prisma.technicalReport.count({
+        where: {
+          loanApplication: assignmentFilter,
+        },
+      }),
+      prisma.loanApplication.findMany({
+        where: {
+          ...assignmentFilter,
+          OR: [{ status: "kyc_pending" }, { status: "under_review" }],
+          updatedAt: {
+            gte: todayStart,
+          },
+        },
+        select: {
+          id: true,
+          loanNumber: true,
+          status: true,
+          updatedAt: true,
+        },
+        orderBy: { updatedAt: "desc" },
+      }),
+    ]);
 
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
-
-  const todaysTasks = await prisma.loanApplication.findMany({
-    where: {
-      id: { in: loanIds },
-      OR: [{ status: "kyc_pending" }, { status: "under_review" }],
-      updatedAt: {
-        gte: todayStart,
-      },
-    },
-    select: {
-      id: true,
-      loanNumber: true,
-      status: true,
-      updatedAt: true,
-    },
-    orderBy: { updatedAt: "desc" },
-  });
+  const pendingKyc = groupedStatuses.find((g) => g.status === "kyc_pending")?._count._all ?? 0;
+  const underReview = groupedStatuses.find((g) => g.status === "under_review")?._count._all ?? 0;
 
   return {
     assignedLoans,

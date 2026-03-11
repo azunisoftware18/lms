@@ -81,6 +81,14 @@ export const reuploadCoApplicantDocumentController = async (
       typeof req.params.documentType === "string"
         ? req.params.documentType
         : req.params.documentType[0];
+
+    const parsedDocumentType = coApplicantDocumentTypeSchema.safeParse(documentType);
+    if (!parsedDocumentType.success) {
+      throw AppError.badRequest(
+        `Invalid document type '${documentType}'. Allowed values: ${coApplicantDocumentTypeSchema.options.join(", ")}`,
+      );
+    }
+
     if (!req.user) {
       throw AppError.unauthorized("Unauthorized");
     }
@@ -90,7 +98,7 @@ export const reuploadCoApplicantDocumentController = async (
     }
     const updatedDoc = await reuploadCoApplicantDocumentService(
       coApplicantId,
-      documentType,
+      parsedDocumentType.data,
       {
         filename: req.file.filename,
         path: req.file.path,
