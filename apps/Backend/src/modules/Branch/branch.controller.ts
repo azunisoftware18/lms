@@ -6,6 +6,8 @@ import {
   updateBranchService,
   deleteBranchService,
   getAllMainBranchesService,
+  createBulkBranchesService,
+  reassignBulkBranchesService,
 } from "./branch.service.js";
 import { AppError } from "../../common/utils/apiError.js";
 
@@ -75,5 +77,36 @@ export const getAllMainBranchesController = async (
     success: true,
     message: "Main branches retrieved successfully",
     data: mainBranches,
+  });
+};
+
+export const createBulkBranchesController = async (
+  req: Request,
+  res: Response,
+) => {
+  if (!req.user) {
+    throw AppError.unauthorized("Unauthorized");
+  }
+  const branches = await createBulkBranchesService(req.body, req.user.id);
+  res.status(201).json({
+    success: true,
+    message: `${branches.length} branch(es) created successfully`,
+    data: branches,
+  });
+};
+
+export const reassignBulkBranchesController = async (
+  req: Request,
+  res: Response,
+) => {
+  if (!req.user) {
+    throw AppError.unauthorized("Unauthorized");
+  }
+
+  const branches = await reassignBulkBranchesService(req.body, req.user.id);
+  res.status(200).json({
+    success: true,
+    message: `${branches.length} branch(es) reassigned successfully`,
+    data: branches,
   });
 };
