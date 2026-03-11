@@ -36,7 +36,7 @@ export const updateBranchAdminController = async (
   req: Request,
   res: Response,
 ) => {
-  const { id } = req.params;
+  const { id } = req.params as { id: string };
   try {
     if (!req.user) {
       return res.status(401).json({

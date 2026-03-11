@@ -1,8 +1,8 @@
 import { prisma } from "../../db/prismaService.js";
 import { getBranchScopeFilter } from "../../common/utils/branchScope.helper.js";
-import { CreateBranchInput, updateBranchInput } from "./branch.types.js";
+import { CreateBranchInput, UpdateBranchInput } from "./branch.types.js";
 import { logAction } from "../../audit/audit.helper.js";
-import { buildBranchFilter } from "../../common/utils/branchFilter.js";
+import { AppError } from "../../common/utils/apiError.js";
 
 export const createBranchService = async (
   data: CreateBranchInput,
@@ -14,7 +14,7 @@ export const createBranchService = async (
     });
 
     if (existingSuperBranch) {
-      throw new Error("cannot create another Super branch");
+      throw AppError.conflict("Cannot create another super branch");
     }
   } else {
     const superBranch = await prisma.branch.findFirst({
@@ -22,7 +22,7 @@ export const createBranchService = async (
     });
 
     if (!superBranch) {
-      throw new Error(
+      throw AppError.badRequest(
         "No super branch found. Please create a super branch first.",
       );
     }
@@ -32,7 +32,7 @@ export const createBranchService = async (
     }
 
     if (data.type === "SUB" && !data.parentBranchId) {
-      throw new Error("Sub branches must have a parentBranchId");
+      throw AppError.badRequest("Sub branches must have a parentBranchId");
     }
   }
 
@@ -42,7 +42,7 @@ export const createBranchService = async (
   });
 
   if (existingBranch) {
-    throw new Error(`A branch with code '${data.code}' already exists`);
+    throw AppError.conflict(`A branch with code '${data.code}' already exists`);
   }
 
   const branch = await prisma.branch.create({
@@ -74,7 +74,7 @@ export const createBranchService = async (
 
 export const updateBranchService = async (
   id: string,
-  data: updateBranchInput,
+  data: UpdateBranchInput,
   userId: string,
 ) => {
   // Get the old branch data before updating
@@ -83,7 +83,7 @@ export const updateBranchService = async (
   });
 
   if (!oldBranch) {
-    throw new Error("Branch not found");
+    throw AppError.notFound("Branch not found");
   }
 
   const branch = await prisma.branch.update({
@@ -124,26 +124,53 @@ export const getBranchByIdService = async (id: string) => {
   });
 
   if (!branch) {
-    throw new Error("Branch not found");
+    throw AppError.notFound("Branch not found");
   }
 
   return branch;
 };
 
-export const getAllBranchesService = async (user: any) => {
-  const sope = await getBranchScopeFilter(user);
+type ScopedUser = {
+  id: string;
+  role: string;
+  branchId?: string | null;
+};
+
+export const getAllBranchesService = async (user: ScopedUser) => {
+  const scope = await getBranchScopeFilter(user);
 
   return prisma.branch.findMany({
-    where: { ...sope },
-    include: {
-      parentBranch: true,
-      subBranches: true,
+    where: { ...scope },
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      type: true,
+      isActive: true,
+      createdAt: true,
+      updatedAt: true,
+      parentBranch: {
+        select: { id: true, name: true, code: true, type: true, isActive: true },
+      },
+      subBranches: {
+        select: { id: true, name: true, code: true, type: true, isActive: true },
+      },
     },
     orderBy: { createdAt: "desc" },
   });
 };
 
-export const deleteBranchService = async (id: string) => {
+export const deleteBranchService = async (id: string, userId: string) => {
+  if (!userId) {
+    throw AppError.unauthorized("Unauthorized");
+  }
+
+  const existingBranch = await prisma.branch.findUnique({ where: { id } });
+
+  if (!existingBranch) {
+    throw AppError.notFound("Branch not found");
+  }
+
   const branch = await prisma.branch.update({
     where: { id },
     data: { isActive: false },
@@ -153,14 +180,10 @@ export const deleteBranchService = async (id: string) => {
     entityType: "BRANCH",
     entityId: branch.id,
     action: "DELETE_BRANCH",
-    performedBy: "", // You should pass the userId here when calling this service
+    performedBy: userId,
     branchId: branch.id,
-    oldValue: {
-      isActive: true,
-    },
-    newValue: {
-      isActive: false,
-    },
+    oldValue: { isActive: existingBranch.isActive },
+    newValue: { isActive: false },
   });
 };
 

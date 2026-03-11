@@ -71,7 +71,8 @@ export const getAllPartnersController = async (req: Request, res: Response) => {
 export const getPartnerByIdController = async (req: Request, res: Response) => {
   // Implementation for retrieving a partner by ID
   try {
-    const { id } = req.params;
+    const id = typeof req.params.id === 'string' ? req.params.id : req.params.id[0];
+
     const partner = await getPartnerByIdService(id);
     res.status(200).json({
       success: true,
@@ -92,7 +93,7 @@ export const getPartnerByIdController = async (req: Request, res: Response) => {
 };
 
 export const updatePartnerController = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = typeof req.params.id === 'string' ? req.params.id : req.params.id[0];
   const updateData = req.body;
   try {
     const updatedPartner = await updatePartnerService(id, updateData);

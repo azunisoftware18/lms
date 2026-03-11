@@ -6,8 +6,13 @@ export const createPartner = async (data) => {
 };
 
 export const getAllPartners = async (params) => {
-  const res = await api.get("/partners/all", { params });
-  return res.data;
+  const res = await api.get("/partners/all", { params:{
+    page: params?.page || 1,
+    limit: params?.limit || 10,
+    q: params?.q || "",
+
+  } });
+  return res.data?.data ?? res.data;
 };
 
 export const getPartnerById = async (id) => {

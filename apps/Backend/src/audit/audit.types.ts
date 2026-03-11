@@ -41,7 +41,8 @@ export type AuditAction =
   | "MANUAL_REFRESH"
   | "UPDATE_COMMISSION"
   | "LOAN_DISBURSED"
-  | "CREATE_COMMISSION";
+  | "CREATE_COMMISSION"
+  | "LOGIN_SUCCESS";
 
 export type AuditEntityType =
   | "LOAN"
@@ -62,7 +63,8 @@ export type AuditEntityType =
   | "LOAN_DISBURSEMENT"
   | "LOAN_APPLICATION"
   | "PARTNER_COMMISSION"
-  | "PARTNER_COMMISSION";
+  | "PARTNER_COMMISSION"
+  | "USER";
 
 export interface CreateAuditLogInput {
   entityType: AuditEntityType;

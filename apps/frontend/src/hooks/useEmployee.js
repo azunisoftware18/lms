@@ -23,10 +23,12 @@ import {
 export const useEmployees = (params) => {
     const dispatch = useDispatch();
     const employees = useSelector(state => state.employee.employees);
+    const meta = useSelector(state => state.employee.meta);
     const loading = useSelector(state => state.employee.loading);
     const error = useSelector(state => state.employee.error);
 
     const query = useQuery(['employees', params], () => getEmployees(params), {
+        keepPreviousData: true,
         onSuccess: (data) => {
             dispatch(setEmployees(data));
             dispatch(clearError());
@@ -41,6 +43,7 @@ export const useEmployees = (params) => {
 
     return {
         employees,
+        meta,
         loading: query.isLoading || loading,
         error: error || query.error,
         isFetching: query.isFetching,

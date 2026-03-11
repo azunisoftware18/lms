@@ -3,6 +3,7 @@ import {
   getMyKycController,
   uploadKycDocumentController,
   verifyKycController,
+  getAllKycController,
 } from "./kyc.controller.js";
 import { authMiddleware } from "../../common/middlewares/auth.middleware.js";
 import { checkPermissionMiddleware } from "../../common/middlewares/permission.middleware.js";
@@ -37,6 +38,13 @@ router.get(
   "/me",
   authMiddleware,
   getMyKycController
+);
+
+router.get(
+  "/all",
+  authMiddleware,
+  checkPermissionMiddleware("VIEW_KYC"),
+  getAllKycController
 );
 
 export default router;

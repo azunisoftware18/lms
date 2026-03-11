@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { loginService ,logoutService } from "./auth.service.js";
 import { cookieOptions, clearCookieOptions } from "../../common/utils/utils.js";
+import { AppError } from "../../common/utils/apiError.js";
 
 export const loginController = async (req: Request, res: Response) => {
   try {
@@ -16,24 +17,30 @@ export const loginController = async (req: Request, res: Response) => {
         .status(400)
         .json({ success: false, message: "email or userName is required" });
 
-    const { user, accessToken, refreshToken } = await loginService(
-      identifier,
-      password
-    );
+    const { user, accessToken, refreshToken } = await loginService(identifier, password);
 
-    const { password: _pw, ...safeUser } = user as any;
+    const safeUser = {
+      id: user.id,
+      fullName: user.fullName,
+      userName: user.userName,
+      email: user.email,
+      role: user.role,
+      contactNumber: user.contactNumber,
+      branchId: user.branchId,
+      isActive: user.isActive,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
+
     res
       .status(200)
       .cookie("accessToken", accessToken, cookieOptions)
       .cookie("refreshToken", refreshToken, cookieOptions)
       .json({ success: true, message: "Login successful", data: safeUser });
   } catch (error: any) {
-    if (error.message && error.message.includes("Invalid credentials")) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Invalid credentials" });
-    }
-    res.status(400).json({ success: false, message: "Login failed", error: error.message  });
+    const statusCode = error instanceof AppError ? error.statusCode : 500;
+    const message = error instanceof AppError ? error.message : "Login failed";
+    res.status(statusCode).json({ success: false, message });
   }
 };
 
@@ -48,8 +55,9 @@ export const logoutController = async (req: Request, res: Response) => {
       .clearCookie("refreshToken", clearCookieOptions)
       .json(result);
   } catch (error: any) {
-    res.status(400).json({ success: false, message: "Logout failed", error: error.message });
-    
+    const statusCode = error instanceof AppError ? error.statusCode : 500;
+    const message = error instanceof AppError ? error.message : "Logout failed";
+    res.status(statusCode).json({ success: false, message });
 
   }
 };

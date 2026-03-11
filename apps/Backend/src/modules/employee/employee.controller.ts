@@ -71,7 +71,7 @@ export const getAllEmployeesController = async (
       {
         page: Number(req.query.page),
         limit: Number(req.query.limit),
-        q: req.query.q?.toString(),
+        q: typeof req.query.q === 'string' ? req.query.q : undefined,
       },
       {
         id: req.user.id,
@@ -97,7 +97,7 @@ export const getEmployeeByIdController = async (
   req: Request,
   res: Response,
 ) => {
-  const { id } = req.params;
+  const id = typeof req.params.id === 'string' ? req.params.id : req.params.id[0];
   try {
     const employee = await getEmployeeByIdService(id);
     res.status(200).json({
@@ -118,7 +118,7 @@ export const getEmployeeByIdController = async (
 };
 
 export const updateEmployeeController = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = typeof req.params.id === 'string' ? req.params.id : req.params.id[0];
   const updateData = req.body;
 
   try {

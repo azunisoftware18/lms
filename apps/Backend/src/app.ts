@@ -8,7 +8,16 @@ import { startEmiOverdueJob } from "./jobs/emiOverdue.job.js";
 import { runLoanDefaultCron } from "./jobs/jobs.controller.js";
 import { startSlaScheduler } from "./modules/sla/sla.cron.js";
 import { startNachAutoDebitJob } from "./jobs/nachDebit.job.js";
+import { createRateLimiter } from "./common/middlewares/rateLimit.middleware.js";
+import errorMiddleware from "./common/middlewares/error.middleware.js";
 const app = express();
+
+const globalApiLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: Number(process.env.GLOBAL_API_RATE_LIMIT_MAX || 500),
+  message: "Too many API requests. Please try again later.",
+  keyScope: "ip",
+});
 
 async function  bootstrap() {
   try {
@@ -40,7 +49,7 @@ app.use(cookieParser());
 // ✅ Add static file serving for uploads
 app.use("/public", express.static(path.join(process.cwd(), "public")));
 
-app.use("/api", routes);
+app.use("/api", globalApiLimiter, routes);
 
 // Multer / upload error handler (returns JSON instead of HTML)
 app.use((err: any, req: any, res: any, next: any) => {

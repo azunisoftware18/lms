@@ -22,6 +22,31 @@ import {
     applyMoratorium
 } from '../lib/api/emi.api';
 
+export const useAllEmis = (params) => {
+    const dispatch = useDispatch();
+    const emis = useSelector(state => state.emi.emis);
+    const meta = useSelector(state => state.emi.meta);
+    const loading = useSelector(state => state.emi.loading);
+    const error = useSelector(state => state.emi.error);
+
+    const { isFetching, refetch } = useQuery({
+        queryKey: ['allEmis', params],
+        queryFn: () => getAllEmis(params),
+        keepPreviousData: true,
+        onSuccess: (data) => {
+            dispatch(setEmis(data));
+            dispatch(clearError());
+        },
+        onError: (error) => {
+            const message = error?.message || 'Failed to fetch EMIs';
+            dispatch(setError(message));
+            showError(message);
+        },
+    });
+
+    return { emis, meta, loading, error, isFetching, refetch };
+};
+
 export const useLoanEmis = (loanId) => {
     const dispatch = useDispatch();
     const emis = useSelector(state => state.emi.emis);
