@@ -89,7 +89,7 @@ export const createBranchService = async (
       data: {
         name: data.name,
         parentBranchId: data.parentBranchId || null,
-        isActive: true,
+        isActive: existingBranch.isActive,
       },
     });
   } else {
@@ -369,9 +369,8 @@ export const createBulkBranchesService = async (
   );
 
   if (branchesToCreate.length === 0) {
-    throw AppError.conflict("All provided branch codes already exist");
+    return []; // Idempotent: no new branches to create, return empty
   }
-
   // Create only new branches
   const created = await prisma.$transaction(
     branchesToCreate.map((b) =>
