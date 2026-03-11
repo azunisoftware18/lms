@@ -10,6 +10,7 @@ export const employmentTypeEnum = z.enum([
   "salaried",
   "self_employed",
   "business",
+  "professional",
 ]);
 
 export const maritalStatusEnum = z.enum([
@@ -221,6 +222,13 @@ export const approveLoanInputSchema = z.object({
 
 export type ApproveLoanInput = z.infer<typeof approveLoanInputSchema>;
 
+export const addressTypeEnum = z.enum([
+  "CURRENT_RESIDENTIAL",
+  "PERMANENT",
+  "CORRESPONDENCE",
+  "OFFICE",
+]);
+
 export const addressSchema = z.object({
   addressLine1: z.string().min(1),
   addressLine2: z.string().optional(),
@@ -230,6 +238,10 @@ export const addressSchema = z.object({
   pinCode: z.string(),
   landmark: z.string().optional(),
   phoneNumber: z.string().optional()
+});
+
+export const typedAddressSchema = addressSchema.extend({
+  addressType: addressTypeEnum,
 });
 
 const occupationalDetailsSchema = z.object({
@@ -306,8 +318,8 @@ export const createCoApplicantSchema = z.object({
   presentAccommodation: accommodationTypeEnum.optional(),
   periodOfStay: z.string().trim().min(1).optional(),
   rentPerMonth: z.coerce.number().min(0).optional(),
-  employmentType: z.enum(["salaried", "self_employed", "business", "professional"]),
-  addresses: z.array(addressSchema).optional(),
+  employmentType: employmentTypeEnum,
+  addresses: z.array(typedAddressSchema).optional(),
   occupationalDetails: occupationalDetailsSchema.optional(),
   employmentDetails: employmentDetailsSchema.optional(),
   financialDetails: financialDetailsSchema.optional(),
@@ -340,8 +352,8 @@ const guarantorSchema = z.object({
   accommodationType: accommodationTypeEnum.optional(),
   periodOfStay: z.string().trim().min(1).optional(),
   rentPerMonth: z.coerce.number().min(0).optional(),
-  employmentType: z.enum(["salaried", "self_employed", "business", "professional"]).optional(),
-  addresses: z.array(addressSchema).optional(),
+  employmentType: employmentTypeEnum.optional(),
+  addresses: z.array(typedAddressSchema).optional(),
   occupationalDetails: occupationalDetailsSchema.optional(),
   employmentDetails: employmentDetailsSchema.optional(),
   financialDetails: financialDetailsSchema.optional(),
@@ -474,7 +486,7 @@ export const createFullLoanApplicationSchema = z.object({
     periodOfStay: z.string().optional(),
     rentPerMonth: z.coerce.number().min(0).optional(),
 
-    employmentType: z.enum(["salaried","self_employed","business","professional"])
+    employmentType: employmentTypeEnum
   }),
 
   addresses: z.object({

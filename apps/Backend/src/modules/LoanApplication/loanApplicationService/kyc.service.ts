@@ -82,15 +82,9 @@ export async function createCoApplicants(
 
     if (co.addresses?.length) {
       await tx.address.createMany({
-        data: co.addresses.map((address, index) => ({
+        data: co.addresses.map((address) => ({
           ...address,
           coApplicantId: coApplication.id,
-          addressType:
-            index === 0
-              ? Enums.AddressType.CURRENT_RESIDENTIAL
-              : index === 1
-                ? Enums.AddressType.PERMANENT
-                : Enums.AddressType.CORRESPONDENCE,
         })),
       });
     }

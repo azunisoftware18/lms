@@ -350,7 +350,7 @@ export interface CoApplicantInput {
   periodOfStay?: string
   rentPerMonth?: number
   employmentType: Enums.EmploymentType
-  addresses?: AddressInput[]
+  addresses?: (AddressInput & { addressType: Enums.AddressType })[]
   occupationalDetails?: OccupationalInput
   employmentDetails?: EmploymentInput
   financialDetails?: FinancialInput
@@ -384,7 +384,7 @@ export interface GuarantorInput {
   periodOfStay?: string
   rentPerMonth?: number
   employmentType?: Enums.EmploymentType
-  addresses?: AddressInput[]
+  addresses?: (AddressInput & { addressType: Enums.AddressType })[]
   occupationalDetails?: OccupationalInput
   employmentDetails?: EmploymentInput
   financialDetails?: FinancialInput

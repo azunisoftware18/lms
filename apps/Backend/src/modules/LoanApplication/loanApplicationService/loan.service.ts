@@ -249,15 +249,9 @@ export async function createGuarantors(
 
     if (g.addresses?.length) {
       await tx.address.createMany({
-        data: g.addresses.map((address, index) => ({
+        data: g.addresses.map((address) => ({
           ...address,
           guarantorId: guarantor.id,
-          addressType:
-            index === 0
-              ? Enums.AddressType.CURRENT_RESIDENTIAL
-              : index === 1
-                ? Enums.AddressType.PERMANENT
-                : Enums.AddressType.CORRESPONDENCE,
         })),
       });
     }
