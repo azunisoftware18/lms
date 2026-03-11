@@ -27,6 +27,9 @@ import {
   ensureNoActiveLoan,
   createLoan,
   createFinancialDetails,
+  createOccupationalDetailsForEntity,
+  createEmploymentDetailsForEntity,
+  createGuarantors,
 } from "./loanApplicationService/loan.service.js";
 import {
   createKYC,
@@ -455,6 +458,22 @@ export const getLoanApplicationByIdService = async (
       coapplicants: {
         include: {
           documents: true,
+          addresses: true,
+          occupationalDetails: {
+            include: { address: true },
+          },
+          employmentDetails: true,
+          financialDetails: true,
+        },
+      },
+      guarantors: {
+        include: {
+          addresses: true,
+          occupationalDetails: {
+            include: { address: true },
+          },
+          employmentDetails: true,
+          financialDetails: true,
         },
       },
     },
@@ -521,7 +540,12 @@ export const getLoanApplicationByIdService = async (
       name: `${c.firstName} ${c.lastName}`,
       relation: c.relation,
       contactNumber: c.contactNumber,
+      addresses: c.addresses,
+      occupationalDetails: c.occupationalDetails,
+      employmentDetails: c.employmentDetails,
+      financialDetails: c.financialDetails,
     })),
+    guarantors: loanApplication.guarantors,
   };
 };
 
@@ -842,7 +866,25 @@ export const createFullLoanApplicationService = async (
 
       const kyc = await createKYC(tx, userId);
       await attachKycToLoan(tx, loan.id, kyc.id);
-      await createCoApplicants(tx, loan.id, userId, data.coApplicants);
+      await createCoApplicants(tx, loan.id, userId, customer.id, data.coApplicants);
+
+      await createOccupationalDetailsForEntity(
+        tx,
+        { customerId: customer.id },
+        data.occupationalDetails,
+      );
+      await createEmploymentDetailsForEntity(
+        tx,
+        { customerId: customer.id },
+        data.employmentDetails,
+      );
+      if (data.financialDetails) {
+        await tx.financialDetails.create({
+          data: { customerId: customer.id, ...data.financialDetails },
+        });
+      }
+
+      await createGuarantors(tx, loan.id, customer.id, data.guarantors);
 
       await createFinancialDetails(tx, data, loan.id);
 

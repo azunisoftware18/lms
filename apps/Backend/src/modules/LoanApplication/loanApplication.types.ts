@@ -326,14 +326,34 @@ export interface CoApplicantInput {
   firstName: string
   middleName?: string
   lastName: string
+  fatherName?: string
+  motherName?: string
+  woname?: string
   relation: Enums.CoApplicantRelation
   relationOther?: string
   contactNumber: string
+  phoneNumber?: string
   email?: string
   dob: Date | string
+  category?: Enums.Category
+  maritalStatus?: Enums.MaritalStatus
+  noOfDependents?: number
+  noOfChildren?: number
+  qualification?: string
+  correspondenceAddressType?: Enums.CorrespondenceAddressType
   panNumber?: string
   aadhaarNumber?: string
+  voterId?: string
+  drivingLicenceNo?: string
+  passportNumber?: string
+  presentAccommodation?: Enums.AccommodationType
+  periodOfStay?: string
+  rentPerMonth?: number
   employmentType: Enums.EmploymentType
+  addresses?: AddressInput[]
+  occupationalDetails?: OccupationalInput
+  employmentDetails?: EmploymentInput
+  financialDetails?: FinancialInput
 }
 
 export interface GuarantorInput {
@@ -357,6 +377,9 @@ export interface GuarantorInput {
   noOfDependents?: number
   noOfChildren?: number
   qualification?: string
+  correspondenceAddressType?: Enums.CorrespondenceAddressType
+  relationshipWithApplicant?: Enums.CoApplicantRelation
+  relationshipOther?: string
   accommodationType?: Enums.AccommodationType
   periodOfStay?: string
   rentPerMonth?: number
