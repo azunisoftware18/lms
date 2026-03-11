@@ -21,10 +21,15 @@ export const useLogin = () => {
     },
 
     onSuccess: (data) => {
-      dispatch(setUser(data.data || user));
 
-      toast.success("Login successful");
-    },
+  const userData = data?.data;
+
+  dispatch(setUser(userData));
+
+  localStorage.setItem("user", JSON.stringify(userData));
+
+  toast.success("Login successful");
+},
 
     onError: (error) => {
       const message = error?.response?.data?.message || "Invalid credentials";
@@ -43,10 +48,13 @@ export const useLogout = () => {
     mutationFn: logout,
 
     onSuccess: () => {
-      dispatch(clearUser());
 
-      toast.success("Logged out successfully");
-    },
+  localStorage.removeItem("user");
+
+  dispatch(clearUser());
+
+  toast.success("Logged out successfully");
+},
 
     onError: (error) => {
       const message = error?.response?.data?.message || "Logout failed";
