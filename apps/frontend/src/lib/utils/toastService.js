@@ -1,4 +1,4 @@
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 /**
  * Toast service for consistent notifications
@@ -25,21 +25,18 @@ export const showLoading = (message, options = {}) => {
 };
 
 export const showInfo = (message, options = {}) => {
-  return toast.custom((t) => (
-    <div className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg">
-      {message}
-    </div>
-  ), {
+  return toast(message, {
+    icon: "ℹ️",
     duration: 3000,
     ...options,
   });
 };
 
-export const updateToast = (toastId, message, type = 'success') => {
+export const updateToast = (toastId, message, type = "success") => {
   toast.dismiss(toastId);
-  if (type === 'success') {
+  if (type === "success") {
     showSuccess(message);
-  } else if (type === 'error') {
+  } else if (type === "error") {
     showError(message);
   }
 };
