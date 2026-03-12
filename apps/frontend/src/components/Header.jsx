@@ -112,10 +112,10 @@ export default function Header() {
             {/* LOGO */}
             <Link
               to="/"
-              className="flex items-center gap-2.5 flex-shrink-0 group min-w-[180px]"
+              className="flex items-center gap-2.5 shrink-0 group min-w-[180px]"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-blue-200 group-hover:shadow-md transition-shadow">
+              <div className="w-9 h-9 bg-linear-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-blue-200 group-hover:shadow-md transition-shadow">
                 <span className="text-white font-black text-base">F</span>
               </div>
               <div className="leading-tight">

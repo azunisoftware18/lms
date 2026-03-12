@@ -5,7 +5,6 @@ import {
   Menu,
   User,
   LogOut,
-  Settings
 } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -140,27 +139,7 @@ export default function DashboardHeader({ toggleSidebar }) {
             {getInitials()}
           </div>
 
-          {/* User Info Tooltip */}
-          <div className="absolute top-full right-0 mt-8 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 hidden group-hover:md:block animate-in fade-in slide-in-from-top-2 z-20">
-            <div className="px-4 py-3 border-b border-gray-100">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-full bg-linear-to-r from-blue-600 to-blue-700 flex items-center justify-center text-white font-semibold">
-                  {getInitials()}
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-800">
-                    {user?.fullName || user?.userName || 'User'}
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {user?.email || 'N/A'}
-                  </div>
-                  <div className="text-xs text-blue-600 font-medium mt-1">
-                    ID: {user?.id?.slice(0, 8) || 'N/A'}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+              
 
           {/* Dropdown Menu - Shows on click for mobile, hover for desktop */}
           <div
@@ -192,16 +171,6 @@ export default function DashboardHeader({ toggleSidebar }) {
               className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
             >
               <User size={16} /> My Profile
-            </button>
-
-            <button
-              onClick={() => {
-                navigate("/admin/settings");
-                setShowDropdown(false);
-              }}
-              className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-            >
-              <Settings size={16} /> Settings
             </button>
 
             {/* Additional Admin Links */}

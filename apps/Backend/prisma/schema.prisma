@@ -1537,9 +1537,10 @@ enum recovery_status {
 }
 
 enum BranchType {
-  SUPER
-  MAIN
-  SUB
+  HEAD_OFFICE
+  ZONAL
+  REGIONAL
+  BRANCH
 }
 
 enum MoratoriumType {

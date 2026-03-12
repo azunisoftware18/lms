@@ -91,58 +91,86 @@ export default function Sidebar() {
           subItems: [
 
             {
-              name: "Loan Entry",
+              name: "Loan Account Creation",
               path: currentUser?.role === "EMPLOYEE"
-                ? "/employee/loanEntry"
-                : "/admin/loanEntry",
+                ? "/employee/loan-account-creation"
+                : "/admin/loan-account-creation",
               permission: "CREATE_LOAN"
             },
 
-            // --- REPAYMENT (Dropdown) ---
             {
-              name: "Repayment",
-              permission: "VIEW_REPAYMENT",
-              subItems: [
-                {
-                  name: "NACH Registration",
-                  path: currentUser?.role === "EMPLOYEE"
-                    ? "/employee/nach"
-                    : "/admin/nach",
-                  permission: "VIEW_NACH"
-                },
-                {
-                  name: "PDC Receipt",
-                  path: currentUser?.role === "EMPLOYEE"
-                    ? "/employee/PdcReceipts"
-                    : "/admin/PdcReceipts",
-                  permission: "VIEW_PDC"
-                }
-              ]
-            },
-
-
-            {
-              name: "Loan Closer",
+              name: "EMI Schedule",
               path: currentUser?.role === "EMPLOYEE"
-                ? "/employee/loan-closer"
-                : "/admin/loan-closer",
-              permission: "VIEW_LOAN_CLOSER"
+                ? "/employee/emi-schedule"
+                : "/admin/emi-schedule",
+              permission: "VIEW_EMI_SCHEDULE"
             },
 
             {
-              name: "Waiver",
+              name: "Repayment Management",
               path: currentUser?.role === "EMPLOYEE"
-                ? "/employee/waiver"
-                : "/admin/waiver",
-              permission: "VIEW_WAIVER"
+                ? "/employee/repayment-management"
+                : "/admin/repayment-management",
+              permission: "VIEW_REPAYMENT_MANAGEMENT"
             },
 
+            // // --- REPAYMENT (Dropdown) ---
+            // {
+            //   name: "Repayment",
+            //   permission: "VIEW_REPAYMENT",
+            //   subItems: [
+            //     {
+            //       name: "NACH Registration",
+            //       path: currentUser?.role === "EMPLOYEE"
+            //         ? "/employee/nach"
+            //         : "/admin/nach",
+            //       permission: "VIEW_NACH"
+            //     },
+            //     {
+            //       name: "PDC Receipt",
+            //       path: currentUser?.role === "EMPLOYEE"
+            //         ? "/employee/PdcReceipts"
+            //         : "/admin/PdcReceipts",
+            //       permission: "VIEW_PDC"
+            //     }
+            //   ]
+            // },
+
+
             {
-              name: "Repossess",
+              name: "NACH Auto Debit",
               path: currentUser?.role === "EMPLOYEE"
-                ? "/employee/repossess"
-                : "/admin/repossess",
-              permission: "VIEW_REPOSSESS"
+                ? "/employee/nach-auto-debit"
+                : "/admin/nach-auto-debit",
+              permission: "VIEW_NACH_AUTO_DEBIT"
+            },
+            {
+              name: "DPD Tracking",
+              path: currentUser?.role === "EMPLOYEE"
+                ? "/employee/dpd-tracking"
+                : "/admin/dpd-tracking",
+              permission: "VIEW_DPD_TRACKING"
+            },
+            {
+              name: "Recovery Management",
+              path: currentUser?.role === "EMPLOYEE"
+                ? "/employee/recovery-management"
+                : "/admin/recovery-management",
+              permission: "VIEW_RECOVERY_MANAGEMENT"
+            },
+            {
+              name: "Foreclosure",
+              path: currentUser?.role === "EMPLOYEE"
+                ? "/employee/foreclosure"
+                : "/admin/foreclosure",
+              permission: "VIEW_FORECLOSURE"
+            },
+            {
+              name: "Loan Closure",
+              path: currentUser?.role === "EMPLOYEE"
+                ? "/employee/loan-closure"
+                : "/admin/loan-closure",
+              permission: "VIEW_LOAN_CLOSURE"
             },
           ]
         },

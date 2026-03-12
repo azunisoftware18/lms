@@ -8,15 +8,9 @@ import TableShell from "./core/TableShell";
 export default function UserTable({ users = [], loading = false }) {
 
   const [currentPage, setCurrentPage] = useState(1);
-
-  // ✅ Search state
   const [search, setSearch] = useState("");
-
-  // ✅ Filter state
   const [status, setStatus] = useState("all");
-
   const rowsPerPage = 5;
-
   const columns = [
     { header: "Name", accessor: "name" },
     { header: "Email", accessor: "email" },
@@ -46,14 +40,11 @@ export default function UserTable({ users = [], loading = false }) {
       ),
     },
   ];
-
   const actions = [
     { label: "View", onClick: (row) => console.log("View user:", row) },
     { label: "Edit", onClick: (row) => console.log("Edit user:", row) },
     { label: "Delete", onClick: (row) => console.log("Delete user:", row) },
   ];
-
-  // ✅ Filter options
   const filterOptions = [
     { label: "All", value: "all" },
     { label: "Active", value: "Active" },

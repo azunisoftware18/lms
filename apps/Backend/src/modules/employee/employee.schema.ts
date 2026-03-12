@@ -1,5 +1,13 @@
 import { z } from "zod";
 
+const strongPasswordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters")
+  .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+  .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+  .regex(/[0-9]/, "Password must contain at least one number")
+  .regex(/[^A-Za-z0-9]/, "Password must contain at least one special character");
+
 /* ================= CREATE ================= */
 
 export const createEmployeeSchema = z
@@ -7,7 +15,7 @@ export const createEmployeeSchema = z
     // allow top-level user fields commonly sent with employee creation
     fullName: z.string().trim().min(1),
     email: z.string().trim().email(),
-    password: z.string().min(8),
+    password: strongPasswordSchema,
     role: z.enum(["ADMIN", "EMPLOYEE", "PARTNER"]),
     contactNumber: z.string().trim().min(10).max(15),
     isActive: z.coerce.boolean(),
@@ -48,7 +56,7 @@ export const updateEmployeeSchema = z
   .object({
     fullName: z.string().trim().min(1).optional(),
     email: z.string().trim().email().optional(),
-    password: z.string().min(8).optional(),
+    password: strongPasswordSchema.optional(),
     role: z.enum(["EMPLOYEE"]).optional(),
     contactNumber: z.string().trim().min(10).max(15).optional(),
     isActive: z.coerce.boolean().optional(),

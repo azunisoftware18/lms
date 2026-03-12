@@ -2,6 +2,30 @@ import { prisma } from "../../db/prismaService.js";
 
 import path from "path";
 import fs from "fs";
+import { AppError } from "../../common/utils/apiError.js";
+import { logAction } from "../../audit/audit.helper.js";
+
+type RequestUserContext = {
+  id: string;
+  role: string;
+  branchId?: string | null;
+};
+
+const assertBranchAccess = (
+  requester: RequestUserContext | undefined,
+  branchId: string,
+) => {
+  if (typeof branchId !== "string" || branchId.trim().length === 0) {
+    throw AppError.forbidden("Invalid branch context for branch resources");
+  }
+
+  if (!requester) return;
+  if (requester.role === "SUPER_ADMIN" || requester.role === "ADMIN") return;
+
+  if (!requester.branchId || requester.branchId !== branchId) {
+    throw AppError.forbidden("Access denied for branch resources");
+  }
+};
 
 export async function uploadDocumentsService(
   target: "loan" | "coApplicant",
@@ -11,10 +35,11 @@ export async function uploadDocumentsService(
     documentPath: string;
     uploadedBy: string;
   }[],
+  requester?: RequestUserContext,
 ) {
   return prisma.$transaction(async (tx) => {
     let kycId: string;
-    let branchId: string;
+    let branchId = "";
     let loanApplicationId: string;
     let whereClause: any = {};
 
@@ -24,12 +49,14 @@ export async function uploadDocumentsService(
         where: { id: targetId },
         select: { kyc: { select: { id: true } }, branchId: true },
       });
-      if (!loan || !loan.kyc) throw new Error("Loan or KYC not found");
+      if (!loan || !loan.kyc) throw AppError.notFound("Loan or KYC not found");
 
       kycId = loan.kyc.id;
       branchId = loan.branchId;
       loanApplicationId = targetId;
       whereClause = { loanApplicationId: targetId };
+
+      assertBranchAccess(requester, branchId);
     }
 
     if (target === "coApplicant") {
@@ -40,12 +67,16 @@ export async function uploadDocumentsService(
           loanApplication: { select: { branchId: true, id: true } },
         },
       });
-      if (!co || !co.kyc) throw new Error("CoApplicant or KYC not found");
+      if (!co || !co.kyc) {
+        throw AppError.notFound("CoApplicant or KYC not found");
+      }
 
       kycId = co.kyc.id;
       branchId = co.loanApplication.branchId;
       loanApplicationId = co.loanApplication.id;
       whereClause = { coApplicantId: targetId };
+
+      assertBranchAccess(requester, branchId);
     }
 
     /* 2️⃣ Check already uploaded document types */
@@ -61,16 +92,15 @@ export async function uploadDocumentsService(
       .filter((type) => existingTypes.has(type));
 
     if (duplicateDocs.length > 0) {
-      const err: any = new Error(
+      const err: any = AppError.conflict(
         `Document(s) already uploaded: ${duplicateDocs.join(", ")}`,
       );
-      err.statusCode = 409;
       err.duplicateDocs = duplicateDocs;
       throw err;
     }
 
     /* 3️⃣ Insert documents */
-    await tx.document.createMany({
+    const created = await tx.document.createMany({
       data: documents.map((doc) => ({
         documentType: doc.documentType,
         documentPath: doc.documentPath,
@@ -80,6 +110,20 @@ export async function uploadDocumentsService(
         loanApplicationId: loanApplicationId!,
         coApplicantId: target === "coApplicant" ? targetId : undefined,
       })),
+    });
+
+    await logAction({
+      action: "UPLOAD_DOCUMENT",
+      performedBy: documents[0]?.uploadedBy ?? requester?.id ?? "SYSTEM",
+      entityType: "DOCUMENT",
+      entityId: targetId,
+      branchId,
+      oldValue: null,
+      newValue: {
+        target,
+        count: created.count,
+        documentTypes: documents.map((d) => d.documentType),
+      },
     });
 
     /* 4️⃣ Return documents */
@@ -98,8 +142,21 @@ export async function reuploadCoApplicantDocumentService(
     path: string;
     uploadedBy: string;
   },
+  requester?: RequestUserContext,
 ) {
   return prisma.$transaction(async (tx) => {
+    const coApplicant = await tx.coApplicant.findUnique({
+      where: { id: coApplicantId },
+      select: { loanApplication: { select: { branchId: true } } },
+    });
+
+    if (!coApplicant) {
+      throw AppError.notFound("CoApplicant not found");
+    }
+
+    const branchId = coApplicant.loanApplication.branchId;
+    assertBranchAccess(requester, branchId);
+
     /* 1️⃣ Find existing document */
     const existingDoc = await tx.document.findFirst({
       where: {
@@ -109,11 +166,7 @@ export async function reuploadCoApplicantDocumentService(
     });
 
     if (!existingDoc) {
-      const err: any = new Error(
-        `Document ${documentType} not found. Upload first.`,
-      );
-      err.statusCode = 404;
-      throw err;
+      throw AppError.notFound(`Document ${documentType} not found. Upload first.`);
     }
 
     /* 2️⃣ Delete old file from disk */
@@ -130,7 +183,7 @@ export async function reuploadCoApplicantDocumentService(
     }
 
     /* 3️⃣ Update document */
-    return tx.document.update({
+    const updatedDoc = await tx.document.update({
       where: { id: existingDoc.id },
       data: {
         documentPath: `/uploads/${file.filename}`,
@@ -142,12 +195,42 @@ export async function reuploadCoApplicantDocumentService(
         verifiedAt: null,
       },
     });
+
+    await logAction({
+      action: "REUPLOAD_DOCUMENT",
+      performedBy: file.uploadedBy,
+      entityType: "DOCUMENT",
+      entityId: existingDoc.id,
+      branchId,
+      oldValue: {
+        documentPath: existingDoc.documentPath,
+        verificationStatus: existingDoc.verificationStatus,
+      },
+      newValue: {
+        documentPath: updatedDoc.documentPath,
+        verificationStatus: updatedDoc.verificationStatus,
+      },
+    });
+
+    return updatedDoc;
   });
 }
 
 export const getAllCoApplicantInLoanService = async (
   loanApplicationId: string,
+  requester?: RequestUserContext,
 ) => {
+  const loan = await prisma.loanApplication.findUnique({
+    where: { id: loanApplicationId },
+    select: { branchId: true },
+  });
+
+  if (!loan) {
+    throw AppError.notFound("Loan application not found");
+  }
+
+  assertBranchAccess(requester, loan.branchId);
+
   const coApplicants = await prisma.coApplicant.findMany({
     where: { loanApplicationId },
     include: {

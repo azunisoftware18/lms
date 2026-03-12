@@ -1,14 +1,21 @@
+// TableEmpty.jsx - Updated with responsive empty state
+import { Search } from "lucide-react";
+
 export default function TableEmpty({ colSpan }) {
   return (
     <tbody>
       <tr>
-        <td colSpan={colSpan} className="py-20 text-center">
-          <div className="flex flex-col items-center justify-center opacity-40">
-            <div className="bg-slate-100 p-4 rounded-full mb-3">
-               {/* Search icon placeholder */}
-               <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+        <td colSpan={colSpan} className="py-12 sm:py-16 md:py-20 px-4 text-center">
+          <div className="flex flex-col items-center justify-center max-w-sm mx-auto">
+            <div className="bg-slate-100 p-4 sm:p-5 rounded-full mb-4">
+              <Search className="w-6 h-6 sm:w-8 sm:h-8 text-slate-400" />
             </div>
-            <p className="text-slate-500 font-semibold italic">No records found</p>
+            <p className="text-slate-600 font-semibold text-sm sm:text-base mb-1">
+              No records found
+            </p>
+            <p className="text-slate-400 text-xs sm:text-sm">
+              Try adjusting your search or filter to find what you're looking for.
+            </p>
           </div>
         </td>
       </tr>
