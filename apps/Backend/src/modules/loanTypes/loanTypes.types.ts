@@ -61,7 +61,8 @@ export interface LoanTypeDTO {
 
   // SLA & Workflow
   estimatedProcessingTimeDays?: number | null;
-  documentsRequired?: string | null;
+  documentsRequired: string;
+  documentsOptions?: string | null;
 
   // Audit
   createdAt: Date;

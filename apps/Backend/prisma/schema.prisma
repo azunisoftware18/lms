@@ -1182,9 +1182,10 @@ model LoanType {
 
   //SLA & WorkFlow 
   estimatedProcessingTimeDays Int? //turnaround time
-  documentsRequired           String? //list of documents /comma separated 
-
+  documentsRequired           String //list of documents /comma separated 
+  documentsOptions            String? // any optional documents that can help in faster processing
   //Audit Fields
+  deletedAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -58,7 +58,11 @@ export const getAllLoanTypesController = async (req: Request, res: Response) => 
 export const getLoanTypeByIdController = async (req: Request, res: Response) => {
     // Implementation for getting a loan type by ID
     try { 
-        const loanTypeId = req.params.id;
+        const loanTypeId = typeof req.params.id === "string"
+            ? req.params.id
+            : Array.isArray(req.params.id)
+                ? req.params.id[0]
+                : "";
 
         const loanType = await getLoanTypeByIdService( loanTypeId );
         res.status(200).json({
@@ -79,7 +83,11 @@ export const getLoanTypeByIdController = async (req: Request, res: Response) => 
 
 export const updateLoanTypeController = async (req: Request, res: Response) => {
     try {
-        const loanTypeId = req.params.id;
+        const loanTypeId = typeof req.params.id === "string"
+            ? req.params.id
+            : Array.isArray(req.params.id)
+                ? req.params.id[0]
+                : "";
         const updateData = req.body;
         const updatedLoanType = await updateLoanTypeService( loanTypeId, updateData );
         res.status(200).json({
@@ -99,7 +107,11 @@ export const updateLoanTypeController = async (req: Request, res: Response) => {
 
 export const deleteLoanTypeController = async (req: Request, res: Response) => {
     try {
-        const loanTypeId = req.params.id;
+        const loanTypeId = typeof req.params.id === "string"
+            ? req.params.id
+            : Array.isArray(req.params.id)
+                ? req.params.id[0]
+                : "";
         const deletedByUserId = req.user?.id; // Assuming req.user is populated by auth middleware
         if (!deletedByUserId) {
             return res.status(401).json({

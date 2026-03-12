@@ -997,6 +997,7 @@ export const LoanTypeScalarFieldEnum = {
   approvalRequired: 'approvalRequired',
   estimatedProcessingTimeDays: 'estimatedProcessingTimeDays',
   documentsRequired: 'documentsRequired',
+  documentsOptions: 'documentsOptions',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1730,7 +1731,8 @@ export const LoanTypeOrderByRelevanceFieldEnum = {
   code: 'code',
   name: 'name',
   description: 'description',
-  documentsRequired: 'documentsRequired'
+  documentsRequired: 'documentsRequired',
+  documentsOptions: 'documentsOptions'
 } as const
 
 export type LoanTypeOrderByRelevanceFieldEnum = (typeof LoanTypeOrderByRelevanceFieldEnum)[keyof typeof LoanTypeOrderByRelevanceFieldEnum]

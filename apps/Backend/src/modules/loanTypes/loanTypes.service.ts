@@ -101,6 +101,7 @@ export const createLoanTypeService = async (loanTypeData: LoanTypeDTO) => {
 
         estimatedProcessingTimeDays: data.estimatedProcessingTimeDays,
         documentsRequired: data.documentsRequired,
+        documentsOptions: data.documentsOptions,
       },
     });
 
@@ -186,12 +187,12 @@ export const updateLoanTypeService = async(
 
 export const softDeleteLoanTypeService = async (
   loanTypeId: string,
-  deletedByUserId: string
+  _deletedByUserId: string
 ) => {
   const loanType = await prisma.loanType.findFirst({
     where: {
       id: loanTypeId,
-      deletedAt: null,
+      isActive: true,
     },
   });
 
@@ -202,8 +203,6 @@ export const softDeleteLoanTypeService = async (
   return prisma.loanType.update({
     where: { id: loanTypeId },
     data: {
-      deletedAt: new Date(),
-      deletedBy: deletedByUserId,
       isActive: false,
     },
   });
