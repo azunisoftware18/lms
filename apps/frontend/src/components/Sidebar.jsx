@@ -249,7 +249,7 @@ export default function Sidebar() {
           subItems: [
             { name: "Employee Add", path: "/admin/configuration/employee" },
             { name: "Partner Add", path: "/admin/configuration/partner" },
-            { name: "Branch Management", path: "/admin/configuration/BranchManagement" },
+            { name: "Branch Management", path: "/admin/branch-management" },
             { name: "Branch Admin", path: "/admin/configuration/branch-admin" },
             { name: "Loan Swap", path: "/admin/configuration/loan-swap" },
             { name: "Loan Product", path: "/admin/configuration/loan-product" },

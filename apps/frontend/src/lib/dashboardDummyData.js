@@ -713,3 +713,60 @@ export const securitySections = [
   { id: "audit", label: "Audit & Logging", icon: "Clock", color: "gray" },
   { id: "advanced", label: "Advanced Security", icon: "Cpu", color: "red" },
 ];
+
+
+ export const emiData = [
+  {
+    id: 1,
+    dueDate: '2024-01-15',
+    principal: 5000,
+    interest: 850,
+    emiAmount: 5850,
+    status: 'paid'
+  },
+  {
+    id: 2,
+    dueDate: '2024-02-15',
+    principal: 5000,
+    interest: 820,
+    emiAmount: 5820,
+    status: 'paid'
+  },
+  {
+    id: 3,
+    dueDate: '2024-03-15',
+    principal: 5000,
+    interest: 790,
+    emiAmount: 5790,
+    status: 'paid'
+  },
+  {
+    id: 4,
+    dueDate: '2024-04-15',
+    principal: 5000,
+    interest: 760,
+    emiAmount: 5760,
+    status: 'overdue'
+  },
+  {
+    id: 5,
+    dueDate: '2024-05-15',
+    principal: 5000,
+    interest: 730,
+    emiAmount: 5730,
+    status: 'pending'
+  },
+  {
+    id: 6,
+    dueDate: '2024-06-15',
+    principal: 5000,
+    interest: 700,
+    emiAmount: 5700,
+    status: 'pending'
+  }
+];
+
+
+export default {
+  emiData
+};
