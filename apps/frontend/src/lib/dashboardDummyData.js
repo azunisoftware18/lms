@@ -100,31 +100,53 @@ export const recentLoans = [
 
 export const foreclosureData = [
   {
-    id: "LN0012345",
-    customer: "Arun Sharma",
-    requestedDate: "2025-10-20",
-    loanAmount: 500000,
-    outstanding: 125000,
-    foreclosureAmount: 120000,
+    id: "FL-2024-001",
+    loanId: "FL-2024-001",
+    customer: "John Smith",
     status: "Pending Approval",
-    daysPending: 4,
-    loanType: "Home Loan",
-    tenure: "36 months",
-    paidEMIs: 24,
+    amount: 250000,
+    date: "2024-01-15"
   },
   {
-    id: "LN0012346",
-    customer: "Priya Singh",
-    requestedDate: "2025-10-18",
-    loanAmount: 120000,
-    outstanding: 25000,
-    foreclosureAmount: 23000,
+    id: "FL-2024-002",
+    loanId: "FL-2024-002",
+    customer: "Sarah Johnson",
     status: "Approved",
-    daysPending: 0,
-    loanType: "Personal Loan",
-    tenure: "24 months",
-    paidEMIs: 18,
+    amount: 175000,
+    date: "2024-01-20"
   },
+  {
+    id: "FL-2024-003",
+    loanId: "FL-2024-003",
+    customer: "Michael Brown",
+    status: "Rejected",
+    amount: 320000,
+    date: "2024-01-22"
+  },
+  {
+    id: "FL-2024-004",
+    loanId: "FL-2024-004",
+    customer: "Emily Davis",
+    status: "Ready to Print",
+    amount: 195000,
+    date: "2024-01-25"
+  },
+  {
+    id: "FL-2024-005",
+    loanId: "FL-2024-005",
+    customer: "Robert Wilson",
+    status: "Pending Approval",
+    amount: 280000,
+    date: "2024-01-28"
+  },
+  {
+    id: "FL-2024-006",
+    loanId: "FL-2024-006",
+    customer: "Lisa Anderson",
+    status: "Approved",
+    amount: 310000,
+    date: "2024-02-01"
+  }
 ];
 
 export const nocData = [
