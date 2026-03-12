@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
   createEmployeeService,
   getAllEmployeesService,
@@ -8,8 +8,13 @@ import {
 } from "./employee.service.js";
 import { prisma } from "../../db/prismaService.js";
 import { logAction } from "../../audit/audit.helper.js";
+import { AppError } from "../../common/utils/apiError.js";
 
-export const createEmployeeController = async (req: Request, res: Response) => {
+export const createEmployeeController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await createEmployeeService(req.body);
     const { user, employee } = result as any;
@@ -47,31 +52,25 @@ export const createEmployeeController = async (req: Request, res: Response) => {
       message: "Employee created successfully",
       data: { user: safeUser, employee },
     });
-  } catch (error: any) {
-    if (error.message && error.message.includes("already exists")) {
-      return res.status(409).json({ success: false, message: error.message });
-    }
-    res.status(400).json({
-      success: false,
-      message: "Employee creation failed",
-      error: error.message,
-    });
+  } catch (error) {
+    next(error);
   }
 };
 
 export const getAllEmployeesController = async (
   req: Request,
   res: Response,
+  next: NextFunction,
 ) => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, message: "Unauthorized" });
+      throw AppError.unauthorized("Unauthorized");
     }
     const employees = await getAllEmployeesService(
       {
         page: Number(req.query.page),
         limit: Number(req.query.limit),
-        q: req.query.q?.toString(),
+        q: typeof req.query.q === 'string' ? req.query.q : undefined,
       },
       {
         id: req.user.id,
@@ -84,20 +83,17 @@ export const getAllEmployeesController = async (
       message: "Employees retrieved successfully",
       data: employees,
     });
-  } catch (error: any) {
-    res.status(400).json({
-      success: false,
-      message: "Failed to retrieve employees",
-      error: error.message,
-    });
+  } catch (error) {
+    next(error);
   }
 };
 
 export const getEmployeeByIdController = async (
   req: Request,
   res: Response,
+  next: NextFunction,
 ) => {
-  const { id } = req.params;
+  const id = typeof req.params.id === 'string' ? req.params.id : req.params.id[0];
   try {
     const employee = await getEmployeeByIdService(id);
     res.status(200).json({
@@ -105,20 +101,17 @@ export const getEmployeeByIdController = async (
       message: "Employee retrieved successfully",
       data: employee,
     });
-  } catch (error: any) {
-    if (error.message && error.message.includes("not found")) {
-      return res.status(404).json({ success: false, message: error.message });
-    }
-    res.status(400).json({
-      success: false,
-      message: "Failed to retrieve employee",
-      error: error,
-    });
+  } catch (error) {
+    next(error);
   }
 };
 
-export const updateEmployeeController = async (req: Request, res: Response) => {
-  const { id } = req.params;
+export const updateEmployeeController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const id = typeof req.params.id === 'string' ? req.params.id : req.params.id[0];
   const updateData = req.body;
 
   try {
@@ -134,30 +127,25 @@ export const updateEmployeeController = async (req: Request, res: Response) => {
       message: "Employee updated successfully",
       data: updatedEmployee,
     });
-  } catch (error: any) {
-    res.status(400).json({
-      success: false,
-      message: "Employee update failed",
-      error: error.message,
-    });
+  } catch (error) {
+    next(error);
   }
 };
 
 export const getEmployeeDashBoardController = async (
   req: Request,
   res: Response,
+  next: NextFunction,
 ) => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, message: "Unauthorized" });
+      throw AppError.unauthorized("Unauthorized");
     }
     const employee = await prisma.employee.findUnique({
       where: { userId: req.user.id },
     });
     if (!employee) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Employee not found" });
+      throw AppError.notFound("Employee not found");
     }
     const employeeId = employee.id;
     const dashboardData = await getEmployeeDashBoardService(employeeId);
@@ -166,11 +154,7 @@ export const getEmployeeDashBoardController = async (
       message: "Employee dashboard data retrieved successfully",
       data: dashboardData,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to retrieve dashboard data",
-      error: error.message,
-    });
+  } catch (error) {
+    next(error);
   }
 };

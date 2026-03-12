@@ -7,8 +7,12 @@ import { getErrorMessage } from '../utils/errorHandler';
 
 export const getAllEmis = async (params) => {
     try {
-        const res = await api.get('/emi', { params });
-        return res.data;
+        const res = await api.get('/emi', { params:{
+        page: params?.page || 1,
+        limit: params?.limit || 10,
+        q:params?.q|| "",
+        } });
+        return res.data?.data ?? res.data;
     } catch (error) {
         throw new Error(getErrorMessage(error));
     }

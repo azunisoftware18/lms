@@ -1,19 +1,14 @@
-import { z } from 'zod';
- import {BranchType} from "../../../generated/prisma-client/enums.js";
-export type CreateBranchInput = {
-  name: string;
-  code: string;
-  type: BranchType;
-  parentBranchId?: string | null;
-};
+import { z } from "zod";
+import {
+	createBranchSchema,
+	updateBranchSchema,
+	branchIdParamSchema,
+	createBulkBranchesSchema,
+	reassignBulkBranchesSchema,
+} from "./branch.schema.js";
 
-
-export type updateBranchInput = {
-    name: string;
-    isActive: boolean;
-}
-
-
-export const branchIdParamSchema = z.object({
-    id: z.string().uuid(),
-})
+export type CreateBranchInput = z.infer<typeof createBranchSchema>;
+export type UpdateBranchInput = z.infer<typeof updateBranchSchema>;
+export type BranchIdParamInput = z.infer<typeof branchIdParamSchema>;
+export type CreateBulkBranchesInput = z.infer<typeof createBulkBranchesSchema>;
+export type ReassignBulkBranchesInput = z.infer<typeof reassignBulkBranchesSchema>;

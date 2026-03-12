@@ -12,7 +12,7 @@ export const uploadKycDocumentController = async (
   res: Response,
 ) => {
   try {
-    const { id } = req.params;
+    const id = typeof req.params.id === 'string' ? req.params.id : req.params.id[0];
 
     // if (!req.user || req.user.id !== id) {
     //   return res.status(401).json({ success: false, message: "Unauthorized" });
@@ -74,7 +74,8 @@ export const verifyKycController = async (req: Request, res: Response) => {
     if (!req.user) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
-    const doc = await verifyDocumentService(req.params.id, req.user.id);
+    const id = typeof req.params.id === 'string' ? req.params.id : req.params.id[0];
+    const doc = await verifyDocumentService(id, req.user.id);
     return res.status(200).json({ success: true, data: doc });
   } catch (error) {
     if (error instanceof Error) {
@@ -119,7 +120,7 @@ export const getAllKycController = async (req: Request, res: Response) => {
     const kycList = await getAllKycService({
       page: Number(req.query.page),
       limit: Number(req.query.limit),
-      q: req.query.q?.toString(),
+      q: typeof req.query.q === 'string' ? req.query.q : undefined,
     },
       {
         id: req.user.id,

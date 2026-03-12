@@ -38,8 +38,30 @@ import ShareholderInformationPage from '../app/public/ShareholderInformationPage
 import VisionAndMissionPage from '../app/public/VisionAndMissionPage.jsx';
 import WelcometoFinovaPage from '../app/public/WelcometoFinovaPage.jsx';
 import UnderRegulationPage from '../app/public/UnderRegulationPage.jsx';
+import LoanAccountCreation from '../app/dashboard/LMS/LoanAccountCreation.jsx';
+import EMISchedule from '../app/dashboard/LMS/EMISchedule.jsx';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { setUser } from '../store/slices/authSlice.js';
+import RepaymentManagement from '../app/dashboard/LMS/RepaymentManagement.jsx';
+import NachAutoDebit from '../app/dashboard/LMS/NachAutoDebit.jsx';
+import DpdTracking from '../app/dashboard/LMS/DpdTracking.jsx';
+import RecoveryManagement from '../app/dashboard/LMS/RecoveryManagement.jsx';
+import Foreclosure from '../app/dashboard/LMS/Foreclosure.jsx';
+import LoanClosure from '../app/dashboard/LMS/LoanClosure.jsx';
+import LoanAccountView from '../app/dashboard/ViewDetail/LoanAccountView.jsx';
 
 export default function AppRoutes() {
+	const dispatch = useDispatch();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      dispatch(setUser(JSON.parse(storedUser)));
+    }
+  }, [dispatch]);
+
 	return (
 		<Routes>
 			{/* Public Layout */}
@@ -56,7 +78,7 @@ export default function AppRoutes() {
 				<Route path="annual-report" element={<AnnualReportPage />} />
 				<Route path="board-of-directors" element={<BoardOfDirectorsPage />} />
 				<Route path="committees" element={<CommitteesPage />} />
-				<Route path="contact-us" element={<ContactUsPage />} />
+				<Route path="contact" element={<ContactUsPage />} />
 				<Route
 					path="corporate-governance"
 					element={<CorporateGovernancePage />}
@@ -116,6 +138,17 @@ export default function AppRoutes() {
 				}>
 				{/* Dashboard page */}
 				<Route index element={<DashboardPage />} />
+				<Route path="loan-account-creation" element={<LoanAccountCreation />} />
+				<Route path="emi-schedule" element={<EMISchedule />} />
+				<Route path="repayment-management" element={<RepaymentManagement />} />
+				<Route path="nach-auto-debit" element={<NachAutoDebit />} />
+				<Route path="dpd-tracking" element={<DpdTracking />} />
+				<Route path="recovery-management" element={<RecoveryManagement />} />
+				<Route path="foreclosure" element={<Foreclosure />} />
+				<Route path="loan-closure" element={<LoanClosure />} />
+
+				{/* View Detail Pages */}
+				<Route path="loan-account-view/:loanId" element={<LoanAccountView />} />
 			</Route>
 		</Routes>
 	);

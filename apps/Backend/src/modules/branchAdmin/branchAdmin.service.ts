@@ -1,50 +1,39 @@
 import { prisma } from "../../db/prismaService.js";
-
 import { hashPassword } from "../../common/utils/utils.js";
 import { logAction } from "../../audit/audit.helper.js";
 import logger from "../../common/logger.js";
+import { AppError } from "../../common/utils/apiError.js";
+import {
+  CreateBranchAdminInput,
+  UpdateBranchAdminInput,
+} from "./branchAdmin.types.js";
+
+const mapPrismaError = (error: any): never => {
+  if (error?.code === "P2002") {
+    const fields = Array.isArray(error?.meta?.target) ? error.meta.target.join(", ") : "unique field";
+    throw AppError.conflict(`Duplicate value for ${fields}`);
+  }
+  if (error?.code === "P2003") {
+    throw AppError.badRequest("Invalid foreign key reference");
+  }
+  throw error;
+};
 
 export const createBranchAdminService = async (
-  data: {
-    fullName: string;
-    email: string;
-    userName: string;
-    contactNumber: string;
-    password: string;
-    branchId: string;
-  },
+  data: CreateBranchAdminInput,
   userId: string,
 ) => {
   try {
-    // Verify branch exists and is active
-    const branch = await prisma.branch.findUnique({
-      where: { id: data.branchId },
-    });
+    const branch = await prisma.branch.findUnique({ where: { id: data.branchId } });
     if (!branch || !branch.isActive) {
-      const error: any = new Error("Branch not found or inactive");
-      error.statusCode = 400;
-      throw error;
+      throw AppError.badRequest("Branch not found or inactive");
     }
 
-    // Check if email already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email: data.email },
-    });
-    if (existingUser) {
-      const error: any = new Error("User with this email already exists");
-      error.statusCode = 409;
-      throw error;
-    }
+    const existingUser = await prisma.user.findUnique({ where: { email: data.email } });
+    if (existingUser) throw AppError.conflict("User with this email already exists");
 
-    // Check if userName already exists
-    const existingUserName = await prisma.user.findUnique({
-      where: { userName: data.userName },
-    });
-    if (existingUserName) {
-      const error: any = new Error("Username already exists");
-      error.statusCode = 409;
-      throw error;
-    }
+    const existingUserName = await prisma.user.findUnique({ where: { userName: data.userName } });
+    if (existingUserName) throw AppError.conflict("Username already exists");
 
     const hashedPassword = await hashPassword(data.password);
 
@@ -61,7 +50,6 @@ export const createBranchAdminService = async (
       },
     });
 
-    // Log audit trail
     await logAction({
       entityType: "BRANCH_ADMIN",
       entityId: user.id,
@@ -81,34 +69,19 @@ export const createBranchAdminService = async (
       remarks: `Branch admin created for branch ${branch.name}`,
     });
 
-    // Return user without password
     const { password: _pw, ...safeUser } = user;
     return safeUser;
   } catch (error: any) {
-    logger.error("Error creating branch admin:", {
-      message: error.message,
-      stack: error.stack,
-      statusCode: error.statusCode,
-    });
-
-    if (!error.statusCode) {
-      error.statusCode = 500;
-      error.message = "Failed to create branch admin";
-    }
+    logger.error("Error creating branch admin:", { message: error.message, stack: error.stack, code: error.code });
+    if (error?.code) mapPrismaError(error);
+    if (!error.statusCode) throw AppError.internal("Failed to create branch admin");
     throw error;
   }
 };
 
 export const updateBranchAdminService = async (
   id: string,
-  data: {
-    fullName?: string;
-    email?: string;
-    userName?: string;
-    contactNumber?: string;
-    password?: string;
-    branchId?: string;
-  },
+  data: UpdateBranchAdminInput,
   userId: string,
 ) => {
   let updatedBranchName: string | null = null;

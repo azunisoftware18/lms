@@ -1,9 +1,8 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import ENV from "../config/env.js";
 import logger from "../logger.js";
-import { ApiError } from "../utils/apiError.js";
+import { AppError } from "../utils/apiError.js";
 import { Request, Response, NextFunction } from "express";
-import { handleError } from "../utils/handleError.js";
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -80,7 +79,7 @@ export const authMiddleware = async (
       } catch (err: any) {
         if (err.name !== "TokenExpiredError") {
           logger.warn("Invalid access token");
-          return ApiError.send(res, 401, "Invalid access token");
+          throw AppError.unauthorized("Invalid access token");
         }
       }
     }
@@ -89,7 +88,7 @@ export const authMiddleware = async (
     const refreshToken = req.cookies?.refreshToken;
 
     if (!refreshToken) {
-      return ApiError.send(res, 401, "Authentication required");
+      throw AppError.unauthorized("Authentication required");
     }
 
     let decodedRefresh: AuthPayload;
@@ -97,7 +96,7 @@ export const authMiddleware = async (
     try {
       decodedRefresh = verifyRefreshToken(refreshToken) as AuthPayload;
     } catch {
-      return ApiError.send(res, 401, "Invalid refresh token");
+      throw AppError.unauthorized("Invalid refresh token");
     }
 
     req.user = {
@@ -151,6 +150,7 @@ export const authMiddleware = async (
 
     return next();
   } catch (error) {
-    return handleError(res, error, 401, "Authentication failed");
+    logger.error("Authentication failed: %o", error);
+    throw AppError.unauthorized("Authentication failed");
   }
 };

@@ -81,7 +81,7 @@ export default function CompanyDetailsPage() {
           {notification.message}
         </div>
       )}
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-4 md:p-6">
+      <div className="min-h-screen bg-linear-to-br from-gray-50 to-blue-50 p-4 md:p-6">
         <div className="max-w-6xl mx-auto">
           {/* Header with Stats */}
           <div className="mb-8">
@@ -506,7 +506,7 @@ export default function CompanyDetailsPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-6">
-                      <div className="p-5 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+                      <div className="p-5 bg-linear-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
                         <div className="flex items-center gap-3 mb-3">
                           <div className="p-2 bg-blue-100 rounded-lg">
                             <Icons.FileText className="w-5 h-5 text-blue-600" />
@@ -531,7 +531,7 @@ export default function CompanyDetailsPage() {
                         />
                       </div>
 
-                      <div className="p-5 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200">
+                      <div className="p-5 bg-linear-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200">
                         <div className="flex items-center gap-3 mb-3">
                           <div className="p-2 bg-purple-100 rounded-lg">
                             <Icons.Shield className="w-5 h-5 text-purple-600" />
@@ -558,7 +558,7 @@ export default function CompanyDetailsPage() {
                     </div>
 
                     <div className="space-y-6">
-                      <div className="p-5 bg-gradient-to-r from-green-50 to-teal-50 rounded-xl border border-green-200">
+                      <div className="p-5 bg-linear-to-r from-green-50 to-teal-50 rounded-xl border border-green-200">
                         <div className="flex items-center gap-3 mb-3">
                           <div className="p-2 bg-green-100 rounded-lg">
                             <Icons.FileText className="w-5 h-5 text-green-600" />
@@ -583,7 +583,7 @@ export default function CompanyDetailsPage() {
                         />
                       </div>
 
-                      <div className="p-5 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl border border-orange-200">
+                      <div className="p-5 bg-linear-to-r from-orange-50 to-red-50 rounded-xl border border-orange-200">
                         <div className="flex items-center gap-3 mb-3">
                           <div className="p-2 bg-orange-100 rounded-lg">
                             <Icons.Calendar className="w-5 h-5 text-orange-600" />
@@ -827,7 +827,7 @@ export default function CompanyDetailsPage() {
             </div>
 
             {/* Footer Actions */}
-            <div className="p-6 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-blue-50">
+            <div className="p-6 border-t border-gray-200 bg-linear-to-r from-gray-50 to-blue-50">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <p className="font-medium text-gray-900">
@@ -851,8 +851,8 @@ export default function CompanyDetailsPage() {
                     disabled={isSaving}
                     className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all transform hover:scale-[1.02] ${
                       isSaving
-                        ? "bg-gradient-to-r from-blue-400 to-blue-500 cursor-not-allowed"
-                        : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl"
+                        ? "bg-linear-to-r from-blue-400 to-blue-500 cursor-not-allowed"
+                        : "bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl"
                     } text-white`}
                   >
                     {isSaving ? (

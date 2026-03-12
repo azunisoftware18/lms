@@ -1,8 +1,6 @@
 import { prisma } from "../../db/prismaService.js";
-import { CreateLoanApplication, FullLoanApplicationInput } from "./loanApplication.types.js";
-import createLoanApplicationSchema, {
-  ApproveLoanInput,
-} from "./loanApplication.schema.js";
+import { FullLoanApplicationInput } from "./loanApplication.types.js";
+import { ApproveLoanInput } from "./loanApplication.schema.js";
 import * as Enums from "../../../generated/prisma-client/enums.js";
 import { generateLoanNumber } from "../../common/generateId/generateLoanNumber.js";
 import {
@@ -18,7 +16,30 @@ import { buildBranchFilter } from "../../common/utils/branchFilter.js";
 import { logAction } from "../../audit/audit.helper.js";
 import { calculatePartnerCommission } from "../partner/partnerCommission.service.js";
 import logger from "../../common/logger.js";
-
+import { AppError } from "../../common/utils/apiError.js";
+import {
+  createCustomer,
+  getUserBranchId,
+  validateLoanTypeId,
+} from "./loanApplicationService/customer.service.js";
+import { createAddress } from "./loanApplicationService/address.service.js";
+import {
+  ensureNoActiveLoan,
+  createLoan,
+  createFinancialDetails,
+  createOccupationalDetailsForEntity,
+  createEmploymentDetailsForEntity,
+  createGuarantors,
+} from "./loanApplicationService/loan.service.js";
+import {
+  createKYC,
+  attachKycToLoan,
+  createCoApplicants,
+} from "./loanApplicationService/kyc.service.js";
+import {
+  sanitizeDocumentList,
+  sanitizeDocumentResponse,
+} from "./loanApplicationService/document.service.js";
 
 export async function uploadLoanDocumentsService(
   loanApplicationId: string,
@@ -29,7 +50,6 @@ export async function uploadLoanDocumentsService(
   }[],
 ) {
   return prisma.$transaction(async (tx) => {
-    /* 1️⃣ Validate loan & KYC */
     const loanApplication = await tx.loanApplication.findUnique({
       where: { id: loanApplicationId },
       select: {
@@ -40,14 +60,13 @@ export async function uploadLoanDocumentsService(
     });
 
     if (!loanApplication) {
-      throw new Error("Loan application not found");
+      throw AppError.notFound("Loan application not found");
     }
 
     if (!loanApplication.kyc) {
-      throw new Error("KYC record not found for loan application");
+      throw AppError.notFound("KYC record not found for loan application");
     }
 
-    /* 2️⃣ Handle each document - update if exists, create if not */
     for (const doc of documents) {
       const existingDoc = await tx.document.findFirst({
         where: {
@@ -57,7 +76,6 @@ export async function uploadLoanDocumentsService(
       });
 
       if (existingDoc) {
-        // Update existing document (re-upload scenario)
         await tx.document.update({
           where: { id: existingDoc.id },
           data: {
@@ -71,11 +89,10 @@ export async function uploadLoanDocumentsService(
           },
         });
       } else {
-        // Create new document
         await tx.document.create({
           data: {
             loanApplicationId,
-            kycId: loanApplication.kyc!.id,
+            kycId: loanApplication.kyc.id,
             branchId: loanApplication.branchId,
             documentType: doc.documentType,
             documentPath: doc.documentPath,
@@ -95,36 +112,29 @@ export async function uploadLoanDocumentsService(
       newValue: { documents: { status: "uploaded" } },
     });
 
-    /* 3️⃣ Return all documents */
-    return tx.document.findMany({
+    const uploadedDocuments = await tx.document.findMany({
       where: { loanApplicationId },
       orderBy: { createdAt: "asc" },
     });
+
+    return sanitizeDocumentList(uploadedDocuments);
   });
 }
 
-export async function verifyDocumentService(
-  documentId: string,
-  verifierId: string,
-) {
+export async function verifyDocumentService(documentId: string, verifierId: string) {
   return prisma.$transaction(async (tx) => {
-    // First, check if document exists
     const existingDocument = await tx.document.findUnique({
       where: { id: documentId },
     });
 
     if (!existingDocument) {
-      const err: any = new Error("Document not found");
-      err.statusCode = 404;
-      throw err;
+      throw AppError.notFound("Document not found");
     }
 
     if (existingDocument.verificationStatus !== "pending") {
-      const err: any = new Error(
+      throw AppError.badRequest(
         `Document is already ${existingDocument.verificationStatus}. Cannot verify a document that is not in pending status.`,
       );
-      err.statusCode = 400;
-      throw err;
     }
 
     const document = await tx.document.update({
@@ -136,6 +146,7 @@ export async function verifyDocumentService(
         verificationStatus: "verified",
       },
     });
+
     const unverifiedCount = await tx.document.count({
       where: {
         kycId: document.kycId,
@@ -144,9 +155,10 @@ export async function verifyDocumentService(
     });
 
     if (unverifiedCount === 0) {
-      if (!document.kycId) throw new Error("Document missing kycId");
-      if (!document.loanApplicationId)
-        throw new Error("Document missing loanApplicationId");
+      if (!document.kycId) throw AppError.badRequest("Document missing kycId");
+      if (!document.loanApplicationId) {
+        throw AppError.badRequest("Document missing loanApplicationId");
+      }
 
       await tx.kyc.update({
         where: { id: document.kycId },
@@ -156,6 +168,7 @@ export async function verifyDocumentService(
           verifiedAt: new Date(),
         },
       });
+
       await tx.loanApplication.update({
         where: { id: document.loanApplicationId },
         data: {
@@ -174,7 +187,7 @@ export async function verifyDocumentService(
       newValue: { verificationStatus: "verified" },
     });
 
-    return document;
+    return sanitizeDocumentResponse(document);
   });
 }
 
@@ -186,29 +199,25 @@ export async function rejectDocumentService(
   const existing = await prisma.document.findUnique({
     where: { id: documentId },
   });
+
   if (!existing) {
-    const err: any = new Error("Document not found");
-    err.statusCode = 404;
-    throw err;
+    throw AppError.notFound("Document not found");
   }
+
   if (!existing.loanApplicationId) {
-    const err: any = new Error("Document not linked to any loan application");
-    err.statusCode = 400;
-    throw err;
+    throw AppError.badRequest("Document not linked to any loan application");
   }
+
   const loanApplication = await prisma.loanApplication.findUnique({
     where: { id: existing.loanApplicationId },
   });
 
   if (!loanApplication) {
-    const err: any = new Error("Associated loan application not found");
-    err.statusCode = 404;
-    throw err;
+    throw AppError.notFound("Associated loan application not found");
   }
+
   if (loanApplication.status !== "kyc_pending") {
-    const err: any = new Error("Loan application not in KYC pending status");
-    err.statusCode = 400;
-    throw err;
+    throw AppError.badRequest("Loan application not in KYC pending status");
   }
 
   const document = await prisma.document.update({
@@ -222,9 +231,11 @@ export async function rejectDocumentService(
     },
   });
 
-  if (!document.kycId) throw new Error("Document missing kycId");
-  if (!document.loanApplicationId)
-    throw new Error("Document missing loanApplicationId");
+  if (!document.kycId) throw AppError.badRequest("Document missing kycId");
+  if (!document.loanApplicationId) {
+    throw AppError.badRequest("Document missing loanApplicationId");
+  }
+
   await prisma.kyc.update({
     where: { id: document.kycId },
     data: {
@@ -233,6 +244,7 @@ export async function rejectDocumentService(
       verifiedAt: new Date(),
     },
   });
+
   await prisma.loanApplication.update({
     where: { id: document.loanApplicationId },
     data: {
@@ -250,20 +262,18 @@ export async function rejectDocumentService(
     newValue: { verificationStatus: "rejected", rejectionReason: reason },
   });
 
-  return document;
+  return sanitizeDocumentResponse(document);
 }
 
+export async function getAllDocumentsForLoanApplicationService(
+  loanApplicationId: string,
+) {
+  const documents = await prisma.document.findMany({
+    where: { loanApplicationId },
+    orderBy: { createdAt: "asc" },
+  });
 
-export async function  getAllDocumentsForLoanApplicationService(loanApplicationId: string) {
-  try {
-    const documents = await prisma.document.findMany({
-      where: { loanApplicationId },
-      orderBy: { createdAt: "asc" },
-    });
-    return documents;
-  } catch (error) {
-    throw error;
-  }
+  return sanitizeDocumentList(documents);
 }
 
 export const reuploadLoanDocumentService = async (
@@ -276,7 +286,6 @@ export const reuploadLoanDocumentService = async (
   },
 ) => {
   return prisma.$transaction(async (tx) => {
-    /* 1️⃣ Find existing document */
     const existingDoc = await tx.document.findFirst({
       where: {
         loanApplicationId,
@@ -285,18 +294,12 @@ export const reuploadLoanDocumentService = async (
     });
 
     if (!existingDoc) {
-      const err: any = new Error(
-        `Document ${documentType} not found. Upload first.`,
-      );
-      err.statusCode = 404;
-      throw err;
+      throw AppError.notFound(`Document ${documentType} not found. Upload first.`);
     }
-    /* 2️⃣ Delete old file from disk */
+
     if (existingDoc.documentPath) {
-      // Handle path format: /public/uploads/filename or /uploads/filename
       let filePath = existingDoc.documentPath;
-      // Remove leading slash if present
-      if (filePath.startsWith('/')) {
+      if (filePath.startsWith("/")) {
         filePath = filePath.slice(1);
       }
       const oldFilePath = path.join(process.cwd(), filePath);
@@ -305,12 +308,11 @@ export const reuploadLoanDocumentService = async (
         fs.unlinkSync(oldFilePath);
       } catch (err: any) {
         if (err.code !== "ENOENT") {
-          // Log unexpected errors but don't fail the transaction
           console.error(`Failed to delete old file: ${oldFilePath}`, err);
         }
       }
     }
-    /* 3️⃣ Update document */
+
     const updatedDocument = await tx.document.update({
       where: { id: existingDoc.id },
       data: {
@@ -324,7 +326,6 @@ export const reuploadLoanDocumentService = async (
       },
     });
 
-    /* 4️⃣ Log audit trail */
     await logAction({
       entityType: "DOCUMENT",
       entityId: existingDoc.id,
@@ -344,7 +345,7 @@ export const reuploadLoanDocumentService = async (
       remarks: `Document ${documentType} reuploaded for loan application`,
     });
 
-    return updatedDocument;
+    return sanitizeDocumentResponse(updatedDocument);
   });
 };
 
@@ -363,10 +364,11 @@ export const getAllLoanApplicationsService = async (params: {
       select: { branchId: true },
     });
     if (!employee) {
-      throw new Error("Employee record not found for user");
+      throw AppError.notFound("Employee record not found for user");
     }
     userBranchId = employee.branchId;
   }
+
   const accessibleBranches = await getAccessibleBranchIds({
     id: params.user.id,
     role: params.user.role,
@@ -377,7 +379,6 @@ export const getAllLoanApplicationsService = async (params: {
   const where: any = {
     ...searchFilter,
     ...buildBranchFilter(accessibleBranches),
-    //...(accessibleBranches ? { branchId: { in: accessibleBranches } } : {}),
   };
 
   const employee = await prisma.employee.findUnique({
@@ -409,8 +410,27 @@ export const getAllLoanApplicationsService = async (params: {
     prisma.loanApplication.count({ where }),
   ]);
 
+  const sanitizedData = data.map((loan) => ({
+    id: loan.id,
+    loanNumber: loan.loanNumber,
+    status: loan.status,
+    requestedAmount: loan.requestedAmount,
+    approvedAmount: loan.approvedAmount,
+    tenureMonths: loan.tenureMonths,
+    loanPurpose: loan.loanPurpose,
+    createdAt: loan.createdAt,
+    updatedAt: loan.updatedAt,
+    customer: {
+      id: loan.customer.id,
+      name: `${loan.customer.firstName} ${loan.customer.lastName}`,
+    },
+    kycStatus: loan.kyc?.status,
+    documentCount: loan.kyc?.documents?.length || 0,
+    coApplicantCount: loan.coapplicants?.length || 0,
+  }));
+
   return {
-    data,
+    data: sanitizedData,
     meta: buildPaginationMeta(total, page, limit),
   };
 };
@@ -419,130 +439,172 @@ export const getLoanApplicationByIdService = async (
   id: string,
   user?: { id: string; role: Enums.Role },
 ) => {
-  // Implementation for retrieving a loan application by ID with branch isolation
-  try {
-    const loanApplication = await prisma.loanApplication.findUnique({
-      where: { id },
-      include: {
-        customer: true,
-        loanType: true,
-        emis: true,
-        kyc: {
-          include: {
-            documents: true,
-          },
-        },
-        loanRecoveries: {
-          include: {
-            recoveryPayments: true,
-          },
-        },
-        coapplicants: {
-          include: {
-            documents: true,
-          },
+  const loanApplication = await prisma.loanApplication.findUnique({
+    where: { id },
+    include: {
+      customer: true,
+      loanType: true,
+      emis: true,
+      kyc: {
+        include: {
+          documents: true,
         },
       },
+      loanRecoveries: {
+        include: {
+          recoveryPayments: true,
+        },
+      },
+      coapplicants: {
+        include: {
+          documents: true,
+          addresses: true,
+          occupationalDetails: {
+            include: { address: true },
+          },
+          employmentDetails: true,
+          financialDetails: true,
+        },
+      },
+      guarantors: {
+        include: {
+          addresses: true,
+          occupationalDetails: {
+            include: { address: true },
+          },
+          employmentDetails: true,
+          financialDetails: true,
+        },
+      },
+    },
+  });
+
+  if (!loanApplication) {
+    throw AppError.notFound("Loan application not found");
+  }
+
+  if (!user) return loanApplication;
+
+  let userBranchId: string | undefined;
+  if (user.role === "EMPLOYEE") {
+    const employee = await prisma.employee.findUnique({
+      where: { userId: user.id },
+      select: { branchId: true },
     });
 
-    if (!loanApplication) {
-      const err: any = new Error("Loan application not found");
-      err.statusCode = 404;
-      throw err;
+    if (!employee) {
+      throw AppError.notFound("Employee record not found");
     }
 
-    // Apply branch isolation if user is provided
-    if (user) {
-      let userBranchId: string | undefined;
-      if (user.role === "EMPLOYEE") {
-        const employee = await prisma.employee.findUnique({
-          where: { userId: user.id },
-          select: { branchId: true },
-        });
-        if (!employee) {
-          const err: any = new Error("Employee record not found");
-          err.statusCode = 404;
-          throw err;
-        }
-        userBranchId = employee.branchId;
-      }
-
-      const accessibleBranches = await getAccessibleBranchIds({
-        id: user.id,
-        role: user.role,
-        branchId: userBranchId,
-      });
-
-      // Check if user has access to this loan's branch
-      // null means no filter (global access), so only check if accessibleBranches is an array
-      if (
-        accessibleBranches !== null &&
-        !accessibleBranches.includes(loanApplication.branchId)
-      ) {
-        const err: any = new Error("Unauthorized: No access to this loan");
-        err.statusCode = 403;
-        throw err;
-      }
-    }
-
-    return loanApplication;
-  } catch (error) {
-    throw error;
+    userBranchId = employee.branchId;
   }
+
+  const accessibleBranches = await getAccessibleBranchIds({
+    id: user.id,
+    role: user.role,
+    branchId: userBranchId,
+  });
+
+  if (
+    Array.isArray(accessibleBranches) &&
+    !accessibleBranches.includes(loanApplication.branchId)
+  ) {
+    throw AppError.forbidden("Unauthorized: No access to this loan");
+  }
+
+  return {
+    id: loanApplication.id,
+    loanNumber: loanApplication.loanNumber,
+    status: loanApplication.status,
+    requestedAmount: loanApplication.requestedAmount,
+    tenureMonths: loanApplication.tenureMonths,
+    loanPurpose: loanApplication.loanPurpose,
+    customer: {
+      name: `${loanApplication.customer.firstName} ${loanApplication.customer.lastName}`,
+      contactNumber: loanApplication.customer.contactNumber,
+      email: loanApplication.customer.email,
+    },
+    loanType: loanApplication.loanType
+      ? {
+          name: loanApplication.loanType.name,
+          interestRate: loanApplication.loanType.defaultInterestRate,
+          tenureMax: loanApplication.loanType.maxTenureMonths,
+        }
+      : null,
+    documents: loanApplication.kyc?.documents.map((doc) => ({
+      type: doc.documentType,
+      status: doc.verificationStatus,
+      verified: doc.verified,
+    })),
+    coApplicants: loanApplication.coapplicants.map((c) => ({
+      name: `${c.firstName} ${c.lastName}`,
+      relation: c.relation,
+      contactNumber: c.contactNumber,
+      addresses: c.addresses,
+      occupationalDetails: c.occupationalDetails,
+      employmentDetails: c.employmentDetails,
+      financialDetails: c.financialDetails,
+    })),
+    guarantors: loanApplication.guarantors,
+  };
 };
 
 type StatusUpdate = {
   status: Enums.LoanStatus;
 };
+
 export const updateLoanApplicationStatusService = async (
   id: string,
   statusData: StatusUpdate,
   userId: string,
 ) => {
-  // Implementation for updating loan application status
-  try {
-    // Fetch existing loan application before update
-    const existingLoan = await prisma.loanApplication.findUnique({
-      where: { id },
-      select: { status: true, branchId: true },
-    });
+  const existingLoan = await prisma.loanApplication.findUnique({
+    where: { id },
+    select: { status: true, branchId: true },
+  });
 
-    if (!existingLoan) {
-      const err: any = new Error("Loan application not found");
-      err.statusCode = 404;
-      throw err;
-    }
-
-    const updatedLoanApplication = await prisma.loanApplication.update({
-      where: { id },
-      data: { status: statusData.status },
-      include: {
-        customer: true,
-        kyc: {
-          include: {
-            documents: true,
-          },
-        },
-        documents: true,
-      },
-    });
-
-    // Log status change
-    await logAction({
-      entityType: "LOAN",
-      entityId: id,
-      action: "UPDATE_LOAN_STATUS",
-      performedBy: userId,
-      branchId: existingLoan.branchId,
-      oldValue: { status: existingLoan.status },
-      newValue: { status: statusData.status },
-      remarks: `Loan status updated from ${existingLoan.status} to ${statusData.status}`,
-    });
-
-    return updatedLoanApplication;
-  } catch (error) {
-    throw error;
+  if (!existingLoan) {
+    throw AppError.notFound("Loan application not found");
   }
+
+  const updatedLoanApplication = await prisma.loanApplication.update({
+    where: { id },
+    data: { status: statusData.status },
+    include: {
+      customer: true,
+      kyc: {
+        include: {
+          documents: true,
+        },
+      },
+      documents: true,
+    },
+  });
+
+  await logAction({
+    entityType: "LOAN",
+    entityId: id,
+    action: "UPDATE_LOAN_STATUS",
+    performedBy: userId,
+    branchId: existingLoan.branchId,
+    oldValue: { status: existingLoan.status },
+    newValue: { status: statusData.status },
+    remarks: `Loan status updated from ${existingLoan.status} to ${statusData.status}`,
+  });
+
+  return {
+    id: updatedLoanApplication.id,
+    loanNumber: updatedLoanApplication.loanNumber,
+    status: updatedLoanApplication.status,
+    requestedAmount: updatedLoanApplication.requestedAmount,
+    approvedAmount: updatedLoanApplication.approvedAmount,
+    customer: {
+      id: updatedLoanApplication.customer.id,
+      name: `${updatedLoanApplication.customer.firstName} ${updatedLoanApplication.customer.lastName}`,
+    },
+    kycStatus: updatedLoanApplication.kyc?.status,
+    updatedAt: updatedLoanApplication.updatedAt,
+  };
 };
 
 export const reviewLoanService = async (loanId: string) => {
@@ -558,16 +620,24 @@ export const reviewLoanService = async (loanId: string) => {
       },
     },
   });
-  if (!loan) throw new Error("Loan not found");
+
+  if (!loan) throw AppError.notFound("Loan not found");
 
   if (loan.status !== "application_in_progress") {
-    throw new Error("Loan not eligible for review");
+    throw AppError.badRequest("Loan not eligible for review");
   }
 
-  return prisma.loanApplication.update({
+  const updated = await prisma.loanApplication.update({
     where: { id: loanId },
     data: { status: "under_review" },
   });
+
+  return {
+    id: updated.id,
+    loanNumber: updated.loanNumber,
+    status: updated.status,
+    updatedAt: updated.updatedAt,
+  };
 };
 
 export const approveLoanService = async (
@@ -575,7 +645,6 @@ export const approveLoanService = async (
   userId: string,
   data: ApproveLoanInput,
 ) => {
-  // Fetch existing loan data before approval
   const existingLoan = await prisma.loanApplication.findUnique({
     where: { id: loanId },
     select: {
@@ -593,18 +662,13 @@ export const approveLoanService = async (
   });
 
   if (!existingLoan) {
-    const err: any = new Error("Loan application not found");
-    err.statusCode = 404;
-    throw err;
+    throw AppError.notFound("Loan application not found");
   }
 
   if (existingLoan.status !== "under_review") {
-    const err: any = new Error("Loan not ready for approval");
-    err.statusCode = 400;
-    throw err;
+    throw AppError.badRequest("Loan not ready for approval");
   }
 
-  // normalize emiStartDate to a full ISO Date if provided as yyyy-mm-dd string
   let emiStartDateNormalized: Date | undefined = undefined;
   if (data.emiStartDate !== undefined && data.emiStartDate !== null) {
     if (typeof data.emiStartDate === "string") {
@@ -612,7 +676,7 @@ export const approveLoanService = async (
         emiStartDateNormalized = new Date(data.emiStartDate + "T00:00:00.000Z");
       } else {
         const parsed = new Date(data.emiStartDate);
-        if (isNaN(parsed.getTime())) throw new Error("Invalid emiStartDate");
+        if (isNaN(parsed.getTime())) throw AppError.badRequest("Invalid emiStartDate");
         emiStartDateNormalized = parsed;
       }
     } else {
@@ -630,25 +694,19 @@ export const approveLoanService = async (
       latePaymentFeeType: data.latePaymentFeeType,
       latePaymentFee: data.latePaymentFee,
       bounceCharges: data.bounceCharges,
-
       approvedAmount: data.approvedAmount,
       tenureMonths: data.tenureMonths,
-
       interestType: data.interestType,
       interestRate: data.interestRate,
-
       foreclosureAllowed: data.foreclosureAllowed ?? true,
       foreclosureChargesType: data.foreclosureChargesType,
       foreclosureCharges: data.foreclosureCharges,
-
       prepaymentAllowed: data.prepaymentAllowed ?? true,
       prepaymentChargeType: data.prepaymentChargeType,
       prepaymentCharges: data.prepaymentCharges,
-
       emiStartDate: emiStartDateNormalized,
       emiPaymentAmount: data.emiPaymentAmount,
       emiAmount: data.emiAmount,
-
       approvalDate: new Date(),
       approvedBy: userId,
       approvedAt: new Date(),
@@ -656,7 +714,7 @@ export const approveLoanService = async (
   });
 
   if (result.count === 0) {
-    throw new Error("Loan not ready for approval");
+    throw AppError.badRequest("Loan not ready for approval");
   }
 
   const loandata = await prisma.loanApplication.findUnique({
@@ -664,7 +722,7 @@ export const approveLoanService = async (
   });
 
   if (!loandata) {
-    throw new Error("Loan application not found after approval");
+    throw AppError.notFound("Loan application not found after approval");
   }
 
   await logAction({
@@ -694,6 +752,7 @@ export const approveLoanService = async (
     },
     remarks: `Loan approved with amount ${data.approvedAmount} for ${data.tenureMonths} months`,
   });
+
   try {
     await calculatePartnerCommission(loanId);
   } catch (error) {
@@ -703,7 +762,17 @@ export const approveLoanService = async (
     );
   }
 
-  return loandata;
+  return {
+    id: loandata.id,
+    loanNumber: loandata.loanNumber,
+    status: loandata.status,
+    approvedAmount: loandata.approvedAmount,
+    tenureMonths: loandata.tenureMonths,
+    interestRate: loandata.interestRate,
+    emiAmount: loandata.emiAmount,
+    approvalDate: loandata.approvalDate,
+    updatedAt: loandata.updatedAt,
+  };
 };
 
 export const rejectLoanService = async (
@@ -724,17 +793,13 @@ export const rejectLoanService = async (
   });
 
   if (!loan) {
-    const err: any = new Error("Loan application not found");
-    err.statusCode = 404;
-    throw err;
+    throw AppError.notFound("Loan application not found");
   }
 
   if (loan.status !== "under_review") {
-    const err: any = new Error(
+    throw AppError.badRequest(
       "Loan not ready for rejection. Only loans under review can be rejected.",
     );
-    err.statusCode = 400;
-    throw err;
   }
 
   const updatedLoan = await prisma.loanApplication.update({
@@ -763,376 +828,97 @@ export const rejectLoanService = async (
     remarks: `Loan ${loan.loanNumber} rejected. Reason: ${reason}`,
   });
 
-  return updatedLoan;
+  return {
+    id: updatedLoan.id,
+    loanNumber: updatedLoan.loanNumber,
+    status: updatedLoan.status,
+    rejectionReason: updatedLoan.rejectionReason,
+    updatedAt: updatedLoan.updatedAt,
+  };
 };
-
-
 
 export const createFullLoanApplicationService = async (
   data: FullLoanApplicationInput,
-  userId: string
+  userId: string,
 ) => {
   try {
-    return await prisma.$transaction(async(tx)=>{
-
-    if (!data.loanTypeId) {
-      throw new Error("loanTypeId is required")
-    }
-
-    const user = await tx.user.findUnique({
-      where: { id: userId },
-      select: { branchId: true },
-    })
-
-    if (!user?.branchId) {
-      throw new Error("User branch information not found")
-    }
-
-    const loanType = await tx.loanType.findFirst({
-      where: { id: data.loanTypeId, isActive: true },
-      select: { id: true },
-    })
-
-    if (!loanType) {
-      throw new Error("Invalid loan type")
-    }
-
-    const loanNumber = await generateLoanNumber(tx)
-
-    /* 1️⃣ Find or Create Customer */
-
-    let customer = await tx.customer.findFirst({
-      where: {
-        OR: [
-          data.applicant.panNumber ? { panNumber: data.applicant.panNumber } : undefined,
-          data.applicant.aadhaarNumber
-            ? { aadhaarNumber: data.applicant.aadhaarNumber }
-            : undefined,
-          data.applicant.contactNumber
-            ? { contactNumber: data.applicant.contactNumber }
-            : undefined,
-        ].filter(Boolean) as object[],
-      },
-    });
-
-    if (!customer) {
-      customer = await tx.customer.create({
-        data:{
-          title:data.applicant.title,
-          firstName:data.applicant.firstName,
-          middleName:data.applicant.middleName,
-          lastName:data.applicant.lastName,
-          fatherName:data.applicant.fatherName,
-          motherName:data.applicant.motherName,
-          woname:data.applicant.woname,
-          dob:data.applicant.dob,
-          gender:data.applicant.gender,
-          aadhaarNumber:data.applicant.aadhaarNumber,
-          panNumber:data.applicant.panNumber,
-          voterId:data.applicant.voterId,
-          drivingLicenceNo:data.applicant.drivingLicenceNo,
-          passportNumber:data.applicant.passportNumber,
-          maritalStatus:data.applicant.maritalStatus,
-          nationality:data.applicant.nationality,
-          category:data.applicant.category,
-          contactNumber:data.applicant.contactNumber,
-          email:data.applicant.email,
-          relationshipWithCoApplicant:
-            data.coApplicants?.length
-              ? data.coApplicants[0].relation
-              : Enums.CoApplicantRelation.OTHER,
-          employmentType:data.applicant.employmentType
-        }
-      })
-    }
-
-    /* 2️⃣ Create Address */
-
-    await tx.address.create({
-      data:{
-        ...data.addresses.currentAddress,
-        addressType:"CURRENT_RESIDENTIAL",
-        customerId:customer.id
+    return await prisma.$transaction(async (tx) => {
+      if (!data.loanTypeId) {
+        throw AppError.badRequest("loanTypeId is required");
       }
-    })
 
-    if(data.addresses.permanentAddress){
+      const branchId = await getUserBranchId(tx, userId);
+      const loanTypeId = await validateLoanTypeId(tx, data.loanTypeId);
+      const loanNumber = await generateLoanNumber(tx);
 
-      await tx.address.create({
-        data:{
-          ...data.addresses.permanentAddress,
-          addressType:"PERMANENT",
-          customerId:customer.id
-        }
-      })
+      const customer = await createCustomer(tx, data);
+      await createAddress(tx, customer.id, data.addresses);
+      await ensureNoActiveLoan(tx, customer.id);
 
-    }
-
-    /* 2a️⃣ Prevent duplicate active loan */
-
-    const existingLoan = await tx.loanApplication.findFirst({
-      where: {
-        customerId: customer.id,
-        status: {
-          in: [
-            "application_in_progress",
-            "kyc_pending",
-            "under_review",
-            "approved",
-            "active",
-          ],
-        },
-      },
-    });
-
-    if (existingLoan) {
-      const err: any = new Error(
-        "Customer already has an active loan application",
-      );
-      err.statusCode = 409;
-      throw err;
-    }
-
-    /* 3️⃣ Create Loan */
-
-    const loan = await tx.loanApplication.create({
-
-      data:{
+      const loan = await createLoan(tx, {
         loanNumber,
-        requestedAmount:data.loanRequirement.loanAmount,
-        tenureMonths:data.loanRequirement.tenure,
-        interestType:data.loanRequirement.interestType ?? Enums.InterestType.FLAT,
-        loanPurpose:data.loanRequirement.loanPurpose,
-        customer:{ connect: { id: customer.id } },
-        loanType:{ connect: { id: loanType.id } },
-        branch:{ connect: { id: user.branchId } },
-        createdBy:{ connect: { id: userId } },
-        status:"application_in_progress",
-      }
+        data,
+        customerId: customer.id,
+        loanTypeId,
+        branchId,
+        userId,
+      });
 
-    })
+      const kyc = await createKYC(tx, userId);
+      await attachKycToLoan(tx, loan.id, kyc.id);
+      await createCoApplicants(tx, loan.id, userId, customer.id, data.coApplicants);
 
-    /* 3a️⃣ Create KYC for Loan Application */
-
-    const kyc = await tx.kyc.create({
-      data: {
-        userId: userId,
-        status: Enums.KycStatus.PENDING,
-      }
-    })
-
-    // Link KYC to Loan Application
-    await tx.loanApplication.update({
-      where: { id: loan.id },
-      data: { kycId: kyc.id }
-    })
-
-    /* 3b️⃣ Create Co-Applicants and their KYC */
-
-    if (data.coApplicants?.length) {
-      for (const co of data.coApplicants) {
-        const coApplication = await tx.coApplicant.create({
-          data: {
-            loanApplicationId: loan.id,
-            firstName: co.firstName,
-            lastName: co.lastName ?? "",
-            middleName: co.middleName,
-            relation: co.relation as Enums.CoApplicantRelation,
-            relationOther: co.relationOther,
-            contactNumber: co.contactNumber,
-            email: co.email,
-            dob: co.dob,
-            aadhaarNumber: co.aadhaarNumber,
-            panNumber: co.panNumber,
-            employmentType: co.employmentType as Enums.EmploymentType,
-          },
-        });
-
-        const coKyc = await tx.kyc.create({
-          data: {
-            userId: userId,
-            status: Enums.KycStatus.PENDING,
-          },
-        });
-
-        await tx.coApplicant.update({
-          where: { id: coApplication.id },
-          data: { kycId: coKyc.id },
+      await createOccupationalDetailsForEntity(
+        tx,
+        { customerId: customer.id },
+        data.occupationalDetails,
+      );
+      await createEmploymentDetailsForEntity(
+        tx,
+        { customerId: customer.id },
+        data.employmentDetails,
+      );
+      if (data.financialDetails) {
+        await tx.financialDetails.create({
+          data: { customerId: customer.id, ...data.financialDetails },
         });
       }
-    }
 
-    /* 4️⃣ Existing Loans */
+      await createGuarantors(tx, loan.id, customer.id, data.guarantors);
 
-    if(data.existingLoans?.length){
+      await createFinancialDetails(tx, data, loan.id);
 
-      await tx.existingLoan.createMany({
-        data:data.existingLoans.map(
-          (l:any)=>({
-          ...l,
-          loanApplicationId:loan.id
-        }))
-      })
+      await logAction({
+        entityType: "LOAN",
+        entityId: loan.id,
+        action: "CREATE_LOAN",
+        performedBy: userId,
+        branchId,
+        oldValue: null,
+        newValue: {
+          loanNumber: loan.loanNumber,
+          status: loan.status,
+          loanTypeId: data.loanTypeId,
+          requestedAmount: data.loanRequirement.loanAmount,
+        },
+      });
 
-    }
-
-    /* 5️⃣ Credit Cards */
-
-    if(data.creditCards?.length){
-
-      await tx.creditCard.createMany({
-        data:data.creditCards.map((c)=>({
-            holderName: c.holderName,
-            cardNumber: c.lastFourDigits, // Persist only masked representation
-            issuingBank: c.issuingBank,
-            holderSince: c.holderSince ? new Date(c.holderSince) : null,
-            creditLimit: c.creditLimit,
-            outstandingAmount: c.outstandingAmount,
-            loanApplicationId:loan.id
-        }))
-      })
-
-    }
-
-    /* 6️⃣ Bank Accounts */
-
-    if(data.bankAccounts?.length){
-
-      await tx.bankAccount.createMany({
-        data:data.bankAccounts.map((b:any)=>({
-          holderName: b.holderName,
-          bankName: b.bankName,
-          branchName: b.branchName,
-          accountType: b.accountType,
-          accountNumber: b.accountNumber,
-          openingDate: b.openingDate ? new Date(b.openingDate) : null,
-          balanceAmount: b.balanceAmount,
-          loanApplicationId:loan.id
-        }))
-      })
-
-    }
-
-    /* 7️⃣ Insurance */
-
-    if(data.insurancePolicies?.length){
-
-      await tx.insurancePolicy.createMany({
-        data:data.insurancePolicies.map((p:any)=>({
-          issuedBy: p.issuedBy,
-          branchName: p.branchName,
-          holderName: p.holderName,
-          policyNumber: p.policyNumber,
-          maturityDate: p.maturityDate ? new Date(p.maturityDate) : null,
-          policyValue: p.policyValue,
-          policyType: p.policyType,
-          yearlyPremium: p.yearlyPremium,
-          paidUpValue: p.paidUpValue,
-          loanApplicationId:loan.id
-        }))
-      })
-
-    }
-
-    /* 8️⃣ Property */
-
-    if(data.properties?.length){
-
-      await tx.property.createMany({
-        data:data.properties.map((p:any)=>({
-          propertySelected: p.propertySelected,
-          landArea: p.landArea,
-          buildUpArea: p.buildUpArea,
-          ownershipType: p.ownershipType,
-          landType: p.landType,
-          purchaseFrom: p.purchaseFrom,
-          purchaseOther: p.purchaseOther,
-          constructionStage: p.constructionStage,
-          constructionPercent: p.constructionPercent,
-          loanApplicationId:loan.id
-        }))
-      })
-
-    }
-
-    /* 9️⃣ References */
-
-    if(data.references?.length){
-
-      await tx.reference.createMany({
-        data:data.references.map((r:any)=>({
-          name: r.name,
-          fatherName: r.fatherName,
-          address: r.address,
-          city: r.city,
-          state: r.state,
-          pinCode: r.pinCode,
-          phone: r.phone,
-          occupation: r.occupation,
-          loanApplicationId:loan.id
-        }))
-      })
-
-    }
-
-    /* 10️⃣ Loan Requirement */
-
-    await tx.loanRequirement.create({
-
-      data:{
-        loanApplicationId:loan.id,
-        loanAmount:data.loanRequirement.loanAmount,
-        tenure:data.loanRequirement.tenure,
-        interestOption:data.loanRequirement.interestOption,
-        loanPurpose:data.loanRequirement.loanPurpose,
-        repaymentMethod:data.loanRequirement.repaymentMethod,
-      }
-
-    })
-
-    /* 11️⃣ Questionnaire */
-
-    if(data.questionnaire){
-
-      await tx.loanQuestionnaire.create({
-
-        data:{
-          loanApplicationId:loan.id,
-          ...data.questionnaire
-        }
-
-      })
-
-    }
-
-    /* 12️⃣ Audit Log */
-
-    await logAction({
-      entityType: "LOAN",
-      entityId: loan.id,
-      action: "CREATE_LOAN",
-      performedBy: userId,
-      branchId: user.branchId,
-      oldValue: null,
-      newValue: {
+      return {
+        id: loan.id,
         loanNumber: loan.loanNumber,
         status: loan.status,
-        loanTypeId: data.loanTypeId,
-        requestedAmount: data.loanRequirement.loanAmount,
-      },
+        requestedAmount: loan.requestedAmount,
+        loanTypeId: loan.loanTypeId,
+        branchId: loan.branchId,
+        createdAt: loan.createdAt,
+      };
     });
-
-    return loan
-
-    })
   } catch (error) {
     const err: any = error;
     if (err?.code === "P2002") {
-      const constraintError: any = new Error("Loan number already exists");
-      constraintError.statusCode = 409;
-      throw constraintError;
+      throw AppError.conflict("Loan number already exists");
     }
     throw error;
   }
+};
 
-}

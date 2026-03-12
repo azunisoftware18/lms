@@ -7,17 +7,22 @@ import {
   updateBranchController,
   deleteBranchController,
   getAllMainBranchesController,
+  createBulkBranchesController,
+  reassignBulkBranchesController,
 } from "./branch.controller.js";
 
 import { validate } from "../../common/middlewares/zod.middleware.js";
 import {
-  CreateBranchInput,
-  updateBranchInput,
   branchIdParamSchema,
-} from "./branch.types.js";
+} from "./branch.schema.js";
 
 import { authMiddleware } from "../../common/middlewares/auth.middleware.js";
-import { createBranchSchema, updateBranchSchema } from "./branch.schema.js";
+import {
+  createBranchSchema,
+  updateBranchSchema,
+  createBulkBranchesSchema,
+  reassignBulkBranchesSchema,
+} from "./branch.schema.js";
 
 import { checkPermissionMiddleware } from "../../common/middlewares/permission.middleware.js";
 
@@ -29,6 +34,22 @@ branchRouter.post(
   checkPermissionMiddleware("CREATE_BRANCH"),
   validate(createBranchSchema),
   createBranchController,
+);
+
+branchRouter.post(
+  "/bulk",
+  authMiddleware,
+  checkPermissionMiddleware("CREATE_BRANCH"),
+  validate(createBulkBranchesSchema),
+  createBulkBranchesController,
+);
+
+branchRouter.put(
+  "/bulk/reassign",
+  authMiddleware,
+  checkPermissionMiddleware("UPDATE_BRANCH"),
+  validate(reassignBulkBranchesSchema),
+  reassignBulkBranchesController,
 );
 
 branchRouter.put(

@@ -4,6 +4,7 @@ const employeeSlice = createSlice({
     name: 'employee',
     initialState: {
         employees: [],
+        meta: null,
         selectedEmployee: null,
         loading: false,
         error: null,
@@ -23,7 +24,16 @@ const employeeSlice = createSlice({
         }
         // Set all employees
         ,setEmployees: (state, action) => {
-            state.employees = action.payload;
+            const payload = action.payload;
+
+            if (Array.isArray(payload)) {
+                state.employees = payload;
+                state.meta = null;
+            } else {
+                state.employees = Array.isArray(payload?.data) ? payload.data : [];
+                state.meta = payload?.meta ?? null;
+            }
+
             state.loading = false;
             state.error = null;
         }
@@ -53,6 +63,7 @@ const employeeSlice = createSlice({
         // Reset employee state
         ,resetEmployees: (state) => {
             state.employees = [];
+            state.meta = null;
             state.selectedEmployee = null;
             state.loading = false;
             state.error = null;

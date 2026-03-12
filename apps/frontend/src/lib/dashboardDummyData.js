@@ -648,3 +648,68 @@ export const INITIAL_ADMIN_LOAN_DATA = [
     },
   },
 ];
+
+export const securitySettingsData = {
+  // Password Policy
+  minPasswordLength: 8,
+  requireUppercase: true,
+  requireLowercase: true,
+  requireNumbers: true,
+  requireSpecialChars: true,
+  passwordExpiryDays: 90,
+  passwordHistoryCount: 5,
+  maxPasswordAge: 365,
+
+  // Login Security
+  maxLoginAttempts: 5,
+  lockDuration: 30,
+  sessionTimeout: 30,
+  rememberMeDuration: 30,
+  concurrentSessions: 3,
+
+  // Two-Factor Authentication
+  twoFactorAuth: true,
+  twoFactorMethods: ["authenticator", "sms", "email"],
+  mandatory2FA: false,
+  backupCodesCount: 10,
+
+  // IP Security
+  ipWhitelisting: false,
+  ipBlacklisting: true,
+  allowedIPs: ["192.168.1.1", "10.0.0.1"],
+  blockedIPs: [],
+
+  // Device Management
+  deviceTracking: true,
+  maxDevicesPerUser: 5,
+  autoLogoutInactive: true,
+  inactiveTimeout: 15,
+
+  // Audit & Logging
+  auditLogRetention: 365,
+  loginLogging: true,
+  sensitiveActionLogging: true,
+  logExportEnabled: true,
+
+  // Advanced Security
+  encryptionLevel: "high",
+  sslEnforcement: true,
+  csrfProtection: true,
+  xssProtection: true,
+  sqlInjectionProtection: true,
+};
+
+export const securitySections = [
+  { id: "password", label: "Password Policy", icon: "Key", color: "blue" },
+  { id: "login", label: "Login Security", icon: "Lock", color: "indigo" },
+  { id: "2fa", label: "Two-Factor Auth", icon: "ShieldCheck", color: "purple" },
+  { id: "network", label: "Network Security", icon: "Network", color: "green" },
+  {
+    id: "device",
+    label: "Device Management",
+    icon: "Fingerprint",
+    color: "amber",
+  },
+  { id: "audit", label: "Audit & Logging", icon: "Clock", color: "gray" },
+  { id: "advanced", label: "Advanced Security", icon: "Cpu", color: "red" },
+];

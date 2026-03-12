@@ -72,8 +72,8 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* ===== LEFT SIDE TABLE ===== */}
 
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-          <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+        <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 overflow-hidden flex flex-col">
+          <div className="p-6  flex justify-between items-center">
             <h2 className="font-bold text-gray-800">Recent Loan Requests</h2>
 
             <button className="text-blue-600 text-sm hover:underline">
@@ -82,7 +82,8 @@ export default function DashboardPage() {
           </div>
 
           <div className="overflow-x-auto flex-1">
-            <DashboardTable loans={recentLoans} />  {/* Added prop to pass recentLoans data to DashboardTable component */}
+            <DashboardTable loans={recentLoans} />{" "}
+            {/* Added prop to pass recentLoans data to DashboardTable component */}
           </div>
         </div>
 

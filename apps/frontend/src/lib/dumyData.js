@@ -897,7 +897,7 @@ export const hrValues = [
       { name: "Committees", link: "/committees" },
       {
         name: "Corporate Governance",
-        link: "/corporate-governance",
+        // link: "/corporate-governance",
         submenu: [
           { name: "Policies and Codes", link: "/policies-and-codes" },
           { name: "SARFAESI", link: "/sarfaesi" },
@@ -906,7 +906,7 @@ export const hrValues = [
       },
       {
         name: "Shareholder Information",
-        link: "/shareholder-information",
+        // link: "/shareholder-information",
         submenu: [
           { name: "Notice Of AGM/EGM/Postal ballot", link: "/notice-Of-ballot" },
           { name: "Disclosures under Regulation 62 of LODR", link: "/under-regulation" },
@@ -928,3 +928,122 @@ export const hrValues = [
       { name: "Apply Now", link: "/Apply-Now" },
     ],
   };
+
+
+  export const loanAccounts = [
+  {
+    loanNumber: "LN-2024-00143",
+    customer: "Aditya Sharma",
+    initials: "AS",
+    branch: "Andheri West",
+    loanAmount: 750000,
+    balance: 612340,
+    status: "Active",
+  },
+  {
+    loanNumber: "LN-2024-00087",
+    customer: "Priya Nair",
+    initials: "PN",
+    branch: "Koramangala",
+    loanAmount: 1200000,
+    balance: 1050000,
+    status: "Delinquent",
+  },
+  {
+    loanNumber: "LN-2023-00512",
+    customer: "Rahul Gupta",
+    initials: "RG",
+    branch: "Connaught Place",
+    loanAmount: 500000,
+    balance: 0,
+    status: "Closed",
+  },
+  {
+    loanNumber: "LN-2024-00201",
+    customer: "Sneha Pillai",
+    initials: "SP",
+    branch: "T. Nagar",
+    loanAmount: 900000,
+    balance: 875000,
+    status: "Active",
+  },
+];
+
+export const mockLoans = [
+  {
+    id: "LN-2024-00143", customerName: "Aditya Sharma", branch: "Andheri West",
+    loanAmount: 750000, outstandingBalance: 612340, status: "Active",
+    phone: "+91 98201 34567", email: "aditya.sharma@email.com",
+    address: "204, Sai Niwas, Versova Road, Andheri West, Mumbai – 400053",
+    interestRate: 10.5, tenure: 60, emiAmount: 16123,
+    disbursementDate: "15 Mar 2023", disbursementAmount: 750000, bankAccount: "HDFC Bank •••• 4521",
+    principalOutstanding: 498200, interestOutstanding: 114140,
+    totalEMIs: 60, paidEMIs: 14, pendingEMIs: 46, nextEMIDate: "15 Apr 2024",
+    nachStatus: "Registered", mandateDate: "10 Mar 2023", autoDebit: "Active",
+  },
+  {
+    id: "LN-2024-00087", customerName: "Priya Nair", branch: "Koramangala",
+    loanAmount: 1200000, outstandingBalance: 1050000, status: "Delinquent",
+    phone: "+91 97740 22891", email: "priya.nair@email.com",
+    address: "No. 12, 5th Block, Koramangala, Bengaluru – 560034",
+    interestRate: 11.0, tenure: 84, emiAmount: 19450,
+    disbursementDate: "02 Jan 2024", disbursementAmount: 1200000, bankAccount: "Axis Bank •••• 8812",
+    principalOutstanding: 890000, interestOutstanding: 160000,
+    totalEMIs: 84, paidEMIs: 3, pendingEMIs: 81, nextEMIDate: "02 Apr 2024",
+    nachStatus: "Failed", mandateDate: "28 Dec 2023", autoDebit: "Suspended",
+  },
+  {
+    id: "LN-2023-00512", customerName: "Rahul Gupta", branch: "Connaught Place",
+    loanAmount: 500000, outstandingBalance: 0, status: "Closed",
+    phone: "+91 99100 55678", email: "rahul.gupta@email.com",
+    address: "A-47, Sector 14, Dwarka, New Delhi – 110078",
+    interestRate: 9.75, tenure: 36, emiAmount: 16050,
+    disbursementDate: "01 Sep 2020", disbursementAmount: 500000, bankAccount: "SBI Bank •••• 3302",
+    principalOutstanding: 0, interestOutstanding: 0,
+    totalEMIs: 36, paidEMIs: 36, pendingEMIs: 0, nextEMIDate: "—",
+    nachStatus: "Cancelled", mandateDate: "25 Aug 2020", autoDebit: "Inactive",
+  },
+  {
+    id: "LN-2024-00201", customerName: "Sneha Pillai", branch: "T. Nagar",
+    loanAmount: 900000, outstandingBalance: 875000, status: "Active",
+    phone: "+91 94440 77123", email: "sneha.pillai@email.com",
+    address: "22/4, Thyagaraya Road, T. Nagar, Chennai – 600017",
+    interestRate: 10.25, tenure: 72, emiAmount: 16820,
+    disbursementDate: "20 Feb 2024", disbursementAmount: 900000, bankAccount: "ICICI Bank •••• 6634",
+    principalOutstanding: 741000, interestOutstanding: 134000,
+    totalEMIs: 72, paidEMIs: 1, pendingEMIs: 71, nextEMIDate: "20 Apr 2024",
+    nachStatus: "Registered", mandateDate: "15 Feb 2024", autoDebit: "Active",
+  },
+  {
+    id: "LN-2023-00398", customerName: "Mohammed Iqbal", branch: "Banjara Hills",
+    loanAmount: 650000, outstandingBalance: 320000, status: "Active",
+    phone: "+91 91002 34890", email: "m.iqbal@email.com",
+    address: "Plot 88, Road No. 12, Banjara Hills, Hyderabad – 500034",
+    interestRate: 10.75, tenure: 48, emiAmount: 16680,
+    disbursementDate: "05 Jun 2022", disbursementAmount: 650000, bankAccount: "Kotak Bank •••• 9901",
+    principalOutstanding: 271000, interestOutstanding: 49000,
+    totalEMIs: 48, paidEMIs: 22, pendingEMIs: 26, nextEMIDate: "05 Apr 2024",
+    nachStatus: "Registered", mandateDate: "01 Jun 2022", autoDebit: "Active",
+  },
+];
+
+export const mockMandates = [
+  { id: "MCH-2024-0143", customer: "Aditya Sharma",    bank: "HDFC Bank",   account: "****4521", limit: 16123,  status: "Active"    },
+  { id: "MCH-2024-0087", customer: "Priya Nair",       bank: "Axis Bank",   account: "****8812", limit: 19450,  status: "Suspended" },
+  { id: "MCH-2023-0512", customer: "Rahul Gupta",      bank: "SBI Bank",    account: "****3302", limit: 16050,  status: "Cancelled" },
+  { id: "MCH-2024-0201", customer: "Sneha Pillai",     bank: "ICICI Bank",  account: "****6634", limit: 16820,  status: "Active"    },
+  { id: "MCH-2023-0398", customer: "Mohammed Iqbal",   bank: "Kotak Bank",  account: "****9901", limit: 16680,  status: "Active"    },
+  { id: "MCH-2024-0310", customer: "Kavya Reddy",      bank: "Yes Bank",    account: "****2271", limit: 22100,  status: "Suspended" },
+  { id: "MCH-2024-0419", customer: "Rohan Mehta",      bank: "PNB Bank",    account: "****7743", limit: 13400,  status: "Active"    },
+];
+
+export const mockDebits = [
+  { date: "12 Mar 2024", loan: "LN-2024-00143", customer: "Aditya Sharma",  amount: 16123, ref: "HDFC24031200143", status: "Success", reason: "—"                        },
+  { date: "05 Mar 2024", loan: "LN-2024-00087", customer: "Priya Nair",     amount: 19450, ref: "AXS24030500087",  status: "Failed",  reason: "Insufficient Funds"       },
+  { date: "01 Mar 2024", loan: "LN-2023-00512", customer: "Rahul Gupta",    amount: 16050, ref: "SBI24030100512",  status: "Success", reason: "—"                        },
+  { date: "20 Feb 2024", loan: "LN-2024-00201", customer: "Sneha Pillai",   amount: 16820, ref: "ICI24022000201",  status: "Success", reason: "—"                        },
+  { date: "15 Feb 2024", loan: "LN-2023-00398", customer: "Mohammed Iqbal", amount: 16680, ref: "KOT24021500398",  status: "Failed",  reason: "Account Dormant"          },
+  { date: "10 Feb 2024", loan: "LN-2024-00310", customer: "Kavya Reddy",    amount: 22100, ref: "YES24021000310",  status: "Success", reason: "—"                        },
+  { date: "05 Feb 2024", loan: "LN-2024-00419", customer: "Rohan Mehta",    amount: 13400, ref: "PNB24020500419",  status: "Failed",  reason: "Mandate Not Registered"   },
+  { date: "01 Feb 2024", loan: "LN-2024-00143", customer: "Aditya Sharma",  amount: 16123, ref: "HDFC24020100143", status: "Success", reason: "—"                        },
+];

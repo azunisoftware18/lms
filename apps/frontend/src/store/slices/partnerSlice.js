@@ -6,6 +6,7 @@ const partnerSlice = createSlice({
   initialState: {
     selectedPartner: null,
     partners: [],
+    meta: null,
     loading: false,
     error: null,
   },
@@ -32,7 +33,16 @@ const partnerSlice = createSlice({
     },
 
     setPartners: (state, action) => {
-      state.partners = action.payload;
+      if (Array.isArray(action.payload)) {
+        state.partners = action.payload;
+        state.meta = null;
+      } else if (action.payload?.data) {
+        state.partners = action.payload.data;
+        state.meta = action.payload.meta || null;
+      } else {
+        state.partners = action.payload;
+        state.meta = null;
+      }
       state.loading = false;
       state.error = null;
     },

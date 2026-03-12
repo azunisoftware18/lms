@@ -124,44 +124,38 @@ export default function ContactUsPage() {
 						{/* Email */}
 						<div className="shadow-lg rounded-lg p-6 flex items-center gap-4 border border-gray-100 bg-blue-50/50 hover:bg-blue-100 transition duration-300">
 							<div
-								className={`${PRIMARY_BG_CLASS} text-white p-3 rounded-full shadow-md`}>
+								className={`${colorVariables.PRIMARY_BG} text-white p-3 rounded-full shadow-md`}>
 								{/* Mail Icon */}
 								<Mail size={22} />
 							</div>
 							<div>
-								<h4 className="font-bold text-lg text-gray-900">
-									Customer Service
-								</h4>
+								<h4 className="font-bold text-lg text-gray-900">Customer Service</h4>
 								<p className="text-blue-700 font-medium">csd@finova.in</p>
 							</div>
 						</div>
 
-						{/* Contact */}
+						{/* Phone */}
 						<div className="shadow-lg rounded-lg p-6 flex items-center gap-4 border border-gray-100 bg-blue-50/50 hover:bg-blue-100 transition duration-300">
 							<div
-								className={`${PRIMARY_BG_CLASS} text-white p-3 rounded-full shadow-md`}>
+								className={`${colorVariables.PRIMARY_BG} text-white p-3 rounded-full shadow-md`}>
 								{/* Phone Icon */}
 								<Phone size={22} />
 							</div>
 							<div>
-								<h4 className="font-bold text-lg text-gray-900">
-									Phone Support
-								</h4>
+								<h4 className="font-bold text-lg text-gray-900">Phone Support</h4>
 								<p className="text-blue-700 font-medium">0141-6699999</p>
 							</div>
 						</div>
 
-						{/* Operation Hours */}
+						{/* Hours */}
 						<div className="shadow-lg rounded-lg p-6 flex items-center gap-4 border border-gray-100 bg-blue-50/50 hover:bg-blue-100 transition duration-300">
 							<div
-								className={`${PRIMARY_BG_CLASS} text-white p-3 rounded-full shadow-md`}>
+								className={`${colorVariables.PRIMARY_BG} text-white p-3 rounded-full shadow-md`}>
 								{/* Clock Icon */}
 								<Clock size={22} />
 							</div>
 							<div>
-								<h4 className="font-bold text-lg text-gray-900">
-									Operation Hours
-								</h4>
+								<h4 className="font-bold text-lg text-gray-900">Operation Hours</h4>
 								<p className="text-gray-700">9:30 AM to 6:30 PM</p>
 							</div>
 						</div>

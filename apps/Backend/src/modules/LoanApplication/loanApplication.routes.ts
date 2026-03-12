@@ -26,6 +26,26 @@ import { authMiddleware } from "../../common/middlewares/auth.middleware.js";
 import upload from "../../common/middlewares/multer.middleware.js";
 import { checkPermissionMiddleware } from "../../common/middlewares/permission.middleware.js";
 import { markLoanDefaultController } from "../loanDefault/loanDefault.controller.js";
+import { createRateLimiter } from "../../common/middlewares/rateLimit.middleware.js";
+import { validateLoanDocumentUpload } from "../../common/middlewares/uploadValidation.middleware.js";
+
+const createLoanApplicationLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,  // 15 minutes
+  max: 20,
+  message: "Too many create loan requests. Please try again later.",
+});
+
+const verifyDocumentLimiter = createRateLimiter({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 120,
+  message: "Too many document verification requests. Please try again later.",
+});
+
+const uploadLoanDocumentsLimiter = createRateLimiter({
+  windowMs: 10 * 60 * 1000,  // 10 minutes
+  max: 50,
+  message: "Too many document upload requests. Please try again later.",
+});
 
 // Define your loan application routes here
 
@@ -78,17 +98,19 @@ loanApplicationRouter.put(
 loanApplicationRouter.post(
   "/:id/documents",
   authMiddleware,
-
+  checkPermissionMiddleware("UPLOAD_DOCUMENTS"),
   validate(loanApplicationIdParamSchema, "params"),
-  //checkPermissionMiddleware("UPLOAD_DOCUMENTS"),
+  uploadLoanDocumentsLimiter,
   upload.any(),
+  validateLoanDocumentUpload,
   uploadLoanDocumentsController,
 );
 loanApplicationRouter.post(
   "/documents/:id/verify",
   authMiddleware,
   validate(loanApplicationIdParamSchema, "params"),
-  //checkPermissionMiddleware("VERIFY_DOCUMENTS"),
+  checkPermissionMiddleware("VERIFY_DOCUMENTS"),
+  verifyDocumentLimiter,
   verifyDocumentController,
 );
 loanApplicationRouter.post(
@@ -131,7 +153,8 @@ loanApplicationRouter.post(
 loanApplicationRouter.post(
   "/loan/create",
   authMiddleware,
-  validate(createFullLoanApplicationSchema, "body"),
   checkPermissionMiddleware("CREATE_LOAN_APPLICATION"),
+  createLoanApplicationLimiter,
+  validate(createFullLoanApplicationSchema, "body"),
   createFullLoanApplicationController
 );export default loanApplicationRouter;

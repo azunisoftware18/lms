@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { showSuccess, showError } from "../lib/utils/toastService";
 import {
   getAllPartners,
@@ -20,10 +20,15 @@ import {
 
 export const usePartners = (params) => {
   const dispatch = useDispatch();
+  const partners = useSelector((state) => state.partner.partners);
+  const meta = useSelector((state) => state.partner.meta);
+  const loading = useSelector((state) => state.partner.loading);
+  const error = useSelector((state) => state.partner.error);
 
-  return useQuery({
+  const { isFetching, refetch } = useQuery({
     queryKey: ["partners", params],
     queryFn: () => getAllPartners(params),
+    keepPreviousData: true,
     onSuccess: (data) => {
       dispatch(setPartners(data));
       dispatch(clearError());
@@ -34,6 +39,8 @@ export const usePartners = (params) => {
       showError(message);
     },
   });
+
+  return { partners, meta, loading, error, isFetching, refetch };
 };
 
 export const useCreatePartner = () => {

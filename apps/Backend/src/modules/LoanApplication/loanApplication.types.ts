@@ -199,9 +199,12 @@ export interface FullLoanApplicationInput {
     woname?: string
     dob: Date
     gender: Enums.Gender
+    genderOther?: string
     maritalStatus: Enums.MaritalStatus
+    maritalStatusOther?: string
     nationality: string
     category: Enums.Category
+    categoryOther?: string
 
     aadhaarNumber: string
     panNumber: string
@@ -212,11 +215,20 @@ export interface FullLoanApplicationInput {
     contactNumber: string
     alternateNumber?: string
     email?: string
+    phoneNumber?: string
+
+    relationshipWithCoApplicant?: Enums.CoApplicantRelation
+    relationWithCoApplicantOther?: string
 
     qualification?: string
 
     noOfFamilyDependents?: number
     noOfChildren?: number
+
+    correspondenceAddressType?: Enums.CorrespondenceAddressType
+    presentAccommodation?: Enums.AccommodationType
+    periodOfStay?: string
+    rentPerMonth?: number
 
     employmentType: Enums.EmploymentType
   }
@@ -265,18 +277,24 @@ export interface AddressInput {
 }
 
 export interface OccupationalInput {
-  occupationalCategory?: string
+  occupationalCategory: Enums.OccupationalCategory
+  occupationalCategoryOther?: string
   companyBusinessName?: string
+  address?: AddressInput
   phoneNumber?: string
   extensionNumber?: string
   totalWorkExperience?: number
-  yearsInCurrentEmployment?: number
-  monthlyIncome?: number
-  annualIncome?: number
+  noOfEmployees?: number
+  commencementDate?: Date | string
+  professionalType?: Enums.ProfessionalType
+  professionalSpecify?: string
+  businessType?: Enums.BusinessType
+  businessSpecify?: string
 }
 
 export interface EmploymentInput {
-  employerType?: string
+  employerType: Enums.EmployerType
+  employerTypeOther?: string
   designation?: string
   department?: string
   dateOfJoining?: Date | string
@@ -308,14 +326,34 @@ export interface CoApplicantInput {
   firstName: string
   middleName?: string
   lastName: string
+  fatherName?: string
+  motherName?: string
+  woname?: string
   relation: Enums.CoApplicantRelation
   relationOther?: string
   contactNumber: string
+  phoneNumber?: string
   email?: string
   dob: Date | string
+  category?: Enums.Category
+  maritalStatus?: Enums.MaritalStatus
+  noOfDependents?: number
+  noOfChildren?: number
+  qualification?: string
+  correspondenceAddressType?: Enums.CorrespondenceAddressType
   panNumber?: string
   aadhaarNumber?: string
+  voterId?: string
+  drivingLicenceNo?: string
+  passportNumber?: string
+  presentAccommodation?: Enums.AccommodationType
+  periodOfStay?: string
+  rentPerMonth?: number
   employmentType: Enums.EmploymentType
+  addresses?: (AddressInput & { addressType: Enums.AddressType })[]
+  occupationalDetails?: OccupationalInput
+  employmentDetails?: EmploymentInput
+  financialDetails?: FinancialInput
 }
 
 export interface GuarantorInput {
@@ -339,10 +377,17 @@ export interface GuarantorInput {
   noOfDependents?: number
   noOfChildren?: number
   qualification?: string
-  accommodationType?: string
+  correspondenceAddressType?: Enums.CorrespondenceAddressType
+  relationshipWithApplicant?: Enums.CoApplicantRelation
+  relationshipOther?: string
+  accommodationType?: Enums.AccommodationType
   periodOfStay?: string
   rentPerMonth?: number
   employmentType?: Enums.EmploymentType
+  addresses?: (AddressInput & { addressType: Enums.AddressType })[]
+  occupationalDetails?: OccupationalInput
+  employmentDetails?: EmploymentInput
+  financialDetails?: FinancialInput
 }
 
 export interface ExistingLoanInput {
@@ -400,9 +445,15 @@ export interface PropertyInput {
 
 export interface ReferenceInput {
   name: string
+  fatherName?: string
   relation?: string
   contactNumber: string
   address?: string
+  city?: string
+  state?: string
+  pinCode?: string
+  phone?: string
+  occupation?: string
 }
 
 export interface LoanRequirementInput {
@@ -410,13 +461,16 @@ export interface LoanRequirementInput {
   tenure?: number
   interestOption: Enums.InterestOption
   loanPurpose: Enums.LoanPurpose
+  loanPurposeOther?: string
   repaymentMethod: Enums.RepaymentMethod
   interestType?: Enums.InterestType
 }
 
 export interface LoanQuestionnaireInput {
-  existingCustomer?: boolean
-  hasPastDefaults?: boolean
-  isPoliticallyExposed?: boolean
-  remarks?: string
+  legalPropertyClear?: boolean
+  mortgagedElsewhere?: boolean
+  residentOfIndia?: boolean
+  otherLoans?: boolean
+  guarantorAnywhere?: boolean
+  mppLifeInsurance?: boolean
 }
