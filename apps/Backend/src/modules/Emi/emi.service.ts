@@ -951,26 +951,80 @@ export const applyMoratoriumService = async ({
       if (remainingEmis.length > 0) {
         const deferredPerEmi = totalDeferredPrincipal / remainingEmis.length;
 
-        await Promise.all(
-          remainingEmis.map((emi) => {
-            const newPrincipal = emi.principalAmount + deferredPerEmi;
-            // Recalculate EMI amount with new principal
-            // emiAmount = P * r * (1 + r)^n / ((1 + r)^n - 1)
-            // For simplicity, maintain proportional relationship: spread deferred across remaining
-            const principalShare =
-              newPrincipal / (emi.principalAmount + emi.interestAmount);
-            const newEmiAmount = (newPrincipal + emi.interestAmount) * 0.95; // approximate recalculation
+        // Get the last affected EMI's closingBalance to use as starting point for remaining EMIs
+        const lastAffectedEmi = affectedEmis[affectedEmis.length - 1];
+        let currentOpeningBalance = lastAffectedEmi?.closingBalance ?? loan.approvedAmount ?? 0;
 
-            return tx.loanEmiSchedule.update({
-              where: { id: emi.id },
-              data: {
-                principalAmount: newPrincipal,
-                emiAmount: newEmiAmount,
-                totalPayableAmount: newPrincipal + emi.interestAmount,
-              },
-            });
-          }),
-        );
+        // Update remaining EMIs sequentially to maintain balance continuity
+        for (const emi of remainingEmis) {
+          const newPrincipal = emi.principalAmount + deferredPerEmi;
+          // emiAmount = principal + interest (consistent total payable)
+          const newEmiAmount = newPrincipal + emi.interestAmount;
+          const newTotalPayable = newPrincipal + emi.interestAmount;
+
+          // Calculate balances
+          const openingBalance = currentOpeningBalance;
+          const closingBalance = Math.max(0, openingBalance - newPrincipal); // Ensure non-negative
+
+          await tx.loanEmiSchedule.update({
+            where: { id: emi.id },
+            data: {
+              openingBalance,
+              principalAmount: newPrincipal,
+              emiAmount: newEmiAmount,
+              totalPayableAmount: newTotalPayable,
+              closingBalance,
+            },
+          });
+
+          // Next EMI's opening balance is this EMI's closing balance
+          currentOpeningBalance = closingBalance;
+        }
+      } else {
+        // No remaining EMIs: create new ones to cover deferred principal
+        // Determine number of new EMIs needed (assume ~equal distribution)
+        const lastEmi = futureEmis[futureEmis.length - 1];
+        const maxNewEmis = Math.ceil(affectedEmis.length * 0.5); // Conservative: spread over half original period
+        const numberOfNewEmis = Math.max(1, maxNewEmis);
+        const principalPerNewEmi = totalDeferredPrincipal / numberOfNewEmis;
+
+        // Get the last affected EMI's closingBalance for the first new EMI
+        const lastAffectedEmi = affectedEmis[affectedEmis.length - 1];
+        let currentOpeningBalance = lastAffectedEmi?.closingBalance ?? loan.approvedAmount ?? 0;
+
+        // Find the highest emiNo to continue sequence
+        const maxEmiNo = Math.max(...futureEmis.map((e) => e.emiNo));
+
+        // Create new EMI rows to recover deferred principal
+        for (let i = 0; i < numberOfNewEmis; i++) {
+          const newEmiNo = maxEmiNo + 1 + i;
+          // Space new EMIs one month apart starting after moratorium end
+          const newDueDate = new Date(endDate);
+          newDueDate.setMonth(newDueDate.getMonth() + i + 1);
+
+          const openingBalance = currentOpeningBalance;
+          // Conservative interest calc on deferred principal
+          const interestOnDeferred = (principalPerNewEmi * (loan.interestRate ?? 0)) / 100 / 12;
+          const closingBalance = Math.max(0, openingBalance - principalPerNewEmi);
+
+          await tx.loanEmiSchedule.create({
+            data: {
+              loanApplicationId: loanId,
+              emiNo: newEmiNo,
+              emiStartDate: new Date(endDate.getFullYear(), endDate.getMonth() + i, endDate.getDate()),
+              dueDate: newDueDate,
+              openingBalance,
+              principalAmount: principalPerNewEmi,
+              interestAmount: interestOnDeferred,
+              emiAmount: principalPerNewEmi + interestOnDeferred,
+              closingBalance,
+              totalPayableAmount: principalPerNewEmi + interestOnDeferred,
+              status: "pending",
+            },
+          });
+
+          currentOpeningBalance = closingBalance;
+        }
       }
     }
 
