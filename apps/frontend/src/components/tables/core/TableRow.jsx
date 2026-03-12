@@ -1,13 +1,15 @@
+// TableRow.jsx - Updated with responsive styling
 import ActionMenu from "../../common/ActionMenu";
 
-export default function TableRow ({ columns, row, actions = [] }) {
+export default function TableRow({ columns, row, actions = [], isLast = false }) {
   return (
-    <tr className="hover:bg-blue-50 transition-colors duration-150 group">
+    <tr className="hover:bg-blue-50/50 transition-colors duration-150 group">
       {columns.map((col) => (
         <td 
           key={col.accessor} 
-          // Yahan border color wahi rakhein jo aapko puri row mein chahiye
-          className="px-6 py-4 whitespace-nowrap border-b border-slate-400 group-last:border-none font-medium text-slate-700"
+          className={`px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm 
+            ${!isLast ? 'border-b border-slate-400' : ''} 
+            font-medium text-slate-700 group-hover:text-slate-900`}
         >
           {col.render
             ? col.render(row[col.accessor], row)
@@ -15,8 +17,10 @@ export default function TableRow ({ columns, row, actions = [] }) {
         </td>
       ))}
       
-      {/* Action Menu Column - Iski border class bhi match karni chahiye */}
-      <td className="px-6 py-4 text-right border-b border-slate-400 group-last:border-none">
+      {/* Action Menu Column */}
+      <td className={`px-3 sm:px-4 md:px-6 py-3 sm:py-4 text-right 
+        ${!isLast ? 'border-b border-slate-400' : ''}`}
+      >
         <ActionMenu
           actions={actions.map((action) => ({
             ...action,
