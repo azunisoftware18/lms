@@ -1492,3 +1492,101 @@ export const DOCUMENT_REPOSITORY = {
     },
   ],
 };
+
+// leads page dummy data
+export const LEADS_PAGE_DUMMY_CONFIG = {
+  ITEMS_PER_PAGE: 6,
+  MAX_VISIBLE_PAGES: 5,
+};
+
+export const LEAD_ACTION_DEFINITIONS = [
+  {
+    key: "edit",
+    label: "Edit",
+    icon: "Edit",
+  },
+  {
+    key: "delete",
+    label: "Delete",
+    icon: "Trash2",
+    isDanger: true,
+  },
+];
+
+export const LEADS_DUMMY_DATA = [
+  {
+    id: "lead-1",
+    leadNumber: "LD0001",
+    fullName: "Rahul Sharma",
+    contactNumber: "9876543210",
+    email: "rahul.sharma@gmail.com",
+    city: "Jaipur",
+    state: "Rajasthan",
+    loanAmount: 300000,
+    loanType: { name: "Home Loan" },
+    createdAt: "2026-03-10T09:30:00.000Z",
+  },
+  {
+    id: "lead-2",
+    leadNumber: "LD0002",
+    fullName: "Priya Singh",
+    contactNumber: "9988776655",
+    email: "priya.singh@gmail.com",
+    city: "Delhi",
+    state: "Delhi",
+    loanAmount: 500000,
+    loanType: { name: "Personal Loan" },
+    createdAt: "2026-03-09T14:45:00.000Z",
+  },
+  {
+    id: "lead-3",
+    leadNumber: "LD0003",
+    fullName: "Amit Verma",
+    contactNumber: "9123456789",
+    email: "amit.verma@gmail.com",
+    city: "Mumbai",
+    state: "Maharashtra",
+    loanAmount: 1200000,
+    loanType: { name: "Business Loan" },
+    createdAt: "2026-03-08T11:20:00.000Z",
+  },
+  {
+    id: "lead-4",
+    leadNumber: "LD0004",
+    fullName: "Sneha Patel",
+    contactNumber: "9012345678",
+    email: "sneha.patel@gmail.com",
+    city: "Ahmedabad",
+    state: "Gujarat",
+    loanAmount: 800000,
+    loanType: { name: "Car Loan" },
+    createdAt: "2026-03-07T16:00:00.000Z",
+  },
+  {
+    id: "lead-5",
+    leadNumber: "LD0005",
+    fullName: "Mohit Gupta",
+    contactNumber: "9098765432",
+    email: "mohit.gupta@gmail.com",
+    city: "Lucknow",
+    state: "Uttar Pradesh",
+    loanAmount: 250000,
+    loanType: { name: "Education Loan" },
+    createdAt: "2026-03-06T10:15:00.000Z",
+  },
+];
+
+export const getLeadLoanTypeColor = (name = "") => {
+  const key = name.toLowerCase();
+
+  if (key.includes("home")) return "bg-blue-50 text-blue-700 border-blue-200";
+  if (key.includes("personal"))
+    return "bg-purple-50 text-purple-700 border-purple-200";
+  if (key.includes("car")) return "bg-green-50 text-green-700 border-green-200";
+  if (key.includes("business"))
+    return "bg-amber-50 text-amber-700 border-amber-200";
+  if (key.includes("education"))
+    return "bg-indigo-50 text-indigo-700 border-indigo-200";
+
+  return "bg-gray-50 text-gray-700 border-gray-200";
+};

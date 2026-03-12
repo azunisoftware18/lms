@@ -14,7 +14,7 @@ import {
 } from '../store/slices/leadSlice';
 
 import{
-    getLead,
+    getLeads,
     createLead,
     updateLeadStatus,
     assignLead,
@@ -30,7 +30,7 @@ const loading = useSelector(state => state.lead.loading);
 const error = useSelector(state => state.lead.error);
 
 
-const query = useQuery(['leads', params], () => getLead(params), {
+const query = useQuery(['leads', params], () => getLeads(params), {
     onSuccess: (data) => {
         dispatch(setLeads(data));
         dispatch(clearError());

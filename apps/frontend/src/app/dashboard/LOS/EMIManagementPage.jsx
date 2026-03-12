@@ -1,6 +1,4 @@
 import React, { useState, useMemo } from "react";
-import SelectField from "../../../components/ui/SelectField";
-import FilterDropdown from "../../../components/ui/FilterDropdown";
 import Pagination from "../../../components/common/Pagination";
 import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
 import QuickActionCard from "../../../components/common/QuickAction";
@@ -57,12 +55,13 @@ export default function EMIManagementPage() {
         loanNumber.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesFilter =
+        activeTab !== "all" ||
         filterStatus === "" ||
         status.toUpperCase() === filterStatus.toUpperCase();
 
       return matchesSearch && matchesFilter;
     });
-  }, [filteredByTab, searchTerm, filterStatus]);
+  }, [filteredByTab, searchTerm, filterStatus, activeTab]);
 
   // ---------- PAGINATION ----------
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -274,12 +273,20 @@ export default function EMIManagementPage() {
   const activeActions =
     activeTab === "approved" ? approvedActions : voucherActions;
 
-  const filterOptions =
+  const viewOptions = [
+    {
+      value: "approved",
+      label: `Approved Applications (${approvedApplications.length})`,
+    },
+    { value: "all", label: `EMI Vouchers (${emiVouchers.length})` },
+  ];
+
+  const voucherStatusOptions =
     activeTab === "all"
       ? [
           { value: "", label: "All Statuses" },
-          { value: "ACTIVE", label: "Active" },
-          { value: "PENDING", label: "Pending" },
+          { value: "ACTIVE", label: "EMI Approved" },
+          { value: "PENDING", label: "EMI Pending" },
         ]
       : [];
 
@@ -312,35 +319,6 @@ export default function EMIManagementPage() {
         />
       </div>
 
-      {/* TAB SELECTOR */}
-      <div className="flex items-center gap-4">
-        <SelectField
-          label="View"
-          value={activeTab}
-          onChange={(e) => {
-            setActiveTab(e.target.value);
-            setFilterStatus("");
-            setCurrentPage(1);
-          }}
-          options={[
-            {
-              value: "approved",
-              label: `Approved Applications (${approvedApplications.length})`,
-            },
-            { value: "all", label: `EMI Vouchers (${emiVouchers.length})` },
-          ]}
-          className="w-72"
-        />
-        {activeTab === "all" && (
-          <FilterDropdown
-            value={filterStatus}
-            onChange={(v) => { setFilterStatus(v); setCurrentPage(1); }}
-            options={filterOptions}
-            placeholder="Filter by Status"
-          />
-        )}
-      </div>
-
       {/* TABLE */}
       <TableShell>
         <TableHead
@@ -351,10 +329,24 @@ export default function EMIManagementPage() {
           }
           columns={activeColumns}
           search={searchTerm}
-          setSearch={(v) => { setSearchTerm(v); setCurrentPage(1); }}
-          filterValue={filterStatus}
-          setFilterValue={(v) => { setFilterStatus(v); setCurrentPage(1); }}
-          filterOptions={filterOptions}
+          setSearch={(v) => {
+            setSearchTerm(v);
+            setCurrentPage(1);
+          }}
+          filterValue={activeTab}
+          setFilterValue={(v) => {
+            setActiveTab(v);
+            setFilterStatus("");
+            setCurrentPage(1);
+          }}
+          filterOptions={viewOptions}
+          secondaryFilterValue={filterStatus}
+          setSecondaryFilterValue={(v) => {
+            setFilterStatus(v);
+            setCurrentPage(1);
+          }}
+          secondaryFilterOptions={voucherStatusOptions}
+          secondaryFilterPlaceholder="Filter EMI status"
         />
         <TableBody
           columns={activeColumns}
