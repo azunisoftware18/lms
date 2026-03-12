@@ -26,6 +26,18 @@ const getParam = (req: Request, key: string) => {
   return "";
 };
 
+const requireActor = (req: Request) => {
+  const userId = typeof req.user?.id === "string" ? req.user.id.trim() : "";
+  const branchId =
+    typeof req.user?.branchId === "string" ? req.user.branchId.trim() : "";
+
+  if (!userId || !branchId) {
+    throw AppError.badRequest("User id and branch id are required");
+  }
+
+  return { userId, branchId };
+};
+
 const hasBranchAccess = (req: Request, branchId: string) => {
   const accessibleBranchIds = (req as any).accessibleBranchIds as string[] | null | undefined;
   if (accessibleBranchIds == null) return true;
@@ -93,21 +105,13 @@ export const generateEmiScheduleController = async (
 ) => {
   try {
     const loanId = getParam(req, "id");
-    const userId = req.user?.id;
-    const branchId = req.user?.branchId;
+    const { userId, branchId } = requireActor(req);
 
     if (!loanId) {
       throw AppError.badRequest("Loan id is required");
     }
 
     await ensureLoanBranchAccess(req, loanId);
-
-    if (!userId || !branchId) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized: User or branch information missing",
-      });
-    }
 
     const schedule = await generateEmiScheduleService(loanId, userId, branchId);
     res.status(200).json({ success: true, data: schedule });
@@ -173,6 +177,7 @@ export const markEmiPaidController = async (req: Request, res: Response) => {
   try {
     const { amountPaid, paymentMode } = req.body;
     const emiId = getParam(req, "emiId");
+    const { userId, branchId } = requireActor(req);
 
     if (!emiId) {
       throw AppError.badRequest("EMI id is required");
@@ -184,8 +189,8 @@ export const markEmiPaidController = async (req: Request, res: Response) => {
       emiId,
       amountPaid,
       paymentMode,
-      paidByUserId: req.user?.id,
-      branchId: req.user?.branchId,
+      paidByUserId: userId,
+      branchId,
     });
 
     res.status(200).json({ success: true, data: emi });
@@ -311,6 +316,7 @@ export const payforecloseLoanController = async (
 ) => {
   try {
     const loanId = getParam(req, "loanId");
+    const { userId, branchId } = requireActor(req);
     if (!loanId) {
       throw AppError.badRequest("Loan id is required");
     }
@@ -320,8 +326,8 @@ export const payforecloseLoanController = async (
     const result = await payforecloseLoanService(
       loanId,
       data,
-      req.user?.id,
-      req.user?.branchId,
+      userId,
+      branchId,
     );
     res.status(200).json({
       success: true,
@@ -342,6 +348,7 @@ export const applyMoratoriumController = async (
 ) => {
   try {
     const loanId = getParam(req, "loanId");
+    const { userId, branchId } = requireActor(req);
     const { type, startDate, endDate } = req.body;
 
     if (!loanId || !type || !startDate || !endDate) {
@@ -358,8 +365,8 @@ export const applyMoratoriumController = async (
       type,
       startDate: new Date(startDate),
       endDate: new Date(endDate),
-      userId: req.user?.id,
-      branchId: req.user?.branchId,
+      userId,
+      branchId,
     });
     res.status(200).json({
       success: true,
@@ -377,6 +384,7 @@ export const applyMoratoriumController = async (
 export const editEmiController = async (req: Request, res: Response) => {
   try {
     const emiId = getParam(req, "emiId");
+    const { userId, branchId } = requireActor(req);
 
     if (!emiId) {
       throw AppError.badRequest("EMI id is required");
@@ -396,8 +404,8 @@ export const editEmiController = async (req: Request, res: Response) => {
     const updatedEmi = await editEmiService(
       emiId,
       new Date(dueDate),
-      req.user?.id,
-      req.user?.branchId,
+      userId,
+      branchId,
     );
 
     res.status(200).json({

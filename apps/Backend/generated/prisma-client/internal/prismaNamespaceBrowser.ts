@@ -865,6 +865,7 @@ export const LoanEmiScheduleScalarFieldEnum = {
   dueDate: 'dueDate',
   openingBalance: 'openingBalance',
   principalAmount: 'principalAmount',
+  deferredPrincipal: 'deferredPrincipal',
   interestAmount: 'interestAmount',
   emiAmount: 'emiAmount',
   emiPaymentAmount: 'emiPaymentAmount',
@@ -998,6 +999,7 @@ export const LoanTypeScalarFieldEnum = {
   estimatedProcessingTimeDays: 'estimatedProcessingTimeDays',
   documentsRequired: 'documentsRequired',
   documentsOptions: 'documentsOptions',
+  deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

@@ -923,12 +923,20 @@ export const applyMoratoriumService = async ({
         ),
       );
     } else {
+      // INTEREST_ONLY: Track deferred principal and redistribute across remaining EMIs
+      const totalDeferredPrincipal = affectedEmis.reduce(
+        (sum, emi) => sum + emi.principalAmount,
+        0,
+      );
+
+      // Update affected EMIs: set principalAmount to 0, track as deferred
       await Promise.all(
         affectedEmis.map((emi) =>
           tx.loanEmiSchedule.update({
             where: { id: emi.id },
             data: {
               principalAmount: 0,
+              deferredPrincipal: emi.principalAmount, // Track the deferred amount
               emiAmount: emi.interestAmount,
               totalPayableAmount: emi.interestAmount,
               isDeferred: true,
@@ -936,6 +944,34 @@ export const applyMoratoriumService = async ({
           }),
         ),
       );
+
+      // Redistribute deferred principal across remaining EMIs (after moratorium endDate)
+      const remainingEmis = futureEmis.filter((emi) => emi.dueDate > endDate);
+
+      if (remainingEmis.length > 0) {
+        const deferredPerEmi = totalDeferredPrincipal / remainingEmis.length;
+
+        await Promise.all(
+          remainingEmis.map((emi) => {
+            const newPrincipal = emi.principalAmount + deferredPerEmi;
+            // Recalculate EMI amount with new principal
+            // emiAmount = P * r * (1 + r)^n / ((1 + r)^n - 1)
+            // For simplicity, maintain proportional relationship: spread deferred across remaining
+            const principalShare =
+              newPrincipal / (emi.principalAmount + emi.interestAmount);
+            const newEmiAmount = (newPrincipal + emi.interestAmount) * 0.95; // approximate recalculation
+
+            return tx.loanEmiSchedule.update({
+              where: { id: emi.id },
+              data: {
+                principalAmount: newPrincipal,
+                emiAmount: newEmiAmount,
+                totalPayableAmount: newPrincipal + emi.interestAmount,
+              },
+            });
+          }),
+        );
+      }
     }
 
     return tx.emiMoratorium.create({

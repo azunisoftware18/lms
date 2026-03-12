@@ -1009,6 +1009,7 @@ model LoanEmiSchedule {
 
   openingBalance     Float
   principalAmount    Float
+  deferredPrincipal  Float @default(0) // Principal deferred during INTEREST_ONLY moratorium
   interestAmount     Float
   emiAmount          Float // Scheduled EMI amount
   emiPaymentAmount   Float? // Actual amount paid (can be partial / excess)

@@ -30,6 +30,7 @@ export type LoanEmiScheduleAvgAggregateOutputType = {
   emiNo: number | null
   openingBalance: number | null
   principalAmount: number | null
+  deferredPrincipal: number | null
   interestAmount: number | null
   emiAmount: number | null
   emiPaymentAmount: number | null
@@ -43,6 +44,7 @@ export type LoanEmiScheduleSumAggregateOutputType = {
   emiNo: number | null
   openingBalance: number | null
   principalAmount: number | null
+  deferredPrincipal: number | null
   interestAmount: number | null
   emiAmount: number | null
   emiPaymentAmount: number | null
@@ -60,6 +62,7 @@ export type LoanEmiScheduleMinAggregateOutputType = {
   dueDate: Date | null
   openingBalance: number | null
   principalAmount: number | null
+  deferredPrincipal: number | null
   interestAmount: number | null
   emiAmount: number | null
   emiPaymentAmount: number | null
@@ -85,6 +88,7 @@ export type LoanEmiScheduleMaxAggregateOutputType = {
   dueDate: Date | null
   openingBalance: number | null
   principalAmount: number | null
+  deferredPrincipal: number | null
   interestAmount: number | null
   emiAmount: number | null
   emiPaymentAmount: number | null
@@ -110,6 +114,7 @@ export type LoanEmiScheduleCountAggregateOutputType = {
   dueDate: number
   openingBalance: number
   principalAmount: number
+  deferredPrincipal: number
   interestAmount: number
   emiAmount: number
   emiPaymentAmount: number
@@ -133,6 +138,7 @@ export type LoanEmiScheduleAvgAggregateInputType = {
   emiNo?: true
   openingBalance?: true
   principalAmount?: true
+  deferredPrincipal?: true
   interestAmount?: true
   emiAmount?: true
   emiPaymentAmount?: true
@@ -146,6 +152,7 @@ export type LoanEmiScheduleSumAggregateInputType = {
   emiNo?: true
   openingBalance?: true
   principalAmount?: true
+  deferredPrincipal?: true
   interestAmount?: true
   emiAmount?: true
   emiPaymentAmount?: true
@@ -163,6 +170,7 @@ export type LoanEmiScheduleMinAggregateInputType = {
   dueDate?: true
   openingBalance?: true
   principalAmount?: true
+  deferredPrincipal?: true
   interestAmount?: true
   emiAmount?: true
   emiPaymentAmount?: true
@@ -188,6 +196,7 @@ export type LoanEmiScheduleMaxAggregateInputType = {
   dueDate?: true
   openingBalance?: true
   principalAmount?: true
+  deferredPrincipal?: true
   interestAmount?: true
   emiAmount?: true
   emiPaymentAmount?: true
@@ -213,6 +222,7 @@ export type LoanEmiScheduleCountAggregateInputType = {
   dueDate?: true
   openingBalance?: true
   principalAmount?: true
+  deferredPrincipal?: true
   interestAmount?: true
   emiAmount?: true
   emiPaymentAmount?: true
@@ -325,6 +335,7 @@ export type LoanEmiScheduleGroupByOutputType = {
   dueDate: Date
   openingBalance: number
   principalAmount: number
+  deferredPrincipal: number
   interestAmount: number
   emiAmount: number
   emiPaymentAmount: number | null
@@ -373,6 +384,7 @@ export type LoanEmiScheduleWhereInput = {
   dueDate?: Prisma.DateTimeFilter<"LoanEmiSchedule"> | Date | string
   openingBalance?: Prisma.FloatFilter<"LoanEmiSchedule"> | number
   principalAmount?: Prisma.FloatFilter<"LoanEmiSchedule"> | number
+  deferredPrincipal?: Prisma.FloatFilter<"LoanEmiSchedule"> | number
   interestAmount?: Prisma.FloatFilter<"LoanEmiSchedule"> | number
   emiAmount?: Prisma.FloatFilter<"LoanEmiSchedule"> | number
   emiPaymentAmount?: Prisma.FloatNullableFilter<"LoanEmiSchedule"> | number | null
@@ -400,6 +412,7 @@ export type LoanEmiScheduleOrderByWithRelationInput = {
   dueDate?: Prisma.SortOrder
   openingBalance?: Prisma.SortOrder
   principalAmount?: Prisma.SortOrder
+  deferredPrincipal?: Prisma.SortOrder
   interestAmount?: Prisma.SortOrder
   emiAmount?: Prisma.SortOrder
   emiPaymentAmount?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -431,6 +444,7 @@ export type LoanEmiScheduleWhereUniqueInput = Prisma.AtLeast<{
   dueDate?: Prisma.DateTimeFilter<"LoanEmiSchedule"> | Date | string
   openingBalance?: Prisma.FloatFilter<"LoanEmiSchedule"> | number
   principalAmount?: Prisma.FloatFilter<"LoanEmiSchedule"> | number
+  deferredPrincipal?: Prisma.FloatFilter<"LoanEmiSchedule"> | number
   interestAmount?: Prisma.FloatFilter<"LoanEmiSchedule"> | number
   emiAmount?: Prisma.FloatFilter<"LoanEmiSchedule"> | number
   emiPaymentAmount?: Prisma.FloatNullableFilter<"LoanEmiSchedule"> | number | null
@@ -458,6 +472,7 @@ export type LoanEmiScheduleOrderByWithAggregationInput = {
   dueDate?: Prisma.SortOrder
   openingBalance?: Prisma.SortOrder
   principalAmount?: Prisma.SortOrder
+  deferredPrincipal?: Prisma.SortOrder
   interestAmount?: Prisma.SortOrder
   emiAmount?: Prisma.SortOrder
   emiPaymentAmount?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -491,6 +506,7 @@ export type LoanEmiScheduleScalarWhereWithAggregatesInput = {
   dueDate?: Prisma.DateTimeWithAggregatesFilter<"LoanEmiSchedule"> | Date | string
   openingBalance?: Prisma.FloatWithAggregatesFilter<"LoanEmiSchedule"> | number
   principalAmount?: Prisma.FloatWithAggregatesFilter<"LoanEmiSchedule"> | number
+  deferredPrincipal?: Prisma.FloatWithAggregatesFilter<"LoanEmiSchedule"> | number
   interestAmount?: Prisma.FloatWithAggregatesFilter<"LoanEmiSchedule"> | number
   emiAmount?: Prisma.FloatWithAggregatesFilter<"LoanEmiSchedule"> | number
   emiPaymentAmount?: Prisma.FloatNullableWithAggregatesFilter<"LoanEmiSchedule"> | number | null
@@ -515,6 +531,7 @@ export type LoanEmiScheduleCreateInput = {
   dueDate: Date | string
   openingBalance: number
   principalAmount: number
+  deferredPrincipal?: number
   interestAmount: number
   emiAmount: number
   emiPaymentAmount?: number | null
@@ -542,6 +559,7 @@ export type LoanEmiScheduleUncheckedCreateInput = {
   dueDate: Date | string
   openingBalance: number
   principalAmount: number
+  deferredPrincipal?: number
   interestAmount: number
   emiAmount: number
   emiPaymentAmount?: number | null
@@ -567,6 +585,7 @@ export type LoanEmiScheduleUpdateInput = {
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   principalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  deferredPrincipal?: Prisma.FloatFieldUpdateOperationsInput | number
   interestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -594,6 +613,7 @@ export type LoanEmiScheduleUncheckedUpdateInput = {
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   principalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  deferredPrincipal?: Prisma.FloatFieldUpdateOperationsInput | number
   interestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -620,6 +640,7 @@ export type LoanEmiScheduleCreateManyInput = {
   dueDate: Date | string
   openingBalance: number
   principalAmount: number
+  deferredPrincipal?: number
   interestAmount: number
   emiAmount: number
   emiPaymentAmount?: number | null
@@ -644,6 +665,7 @@ export type LoanEmiScheduleUpdateManyMutationInput = {
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   principalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  deferredPrincipal?: Prisma.FloatFieldUpdateOperationsInput | number
   interestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -669,6 +691,7 @@ export type LoanEmiScheduleUncheckedUpdateManyInput = {
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   principalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  deferredPrincipal?: Prisma.FloatFieldUpdateOperationsInput | number
   interestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -710,6 +733,7 @@ export type LoanEmiScheduleCountOrderByAggregateInput = {
   dueDate?: Prisma.SortOrder
   openingBalance?: Prisma.SortOrder
   principalAmount?: Prisma.SortOrder
+  deferredPrincipal?: Prisma.SortOrder
   interestAmount?: Prisma.SortOrder
   emiAmount?: Prisma.SortOrder
   emiPaymentAmount?: Prisma.SortOrder
@@ -731,6 +755,7 @@ export type LoanEmiScheduleAvgOrderByAggregateInput = {
   emiNo?: Prisma.SortOrder
   openingBalance?: Prisma.SortOrder
   principalAmount?: Prisma.SortOrder
+  deferredPrincipal?: Prisma.SortOrder
   interestAmount?: Prisma.SortOrder
   emiAmount?: Prisma.SortOrder
   emiPaymentAmount?: Prisma.SortOrder
@@ -748,6 +773,7 @@ export type LoanEmiScheduleMaxOrderByAggregateInput = {
   dueDate?: Prisma.SortOrder
   openingBalance?: Prisma.SortOrder
   principalAmount?: Prisma.SortOrder
+  deferredPrincipal?: Prisma.SortOrder
   interestAmount?: Prisma.SortOrder
   emiAmount?: Prisma.SortOrder
   emiPaymentAmount?: Prisma.SortOrder
@@ -773,6 +799,7 @@ export type LoanEmiScheduleMinOrderByAggregateInput = {
   dueDate?: Prisma.SortOrder
   openingBalance?: Prisma.SortOrder
   principalAmount?: Prisma.SortOrder
+  deferredPrincipal?: Prisma.SortOrder
   interestAmount?: Prisma.SortOrder
   emiAmount?: Prisma.SortOrder
   emiPaymentAmount?: Prisma.SortOrder
@@ -794,6 +821,7 @@ export type LoanEmiScheduleSumOrderByAggregateInput = {
   emiNo?: Prisma.SortOrder
   openingBalance?: Prisma.SortOrder
   principalAmount?: Prisma.SortOrder
+  deferredPrincipal?: Prisma.SortOrder
   interestAmount?: Prisma.SortOrder
   emiAmount?: Prisma.SortOrder
   emiPaymentAmount?: Prisma.SortOrder
@@ -887,6 +915,7 @@ export type LoanEmiScheduleCreateWithoutLoanApplicationInput = {
   dueDate: Date | string
   openingBalance: number
   principalAmount: number
+  deferredPrincipal?: number
   interestAmount: number
   emiAmount: number
   emiPaymentAmount?: number | null
@@ -912,6 +941,7 @@ export type LoanEmiScheduleUncheckedCreateWithoutLoanApplicationInput = {
   dueDate: Date | string
   openingBalance: number
   principalAmount: number
+  deferredPrincipal?: number
   interestAmount: number
   emiAmount: number
   emiPaymentAmount?: number | null
@@ -967,6 +997,7 @@ export type LoanEmiScheduleScalarWhereInput = {
   dueDate?: Prisma.DateTimeFilter<"LoanEmiSchedule"> | Date | string
   openingBalance?: Prisma.FloatFilter<"LoanEmiSchedule"> | number
   principalAmount?: Prisma.FloatFilter<"LoanEmiSchedule"> | number
+  deferredPrincipal?: Prisma.FloatFilter<"LoanEmiSchedule"> | number
   interestAmount?: Prisma.FloatFilter<"LoanEmiSchedule"> | number
   emiAmount?: Prisma.FloatFilter<"LoanEmiSchedule"> | number
   emiPaymentAmount?: Prisma.FloatNullableFilter<"LoanEmiSchedule"> | number | null
@@ -991,6 +1022,7 @@ export type LoanEmiScheduleCreateWithoutNachDebitsInput = {
   dueDate: Date | string
   openingBalance: number
   principalAmount: number
+  deferredPrincipal?: number
   interestAmount: number
   emiAmount: number
   emiPaymentAmount?: number | null
@@ -1017,6 +1049,7 @@ export type LoanEmiScheduleUncheckedCreateWithoutNachDebitsInput = {
   dueDate: Date | string
   openingBalance: number
   principalAmount: number
+  deferredPrincipal?: number
   interestAmount: number
   emiAmount: number
   emiPaymentAmount?: number | null
@@ -1057,6 +1090,7 @@ export type LoanEmiScheduleUpdateWithoutNachDebitsInput = {
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   principalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  deferredPrincipal?: Prisma.FloatFieldUpdateOperationsInput | number
   interestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1083,6 +1117,7 @@ export type LoanEmiScheduleUncheckedUpdateWithoutNachDebitsInput = {
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   principalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  deferredPrincipal?: Prisma.FloatFieldUpdateOperationsInput | number
   interestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1107,6 +1142,7 @@ export type LoanEmiScheduleCreateManyLoanApplicationInput = {
   dueDate: Date | string
   openingBalance: number
   principalAmount: number
+  deferredPrincipal?: number
   interestAmount: number
   emiAmount: number
   emiPaymentAmount?: number | null
@@ -1131,6 +1167,7 @@ export type LoanEmiScheduleUpdateWithoutLoanApplicationInput = {
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   principalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  deferredPrincipal?: Prisma.FloatFieldUpdateOperationsInput | number
   interestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1156,6 +1193,7 @@ export type LoanEmiScheduleUncheckedUpdateWithoutLoanApplicationInput = {
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   principalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  deferredPrincipal?: Prisma.FloatFieldUpdateOperationsInput | number
   interestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1181,6 +1219,7 @@ export type LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationInput = {
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   principalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  deferredPrincipal?: Prisma.FloatFieldUpdateOperationsInput | number
   interestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   emiPaymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1237,6 +1276,7 @@ export type LoanEmiScheduleSelect<ExtArgs extends runtime.Types.Extensions.Inter
   dueDate?: boolean
   openingBalance?: boolean
   principalAmount?: boolean
+  deferredPrincipal?: boolean
   interestAmount?: boolean
   emiAmount?: boolean
   emiPaymentAmount?: boolean
@@ -1267,6 +1307,7 @@ export type LoanEmiScheduleSelectScalar = {
   dueDate?: boolean
   openingBalance?: boolean
   principalAmount?: boolean
+  deferredPrincipal?: boolean
   interestAmount?: boolean
   emiAmount?: boolean
   emiPaymentAmount?: boolean
@@ -1284,7 +1325,7 @@ export type LoanEmiScheduleSelectScalar = {
   isDeferred?: boolean
 }
 
-export type LoanEmiScheduleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "emiNo" | "emiStartDate" | "dueDate" | "openingBalance" | "principalAmount" | "interestAmount" | "emiAmount" | "emiPaymentAmount" | "closingBalance" | "totalPayableAmount" | "latePaymentFeeType" | "latePaymentFee" | "bounceCharges" | "bounceChargeApplied" | "lastPaymentMode" | "chequeStatus" | "lastPaymentDate" | "status" | "paidDate" | "isDeferred", ExtArgs["result"]["loanEmiSchedule"]>
+export type LoanEmiScheduleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "emiNo" | "emiStartDate" | "dueDate" | "openingBalance" | "principalAmount" | "deferredPrincipal" | "interestAmount" | "emiAmount" | "emiPaymentAmount" | "closingBalance" | "totalPayableAmount" | "latePaymentFeeType" | "latePaymentFee" | "bounceCharges" | "bounceChargeApplied" | "lastPaymentMode" | "chequeStatus" | "lastPaymentDate" | "status" | "paidDate" | "isDeferred", ExtArgs["result"]["loanEmiSchedule"]>
 export type LoanEmiScheduleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   nachDebits?: boolean | Prisma.LoanEmiSchedule$nachDebitsArgs<ExtArgs>
   loanApplication?: boolean | Prisma.LoanApplicationDefaultArgs<ExtArgs>
@@ -1305,6 +1346,7 @@ export type $LoanEmiSchedulePayload<ExtArgs extends runtime.Types.Extensions.Int
     dueDate: Date
     openingBalance: number
     principalAmount: number
+    deferredPrincipal: number
     interestAmount: number
     emiAmount: number
     emiPaymentAmount: number | null
@@ -1698,6 +1740,7 @@ export interface LoanEmiScheduleFieldRefs {
   readonly dueDate: Prisma.FieldRef<"LoanEmiSchedule", 'DateTime'>
   readonly openingBalance: Prisma.FieldRef<"LoanEmiSchedule", 'Float'>
   readonly principalAmount: Prisma.FieldRef<"LoanEmiSchedule", 'Float'>
+  readonly deferredPrincipal: Prisma.FieldRef<"LoanEmiSchedule", 'Float'>
   readonly interestAmount: Prisma.FieldRef<"LoanEmiSchedule", 'Float'>
   readonly emiAmount: Prisma.FieldRef<"LoanEmiSchedule", 'Float'>
   readonly emiPaymentAmount: Prisma.FieldRef<"LoanEmiSchedule", 'Float'>
