@@ -1,99 +1,3 @@
-export const LEADS_PAGE_DUMMY_CONFIG = {
-  ITEMS_PER_PAGE: 6,
-  MAX_VISIBLE_PAGES: 5,
-};
-
-export const LEAD_ACTION_DEFINITIONS = [
-  {
-    key: "edit",
-    label: "Edit",
-    icon: "Edit",
-  },
-  {
-    key: "delete",
-    label: "Delete",
-    icon: "Trash2",
-    isDanger: true,
-  },
-];
-
-export const LEADS_DUMMY_DATA = [
-  {
-    id: "lead-1",
-    leadNumber: "LD0001",
-    fullName: "Rahul Sharma",
-    contactNumber: "9876543210",
-    email: "rahul.sharma@gmail.com",
-    city: "Jaipur",
-    state: "Rajasthan",
-    loanAmount: 300000,
-    loanType: { name: "Home Loan" },
-    createdAt: "2026-03-10T09:30:00.000Z",
-  },
-  {
-    id: "lead-2",
-    leadNumber: "LD0002",
-    fullName: "Priya Singh",
-    contactNumber: "9988776655",
-    email: "priya.singh@gmail.com",
-    city: "Delhi",
-    state: "Delhi",
-    loanAmount: 500000,
-    loanType: { name: "Personal Loan" },
-    createdAt: "2026-03-09T14:45:00.000Z",
-  },
-  {
-    id: "lead-3",
-    leadNumber: "LD0003",
-    fullName: "Amit Verma",
-    contactNumber: "9123456789",
-    email: "amit.verma@gmail.com",
-    city: "Mumbai",
-    state: "Maharashtra",
-    loanAmount: 1200000,
-    loanType: { name: "Business Loan" },
-    createdAt: "2026-03-08T11:20:00.000Z",
-  },
-  {
-    id: "lead-4",
-    leadNumber: "LD0004",
-    fullName: "Sneha Patel",
-    contactNumber: "9012345678",
-    email: "sneha.patel@gmail.com",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    loanAmount: 800000,
-    loanType: { name: "Car Loan" },
-    createdAt: "2026-03-07T16:00:00.000Z",
-  },
-  {
-    id: "lead-5",
-    leadNumber: "LD0005",
-    fullName: "Mohit Gupta",
-    contactNumber: "9098765432",
-    email: "mohit.gupta@gmail.com",
-    city: "Lucknow",
-    state: "Uttar Pradesh",
-    loanAmount: 250000,
-    loanType: { name: "Education Loan" },
-    createdAt: "2026-03-06T10:15:00.000Z",
-  },
-];
-
-export const getLeadLoanTypeColor = (name = "") => {
-  const key = name.toLowerCase();
-
-  if (key.includes("home")) return "bg-blue-50 text-blue-700 border-blue-200";
-  if (key.includes("personal"))
-    return "bg-purple-50 text-purple-700 border-purple-200";
-  if (key.includes("car")) return "bg-green-50 text-green-700 border-green-200";
-  if (key.includes("business"))
-    return "bg-amber-50 text-amber-700 border-amber-200";
-  if (key.includes("education"))
-    return "bg-indigo-50 text-indigo-700 border-indigo-200";
-
-  return "bg-gray-50 text-gray-700 border-gray-200";
-};
 
 // Due List Page Dummy Data
 export const DUE_LIST_ITEMS_PER_PAGE = 10;
@@ -1258,5 +1162,131 @@ export const CRC_COMMERCIAL_DUMMY_DATA = [
     complianceWarnings: "Multiple defaults",
     lastChecked: "2024-03-13",
     statusColor: "red",
+  },
+];
+
+export const ADMIN_PRESENTATION_AVAILABLE_PAGES = [
+  { id: "intro", label: "Introduction" },
+  { id: "process", label: "Process Explanation" },
+  { id: "documents", label: "Documents Required" },
+  { id: "mistakes", label: "Common Mistakes" },
+  { id: "final", label: "Final Instructions" },
+];
+
+export const ADMIN_PRESENTATION_PRIORITY_OPTIONS = ["Low", "Medium", "High"];
+
+export const ATTENDANCE_REPORT_FILTER_OPTIONS = {
+  status: [
+    { value: "all", label: "All Status" },
+    { value: "present", label: "Present" },
+    { value: "late", label: "Late" },
+    { value: "absent", label: "Absent" },
+    { value: "leave", label: "On Leave" },
+  ],
+  branch: [
+    { value: "all", label: "All Branches" },
+    { value: "Main Branch", label: "Main Branch" },
+    { value: "Downtown", label: "Downtown" },
+    { value: "Westside", label: "Westside" },
+    { value: "East End", label: "East End" },
+  ],
+};
+
+export const ATTENDANCE_REPORT_DUMMY_DATA = [
+  {
+    id: "EMP001",
+    employeeName: "Amit Sharma",
+    role: "Collection Executive",
+    branch: "Main Branch",
+    date: "2026-03-12",
+    checkIn: "09:05",
+    checkOut: "18:12",
+    workHours: 9.1,
+    overtimeHours: 0.6,
+    status: "present",
+  },
+  {
+    id: "EMP002",
+    employeeName: "Neha Verma",
+    role: "Field Officer",
+    branch: "Downtown",
+    date: "2026-03-12",
+    checkIn: "09:28",
+    checkOut: "18:01",
+    workHours: 8.3,
+    overtimeHours: 0,
+    status: "late",
+  },
+  {
+    id: "EMP003",
+    employeeName: "Rohit Mehta",
+    role: "Branch Manager",
+    branch: "Westside",
+    date: "2026-03-12",
+    checkIn: "08:54",
+    checkOut: "18:35",
+    workHours: 9.7,
+    overtimeHours: 1.2,
+    status: "present",
+  },
+  {
+    id: "EMP004",
+    employeeName: "Priya Singh",
+    role: "Customer Support",
+    branch: "East End",
+    date: "2026-03-12",
+    checkIn: "-",
+    checkOut: "-",
+    workHours: 0,
+    overtimeHours: 0,
+    status: "leave",
+  },
+  {
+    id: "EMP005",
+    employeeName: "Vikram Patel",
+    role: "Credit Analyst",
+    branch: "Main Branch",
+    date: "2026-03-12",
+    checkIn: "-",
+    checkOut: "-",
+    workHours: 0,
+    overtimeHours: 0,
+    status: "absent",
+  },
+  {
+    id: "EMP006",
+    employeeName: "Meera Iyer",
+    role: "Documentation Officer",
+    branch: "Downtown",
+    date: "2026-03-12",
+    checkIn: "09:10",
+    checkOut: "18:05",
+    workHours: 8.9,
+    overtimeHours: 0,
+    status: "present",
+  },
+  {
+    id: "EMP007",
+    employeeName: "Sanjay Gupta",
+    role: "Recovery Agent",
+    branch: "Westside",
+    date: "2026-03-12",
+    checkIn: "09:40",
+    checkOut: "18:14",
+    workHours: 8.2,
+    overtimeHours: 0,
+    status: "late",
+  },
+  {
+    id: "EMP008",
+    employeeName: "Anjali Desai",
+    role: "Telecaller",
+    branch: "East End",
+    date: "2026-03-12",
+    checkIn: "09:00",
+    checkOut: "17:56",
+    workHours: 8.9,
+    overtimeHours: 0,
+    status: "present",
   },
 ];

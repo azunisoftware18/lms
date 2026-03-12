@@ -22,12 +22,31 @@ import {
   RefreshCw,
   Globe,
 } from "lucide-react";
+import ActionMenu from "../../../components/common/ActionMenu";
+import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
+import StatusCard from "../../../components/common/StatusCard";
+import Pagination from "../../../components/common/Pagination";
+import QuickActionCard from "../../../components/common/QuickAction";
+import InfoCard from "../../../components/details/InfoCard";
+import InfoItem from "../../../components/details/InfoItem";
+import CopyableInfoItem from "../../../components/details/CopyableInfoItem";
+import TabsNav from "../../../components/details/TabsNav";
+import StatusOverviewCard from "../../../components/details/StatusOverviewCard";
+import ProfileHeader from "../../../components/details/ProfileHeader";
+import PageSkeleton from "../../../components/details/PageSkeleton";
+import Button from "../../../components/ui/Button";
+import SearchField from "../../../components/ui/SearchField";
+import SelectField from "../../../components/ui/SelectField";
+import FilterDropdown from "../../../components/ui/FilterDropdown";
+import ToastCard from "../../../components/ui/ToastCard";
+import ToggleSwitch from "../../../components/ui/ToggleSwitch";
 import {
   CRC_COMMERCIAL_DUMMY_DATA,
   CRC_CONSUMER_DUMMY_DATA,
   CRC_ROLES,
   CRC_RISK_FILTER_OPTIONS,
 } from "../../../lib/ReportsDummyData";
+import { colorVariables } from "../../../lib/index";
 
 // Helper functions
 const getRiskColor = (riskLevel) => {
@@ -58,49 +77,6 @@ const formatCurrency = (amount) =>
     currency: "INR",
     minimumFractionDigits: 0,
   }).format(amount);
-
-const TabButton = ({ tab, label, icon, count, activeTab, onTabChange }) => (
-  <button
-    className={`px-8 py-4 font-medium text-sm border-b-2 transition-all flex items-center gap-2 ${
-      activeTab === tab
-        ? "border-blue-600 text-blue-600"
-        : "border-transparent text-gray-500 hover:text-gray-700"
-    }`}
-    onClick={() => onTabChange(tab)}
-  >
-    {icon}
-    {label}
-    <span className="ml-1 bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-      {count}
-    </span>
-  </button>
-);
-
-// Component: QuickStatCard
-const QuickStatCard = ({ title, value, icon, change, trend }) => (
-  <div className="bg-white rounded-2xl shadow-sm p-5">
-    <div className="flex items-start justify-between mb-4">
-      <div>
-        <p className="text-sm font-medium text-gray-600">{title}</p>
-        <p className="text-2xl font-bold text-gray-900 mt-1">{value}</p>
-      </div>
-      <div className="p-3 rounded-xl bg-blue-50">{icon}</div>
-    </div>
-    <div className="flex items-center gap-1">
-      {trend === "up" ? (
-        <TrendingUp size={16} className="text-green-500" />
-      ) : (
-        <TrendingDown size={16} className="text-red-500" />
-      )}
-      <span
-        className={`text-sm font-medium ${trend === "up" ? "text-green-600" : "text-red-600"}`}
-      >
-        {change}
-      </span>
-      <span className="text-xs text-gray-500 ml-1">from last month</span>
-    </div>
-  </div>
-);
 
 // Component: ConsumerCard
 const ConsumerCard = ({ data, onView }) => {
@@ -138,7 +114,7 @@ const ConsumerCard = ({ data, onView }) => {
           <div>
             <div className="flex items-center gap-3 mb-2">
               <div className="w-12 h-12 bg-linear-to-r from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center">
-                <User className="text-blue-600" size={20} />
+                <User className={colorVariables.PRIMARY_COLOR} size={20} />
               </div>
               <div>
                 <h3 className="font-bold text-gray-900">{data.customerName}</h3>
@@ -146,18 +122,15 @@ const ConsumerCard = ({ data, onView }) => {
               </div>
             </div>
             <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-medium text-gray-500">PAN:</span>
-                <span className="text-sm font-medium">{data.panNumber}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-medium text-gray-500">
-                  Income:
-                </span>
-                <span className="text-sm font-semibold text-gray-900">
-                  {formatCurrency(data.monthlyIncome)}/mo
-                </span>
-              </div>
+              <CopyableInfoItem
+                label="PAN"
+                value={data.panNumber}
+                icon={CreditCard}
+              />
+              <InfoItem
+                label="Income"
+                value={`${formatCurrency(data.monthlyIncome)}/mo`}
+              />
             </div>
           </div>
           <div className="text-right">
@@ -210,7 +183,7 @@ const ConsumerCard = ({ data, onView }) => {
           </div>
           <button
             onClick={onView}
-            className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
+            className={`${colorVariables.PRIMARY_COLOR} hover:text-blue-700 text-sm font-medium flex items-center gap-1`}
           >
             View Details <span>→</span>
           </button>
@@ -258,24 +231,19 @@ const CommercialCard = ({ data, onView }) => {
               </div>
               <div>
                 <h3 className="font-bold text-gray-900">{data.businessName}</h3>
-                <p className="text-sm text-gray-500">{data.gstNumber}</p>
+                <CopyableInfoItem
+                  label="GST"
+                  value={data.gstNumber}
+                  icon={Globe}
+                />
               </div>
             </div>
             <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-medium text-gray-500">
-                  Turnover:
-                </span>
-                <span className="text-sm font-semibold text-gray-900">
-                  {formatCurrency(data.annualTurnover)}/yr
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-medium text-gray-500">
-                  Active Loans:
-                </span>
-                <span className="text-sm font-medium">{data.activeLoans}</span>
-              </div>
+              <InfoItem
+                label="Turnover"
+                value={`${formatCurrency(data.annualTurnover)}/yr`}
+              />
+              <InfoItem label="Active Loans" value={`${data.activeLoans}`} />
             </div>
           </div>
           <div className="text-right">
@@ -352,17 +320,32 @@ export default function CRCReportPage() {
   const [userRole, setUserRole] = useState(CRC_ROLES.creditAnalyst);
   const [selectedReport, setSelectedReport] = useState(null);
   const [filters, setFilters] = useState({ riskGrade: "all" });
+  const [toast, setToast] = useState({
+    isOpen: false,
+    type: "success",
+    title: "",
+    message: "",
+  });
+  const [confirmDialog, setConfirmDialog] = useState({ open: false });
+  const [compactView, setCompactView] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const consumerData = CRC_CONSUMER_DUMMY_DATA;
   const commercialData = CRC_COMMERCIAL_DUMMY_DATA;
 
   const currentData = activeTab === "consumer" ? consumerData : commercialData;
+  const ITEMS_PER_PAGE = 3;
 
   const handleAction = (type) => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      alert(`${type} action completed!`);
+      setToast({
+        isOpen: true,
+        type: "success",
+        title: type,
+        message: `${type} completed successfully.`,
+      });
     }, 800);
   };
 
@@ -389,163 +372,144 @@ export default function CRCReportPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <div className="bg-white border rounded-xl px-3 py-2">
-              <select
-                value={userRole}
-                onChange={(e) => setUserRole(e.target.value)}
-                className="bg-transparent outline-none text-sm"
-              >
-                <option value={CRC_ROLES.creditAnalyst}>
-                  Credit Analyst View
-                </option>
-                <option value={CRC_ROLES.creditManager}>
-                  Credit Manager View
-                </option>
-                <option value={CRC_ROLES.admin}>Admin View</option>
-              </select>
-            </div>
-            <button
-              onClick={() => handleAction("Refresh Data")}
-              className="flex items-center gap-2 bg-linear-to-r from-blue-600 to-indigo-600 text-white px-4 py-2.5 rounded-xl hover:opacity-90"
-            >
+            <SelectField
+              value={userRole}
+              onChange={(v) => setUserRole(v)}
+              options={[
+                {
+                  label: "Credit Analyst View",
+                  value: CRC_ROLES.creditAnalyst,
+                },
+                {
+                  label: "Credit Manager View",
+                  value: CRC_ROLES.creditManager,
+                },
+                { label: "Admin View", value: CRC_ROLES.admin },
+              ]}
+              placeholder="Select Role"
+            />
+            <Button onClick={() => handleAction("Refresh Data")}>
               <RefreshCw size={18} /> Refresh Data
-            </button>
+            </Button>
           </div>
         </div>
 
         {/* Search */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div className="flex-1">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleAction("Search");
-                }}
-                className="relative"
-              >
-                <Search
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                  size={20}
-                />
-                <input
-                  type="text"
-                  placeholder="Search by name, PAN, GST, mobile..."
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </form>
+            <div className="mb-4">
+              <SearchField
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onClear={() => setSearchQuery("")}
+                placeholder="Search by name, PAN, GST, mobile..."
+              />
             </div>
-            <div className="flex items-center gap-3">
-              {["Save Report", "Export PDF", "Print"].map((action, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleAction(action)}
-                  className={`flex items-center gap-2 px-4 py-3 rounded-xl ${
-                    idx === 0
-                      ? "bg-green-600 text-white hover:bg-green-700"
-                      : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
-                  }`}
-                >
-                  {idx === 0 ? (
-                    <Save size={18} />
-                  ) : idx === 1 ? (
-                    <Download size={18} />
-                  ) : (
-                    <Printer size={18} />
-                  )}
-                  {action}
-                </button>
-              ))}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <QuickActionCard
+                title="Save Report"
+                subtitle="Save to database"
+                icon={Save}
+                onClick={() => handleAction("Save Report")}
+                variant="blue"
+              />
+              <QuickActionCard
+                title="Export PDF"
+                subtitle="Download as PDF"
+                icon={Download}
+                onClick={() => handleAction("Export PDF")}
+                variant="indigo"
+              />
+              <QuickActionCard
+                title="Print Report"
+                subtitle="Send to printer"
+                icon={Printer}
+                onClick={() => handleAction("Print")}
+                variant="sky"
+              />
             </div>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-gray-200 mb-6">
-          <TabButton
-            tab="consumer"
-            label="Consumer CRC"
-            icon={<User size={18} />}
-            count={consumerData.length}
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-          />
-          <TabButton
-            tab="commercial"
-            label="Commercial CRC"
-            icon={<Building size={18} />}
-            count={commercialData.length}
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-          />
-        </div>
+        <TabsNav
+          tabs={["Consumer CRC", "Commercial CRC"]}
+          active={activeTab === "consumer" ? "Consumer CRC" : "Commercial CRC"}
+          setActive={(t) =>
+            setActiveTab(t === "Consumer CRC" ? "consumer" : "commercial")
+          }
+        />
       </div>
 
       {isLoading ? (
-        <div className="flex justify-center items-center py-20">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Fetching credit risk data...</p>
-          </div>
-        </div>
+        <PageSkeleton />
       ) : (
         <>
           {/* Stats */}
+          {/* Stats + Compact Toggle */}
+          <div className="flex items-center justify-end gap-3 mb-3">
+            <span className="text-sm text-gray-600">Compact View</span>
+            <ToggleSwitch
+              checked={compactView}
+              onChange={setCompactView}
+              size="sm"
+            />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <QuickStatCard
+            <StatusCard
               title="Total Assessments"
               value={currentData.length}
-              icon={<FileText className="text-blue-600" />}
-              change="+12%"
-              trend="up"
+              icon={FileText}
+              variant="blue"
+              trend={{ value: "+12%", isPositive: true }}
             />
-            <QuickStatCard
+            <StatusCard
               title={`Avg. ${activeTab === "consumer" ? "Credit Score" : "Risk Rating"}`}
               value={activeTab === "consumer" ? "725" : "Low-Medium"}
-              icon={<TrendingUp className="text-green-600" />}
-              change="+5%"
-              trend="up"
+              icon={TrendingUp}
+              variant="green"
+              trend={{ value: "+5%", isPositive: true }}
             />
-            <QuickStatCard
+            <StatusCard
               title="Approval Rate"
               value={activeTab === "consumer" ? "78%" : "65%"}
-              icon={<Percent className="text-indigo-600" />}
-              change="+3%"
-              trend="up"
+              icon={Percent}
+              variant="purple"
+              trend={{ value: "+3%", isPositive: true }}
             />
-            <QuickStatCard
+            <StatusCard
               title="High Risk Cases"
               value="1"
-              icon={<AlertTriangle className="text-red-600" />}
-              change="+2"
-              trend="down"
+              icon={AlertTriangle}
+              variant="red"
+              trend={{ value: "+2", isPositive: false }}
             />
           </div>
 
           {/* Cards */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-            {currentData.map((item) =>
-              activeTab === "consumer" ? (
-                <ConsumerCard
-                  key={item.id}
-                  data={item}
-                  onView={() =>
-                    setSelectedReport({ type: "consumer", data: item })
-                  }
-                />
-              ) : (
-                <CommercialCard
-                  key={item.id}
-                  data={item}
-                  onView={() =>
-                    setSelectedReport({ type: "commercial", data: item })
-                  }
-                />
-              ),
-            )}
-          </div>
+          {!compactView && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+              {currentData.map((item) =>
+                activeTab === "consumer" ? (
+                  <ConsumerCard
+                    key={item.id}
+                    data={item}
+                    onView={() =>
+                      setSelectedReport({ type: "consumer", data: item })
+                    }
+                  />
+                ) : (
+                  <CommercialCard
+                    key={item.id}
+                    data={item}
+                    onView={() =>
+                      setSelectedReport({ type: "commercial", data: item })
+                    }
+                  />
+                ),
+              )}
+            </div>
+          )}
 
           {/* Table */}
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
@@ -560,17 +524,12 @@ export default function CRCReportPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Filter size={18} className="text-gray-500" />
-                  <select
-                    className="border-0 bg-transparent outline-none text-sm"
+                  <FilterDropdown
                     value={filters.riskGrade}
-                    onChange={(e) => setFilters({ riskGrade: e.target.value })}
-                  >
-                    {CRC_RISK_FILTER_OPTIONS.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(val) => setFilters({ riskGrade: val })}
+                    options={CRC_RISK_FILTER_OPTIONS}
+                    placeholder="All Risk Grades"
+                  />
                 </div>
               </div>
             </div>
@@ -629,7 +588,10 @@ export default function CRCReportPage() {
                               }`}
                             >
                               {activeTab === "consumer" ? (
-                                <User className="text-blue-600" size={18} />
+                                <User
+                                  className={colorVariables.PRIMARY_COLOR}
+                                  size={18}
+                                />
                               ) : (
                                 <Building
                                   className="text-purple-600"
@@ -776,22 +738,30 @@ export default function CRCReportPage() {
                         </div>
                       </td>
                       <td className="p-4">
-                        <div className="flex flex-col gap-2">
-                          <button
-                            onClick={() =>
-                              setSelectedReport({ type: activeTab, data: item })
-                            }
-                            className="flex items-center justify-center gap-1 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100"
-                          >
-                            <Eye size={14} /> View Full
-                          </button>
-                          <button className="flex items-center justify-center gap-1 px-3 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100">
-                            <Edit size={14} /> Edit
-                          </button>
-                          <button className="flex items-center justify-center gap-1 px-3 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100">
-                            <FileText size={14} /> Report
-                          </button>
-                        </div>
+                        <ActionMenu
+                          actions={[
+                            {
+                              label: "View Full Report",
+                              icon: Eye,
+                              onClick: () =>
+                                setSelectedReport({
+                                  type: activeTab,
+                                  data: item,
+                                }),
+                            },
+                            {
+                              label: "Edit Record",
+                              icon: Edit,
+                              onClick: () => {},
+                            },
+                            {
+                              label: "Generate Report",
+                              icon: FileText,
+                              onClick: () => {},
+                              divider: true,
+                            },
+                          ]}
+                        />
                       </td>
                     </tr>
                   ))}
@@ -814,16 +784,14 @@ export default function CRCReportPage() {
           >
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900">
-                    {selectedReport.type === "consumer"
-                      ? `${selectedReport.data.customerName} - Consumer CRC Report`
-                      : `${selectedReport.data.businessName} - Commercial CRC Report`}
-                  </h3>
-                  <p className="text-gray-600">
-                    Generated on {new Date().toLocaleDateString()}
-                  </p>
-                </div>
+                <ProfileHeader
+                  name={
+                    selectedReport.type === "consumer"
+                      ? selectedReport.data.customerName
+                      : selectedReport.data.businessName
+                  }
+                  subtitle={`CRC Report • Generated on ${new Date().toLocaleDateString()}`}
+                />
                 <button
                   onClick={() => setSelectedReport(null)}
                   className="p-2 hover:bg-gray-100 rounded-lg"
@@ -835,28 +803,34 @@ export default function CRCReportPage() {
 
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-gray-50 rounded-xl p-5">
-                  <h4 className="font-semibold text-gray-900 mb-4">
-                    {selectedReport.type === "consumer"
+                <InfoCard
+                  title={
+                    selectedReport.type === "consumer"
                       ? "Personal Information"
-                      : "Business Information"}
-                  </h4>
+                      : "Business Information"
+                  }
+                  icon={selectedReport.type === "consumer" ? User : Building}
+                >
                   <div className="space-y-3">
                     {selectedReport.type === "consumer" ? (
                       <>
-                        <DetailRow
+                        <InfoItem
                           label="Full Name"
                           value={selectedReport.data.customerName}
+                          icon={User}
                         />
-                        <DetailRow
+                        <InfoItem
                           label="Mobile Number"
                           value={selectedReport.data.mobileNumber}
+                          icon={Phone}
+                          copyable
                         />
-                        <DetailRow
+                        <CopyableInfoItem
                           label="PAN Number"
                           value={selectedReport.data.panNumber}
+                          icon={CreditCard}
                         />
-                        <DetailRow
+                        <InfoItem
                           label="Monthly Income"
                           value={formatCurrency(
                             selectedReport.data.monthlyIncome,
@@ -865,35 +839,34 @@ export default function CRCReportPage() {
                       </>
                     ) : (
                       <>
-                        <DetailRow
+                        <InfoItem
                           label="Business Name"
                           value={selectedReport.data.businessName}
+                          icon={Building}
                         />
-                        <DetailRow
+                        <CopyableInfoItem
                           label="GST Number"
                           value={selectedReport.data.gstNumber}
+                          icon={Globe}
                         />
-                        <DetailRow
+                        <InfoItem
                           label="Annual Turnover"
                           value={formatCurrency(
                             selectedReport.data.annualTurnover,
                           )}
                         />
-                        <DetailRow
+                        <InfoItem
                           label="Active Loans"
-                          value={selectedReport.data.activeLoans}
+                          value={`${selectedReport.data.activeLoans}`}
                         />
                       </>
                     )}
                   </div>
-                </div>
+                </InfoCard>
 
-                <div className="bg-gray-50 rounded-xl p-5">
-                  <h4 className="font-semibold text-gray-900 mb-4">
-                    Risk Assessment
-                  </h4>
+                <InfoCard title="Risk Assessment" icon={Shield}>
                   <div className="space-y-3">
-                    <DetailRow
+                    <InfoItem
                       label={
                         selectedReport.type === "consumer"
                           ? "Credit Score"
@@ -905,7 +878,7 @@ export default function CRCReportPage() {
                           : selectedReport.data.businessRiskRating
                       }
                     />
-                    <DetailRow
+                    <InfoItem
                       label={
                         selectedReport.type === "consumer"
                           ? "Risk Grade"
@@ -917,7 +890,7 @@ export default function CRCReportPage() {
                           : selectedReport.data.riskCategory
                       }
                     />
-                    <DetailRow
+                    <InfoItem
                       label={
                         selectedReport.type === "consumer"
                           ? "Overdue Count"
@@ -930,7 +903,55 @@ export default function CRCReportPage() {
                       }
                     />
                   </div>
-                </div>
+                </InfoCard>
+              </div>
+
+              <div className="mt-6">
+                <StatusOverviewCard
+                  items={
+                    selectedReport.type === "consumer"
+                      ? [
+                          {
+                            label: "Suggested Limit",
+                            value: formatCurrency(
+                              selectedReport.data.suggestedLimit,
+                            ),
+                          },
+                          {
+                            label: "Interest Band",
+                            value: selectedReport.data.interestBand,
+                          },
+                          {
+                            label: "Eligibility",
+                            value: selectedReport.data.eligibilityStatus,
+                          },
+                          {
+                            label: "Last Checked",
+                            value: selectedReport.data.lastChecked,
+                          },
+                        ]
+                      : [
+                          {
+                            label: "Approved Limit",
+                            value: formatCurrency(
+                              selectedReport.data.approvedLimit,
+                            ),
+                          },
+                          {
+                            label: "Risk Category",
+                            value: selectedReport.data.riskCategory,
+                          },
+                          {
+                            label: "GST Status",
+                            value: selectedReport.data.gstVerification,
+                          },
+                          {
+                            label: "Last Checked",
+                            value: selectedReport.data.lastChecked,
+                          },
+                        ]
+                  }
+                />
               </div>
 
               <div className="mt-6 pt-6 border-t border-gray-200">
@@ -946,12 +967,9 @@ export default function CRCReportPage() {
                     >
                       Download PDF
                     </button>
-                    <button
-                      onClick={() => handleAction("Save to Database")}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700"
-                    >
+                    <Button onClick={() => setConfirmDialog({ open: true })}>
                       Save to Database
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -959,14 +977,41 @@ export default function CRCReportPage() {
           </div>
         </div>
       )}
+
+      {/* Pagination */}
+      <div className="mt-6 flex justify-center">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={Math.ceil(currentData.length / ITEMS_PER_PAGE)}
+          onPageChange={setCurrentPage}
+        />
+      </div>
+
+      {/* Toast Notification */}
+      <ToastCard
+        isOpen={toast.isOpen}
+        onClose={() => setToast((t) => ({ ...t, isOpen: false }))}
+        type={toast.type}
+        title={toast.title}
+        message={toast.message}
+        showDeliveryTime={false}
+        onButtonClick={() => setToast((t) => ({ ...t, isOpen: false }))}
+      />
+
+      {/* Confirm Save Dialog */}
+      <ConfirmationDialog
+        open={confirmDialog.open}
+        title="Save CRC Report"
+        description="Are you sure you want to save this CRC report to the database?"
+        confirmText="Save"
+        showRemark
+        onConfirm={() => {
+          setConfirmDialog({ open: false });
+          handleAction("Save to Database");
+        }}
+        onCancel={() => setConfirmDialog({ open: false })}
+        isPopup
+      />
     </div>
   );
 }
-
-// Helper component
-const DetailRow = ({ label, value }) => (
-  <div className="flex justify-between items-center py-2 border-b border-gray-200 last:border-0">
-    <span className="text-sm font-medium text-gray-600">{label}:</span>
-    <span className="text-sm font-semibold text-gray-900">{value}</span>
-  </div>
-);
