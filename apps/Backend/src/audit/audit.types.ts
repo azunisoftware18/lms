@@ -42,7 +42,8 @@ export type AuditAction =
   | "UPDATE_COMMISSION"
   | "LOAN_DISBURSED"
   | "CREATE_COMMISSION"
-  | "LOGIN_SUCCESS";
+  | "LOGIN_SUCCESS"
+  | "UPLOAD_DOCUMENT";
 
 export type AuditEntityType =
   | "LOAN"

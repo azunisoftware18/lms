@@ -278,10 +278,6 @@ model Leads {
   @@index([leadNumber])
 }
 
-
-
-
-
 model LoanApplicationDraft {
   id       String @id @default(cuid())
   userId   String
@@ -381,17 +377,17 @@ model LoanApplication {
   branch               Branch              @relation(fields: [branchId], references: [id])
 
   // Relations
-  loanType           LoanType?             @relation(fields: [loanTypeId], references: [id])
-  loanAssignments    LoanAssignment[]
-  guarantors         Guarantor[]
-  existingLoans      ExistingLoan[]
-  creditCards        CreditCard[]
-  bankAccounts       BankAccount[]
-  insurancePolicies  InsurancePolicy[]
-  properties         Property[]
-  references         Reference[]
-  loanRequirement    LoanRequirement?
-  loanQuestionnaire  LoanQuestionnaire?
+  loanType          LoanType?          @relation(fields: [loanTypeId], references: [id])
+  loanAssignments   LoanAssignment[]
+  guarantors        Guarantor[]
+  existingLoans     ExistingLoan[]
+  creditCards       CreditCard[]
+  bankAccounts      BankAccount[]
+  insurancePolicies InsurancePolicy[]
+  properties        Property[]
+  references        Reference[]
+  loanRequirement   LoanRequirement?
+  loanQuestionnaire LoanQuestionnaire?
 
   @@index([loanNumber])
 }
@@ -402,16 +398,32 @@ model CoApplicant {
   loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
 
   // Personal Details
-  firstName     String
-  lastName      String
-  middleName    String?
-  relation      CoApplicantRelation
-  relationOther String? // Specify if relation is OTHER
-  contactNumber String
-  email         String?
-  dob           DateTime
-  panNumber     String?
-  aadhaarNumber String?
+  firstName                 String
+  lastName                  String
+  middleName                String?
+  fatherName                String?
+  motherName                String?
+  woname                    String?
+  relation                  CoApplicantRelation
+  relationOther             String? // Specify if relation is OTHER
+  contactNumber             String
+  phoneNumber               String?
+  email                     String?
+  dob                       DateTime
+  category                  Category?
+  maritalStatus             MaritalStatus?
+  noOfDependents            Int?
+  noOfChildren              Int?
+  qualification             String?
+  correspondenceAddressType CorrespondenceAddressType?
+  panNumber                 String?
+  aadhaarNumber             String?
+  voterId                   String?
+  drivingLicenceNo          String?
+  passportNumber            String?
+  presentAccommodation      AccommodationType?
+  periodOfStay              String?
+  rentPerMonth              Float?
 
   employmentType EmploymentType
 
@@ -423,59 +435,85 @@ model CoApplicant {
   addresses           Address[]
   occupationalDetails OccupationalDetails[]
   employmentDetails   EmploymentDetails[]
+  financialDetails    CoApplicantFinancialDetails?
   documents           Document[]
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @updatedAt
+  createdAt           DateTime                     @default(now())
+  updatedAt           DateTime                     @updatedAt
 
   @@index([loanApplicationId])
 }
 
+model CoApplicantFinancialDetails {
+  id            String      @id @default(cuid())
+  coApplicantId String      @unique
+  coApplicant   CoApplicant @relation(fields: [coApplicantId], references: [id])
+
+  grossMonthlyIncome     Float?
+  netMonthlyIncome       Float?
+  averageMonthlyExpenses Float?
+
+  savingBankBalance        Float?
+  valueOfImmovableProperty Float?
+  currentBalanceInPF       Float?
+  valueOfSharesSecurities  Float?
+  fixedDeposits            Float?
+  otherAssets              Float?
+  totalAssets              Float?
+
+  creditSocietyLoan Float?
+  employerLoan      Float?
+  homeLoan          Float?
+  pfLoan            Float?
+  vehicleLoan       Float?
+  personalLoan      Float?
+  otherLoan         Float?
+  totalLiabilities  Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
 //===================================CUSTOMER=====================================
 
 model Customer {
-  id                 String        @id @default(cuid())
-  title              Title
-  firstName          String
-  lastName           String
-  middleName         String?
-  fatherName         String
-  motherName         String
-  woname           String? // Husband/Wife/Guardian name based on relation
-  gender             Gender
-  genderOther        String? // Specify if gender is OTHER
-  dob                DateTime
-  aadhaarNumber      String
-  panNumber          String
-  voterId            String?
-  drivingLicenceNo   String?
-  maritalStatus      MaritalStatus
-  maritalStatusOther String? // Specify if marital status is OTHER
-  nationality        String
-  category           Category
-  categoryOther      String? // Specify if category is OTHER
-  passportNumber     String?
-  contactNumber      String
-  alternateNumber    String?
-  email              String?
-  phoneNumber        String? // With STD Code
-  relationshipWithCoApplicant CoApplicantRelation // Relation with co-applicant if any
+  id                           String                     @id @default(cuid())
+  title                        Title
+  firstName                    String
+  lastName                     String
+  middleName                   String?
+  fatherName                   String
+  motherName                   String
+  woname                       String? // Husband/Wife/Guardian name based on relation
+  email                        String?
+  dob                          DateTime
+  contactNumber                String
+  alternateNumber              String?
+  category                     Category
+  categoryOther                String? // Specify if category is OTHER
+  maritalStatus                MaritalStatus
+  maritalStatusOther           String? // Specify if marital status is OTHER
+  // Additional Personal Details
+  noOfFamilyDependents         Int?
+  noOfChildren                 Int?
+  qualification                String?
+  correspondenceAddressType    CorrespondenceAddressType?
+  aadhaarNumber                String
+  panNumber                    String
+  passportNumber               String?
+  voterId                      String?
+  drivingLicenceNo             String?
+  gender                       Gender
+  genderOther                  String? // Specify if gender is OTHER
+  // Accommodation Details
+  presentAccommodation         AccommodationType?
+  periodOfStay                 String? // e.g., "2 years", "6 months"
+  rentPerMonth                 Float?
+  nationality                  String
+  phoneNumber                  String? // With STD Code
+  relationshipWithCoApplicant  CoApplicantRelation // Relation with co-applicant if any
   relationWithCoApplicantOther String? // Specify if relation is OTHER
 
-  // Additional Personal Details
-  noOfFamilyDependents      Int?
-  noOfChildren              Int?
-  qualification             String?
-  correspondenceAddressType CorrespondenceAddressType?
-
-  // Accommodation Details
-  presentAccommodation AccommodationType?
-  periodOfStay         String? // e.g., "2 years", "6 months"
-  rentPerMonth         Float?
-
   employmentType EmploymentType
-
-
 
   status CustomerStatus @default(ACTIVE)
 
@@ -495,7 +533,6 @@ model Customer {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
 
 //===================================OCCUPATIONAL DETAILS=====================================
 
@@ -598,7 +635,6 @@ model FinancialDetails {
   updatedAt DateTime @updatedAt
 }
 
-
 //===================================GUARANTOR DETAILS=====================================
 model Guarantor {
   id                String          @id @default(cuid())
@@ -619,19 +655,22 @@ model Guarantor {
   phoneNumber   String?
   email         String?
 
-  panNumber     String?
-  aadhaarNumber String?
-  voterId       String?
+  panNumber      String?
+  aadhaarNumber  String?
+  voterId        String?
   drivingLicence String?
   passportNumber String?
 
-  category Category?
+  category      Category?
   maritalStatus MaritalStatus?
 
   noOfDependents Int?
   noOfChildren   Int?
 
-  qualification String?
+  qualification             String?
+  correspondenceAddressType CorrespondenceAddressType?
+  relationshipWithApplicant CoApplicantRelation?
+  relationshipOther         String?
 
   accommodationType AccommodationType?
   periodOfStay      String?
@@ -681,22 +720,22 @@ model GuarantorFinancialDetails {
   updatedAt DateTime @updatedAt
 }
 
-
 //===================================EXISTING LOANS=====================================
 model ExistingLoan {
   id                String          @id @default(cuid())
   loanApplicationId String
   loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
 
-  institutionName   String
-  purpose           String?
-  disbursedAmount   Float?
-  emi               Float?
-  balanceTerm       Int?
+  institutionName    String
+  purpose            String?
+  disbursedAmount    Float?
+  emi                Float?
+  balanceTerm        Int?
   balanceOutstanding Float?
 
   createdAt DateTime @default(now())
 }
+
 //===================================CREDIT CARD DETAILS=====================================
 model CreditCard {
   id                String          @id @default(cuid())
@@ -720,13 +759,13 @@ model BankAccount {
   loanApplicationId String
   loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
 
-  holderName     String
-  bankName       String
-  branchName     String?
-  accountType    String
-  accountNumber  String
-  openingDate    DateTime?
-  balanceAmount  Float?
+  holderName    String
+  bankName      String
+  branchName    String?
+  accountType   String
+  accountNumber String
+  openingDate   DateTime?
+  balanceAmount Float?
 
   createdAt DateTime @default(now())
 }
@@ -743,11 +782,11 @@ model InsurancePolicy {
   holderName   String?
   policyNumber String?
 
-  maturityDate DateTime?
-  policyValue  Float?
-  policyType   String?
+  maturityDate  DateTime?
+  policyValue   Float?
+  policyType    String?
   yearlyPremium Float?
-  paidUpValue  Float?
+  paidUpValue   Float?
 
   createdAt DateTime @default(now())
 }
@@ -763,16 +802,16 @@ model Property {
   addressId String?
   address   Address? @relation(fields: [addressId], references: [id])
 
-  landArea        Float?
-  buildUpArea     Float?
+  landArea    Float?
+  buildUpArea Float?
 
-  ownershipType   OwnershipType
-  landType        LandType
+  ownershipType OwnershipType
+  landType      LandType
 
-  purchaseFrom    PurchaseSource
-  purchaseOther   String?
+  purchaseFrom  PurchaseSource
+  purchaseOther String?
 
-  constructionStage ConstructionStage
+  constructionStage   ConstructionStage
   constructionPercent Float?
 
   createdAt DateTime @default(now())
@@ -784,13 +823,13 @@ model Reference {
   loanApplicationId String
   loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
 
-  name      String
+  name       String
   fatherName String?
-  address   String?
-  city      String?
-  state     String?
-  pinCode   String?
-  phone     String?
+  address    String?
+  city       String?
+  state      String?
+  pinCode    String?
+  phone      String?
   occupation String?
 
   createdAt DateTime @default(now())
@@ -807,14 +846,13 @@ model LoanRequirement {
 
   interestOption InterestOption
 
-  loanPurpose LoanPurpose
+  loanPurpose      LoanPurpose
   loanPurposeOther String?
 
   repaymentMethod RepaymentMethod
 
   createdAt DateTime @default(now())
 }
-
 
 //===========================LOAN QUESTIONNAIRE=====================================
 model LoanQuestionnaire {
@@ -828,15 +866,10 @@ model LoanQuestionnaire {
   otherLoans         Boolean?
   guarantorAnywhere  Boolean?
 
-  mppLifeInsurance   Boolean?
+  mppLifeInsurance Boolean?
 
   createdAt DateTime @default(now())
 }
-
-
-
-
-
 
 model LoanRecovery {
   id String @id @default(cuid())
@@ -958,8 +991,6 @@ model Kyc {
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id])
 }
-
-
 
 enum KycStatus {
   NOT_STARTED
@@ -1161,11 +1192,6 @@ model LoanType {
   leads            Leads[]
   loanApplications LoanApplication[]
 }
-
-
-
-
-
 
 model TechnicalReport {
   id                String          @id @default(cuid())
@@ -1397,7 +1423,6 @@ enum DraftStatus {
   SUBMITTED
 }
 
-
 enum InterestOption {
   FIXED
   VARIABLE
@@ -1447,8 +1472,6 @@ enum CommissionStatus {
   REJECTED
   PAID
 }
-
-
 
 enum OwnershipType {
   SOLE
@@ -1514,9 +1537,10 @@ enum recovery_status {
 }
 
 enum BranchType {
-  SUPER
-  MAIN
-  SUB
+  HEAD_OFFICE
+  ZONAL
+  REGIONAL
+  BRANCH
 }
 
 enum MoratoriumType {

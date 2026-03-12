@@ -61,6 +61,9 @@ export type GuarantorMinAggregateOutputType = {
   noOfDependents: number | null
   noOfChildren: number | null
   qualification: string | null
+  correspondenceAddressType: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant: $Enums.CoApplicantRelation | null
+  relationshipOther: string | null
   accommodationType: $Enums.AccommodationType | null
   periodOfStay: string | null
   rentPerMonth: number | null
@@ -92,6 +95,9 @@ export type GuarantorMaxAggregateOutputType = {
   noOfDependents: number | null
   noOfChildren: number | null
   qualification: string | null
+  correspondenceAddressType: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant: $Enums.CoApplicantRelation | null
+  relationshipOther: string | null
   accommodationType: $Enums.AccommodationType | null
   periodOfStay: string | null
   rentPerMonth: number | null
@@ -123,6 +129,9 @@ export type GuarantorCountAggregateOutputType = {
   noOfDependents: number
   noOfChildren: number
   qualification: number
+  correspondenceAddressType: number
+  relationshipWithApplicant: number
+  relationshipOther: number
   accommodationType: number
   periodOfStay: number
   rentPerMonth: number
@@ -168,6 +177,9 @@ export type GuarantorMinAggregateInputType = {
   noOfDependents?: true
   noOfChildren?: true
   qualification?: true
+  correspondenceAddressType?: true
+  relationshipWithApplicant?: true
+  relationshipOther?: true
   accommodationType?: true
   periodOfStay?: true
   rentPerMonth?: true
@@ -199,6 +211,9 @@ export type GuarantorMaxAggregateInputType = {
   noOfDependents?: true
   noOfChildren?: true
   qualification?: true
+  correspondenceAddressType?: true
+  relationshipWithApplicant?: true
+  relationshipOther?: true
   accommodationType?: true
   periodOfStay?: true
   rentPerMonth?: true
@@ -230,6 +245,9 @@ export type GuarantorCountAggregateInputType = {
   noOfDependents?: true
   noOfChildren?: true
   qualification?: true
+  correspondenceAddressType?: true
+  relationshipWithApplicant?: true
+  relationshipOther?: true
   accommodationType?: true
   periodOfStay?: true
   rentPerMonth?: true
@@ -348,6 +366,9 @@ export type GuarantorGroupByOutputType = {
   noOfDependents: number | null
   noOfChildren: number | null
   qualification: string | null
+  correspondenceAddressType: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant: $Enums.CoApplicantRelation | null
+  relationshipOther: string | null
   accommodationType: $Enums.AccommodationType | null
   periodOfStay: string | null
   rentPerMonth: number | null
@@ -402,6 +423,9 @@ export type GuarantorWhereInput = {
   noOfDependents?: Prisma.IntNullableFilter<"Guarantor"> | number | null
   noOfChildren?: Prisma.IntNullableFilter<"Guarantor"> | number | null
   qualification?: Prisma.StringNullableFilter<"Guarantor"> | string | null
+  correspondenceAddressType?: Prisma.EnumCorrespondenceAddressTypeNullableFilter<"Guarantor"> | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.EnumCoApplicantRelationNullableFilter<"Guarantor"> | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.StringNullableFilter<"Guarantor"> | string | null
   accommodationType?: Prisma.EnumAccommodationTypeNullableFilter<"Guarantor"> | $Enums.AccommodationType | null
   periodOfStay?: Prisma.StringNullableFilter<"Guarantor"> | string | null
   rentPerMonth?: Prisma.FloatNullableFilter<"Guarantor"> | number | null
@@ -438,6 +462,9 @@ export type GuarantorOrderByWithRelationInput = {
   noOfDependents?: Prisma.SortOrderInput | Prisma.SortOrder
   noOfChildren?: Prisma.SortOrderInput | Prisma.SortOrder
   qualification?: Prisma.SortOrderInput | Prisma.SortOrder
+  correspondenceAddressType?: Prisma.SortOrderInput | Prisma.SortOrder
+  relationshipWithApplicant?: Prisma.SortOrderInput | Prisma.SortOrder
+  relationshipOther?: Prisma.SortOrderInput | Prisma.SortOrder
   accommodationType?: Prisma.SortOrderInput | Prisma.SortOrder
   periodOfStay?: Prisma.SortOrderInput | Prisma.SortOrder
   rentPerMonth?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -478,6 +505,9 @@ export type GuarantorWhereUniqueInput = Prisma.AtLeast<{
   noOfDependents?: Prisma.IntNullableFilter<"Guarantor"> | number | null
   noOfChildren?: Prisma.IntNullableFilter<"Guarantor"> | number | null
   qualification?: Prisma.StringNullableFilter<"Guarantor"> | string | null
+  correspondenceAddressType?: Prisma.EnumCorrespondenceAddressTypeNullableFilter<"Guarantor"> | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.EnumCoApplicantRelationNullableFilter<"Guarantor"> | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.StringNullableFilter<"Guarantor"> | string | null
   accommodationType?: Prisma.EnumAccommodationTypeNullableFilter<"Guarantor"> | $Enums.AccommodationType | null
   periodOfStay?: Prisma.StringNullableFilter<"Guarantor"> | string | null
   rentPerMonth?: Prisma.FloatNullableFilter<"Guarantor"> | number | null
@@ -514,6 +544,9 @@ export type GuarantorOrderByWithAggregationInput = {
   noOfDependents?: Prisma.SortOrderInput | Prisma.SortOrder
   noOfChildren?: Prisma.SortOrderInput | Prisma.SortOrder
   qualification?: Prisma.SortOrderInput | Prisma.SortOrder
+  correspondenceAddressType?: Prisma.SortOrderInput | Prisma.SortOrder
+  relationshipWithApplicant?: Prisma.SortOrderInput | Prisma.SortOrder
+  relationshipOther?: Prisma.SortOrderInput | Prisma.SortOrder
   accommodationType?: Prisma.SortOrderInput | Prisma.SortOrder
   periodOfStay?: Prisma.SortOrderInput | Prisma.SortOrder
   rentPerMonth?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -553,6 +586,9 @@ export type GuarantorScalarWhereWithAggregatesInput = {
   noOfDependents?: Prisma.IntNullableWithAggregatesFilter<"Guarantor"> | number | null
   noOfChildren?: Prisma.IntNullableWithAggregatesFilter<"Guarantor"> | number | null
   qualification?: Prisma.StringNullableWithAggregatesFilter<"Guarantor"> | string | null
+  correspondenceAddressType?: Prisma.EnumCorrespondenceAddressTypeNullableWithAggregatesFilter<"Guarantor"> | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.EnumCoApplicantRelationNullableWithAggregatesFilter<"Guarantor"> | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.StringNullableWithAggregatesFilter<"Guarantor"> | string | null
   accommodationType?: Prisma.EnumAccommodationTypeNullableWithAggregatesFilter<"Guarantor"> | $Enums.AccommodationType | null
   periodOfStay?: Prisma.StringNullableWithAggregatesFilter<"Guarantor"> | string | null
   rentPerMonth?: Prisma.FloatNullableWithAggregatesFilter<"Guarantor"> | number | null
@@ -583,6 +619,9 @@ export type GuarantorCreateInput = {
   noOfDependents?: number | null
   noOfChildren?: number | null
   qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
   accommodationType?: $Enums.AccommodationType | null
   periodOfStay?: string | null
   rentPerMonth?: number | null
@@ -619,6 +658,9 @@ export type GuarantorUncheckedCreateInput = {
   noOfDependents?: number | null
   noOfChildren?: number | null
   qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
   accommodationType?: $Enums.AccommodationType | null
   periodOfStay?: string | null
   rentPerMonth?: number | null
@@ -653,6 +695,9 @@ export type GuarantorUpdateInput = {
   noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -689,6 +734,9 @@ export type GuarantorUncheckedUpdateInput = {
   noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -724,6 +772,9 @@ export type GuarantorCreateManyInput = {
   noOfDependents?: number | null
   noOfChildren?: number | null
   qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
   accommodationType?: $Enums.AccommodationType | null
   periodOfStay?: string | null
   rentPerMonth?: number | null
@@ -754,6 +805,9 @@ export type GuarantorUpdateManyMutationInput = {
   noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -785,6 +839,9 @@ export type GuarantorUncheckedUpdateManyInput = {
   noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -837,6 +894,9 @@ export type GuarantorCountOrderByAggregateInput = {
   noOfDependents?: Prisma.SortOrder
   noOfChildren?: Prisma.SortOrder
   qualification?: Prisma.SortOrder
+  correspondenceAddressType?: Prisma.SortOrder
+  relationshipWithApplicant?: Prisma.SortOrder
+  relationshipOther?: Prisma.SortOrder
   accommodationType?: Prisma.SortOrder
   periodOfStay?: Prisma.SortOrder
   rentPerMonth?: Prisma.SortOrder
@@ -874,6 +934,9 @@ export type GuarantorMaxOrderByAggregateInput = {
   noOfDependents?: Prisma.SortOrder
   noOfChildren?: Prisma.SortOrder
   qualification?: Prisma.SortOrder
+  correspondenceAddressType?: Prisma.SortOrder
+  relationshipWithApplicant?: Prisma.SortOrder
+  relationshipOther?: Prisma.SortOrder
   accommodationType?: Prisma.SortOrder
   periodOfStay?: Prisma.SortOrder
   rentPerMonth?: Prisma.SortOrder
@@ -905,6 +968,9 @@ export type GuarantorMinOrderByAggregateInput = {
   noOfDependents?: Prisma.SortOrder
   noOfChildren?: Prisma.SortOrder
   qualification?: Prisma.SortOrder
+  correspondenceAddressType?: Prisma.SortOrder
+  relationshipWithApplicant?: Prisma.SortOrder
+  relationshipOther?: Prisma.SortOrder
   accommodationType?: Prisma.SortOrder
   periodOfStay?: Prisma.SortOrder
   rentPerMonth?: Prisma.SortOrder
@@ -1014,12 +1080,8 @@ export type GuarantorUpdateOneWithoutEmploymentDetailsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.GuarantorUpdateToOneWithWhereWithoutEmploymentDetailsInput, Prisma.GuarantorUpdateWithoutEmploymentDetailsInput>, Prisma.GuarantorUncheckedUpdateWithoutEmploymentDetailsInput>
 }
 
-export type NullableEnumCategoryFieldUpdateOperationsInput = {
-  set?: $Enums.Category | null
-}
-
-export type NullableEnumMaritalStatusFieldUpdateOperationsInput = {
-  set?: $Enums.MaritalStatus | null
+export type NullableEnumCoApplicantRelationFieldUpdateOperationsInput = {
+  set?: $Enums.CoApplicantRelation | null
 }
 
 export type NullableEnumEmploymentTypeFieldUpdateOperationsInput = {
@@ -1062,6 +1124,9 @@ export type GuarantorCreateWithoutAddressesInput = {
   noOfDependents?: number | null
   noOfChildren?: number | null
   qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
   accommodationType?: $Enums.AccommodationType | null
   periodOfStay?: string | null
   rentPerMonth?: number | null
@@ -1097,6 +1162,9 @@ export type GuarantorUncheckedCreateWithoutAddressesInput = {
   noOfDependents?: number | null
   noOfChildren?: number | null
   qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
   accommodationType?: $Enums.AccommodationType | null
   periodOfStay?: string | null
   rentPerMonth?: number | null
@@ -1146,6 +1214,9 @@ export type GuarantorUpdateWithoutAddressesInput = {
   noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1181,6 +1252,9 @@ export type GuarantorUncheckedUpdateWithoutAddressesInput = {
   noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1214,6 +1288,9 @@ export type GuarantorCreateWithoutLoanApplicationInput = {
   noOfDependents?: number | null
   noOfChildren?: number | null
   qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
   accommodationType?: $Enums.AccommodationType | null
   periodOfStay?: string | null
   rentPerMonth?: number | null
@@ -1248,6 +1325,9 @@ export type GuarantorUncheckedCreateWithoutLoanApplicationInput = {
   noOfDependents?: number | null
   noOfChildren?: number | null
   qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
   accommodationType?: $Enums.AccommodationType | null
   periodOfStay?: string | null
   rentPerMonth?: number | null
@@ -1312,6 +1392,9 @@ export type GuarantorScalarWhereInput = {
   noOfDependents?: Prisma.IntNullableFilter<"Guarantor"> | number | null
   noOfChildren?: Prisma.IntNullableFilter<"Guarantor"> | number | null
   qualification?: Prisma.StringNullableFilter<"Guarantor"> | string | null
+  correspondenceAddressType?: Prisma.EnumCorrespondenceAddressTypeNullableFilter<"Guarantor"> | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.EnumCoApplicantRelationNullableFilter<"Guarantor"> | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.StringNullableFilter<"Guarantor"> | string | null
   accommodationType?: Prisma.EnumAccommodationTypeNullableFilter<"Guarantor"> | $Enums.AccommodationType | null
   periodOfStay?: Prisma.StringNullableFilter<"Guarantor"> | string | null
   rentPerMonth?: Prisma.FloatNullableFilter<"Guarantor"> | number | null
@@ -1342,6 +1425,9 @@ export type GuarantorCreateWithoutOccupationalDetailsInput = {
   noOfDependents?: number | null
   noOfChildren?: number | null
   qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
   accommodationType?: $Enums.AccommodationType | null
   periodOfStay?: string | null
   rentPerMonth?: number | null
@@ -1377,6 +1463,9 @@ export type GuarantorUncheckedCreateWithoutOccupationalDetailsInput = {
   noOfDependents?: number | null
   noOfChildren?: number | null
   qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
   accommodationType?: $Enums.AccommodationType | null
   periodOfStay?: string | null
   rentPerMonth?: number | null
@@ -1426,6 +1515,9 @@ export type GuarantorUpdateWithoutOccupationalDetailsInput = {
   noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1461,6 +1553,9 @@ export type GuarantorUncheckedUpdateWithoutOccupationalDetailsInput = {
   noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1494,6 +1589,9 @@ export type GuarantorCreateWithoutEmploymentDetailsInput = {
   noOfDependents?: number | null
   noOfChildren?: number | null
   qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
   accommodationType?: $Enums.AccommodationType | null
   periodOfStay?: string | null
   rentPerMonth?: number | null
@@ -1529,6 +1627,9 @@ export type GuarantorUncheckedCreateWithoutEmploymentDetailsInput = {
   noOfDependents?: number | null
   noOfChildren?: number | null
   qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
   accommodationType?: $Enums.AccommodationType | null
   periodOfStay?: string | null
   rentPerMonth?: number | null
@@ -1578,6 +1679,9 @@ export type GuarantorUpdateWithoutEmploymentDetailsInput = {
   noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1613,6 +1717,9 @@ export type GuarantorUncheckedUpdateWithoutEmploymentDetailsInput = {
   noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1646,6 +1753,9 @@ export type GuarantorCreateWithoutFinancialDetailsInput = {
   noOfDependents?: number | null
   noOfChildren?: number | null
   qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
   accommodationType?: $Enums.AccommodationType | null
   periodOfStay?: string | null
   rentPerMonth?: number | null
@@ -1681,6 +1791,9 @@ export type GuarantorUncheckedCreateWithoutFinancialDetailsInput = {
   noOfDependents?: number | null
   noOfChildren?: number | null
   qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
   accommodationType?: $Enums.AccommodationType | null
   periodOfStay?: string | null
   rentPerMonth?: number | null
@@ -1730,6 +1843,9 @@ export type GuarantorUpdateWithoutFinancialDetailsInput = {
   noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1765,6 +1881,9 @@ export type GuarantorUncheckedUpdateWithoutFinancialDetailsInput = {
   noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1798,6 +1917,9 @@ export type GuarantorCreateManyLoanApplicationInput = {
   noOfDependents?: number | null
   noOfChildren?: number | null
   qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
   accommodationType?: $Enums.AccommodationType | null
   periodOfStay?: string | null
   rentPerMonth?: number | null
@@ -1828,6 +1950,9 @@ export type GuarantorUpdateWithoutLoanApplicationInput = {
   noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1862,6 +1987,9 @@ export type GuarantorUncheckedUpdateWithoutLoanApplicationInput = {
   noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1896,6 +2024,9 @@ export type GuarantorUncheckedUpdateManyWithoutLoanApplicationInput = {
   noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1976,6 +2107,9 @@ export type GuarantorSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   noOfDependents?: boolean
   noOfChildren?: boolean
   qualification?: boolean
+  correspondenceAddressType?: boolean
+  relationshipWithApplicant?: boolean
+  relationshipOther?: boolean
   accommodationType?: boolean
   periodOfStay?: boolean
   rentPerMonth?: boolean
@@ -2015,6 +2149,9 @@ export type GuarantorSelectScalar = {
   noOfDependents?: boolean
   noOfChildren?: boolean
   qualification?: boolean
+  correspondenceAddressType?: boolean
+  relationshipWithApplicant?: boolean
+  relationshipOther?: boolean
   accommodationType?: boolean
   periodOfStay?: boolean
   rentPerMonth?: boolean
@@ -2023,7 +2160,7 @@ export type GuarantorSelectScalar = {
   updatedAt?: boolean
 }
 
-export type GuarantorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "firstName" | "middleName" | "lastName" | "fatherName" | "motherName" | "woname" | "dob" | "contactNumber" | "phoneNumber" | "email" | "panNumber" | "aadhaarNumber" | "voterId" | "drivingLicence" | "passportNumber" | "category" | "maritalStatus" | "noOfDependents" | "noOfChildren" | "qualification" | "accommodationType" | "periodOfStay" | "rentPerMonth" | "employmentType" | "createdAt" | "updatedAt", ExtArgs["result"]["guarantor"]>
+export type GuarantorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "firstName" | "middleName" | "lastName" | "fatherName" | "motherName" | "woname" | "dob" | "contactNumber" | "phoneNumber" | "email" | "panNumber" | "aadhaarNumber" | "voterId" | "drivingLicence" | "passportNumber" | "category" | "maritalStatus" | "noOfDependents" | "noOfChildren" | "qualification" | "correspondenceAddressType" | "relationshipWithApplicant" | "relationshipOther" | "accommodationType" | "periodOfStay" | "rentPerMonth" | "employmentType" | "createdAt" | "updatedAt", ExtArgs["result"]["guarantor"]>
 export type GuarantorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   loanApplication?: boolean | Prisma.LoanApplicationDefaultArgs<ExtArgs>
   addresses?: boolean | Prisma.Guarantor$addressesArgs<ExtArgs>
@@ -2065,6 +2202,9 @@ export type $GuarantorPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     noOfDependents: number | null
     noOfChildren: number | null
     qualification: string | null
+    correspondenceAddressType: $Enums.CorrespondenceAddressType | null
+    relationshipWithApplicant: $Enums.CoApplicantRelation | null
+    relationshipOther: string | null
     accommodationType: $Enums.AccommodationType | null
     periodOfStay: string | null
     rentPerMonth: number | null
@@ -2467,6 +2607,9 @@ export interface GuarantorFieldRefs {
   readonly noOfDependents: Prisma.FieldRef<"Guarantor", 'Int'>
   readonly noOfChildren: Prisma.FieldRef<"Guarantor", 'Int'>
   readonly qualification: Prisma.FieldRef<"Guarantor", 'String'>
+  readonly correspondenceAddressType: Prisma.FieldRef<"Guarantor", 'CorrespondenceAddressType'>
+  readonly relationshipWithApplicant: Prisma.FieldRef<"Guarantor", 'CoApplicantRelation'>
+  readonly relationshipOther: Prisma.FieldRef<"Guarantor", 'String'>
   readonly accommodationType: Prisma.FieldRef<"Guarantor", 'AccommodationType'>
   readonly periodOfStay: Prisma.FieldRef<"Guarantor", 'String'>
   readonly rentPerMonth: Prisma.FieldRef<"Guarantor", 'Float'>

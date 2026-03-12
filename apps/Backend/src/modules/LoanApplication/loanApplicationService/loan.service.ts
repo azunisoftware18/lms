@@ -1,6 +1,11 @@
 import * as Enums from "../../../../generated/prisma-client/enums.js";
 import { AppError } from "../../../common/utils/apiError.js";
-import type { FullLoanApplicationInput } from "../loanApplication.types.js";
+import type {
+  FullLoanApplicationInput,
+  OccupationalInput,
+  EmploymentInput,
+  GuarantorInput,
+} from "../loanApplication.types.js";
 
 export async function ensureNoActiveLoan(tx: any, customerId: string) {
   const existingLoan = await tx.loanApplication.findFirst({
@@ -162,5 +167,110 @@ export async function createFinancialDetails(
         ...data.questionnaire,
       },
     });
+  }
+}
+
+type EntityIds = {
+  customerId: string;
+  coApplicantId?: string;
+  guarantorId?: string;
+};
+
+export async function createOccupationalDetailsForEntity(
+  tx: any,
+  entity: EntityIds,
+  input: OccupationalInput | undefined,
+) {
+  if (!input) return;
+  const { address, ...rest } = input;
+  let addressId: string | undefined;
+  if (address) {
+    const addr = await tx.address.create({
+      data: { ...address, addressType: Enums.AddressType.OFFICE },
+    });
+    addressId = addr.id;
+  }
+  await tx.occupationalDetails.create({
+    data: { ...entity, ...rest, addressId },
+  });
+}
+
+export async function createEmploymentDetailsForEntity(
+  tx: any,
+  entity: EntityIds,
+  input: EmploymentInput | undefined,
+) {
+  if (!input) return;
+  await tx.employmentDetails.create({
+    data: { ...entity, ...input },
+  });
+}
+
+export async function createGuarantors(
+  tx: any,
+  loanId: string,
+  customerId: string,
+  guarantors: GuarantorInput[] | undefined,
+) {
+  if (!guarantors?.length) return;
+  for (const g of guarantors) {
+    const guarantor = await tx.guarantor.create({
+      data: {
+        loanApplicationId: loanId,
+        firstName: g.firstName,
+        middleName: g.middleName,
+        lastName: g.lastName,
+        fatherName: g.fatherName,
+        motherName: g.motherName,
+        woname: g.woname,
+        dob: g.dob,
+        contactNumber: g.contactNumber,
+        phoneNumber: g.phoneNumber,
+        email: g.email,
+        panNumber: g.panNumber,
+        aadhaarNumber: g.aadhaarNumber,
+        voterId: g.voterId,
+        drivingLicence: g.drivingLicence,
+        passportNumber: g.passportNumber,
+        category: g.category,
+        maritalStatus: g.maritalStatus,
+        noOfDependents: g.noOfDependents,
+        noOfChildren: g.noOfChildren,
+        qualification: g.qualification,
+        correspondenceAddressType: g.correspondenceAddressType,
+        relationshipWithApplicant: g.relationshipWithApplicant,
+        relationshipOther: g.relationshipOther,
+        accommodationType: g.accommodationType,
+        periodOfStay: g.periodOfStay,
+        rentPerMonth: g.rentPerMonth,
+        employmentType: g.employmentType,
+      },
+    });
+
+    if (g.addresses?.length) {
+      await tx.address.createMany({
+        data: g.addresses.map((address) => ({
+          ...address,
+          guarantorId: guarantor.id,
+        })),
+      });
+    }
+
+    await createOccupationalDetailsForEntity(
+      tx,
+      { customerId, guarantorId: guarantor.id },
+      g.occupationalDetails,
+    );
+    await createEmploymentDetailsForEntity(
+      tx,
+      { customerId, guarantorId: guarantor.id },
+      g.employmentDetails,
+    );
+
+    if (g.financialDetails) {
+      await tx.guarantorFinancialDetails.create({
+        data: { guarantorId: guarantor.id, ...g.financialDetails },
+      });
+    }
   }
 }

@@ -20,8 +20,22 @@ export type CoApplicantModel = runtime.Types.Result.DefaultSelection<Prisma.$CoA
 
 export type AggregateCoApplicant = {
   _count: CoApplicantCountAggregateOutputType | null
+  _avg: CoApplicantAvgAggregateOutputType | null
+  _sum: CoApplicantSumAggregateOutputType | null
   _min: CoApplicantMinAggregateOutputType | null
   _max: CoApplicantMaxAggregateOutputType | null
+}
+
+export type CoApplicantAvgAggregateOutputType = {
+  noOfDependents: number | null
+  noOfChildren: number | null
+  rentPerMonth: number | null
+}
+
+export type CoApplicantSumAggregateOutputType = {
+  noOfDependents: number | null
+  noOfChildren: number | null
+  rentPerMonth: number | null
 }
 
 export type CoApplicantMinAggregateOutputType = {
@@ -30,13 +44,29 @@ export type CoApplicantMinAggregateOutputType = {
   firstName: string | null
   lastName: string | null
   middleName: string | null
+  fatherName: string | null
+  motherName: string | null
+  woname: string | null
   relation: $Enums.CoApplicantRelation | null
   relationOther: string | null
   contactNumber: string | null
+  phoneNumber: string | null
   email: string | null
   dob: Date | null
+  category: $Enums.Category | null
+  maritalStatus: $Enums.MaritalStatus | null
+  noOfDependents: number | null
+  noOfChildren: number | null
+  qualification: string | null
+  correspondenceAddressType: $Enums.CorrespondenceAddressType | null
   panNumber: string | null
   aadhaarNumber: string | null
+  voterId: string | null
+  drivingLicenceNo: string | null
+  passportNumber: string | null
+  presentAccommodation: $Enums.AccommodationType | null
+  periodOfStay: string | null
+  rentPerMonth: number | null
   employmentType: $Enums.EmploymentType | null
   kycId: string | null
   createdAt: Date | null
@@ -49,13 +79,29 @@ export type CoApplicantMaxAggregateOutputType = {
   firstName: string | null
   lastName: string | null
   middleName: string | null
+  fatherName: string | null
+  motherName: string | null
+  woname: string | null
   relation: $Enums.CoApplicantRelation | null
   relationOther: string | null
   contactNumber: string | null
+  phoneNumber: string | null
   email: string | null
   dob: Date | null
+  category: $Enums.Category | null
+  maritalStatus: $Enums.MaritalStatus | null
+  noOfDependents: number | null
+  noOfChildren: number | null
+  qualification: string | null
+  correspondenceAddressType: $Enums.CorrespondenceAddressType | null
   panNumber: string | null
   aadhaarNumber: string | null
+  voterId: string | null
+  drivingLicenceNo: string | null
+  passportNumber: string | null
+  presentAccommodation: $Enums.AccommodationType | null
+  periodOfStay: string | null
+  rentPerMonth: number | null
   employmentType: $Enums.EmploymentType | null
   kycId: string | null
   createdAt: Date | null
@@ -68,13 +114,29 @@ export type CoApplicantCountAggregateOutputType = {
   firstName: number
   lastName: number
   middleName: number
+  fatherName: number
+  motherName: number
+  woname: number
   relation: number
   relationOther: number
   contactNumber: number
+  phoneNumber: number
   email: number
   dob: number
+  category: number
+  maritalStatus: number
+  noOfDependents: number
+  noOfChildren: number
+  qualification: number
+  correspondenceAddressType: number
   panNumber: number
   aadhaarNumber: number
+  voterId: number
+  drivingLicenceNo: number
+  passportNumber: number
+  presentAccommodation: number
+  periodOfStay: number
+  rentPerMonth: number
   employmentType: number
   kycId: number
   createdAt: number
@@ -83,19 +145,47 @@ export type CoApplicantCountAggregateOutputType = {
 }
 
 
+export type CoApplicantAvgAggregateInputType = {
+  noOfDependents?: true
+  noOfChildren?: true
+  rentPerMonth?: true
+}
+
+export type CoApplicantSumAggregateInputType = {
+  noOfDependents?: true
+  noOfChildren?: true
+  rentPerMonth?: true
+}
+
 export type CoApplicantMinAggregateInputType = {
   id?: true
   loanApplicationId?: true
   firstName?: true
   lastName?: true
   middleName?: true
+  fatherName?: true
+  motherName?: true
+  woname?: true
   relation?: true
   relationOther?: true
   contactNumber?: true
+  phoneNumber?: true
   email?: true
   dob?: true
+  category?: true
+  maritalStatus?: true
+  noOfDependents?: true
+  noOfChildren?: true
+  qualification?: true
+  correspondenceAddressType?: true
   panNumber?: true
   aadhaarNumber?: true
+  voterId?: true
+  drivingLicenceNo?: true
+  passportNumber?: true
+  presentAccommodation?: true
+  periodOfStay?: true
+  rentPerMonth?: true
   employmentType?: true
   kycId?: true
   createdAt?: true
@@ -108,13 +198,29 @@ export type CoApplicantMaxAggregateInputType = {
   firstName?: true
   lastName?: true
   middleName?: true
+  fatherName?: true
+  motherName?: true
+  woname?: true
   relation?: true
   relationOther?: true
   contactNumber?: true
+  phoneNumber?: true
   email?: true
   dob?: true
+  category?: true
+  maritalStatus?: true
+  noOfDependents?: true
+  noOfChildren?: true
+  qualification?: true
+  correspondenceAddressType?: true
   panNumber?: true
   aadhaarNumber?: true
+  voterId?: true
+  drivingLicenceNo?: true
+  passportNumber?: true
+  presentAccommodation?: true
+  periodOfStay?: true
+  rentPerMonth?: true
   employmentType?: true
   kycId?: true
   createdAt?: true
@@ -127,13 +233,29 @@ export type CoApplicantCountAggregateInputType = {
   firstName?: true
   lastName?: true
   middleName?: true
+  fatherName?: true
+  motherName?: true
+  woname?: true
   relation?: true
   relationOther?: true
   contactNumber?: true
+  phoneNumber?: true
   email?: true
   dob?: true
+  category?: true
+  maritalStatus?: true
+  noOfDependents?: true
+  noOfChildren?: true
+  qualification?: true
+  correspondenceAddressType?: true
   panNumber?: true
   aadhaarNumber?: true
+  voterId?: true
+  drivingLicenceNo?: true
+  passportNumber?: true
+  presentAccommodation?: true
+  periodOfStay?: true
+  rentPerMonth?: true
   employmentType?: true
   kycId?: true
   createdAt?: true
@@ -179,6 +301,18 @@ export type CoApplicantAggregateArgs<ExtArgs extends runtime.Types.Extensions.In
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: CoApplicantAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: CoApplicantSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: CoApplicantMinAggregateInputType
@@ -209,6 +343,8 @@ export type CoApplicantGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   _count?: CoApplicantCountAggregateInputType | true
+  _avg?: CoApplicantAvgAggregateInputType
+  _sum?: CoApplicantSumAggregateInputType
   _min?: CoApplicantMinAggregateInputType
   _max?: CoApplicantMaxAggregateInputType
 }
@@ -219,18 +355,36 @@ export type CoApplicantGroupByOutputType = {
   firstName: string
   lastName: string
   middleName: string | null
+  fatherName: string | null
+  motherName: string | null
+  woname: string | null
   relation: $Enums.CoApplicantRelation
   relationOther: string | null
   contactNumber: string
+  phoneNumber: string | null
   email: string | null
   dob: Date
+  category: $Enums.Category | null
+  maritalStatus: $Enums.MaritalStatus | null
+  noOfDependents: number | null
+  noOfChildren: number | null
+  qualification: string | null
+  correspondenceAddressType: $Enums.CorrespondenceAddressType | null
   panNumber: string | null
   aadhaarNumber: string | null
+  voterId: string | null
+  drivingLicenceNo: string | null
+  passportNumber: string | null
+  presentAccommodation: $Enums.AccommodationType | null
+  periodOfStay: string | null
+  rentPerMonth: number | null
   employmentType: $Enums.EmploymentType
   kycId: string | null
   createdAt: Date
   updatedAt: Date
   _count: CoApplicantCountAggregateOutputType | null
+  _avg: CoApplicantAvgAggregateOutputType | null
+  _sum: CoApplicantSumAggregateOutputType | null
   _min: CoApplicantMinAggregateOutputType | null
   _max: CoApplicantMaxAggregateOutputType | null
 }
@@ -259,13 +413,29 @@ export type CoApplicantWhereInput = {
   firstName?: Prisma.StringFilter<"CoApplicant"> | string
   lastName?: Prisma.StringFilter<"CoApplicant"> | string
   middleName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  fatherName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  motherName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  woname?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   relation?: Prisma.EnumCoApplicantRelationFilter<"CoApplicant"> | $Enums.CoApplicantRelation
   relationOther?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   contactNumber?: Prisma.StringFilter<"CoApplicant"> | string
+  phoneNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   email?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   dob?: Prisma.DateTimeFilter<"CoApplicant"> | Date | string
+  category?: Prisma.EnumCategoryNullableFilter<"CoApplicant"> | $Enums.Category | null
+  maritalStatus?: Prisma.EnumMaritalStatusNullableFilter<"CoApplicant"> | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.IntNullableFilter<"CoApplicant"> | number | null
+  noOfChildren?: Prisma.IntNullableFilter<"CoApplicant"> | number | null
+  qualification?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  correspondenceAddressType?: Prisma.EnumCorrespondenceAddressTypeNullableFilter<"CoApplicant"> | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   aadhaarNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  voterId?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  drivingLicenceNo?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  passportNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  presentAccommodation?: Prisma.EnumAccommodationTypeNullableFilter<"CoApplicant"> | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  rentPerMonth?: Prisma.FloatNullableFilter<"CoApplicant"> | number | null
   employmentType?: Prisma.EnumEmploymentTypeFilter<"CoApplicant"> | $Enums.EmploymentType
   kycId?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CoApplicant"> | Date | string
@@ -275,6 +445,7 @@ export type CoApplicantWhereInput = {
   addresses?: Prisma.AddressListRelationFilter
   occupationalDetails?: Prisma.OccupationalDetailsListRelationFilter
   employmentDetails?: Prisma.EmploymentDetailsListRelationFilter
+  financialDetails?: Prisma.XOR<Prisma.CoApplicantFinancialDetailsNullableScalarRelationFilter, Prisma.CoApplicantFinancialDetailsWhereInput> | null
   documents?: Prisma.DocumentListRelationFilter
 }
 
@@ -284,13 +455,29 @@ export type CoApplicantOrderByWithRelationInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrderInput | Prisma.SortOrder
+  fatherName?: Prisma.SortOrderInput | Prisma.SortOrder
+  motherName?: Prisma.SortOrderInput | Prisma.SortOrder
+  woname?: Prisma.SortOrderInput | Prisma.SortOrder
   relation?: Prisma.SortOrder
   relationOther?: Prisma.SortOrderInput | Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
+  phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   dob?: Prisma.SortOrder
+  category?: Prisma.SortOrderInput | Prisma.SortOrder
+  maritalStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  noOfDependents?: Prisma.SortOrderInput | Prisma.SortOrder
+  noOfChildren?: Prisma.SortOrderInput | Prisma.SortOrder
+  qualification?: Prisma.SortOrderInput | Prisma.SortOrder
+  correspondenceAddressType?: Prisma.SortOrderInput | Prisma.SortOrder
   panNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  voterId?: Prisma.SortOrderInput | Prisma.SortOrder
+  drivingLicenceNo?: Prisma.SortOrderInput | Prisma.SortOrder
+  passportNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  presentAccommodation?: Prisma.SortOrderInput | Prisma.SortOrder
+  periodOfStay?: Prisma.SortOrderInput | Prisma.SortOrder
+  rentPerMonth?: Prisma.SortOrderInput | Prisma.SortOrder
   employmentType?: Prisma.SortOrder
   kycId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -300,6 +487,7 @@ export type CoApplicantOrderByWithRelationInput = {
   addresses?: Prisma.AddressOrderByRelationAggregateInput
   occupationalDetails?: Prisma.OccupationalDetailsOrderByRelationAggregateInput
   employmentDetails?: Prisma.EmploymentDetailsOrderByRelationAggregateInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsOrderByWithRelationInput
   documents?: Prisma.DocumentOrderByRelationAggregateInput
   _relevance?: Prisma.CoApplicantOrderByRelevanceInput
 }
@@ -314,13 +502,29 @@ export type CoApplicantWhereUniqueInput = Prisma.AtLeast<{
   firstName?: Prisma.StringFilter<"CoApplicant"> | string
   lastName?: Prisma.StringFilter<"CoApplicant"> | string
   middleName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  fatherName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  motherName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  woname?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   relation?: Prisma.EnumCoApplicantRelationFilter<"CoApplicant"> | $Enums.CoApplicantRelation
   relationOther?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   contactNumber?: Prisma.StringFilter<"CoApplicant"> | string
+  phoneNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   email?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   dob?: Prisma.DateTimeFilter<"CoApplicant"> | Date | string
+  category?: Prisma.EnumCategoryNullableFilter<"CoApplicant"> | $Enums.Category | null
+  maritalStatus?: Prisma.EnumMaritalStatusNullableFilter<"CoApplicant"> | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.IntNullableFilter<"CoApplicant"> | number | null
+  noOfChildren?: Prisma.IntNullableFilter<"CoApplicant"> | number | null
+  qualification?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  correspondenceAddressType?: Prisma.EnumCorrespondenceAddressTypeNullableFilter<"CoApplicant"> | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   aadhaarNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  voterId?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  drivingLicenceNo?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  passportNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  presentAccommodation?: Prisma.EnumAccommodationTypeNullableFilter<"CoApplicant"> | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  rentPerMonth?: Prisma.FloatNullableFilter<"CoApplicant"> | number | null
   employmentType?: Prisma.EnumEmploymentTypeFilter<"CoApplicant"> | $Enums.EmploymentType
   createdAt?: Prisma.DateTimeFilter<"CoApplicant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CoApplicant"> | Date | string
@@ -329,6 +533,7 @@ export type CoApplicantWhereUniqueInput = Prisma.AtLeast<{
   addresses?: Prisma.AddressListRelationFilter
   occupationalDetails?: Prisma.OccupationalDetailsListRelationFilter
   employmentDetails?: Prisma.EmploymentDetailsListRelationFilter
+  financialDetails?: Prisma.XOR<Prisma.CoApplicantFinancialDetailsNullableScalarRelationFilter, Prisma.CoApplicantFinancialDetailsWhereInput> | null
   documents?: Prisma.DocumentListRelationFilter
 }, "id" | "kycId">
 
@@ -338,20 +543,38 @@ export type CoApplicantOrderByWithAggregationInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrderInput | Prisma.SortOrder
+  fatherName?: Prisma.SortOrderInput | Prisma.SortOrder
+  motherName?: Prisma.SortOrderInput | Prisma.SortOrder
+  woname?: Prisma.SortOrderInput | Prisma.SortOrder
   relation?: Prisma.SortOrder
   relationOther?: Prisma.SortOrderInput | Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
+  phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   dob?: Prisma.SortOrder
+  category?: Prisma.SortOrderInput | Prisma.SortOrder
+  maritalStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  noOfDependents?: Prisma.SortOrderInput | Prisma.SortOrder
+  noOfChildren?: Prisma.SortOrderInput | Prisma.SortOrder
+  qualification?: Prisma.SortOrderInput | Prisma.SortOrder
+  correspondenceAddressType?: Prisma.SortOrderInput | Prisma.SortOrder
   panNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  voterId?: Prisma.SortOrderInput | Prisma.SortOrder
+  drivingLicenceNo?: Prisma.SortOrderInput | Prisma.SortOrder
+  passportNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  presentAccommodation?: Prisma.SortOrderInput | Prisma.SortOrder
+  periodOfStay?: Prisma.SortOrderInput | Prisma.SortOrder
+  rentPerMonth?: Prisma.SortOrderInput | Prisma.SortOrder
   employmentType?: Prisma.SortOrder
   kycId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CoApplicantCountOrderByAggregateInput
+  _avg?: Prisma.CoApplicantAvgOrderByAggregateInput
   _max?: Prisma.CoApplicantMaxOrderByAggregateInput
   _min?: Prisma.CoApplicantMinOrderByAggregateInput
+  _sum?: Prisma.CoApplicantSumOrderByAggregateInput
 }
 
 export type CoApplicantScalarWhereWithAggregatesInput = {
@@ -363,13 +586,29 @@ export type CoApplicantScalarWhereWithAggregatesInput = {
   firstName?: Prisma.StringWithAggregatesFilter<"CoApplicant"> | string
   lastName?: Prisma.StringWithAggregatesFilter<"CoApplicant"> | string
   middleName?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
+  fatherName?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
+  motherName?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
+  woname?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
   relation?: Prisma.EnumCoApplicantRelationWithAggregatesFilter<"CoApplicant"> | $Enums.CoApplicantRelation
   relationOther?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
   contactNumber?: Prisma.StringWithAggregatesFilter<"CoApplicant"> | string
+  phoneNumber?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
   email?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
   dob?: Prisma.DateTimeWithAggregatesFilter<"CoApplicant"> | Date | string
+  category?: Prisma.EnumCategoryNullableWithAggregatesFilter<"CoApplicant"> | $Enums.Category | null
+  maritalStatus?: Prisma.EnumMaritalStatusNullableWithAggregatesFilter<"CoApplicant"> | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.IntNullableWithAggregatesFilter<"CoApplicant"> | number | null
+  noOfChildren?: Prisma.IntNullableWithAggregatesFilter<"CoApplicant"> | number | null
+  qualification?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
+  correspondenceAddressType?: Prisma.EnumCorrespondenceAddressTypeNullableWithAggregatesFilter<"CoApplicant"> | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
   aadhaarNumber?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
+  voterId?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
+  drivingLicenceNo?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
+  passportNumber?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
+  presentAccommodation?: Prisma.EnumAccommodationTypeNullableWithAggregatesFilter<"CoApplicant"> | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
+  rentPerMonth?: Prisma.FloatNullableWithAggregatesFilter<"CoApplicant"> | number | null
   employmentType?: Prisma.EnumEmploymentTypeWithAggregatesFilter<"CoApplicant"> | $Enums.EmploymentType
   kycId?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CoApplicant"> | Date | string
@@ -381,13 +620,29 @@ export type CoApplicantCreateInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
   relation: $Enums.CoApplicantRelation
   relationOther?: string | null
   contactNumber: string
+  phoneNumber?: string | null
   email?: string | null
   dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
   panNumber?: string | null
   aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -396,6 +651,7 @@ export type CoApplicantCreateInput = {
   addresses?: Prisma.AddressCreateNestedManyWithoutCoApplicantInput
   occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCoApplicantInput
   employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCoApplicantInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsCreateNestedOneWithoutCoApplicantInput
   documents?: Prisma.DocumentCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -405,13 +661,29 @@ export type CoApplicantUncheckedCreateInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
   relation: $Enums.CoApplicantRelation
   relationOther?: string | null
   contactNumber: string
+  phoneNumber?: string | null
   email?: string | null
   dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
   panNumber?: string | null
   aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
   kycId?: string | null
   createdAt?: Date | string
@@ -419,6 +691,7 @@ export type CoApplicantUncheckedCreateInput = {
   addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCoApplicantInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUncheckedCreateNestedOneWithoutCoApplicantInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -427,13 +700,29 @@ export type CoApplicantUpdateInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
   relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -442,6 +731,7 @@ export type CoApplicantUpdateInput = {
   addresses?: Prisma.AddressUpdateManyWithoutCoApplicantNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCoApplicantNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCoApplicantNestedInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUpdateOneWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -451,13 +741,29 @@ export type CoApplicantUncheckedUpdateInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
   relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
   kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -465,6 +771,7 @@ export type CoApplicantUncheckedUpdateInput = {
   addresses?: Prisma.AddressUncheckedUpdateManyWithoutCoApplicantNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUncheckedUpdateOneWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -474,13 +781,29 @@ export type CoApplicantCreateManyInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
   relation: $Enums.CoApplicantRelation
   relationOther?: string | null
   contactNumber: string
+  phoneNumber?: string | null
   email?: string | null
   dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
   panNumber?: string | null
   aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
   kycId?: string | null
   createdAt?: Date | string
@@ -492,13 +815,29 @@ export type CoApplicantUpdateManyMutationInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
   relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -510,13 +849,29 @@ export type CoApplicantUncheckedUpdateManyInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
   relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
   kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -550,17 +905,39 @@ export type CoApplicantCountOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrder
+  fatherName?: Prisma.SortOrder
+  motherName?: Prisma.SortOrder
+  woname?: Prisma.SortOrder
   relation?: Prisma.SortOrder
   relationOther?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
+  phoneNumber?: Prisma.SortOrder
   email?: Prisma.SortOrder
   dob?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  maritalStatus?: Prisma.SortOrder
+  noOfDependents?: Prisma.SortOrder
+  noOfChildren?: Prisma.SortOrder
+  qualification?: Prisma.SortOrder
+  correspondenceAddressType?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrder
+  voterId?: Prisma.SortOrder
+  drivingLicenceNo?: Prisma.SortOrder
+  passportNumber?: Prisma.SortOrder
+  presentAccommodation?: Prisma.SortOrder
+  periodOfStay?: Prisma.SortOrder
+  rentPerMonth?: Prisma.SortOrder
   employmentType?: Prisma.SortOrder
   kycId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type CoApplicantAvgOrderByAggregateInput = {
+  noOfDependents?: Prisma.SortOrder
+  noOfChildren?: Prisma.SortOrder
+  rentPerMonth?: Prisma.SortOrder
 }
 
 export type CoApplicantMaxOrderByAggregateInput = {
@@ -569,13 +946,29 @@ export type CoApplicantMaxOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrder
+  fatherName?: Prisma.SortOrder
+  motherName?: Prisma.SortOrder
+  woname?: Prisma.SortOrder
   relation?: Prisma.SortOrder
   relationOther?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
+  phoneNumber?: Prisma.SortOrder
   email?: Prisma.SortOrder
   dob?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  maritalStatus?: Prisma.SortOrder
+  noOfDependents?: Prisma.SortOrder
+  noOfChildren?: Prisma.SortOrder
+  qualification?: Prisma.SortOrder
+  correspondenceAddressType?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrder
+  voterId?: Prisma.SortOrder
+  drivingLicenceNo?: Prisma.SortOrder
+  passportNumber?: Prisma.SortOrder
+  presentAccommodation?: Prisma.SortOrder
+  periodOfStay?: Prisma.SortOrder
+  rentPerMonth?: Prisma.SortOrder
   employmentType?: Prisma.SortOrder
   kycId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -588,17 +981,44 @@ export type CoApplicantMinOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrder
+  fatherName?: Prisma.SortOrder
+  motherName?: Prisma.SortOrder
+  woname?: Prisma.SortOrder
   relation?: Prisma.SortOrder
   relationOther?: Prisma.SortOrder
   contactNumber?: Prisma.SortOrder
+  phoneNumber?: Prisma.SortOrder
   email?: Prisma.SortOrder
   dob?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  maritalStatus?: Prisma.SortOrder
+  noOfDependents?: Prisma.SortOrder
+  noOfChildren?: Prisma.SortOrder
+  qualification?: Prisma.SortOrder
+  correspondenceAddressType?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrder
+  voterId?: Prisma.SortOrder
+  drivingLicenceNo?: Prisma.SortOrder
+  passportNumber?: Prisma.SortOrder
+  presentAccommodation?: Prisma.SortOrder
+  periodOfStay?: Prisma.SortOrder
+  rentPerMonth?: Prisma.SortOrder
   employmentType?: Prisma.SortOrder
   kycId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type CoApplicantSumOrderByAggregateInput = {
+  noOfDependents?: Prisma.SortOrder
+  noOfChildren?: Prisma.SortOrder
+  rentPerMonth?: Prisma.SortOrder
+}
+
+export type CoApplicantScalarRelationFilter = {
+  is?: Prisma.CoApplicantWhereInput
+  isNot?: Prisma.CoApplicantWhereInput
 }
 
 export type CoApplicantCreateNestedOneWithoutAddressesInput = {
@@ -663,8 +1083,38 @@ export type EnumCoApplicantRelationFieldUpdateOperationsInput = {
   set?: $Enums.CoApplicantRelation
 }
 
+export type NullableEnumCategoryFieldUpdateOperationsInput = {
+  set?: $Enums.Category | null
+}
+
+export type NullableEnumMaritalStatusFieldUpdateOperationsInput = {
+  set?: $Enums.MaritalStatus | null
+}
+
+export type NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput = {
+  set?: $Enums.CorrespondenceAddressType | null
+}
+
+export type NullableEnumAccommodationTypeFieldUpdateOperationsInput = {
+  set?: $Enums.AccommodationType | null
+}
+
 export type EnumEmploymentTypeFieldUpdateOperationsInput = {
   set?: $Enums.EmploymentType
+}
+
+export type CoApplicantCreateNestedOneWithoutFinancialDetailsInput = {
+  create?: Prisma.XOR<Prisma.CoApplicantCreateWithoutFinancialDetailsInput, Prisma.CoApplicantUncheckedCreateWithoutFinancialDetailsInput>
+  connectOrCreate?: Prisma.CoApplicantCreateOrConnectWithoutFinancialDetailsInput
+  connect?: Prisma.CoApplicantWhereUniqueInput
+}
+
+export type CoApplicantUpdateOneRequiredWithoutFinancialDetailsNestedInput = {
+  create?: Prisma.XOR<Prisma.CoApplicantCreateWithoutFinancialDetailsInput, Prisma.CoApplicantUncheckedCreateWithoutFinancialDetailsInput>
+  connectOrCreate?: Prisma.CoApplicantCreateOrConnectWithoutFinancialDetailsInput
+  upsert?: Prisma.CoApplicantUpsertWithoutFinancialDetailsInput
+  connect?: Prisma.CoApplicantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CoApplicantUpdateToOneWithWhereWithoutFinancialDetailsInput, Prisma.CoApplicantUpdateWithoutFinancialDetailsInput>, Prisma.CoApplicantUncheckedUpdateWithoutFinancialDetailsInput>
 }
 
 export type CoApplicantCreateNestedOneWithoutOccupationalDetailsInput = {
@@ -752,13 +1202,29 @@ export type CoApplicantCreateWithoutAddressesInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
   relation: $Enums.CoApplicantRelation
   relationOther?: string | null
   contactNumber: string
+  phoneNumber?: string | null
   email?: string | null
   dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
   panNumber?: string | null
   aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -766,6 +1232,7 @@ export type CoApplicantCreateWithoutAddressesInput = {
   kyc?: Prisma.KycCreateNestedOneWithoutCoApplicantInput
   occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCoApplicantInput
   employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCoApplicantInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsCreateNestedOneWithoutCoApplicantInput
   documents?: Prisma.DocumentCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -775,19 +1242,36 @@ export type CoApplicantUncheckedCreateWithoutAddressesInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
   relation: $Enums.CoApplicantRelation
   relationOther?: string | null
   contactNumber: string
+  phoneNumber?: string | null
   email?: string | null
   dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
   panNumber?: string | null
   aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
   kycId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUncheckedCreateNestedOneWithoutCoApplicantInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -812,13 +1296,29 @@ export type CoApplicantUpdateWithoutAddressesInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
   relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -826,6 +1326,7 @@ export type CoApplicantUpdateWithoutAddressesInput = {
   kyc?: Prisma.KycUpdateOneWithoutCoApplicantNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCoApplicantNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCoApplicantNestedInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUpdateOneWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -835,19 +1336,36 @@ export type CoApplicantUncheckedUpdateWithoutAddressesInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
   relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
   kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUncheckedUpdateOneWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -856,13 +1374,29 @@ export type CoApplicantCreateWithoutLoanApplicationInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
   relation: $Enums.CoApplicantRelation
   relationOther?: string | null
   contactNumber: string
+  phoneNumber?: string | null
   email?: string | null
   dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
   panNumber?: string | null
   aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -870,6 +1404,7 @@ export type CoApplicantCreateWithoutLoanApplicationInput = {
   addresses?: Prisma.AddressCreateNestedManyWithoutCoApplicantInput
   occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCoApplicantInput
   employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCoApplicantInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsCreateNestedOneWithoutCoApplicantInput
   documents?: Prisma.DocumentCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -878,13 +1413,29 @@ export type CoApplicantUncheckedCreateWithoutLoanApplicationInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
   relation: $Enums.CoApplicantRelation
   relationOther?: string | null
   contactNumber: string
+  phoneNumber?: string | null
   email?: string | null
   dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
   panNumber?: string | null
   aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
   kycId?: string | null
   createdAt?: Date | string
@@ -892,6 +1443,7 @@ export type CoApplicantUncheckedCreateWithoutLoanApplicationInput = {
   addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCoApplicantInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUncheckedCreateNestedOneWithoutCoApplicantInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -930,17 +1482,205 @@ export type CoApplicantScalarWhereInput = {
   firstName?: Prisma.StringFilter<"CoApplicant"> | string
   lastName?: Prisma.StringFilter<"CoApplicant"> | string
   middleName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  fatherName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  motherName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  woname?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   relation?: Prisma.EnumCoApplicantRelationFilter<"CoApplicant"> | $Enums.CoApplicantRelation
   relationOther?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   contactNumber?: Prisma.StringFilter<"CoApplicant"> | string
+  phoneNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   email?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   dob?: Prisma.DateTimeFilter<"CoApplicant"> | Date | string
+  category?: Prisma.EnumCategoryNullableFilter<"CoApplicant"> | $Enums.Category | null
+  maritalStatus?: Prisma.EnumMaritalStatusNullableFilter<"CoApplicant"> | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.IntNullableFilter<"CoApplicant"> | number | null
+  noOfChildren?: Prisma.IntNullableFilter<"CoApplicant"> | number | null
+  qualification?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  correspondenceAddressType?: Prisma.EnumCorrespondenceAddressTypeNullableFilter<"CoApplicant"> | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   aadhaarNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  voterId?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  drivingLicenceNo?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  passportNumber?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  presentAccommodation?: Prisma.EnumAccommodationTypeNullableFilter<"CoApplicant"> | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
+  rentPerMonth?: Prisma.FloatNullableFilter<"CoApplicant"> | number | null
   employmentType?: Prisma.EnumEmploymentTypeFilter<"CoApplicant"> | $Enums.EmploymentType
   kycId?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CoApplicant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CoApplicant"> | Date | string
+}
+
+export type CoApplicantCreateWithoutFinancialDetailsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
+  relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
+  contactNumber: string
+  phoneNumber?: string | null
+  email?: string | null
+  dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  panNumber?: string | null
+  aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
+  employmentType: $Enums.EmploymentType
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  loanApplication: Prisma.LoanApplicationCreateNestedOneWithoutCoapplicantsInput
+  kyc?: Prisma.KycCreateNestedOneWithoutCoApplicantInput
+  addresses?: Prisma.AddressCreateNestedManyWithoutCoApplicantInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCoApplicantInput
+  employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCoApplicantInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutCoApplicantInput
+}
+
+export type CoApplicantUncheckedCreateWithoutFinancialDetailsInput = {
+  id?: string
+  loanApplicationId: string
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
+  relation: $Enums.CoApplicantRelation
+  relationOther?: string | null
+  contactNumber: string
+  phoneNumber?: string | null
+  email?: string | null
+  dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  panNumber?: string | null
+  aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
+  employmentType: $Enums.EmploymentType
+  kycId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCoApplicantInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutCoApplicantInput
+}
+
+export type CoApplicantCreateOrConnectWithoutFinancialDetailsInput = {
+  where: Prisma.CoApplicantWhereUniqueInput
+  create: Prisma.XOR<Prisma.CoApplicantCreateWithoutFinancialDetailsInput, Prisma.CoApplicantUncheckedCreateWithoutFinancialDetailsInput>
+}
+
+export type CoApplicantUpsertWithoutFinancialDetailsInput = {
+  update: Prisma.XOR<Prisma.CoApplicantUpdateWithoutFinancialDetailsInput, Prisma.CoApplicantUncheckedUpdateWithoutFinancialDetailsInput>
+  create: Prisma.XOR<Prisma.CoApplicantCreateWithoutFinancialDetailsInput, Prisma.CoApplicantUncheckedCreateWithoutFinancialDetailsInput>
+  where?: Prisma.CoApplicantWhereInput
+}
+
+export type CoApplicantUpdateToOneWithWhereWithoutFinancialDetailsInput = {
+  where?: Prisma.CoApplicantWhereInput
+  data: Prisma.XOR<Prisma.CoApplicantUpdateWithoutFinancialDetailsInput, Prisma.CoApplicantUncheckedUpdateWithoutFinancialDetailsInput>
+}
+
+export type CoApplicantUpdateWithoutFinancialDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanApplication?: Prisma.LoanApplicationUpdateOneRequiredWithoutCoapplicantsNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutCoApplicantNestedInput
+  addresses?: Prisma.AddressUpdateManyWithoutCoApplicantNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCoApplicantNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCoApplicantNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutCoApplicantNestedInput
+}
+
+export type CoApplicantUncheckedUpdateWithoutFinancialDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
+  relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUncheckedUpdateManyWithoutCoApplicantNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutCoApplicantNestedInput
 }
 
 export type CoApplicantCreateWithoutOccupationalDetailsInput = {
@@ -948,13 +1688,29 @@ export type CoApplicantCreateWithoutOccupationalDetailsInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
   relation: $Enums.CoApplicantRelation
   relationOther?: string | null
   contactNumber: string
+  phoneNumber?: string | null
   email?: string | null
   dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
   panNumber?: string | null
   aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -962,6 +1718,7 @@ export type CoApplicantCreateWithoutOccupationalDetailsInput = {
   kyc?: Prisma.KycCreateNestedOneWithoutCoApplicantInput
   addresses?: Prisma.AddressCreateNestedManyWithoutCoApplicantInput
   employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCoApplicantInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsCreateNestedOneWithoutCoApplicantInput
   documents?: Prisma.DocumentCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -971,19 +1728,36 @@ export type CoApplicantUncheckedCreateWithoutOccupationalDetailsInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
   relation: $Enums.CoApplicantRelation
   relationOther?: string | null
   contactNumber: string
+  phoneNumber?: string | null
   email?: string | null
   dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
   panNumber?: string | null
   aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
   kycId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCoApplicantInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUncheckedCreateNestedOneWithoutCoApplicantInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -1008,13 +1782,29 @@ export type CoApplicantUpdateWithoutOccupationalDetailsInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
   relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1022,6 +1812,7 @@ export type CoApplicantUpdateWithoutOccupationalDetailsInput = {
   kyc?: Prisma.KycUpdateOneWithoutCoApplicantNestedInput
   addresses?: Prisma.AddressUpdateManyWithoutCoApplicantNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCoApplicantNestedInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUpdateOneWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -1031,19 +1822,36 @@ export type CoApplicantUncheckedUpdateWithoutOccupationalDetailsInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
   relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
   kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addresses?: Prisma.AddressUncheckedUpdateManyWithoutCoApplicantNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUncheckedUpdateOneWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -1052,13 +1860,29 @@ export type CoApplicantCreateWithoutEmploymentDetailsInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
   relation: $Enums.CoApplicantRelation
   relationOther?: string | null
   contactNumber: string
+  phoneNumber?: string | null
   email?: string | null
   dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
   panNumber?: string | null
   aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1066,6 +1890,7 @@ export type CoApplicantCreateWithoutEmploymentDetailsInput = {
   kyc?: Prisma.KycCreateNestedOneWithoutCoApplicantInput
   addresses?: Prisma.AddressCreateNestedManyWithoutCoApplicantInput
   occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCoApplicantInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsCreateNestedOneWithoutCoApplicantInput
   documents?: Prisma.DocumentCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -1075,19 +1900,36 @@ export type CoApplicantUncheckedCreateWithoutEmploymentDetailsInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
   relation: $Enums.CoApplicantRelation
   relationOther?: string | null
   contactNumber: string
+  phoneNumber?: string | null
   email?: string | null
   dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
   panNumber?: string | null
   aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
   kycId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCoApplicantInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUncheckedCreateNestedOneWithoutCoApplicantInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -1112,13 +1954,29 @@ export type CoApplicantUpdateWithoutEmploymentDetailsInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
   relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1126,6 +1984,7 @@ export type CoApplicantUpdateWithoutEmploymentDetailsInput = {
   kyc?: Prisma.KycUpdateOneWithoutCoApplicantNestedInput
   addresses?: Prisma.AddressUpdateManyWithoutCoApplicantNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCoApplicantNestedInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUpdateOneWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -1135,19 +1994,36 @@ export type CoApplicantUncheckedUpdateWithoutEmploymentDetailsInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
   relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
   kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addresses?: Prisma.AddressUncheckedUpdateManyWithoutCoApplicantNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUncheckedUpdateOneWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -1156,13 +2032,29 @@ export type CoApplicantCreateWithoutDocumentsInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
   relation: $Enums.CoApplicantRelation
   relationOther?: string | null
   contactNumber: string
+  phoneNumber?: string | null
   email?: string | null
   dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
   panNumber?: string | null
   aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1171,6 +2063,7 @@ export type CoApplicantCreateWithoutDocumentsInput = {
   addresses?: Prisma.AddressCreateNestedManyWithoutCoApplicantInput
   occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCoApplicantInput
   employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCoApplicantInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsCreateNestedOneWithoutCoApplicantInput
 }
 
 export type CoApplicantUncheckedCreateWithoutDocumentsInput = {
@@ -1179,13 +2072,29 @@ export type CoApplicantUncheckedCreateWithoutDocumentsInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
   relation: $Enums.CoApplicantRelation
   relationOther?: string | null
   contactNumber: string
+  phoneNumber?: string | null
   email?: string | null
   dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
   panNumber?: string | null
   aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
   kycId?: string | null
   createdAt?: Date | string
@@ -1193,6 +2102,7 @@ export type CoApplicantUncheckedCreateWithoutDocumentsInput = {
   addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCoApplicantInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUncheckedCreateNestedOneWithoutCoApplicantInput
 }
 
 export type CoApplicantCreateOrConnectWithoutDocumentsInput = {
@@ -1216,13 +2126,29 @@ export type CoApplicantUpdateWithoutDocumentsInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
   relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1231,6 +2157,7 @@ export type CoApplicantUpdateWithoutDocumentsInput = {
   addresses?: Prisma.AddressUpdateManyWithoutCoApplicantNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCoApplicantNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCoApplicantNestedInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUpdateOneWithoutCoApplicantNestedInput
 }
 
 export type CoApplicantUncheckedUpdateWithoutDocumentsInput = {
@@ -1239,13 +2166,29 @@ export type CoApplicantUncheckedUpdateWithoutDocumentsInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
   relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
   kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1253,6 +2196,7 @@ export type CoApplicantUncheckedUpdateWithoutDocumentsInput = {
   addresses?: Prisma.AddressUncheckedUpdateManyWithoutCoApplicantNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUncheckedUpdateOneWithoutCoApplicantNestedInput
 }
 
 export type CoApplicantCreateWithoutKycInput = {
@@ -1260,13 +2204,29 @@ export type CoApplicantCreateWithoutKycInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
   relation: $Enums.CoApplicantRelation
   relationOther?: string | null
   contactNumber: string
+  phoneNumber?: string | null
   email?: string | null
   dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
   panNumber?: string | null
   aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1274,6 +2234,7 @@ export type CoApplicantCreateWithoutKycInput = {
   addresses?: Prisma.AddressCreateNestedManyWithoutCoApplicantInput
   occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutCoApplicantInput
   employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutCoApplicantInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsCreateNestedOneWithoutCoApplicantInput
   documents?: Prisma.DocumentCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -1283,19 +2244,36 @@ export type CoApplicantUncheckedCreateWithoutKycInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
   relation: $Enums.CoApplicantRelation
   relationOther?: string | null
   contactNumber: string
+  phoneNumber?: string | null
   email?: string | null
   dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
   panNumber?: string | null
   aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
   createdAt?: Date | string
   updatedAt?: Date | string
   addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutCoApplicantInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutCoApplicantInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUncheckedCreateNestedOneWithoutCoApplicantInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutCoApplicantInput
 }
 
@@ -1320,13 +2298,29 @@ export type CoApplicantUpdateWithoutKycInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
   relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1334,6 +2328,7 @@ export type CoApplicantUpdateWithoutKycInput = {
   addresses?: Prisma.AddressUpdateManyWithoutCoApplicantNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCoApplicantNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCoApplicantNestedInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUpdateOneWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -1343,19 +2338,36 @@ export type CoApplicantUncheckedUpdateWithoutKycInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
   relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addresses?: Prisma.AddressUncheckedUpdateManyWithoutCoApplicantNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUncheckedUpdateOneWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -1364,13 +2376,29 @@ export type CoApplicantCreateManyLoanApplicationInput = {
   firstName: string
   lastName: string
   middleName?: string | null
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
   relation: $Enums.CoApplicantRelation
   relationOther?: string | null
   contactNumber: string
+  phoneNumber?: string | null
   email?: string | null
   dob: Date | string
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
   panNumber?: string | null
   aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicenceNo?: string | null
+  passportNumber?: string | null
+  presentAccommodation?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
   employmentType: $Enums.EmploymentType
   kycId?: string | null
   createdAt?: Date | string
@@ -1382,13 +2410,29 @@ export type CoApplicantUpdateWithoutLoanApplicationInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
   relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1396,6 +2440,7 @@ export type CoApplicantUpdateWithoutLoanApplicationInput = {
   addresses?: Prisma.AddressUpdateManyWithoutCoApplicantNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutCoApplicantNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutCoApplicantNestedInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUpdateOneWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -1404,13 +2449,29 @@ export type CoApplicantUncheckedUpdateWithoutLoanApplicationInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
   relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
   kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1418,6 +2479,7 @@ export type CoApplicantUncheckedUpdateWithoutLoanApplicationInput = {
   addresses?: Prisma.AddressUncheckedUpdateManyWithoutCoApplicantNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutCoApplicantNestedInput
+  financialDetails?: Prisma.CoApplicantFinancialDetailsUncheckedUpdateOneWithoutCoApplicantNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutCoApplicantNestedInput
 }
 
@@ -1426,13 +2488,29 @@ export type CoApplicantUncheckedUpdateManyWithoutLoanApplicationInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relation?: Prisma.EnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation
   relationOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presentAccommodation?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
   kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1503,13 +2581,29 @@ export type CoApplicantSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   firstName?: boolean
   lastName?: boolean
   middleName?: boolean
+  fatherName?: boolean
+  motherName?: boolean
+  woname?: boolean
   relation?: boolean
   relationOther?: boolean
   contactNumber?: boolean
+  phoneNumber?: boolean
   email?: boolean
   dob?: boolean
+  category?: boolean
+  maritalStatus?: boolean
+  noOfDependents?: boolean
+  noOfChildren?: boolean
+  qualification?: boolean
+  correspondenceAddressType?: boolean
   panNumber?: boolean
   aadhaarNumber?: boolean
+  voterId?: boolean
+  drivingLicenceNo?: boolean
+  passportNumber?: boolean
+  presentAccommodation?: boolean
+  periodOfStay?: boolean
+  rentPerMonth?: boolean
   employmentType?: boolean
   kycId?: boolean
   createdAt?: boolean
@@ -1519,6 +2613,7 @@ export type CoApplicantSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   addresses?: boolean | Prisma.CoApplicant$addressesArgs<ExtArgs>
   occupationalDetails?: boolean | Prisma.CoApplicant$occupationalDetailsArgs<ExtArgs>
   employmentDetails?: boolean | Prisma.CoApplicant$employmentDetailsArgs<ExtArgs>
+  financialDetails?: boolean | Prisma.CoApplicant$financialDetailsArgs<ExtArgs>
   documents?: boolean | Prisma.CoApplicant$documentsArgs<ExtArgs>
   _count?: boolean | Prisma.CoApplicantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["coApplicant"]>
@@ -1531,26 +2626,43 @@ export type CoApplicantSelectScalar = {
   firstName?: boolean
   lastName?: boolean
   middleName?: boolean
+  fatherName?: boolean
+  motherName?: boolean
+  woname?: boolean
   relation?: boolean
   relationOther?: boolean
   contactNumber?: boolean
+  phoneNumber?: boolean
   email?: boolean
   dob?: boolean
+  category?: boolean
+  maritalStatus?: boolean
+  noOfDependents?: boolean
+  noOfChildren?: boolean
+  qualification?: boolean
+  correspondenceAddressType?: boolean
   panNumber?: boolean
   aadhaarNumber?: boolean
+  voterId?: boolean
+  drivingLicenceNo?: boolean
+  passportNumber?: boolean
+  presentAccommodation?: boolean
+  periodOfStay?: boolean
+  rentPerMonth?: boolean
   employmentType?: boolean
   kycId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CoApplicantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "firstName" | "lastName" | "middleName" | "relation" | "relationOther" | "contactNumber" | "email" | "dob" | "panNumber" | "aadhaarNumber" | "employmentType" | "kycId" | "createdAt" | "updatedAt", ExtArgs["result"]["coApplicant"]>
+export type CoApplicantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "firstName" | "lastName" | "middleName" | "fatherName" | "motherName" | "woname" | "relation" | "relationOther" | "contactNumber" | "phoneNumber" | "email" | "dob" | "category" | "maritalStatus" | "noOfDependents" | "noOfChildren" | "qualification" | "correspondenceAddressType" | "panNumber" | "aadhaarNumber" | "voterId" | "drivingLicenceNo" | "passportNumber" | "presentAccommodation" | "periodOfStay" | "rentPerMonth" | "employmentType" | "kycId" | "createdAt" | "updatedAt", ExtArgs["result"]["coApplicant"]>
 export type CoApplicantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   loanApplication?: boolean | Prisma.LoanApplicationDefaultArgs<ExtArgs>
   kyc?: boolean | Prisma.CoApplicant$kycArgs<ExtArgs>
   addresses?: boolean | Prisma.CoApplicant$addressesArgs<ExtArgs>
   occupationalDetails?: boolean | Prisma.CoApplicant$occupationalDetailsArgs<ExtArgs>
   employmentDetails?: boolean | Prisma.CoApplicant$employmentDetailsArgs<ExtArgs>
+  financialDetails?: boolean | Prisma.CoApplicant$financialDetailsArgs<ExtArgs>
   documents?: boolean | Prisma.CoApplicant$documentsArgs<ExtArgs>
   _count?: boolean | Prisma.CoApplicantCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1563,6 +2675,7 @@ export type $CoApplicantPayload<ExtArgs extends runtime.Types.Extensions.Interna
     addresses: Prisma.$AddressPayload<ExtArgs>[]
     occupationalDetails: Prisma.$OccupationalDetailsPayload<ExtArgs>[]
     employmentDetails: Prisma.$EmploymentDetailsPayload<ExtArgs>[]
+    financialDetails: Prisma.$CoApplicantFinancialDetailsPayload<ExtArgs> | null
     documents: Prisma.$DocumentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1571,13 +2684,29 @@ export type $CoApplicantPayload<ExtArgs extends runtime.Types.Extensions.Interna
     firstName: string
     lastName: string
     middleName: string | null
+    fatherName: string | null
+    motherName: string | null
+    woname: string | null
     relation: $Enums.CoApplicantRelation
     relationOther: string | null
     contactNumber: string
+    phoneNumber: string | null
     email: string | null
     dob: Date
+    category: $Enums.Category | null
+    maritalStatus: $Enums.MaritalStatus | null
+    noOfDependents: number | null
+    noOfChildren: number | null
+    qualification: string | null
+    correspondenceAddressType: $Enums.CorrespondenceAddressType | null
     panNumber: string | null
     aadhaarNumber: string | null
+    voterId: string | null
+    drivingLicenceNo: string | null
+    passportNumber: string | null
+    presentAccommodation: $Enums.AccommodationType | null
+    periodOfStay: string | null
+    rentPerMonth: number | null
     employmentType: $Enums.EmploymentType
     kycId: string | null
     createdAt: Date
@@ -1927,6 +3056,7 @@ export interface Prisma__CoApplicantClient<T, Null = never, ExtArgs extends runt
   addresses<T extends Prisma.CoApplicant$addressesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CoApplicant$addressesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   occupationalDetails<T extends Prisma.CoApplicant$occupationalDetailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CoApplicant$occupationalDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OccupationalDetailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   employmentDetails<T extends Prisma.CoApplicant$employmentDetailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CoApplicant$employmentDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmploymentDetailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  financialDetails<T extends Prisma.CoApplicant$financialDetailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CoApplicant$financialDetailsArgs<ExtArgs>>): Prisma.Prisma__CoApplicantFinancialDetailsClient<runtime.Types.Result.GetResult<Prisma.$CoApplicantFinancialDetailsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   documents<T extends Prisma.CoApplicant$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CoApplicant$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1962,13 +3092,29 @@ export interface CoApplicantFieldRefs {
   readonly firstName: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly lastName: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly middleName: Prisma.FieldRef<"CoApplicant", 'String'>
+  readonly fatherName: Prisma.FieldRef<"CoApplicant", 'String'>
+  readonly motherName: Prisma.FieldRef<"CoApplicant", 'String'>
+  readonly woname: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly relation: Prisma.FieldRef<"CoApplicant", 'CoApplicantRelation'>
   readonly relationOther: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly contactNumber: Prisma.FieldRef<"CoApplicant", 'String'>
+  readonly phoneNumber: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly email: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly dob: Prisma.FieldRef<"CoApplicant", 'DateTime'>
+  readonly category: Prisma.FieldRef<"CoApplicant", 'Category'>
+  readonly maritalStatus: Prisma.FieldRef<"CoApplicant", 'MaritalStatus'>
+  readonly noOfDependents: Prisma.FieldRef<"CoApplicant", 'Int'>
+  readonly noOfChildren: Prisma.FieldRef<"CoApplicant", 'Int'>
+  readonly qualification: Prisma.FieldRef<"CoApplicant", 'String'>
+  readonly correspondenceAddressType: Prisma.FieldRef<"CoApplicant", 'CorrespondenceAddressType'>
   readonly panNumber: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly aadhaarNumber: Prisma.FieldRef<"CoApplicant", 'String'>
+  readonly voterId: Prisma.FieldRef<"CoApplicant", 'String'>
+  readonly drivingLicenceNo: Prisma.FieldRef<"CoApplicant", 'String'>
+  readonly passportNumber: Prisma.FieldRef<"CoApplicant", 'String'>
+  readonly presentAccommodation: Prisma.FieldRef<"CoApplicant", 'AccommodationType'>
+  readonly periodOfStay: Prisma.FieldRef<"CoApplicant", 'String'>
+  readonly rentPerMonth: Prisma.FieldRef<"CoApplicant", 'Float'>
   readonly employmentType: Prisma.FieldRef<"CoApplicant", 'EmploymentType'>
   readonly kycId: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly createdAt: Prisma.FieldRef<"CoApplicant", 'DateTime'>
@@ -2404,6 +3550,25 @@ export type CoApplicant$employmentDetailsArgs<ExtArgs extends runtime.Types.Exte
   take?: number
   skip?: number
   distinct?: Prisma.EmploymentDetailsScalarFieldEnum | Prisma.EmploymentDetailsScalarFieldEnum[]
+}
+
+/**
+ * CoApplicant.financialDetails
+ */
+export type CoApplicant$financialDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CoApplicantFinancialDetails
+   */
+  select?: Prisma.CoApplicantFinancialDetailsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CoApplicantFinancialDetails
+   */
+  omit?: Prisma.CoApplicantFinancialDetailsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CoApplicantFinancialDetailsInclude<ExtArgs> | null
+  where?: Prisma.CoApplicantFinancialDetailsWhereInput
 }
 
 /**
