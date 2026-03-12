@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { authMiddleware } from "../../common/middlewares/auth.middleware.js";
+import { branchMiddleware } from "../../common/middlewares/branch.middleware.js";
+import { createRateLimiter } from "../../common/middlewares/rateLimit.middleware.js";
 
 import {
   applyMoratoriumController,
@@ -20,19 +22,24 @@ import { checkPermissionMiddleware } from "../../common/middlewares/permission.m
 
 const emiRouter = Router();
 
-// Example route to generate EMI schedule
+const emiReadLimiter = createRateLimiter({
+  windowMs: 60_000,
+  max: 120,
+  message: "Too many EMI read requests. Please try again later.",
+});
+
+const emiWriteLimiter = createRateLimiter({
+  windowMs: 60_000,
+  max: 60,
+  message: "Too many EMI write requests. Please try again later.",
+});
 
 
-  //todo
-// ✔ EMI reminders (SMS / Email)
-// ✔ Grace period logic
-// ✔ Daily late fee accrual
-// ✔ Penalty caps
-// ✔ Loan rescheduling
-// ✔ Statement generation (PDF)
 
 
 emiRouter.get("/", authMiddleware,
+  branchMiddleware,
+  emiReadLimiter,
   checkPermissionMiddleware("VIEW_EMIS"),
   getAllEmisController);
 
@@ -40,40 +47,47 @@ emiRouter.get("/", authMiddleware,
 emiRouter.post(
   "/loan-applications/:id/emis",
   authMiddleware,
- checkPermissionMiddleware("GENERATE_EMI_SCHEDULE"),
+  branchMiddleware,
+  emiWriteLimiter,
+  checkPermissionMiddleware("GENERATE_EMI_SCHEDULE"),
   generateEmiScheduleController
 );
 
 emiRouter.get(
   "/loan-applications/:id/emis",
   authMiddleware,
+  branchMiddleware,
+  emiReadLimiter,
   checkPermissionMiddleware("VIEW_EMIS"),
   getLoanEmiController
-);
-
-emiRouter.post(
-  "/loan-applications/emi-amount",
-  generateEmiAmount
 );
 
 emiRouter.get(
   "/loan-emis/:loanApplicationId/get-emi-details",
   authMiddleware,
+  branchMiddleware,
+  emiReadLimiter,
   checkPermissionMiddleware("VIEW_EMIS"),
   getThisMonthEmiAmountController
 );
 emiRouter.post("/:emiId/pay",
   authMiddleware,
+  branchMiddleware,
+  emiWriteLimiter,
   checkPermissionMiddleware("EMI_PAID"),
   markEmiPaidController);
 
 emiRouter.get("/loans/:loanId/foreclose",
   authMiddleware,
+  branchMiddleware,
+  emiReadLimiter,
   checkPermissionMiddleware("VIEW_FORECLOSE_AMOUNT"),
   forecloseLoanController);
 emiRouter.post(
   "/loans/:loanId/foreclose",
   authMiddleware,
+  branchMiddleware,
+  emiWriteLimiter,
   checkPermissionMiddleware("FORECLOSE_LOAN"),
 payforecloseLoanController
 );
@@ -81,33 +95,30 @@ payforecloseLoanController
 
 emiRouter.post("/loans/:loanId/moratorium",
   authMiddleware,
+  branchMiddleware,
+  emiWriteLimiter,
   checkPermissionMiddleware("APPLY_MORATORIUM"),
   applyMoratoriumController);
 
 emiRouter.post("/get-emi-amount",
   authMiddleware,
+  emiReadLimiter,
   checkPermissionMiddleware("GENERATE_EMI_AMOUNT"),
   generateEmiAmount);
 
-emiRouter.post("/loan-emis/:emiId/pay",
-  authMiddleware,
-  checkPermissionMiddleware("EMI_PAID"),
-  markEmiPaidController);
-
 emiRouter.post("/loan-emis/:emiId/edit",
   authMiddleware,
+  branchMiddleware,
+  emiWriteLimiter,
   checkPermissionMiddleware("EDIT_EMI"),
   editEmiController);
 emiRouter.get("/loan-emis/:emiId/payable-amount",
   authMiddleware,
+  branchMiddleware,
+  emiReadLimiter,
   checkPermissionMiddleware("VIEW_EMI_PAYABLE_AMOUNT"),
   getEmiPayableAmountController);
 
-// emiRouter.post(
-//   "/emis/process-overdue",
-//   authMiddleware, // optional if cron
-//   processOverdueEmisController
-// );
 
 
 export default emiRouter;

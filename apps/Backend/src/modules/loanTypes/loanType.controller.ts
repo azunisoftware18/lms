@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { createLoanTypeService, getAllLoanTypeService, getLoanTypeByIdService, softDeleteLoanTypeService, updateLoanTypeService } from "./loanTypes.service.js";
+import { AppError } from "../../common/utils/apiError.js";
 
 
 
@@ -14,9 +15,9 @@ export const createLoanTypeController = async (req: Request, res: Response) => {
             data: loanType,
         });
     }   catch (error: any) {
-        res.status(500).json({
+        res.status(error.statusCode || 500).json({
             success: false,
-            message: "Failed to create loan type",
+            message: error.message || "Failed to create loan type",
             error: error.message || "INTERNAL_SERVER_ERROR",
         });
     }
@@ -47,9 +48,9 @@ export const getAllLoanTypesController = async (req: Request, res: Response) => 
             data: loanTypes,
         });
     } catch (error: any) {
-        res.status(500).json({
+        res.status(error.statusCode || 500).json({
             success: false,
-            message: "Failed to retrieve loan types",
+            message: error.message || "Failed to retrieve loan types",
             error: error.message || "INTERNAL_SERVER_ERROR",
         });
     }
@@ -73,9 +74,9 @@ export const getLoanTypeByIdController = async (req: Request, res: Response) => 
 
     }
     catch (error: any) {
-        res.status(500).json({
+        res.status(error.statusCode || 500).json({
             success: false,
-            message: "Failed to retrieve loan type",
+            message: error.message || "Failed to retrieve loan type",
             error: error.message || "INTERNAL_SERVER_ERROR",
         });
      }
@@ -97,9 +98,9 @@ export const updateLoanTypeController = async (req: Request, res: Response) => {
         });
     }
     catch (error: any) {
-        res.status(500).json({
+        res.status(error.statusCode || 500).json({
             success: false,
-            message: "Failed to update loan type",
+            message: error.message || "Failed to update loan type",
             error: error.message || "INTERNAL_SERVER_ERROR",
         });
     }
@@ -114,10 +115,11 @@ export const deleteLoanTypeController = async (req: Request, res: Response) => {
                 : "";
         const deletedByUserId = req.user?.id; // Assuming req.user is populated by auth middleware
         if (!deletedByUserId) {
-            return res.status(401).json({
-                success: false,
-                message: "Unauthorized",
-            });
+            throw AppError.unauthorized("Unauthorized");
+        }
+
+        if (!loanTypeId) {
+            throw AppError.badRequest("Loan type id is required");
         }
 
         // Assuming you have a deleteLoanTypeService function
@@ -128,9 +130,9 @@ export const deleteLoanTypeController = async (req: Request, res: Response) => {
             data: result,
         });
     } catch (error: any) {
-        res.status(500).json({
+        res.status(error.statusCode || 500).json({
             success: false,
-            message: "Failed to delete loan type",
+            message: error.message || "Failed to delete loan type",
             error: error.message || "INTERNAL_SERVER_ERROR",
         });
     }
