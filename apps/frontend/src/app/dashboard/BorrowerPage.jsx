@@ -256,35 +256,35 @@ export default function BorrowerPage() {
               <p className="text-xs text-gray-500">Total Borrowers</p>
               <p className="text-xl font-bold text-gray-900">{stats.total}</p>
             </div>
-            <div className="bg-white rounded-xl p-3 border border-green-200 bg-green-50">
+            <div className="rounded-xl p-3 border border-green-200 bg-green-50">
               <p className="text-xs text-green-600">Active</p>
               <p className="text-xl font-bold text-green-700">{stats.active}</p>
             </div>
-            <div className="bg-white rounded-xl p-3 border border-orange-200 bg-orange-50">
+            <div className="rounded-xl p-3 border border-orange-200 bg-orange-50">
               <p className="text-xs text-orange-600">Overdue</p>
               <p className="text-xl font-bold text-orange-700">
                 {stats.overdue}
               </p>
             </div>
-            <div className="bg-white rounded-xl p-3 border border-yellow-200 bg-yellow-50">
+            <div className="rounded-xl p-3 border border-yellow-200 bg-yellow-50">
               <p className="text-xs text-yellow-600">Pending KYC</p>
               <p className="text-xl font-bold text-yellow-700">
                 {stats.kycPending}
               </p>
             </div>
-            <div className="bg-white rounded-xl p-3 border border-blue-200 bg-blue-50">
+            <div className="rounded-xl p-3 border border-blue-200 bg-blue-50">
               <p className="text-xs text-blue-600">Total Amount</p>
               <p className="text-xl font-bold text-blue-700">
                 ₹{(stats.totalAmount / 100000).toFixed(1)}L
               </p>
             </div>
-            <div className="bg-white rounded-xl p-3 border border-red-200 bg-red-50">
+            <div className="rounded-xl p-3 border border-red-200 bg-red-50">
               <p className="text-xs text-red-600">Overdue Amount</p>
               <p className="text-xl font-bold text-red-700">
                 ₹{(stats.overdueAmount / 1000).toFixed(1)}K
               </p>
             </div>
-            <div className="bg-white rounded-xl p-3 border border-purple-200 bg-purple-50">
+            <div className="rounded-xl p-3 border border-purple-200 bg-purple-50">
               <p className="text-xs text-purple-600">Blocked</p>
               <p className="text-xl font-bold text-purple-700">
                 {stats.blocked}
