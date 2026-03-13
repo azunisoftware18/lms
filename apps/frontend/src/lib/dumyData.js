@@ -1860,3 +1860,33 @@ export const dummyBranches = [
     _count: { subBranches: 1 }
   }
 ];
+
+export const dummyBranchAdmins = [
+  {
+    id: 1,
+    fullName: "Rajesh Kumar",
+    email: "rajesh@company.com",
+    userName: "rajesh.admin",
+    contactNumber: "9876543210",
+    isActive: true,
+    branch: { name: "Finova Mumbai" }
+  },
+  {
+    id: 2,
+    fullName: "Vikram Singh",
+    email: "vikram@company.com",
+    userName: "vikram.admin",
+    contactNumber: "9876500000",
+    isActive: true,
+    branch: { name: "Finova Delhi NCR" }
+  },
+  {
+    id: 3,
+    fullName: "Suresh Reddy",
+    email: "suresh@company.com",
+    userName: "suresh.admin",
+    contactNumber: "9123456789",
+    isActive: false,
+    branch: { name: "Finova Bangalore" }
+  }
+];

@@ -12,7 +12,7 @@ const StatusCard = ({ title, value, icon: Icon, colorClass, bgClass }) => {
           <Icon size={20} className={colorClass} />
         </div>
       </div>
-      <p className="text-xs text-gray-400 mt-4">Last updated today</p>
+      {/* <p className="text-xs text-gray-400 mt-4">Last updated today</p> */}
     </div>
   );
 };
