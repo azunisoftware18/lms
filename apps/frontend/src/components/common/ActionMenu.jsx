@@ -43,6 +43,20 @@ export default function ActionMenu({
     return () => document.removeEventListener("keydown", handleEsc);
   }, []);
 
+  useEffect(() => {
+  const handleScroll = () => {
+    setIsOpen(false);
+  };
+
+  if (isOpen) {
+    window.addEventListener("scroll", handleScroll, true);
+  }
+
+  return () => {
+    window.removeEventListener("scroll", handleScroll, true);
+  };
+}, [isOpen]);
+
   // alignment class adjustment
   const alignmentClass = align === "right" ? "-translate-x-full" : "";
 

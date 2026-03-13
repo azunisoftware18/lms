@@ -1,9 +1,9 @@
 import { prisma } from "../../db/prismaService.js";
 import { LoanTypeDTO } from "./loanTypes.types.js";
-import { z } from "zod";
 import { createLoanTypeSchema } from "./loanTypes.schema.js";
 import { getPagination } from "../../common/utils/pagination.js";
 import { buildLoanTypeSearch } from "../../common/utils/search.js";
+import { AppError } from "../../common/utils/apiError.js";
 
 //type CreateLoanTypeInput = z.infer<typeof createLoanTypeSchema>;
 export const createLoanTypeService = async (loanTypeData: LoanTypeDTO) => {
@@ -16,32 +16,32 @@ export const createLoanTypeService = async (loanTypeData: LoanTypeDTO) => {
     });
 
     if (existingLoanType) {
-      throw new Error(`LoanType with code "${data.code}" already exists`);
+      throw AppError.conflict(`LoanType with code "${data.code}" already exists`);
     }
 
     if (data.minAmount > data.maxAmount) {
-      throw new Error(`Minimum amount cannot be greater than maximum amount`);
+      throw AppError.badRequest(`Minimum amount cannot be greater than maximum amount`);
     }
 
     if (data.minTenureMonths > data.maxTenureMonths) {
-      throw new Error("minTenureMonths cannot be greater than maxTenureMonths");
+      throw AppError.badRequest("minTenureMonths cannot be greater than maxTenureMonths");
     }
 
     if (data.minInterestRate > data.maxInterestRate) {
-      throw new Error("minInterestRate cannot be greater than maxInterestRate");
+      throw AppError.badRequest("minInterestRate cannot be greater than maxInterestRate");
     }
 
     if (
       data.defaultInterestRate < data.minInterestRate ||
       data.defaultInterestRate > data.maxInterestRate
     ) {
-      throw new Error(
+      throw AppError.badRequest(
         "defaultInterestRate must be within min & max interest rate"
       );
     }
 
     if (data.minAge > data.maxAge) {
-      throw new Error("minAge cannot be greater than maxAge");
+      throw AppError.badRequest("minAge cannot be greater than maxAge");
     }
 
     if (
@@ -49,11 +49,11 @@ export const createLoanTypeService = async (loanTypeData: LoanTypeDTO) => {
       data.maxCibilScore &&
       data.minCibilScore > data.maxCibilScore
     ) {
-      throw new Error("minCibilScore cannot be greater than maxCibilScore");
+      throw AppError.badRequest("minCibilScore cannot be greater than maxCibilScore");
     }
 
     if (data.gstApplicable && !data.gstPercentage) {
-      throw new Error("gstPercentage is required when gstApplicable is true");
+      throw AppError.badRequest("gstPercentage is required when gstApplicable is true");
     }
 
     const loanType = await prisma.loanType.create({
@@ -101,6 +101,7 @@ export const createLoanTypeService = async (loanTypeData: LoanTypeDTO) => {
 
         estimatedProcessingTimeDays: data.estimatedProcessingTimeDays,
         documentsRequired: data.documentsRequired,
+        documentsOptions: data.documentsOptions,
       },
     });
 
@@ -109,7 +110,7 @@ export const createLoanTypeService = async (loanTypeData: LoanTypeDTO) => {
     // Preserve and rethrow the original error so the controller can
     // return informative messages to the client.
     if (error instanceof Error) throw error;
-    throw new Error(String(error));
+    throw AppError.internal(String(error));
   }
 };
 
@@ -158,7 +159,7 @@ export const getLoanTypeByIdService = async (loanTypeId: string) => {
   });
 
   if (!loanType) {
-    throw new Error("LoanType not found");
+    throw AppError.notFound("LoanType not found");
   }
   return loanType;
 }
@@ -173,7 +174,7 @@ export const updateLoanTypeService = async(
     },
   });
   if (!existingLoanType) {
-    throw new Error("LoanType not found");
+    throw AppError.notFound("LoanType not found");
   }
   const updatedLoanType = await prisma.loanType.update({
     where: { id: loanTypeId },
@@ -186,24 +187,22 @@ export const updateLoanTypeService = async(
 
 export const softDeleteLoanTypeService = async (
   loanTypeId: string,
-  deletedByUserId: string
+  _deletedByUserId: string
 ) => {
   const loanType = await prisma.loanType.findFirst({
     where: {
       id: loanTypeId,
-      deletedAt: null,
+      isActive: true,
     },
   });
 
   if (!loanType) {
-    throw new Error("LoanType not found or already deleted");
+    throw AppError.notFound("LoanType not found or already deleted");
   }
 
   return prisma.loanType.update({
     where: { id: loanTypeId },
     data: {
-      deletedAt: new Date(),
-      deletedBy: deletedByUserId,
       isActive: false,
     },
   });

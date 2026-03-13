@@ -110,6 +110,8 @@ export type LoanTypeMinAggregateOutputType = {
   approvalRequired: boolean | null
   estimatedProcessingTimeDays: number | null
   documentsRequired: string | null
+  documentsOptions: string | null
+  deletedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -152,6 +154,8 @@ export type LoanTypeMaxAggregateOutputType = {
   approvalRequired: boolean | null
   estimatedProcessingTimeDays: number | null
   documentsRequired: string | null
+  documentsOptions: string | null
+  deletedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -194,6 +198,8 @@ export type LoanTypeCountAggregateOutputType = {
   approvalRequired: number
   estimatedProcessingTimeDays: number
   documentsRequired: number
+  documentsOptions: number
+  deletedAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -284,6 +290,8 @@ export type LoanTypeMinAggregateInputType = {
   approvalRequired?: true
   estimatedProcessingTimeDays?: true
   documentsRequired?: true
+  documentsOptions?: true
+  deletedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -326,6 +334,8 @@ export type LoanTypeMaxAggregateInputType = {
   approvalRequired?: true
   estimatedProcessingTimeDays?: true
   documentsRequired?: true
+  documentsOptions?: true
+  deletedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -368,6 +378,8 @@ export type LoanTypeCountAggregateInputType = {
   approvalRequired?: true
   estimatedProcessingTimeDays?: true
   documentsRequired?: true
+  documentsOptions?: true
+  deletedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -496,7 +508,9 @@ export type LoanTypeGroupByOutputType = {
   isPublic: boolean
   approvalRequired: boolean
   estimatedProcessingTimeDays: number | null
-  documentsRequired: string | null
+  documentsRequired: string
+  documentsOptions: string | null
+  deletedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: LoanTypeCountAggregateOutputType | null
@@ -561,7 +575,9 @@ export type LoanTypeWhereInput = {
   isPublic?: Prisma.BoolFilter<"LoanType"> | boolean
   approvalRequired?: Prisma.BoolFilter<"LoanType"> | boolean
   estimatedProcessingTimeDays?: Prisma.IntNullableFilter<"LoanType"> | number | null
-  documentsRequired?: Prisma.StringNullableFilter<"LoanType"> | string | null
+  documentsRequired?: Prisma.StringFilter<"LoanType"> | string
+  documentsOptions?: Prisma.StringNullableFilter<"LoanType"> | string | null
+  deletedAt?: Prisma.DateTimeNullableFilter<"LoanType"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"LoanType"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LoanType"> | Date | string
   leads?: Prisma.LeadsListRelationFilter
@@ -605,7 +621,9 @@ export type LoanTypeOrderByWithRelationInput = {
   isPublic?: Prisma.SortOrder
   approvalRequired?: Prisma.SortOrder
   estimatedProcessingTimeDays?: Prisma.SortOrderInput | Prisma.SortOrder
-  documentsRequired?: Prisma.SortOrderInput | Prisma.SortOrder
+  documentsRequired?: Prisma.SortOrder
+  documentsOptions?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   leads?: Prisma.LeadsOrderByRelationAggregateInput
@@ -653,7 +671,9 @@ export type LoanTypeWhereUniqueInput = Prisma.AtLeast<{
   isPublic?: Prisma.BoolFilter<"LoanType"> | boolean
   approvalRequired?: Prisma.BoolFilter<"LoanType"> | boolean
   estimatedProcessingTimeDays?: Prisma.IntNullableFilter<"LoanType"> | number | null
-  documentsRequired?: Prisma.StringNullableFilter<"LoanType"> | string | null
+  documentsRequired?: Prisma.StringFilter<"LoanType"> | string
+  documentsOptions?: Prisma.StringNullableFilter<"LoanType"> | string | null
+  deletedAt?: Prisma.DateTimeNullableFilter<"LoanType"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"LoanType"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LoanType"> | Date | string
   leads?: Prisma.LeadsListRelationFilter
@@ -697,7 +717,9 @@ export type LoanTypeOrderByWithAggregationInput = {
   isPublic?: Prisma.SortOrder
   approvalRequired?: Prisma.SortOrder
   estimatedProcessingTimeDays?: Prisma.SortOrderInput | Prisma.SortOrder
-  documentsRequired?: Prisma.SortOrderInput | Prisma.SortOrder
+  documentsRequired?: Prisma.SortOrder
+  documentsOptions?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.LoanTypeCountOrderByAggregateInput
@@ -747,7 +769,9 @@ export type LoanTypeScalarWhereWithAggregatesInput = {
   isPublic?: Prisma.BoolWithAggregatesFilter<"LoanType"> | boolean
   approvalRequired?: Prisma.BoolWithAggregatesFilter<"LoanType"> | boolean
   estimatedProcessingTimeDays?: Prisma.IntNullableWithAggregatesFilter<"LoanType"> | number | null
-  documentsRequired?: Prisma.StringNullableWithAggregatesFilter<"LoanType"> | string | null
+  documentsRequired?: Prisma.StringWithAggregatesFilter<"LoanType"> | string
+  documentsOptions?: Prisma.StringNullableWithAggregatesFilter<"LoanType"> | string | null
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"LoanType"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LoanType"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"LoanType"> | Date | string
 }
@@ -789,7 +813,9 @@ export type LoanTypeCreateInput = {
   isPublic?: boolean
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: number | null
-  documentsRequired?: string | null
+  documentsRequired: string
+  documentsOptions?: string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leads?: Prisma.LeadsCreateNestedManyWithoutLoanTypeInput
@@ -833,7 +859,9 @@ export type LoanTypeUncheckedCreateInput = {
   isPublic?: boolean
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: number | null
-  documentsRequired?: string | null
+  documentsRequired: string
+  documentsOptions?: string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leads?: Prisma.LeadsUncheckedCreateNestedManyWithoutLoanTypeInput
@@ -877,7 +905,9 @@ export type LoanTypeUpdateInput = {
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   approvalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   estimatedProcessingTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  documentsRequired?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  documentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leads?: Prisma.LeadsUpdateManyWithoutLoanTypeNestedInput
@@ -921,7 +951,9 @@ export type LoanTypeUncheckedUpdateInput = {
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   approvalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   estimatedProcessingTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  documentsRequired?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  documentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leads?: Prisma.LeadsUncheckedUpdateManyWithoutLoanTypeNestedInput
@@ -965,7 +997,9 @@ export type LoanTypeCreateManyInput = {
   isPublic?: boolean
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: number | null
-  documentsRequired?: string | null
+  documentsRequired: string
+  documentsOptions?: string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1007,7 +1041,9 @@ export type LoanTypeUpdateManyMutationInput = {
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   approvalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   estimatedProcessingTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  documentsRequired?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  documentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1049,7 +1085,9 @@ export type LoanTypeUncheckedUpdateManyInput = {
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   approvalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   estimatedProcessingTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  documentsRequired?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  documentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1108,6 +1146,8 @@ export type LoanTypeCountOrderByAggregateInput = {
   approvalRequired?: Prisma.SortOrder
   estimatedProcessingTimeDays?: Prisma.SortOrder
   documentsRequired?: Prisma.SortOrder
+  documentsOptions?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1173,6 +1213,8 @@ export type LoanTypeMaxOrderByAggregateInput = {
   approvalRequired?: Prisma.SortOrder
   estimatedProcessingTimeDays?: Prisma.SortOrder
   documentsRequired?: Prisma.SortOrder
+  documentsOptions?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1215,6 +1257,8 @@ export type LoanTypeMinOrderByAggregateInput = {
   approvalRequired?: Prisma.SortOrder
   estimatedProcessingTimeDays?: Prisma.SortOrder
   documentsRequired?: Prisma.SortOrder
+  documentsOptions?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1313,7 +1357,9 @@ export type LoanTypeCreateWithoutLeadsInput = {
   isPublic?: boolean
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: number | null
-  documentsRequired?: string | null
+  documentsRequired: string
+  documentsOptions?: string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutLoanTypeInput
@@ -1356,7 +1402,9 @@ export type LoanTypeUncheckedCreateWithoutLeadsInput = {
   isPublic?: boolean
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: number | null
-  documentsRequired?: string | null
+  documentsRequired: string
+  documentsOptions?: string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutLoanTypeInput
@@ -1415,7 +1463,9 @@ export type LoanTypeUpdateWithoutLeadsInput = {
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   approvalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   estimatedProcessingTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  documentsRequired?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  documentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutLoanTypeNestedInput
@@ -1458,7 +1508,9 @@ export type LoanTypeUncheckedUpdateWithoutLeadsInput = {
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   approvalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   estimatedProcessingTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  documentsRequired?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  documentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutLoanTypeNestedInput
@@ -1501,7 +1553,9 @@ export type LoanTypeCreateWithoutLoanApplicationsInput = {
   isPublic?: boolean
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: number | null
-  documentsRequired?: string | null
+  documentsRequired: string
+  documentsOptions?: string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leads?: Prisma.LeadsCreateNestedManyWithoutLoanTypeInput
@@ -1544,7 +1598,9 @@ export type LoanTypeUncheckedCreateWithoutLoanApplicationsInput = {
   isPublic?: boolean
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: number | null
-  documentsRequired?: string | null
+  documentsRequired: string
+  documentsOptions?: string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leads?: Prisma.LeadsUncheckedCreateNestedManyWithoutLoanTypeInput
@@ -1603,7 +1659,9 @@ export type LoanTypeUpdateWithoutLoanApplicationsInput = {
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   approvalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   estimatedProcessingTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  documentsRequired?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  documentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leads?: Prisma.LeadsUpdateManyWithoutLoanTypeNestedInput
@@ -1646,7 +1704,9 @@ export type LoanTypeUncheckedUpdateWithoutLoanApplicationsInput = {
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   approvalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   estimatedProcessingTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  documentsRequired?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  documentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leads?: Prisma.LeadsUncheckedUpdateManyWithoutLoanTypeNestedInput
@@ -1730,6 +1790,8 @@ export type LoanTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: boolean
   documentsRequired?: boolean
+  documentsOptions?: boolean
+  deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   leads?: boolean | Prisma.LoanType$leadsArgs<ExtArgs>
@@ -1777,11 +1839,13 @@ export type LoanTypeSelectScalar = {
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: boolean
   documentsRequired?: boolean
+  documentsOptions?: boolean
+  deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LoanTypeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "name" | "description" | "category" | "secured" | "minAmount" | "maxAmount" | "minTenureMonths" | "maxTenureMonths" | "interestType" | "minInterestRate" | "maxInterestRate" | "defaultInterestRate" | "processingFeeType" | "processingFee" | "gstApplicable" | "gstPercentage" | "minAge" | "maxAge" | "minIncome" | "employmentType" | "minCibilScore" | "maxCibilScore" | "maxLoanToValueRatio" | "prepaymentAllowed" | "foreclosureAllowed" | "prepaymentCharges" | "foreclosureCharges" | "latePaymentFeeType" | "latePaymentFee" | "bounceCharges" | "isActive" | "isPublic" | "approvalRequired" | "estimatedProcessingTimeDays" | "documentsRequired" | "createdAt" | "updatedAt", ExtArgs["result"]["loanType"]>
+export type LoanTypeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "name" | "description" | "category" | "secured" | "minAmount" | "maxAmount" | "minTenureMonths" | "maxTenureMonths" | "interestType" | "minInterestRate" | "maxInterestRate" | "defaultInterestRate" | "processingFeeType" | "processingFee" | "gstApplicable" | "gstPercentage" | "minAge" | "maxAge" | "minIncome" | "employmentType" | "minCibilScore" | "maxCibilScore" | "maxLoanToValueRatio" | "prepaymentAllowed" | "foreclosureAllowed" | "prepaymentCharges" | "foreclosureCharges" | "latePaymentFeeType" | "latePaymentFee" | "bounceCharges" | "isActive" | "isPublic" | "approvalRequired" | "estimatedProcessingTimeDays" | "documentsRequired" | "documentsOptions" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["loanType"]>
 export type LoanTypeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   leads?: boolean | Prisma.LoanType$leadsArgs<ExtArgs>
   loanApplications?: boolean | Prisma.LoanType$loanApplicationsArgs<ExtArgs>
@@ -1831,7 +1895,9 @@ export type $LoanTypePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     isPublic: boolean
     approvalRequired: boolean
     estimatedProcessingTimeDays: number | null
-    documentsRequired: string | null
+    documentsRequired: string
+    documentsOptions: string | null
+    deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["loanType"]>
@@ -2242,6 +2308,8 @@ export interface LoanTypeFieldRefs {
   readonly approvalRequired: Prisma.FieldRef<"LoanType", 'Boolean'>
   readonly estimatedProcessingTimeDays: Prisma.FieldRef<"LoanType", 'Int'>
   readonly documentsRequired: Prisma.FieldRef<"LoanType", 'String'>
+  readonly documentsOptions: Prisma.FieldRef<"LoanType", 'String'>
+  readonly deletedAt: Prisma.FieldRef<"LoanType", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"LoanType", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"LoanType", 'DateTime'>
 }

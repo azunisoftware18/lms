@@ -17,6 +17,23 @@ import { prisma } from "../../db/prismaService.js";
 
 import { cleanupFiles } from "../../common/utils/cleanup.js";
 import path from "path";
+import {
+  normalizeLoanDocumentType,
+  parseLoanDocumentCsv,
+} from "../../common/constants/loanDocumentTypes.js";
+
+const hasBranchAccess = (req: Request, branchId: string) => {
+  const accessibleBranchIds = (req as any).accessibleBranchIds as
+    | string[]
+    | null
+    | undefined;
+
+  if (accessibleBranchIds == null) {
+    return true;
+  }
+
+  return accessibleBranchIds.includes(branchId);
+};
 
 
 
@@ -149,6 +166,14 @@ export const uploadLoanDocumentsController = async (
       });
     }
 
+    if (!hasBranchAccess(req, loanApplication.branchId)) {
+      cleanupFiles(files);
+      return res.status(403).json({
+        success: false,
+        message: "You are not allowed to upload documents for this branch",
+      });
+    }
+
     if (!loanApplication.kyc) {
       cleanupFiles(files);
       return res.status(400).json({
@@ -157,32 +182,62 @@ export const uploadLoanDocumentsController = async (
       });
     }
 
-    /* ---------------- 3️⃣ Required documents check ---------------- */
-    const requiredDocuments =
-      loanType?.documentsRequired
-        ?.split(",")
-        .map((d: string) => d.trim()) || [];
+    /* ---------------- 3️⃣ Required + optional documents check ---------------- */
+    const requiredDocuments = loanType?.documentsRequired
+      ? parseLoanDocumentCsv(loanType.documentsRequired)
+      : [];
+    const optionalDocuments = loanType?.documentsOptions
+      ? parseLoanDocumentCsv(loanType.documentsOptions)
+      : [];
 
-    if (requiredDocuments.length === 0) {
+    const allowedDocumentTypes = Array.from(
+      new Set([...requiredDocuments, ...optionalDocuments]),
+    );
+
+    if (allowedDocumentTypes.length === 0) {
       cleanupFiles(files);
       return res.status(400).json({
         success: false,
-        message: "No documents required for this loan type",
+        message: "No allowed documents configured for this loan type",
       });
     }
 
-    const uploadedDocTypes = files.map((file) => file.fieldname);
-
-    const missingDocs = requiredDocuments.filter(
-      (doc) => !uploadedDocTypes.includes(doc),
+    const uploadedDocTypes = files.map((file) =>
+      normalizeLoanDocumentType(file.fieldname),
     );
 
-    if (missingDocs.length > 0) {
+    const invalidForLoanType = uploadedDocTypes.filter(
+      (docType) => !allowedDocumentTypes.includes(docType),
+    );
+
+    if (invalidForLoanType.length > 0) {
       cleanupFiles(files);
       return res.status(400).json({
         success: false,
-        message: `Missing required documents: ${missingDocs.join(", ")}`,
+        message: `Invalid document types for this loan type: ${Array.from(new Set(invalidForLoanType)).join(", ")}`,
       });
+    }
+
+    const existingDocuments = await prisma.document.findMany({
+      where: { loanApplicationId },
+      select: { documentType: true },
+    });
+
+    const existingDocTypes = existingDocuments.map((doc) =>
+      normalizeLoanDocumentType(doc.documentType),
+    );
+
+    const combinedUploadedTypes = Array.from(
+      new Set([...existingDocTypes, ...uploadedDocTypes]),
+    );
+
+    const missingDocs = requiredDocuments.filter(
+      (doc) => !combinedUploadedTypes.includes(doc),
+    );
+
+    if (missingDocs.length > 0) {
+      // Allow partial uploads while reporting which required docs are still pending.
+      // This avoids forcing all required files in a single request.
     }
 
     /* ---------------- 4️⃣ Build payload and save documents (service handles create/update) ---------------- */
@@ -191,7 +246,7 @@ export const uploadLoanDocumentsController = async (
       const relativePath = `/public/uploads/${path.basename(file.path)}`;
 
       return {
-        documentType: file.fieldname,
+        documentType: normalizeLoanDocumentType(file.fieldname),
         documentPath: relativePath,
         uploadedBy: userId,
       };
@@ -207,6 +262,11 @@ export const uploadLoanDocumentsController = async (
       success: true,
       message: "Documents uploaded successfully",
       data: documents,
+      meta: {
+        requiredDocuments,
+        optionalDocuments,
+        missingRequiredDocuments: missingDocs,
+      },
     });
   } catch (error: any) {
     cleanupFiles(files);
@@ -224,6 +284,19 @@ export const verifyDocumentController = async (req: Request, res: Response) => {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
     const documentId = typeof req.params.id === 'string' ? req.params.id : (Array.isArray(req.params.id) ? req.params.id[0] : '');
+    const existingDocument = await prisma.document.findUnique({
+      where: { id: documentId },
+      select: { branchId: true },
+    });
+    if (!existingDocument) {
+      return res.status(404).json({ success: false, message: "Document not found" });
+    }
+    if (!hasBranchAccess(req, existingDocument.branchId)) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not allowed to verify documents for this branch",
+      });
+    }
     const doc = await verifyDocumentService(documentId, req.user.id);
     res.status(200).json({
       success: true,
@@ -246,6 +319,25 @@ export const getAlldoumentsforLoanApplicationController = async (req: Request, r
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
     const loanApplicationId = typeof req.params.id === 'string' ? req.params.id : (Array.isArray(req.params.id) ? req.params.id[0] : '');
+    const loanApplication = await prisma.loanApplication.findUnique({
+      where: { id: loanApplicationId },
+      select: { branchId: true },
+    });
+
+    if (!loanApplication) {
+      return res.status(404).json({
+        success: false,
+        message: "Loan application not found",
+      });
+    }
+
+    if (!hasBranchAccess(req, loanApplication.branchId)) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not allowed to view documents for this branch",
+      });
+    }
+
     const documents = await getAllDocumentsForLoanApplicationService(loanApplicationId);
     res.status(200).json({
       success: true,
@@ -266,6 +358,19 @@ export const rejectDocumentController = async (req: Request, res: Response) => {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
     const documentId = typeof req.params.id === 'string' ? req.params.id : (Array.isArray(req.params.id) ? req.params.id[0] : '');
+    const existingDocument = await prisma.document.findUnique({
+      where: { id: documentId },
+      select: { branchId: true },
+    });
+    if (!existingDocument) {
+      return res.status(404).json({ success: false, message: "Document not found" });
+    }
+    if (!hasBranchAccess(req, existingDocument.branchId)) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not allowed to reject documents for this branch",
+      });
+    }
     const { reason } = req.body;
     if (!reason) {
       return res
@@ -380,9 +485,31 @@ export const reuploadLoanDocumentController = async (
         message: "No document uploaded",
       });
     }
+
+    const loanApplication = await prisma.loanApplication.findUnique({
+      where: { id: loanApplicationId },
+      select: { branchId: true },
+    });
+
+    if (!loanApplication) {
+      cleanupFiles([req.file]);
+      return res.status(404).json({
+        success: false,
+        message: "Loan application not found",
+      });
+    }
+
+    if (!hasBranchAccess(req, loanApplication.branchId)) {
+      cleanupFiles([req.file]);
+      return res.status(403).json({
+        success: false,
+        message: "You are not allowed to reupload documents for this branch",
+      });
+    }
+
     const updatedDoc = await reuploadLoanDocumentService(
       loanApplicationId,
-      documentType,
+      normalizeLoanDocumentType(documentType),
       {
         filename: req.file.filename,
         path: `/public/uploads/${req.file.filename}`,

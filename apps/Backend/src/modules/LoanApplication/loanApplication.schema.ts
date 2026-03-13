@@ -3,6 +3,7 @@ import {
   CommissionType,
   InterestType,
 } from "../../../generated/prisma-client/enums.js";
+import { LOAN_DOCUMENT_TYPES } from "../../common/constants/loanDocumentTypes.js";
 
 export const titleEnum = z.enum(["MR", "MRS", "MS", "DR", "PROF"]);
 export const genderEnum = z.enum(["MALE", "FEMALE", "OTHER"]);
@@ -184,6 +185,13 @@ export const updateLoanApplicationSchema = createLoanApplicationSchema
 
 export const loanApplicationIdParamSchema = z.object({
   id: z.string().min(1, "id param is required"),
+});
+
+export const loanDocumentTypeEnum = z.enum(LOAN_DOCUMENT_TYPES);
+
+export const reuploadLoanDocumentParamSchema = z.object({
+  loanApplicationId: z.string().min(1, "loanApplicationId param is required"),
+  documentType: loanDocumentTypeEnum,
 });
 
 export type CreateLoanApplicationBody = z.infer<

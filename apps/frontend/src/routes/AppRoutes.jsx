@@ -56,6 +56,10 @@ import LoanAccountView from '../app/dashboard/ViewDetail/LoanAccountView.jsx';
 import KycVerificationPage from '../app/dashboard/LOS/KycVerificationPage.jsx';
 
 
+import BranchManagement from '../app/dashboard/Configuration/BranchManagement.jsx';
+import BorrowerPage from '../app/dashboard/BorrowerPage.jsx';
+
+
 export default function AppRoutes() {
 	const dispatch = useDispatch();
 
@@ -153,6 +157,8 @@ export default function AppRoutes() {
 				<Route path="recovery-management" element={<RecoveryManagement />} />
 				<Route path="foreclosure" element={<Foreclosure />} />
 				<Route path="loan-closure" element={<LoanClosure />} />
+				<Route path="branch-management" element={<BranchManagement />} />
+				<Route path='borrowers' element={< BorrowerPage />} />
 
 				{/* LOS pages */}
 				<Route path='los/applications' element={<ApplicationPage />} />

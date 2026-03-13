@@ -865,6 +865,7 @@ export const LoanEmiScheduleScalarFieldEnum = {
   dueDate: 'dueDate',
   openingBalance: 'openingBalance',
   principalAmount: 'principalAmount',
+  deferredPrincipal: 'deferredPrincipal',
   interestAmount: 'interestAmount',
   emiAmount: 'emiAmount',
   emiPaymentAmount: 'emiPaymentAmount',
@@ -997,6 +998,8 @@ export const LoanTypeScalarFieldEnum = {
   approvalRequired: 'approvalRequired',
   estimatedProcessingTimeDays: 'estimatedProcessingTimeDays',
   documentsRequired: 'documentsRequired',
+  documentsOptions: 'documentsOptions',
+  deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1730,7 +1733,8 @@ export const LoanTypeOrderByRelevanceFieldEnum = {
   code: 'code',
   name: 'name',
   description: 'description',
-  documentsRequired: 'documentsRequired'
+  documentsRequired: 'documentsRequired',
+  documentsOptions: 'documentsOptions'
 } as const
 
 export type LoanTypeOrderByRelevanceFieldEnum = (typeof LoanTypeOrderByRelevanceFieldEnum)[keyof typeof LoanTypeOrderByRelevanceFieldEnum]
