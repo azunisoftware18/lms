@@ -5,43 +5,21 @@ import {
   Building,
   Banknote,
   Calendar,
-  Phone,
-  IdCard,
-  TrendingUp,
   AlertCircle,
   CheckCircle,
   XCircle,
   Clock,
-  BarChart,
   Calculator,
   FileText,
   Shield,
-  Target,
   Percent,
-  DollarSign,
-  CreditCard,
   Home,
-  Car,
-  Briefcase,
-  Heart,
-  TrendingDown,
-  ChevronDown,
-  Edit,
   Save,
   Send,
   Download,
-  Filter,
-  Search,
-  Lock,
-  Unlock,
-  Eye,
-  Check,
   X,
-  CalendarDays,
   IndianRupee,
   Key,
-  FolderOpen,
-  Loader,
   ArrowLeft,
 } from "lucide-react";
 import Button from "../../../components/ui/Button";
@@ -50,7 +28,7 @@ import InputField from "../../../components/ui/InputField";
 import SelectField from "../../../components/ui/SelectField";
 import TextAreaField from "../../../components/ui/TextAreaField";
 import StatusCard from "../../../components/common/StatusCard";
-import { TableShell } from "../../../components/tables/core";
+import CreditCheckTable from "../../../components/tables/CreditCheckTable";
 import { useRefreshCreditReport } from "../../../hooks/useCreditReport";
 import {
   CREDIT_CHECK_LOAN_APPLICATIONS,
@@ -372,13 +350,6 @@ export default function CreditCheckPage() {
     { label: "C (Below Average)", value: "C" },
     { label: "D (Poor)", value: "D" },
   ];
-
-  const getStatusTone = (statusColor) => {
-    if (statusColor === "rose") return "bg-rose-100 text-rose-700";
-    if (statusColor === "emerald") return "bg-emerald-100 text-emerald-700";
-    if (statusColor === "amber") return "bg-amber-100 text-amber-700";
-    return "bg-slate-100 text-slate-700";
-  };
 
   // If no application selected, show search screen
   if (!selectedApplication) {
@@ -802,92 +773,10 @@ export default function CreditCheckPage() {
                 </span>
               </div>
 
-              <TableShell>
-                <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Loan Type
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Bank / NBFC
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      EMI Amount
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Outstanding
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Overdue
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody className="divide-y divide-gray-200">
-                  {currentCreditData?.existingLoans?.map((loan) => (
-                    <tr key={loan.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          {loan.loanType === "Home Loan" && (
-                            <Home size={16} className="text-blue-500" />
-                          )}
-                          {loan.loanType === "Car Loan" && (
-                            <Car size={16} className="text-emerald-500" />
-                          )}
-                          {loan.loanType === "Personal Loan" && (
-                            <Briefcase size={16} className="text-purple-500" />
-                          )}
-                          {loan.loanType === "Credit Card" && (
-                            <CreditCard size={16} className="text-amber-500" />
-                          )}
-                          <span className="font-medium text-gray-900">{loan.loanType}</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-gray-700">{loan.bankName}</td>
-                      <td className="px-4 py-3">
-                        <span className="font-medium text-gray-900">
-                          ₹{loan.emiAmount.toLocaleString("en-IN")}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-gray-700">
-                        ₹{loan.outstandingAmount.toLocaleString("en-IN")}
-                      </td>
-                      <td className="px-4 py-3">
-                        <span
-                          className={`font-medium ${loan.overdueAmount > 0 ? "text-rose-600" : "text-gray-700"}`}
-                        >
-                          ₹{loan.overdueAmount.toLocaleString("en-IN")}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusTone(loan.statusColor)}`}
-                        >
-                          {loan.status === "Active" && (
-                            <CheckCircle size={12} className="mr-1" />
-                          )}
-                          {loan.status === "Default" && (
-                            <AlertCircle size={12} className="mr-1" />
-                          )}
-                          {loan.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-
-                  {(!currentCreditData?.existingLoans ||
-                    currentCreditData.existingLoans.length === 0) && (
-                    <tr>
-                      <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
-                        No existing loans found
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </TableShell>
+              <CreditCheckTable
+                loans={currentCreditData?.existingLoans ?? []}
+                loading={false}
+              />
 
               <div className="mt-6 pt-6 border-t border-gray-200">
                 <div className="flex items-center justify-between">
@@ -906,7 +795,9 @@ export default function CreditCheckPage() {
                     <p className="text-sm text-gray-500">
                       Monthly EMI Commitment
                     </p>
-                    <p className={`text-2xl font-bold ${colorVariables.PRIMARY_COLOR}`}>
+                    <p
+                      className={`text-2xl font-bold ${colorVariables.PRIMARY_COLOR}`}
+                    >
                       ₹{totalExistingEMI.toLocaleString("en-IN")}/month
                     </p>
                   </div>
