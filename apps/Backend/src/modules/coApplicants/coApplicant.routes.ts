@@ -52,6 +52,7 @@ coApplicantRouter.get(
 coApplicantRouter.put(
   "/documents/:documentId/verify",
   authMiddleware,
+  coApplicantDocumentLimiter,
   validate(coApplicantDocumentIdParamSchema, "params"),
   checkPermissionMiddleware("VERIFY_DOCUMENT"),
   verifyCoApplicantDocumentController,

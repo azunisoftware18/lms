@@ -239,7 +239,7 @@ export async function reuploadCoApplicantDocumentService(
 
 export async function verifyCoApplicantDocumentService(
   documentId: string,
-  adminId: string,
+  requester: RequestUserContext,
 ) {
   return prisma.$transaction(async (tx) => {
     const existingDoc = await tx.document.findUnique({
@@ -249,18 +249,33 @@ export async function verifyCoApplicantDocumentService(
         coApplicantId: true,
         kycId: true,
         verificationStatus: true,
+        coApplicant: {
+          select: {
+            loanApplication: {
+              select: {
+                branchId: true,
+              },
+            },
+          },
+        },
       },
     });
 
     if (!existingDoc) throw AppError.notFound("Document not found");
     if (!existingDoc.coApplicantId)
       throw AppError.badRequest("Document does not belong to a co-applicant");
+    if (!existingDoc.coApplicant?.loanApplication) {
+      throw AppError.notFound("Loan application for co-applicant not found");
+    }
+
+    const branchId = existingDoc.coApplicant.loanApplication.branchId;
+    assertBranchAccess(requester, branchId);
 
     const document = await tx.document.update({
       where: { id: documentId },
       data: {
         verified: true,
-        verifiedBy: adminId,
+        verifiedBy: requester.id,
         verifiedAt: new Date(),
         verificationStatus: "verified",
       },
@@ -291,7 +306,7 @@ export async function verifyCoApplicantDocumentService(
           where: { id: document.kycId },
           data: {
             status: "VERIFIED",
-            verifiedBy: adminId,
+            verifiedBy: requester.id,
             verifiedAt: new Date(),
           },
         });
@@ -300,10 +315,10 @@ export async function verifyCoApplicantDocumentService(
 
     await logAction({
       action: "VERIFY_DOCUMENT",
-      performedBy: adminId,
+      performedBy: requester.id,
       entityType: "DOCUMENT",
       entityId: documentId,
-      branchId: "",
+      branchId,
       oldValue: { verificationStatus: existingDoc.verificationStatus },
       newValue: { verificationStatus: "verified" },
     });

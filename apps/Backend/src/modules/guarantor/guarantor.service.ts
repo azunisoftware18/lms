@@ -45,6 +45,10 @@ export async function uploadGuarantorDocumentsService(
 
     if (!guarantor) throw AppError.notFound("Guarantor not found");
 
+    if (!guarantor.loanApplication) {
+      throw AppError.notFound("Loan application for guarantor not found");
+    }
+
     const branchId = guarantor.loanApplication.branchId;
     assertBranchAccess(requester, branchId);
 

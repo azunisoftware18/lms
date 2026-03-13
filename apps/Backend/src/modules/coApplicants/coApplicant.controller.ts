@@ -151,35 +151,37 @@ export const getAllCoApplicantController = async (
       message: "Co-applicants fetched successfully",
       data: coApplicants,
     });
-  } catch (error) {    next(error);
+  } catch (error) {
+    next(error);
   }
 };
 
-    export const verifyCoApplicantDocumentController = async (
-      req: Request,
-      res: Response,
-      next: NextFunction,
-    ) => {
-      try {
-        if (!req.user) throw AppError.unauthorized("Unauthorized");
+export const verifyCoApplicantDocumentController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!req.user) throw AppError.unauthorized("Unauthorized");
 
-        const documentId =
-          typeof req.params.documentId === "string"
-            ? req.params.documentId
-            : req.params.documentId[0];
+    const documentId =
+      typeof req.params.documentId === "string"
+        ? req.params.documentId
+        : req.params.documentId[0];
 
-        const document = await verifyCoApplicantDocumentService(
-          documentId,
-          req.user.id,
-        );
+    const document = await verifyCoApplicantDocumentService(documentId, {
+      id: req.user.id,
+      role: req.user.role,
+      branchId: req.user.branchId,
+    });
 
-        return res.status(200).json({
-          success: true,
-          message: "Co-applicant document verified successfully",
-          data: document,
-        });
-      } catch (error) {
-        next(error);
-      }
-    };
-    
+    return res.status(200).json({
+      success: true,
+      message: "Co-applicant document verified successfully",
+      data: document,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
