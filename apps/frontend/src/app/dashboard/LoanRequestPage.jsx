@@ -26,7 +26,7 @@ import { TableShell, TableBody, TableHead } from "../../components/tables/core";
 const DetailItem = ({ label, value }) => (
   <div className="flex flex-col p-3 bg-gray-50 rounded-lg">
     <p className="text-xs font-medium text-gray-500 uppercase">{label}</p>
-    <p className="text-sm font-bold text-gray-800 break-words mt-1">{value}</p>
+    <p className="text-sm font-bold text-gray-800 wrap-break-word mt-1">{value}</p>
   </div>
 );
 export const StatusBadge = ({ status }) => {
@@ -185,7 +185,7 @@ export default function LoanRequestPage() {
 
   // --- Handlers ---
 
-  const handleLoanSubmit = (loanData) => {
+  const _handleLoanSubmit = (loanData) => {
     const isNew = !loans.some((l) => l.id === loanData.id);
     let updatedLoans;
 
@@ -312,20 +312,6 @@ export default function LoanRequestPage() {
   }, [filters.sourceType]);
 
   if (showForm) {
-    // Prepare data for the (assumed) LoanForm component when editing
-    const initialData = isEditing
-      ? {
-          id: selectedLoan?.id || "",
-          customerName: selectedLoan?.borrower || "",
-          amount: selectedLoan?.amount?.replace(/[^0-9]/g, "") || "",
-          product: selectedLoan?.type || "",
-          tenure: selectedLoan?.details?.tenure?.replace(/[^0-9]/g, "") || "12",
-          mobile: selectedLoan?.details?.mobile || "",
-          email: selectedLoan?.details?.email || "",
-          loanCategory: selectedLoan?.details?.loanCategory || "",
-        }
-      : {};
-
     return (
       <div className="p-6 bg-white min-h-screen">
         <div className="max-w-4xl mx-auto">
@@ -357,7 +343,7 @@ export default function LoanRequestPage() {
               management (`showForm`, `isEditing`).
             </p>
             <p className="text-sm mt-2">
-              **Mock Data Used:** The `handleLoanSubmit` function uses a mock
+              **Mock Data Used:** The `_handleLoanSubmit` function uses a mock
               logic to update the main loan table upon submission.
             </p>
           </div>
