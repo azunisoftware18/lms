@@ -87,9 +87,9 @@ export default function AdminDashboardPage() {
             </h3>
 
             <div className="flex items-center justify-center py-4">
-              <div className="relative w-32 h-32 rounded-full border-[10px] border-gray-100 flex items-center justify-center">
+              <div className="relative w-32 h-32 rounded-full border-10 border-gray-100 flex items-center justify-center">
                 <div
-                  className="absolute inset-0 rounded-full border-[10px] border-blue-600 border-t-transparent border-r-transparent transform -rotate-45"
+                  className="absolute inset-0 rounded-full border-10 border-blue-600 border-t-transparent border-r-transparent transform -rotate-45"
                   style={{ clipPath: "circle(50%)" }}
                 />
 
