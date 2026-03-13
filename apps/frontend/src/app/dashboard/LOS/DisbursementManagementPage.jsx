@@ -2,22 +2,19 @@ import React, { useState } from "react";
 import {
   Clock,
   CreditCard,
-  Eye,
   X,
   Building,
   Send,
-  Printer,
   Shield,
   ChevronRight,
 } from "lucide-react";
 
 // External Component Import
-import Pagination from "../../../components/common/Pagination";
 import Button from "../../../components/ui/Button";
 import SearchField from "../../../components/ui/SearchField";
 import InputField from "../../../components/ui/InputField";
 import SelectField from "../../../components/ui/SelectField";
-import TableShell from "../../../components/tables/core/TableShell";
+import DisbursementManagementTable from "../../../components/tables/DisbursementManagementTable";
 
 // Data and Utilities
 import {
@@ -136,35 +133,9 @@ export default function DisbursementManagementPage() {
     setSearchQuery("");
   };
 
-  // --- STATUS BADGE COMPONENT ---
-  const StatusBadge = ({ status }) => {
-    const config = {
-      pending: {
-        label: "Pending",
-        color: "bg-orange-100 text-orange-700 border-orange-200",
-      },
-      approved: {
-        label: "Approved",
-        color: "bg-blue-100 text-blue-700 border-blue-200",
-      },
-      paid: {
-        label: "Paid",
-        color: "bg-green-100 text-green-700 border-green-200",
-      },
-    };
-
-    return (
-      <span
-        className={`px-3 py-1 rounded-full text-xs font-medium border ${config[status]?.color || "bg-gray-100 text-gray-700"}`}
-      >
-        {config[status]?.label || status}
-      </span>
-    );
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 p-4 lg:p-6">
-      {/* HEADER - SIMPLIFIED */}
+      {/* HEADER */}
       <div className="mb-6">
         <div className="flex items-center gap-2 text-gray-500 text-sm mb-1">
           <span>Admin</span>
@@ -175,7 +146,7 @@ export default function DisbursementManagementPage() {
         <p className="text-gray-500 mt-1">Manage loan payments to customers</p>
       </div>
 
-      {/* TABS - SIMPLIFIED */}
+      {/* TABS */}
       <div className="flex gap-1 mb-6 bg-white p-1 rounded-xl border border-gray-200 shadow-sm w-fit">
         {Object.entries(tabData).map(([key, tab]) => (
           <button
@@ -231,143 +202,18 @@ export default function DisbursementManagementPage() {
           </div>
         </div>
 
-        {/* TABLE */}
-        <TableShell>
-          <thead className="bg-gray-50">
-            <tr className="text-left">
-              <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Customer
-              </th>
-              <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Loan ID
-              </th>
-              <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Amount
-              </th>
-              <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Bank
-              </th>
-              {activeTab !== "pending" && (
-                <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-              )}
-              <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {currentPageData.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={activeTab !== "pending" ? 6 : 5}
-                  className="p-12 text-center text-gray-400"
-                >
-                  <div className="flex flex-col items-center gap-2">
-                    <Clock size={24} />
-                    <p>No {currentTab.title.toLowerCase()} found</p>
-                  </div>
-                </td>
-              </tr>
-            ) : (
-              currentPageData.map((item) => (
-                <tr
-                  key={item.id || item.dvNo}
-                  className="hover:bg-gray-50 transition-colors"
-                >
-                  <td className="p-4">
-                    <div className="font-medium text-gray-800">
-                      {item.customer}
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <div
-                      className={`text-sm font-mono ${colorVariables.PRIMARY_COLOR}`}
-                    >
-                      {item.loanId || item.id}
-                    </div>
-                    {item.dvNo && (
-                      <div className="text-xs text-gray-500">{item.dvNo}</div>
-                    )}
-                  </td>
-                  <td className="p-4 font-bold text-gray-900">
-                    ₹{item.amount.toLocaleString()}
-                  </td>
-                  <td className="p-4">
-                    <div className="text-sm">{item.bank}</div>
-                  </td>
-                  {activeTab !== "pending" && (
-                    <td className="p-4">
-                      <StatusBadge status={item.status} />
-                    </td>
-                  )}
-                  <td className="p-4">
-                    <div className="flex justify-end gap-2">
-                      {/* VIEW BUTTON */}
-                      <Button
-                        onClick={() => handleViewDetails(item)}
-                        className={`px-3 py-1.5 ${colorVariables.LIGHT_BG} ${colorVariables.PRIMARY_COLOR} border border-blue-200 hover:bg-blue-100 text-sm`}
-                      >
-                        <Eye size={14} />
-                        View
-                      </Button>
-
-                      {/* ACTION BUTTON */}
-                      {activeTab === "pending" && (
-                        <Button
-                          onClick={() => handleCreateDV(item)}
-                          className={`px-3 py-1.5 ${colorVariables.PRIMARY_BUTTON_COLOR} text-sm`}
-                        >
-                          <Send size={14} />
-                          Disburse
-                        </Button>
-                      )}
-
-                      {activeTab === "approved" && (
-                        <Button
-                          onClick={() => handlePayNow(item)}
-                          className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm"
-                        >
-                          <CreditCard size={14} />
-                          Pay Now
-                        </Button>
-                      )}
-
-                      {activeTab === "paid" && (
-                        <Button
-                          onClick={() => window.print()}
-                          className="px-3 py-1.5 bg-gray-600 hover:bg-gray-700 text-white text-sm"
-                        >
-                          <Printer size={14} />
-                          Print
-                        </Button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </TableShell>
-
-        {/* PAGINATION */}
-        {totalPages > 1 && (
-          <div className="p-4 border-t border-gray-200">
-            <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
-              <p className="text-sm text-gray-500">
-                Page {currentPage} of {totalPages}
-              </p>
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                buttonClassName="px-3 py-1 border rounded hover:bg-gray-50"
-                activeButtonClassName={`${colorVariables.ACCENT_COLOR_BG} text-white border-blue-600`}
-              />
-            </div>
-          </div>
-        )}
+        <DisbursementManagementTable
+          data={currentPageData}
+          activeTab={activeTab}
+          loading={false}
+          onViewDetails={handleViewDetails}
+          onDisburse={handleCreateDV}
+          onPayNow={handlePayNow}
+          onPrint={() => window.print()}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
 
       {/* MODAL: CREATE DISBURSEMENT */}
@@ -407,7 +253,7 @@ export default function DisbursementManagementPage() {
               <div className="flex justify-between">
                 <span className="text-sm text-gray-500">Amount:</span>
                 <span className="font-bold text-lg">
-                  ₹{selectedLoan.amount.toLocaleString()}
+                  &#8377;{selectedLoan.amount.toLocaleString()}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -430,7 +276,6 @@ export default function DisbursementManagementPage() {
                   }
                 />
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Payment Method
@@ -498,7 +343,7 @@ export default function DisbursementManagementPage() {
                 <div>
                   <p className="text-sm text-gray-500">Amount</p>
                   <p className="font-bold">
-                    ₹{selectedLoan.amount.toLocaleString()}
+                    &#8377;{selectedLoan.amount.toLocaleString()}
                   </p>
                 </div>
                 <div>
