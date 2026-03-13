@@ -938,6 +938,7 @@ model Permission {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   userPermissions UserPermission[]
+  rolePermissions RolePermission[]
 }
 
 model UserPermission {
@@ -950,6 +951,17 @@ model UserPermission {
   permission Permission @relation(fields: [permissionId], references: [id])
 
   @@unique([userId, permissionId])
+}
+
+model RolePermission {
+  id           String  @id @default(cuid())
+  role         Role
+  permissionId String
+  allowed      Boolean @default(true)
+
+  permission Permission @relation(fields: [permissionId], references: [id])
+
+  @@unique([role, permissionId])
 }
 
 model Document {
