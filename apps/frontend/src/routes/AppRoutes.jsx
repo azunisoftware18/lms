@@ -6,6 +6,8 @@ import PublicRoute from './publicRoute';
 import DashboardPage from '../app/dashboard/DashboardPage';
 import ApplicationPage from '../app/dashboard/LOS/ApplicationPage.jsx';
 import DocumentPage from '../app/dashboard/LOS/DocumentPage.jsx';
+import BranchManagement from '../app/dashboard/Configuration/BranchManagement.jsx';
+import BorrowerPage from '../app/dashboard/BorrowerPage.jsx';
 
 
 // Public Pages
@@ -54,10 +56,6 @@ import Foreclosure from '../app/dashboard/LMS/Foreclosure.jsx';
 import LoanClosure from '../app/dashboard/LMS/LoanClosure.jsx';
 import LoanAccountView from '../app/dashboard/ViewDetail/LoanAccountView.jsx';
 import KycVerificationPage from '../app/dashboard/LOS/KycVerificationPage.jsx';
-
-
-import BranchManagement from '../app/dashboard/Configuration/BranchManagement.jsx';
-import BorrowerPage from '../app/dashboard/BorrowerPage.jsx';
 
 
 export default function AppRoutes() {
@@ -158,12 +156,13 @@ export default function AppRoutes() {
 				<Route path="foreclosure" element={<Foreclosure />} />
 				<Route path="loan-closure" element={<LoanClosure />} />
 				<Route path="branch-management" element={<BranchManagement />} />
-				<Route path='borrowers' element={< BorrowerPage />} />
+
 
 				{/* LOS pages */}
 				<Route path='los/applications' element={<ApplicationPage />} />
 				<Route path='los/documents' element={<DocumentPage />} />
 				<Route path='los/kyc-verification' element={<KycVerificationPage />} />
+				<Route path='borrowers' element={< BorrowerPage />} />
 				
 				
 
