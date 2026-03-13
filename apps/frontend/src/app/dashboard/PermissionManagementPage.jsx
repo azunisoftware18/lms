@@ -14,24 +14,9 @@ export default function PermissionManagementPage() {
   const [userPermissions, setUserPermissions] = useState([]);
   const [success, setSuccess] = useState("");
   const [localError, setLocalError] = useState("");
-  const [currentUser, setCurrentUser] = useState(null);
 
   const permissionList = dummyPermissions;
   const userList = dummyUsers;
-
-  /* GET CURRENT USER */
-
-  useEffect(() => {
-    try {
-      const userStr = localStorage.getItem("user");
-
-      if (userStr) {
-        setCurrentUser(JSON.parse(userStr));
-      }
-    } catch (e) {
-      console.log("User parse error");
-    }
-  }, []);
 
   /* TOGGLE PERMISSION */
 
@@ -157,7 +142,7 @@ export default function PermissionManagementPage() {
               Select a user to manage permissions
             </div>
           ) : (
-            <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+            <div className="space-y-3 max-h-125 overflow-y-auto pr-2">
               {permissionList.map((perm) => {
                 const active = isAllowed(perm.code);
 

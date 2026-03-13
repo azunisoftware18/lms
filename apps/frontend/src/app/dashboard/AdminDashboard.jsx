@@ -188,7 +188,7 @@ export default function AdminDashboardPage() {
                   </span>
                 </div>
 
-                <div className="w-full h-[1px] bg-blue-200 my-2"></div>
+                <div className="w-full h-px bg-blue-200 my-2"></div>
 
                 <div className="flex justify-between text-xs text-blue-600">
                   <span>Total Interest</span>
