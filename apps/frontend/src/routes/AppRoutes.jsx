@@ -14,6 +14,7 @@ import LegalCompliancePage from '../app/dashboard/LOS/LegalCompilancePage.jsx';
 import EMIManagementPage from '../app/dashboard/LOS/EMIManagementPage.jsx';
 import SanctionPage from '../app/dashboard/LOS/SanctionPage.jsx';
 import DisbursementManagementPage from '../app/dashboard/LOS/DisbursementManagementPage.jsx';
+import BranchAdmin from '../app/dashboard/Configuration/BranchAdmin.jsx';
 
 
 
@@ -170,6 +171,7 @@ export default function AppRoutes() {
 				<Route path="foreclosure" element={<Foreclosure />} />
 				<Route path="loan-closure" element={<LoanClosure />} />
 				<Route path="branch-management" element={<BranchManagement />} />
+				<Route path="branch-admin" element={<BranchAdmin />} />
 
 
 				{/* LOS pages */}
