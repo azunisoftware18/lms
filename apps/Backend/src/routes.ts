@@ -25,6 +25,7 @@ import slaRouter from "./modules/sla/sla.router.js";
 import { superAdminRouter } from "./modules/superAdmin/dashboard.routers.js";
 import loanDisbursementRouter from "./modules/loanDisbursement/loanDisburesment.router.js";
 import nachRouter from "./modules/nach/nach.router.js";
+import guarantorRouter from "./modules/guarantor/guarantor.routes.js";
 
 const router = Router();
 
@@ -57,5 +58,6 @@ router.use("/sla", slaRouter);
 router.use("/super-admin", superAdminRouter);
 router.use("/disbursement", loanDisbursementRouter);
 router.use("/nach",nachRouter)
+router.use("/guarantor", guarantorRouter);
 
 export default router;

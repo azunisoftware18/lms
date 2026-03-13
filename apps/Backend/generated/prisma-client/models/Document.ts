@@ -28,6 +28,7 @@ export type DocumentMinAggregateOutputType = {
   id: string | null
   loanApplicationId: string | null
   coApplicantId: string | null
+  guarantorId: string | null
   documentType: string | null
   documentPath: string | null
   verificationStatus: $Enums.VerificationStatus | null
@@ -46,6 +47,7 @@ export type DocumentMaxAggregateOutputType = {
   id: string | null
   loanApplicationId: string | null
   coApplicantId: string | null
+  guarantorId: string | null
   documentType: string | null
   documentPath: string | null
   verificationStatus: $Enums.VerificationStatus | null
@@ -64,6 +66,7 @@ export type DocumentCountAggregateOutputType = {
   id: number
   loanApplicationId: number
   coApplicantId: number
+  guarantorId: number
   documentType: number
   documentPath: number
   verificationStatus: number
@@ -84,6 +87,7 @@ export type DocumentMinAggregateInputType = {
   id?: true
   loanApplicationId?: true
   coApplicantId?: true
+  guarantorId?: true
   documentType?: true
   documentPath?: true
   verificationStatus?: true
@@ -102,6 +106,7 @@ export type DocumentMaxAggregateInputType = {
   id?: true
   loanApplicationId?: true
   coApplicantId?: true
+  guarantorId?: true
   documentType?: true
   documentPath?: true
   verificationStatus?: true
@@ -120,6 +125,7 @@ export type DocumentCountAggregateInputType = {
   id?: true
   loanApplicationId?: true
   coApplicantId?: true
+  guarantorId?: true
   documentType?: true
   documentPath?: true
   verificationStatus?: true
@@ -211,6 +217,7 @@ export type DocumentGroupByOutputType = {
   id: string
   loanApplicationId: string | null
   coApplicantId: string | null
+  guarantorId: string | null
   documentType: string
   documentPath: string
   verificationStatus: $Enums.VerificationStatus
@@ -250,6 +257,7 @@ export type DocumentWhereInput = {
   id?: Prisma.StringFilter<"Document"> | string
   loanApplicationId?: Prisma.StringNullableFilter<"Document"> | string | null
   coApplicantId?: Prisma.StringNullableFilter<"Document"> | string | null
+  guarantorId?: Prisma.StringNullableFilter<"Document"> | string | null
   documentType?: Prisma.StringFilter<"Document"> | string
   documentPath?: Prisma.StringFilter<"Document"> | string
   verificationStatus?: Prisma.EnumVerificationStatusFilter<"Document"> | $Enums.VerificationStatus
@@ -265,6 +273,7 @@ export type DocumentWhereInput = {
   kyc?: Prisma.XOR<Prisma.KycNullableScalarRelationFilter, Prisma.KycWhereInput> | null
   loanApplication?: Prisma.XOR<Prisma.LoanApplicationNullableScalarRelationFilter, Prisma.LoanApplicationWhereInput> | null
   coApplicant?: Prisma.XOR<Prisma.CoApplicantNullableScalarRelationFilter, Prisma.CoApplicantWhereInput> | null
+  guarantor?: Prisma.XOR<Prisma.GuarantorNullableScalarRelationFilter, Prisma.GuarantorWhereInput> | null
   branch?: Prisma.XOR<Prisma.BranchScalarRelationFilter, Prisma.BranchWhereInput>
 }
 
@@ -272,6 +281,7 @@ export type DocumentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   loanApplicationId?: Prisma.SortOrderInput | Prisma.SortOrder
   coApplicantId?: Prisma.SortOrderInput | Prisma.SortOrder
+  guarantorId?: Prisma.SortOrderInput | Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentPath?: Prisma.SortOrder
   verificationStatus?: Prisma.SortOrder
@@ -287,6 +297,7 @@ export type DocumentOrderByWithRelationInput = {
   kyc?: Prisma.KycOrderByWithRelationInput
   loanApplication?: Prisma.LoanApplicationOrderByWithRelationInput
   coApplicant?: Prisma.CoApplicantOrderByWithRelationInput
+  guarantor?: Prisma.GuarantorOrderByWithRelationInput
   branch?: Prisma.BranchOrderByWithRelationInput
   _relevance?: Prisma.DocumentOrderByRelevanceInput
 }
@@ -294,11 +305,13 @@ export type DocumentOrderByWithRelationInput = {
 export type DocumentWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   loanApplicationId_documentType?: Prisma.DocumentLoanApplicationIdDocumentTypeCompoundUniqueInput
+  guarantorId_documentType?: Prisma.DocumentGuarantorIdDocumentTypeCompoundUniqueInput
   AND?: Prisma.DocumentWhereInput | Prisma.DocumentWhereInput[]
   OR?: Prisma.DocumentWhereInput[]
   NOT?: Prisma.DocumentWhereInput | Prisma.DocumentWhereInput[]
   loanApplicationId?: Prisma.StringNullableFilter<"Document"> | string | null
   coApplicantId?: Prisma.StringNullableFilter<"Document"> | string | null
+  guarantorId?: Prisma.StringNullableFilter<"Document"> | string | null
   documentType?: Prisma.StringFilter<"Document"> | string
   documentPath?: Prisma.StringFilter<"Document"> | string
   verificationStatus?: Prisma.EnumVerificationStatusFilter<"Document"> | $Enums.VerificationStatus
@@ -314,13 +327,15 @@ export type DocumentWhereUniqueInput = Prisma.AtLeast<{
   kyc?: Prisma.XOR<Prisma.KycNullableScalarRelationFilter, Prisma.KycWhereInput> | null
   loanApplication?: Prisma.XOR<Prisma.LoanApplicationNullableScalarRelationFilter, Prisma.LoanApplicationWhereInput> | null
   coApplicant?: Prisma.XOR<Prisma.CoApplicantNullableScalarRelationFilter, Prisma.CoApplicantWhereInput> | null
+  guarantor?: Prisma.XOR<Prisma.GuarantorNullableScalarRelationFilter, Prisma.GuarantorWhereInput> | null
   branch?: Prisma.XOR<Prisma.BranchScalarRelationFilter, Prisma.BranchWhereInput>
-}, "id" | "loanApplicationId_documentType">
+}, "id" | "loanApplicationId_documentType" | "guarantorId_documentType">
 
 export type DocumentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   loanApplicationId?: Prisma.SortOrderInput | Prisma.SortOrder
   coApplicantId?: Prisma.SortOrderInput | Prisma.SortOrder
+  guarantorId?: Prisma.SortOrderInput | Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentPath?: Prisma.SortOrder
   verificationStatus?: Prisma.SortOrder
@@ -345,6 +360,7 @@ export type DocumentScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Document"> | string
   loanApplicationId?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null
   coApplicantId?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null
+  guarantorId?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null
   documentType?: Prisma.StringWithAggregatesFilter<"Document"> | string
   documentPath?: Prisma.StringWithAggregatesFilter<"Document"> | string
   verificationStatus?: Prisma.EnumVerificationStatusWithAggregatesFilter<"Document"> | $Enums.VerificationStatus
@@ -374,6 +390,7 @@ export type DocumentCreateInput = {
   kyc?: Prisma.KycCreateNestedOneWithoutDocumentsInput
   loanApplication?: Prisma.LoanApplicationCreateNestedOneWithoutDocumentsInput
   coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutDocumentsInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutDocumentsInput
   branch: Prisma.BranchCreateNestedOneWithoutDocumentsInput
 }
 
@@ -381,6 +398,7 @@ export type DocumentUncheckedCreateInput = {
   id?: string
   loanApplicationId?: string | null
   coApplicantId?: string | null
+  guarantorId?: string | null
   documentType: string
   documentPath: string
   verificationStatus?: $Enums.VerificationStatus
@@ -410,6 +428,7 @@ export type DocumentUpdateInput = {
   kyc?: Prisma.KycUpdateOneWithoutDocumentsNestedInput
   loanApplication?: Prisma.LoanApplicationUpdateOneWithoutDocumentsNestedInput
   coApplicant?: Prisma.CoApplicantUpdateOneWithoutDocumentsNestedInput
+  guarantor?: Prisma.GuarantorUpdateOneWithoutDocumentsNestedInput
   branch?: Prisma.BranchUpdateOneRequiredWithoutDocumentsNestedInput
 }
 
@@ -417,6 +436,7 @@ export type DocumentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   loanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentType?: Prisma.StringFieldUpdateOperationsInput | string
   documentPath?: Prisma.StringFieldUpdateOperationsInput | string
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -435,6 +455,7 @@ export type DocumentCreateManyInput = {
   id?: string
   loanApplicationId?: string | null
   coApplicantId?: string | null
+  guarantorId?: string | null
   documentType: string
   documentPath: string
   verificationStatus?: $Enums.VerificationStatus
@@ -467,6 +488,7 @@ export type DocumentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   loanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentType?: Prisma.StringFieldUpdateOperationsInput | string
   documentPath?: Prisma.StringFieldUpdateOperationsInput | string
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -502,10 +524,16 @@ export type DocumentLoanApplicationIdDocumentTypeCompoundUniqueInput = {
   documentType: string
 }
 
+export type DocumentGuarantorIdDocumentTypeCompoundUniqueInput = {
+  guarantorId: string
+  documentType: string
+}
+
 export type DocumentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   loanApplicationId?: Prisma.SortOrder
   coApplicantId?: Prisma.SortOrder
+  guarantorId?: Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentPath?: Prisma.SortOrder
   verificationStatus?: Prisma.SortOrder
@@ -524,6 +552,7 @@ export type DocumentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   loanApplicationId?: Prisma.SortOrder
   coApplicantId?: Prisma.SortOrder
+  guarantorId?: Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentPath?: Prisma.SortOrder
   verificationStatus?: Prisma.SortOrder
@@ -542,6 +571,7 @@ export type DocumentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   loanApplicationId?: Prisma.SortOrder
   coApplicantId?: Prisma.SortOrder
+  guarantorId?: Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentPath?: Prisma.SortOrder
   verificationStatus?: Prisma.SortOrder
@@ -682,6 +712,48 @@ export type DocumentUncheckedUpdateManyWithoutCoApplicantNestedInput = {
   deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[]
 }
 
+export type DocumentCreateNestedManyWithoutGuarantorInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutGuarantorInput, Prisma.DocumentUncheckedCreateWithoutGuarantorInput> | Prisma.DocumentCreateWithoutGuarantorInput[] | Prisma.DocumentUncheckedCreateWithoutGuarantorInput[]
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutGuarantorInput | Prisma.DocumentCreateOrConnectWithoutGuarantorInput[]
+  createMany?: Prisma.DocumentCreateManyGuarantorInputEnvelope
+  connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+}
+
+export type DocumentUncheckedCreateNestedManyWithoutGuarantorInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutGuarantorInput, Prisma.DocumentUncheckedCreateWithoutGuarantorInput> | Prisma.DocumentCreateWithoutGuarantorInput[] | Prisma.DocumentUncheckedCreateWithoutGuarantorInput[]
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutGuarantorInput | Prisma.DocumentCreateOrConnectWithoutGuarantorInput[]
+  createMany?: Prisma.DocumentCreateManyGuarantorInputEnvelope
+  connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+}
+
+export type DocumentUpdateManyWithoutGuarantorNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutGuarantorInput, Prisma.DocumentUncheckedCreateWithoutGuarantorInput> | Prisma.DocumentCreateWithoutGuarantorInput[] | Prisma.DocumentUncheckedCreateWithoutGuarantorInput[]
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutGuarantorInput | Prisma.DocumentCreateOrConnectWithoutGuarantorInput[]
+  upsert?: Prisma.DocumentUpsertWithWhereUniqueWithoutGuarantorInput | Prisma.DocumentUpsertWithWhereUniqueWithoutGuarantorInput[]
+  createMany?: Prisma.DocumentCreateManyGuarantorInputEnvelope
+  set?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  disconnect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  delete?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  update?: Prisma.DocumentUpdateWithWhereUniqueWithoutGuarantorInput | Prisma.DocumentUpdateWithWhereUniqueWithoutGuarantorInput[]
+  updateMany?: Prisma.DocumentUpdateManyWithWhereWithoutGuarantorInput | Prisma.DocumentUpdateManyWithWhereWithoutGuarantorInput[]
+  deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[]
+}
+
+export type DocumentUncheckedUpdateManyWithoutGuarantorNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentCreateWithoutGuarantorInput, Prisma.DocumentUncheckedCreateWithoutGuarantorInput> | Prisma.DocumentCreateWithoutGuarantorInput[] | Prisma.DocumentUncheckedCreateWithoutGuarantorInput[]
+  connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutGuarantorInput | Prisma.DocumentCreateOrConnectWithoutGuarantorInput[]
+  upsert?: Prisma.DocumentUpsertWithWhereUniqueWithoutGuarantorInput | Prisma.DocumentUpsertWithWhereUniqueWithoutGuarantorInput[]
+  createMany?: Prisma.DocumentCreateManyGuarantorInputEnvelope
+  set?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  disconnect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  delete?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[]
+  update?: Prisma.DocumentUpdateWithWhereUniqueWithoutGuarantorInput | Prisma.DocumentUpdateWithWhereUniqueWithoutGuarantorInput[]
+  updateMany?: Prisma.DocumentUpdateManyWithWhereWithoutGuarantorInput | Prisma.DocumentUpdateManyWithWhereWithoutGuarantorInput[]
+  deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[]
+}
+
 export type EnumVerificationStatusFieldUpdateOperationsInput = {
   set?: $Enums.VerificationStatus
 }
@@ -743,12 +815,14 @@ export type DocumentCreateWithoutBranchInput = {
   kyc?: Prisma.KycCreateNestedOneWithoutDocumentsInput
   loanApplication?: Prisma.LoanApplicationCreateNestedOneWithoutDocumentsInput
   coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutDocumentsInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutDocumentsInput
 }
 
 export type DocumentUncheckedCreateWithoutBranchInput = {
   id?: string
   loanApplicationId?: string | null
   coApplicantId?: string | null
+  guarantorId?: string | null
   documentType: string
   documentPath: string
   verificationStatus?: $Enums.VerificationStatus
@@ -795,6 +869,7 @@ export type DocumentScalarWhereInput = {
   id?: Prisma.StringFilter<"Document"> | string
   loanApplicationId?: Prisma.StringNullableFilter<"Document"> | string | null
   coApplicantId?: Prisma.StringNullableFilter<"Document"> | string | null
+  guarantorId?: Prisma.StringNullableFilter<"Document"> | string | null
   documentType?: Prisma.StringFilter<"Document"> | string
   documentPath?: Prisma.StringFilter<"Document"> | string
   verificationStatus?: Prisma.EnumVerificationStatusFilter<"Document"> | $Enums.VerificationStatus
@@ -823,12 +898,14 @@ export type DocumentCreateWithoutLoanApplicationInput = {
   updatedAt?: Date | string
   kyc?: Prisma.KycCreateNestedOneWithoutDocumentsInput
   coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutDocumentsInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutDocumentsInput
   branch: Prisma.BranchCreateNestedOneWithoutDocumentsInput
 }
 
 export type DocumentUncheckedCreateWithoutLoanApplicationInput = {
   id?: string
   coApplicantId?: string | null
+  guarantorId?: string | null
   documentType: string
   documentPath: string
   verificationStatus?: $Enums.VerificationStatus
@@ -883,12 +960,14 @@ export type DocumentCreateWithoutCoApplicantInput = {
   updatedAt?: Date | string
   kyc?: Prisma.KycCreateNestedOneWithoutDocumentsInput
   loanApplication?: Prisma.LoanApplicationCreateNestedOneWithoutDocumentsInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutDocumentsInput
   branch: Prisma.BranchCreateNestedOneWithoutDocumentsInput
 }
 
 export type DocumentUncheckedCreateWithoutCoApplicantInput = {
   id?: string
   loanApplicationId?: string | null
+  guarantorId?: string | null
   documentType: string
   documentPath: string
   verificationStatus?: $Enums.VerificationStatus
@@ -929,6 +1008,68 @@ export type DocumentUpdateManyWithWhereWithoutCoApplicantInput = {
   data: Prisma.XOR<Prisma.DocumentUpdateManyMutationInput, Prisma.DocumentUncheckedUpdateManyWithoutCoApplicantInput>
 }
 
+export type DocumentCreateWithoutGuarantorInput = {
+  id?: string
+  documentType: string
+  documentPath: string
+  verificationStatus?: $Enums.VerificationStatus
+  rejectionReason?: string | null
+  uploadedBy: string
+  verified?: boolean
+  verifiedBy?: string | null
+  verifiedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  kyc?: Prisma.KycCreateNestedOneWithoutDocumentsInput
+  loanApplication?: Prisma.LoanApplicationCreateNestedOneWithoutDocumentsInput
+  coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutDocumentsInput
+  branch: Prisma.BranchCreateNestedOneWithoutDocumentsInput
+}
+
+export type DocumentUncheckedCreateWithoutGuarantorInput = {
+  id?: string
+  loanApplicationId?: string | null
+  coApplicantId?: string | null
+  documentType: string
+  documentPath: string
+  verificationStatus?: $Enums.VerificationStatus
+  rejectionReason?: string | null
+  kycId?: string | null
+  branchId: string
+  uploadedBy: string
+  verified?: boolean
+  verifiedBy?: string | null
+  verifiedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DocumentCreateOrConnectWithoutGuarantorInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutGuarantorInput, Prisma.DocumentUncheckedCreateWithoutGuarantorInput>
+}
+
+export type DocumentCreateManyGuarantorInputEnvelope = {
+  data: Prisma.DocumentCreateManyGuarantorInput | Prisma.DocumentCreateManyGuarantorInput[]
+  skipDuplicates?: boolean
+}
+
+export type DocumentUpsertWithWhereUniqueWithoutGuarantorInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  update: Prisma.XOR<Prisma.DocumentUpdateWithoutGuarantorInput, Prisma.DocumentUncheckedUpdateWithoutGuarantorInput>
+  create: Prisma.XOR<Prisma.DocumentCreateWithoutGuarantorInput, Prisma.DocumentUncheckedCreateWithoutGuarantorInput>
+}
+
+export type DocumentUpdateWithWhereUniqueWithoutGuarantorInput = {
+  where: Prisma.DocumentWhereUniqueInput
+  data: Prisma.XOR<Prisma.DocumentUpdateWithoutGuarantorInput, Prisma.DocumentUncheckedUpdateWithoutGuarantorInput>
+}
+
+export type DocumentUpdateManyWithWhereWithoutGuarantorInput = {
+  where: Prisma.DocumentScalarWhereInput
+  data: Prisma.XOR<Prisma.DocumentUpdateManyMutationInput, Prisma.DocumentUncheckedUpdateManyWithoutGuarantorInput>
+}
+
 export type DocumentCreateWithoutKycInput = {
   id?: string
   documentType: string
@@ -943,6 +1084,7 @@ export type DocumentCreateWithoutKycInput = {
   updatedAt?: Date | string
   loanApplication?: Prisma.LoanApplicationCreateNestedOneWithoutDocumentsInput
   coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutDocumentsInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutDocumentsInput
   branch: Prisma.BranchCreateNestedOneWithoutDocumentsInput
 }
 
@@ -950,6 +1092,7 @@ export type DocumentUncheckedCreateWithoutKycInput = {
   id?: string
   loanApplicationId?: string | null
   coApplicantId?: string | null
+  guarantorId?: string | null
   documentType: string
   documentPath: string
   verificationStatus?: $Enums.VerificationStatus
@@ -993,6 +1136,7 @@ export type DocumentCreateManyBranchInput = {
   id?: string
   loanApplicationId?: string | null
   coApplicantId?: string | null
+  guarantorId?: string | null
   documentType: string
   documentPath: string
   verificationStatus?: $Enums.VerificationStatus
@@ -1021,12 +1165,14 @@ export type DocumentUpdateWithoutBranchInput = {
   kyc?: Prisma.KycUpdateOneWithoutDocumentsNestedInput
   loanApplication?: Prisma.LoanApplicationUpdateOneWithoutDocumentsNestedInput
   coApplicant?: Prisma.CoApplicantUpdateOneWithoutDocumentsNestedInput
+  guarantor?: Prisma.GuarantorUpdateOneWithoutDocumentsNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutBranchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   loanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentType?: Prisma.StringFieldUpdateOperationsInput | string
   documentPath?: Prisma.StringFieldUpdateOperationsInput | string
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -1044,6 +1190,7 @@ export type DocumentUncheckedUpdateManyWithoutBranchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   loanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentType?: Prisma.StringFieldUpdateOperationsInput | string
   documentPath?: Prisma.StringFieldUpdateOperationsInput | string
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -1060,6 +1207,7 @@ export type DocumentUncheckedUpdateManyWithoutBranchInput = {
 export type DocumentCreateManyLoanApplicationInput = {
   id?: string
   coApplicantId?: string | null
+  guarantorId?: string | null
   documentType: string
   documentPath: string
   verificationStatus?: $Enums.VerificationStatus
@@ -1088,12 +1236,14 @@ export type DocumentUpdateWithoutLoanApplicationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   kyc?: Prisma.KycUpdateOneWithoutDocumentsNestedInput
   coApplicant?: Prisma.CoApplicantUpdateOneWithoutDocumentsNestedInput
+  guarantor?: Prisma.GuarantorUpdateOneWithoutDocumentsNestedInput
   branch?: Prisma.BranchUpdateOneRequiredWithoutDocumentsNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutLoanApplicationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentType?: Prisma.StringFieldUpdateOperationsInput | string
   documentPath?: Prisma.StringFieldUpdateOperationsInput | string
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -1111,6 +1261,7 @@ export type DocumentUncheckedUpdateWithoutLoanApplicationInput = {
 export type DocumentUncheckedUpdateManyWithoutLoanApplicationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentType?: Prisma.StringFieldUpdateOperationsInput | string
   documentPath?: Prisma.StringFieldUpdateOperationsInput | string
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -1128,6 +1279,7 @@ export type DocumentUncheckedUpdateManyWithoutLoanApplicationInput = {
 export type DocumentCreateManyCoApplicantInput = {
   id?: string
   loanApplicationId?: string | null
+  guarantorId?: string | null
   documentType: string
   documentPath: string
   verificationStatus?: $Enums.VerificationStatus
@@ -1156,12 +1308,14 @@ export type DocumentUpdateWithoutCoApplicantInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   kyc?: Prisma.KycUpdateOneWithoutDocumentsNestedInput
   loanApplication?: Prisma.LoanApplicationUpdateOneWithoutDocumentsNestedInput
+  guarantor?: Prisma.GuarantorUpdateOneWithoutDocumentsNestedInput
   branch?: Prisma.BranchUpdateOneRequiredWithoutDocumentsNestedInput
 }
 
 export type DocumentUncheckedUpdateWithoutCoApplicantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   loanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentType?: Prisma.StringFieldUpdateOperationsInput | string
   documentPath?: Prisma.StringFieldUpdateOperationsInput | string
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -1179,6 +1333,79 @@ export type DocumentUncheckedUpdateWithoutCoApplicantInput = {
 export type DocumentUncheckedUpdateManyWithoutCoApplicantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   loanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentType?: Prisma.StringFieldUpdateOperationsInput | string
+  documentPath?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  uploadedBy?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type DocumentCreateManyGuarantorInput = {
+  id?: string
+  loanApplicationId?: string | null
+  coApplicantId?: string | null
+  documentType: string
+  documentPath: string
+  verificationStatus?: $Enums.VerificationStatus
+  rejectionReason?: string | null
+  kycId?: string | null
+  branchId: string
+  uploadedBy: string
+  verified?: boolean
+  verifiedBy?: string | null
+  verifiedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DocumentUpdateWithoutGuarantorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.StringFieldUpdateOperationsInput | string
+  documentPath?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  uploadedBy?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  kyc?: Prisma.KycUpdateOneWithoutDocumentsNestedInput
+  loanApplication?: Prisma.LoanApplicationUpdateOneWithoutDocumentsNestedInput
+  coApplicant?: Prisma.CoApplicantUpdateOneWithoutDocumentsNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutDocumentsNestedInput
+}
+
+export type DocumentUncheckedUpdateWithoutGuarantorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  loanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentType?: Prisma.StringFieldUpdateOperationsInput | string
+  documentPath?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  uploadedBy?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type DocumentUncheckedUpdateManyWithoutGuarantorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  loanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentType?: Prisma.StringFieldUpdateOperationsInput | string
   documentPath?: Prisma.StringFieldUpdateOperationsInput | string
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -1197,6 +1424,7 @@ export type DocumentCreateManyKycInput = {
   id?: string
   loanApplicationId?: string | null
   coApplicantId?: string | null
+  guarantorId?: string | null
   documentType: string
   documentPath: string
   verificationStatus?: $Enums.VerificationStatus
@@ -1224,6 +1452,7 @@ export type DocumentUpdateWithoutKycInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanApplication?: Prisma.LoanApplicationUpdateOneWithoutDocumentsNestedInput
   coApplicant?: Prisma.CoApplicantUpdateOneWithoutDocumentsNestedInput
+  guarantor?: Prisma.GuarantorUpdateOneWithoutDocumentsNestedInput
   branch?: Prisma.BranchUpdateOneRequiredWithoutDocumentsNestedInput
 }
 
@@ -1231,6 +1460,7 @@ export type DocumentUncheckedUpdateWithoutKycInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   loanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentType?: Prisma.StringFieldUpdateOperationsInput | string
   documentPath?: Prisma.StringFieldUpdateOperationsInput | string
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -1248,6 +1478,7 @@ export type DocumentUncheckedUpdateManyWithoutKycInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   loanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentType?: Prisma.StringFieldUpdateOperationsInput | string
   documentPath?: Prisma.StringFieldUpdateOperationsInput | string
   verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
@@ -1267,6 +1498,7 @@ export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   id?: boolean
   loanApplicationId?: boolean
   coApplicantId?: boolean
+  guarantorId?: boolean
   documentType?: boolean
   documentPath?: boolean
   verificationStatus?: boolean
@@ -1282,6 +1514,7 @@ export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   kyc?: boolean | Prisma.Document$kycArgs<ExtArgs>
   loanApplication?: boolean | Prisma.Document$loanApplicationArgs<ExtArgs>
   coApplicant?: boolean | Prisma.Document$coApplicantArgs<ExtArgs>
+  guarantor?: boolean | Prisma.Document$guarantorArgs<ExtArgs>
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["document"]>
 
@@ -1291,6 +1524,7 @@ export type DocumentSelectScalar = {
   id?: boolean
   loanApplicationId?: boolean
   coApplicantId?: boolean
+  guarantorId?: boolean
   documentType?: boolean
   documentPath?: boolean
   verificationStatus?: boolean
@@ -1305,11 +1539,12 @@ export type DocumentSelectScalar = {
   updatedAt?: boolean
 }
 
-export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "coApplicantId" | "documentType" | "documentPath" | "verificationStatus" | "rejectionReason" | "kycId" | "branchId" | "uploadedBy" | "verified" | "verifiedBy" | "verifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["document"]>
+export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "coApplicantId" | "guarantorId" | "documentType" | "documentPath" | "verificationStatus" | "rejectionReason" | "kycId" | "branchId" | "uploadedBy" | "verified" | "verifiedBy" | "verifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["document"]>
 export type DocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   kyc?: boolean | Prisma.Document$kycArgs<ExtArgs>
   loanApplication?: boolean | Prisma.Document$loanApplicationArgs<ExtArgs>
   coApplicant?: boolean | Prisma.Document$coApplicantArgs<ExtArgs>
+  guarantor?: boolean | Prisma.Document$guarantorArgs<ExtArgs>
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
 }
 
@@ -1319,12 +1554,14 @@ export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     kyc: Prisma.$KycPayload<ExtArgs> | null
     loanApplication: Prisma.$LoanApplicationPayload<ExtArgs> | null
     coApplicant: Prisma.$CoApplicantPayload<ExtArgs> | null
+    guarantor: Prisma.$GuarantorPayload<ExtArgs> | null
     branch: Prisma.$BranchPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     loanApplicationId: string | null
     coApplicantId: string | null
+    guarantorId: string | null
     documentType: string
     documentPath: string
     verificationStatus: $Enums.VerificationStatus
@@ -1680,6 +1917,7 @@ export interface Prisma__DocumentClient<T, Null = never, ExtArgs extends runtime
   kyc<T extends Prisma.Document$kycArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$kycArgs<ExtArgs>>): Prisma.Prisma__KycClient<runtime.Types.Result.GetResult<Prisma.$KycPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   loanApplication<T extends Prisma.Document$loanApplicationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$loanApplicationArgs<ExtArgs>>): Prisma.Prisma__LoanApplicationClient<runtime.Types.Result.GetResult<Prisma.$LoanApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   coApplicant<T extends Prisma.Document$coApplicantArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$coApplicantArgs<ExtArgs>>): Prisma.Prisma__CoApplicantClient<runtime.Types.Result.GetResult<Prisma.$CoApplicantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  guarantor<T extends Prisma.Document$guarantorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$guarantorArgs<ExtArgs>>): Prisma.Prisma__GuarantorClient<runtime.Types.Result.GetResult<Prisma.$GuarantorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   branch<T extends Prisma.BranchDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BranchDefaultArgs<ExtArgs>>): Prisma.Prisma__BranchClient<runtime.Types.Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1713,6 +1951,7 @@ export interface DocumentFieldRefs {
   readonly id: Prisma.FieldRef<"Document", 'String'>
   readonly loanApplicationId: Prisma.FieldRef<"Document", 'String'>
   readonly coApplicantId: Prisma.FieldRef<"Document", 'String'>
+  readonly guarantorId: Prisma.FieldRef<"Document", 'String'>
   readonly documentType: Prisma.FieldRef<"Document", 'String'>
   readonly documentPath: Prisma.FieldRef<"Document", 'String'>
   readonly verificationStatus: Prisma.FieldRef<"Document", 'VerificationStatus'>
@@ -2122,6 +2361,25 @@ export type Document$coApplicantArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   include?: Prisma.CoApplicantInclude<ExtArgs> | null
   where?: Prisma.CoApplicantWhereInput
+}
+
+/**
+ * Document.guarantor
+ */
+export type Document$guarantorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Guarantor
+   */
+  select?: Prisma.GuarantorSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Guarantor
+   */
+  omit?: Prisma.GuarantorOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GuarantorInclude<ExtArgs> | null
+  where?: Prisma.GuarantorWhereInput
 }
 
 /**

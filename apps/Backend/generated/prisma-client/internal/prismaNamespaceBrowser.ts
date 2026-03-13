@@ -597,6 +597,7 @@ export const GuarantorScalarFieldEnum = {
   periodOfStay: 'periodOfStay',
   rentPerMonth: 'rentPerMonth',
   employmentType: 'employmentType',
+  kycId: 'kycId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -826,6 +827,7 @@ export const DocumentScalarFieldEnum = {
   id: 'id',
   loanApplicationId: 'loanApplicationId',
   coApplicantId: 'coApplicantId',
+  guarantorId: 'guarantorId',
   documentType: 'documentType',
   documentPath: 'documentPath',
   verificationStatus: 'verificationStatus',
@@ -1511,7 +1513,8 @@ export const GuarantorOrderByRelevanceFieldEnum = {
   passportNumber: 'passportNumber',
   qualification: 'qualification',
   relationshipOther: 'relationshipOther',
-  periodOfStay: 'periodOfStay'
+  periodOfStay: 'periodOfStay',
+  kycId: 'kycId'
 } as const
 
 export type GuarantorOrderByRelevanceFieldEnum = (typeof GuarantorOrderByRelevanceFieldEnum)[keyof typeof GuarantorOrderByRelevanceFieldEnum]
@@ -1660,6 +1663,7 @@ export const DocumentOrderByRelevanceFieldEnum = {
   id: 'id',
   loanApplicationId: 'loanApplicationId',
   coApplicantId: 'coApplicantId',
+  guarantorId: 'guarantorId',
   documentType: 'documentType',
   documentPath: 'documentPath',
   rejectionReason: 'rejectionReason',

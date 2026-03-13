@@ -68,6 +68,7 @@ export type GuarantorMinAggregateOutputType = {
   periodOfStay: string | null
   rentPerMonth: number | null
   employmentType: $Enums.EmploymentType | null
+  kycId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -102,6 +103,7 @@ export type GuarantorMaxAggregateOutputType = {
   periodOfStay: string | null
   rentPerMonth: number | null
   employmentType: $Enums.EmploymentType | null
+  kycId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -136,6 +138,7 @@ export type GuarantorCountAggregateOutputType = {
   periodOfStay: number
   rentPerMonth: number
   employmentType: number
+  kycId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -184,6 +187,7 @@ export type GuarantorMinAggregateInputType = {
   periodOfStay?: true
   rentPerMonth?: true
   employmentType?: true
+  kycId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -218,6 +222,7 @@ export type GuarantorMaxAggregateInputType = {
   periodOfStay?: true
   rentPerMonth?: true
   employmentType?: true
+  kycId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -252,6 +257,7 @@ export type GuarantorCountAggregateInputType = {
   periodOfStay?: true
   rentPerMonth?: true
   employmentType?: true
+  kycId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -373,6 +379,7 @@ export type GuarantorGroupByOutputType = {
   periodOfStay: string | null
   rentPerMonth: number | null
   employmentType: $Enums.EmploymentType | null
+  kycId: string | null
   createdAt: Date
   updatedAt: Date
   _count: GuarantorCountAggregateOutputType | null
@@ -430,13 +437,16 @@ export type GuarantorWhereInput = {
   periodOfStay?: Prisma.StringNullableFilter<"Guarantor"> | string | null
   rentPerMonth?: Prisma.FloatNullableFilter<"Guarantor"> | number | null
   employmentType?: Prisma.EnumEmploymentTypeNullableFilter<"Guarantor"> | $Enums.EmploymentType | null
+  kycId?: Prisma.StringNullableFilter<"Guarantor"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Guarantor"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Guarantor"> | Date | string
   loanApplication?: Prisma.XOR<Prisma.LoanApplicationScalarRelationFilter, Prisma.LoanApplicationWhereInput>
+  kyc?: Prisma.XOR<Prisma.KycNullableScalarRelationFilter, Prisma.KycWhereInput> | null
   addresses?: Prisma.AddressListRelationFilter
   occupationalDetails?: Prisma.OccupationalDetailsListRelationFilter
   employmentDetails?: Prisma.EmploymentDetailsListRelationFilter
   financialDetails?: Prisma.XOR<Prisma.GuarantorFinancialDetailsNullableScalarRelationFilter, Prisma.GuarantorFinancialDetailsWhereInput> | null
+  documents?: Prisma.DocumentListRelationFilter
 }
 
 export type GuarantorOrderByWithRelationInput = {
@@ -469,18 +479,22 @@ export type GuarantorOrderByWithRelationInput = {
   periodOfStay?: Prisma.SortOrderInput | Prisma.SortOrder
   rentPerMonth?: Prisma.SortOrderInput | Prisma.SortOrder
   employmentType?: Prisma.SortOrderInput | Prisma.SortOrder
+  kycId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   loanApplication?: Prisma.LoanApplicationOrderByWithRelationInput
+  kyc?: Prisma.KycOrderByWithRelationInput
   addresses?: Prisma.AddressOrderByRelationAggregateInput
   occupationalDetails?: Prisma.OccupationalDetailsOrderByRelationAggregateInput
   employmentDetails?: Prisma.EmploymentDetailsOrderByRelationAggregateInput
   financialDetails?: Prisma.GuarantorFinancialDetailsOrderByWithRelationInput
+  documents?: Prisma.DocumentOrderByRelationAggregateInput
   _relevance?: Prisma.GuarantorOrderByRelevanceInput
 }
 
 export type GuarantorWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  kycId?: string
   AND?: Prisma.GuarantorWhereInput | Prisma.GuarantorWhereInput[]
   OR?: Prisma.GuarantorWhereInput[]
   NOT?: Prisma.GuarantorWhereInput | Prisma.GuarantorWhereInput[]
@@ -515,11 +529,13 @@ export type GuarantorWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Guarantor"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Guarantor"> | Date | string
   loanApplication?: Prisma.XOR<Prisma.LoanApplicationScalarRelationFilter, Prisma.LoanApplicationWhereInput>
+  kyc?: Prisma.XOR<Prisma.KycNullableScalarRelationFilter, Prisma.KycWhereInput> | null
   addresses?: Prisma.AddressListRelationFilter
   occupationalDetails?: Prisma.OccupationalDetailsListRelationFilter
   employmentDetails?: Prisma.EmploymentDetailsListRelationFilter
   financialDetails?: Prisma.XOR<Prisma.GuarantorFinancialDetailsNullableScalarRelationFilter, Prisma.GuarantorFinancialDetailsWhereInput> | null
-}, "id">
+  documents?: Prisma.DocumentListRelationFilter
+}, "id" | "kycId">
 
 export type GuarantorOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -551,6 +567,7 @@ export type GuarantorOrderByWithAggregationInput = {
   periodOfStay?: Prisma.SortOrderInput | Prisma.SortOrder
   rentPerMonth?: Prisma.SortOrderInput | Prisma.SortOrder
   employmentType?: Prisma.SortOrderInput | Prisma.SortOrder
+  kycId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.GuarantorCountOrderByAggregateInput
@@ -593,6 +610,7 @@ export type GuarantorScalarWhereWithAggregatesInput = {
   periodOfStay?: Prisma.StringNullableWithAggregatesFilter<"Guarantor"> | string | null
   rentPerMonth?: Prisma.FloatNullableWithAggregatesFilter<"Guarantor"> | number | null
   employmentType?: Prisma.EnumEmploymentTypeNullableWithAggregatesFilter<"Guarantor"> | $Enums.EmploymentType | null
+  kycId?: Prisma.StringNullableWithAggregatesFilter<"Guarantor"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Guarantor"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Guarantor"> | Date | string
 }
@@ -629,10 +647,12 @@ export type GuarantorCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   loanApplication: Prisma.LoanApplicationCreateNestedOneWithoutGuarantorsInput
+  kyc?: Prisma.KycCreateNestedOneWithoutGuarantorInput
   addresses?: Prisma.AddressCreateNestedManyWithoutGuarantorInput
   occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutGuarantorInput
   employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutGuarantorInput
   financialDetails?: Prisma.GuarantorFinancialDetailsCreateNestedOneWithoutGuarantorInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutGuarantorInput
 }
 
 export type GuarantorUncheckedCreateInput = {
@@ -665,12 +685,14 @@ export type GuarantorUncheckedCreateInput = {
   periodOfStay?: string | null
   rentPerMonth?: number | null
   employmentType?: $Enums.EmploymentType | null
+  kycId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutGuarantorInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutGuarantorInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutGuarantorInput
   financialDetails?: Prisma.GuarantorFinancialDetailsUncheckedCreateNestedOneWithoutGuarantorInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutGuarantorInput
 }
 
 export type GuarantorUpdateInput = {
@@ -705,10 +727,12 @@ export type GuarantorUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanApplication?: Prisma.LoanApplicationUpdateOneRequiredWithoutGuarantorsNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutGuarantorNestedInput
   addresses?: Prisma.AddressUpdateManyWithoutGuarantorNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutGuarantorNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutGuarantorNestedInput
   financialDetails?: Prisma.GuarantorFinancialDetailsUpdateOneWithoutGuarantorNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutGuarantorNestedInput
 }
 
 export type GuarantorUncheckedUpdateInput = {
@@ -741,12 +765,14 @@ export type GuarantorUncheckedUpdateInput = {
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.NullableEnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addresses?: Prisma.AddressUncheckedUpdateManyWithoutGuarantorNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutGuarantorNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutGuarantorNestedInput
   financialDetails?: Prisma.GuarantorFinancialDetailsUncheckedUpdateOneWithoutGuarantorNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutGuarantorNestedInput
 }
 
 export type GuarantorCreateManyInput = {
@@ -779,6 +805,7 @@ export type GuarantorCreateManyInput = {
   periodOfStay?: string | null
   rentPerMonth?: number | null
   employmentType?: $Enums.EmploymentType | null
+  kycId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -846,6 +873,7 @@ export type GuarantorUncheckedUpdateManyInput = {
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.NullableEnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -901,6 +929,7 @@ export type GuarantorCountOrderByAggregateInput = {
   periodOfStay?: Prisma.SortOrder
   rentPerMonth?: Prisma.SortOrder
   employmentType?: Prisma.SortOrder
+  kycId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -941,6 +970,7 @@ export type GuarantorMaxOrderByAggregateInput = {
   periodOfStay?: Prisma.SortOrder
   rentPerMonth?: Prisma.SortOrder
   employmentType?: Prisma.SortOrder
+  kycId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -975,6 +1005,7 @@ export type GuarantorMinOrderByAggregateInput = {
   periodOfStay?: Prisma.SortOrder
   rentPerMonth?: Prisma.SortOrder
   employmentType?: Prisma.SortOrder
+  kycId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1102,6 +1133,54 @@ export type GuarantorUpdateOneRequiredWithoutFinancialDetailsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.GuarantorUpdateToOneWithWhereWithoutFinancialDetailsInput, Prisma.GuarantorUpdateWithoutFinancialDetailsInput>, Prisma.GuarantorUncheckedUpdateWithoutFinancialDetailsInput>
 }
 
+export type GuarantorCreateNestedOneWithoutDocumentsInput = {
+  create?: Prisma.XOR<Prisma.GuarantorCreateWithoutDocumentsInput, Prisma.GuarantorUncheckedCreateWithoutDocumentsInput>
+  connectOrCreate?: Prisma.GuarantorCreateOrConnectWithoutDocumentsInput
+  connect?: Prisma.GuarantorWhereUniqueInput
+}
+
+export type GuarantorUpdateOneWithoutDocumentsNestedInput = {
+  create?: Prisma.XOR<Prisma.GuarantorCreateWithoutDocumentsInput, Prisma.GuarantorUncheckedCreateWithoutDocumentsInput>
+  connectOrCreate?: Prisma.GuarantorCreateOrConnectWithoutDocumentsInput
+  upsert?: Prisma.GuarantorUpsertWithoutDocumentsInput
+  disconnect?: Prisma.GuarantorWhereInput | boolean
+  delete?: Prisma.GuarantorWhereInput | boolean
+  connect?: Prisma.GuarantorWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.GuarantorUpdateToOneWithWhereWithoutDocumentsInput, Prisma.GuarantorUpdateWithoutDocumentsInput>, Prisma.GuarantorUncheckedUpdateWithoutDocumentsInput>
+}
+
+export type GuarantorCreateNestedOneWithoutKycInput = {
+  create?: Prisma.XOR<Prisma.GuarantorCreateWithoutKycInput, Prisma.GuarantorUncheckedCreateWithoutKycInput>
+  connectOrCreate?: Prisma.GuarantorCreateOrConnectWithoutKycInput
+  connect?: Prisma.GuarantorWhereUniqueInput
+}
+
+export type GuarantorUncheckedCreateNestedOneWithoutKycInput = {
+  create?: Prisma.XOR<Prisma.GuarantorCreateWithoutKycInput, Prisma.GuarantorUncheckedCreateWithoutKycInput>
+  connectOrCreate?: Prisma.GuarantorCreateOrConnectWithoutKycInput
+  connect?: Prisma.GuarantorWhereUniqueInput
+}
+
+export type GuarantorUpdateOneWithoutKycNestedInput = {
+  create?: Prisma.XOR<Prisma.GuarantorCreateWithoutKycInput, Prisma.GuarantorUncheckedCreateWithoutKycInput>
+  connectOrCreate?: Prisma.GuarantorCreateOrConnectWithoutKycInput
+  upsert?: Prisma.GuarantorUpsertWithoutKycInput
+  disconnect?: Prisma.GuarantorWhereInput | boolean
+  delete?: Prisma.GuarantorWhereInput | boolean
+  connect?: Prisma.GuarantorWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.GuarantorUpdateToOneWithWhereWithoutKycInput, Prisma.GuarantorUpdateWithoutKycInput>, Prisma.GuarantorUncheckedUpdateWithoutKycInput>
+}
+
+export type GuarantorUncheckedUpdateOneWithoutKycNestedInput = {
+  create?: Prisma.XOR<Prisma.GuarantorCreateWithoutKycInput, Prisma.GuarantorUncheckedCreateWithoutKycInput>
+  connectOrCreate?: Prisma.GuarantorCreateOrConnectWithoutKycInput
+  upsert?: Prisma.GuarantorUpsertWithoutKycInput
+  disconnect?: Prisma.GuarantorWhereInput | boolean
+  delete?: Prisma.GuarantorWhereInput | boolean
+  connect?: Prisma.GuarantorWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.GuarantorUpdateToOneWithWhereWithoutKycInput, Prisma.GuarantorUpdateWithoutKycInput>, Prisma.GuarantorUncheckedUpdateWithoutKycInput>
+}
+
 export type GuarantorCreateWithoutAddressesInput = {
   id?: string
   firstName: string
@@ -1134,9 +1213,11 @@ export type GuarantorCreateWithoutAddressesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   loanApplication: Prisma.LoanApplicationCreateNestedOneWithoutGuarantorsInput
+  kyc?: Prisma.KycCreateNestedOneWithoutGuarantorInput
   occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutGuarantorInput
   employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutGuarantorInput
   financialDetails?: Prisma.GuarantorFinancialDetailsCreateNestedOneWithoutGuarantorInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutGuarantorInput
 }
 
 export type GuarantorUncheckedCreateWithoutAddressesInput = {
@@ -1169,11 +1250,13 @@ export type GuarantorUncheckedCreateWithoutAddressesInput = {
   periodOfStay?: string | null
   rentPerMonth?: number | null
   employmentType?: $Enums.EmploymentType | null
+  kycId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutGuarantorInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutGuarantorInput
   financialDetails?: Prisma.GuarantorFinancialDetailsUncheckedCreateNestedOneWithoutGuarantorInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutGuarantorInput
 }
 
 export type GuarantorCreateOrConnectWithoutAddressesInput = {
@@ -1224,9 +1307,11 @@ export type GuarantorUpdateWithoutAddressesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanApplication?: Prisma.LoanApplicationUpdateOneRequiredWithoutGuarantorsNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutGuarantorNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutGuarantorNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutGuarantorNestedInput
   financialDetails?: Prisma.GuarantorFinancialDetailsUpdateOneWithoutGuarantorNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutGuarantorNestedInput
 }
 
 export type GuarantorUncheckedUpdateWithoutAddressesInput = {
@@ -1259,11 +1344,13 @@ export type GuarantorUncheckedUpdateWithoutAddressesInput = {
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.NullableEnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutGuarantorNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutGuarantorNestedInput
   financialDetails?: Prisma.GuarantorFinancialDetailsUncheckedUpdateOneWithoutGuarantorNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutGuarantorNestedInput
 }
 
 export type GuarantorCreateWithoutLoanApplicationInput = {
@@ -1297,10 +1384,12 @@ export type GuarantorCreateWithoutLoanApplicationInput = {
   employmentType?: $Enums.EmploymentType | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  kyc?: Prisma.KycCreateNestedOneWithoutGuarantorInput
   addresses?: Prisma.AddressCreateNestedManyWithoutGuarantorInput
   occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutGuarantorInput
   employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutGuarantorInput
   financialDetails?: Prisma.GuarantorFinancialDetailsCreateNestedOneWithoutGuarantorInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutGuarantorInput
 }
 
 export type GuarantorUncheckedCreateWithoutLoanApplicationInput = {
@@ -1332,12 +1421,14 @@ export type GuarantorUncheckedCreateWithoutLoanApplicationInput = {
   periodOfStay?: string | null
   rentPerMonth?: number | null
   employmentType?: $Enums.EmploymentType | null
+  kycId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutGuarantorInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutGuarantorInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutGuarantorInput
   financialDetails?: Prisma.GuarantorFinancialDetailsUncheckedCreateNestedOneWithoutGuarantorInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutGuarantorInput
 }
 
 export type GuarantorCreateOrConnectWithoutLoanApplicationInput = {
@@ -1399,6 +1490,7 @@ export type GuarantorScalarWhereInput = {
   periodOfStay?: Prisma.StringNullableFilter<"Guarantor"> | string | null
   rentPerMonth?: Prisma.FloatNullableFilter<"Guarantor"> | number | null
   employmentType?: Prisma.EnumEmploymentTypeNullableFilter<"Guarantor"> | $Enums.EmploymentType | null
+  kycId?: Prisma.StringNullableFilter<"Guarantor"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Guarantor"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Guarantor"> | Date | string
 }
@@ -1435,9 +1527,11 @@ export type GuarantorCreateWithoutOccupationalDetailsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   loanApplication: Prisma.LoanApplicationCreateNestedOneWithoutGuarantorsInput
+  kyc?: Prisma.KycCreateNestedOneWithoutGuarantorInput
   addresses?: Prisma.AddressCreateNestedManyWithoutGuarantorInput
   employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutGuarantorInput
   financialDetails?: Prisma.GuarantorFinancialDetailsCreateNestedOneWithoutGuarantorInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutGuarantorInput
 }
 
 export type GuarantorUncheckedCreateWithoutOccupationalDetailsInput = {
@@ -1470,11 +1564,13 @@ export type GuarantorUncheckedCreateWithoutOccupationalDetailsInput = {
   periodOfStay?: string | null
   rentPerMonth?: number | null
   employmentType?: $Enums.EmploymentType | null
+  kycId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutGuarantorInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutGuarantorInput
   financialDetails?: Prisma.GuarantorFinancialDetailsUncheckedCreateNestedOneWithoutGuarantorInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutGuarantorInput
 }
 
 export type GuarantorCreateOrConnectWithoutOccupationalDetailsInput = {
@@ -1525,9 +1621,11 @@ export type GuarantorUpdateWithoutOccupationalDetailsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanApplication?: Prisma.LoanApplicationUpdateOneRequiredWithoutGuarantorsNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutGuarantorNestedInput
   addresses?: Prisma.AddressUpdateManyWithoutGuarantorNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutGuarantorNestedInput
   financialDetails?: Prisma.GuarantorFinancialDetailsUpdateOneWithoutGuarantorNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutGuarantorNestedInput
 }
 
 export type GuarantorUncheckedUpdateWithoutOccupationalDetailsInput = {
@@ -1560,11 +1658,13 @@ export type GuarantorUncheckedUpdateWithoutOccupationalDetailsInput = {
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.NullableEnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addresses?: Prisma.AddressUncheckedUpdateManyWithoutGuarantorNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutGuarantorNestedInput
   financialDetails?: Prisma.GuarantorFinancialDetailsUncheckedUpdateOneWithoutGuarantorNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutGuarantorNestedInput
 }
 
 export type GuarantorCreateWithoutEmploymentDetailsInput = {
@@ -1599,9 +1699,11 @@ export type GuarantorCreateWithoutEmploymentDetailsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   loanApplication: Prisma.LoanApplicationCreateNestedOneWithoutGuarantorsInput
+  kyc?: Prisma.KycCreateNestedOneWithoutGuarantorInput
   addresses?: Prisma.AddressCreateNestedManyWithoutGuarantorInput
   occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutGuarantorInput
   financialDetails?: Prisma.GuarantorFinancialDetailsCreateNestedOneWithoutGuarantorInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutGuarantorInput
 }
 
 export type GuarantorUncheckedCreateWithoutEmploymentDetailsInput = {
@@ -1634,11 +1736,13 @@ export type GuarantorUncheckedCreateWithoutEmploymentDetailsInput = {
   periodOfStay?: string | null
   rentPerMonth?: number | null
   employmentType?: $Enums.EmploymentType | null
+  kycId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutGuarantorInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutGuarantorInput
   financialDetails?: Prisma.GuarantorFinancialDetailsUncheckedCreateNestedOneWithoutGuarantorInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutGuarantorInput
 }
 
 export type GuarantorCreateOrConnectWithoutEmploymentDetailsInput = {
@@ -1689,9 +1793,11 @@ export type GuarantorUpdateWithoutEmploymentDetailsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanApplication?: Prisma.LoanApplicationUpdateOneRequiredWithoutGuarantorsNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutGuarantorNestedInput
   addresses?: Prisma.AddressUpdateManyWithoutGuarantorNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutGuarantorNestedInput
   financialDetails?: Prisma.GuarantorFinancialDetailsUpdateOneWithoutGuarantorNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutGuarantorNestedInput
 }
 
 export type GuarantorUncheckedUpdateWithoutEmploymentDetailsInput = {
@@ -1724,11 +1830,13 @@ export type GuarantorUncheckedUpdateWithoutEmploymentDetailsInput = {
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.NullableEnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addresses?: Prisma.AddressUncheckedUpdateManyWithoutGuarantorNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutGuarantorNestedInput
   financialDetails?: Prisma.GuarantorFinancialDetailsUncheckedUpdateOneWithoutGuarantorNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutGuarantorNestedInput
 }
 
 export type GuarantorCreateWithoutFinancialDetailsInput = {
@@ -1763,9 +1871,11 @@ export type GuarantorCreateWithoutFinancialDetailsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   loanApplication: Prisma.LoanApplicationCreateNestedOneWithoutGuarantorsInput
+  kyc?: Prisma.KycCreateNestedOneWithoutGuarantorInput
   addresses?: Prisma.AddressCreateNestedManyWithoutGuarantorInput
   occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutGuarantorInput
   employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutGuarantorInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutGuarantorInput
 }
 
 export type GuarantorUncheckedCreateWithoutFinancialDetailsInput = {
@@ -1798,11 +1908,13 @@ export type GuarantorUncheckedCreateWithoutFinancialDetailsInput = {
   periodOfStay?: string | null
   rentPerMonth?: number | null
   employmentType?: $Enums.EmploymentType | null
+  kycId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutGuarantorInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutGuarantorInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutGuarantorInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutGuarantorInput
 }
 
 export type GuarantorCreateOrConnectWithoutFinancialDetailsInput = {
@@ -1853,12 +1965,358 @@ export type GuarantorUpdateWithoutFinancialDetailsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loanApplication?: Prisma.LoanApplicationUpdateOneRequiredWithoutGuarantorsNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutGuarantorNestedInput
   addresses?: Prisma.AddressUpdateManyWithoutGuarantorNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutGuarantorNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutGuarantorNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutGuarantorNestedInput
 }
 
 export type GuarantorUncheckedUpdateWithoutFinancialDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  employmentType?: Prisma.NullableEnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUncheckedUpdateManyWithoutGuarantorNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutGuarantorNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutGuarantorNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutGuarantorNestedInput
+}
+
+export type GuarantorCreateWithoutDocumentsInput = {
+  id?: string
+  firstName: string
+  middleName?: string | null
+  lastName: string
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
+  dob?: Date | string | null
+  contactNumber?: string | null
+  phoneNumber?: string | null
+  email?: string | null
+  panNumber?: string | null
+  aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicence?: string | null
+  passportNumber?: string | null
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
+  accommodationType?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
+  employmentType?: $Enums.EmploymentType | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  loanApplication: Prisma.LoanApplicationCreateNestedOneWithoutGuarantorsInput
+  kyc?: Prisma.KycCreateNestedOneWithoutGuarantorInput
+  addresses?: Prisma.AddressCreateNestedManyWithoutGuarantorInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutGuarantorInput
+  employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutGuarantorInput
+  financialDetails?: Prisma.GuarantorFinancialDetailsCreateNestedOneWithoutGuarantorInput
+}
+
+export type GuarantorUncheckedCreateWithoutDocumentsInput = {
+  id?: string
+  loanApplicationId: string
+  firstName: string
+  middleName?: string | null
+  lastName: string
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
+  dob?: Date | string | null
+  contactNumber?: string | null
+  phoneNumber?: string | null
+  email?: string | null
+  panNumber?: string | null
+  aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicence?: string | null
+  passportNumber?: string | null
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
+  accommodationType?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
+  employmentType?: $Enums.EmploymentType | null
+  kycId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutGuarantorInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutGuarantorInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutGuarantorInput
+  financialDetails?: Prisma.GuarantorFinancialDetailsUncheckedCreateNestedOneWithoutGuarantorInput
+}
+
+export type GuarantorCreateOrConnectWithoutDocumentsInput = {
+  where: Prisma.GuarantorWhereUniqueInput
+  create: Prisma.XOR<Prisma.GuarantorCreateWithoutDocumentsInput, Prisma.GuarantorUncheckedCreateWithoutDocumentsInput>
+}
+
+export type GuarantorUpsertWithoutDocumentsInput = {
+  update: Prisma.XOR<Prisma.GuarantorUpdateWithoutDocumentsInput, Prisma.GuarantorUncheckedUpdateWithoutDocumentsInput>
+  create: Prisma.XOR<Prisma.GuarantorCreateWithoutDocumentsInput, Prisma.GuarantorUncheckedCreateWithoutDocumentsInput>
+  where?: Prisma.GuarantorWhereInput
+}
+
+export type GuarantorUpdateToOneWithWhereWithoutDocumentsInput = {
+  where?: Prisma.GuarantorWhereInput
+  data: Prisma.XOR<Prisma.GuarantorUpdateWithoutDocumentsInput, Prisma.GuarantorUncheckedUpdateWithoutDocumentsInput>
+}
+
+export type GuarantorUpdateWithoutDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  employmentType?: Prisma.NullableEnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanApplication?: Prisma.LoanApplicationUpdateOneRequiredWithoutGuarantorsNestedInput
+  kyc?: Prisma.KycUpdateOneWithoutGuarantorNestedInput
+  addresses?: Prisma.AddressUpdateManyWithoutGuarantorNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutGuarantorNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutGuarantorNestedInput
+  financialDetails?: Prisma.GuarantorFinancialDetailsUpdateOneWithoutGuarantorNestedInput
+}
+
+export type GuarantorUncheckedUpdateWithoutDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  employmentType?: Prisma.NullableEnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addresses?: Prisma.AddressUncheckedUpdateManyWithoutGuarantorNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutGuarantorNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutGuarantorNestedInput
+  financialDetails?: Prisma.GuarantorFinancialDetailsUncheckedUpdateOneWithoutGuarantorNestedInput
+}
+
+export type GuarantorCreateWithoutKycInput = {
+  id?: string
+  firstName: string
+  middleName?: string | null
+  lastName: string
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
+  dob?: Date | string | null
+  contactNumber?: string | null
+  phoneNumber?: string | null
+  email?: string | null
+  panNumber?: string | null
+  aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicence?: string | null
+  passportNumber?: string | null
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
+  accommodationType?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
+  employmentType?: $Enums.EmploymentType | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  loanApplication: Prisma.LoanApplicationCreateNestedOneWithoutGuarantorsInput
+  addresses?: Prisma.AddressCreateNestedManyWithoutGuarantorInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutGuarantorInput
+  employmentDetails?: Prisma.EmploymentDetailsCreateNestedManyWithoutGuarantorInput
+  financialDetails?: Prisma.GuarantorFinancialDetailsCreateNestedOneWithoutGuarantorInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutGuarantorInput
+}
+
+export type GuarantorUncheckedCreateWithoutKycInput = {
+  id?: string
+  loanApplicationId: string
+  firstName: string
+  middleName?: string | null
+  lastName: string
+  fatherName?: string | null
+  motherName?: string | null
+  woname?: string | null
+  dob?: Date | string | null
+  contactNumber?: string | null
+  phoneNumber?: string | null
+  email?: string | null
+  panNumber?: string | null
+  aadhaarNumber?: string | null
+  voterId?: string | null
+  drivingLicence?: string | null
+  passportNumber?: string | null
+  category?: $Enums.Category | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  noOfDependents?: number | null
+  noOfChildren?: number | null
+  qualification?: string | null
+  correspondenceAddressType?: $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: $Enums.CoApplicantRelation | null
+  relationshipOther?: string | null
+  accommodationType?: $Enums.AccommodationType | null
+  periodOfStay?: string | null
+  rentPerMonth?: number | null
+  employmentType?: $Enums.EmploymentType | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  addresses?: Prisma.AddressUncheckedCreateNestedManyWithoutGuarantorInput
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutGuarantorInput
+  employmentDetails?: Prisma.EmploymentDetailsUncheckedCreateNestedManyWithoutGuarantorInput
+  financialDetails?: Prisma.GuarantorFinancialDetailsUncheckedCreateNestedOneWithoutGuarantorInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutGuarantorInput
+}
+
+export type GuarantorCreateOrConnectWithoutKycInput = {
+  where: Prisma.GuarantorWhereUniqueInput
+  create: Prisma.XOR<Prisma.GuarantorCreateWithoutKycInput, Prisma.GuarantorUncheckedCreateWithoutKycInput>
+}
+
+export type GuarantorUpsertWithoutKycInput = {
+  update: Prisma.XOR<Prisma.GuarantorUpdateWithoutKycInput, Prisma.GuarantorUncheckedUpdateWithoutKycInput>
+  create: Prisma.XOR<Prisma.GuarantorCreateWithoutKycInput, Prisma.GuarantorUncheckedCreateWithoutKycInput>
+  where?: Prisma.GuarantorWhereInput
+}
+
+export type GuarantorUpdateToOneWithWhereWithoutKycInput = {
+  where?: Prisma.GuarantorWhereInput
+  data: Prisma.XOR<Prisma.GuarantorUpdateWithoutKycInput, Prisma.GuarantorUncheckedUpdateWithoutKycInput>
+}
+
+export type GuarantorUpdateWithoutKycInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  woname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dob?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  noOfDependents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  noOfChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  correspondenceAddressType?: Prisma.NullableEnumCorrespondenceAddressTypeFieldUpdateOperationsInput | $Enums.CorrespondenceAddressType | null
+  relationshipWithApplicant?: Prisma.NullableEnumCoApplicantRelationFieldUpdateOperationsInput | $Enums.CoApplicantRelation | null
+  relationshipOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accommodationType?: Prisma.NullableEnumAccommodationTypeFieldUpdateOperationsInput | $Enums.AccommodationType | null
+  periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  employmentType?: Prisma.NullableEnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loanApplication?: Prisma.LoanApplicationUpdateOneRequiredWithoutGuarantorsNestedInput
+  addresses?: Prisma.AddressUpdateManyWithoutGuarantorNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutGuarantorNestedInput
+  employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutGuarantorNestedInput
+  financialDetails?: Prisma.GuarantorFinancialDetailsUpdateOneWithoutGuarantorNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutGuarantorNestedInput
+}
+
+export type GuarantorUncheckedUpdateWithoutKycInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1893,6 +2351,8 @@ export type GuarantorUncheckedUpdateWithoutFinancialDetailsInput = {
   addresses?: Prisma.AddressUncheckedUpdateManyWithoutGuarantorNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutGuarantorNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutGuarantorNestedInput
+  financialDetails?: Prisma.GuarantorFinancialDetailsUncheckedUpdateOneWithoutGuarantorNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutGuarantorNestedInput
 }
 
 export type GuarantorCreateManyLoanApplicationInput = {
@@ -1924,6 +2384,7 @@ export type GuarantorCreateManyLoanApplicationInput = {
   periodOfStay?: string | null
   rentPerMonth?: number | null
   employmentType?: $Enums.EmploymentType | null
+  kycId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1959,10 +2420,12 @@ export type GuarantorUpdateWithoutLoanApplicationInput = {
   employmentType?: Prisma.NullableEnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  kyc?: Prisma.KycUpdateOneWithoutGuarantorNestedInput
   addresses?: Prisma.AddressUpdateManyWithoutGuarantorNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutGuarantorNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUpdateManyWithoutGuarantorNestedInput
   financialDetails?: Prisma.GuarantorFinancialDetailsUpdateOneWithoutGuarantorNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutGuarantorNestedInput
 }
 
 export type GuarantorUncheckedUpdateWithoutLoanApplicationInput = {
@@ -1994,12 +2457,14 @@ export type GuarantorUncheckedUpdateWithoutLoanApplicationInput = {
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.NullableEnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addresses?: Prisma.AddressUncheckedUpdateManyWithoutGuarantorNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutGuarantorNestedInput
   employmentDetails?: Prisma.EmploymentDetailsUncheckedUpdateManyWithoutGuarantorNestedInput
   financialDetails?: Prisma.GuarantorFinancialDetailsUncheckedUpdateOneWithoutGuarantorNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutGuarantorNestedInput
 }
 
 export type GuarantorUncheckedUpdateManyWithoutLoanApplicationInput = {
@@ -2031,6 +2496,7 @@ export type GuarantorUncheckedUpdateManyWithoutLoanApplicationInput = {
   periodOfStay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rentPerMonth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   employmentType?: Prisma.NullableEnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType | null
+  kycId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2044,12 +2510,14 @@ export type GuarantorCountOutputType = {
   addresses: number
   occupationalDetails: number
   employmentDetails: number
+  documents: number
 }
 
 export type GuarantorCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   addresses?: boolean | GuarantorCountOutputTypeCountAddressesArgs
   occupationalDetails?: boolean | GuarantorCountOutputTypeCountOccupationalDetailsArgs
   employmentDetails?: boolean | GuarantorCountOutputTypeCountEmploymentDetailsArgs
+  documents?: boolean | GuarantorCountOutputTypeCountDocumentsArgs
 }
 
 /**
@@ -2083,6 +2551,13 @@ export type GuarantorCountOutputTypeCountEmploymentDetailsArgs<ExtArgs extends r
   where?: Prisma.EmploymentDetailsWhereInput
 }
 
+/**
+ * GuarantorCountOutputType without action
+ */
+export type GuarantorCountOutputTypeCountDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DocumentWhereInput
+}
+
 
 export type GuarantorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2114,13 +2589,16 @@ export type GuarantorSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   periodOfStay?: boolean
   rentPerMonth?: boolean
   employmentType?: boolean
+  kycId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   loanApplication?: boolean | Prisma.LoanApplicationDefaultArgs<ExtArgs>
+  kyc?: boolean | Prisma.Guarantor$kycArgs<ExtArgs>
   addresses?: boolean | Prisma.Guarantor$addressesArgs<ExtArgs>
   occupationalDetails?: boolean | Prisma.Guarantor$occupationalDetailsArgs<ExtArgs>
   employmentDetails?: boolean | Prisma.Guarantor$employmentDetailsArgs<ExtArgs>
   financialDetails?: boolean | Prisma.Guarantor$financialDetailsArgs<ExtArgs>
+  documents?: boolean | Prisma.Guarantor$documentsArgs<ExtArgs>
   _count?: boolean | Prisma.GuarantorCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["guarantor"]>
 
@@ -2156,17 +2634,20 @@ export type GuarantorSelectScalar = {
   periodOfStay?: boolean
   rentPerMonth?: boolean
   employmentType?: boolean
+  kycId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type GuarantorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "firstName" | "middleName" | "lastName" | "fatherName" | "motherName" | "woname" | "dob" | "contactNumber" | "phoneNumber" | "email" | "panNumber" | "aadhaarNumber" | "voterId" | "drivingLicence" | "passportNumber" | "category" | "maritalStatus" | "noOfDependents" | "noOfChildren" | "qualification" | "correspondenceAddressType" | "relationshipWithApplicant" | "relationshipOther" | "accommodationType" | "periodOfStay" | "rentPerMonth" | "employmentType" | "createdAt" | "updatedAt", ExtArgs["result"]["guarantor"]>
+export type GuarantorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "firstName" | "middleName" | "lastName" | "fatherName" | "motherName" | "woname" | "dob" | "contactNumber" | "phoneNumber" | "email" | "panNumber" | "aadhaarNumber" | "voterId" | "drivingLicence" | "passportNumber" | "category" | "maritalStatus" | "noOfDependents" | "noOfChildren" | "qualification" | "correspondenceAddressType" | "relationshipWithApplicant" | "relationshipOther" | "accommodationType" | "periodOfStay" | "rentPerMonth" | "employmentType" | "kycId" | "createdAt" | "updatedAt", ExtArgs["result"]["guarantor"]>
 export type GuarantorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   loanApplication?: boolean | Prisma.LoanApplicationDefaultArgs<ExtArgs>
+  kyc?: boolean | Prisma.Guarantor$kycArgs<ExtArgs>
   addresses?: boolean | Prisma.Guarantor$addressesArgs<ExtArgs>
   occupationalDetails?: boolean | Prisma.Guarantor$occupationalDetailsArgs<ExtArgs>
   employmentDetails?: boolean | Prisma.Guarantor$employmentDetailsArgs<ExtArgs>
   financialDetails?: boolean | Prisma.Guarantor$financialDetailsArgs<ExtArgs>
+  documents?: boolean | Prisma.Guarantor$documentsArgs<ExtArgs>
   _count?: boolean | Prisma.GuarantorCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -2174,10 +2655,12 @@ export type $GuarantorPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   name: "Guarantor"
   objects: {
     loanApplication: Prisma.$LoanApplicationPayload<ExtArgs>
+    kyc: Prisma.$KycPayload<ExtArgs> | null
     addresses: Prisma.$AddressPayload<ExtArgs>[]
     occupationalDetails: Prisma.$OccupationalDetailsPayload<ExtArgs>[]
     employmentDetails: Prisma.$EmploymentDetailsPayload<ExtArgs>[]
     financialDetails: Prisma.$GuarantorFinancialDetailsPayload<ExtArgs> | null
+    documents: Prisma.$DocumentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2209,6 +2692,7 @@ export type $GuarantorPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     periodOfStay: string | null
     rentPerMonth: number | null
     employmentType: $Enums.EmploymentType | null
+    kycId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["guarantor"]>
@@ -2552,10 +3036,12 @@ readonly fields: GuarantorFieldRefs;
 export interface Prisma__GuarantorClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   loanApplication<T extends Prisma.LoanApplicationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoanApplicationDefaultArgs<ExtArgs>>): Prisma.Prisma__LoanApplicationClient<runtime.Types.Result.GetResult<Prisma.$LoanApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  kyc<T extends Prisma.Guarantor$kycArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Guarantor$kycArgs<ExtArgs>>): Prisma.Prisma__KycClient<runtime.Types.Result.GetResult<Prisma.$KycPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   addresses<T extends Prisma.Guarantor$addressesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Guarantor$addressesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   occupationalDetails<T extends Prisma.Guarantor$occupationalDetailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Guarantor$occupationalDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OccupationalDetailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   employmentDetails<T extends Prisma.Guarantor$employmentDetailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Guarantor$employmentDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmploymentDetailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   financialDetails<T extends Prisma.Guarantor$financialDetailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Guarantor$financialDetailsArgs<ExtArgs>>): Prisma.Prisma__GuarantorFinancialDetailsClient<runtime.Types.Result.GetResult<Prisma.$GuarantorFinancialDetailsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  documents<T extends Prisma.Guarantor$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Guarantor$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2614,6 +3100,7 @@ export interface GuarantorFieldRefs {
   readonly periodOfStay: Prisma.FieldRef<"Guarantor", 'String'>
   readonly rentPerMonth: Prisma.FieldRef<"Guarantor", 'Float'>
   readonly employmentType: Prisma.FieldRef<"Guarantor", 'EmploymentType'>
+  readonly kycId: Prisma.FieldRef<"Guarantor", 'String'>
   readonly createdAt: Prisma.FieldRef<"Guarantor", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Guarantor", 'DateTime'>
 }
@@ -2959,6 +3446,25 @@ export type GuarantorDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
+ * Guarantor.kyc
+ */
+export type Guarantor$kycArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Kyc
+   */
+  select?: Prisma.KycSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Kyc
+   */
+  omit?: Prisma.KycOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.KycInclude<ExtArgs> | null
+  where?: Prisma.KycWhereInput
+}
+
+/**
  * Guarantor.addresses
  */
 export type Guarantor$addressesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3047,6 +3553,30 @@ export type Guarantor$financialDetailsArgs<ExtArgs extends runtime.Types.Extensi
    */
   include?: Prisma.GuarantorFinancialDetailsInclude<ExtArgs> | null
   where?: Prisma.GuarantorFinancialDetailsWhereInput
+}
+
+/**
+ * Guarantor.documents
+ */
+export type Guarantor$documentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Document
+   */
+  select?: Prisma.DocumentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Document
+   */
+  omit?: Prisma.DocumentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocumentInclude<ExtArgs> | null
+  where?: Prisma.DocumentWhereInput
+  orderBy?: Prisma.DocumentOrderByWithRelationInput | Prisma.DocumentOrderByWithRelationInput[]
+  cursor?: Prisma.DocumentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DocumentScalarFieldEnum | Prisma.DocumentScalarFieldEnum[]
 }
 
 /**
