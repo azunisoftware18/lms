@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { AppError } from "../../common/utils/apiError.js";
 
 import {
   createBranchAdminService,
@@ -11,10 +12,7 @@ export const createBranchAdminController = async (
 ) => {
   try {
     if (!req.user) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized",
-      });
+      throw AppError.unauthorized("Unauthorized");
     }
 
     const branchAdmin = await createBranchAdminService(req.body, req.user.id);
@@ -24,7 +22,7 @@ export const createBranchAdminController = async (
       data: branchAdmin,
     });
   } catch (error: any) {
-    const statusCode = error.statusCode || 400;
+    const statusCode = error.statusCode || 500;
     res.status(statusCode).json({
       success: false,
       message: error.message || "Failed to create branch admin",
@@ -36,13 +34,19 @@ export const updateBranchAdminController = async (
   req: Request,
   res: Response,
 ) => {
-  const { id } = req.params as { id: string };
   try {
+    const id = typeof req.params.id === "string"
+      ? req.params.id
+      : Array.isArray(req.params.id)
+        ? req.params.id[0]
+        : "";
+
+    if (!id) {
+      throw AppError.badRequest("Valid branch admin id is required");
+    }
+
     if (!req.user) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized",
-      });
+      throw AppError.unauthorized("Unauthorized");
     }
 
     const updatedBranchAdmin = await updateBranchAdminService(
@@ -56,7 +60,7 @@ export const updateBranchAdminController = async (
       data: updatedBranchAdmin,
     });
   } catch (error: any) {
-    const statusCode = error.statusCode || 400;
+    const statusCode = error.statusCode || 500;
     res.status(statusCode).json({
       success: false,
       message: error.message || "Failed to update branch admin",

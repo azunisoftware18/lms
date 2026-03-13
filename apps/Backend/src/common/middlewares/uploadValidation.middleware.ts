@@ -1,4 +1,8 @@
 import { Request, Response, NextFunction } from "express";
+import {
+  isValidLoanDocumentType,
+  normalizeLoanDocumentType,
+} from "../constants/loanDocumentTypes.js";
 
 const MAX_DOC_FILES = Number(process.env.MAX_DOC_FILES || 15);
 
@@ -39,6 +43,17 @@ export function validateLoanDocumentUpload(
     return res.status(400).json({
       success: false,
       message: "Invalid document type field name",
+    });
+  }
+
+  const invalidDocumentTypes = files
+    .map((file) => normalizeLoanDocumentType(file.fieldname))
+    .filter((type) => !isValidLoanDocumentType(type));
+
+  if (invalidDocumentTypes.length > 0) {
+    return res.status(400).json({
+      success: false,
+      message: `Invalid document types: ${Array.from(new Set(invalidDocumentTypes)).join(", ")}`,
     });
   }
 

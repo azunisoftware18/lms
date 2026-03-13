@@ -5,6 +5,10 @@ import {
   EmploymentType,
   LoanTypes,
 } from "../../../generated/prisma-client/enums.js";
+import {
+  getInvalidLoanDocumentTypes,
+  normalizeLoanDocumentCsv,
+} from "../../common/constants/loanDocumentTypes.js";
 
 const loanTypeBaseSchema = z.object({
   code: z.string().trim().uppercase().min(3).max(50),
@@ -49,35 +53,64 @@ const loanTypeBaseSchema = z.object({
   approvalRequired: z.boolean().default(true),
 
   estimatedProcessingTimeDays: z.number().int().positive().optional(),
-  documentsRequired: z.string().optional(),
+  documentsRequired: z.string(),
+  documentsOptions: z.string().optional(),
 });
 
-export const createLoanTypeSchema = loanTypeBaseSchema.superRefine((data, ctx) => {
-  const min = data.minInterestRate;
-  const max = data.maxInterestRate;
-  const def = data.defaultInterestRate;
+export const createLoanTypeSchema = loanTypeBaseSchema
+  .superRefine((data, ctx) => {
+    const min = data.minInterestRate;
+    const max = data.maxInterestRate;
+    const def = data.defaultInterestRate;
 
-  if (min === undefined || max === undefined || def === undefined) {
-    return;
-  }
+    if (min === undefined || max === undefined || def === undefined) {
+      return;
+    }
 
-  if (max < min) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "maxInterestRate must be greater than or equal to minInterestRate",
-      path: ["maxInterestRate"],
-    });
-  }
+    if (max < min) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "maxInterestRate must be greater than or equal to minInterestRate",
+        path: ["maxInterestRate"],
+      });
+    }
 
-  if (def < min || def > max) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message:
-        "defaultInterestRate must be within minInterestRate and maxInterestRate",
-      path: ["defaultInterestRate"],
-    });
-  }
-});
+    if (def < min || def > max) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message:
+          "defaultInterestRate must be within minInterestRate and maxInterestRate",
+        path: ["defaultInterestRate"],
+      });
+    }
+
+    const invalidRequiredDocs = getInvalidLoanDocumentTypes(data.documentsRequired);
+    if (invalidRequiredDocs.length > 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `documentsRequired has invalid types: ${invalidRequiredDocs.join(", ")}`,
+        path: ["documentsRequired"],
+      });
+    }
+
+    if (data.documentsOptions) {
+      const invalidOptionalDocs = getInvalidLoanDocumentTypes(data.documentsOptions);
+      if (invalidOptionalDocs.length > 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `documentsOptions has invalid types: ${invalidOptionalDocs.join(", ")}`,
+          path: ["documentsOptions"],
+        });
+      }
+    }
+  })
+  .transform((data) => ({
+    ...data,
+    documentsRequired: normalizeLoanDocumentCsv(data.documentsRequired),
+    documentsOptions: data.documentsOptions
+      ? normalizeLoanDocumentCsv(data.documentsOptions)
+      : undefined,
+  }));
 
 export const updateLoanTypeSchema = loanTypeBaseSchema
   .partial()
@@ -108,7 +141,38 @@ export const updateLoanTypeSchema = loanTypeBaseSchema
         path: ["defaultInterestRate"],
       });
     }
-  });
+
+    if (data.documentsRequired !== undefined) {
+      const invalidRequiredDocs = getInvalidLoanDocumentTypes(data.documentsRequired);
+      if (invalidRequiredDocs.length > 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `documentsRequired has invalid types: ${invalidRequiredDocs.join(", ")}`,
+          path: ["documentsRequired"],
+        });
+      }
+    }
+
+    if (data.documentsOptions !== undefined) {
+      const invalidOptionalDocs = getInvalidLoanDocumentTypes(data.documentsOptions);
+      if (invalidOptionalDocs.length > 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `documentsOptions has invalid types: ${invalidOptionalDocs.join(", ")}`,
+          path: ["documentsOptions"],
+        });
+      }
+    }
+  })
+  .transform((data) => ({
+    ...data,
+    ...(data.documentsRequired !== undefined && {
+      documentsRequired: normalizeLoanDocumentCsv(data.documentsRequired),
+    }),
+    ...(data.documentsOptions !== undefined && {
+      documentsOptions: normalizeLoanDocumentCsv(data.documentsOptions),
+    }),
+  }));
 
 export const loanTypeIdSchema = z.object({
   id: z.string().cuid(),

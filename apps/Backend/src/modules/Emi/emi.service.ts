@@ -4,6 +4,7 @@ import { getPagination } from "../../common/utils/pagination.js";
 import { Prisma } from "../../../generated/prisma-client/client.js";
 import { buildEmiSearch } from "../../common/utils/search.js";
 import { logAction } from "../../audit/audit.helper.js";
+import { AppError } from "../../common/utils/apiError.js";
 
 export const generateEmiScheduleService = async (
   loanId: string,
@@ -36,18 +37,28 @@ export const generateEmiScheduleService = async (
   });
 
   if (!loan) {
-    throw new Error("Loan application not found");
+    throw AppError.notFound("Loan application not found");
   }
   if (loan.status === "active") {
-    throw new Error("EMI schedule already generated");
+    throw AppError.conflict("EMI schedule already generated");
   }
   if (loan.status !== "disbursed") {
-    throw new Error(
+    throw AppError.badRequest(
       "EMI schedule can only be generated after loan disbursement",
     );
   }
   if (!loan.approvedAmount || !loan.interestRate || !loan.tenureMonths) {
-    throw new Error("Invalid loan data for EMI schedule generation");
+    throw AppError.badRequest("Invalid loan data for EMI schedule generation");
+  }
+
+  const existingScheduleCount = await prisma.loanEmiSchedule.count({
+    where: { loanApplicationId: loanId },
+  });
+
+  if (existingScheduleCount > 0) {
+    throw AppError.conflict(
+      "EMI schedule already exists. Regeneration is not allowed without explicit reset.",
+    );
   }
 
   const principal = loan.approvedAmount ?? loan.requestedAmount;
@@ -69,6 +80,7 @@ export const generateEmiScheduleService = async (
     loan.latePaymentFee ?? loan.loanType?.latePaymentFee ?? 0;
 
   const bounceCharges = loan.bounceCharges ?? loan.loanType?.bounceCharges ?? 0;
+  const monthlyFlatInterest = (principal * annualRate) / 100 / 12;
 
   if (loan.interestType === "FLAT") {
     const totalInterest = (principal * annualRate * (tenureMonths / 12)) / 100;
@@ -80,9 +92,19 @@ export const generateEmiScheduleService = async (
   }
 
   for (let i = 1; i <= tenureMonths; i++) {
-    const interestAmount = balance * monthlyRate;
-    const principalAmount = emiAmount - interestAmount;
-    const closingBalance = balance - principalAmount;
+    const interestAmount =
+      loan.interestType === "FLAT" ? monthlyFlatInterest : balance * monthlyRate;
+
+    let principalAmount = emiAmount - interestAmount;
+    let emiInstallmentAmount = emiAmount;
+    let closingBalance = balance - principalAmount;
+
+    // Keep schedule totals consistent by forcing final installment to clear residual balance.
+    if (i === tenureMonths) {
+      principalAmount = balance;
+      emiInstallmentAmount = principalAmount + interestAmount;
+      closingBalance = 0;
+    }
 
     emi.push({
       loanApplicationId: loan.id,
@@ -96,10 +118,10 @@ export const generateEmiScheduleService = async (
       openingBalance: Number(balance.toFixed(2)),
       principalAmount: Number(principalAmount.toFixed(2)),
       interestAmount: Number(interestAmount.toFixed(2)),
-      emiAmount: Number(emiAmount.toFixed(2)),
+      emiAmount: Number(emiInstallmentAmount.toFixed(2)),
       closingBalance:
         closingBalance < 0 ? 0 : Number(closingBalance.toFixed(2)),
-      totalPayableAmount: Number(emiAmount.toFixed(2)), // Add this field
+      totalPayableAmount: Number(emiInstallmentAmount.toFixed(2)),
       latePaymentFeeType,
       latePaymentFee,
       bounceCharges,
@@ -107,12 +129,6 @@ export const generateEmiScheduleService = async (
 
     balance = closingBalance;
   }
-  //TODO  add option to remove the existing schedule for this loan to avoid duplicates
-
-  await prisma.loanEmiSchedule.deleteMany({
-    where: { loanApplicationId: loanId },
-  });
-
   await prisma.loanEmiSchedule.createMany({
     data: emi,
   });
@@ -147,7 +163,8 @@ export const getLoanEmiService = async (loanId: string) => {
     });
     return emis;
   } catch (error: any) {
-    throw new Error(error.message || "Failed to fetch EMI schedule");
+    if (error?.statusCode) throw error;
+    throw AppError.internal(error.message || "Failed to fetch EMI schedule");
   }
 };
 
@@ -157,12 +174,18 @@ export const getAllEmisService = async (params: {
   limit?: number;
   q?: string;
   status?: string;
+  accessibleBranchIds?: string[] | null;
 }) => {
   const { page, limit, skip } = getPagination(params.page, params.limit);
 
   const where: Prisma.LoanEmiScheduleWhereInput = {
     ...(params.loanId && { loanApplicationId: params.loanId }),
     ...(params.status && { status: params.status as any }),
+    ...(params.accessibleBranchIds && {
+      loanApplication: {
+        branchId: { in: params.accessibleBranchIds },
+      },
+    }),
     ...buildEmiSearch(params.q),
   };
 
@@ -213,29 +236,37 @@ export const markEmiPaidService = async ({
   amountPaid,
   paymentMode,
   chequeStatus,
+  paidByUserId,
+  branchId,
 }: {
   emiId: string;
   amountPaid: number;
   paymentMode: "CASH" | "UPI" | "BANK" | "CHEQUE";
   chequeStatus?: "PENDING" | "CLEARED" | "BOUNCED";
+  paidByUserId?: string;
+  branchId?: string;
 }) => {
+  if (!amountPaid || amountPaid <= 0) {
+    throw AppError.badRequest("Payment amount must be greater than zero");
+  }
+
   const emi = await prisma.loanEmiSchedule.findUnique({
     where: { id: emiId },
   });
 
-  if (!emi) throw new Error("Invalid EMI ID");
+  if (!emi) throw AppError.badRequest("Invalid EMI ID");
 
   const loan = await prisma.loanApplication.findUnique({
     where: { id: emi.loanApplicationId },
   });
-  if (!loan) throw new Error("Associated loan application not found");
+  if (!loan) throw AppError.notFound("Associated loan application not found");
 
-  if (loan.status !== "active" && loan.status == "defaulted") {
-    throw new Error("Loan is not active or defaulted");
+  if (loan.status !== "active" && loan.status !== "defaulted") {
+    throw AppError.badRequest("Loan is not active or defaulted");
   }
 
   if (emi.status === "paid") {
-    throw new Error("EMI already paid");
+    throw AppError.conflict("EMI already paid");
   }
 
   const paymentDate = new Date();
@@ -273,7 +304,7 @@ export const markEmiPaidService = async ({
 
   const newStatus = newPaidAmount >= totalPayable ? "paid" : emi.status;
   /* ---------------- 4️⃣ DB Transaction ---------------- */
-  return await prisma.$transaction(async (tx) => {
+  const updatedEmi = await prisma.$transaction(async (tx) => {
     // Payment history
     await tx.emiPayment.create({
       data: {
@@ -281,7 +312,6 @@ export const markEmiPaidService = async ({
         amount: effectivePayment,
         paymentDate,
         paymentMode,
-        chequeStatus,
       },
     });
     // EMI update
@@ -302,6 +332,27 @@ export const markEmiPaidService = async ({
       },
     });
   });
+
+  if (paidByUserId && branchId) {
+    await logAction({
+      entityType: "EMI_SCHEDULE",
+      entityId: emiId,
+      action: "UPDATE_LOAN_STATUS",
+      performedBy: paidByUserId,
+      branchId,
+      oldValue: {
+        status: emi.status,
+        emiPaymentAmount: emi.emiPaymentAmount,
+      },
+      newValue: {
+        status: updatedEmi.status,
+        emiPaymentAmount: updatedEmi.emiPaymentAmount,
+      },
+      remarks: `EMI payment recorded with mode ${paymentMode}`,
+    });
+  }
+
+  return updatedEmi;
 };
 
 export const getEmisPayableAmountbyId = async (emiId: string) => {
@@ -311,7 +362,7 @@ export const getEmisPayableAmountbyId = async (emiId: string) => {
     });
 
     if (!emi) {
-      throw new Error("EMI not found");
+      throw AppError.notFound("EMI not found");
     }
     const today = new Date();
 
@@ -351,7 +402,8 @@ export const getEmisPayableAmountbyId = async (emiId: string) => {
       isOverdue: today > emi.dueDate,
     };
   } catch (error: any) {
-    throw new Error(error.message || "Failed to fetch payable EMI amount");
+    if (error?.statusCode) throw error;
+    throw AppError.internal(error.message || "Failed to fetch payable EMI amount");
   }
 };
 
@@ -426,7 +478,7 @@ export const getPayableEmiAmountService = async (emiId: string) => {
   });
 
   if (!emi) {
-    throw new Error("EMI not found");
+    throw AppError.notFound("EMI not found");
   }
 
   const today = new Date();
@@ -475,7 +527,7 @@ export const payEmiService = async (
         where: { id: emiId },
       });
       if (!emi) {
-        throw new Error("EMI not found");
+        throw AppError.notFound("EMI not found");
       }
 
       const loan = await tx.loanApplication.findUnique({
@@ -483,7 +535,7 @@ export const payEmiService = async (
       });
 
       if (loan?.status !== "active" && loan?.status !== "defaulted") {
-        throw new Error("Loan is not active");
+        throw AppError.badRequest("Loan is not active");
       }
 
       const totalDue =
@@ -510,7 +562,8 @@ export const payEmiService = async (
       });
     });
   } catch (error: any) {
-    throw new Error(error.message || "Failed to process EMI payment");
+    if (error?.statusCode) throw error;
+    throw AppError.internal(error.message || "Failed to process EMI payment");
   }
 };
 
@@ -520,7 +573,7 @@ export const forecloseLoanService = async (loanId: string) => {
       where: { id: loanId },
     });
     if (!loan) {
-      throw new Error("Loan application not found");
+      throw AppError.notFound("Loan application not found");
     }
 
     const emis = await prisma.loanEmiSchedule.findMany({
@@ -529,18 +582,52 @@ export const forecloseLoanService = async (loanId: string) => {
         status: { in: ["pending", "overdue"] },
       },
     });
-    const outstandingPrincipal = emis.reduce(
-      (sum, e) => sum + e.principalAmount,
-      0,
-    );
-    const foreclosureCharge =
-      outstandingPrincipal * ((loan.foreclosureCharges ?? 0) / 100);
+    const now = new Date();
 
-    const totalPayable = (outstandingPrincipal + foreclosureCharge).toFixed(2);
+    const remainingPrincipal = emis.reduce((sum, e) => sum + e.principalAmount, 0);
+    const accruedInterest = emis.reduce((sum, e) => sum + e.interestAmount, 0);
 
-    return { outstandingPrincipal, foreclosureCharge, totalPayable };
+    const unpaidEmiCharges = emis.reduce((sum, emi) => {
+      const lateFee =
+        now > emi.dueDate
+          ? emi.latePaymentFeeType === "FIXED"
+            ? emi.latePaymentFee
+            : (emi.emiAmount * emi.latePaymentFee) / 100
+          : 0;
+
+      const bounceCharge =
+        emi.bounceChargeApplied &&
+        emi.lastPaymentMode === "CHEQUE" &&
+        emi.chequeStatus === "BOUNCED"
+          ? emi.bounceCharges
+          : 0;
+
+      const chargeDue = lateFee + bounceCharge;
+      const extraPaidTowardCharges = Math.max((emi.emiPaymentAmount ?? 0) - emi.emiAmount, 0);
+      const chargeOutstanding = Math.max(chargeDue - extraPaidTowardCharges, 0);
+
+      return sum + chargeOutstanding;
+    }, 0);
+
+    const foreclosurePenalty =
+      remainingPrincipal * ((loan.foreclosureCharges ?? 0) / 100);
+
+    const totalPayable =
+      remainingPrincipal +
+      accruedInterest +
+      foreclosurePenalty +
+      unpaidEmiCharges;
+
+    return {
+      remainingPrincipal: Number(remainingPrincipal.toFixed(2)),
+      accruedInterest: Number(accruedInterest.toFixed(2)),
+      foreclosurePenalty: Number(foreclosurePenalty.toFixed(2)),
+      unpaidEmiCharges: Number(unpaidEmiCharges.toFixed(2)),
+      totalPayable: Number(totalPayable.toFixed(2)),
+    };
   } catch (error: any) {
-    throw new Error(error.message || "Failed to foreclose loan");
+    if (error?.statusCode) throw error;
+    throw AppError.internal(error.message || "Failed to foreclose loan");
   }
 };
 
@@ -568,7 +655,7 @@ export const getThisMonthEmiAmountService = async (
   });
 
   if (emis.length === 0) {
-    throw new Error("No EMI due till this month");
+    throw AppError.notFound("No EMI due till this month");
   }
 
   const today = new Date();
@@ -648,17 +735,19 @@ export const getThisMonthEmiAmountService = async (
 export const payforecloseLoanService = async (
   loanApplicationId: string,
   data: any,
+  userId?: string,
+  branchId?: string,
 ) => {
   try {
     const loan = await prisma.loanApplication.findUnique({
       where: { id: loanApplicationId },
     });
     if (!loan) {
-      throw new Error("Loan application not found");
+      throw AppError.notFound("Loan application not found");
     }
 
     if (loan.status !== "active" && loan.status !== "defaulted") {
-      throw new Error("Loan is not active");
+      throw AppError.badRequest("Loan is not active");
     }
 
     //count PAID EMIs
@@ -671,7 +760,7 @@ export const payforecloseLoanService = async (
 
     // minimum 6 emis should be paid before foreclosing
     if (paidEmisCount < 6) {
-      throw new Error(
+      throw AppError.badRequest(
         "At least 6 EMIs must be paid before foreclosing the loan",
       );
     }
@@ -682,21 +771,15 @@ export const payforecloseLoanService = async (
         status: { in: ["pending", "overdue"] },
       },
     });
-    const outstandingPrincipal = emis.reduce(
-      (sum, e) => sum + e.principalAmount,
-      0,
-    );
-    const foreclosureCharge =
-      outstandingPrincipal * ((loan.foreclosureCharges ?? 0) / 100);
 
-    const totalPayable = outstandingPrincipal + foreclosureCharge;
-    const totalPayableFormatted = totalPayable.toFixed(2);
+    const foreclosureSummary = await forecloseLoanService(loanApplicationId);
+    const totalPayable = foreclosureSummary.totalPayable;
 
     if (data.amountPaid <= 0) {
-      throw new Error("Payment amount must be greater than zero");
+      throw AppError.badRequest("Payment amount must be greater than zero");
     }
     if (data.amountPaid < totalPayable) {
-      throw new Error("Insufficient amount to foreclose the loan");
+      throw AppError.badRequest("Insufficient amount to foreclose the loan");
     }
 
     if (data.amountPaid >= totalPayable) {
@@ -723,9 +806,27 @@ export const payforecloseLoanService = async (
         foreclosureDate: new Date(),
       },
     });
-    return { outstandingPrincipal, foreclosureCharge, totalPayable };
+
+    if (userId && branchId) {
+      await logAction({
+        entityType: "LOAN",
+        entityId: loanApplicationId,
+        action: "UPDATE_LOAN_STATUS",
+        performedBy: userId,
+        branchId,
+        oldValue: { status: loan.status },
+        newValue: { status: "closed" },
+        remarks: "Loan foreclosed after settlement of outstanding amount",
+      });
+    }
+
+    return {
+      ...foreclosureSummary,
+      amountPaid: Number(data.amountPaid),
+    };
   } catch (error: any) {
-    throw new Error(error.message || "Failed to foreclose loan");
+    if (error?.statusCode) throw error;
+    throw AppError.internal(error.message || "Failed to foreclose loan");
   }
 };
 
@@ -734,24 +835,27 @@ export const applyMoratoriumService = async ({
   type,
   startDate,
   endDate,
+  userId,
+  branchId,
 }: {
   loanId: string;
   type: "FULL" | "INTEREST_ONLY";
   startDate: Date;
   endDate: Date;
+  userId?: string;
+  branchId?: string;
 }) => {
-  // Fetch EMIs within moratorium period
   const loan = await prisma.loanApplication.findUnique({
     where: { id: loanId },
     include: { emis: true },
   });
 
   if (!loan) {
-    throw new Error("Loan application not found");
+    throw AppError.notFound("Loan application not found");
   }
 
   if (loan.status !== "active") {
-    throw new Error("Moratorium can be applied only on active loans");
+    throw AppError.badRequest("Moratorium can be applied only on active loans");
   }
 
   const overlapping = await prisma.emiMoratorium.findFirst({
@@ -768,7 +872,7 @@ export const applyMoratoriumService = async ({
   });
 
   if (overlapping) {
-    throw new Error(
+    throw AppError.conflict(
       "An active moratorium already exists for this loan in the specified period",
     );
   }
@@ -783,33 +887,213 @@ export const applyMoratoriumService = async ({
   });
 
   if (futureEmis.length === 0) {
-    throw new Error("No pending EMIs found for moratorium application");
+    throw AppError.notFound("No pending EMIs found for moratorium application");
   }
-  const moratorium = await prisma.emiMoratorium.create({
-    data: {
-      loanApplicationId: loanId,
-      type,
-      startDate,
-      endDate,
-      status: "active",
-    },
+
+  const affectedEmis = futureEmis.filter(
+    (emi) => emi.dueDate >= startDate && emi.dueDate <= endDate,
+  );
+
+  if (affectedEmis.length === 0) {
+    throw AppError.badRequest("No EMI falls within the moratorium period");
+  }
+
+  const interestAccrued = affectedEmis.reduce(
+    (sum, emi) => sum + emi.interestAmount,
+    0,
+  );
+
+  const moratorium = await prisma.$transaction(async (tx) => {
+    if (type === "FULL") {
+      const deferMonths = affectedEmis.length;
+
+      await Promise.all(
+        futureEmis.map((emi) =>
+          tx.loanEmiSchedule.update({
+            where: { id: emi.id },
+            data: {
+              isDeferred: true,
+              dueDate: new Date(
+                emi.dueDate.getFullYear(),
+                emi.dueDate.getMonth() + deferMonths,
+                emi.dueDate.getDate(),
+              ),
+            },
+          }),
+        ),
+      );
+    } else {
+      // INTEREST_ONLY: Track deferred principal and redistribute across remaining EMIs
+      const totalDeferredPrincipal = affectedEmis.reduce(
+        (sum, emi) => sum + emi.principalAmount,
+        0,
+      );
+
+      // Update affected EMIs: set principalAmount to 0, track as deferred
+      await Promise.all(
+        affectedEmis.map((emi) =>
+          tx.loanEmiSchedule.update({
+            where: { id: emi.id },
+            data: {
+              principalAmount: 0,
+              deferredPrincipal: emi.principalAmount, // Track the deferred amount
+              emiAmount: emi.interestAmount,
+              totalPayableAmount: emi.interestAmount,
+              isDeferred: true,
+            },
+          }),
+        ),
+      );
+
+      // Redistribute deferred principal across remaining EMIs (after moratorium endDate)
+      const remainingEmis = futureEmis.filter((emi) => emi.dueDate > endDate);
+
+      if (remainingEmis.length > 0) {
+        const deferredPerEmi = totalDeferredPrincipal / remainingEmis.length;
+
+        // Get the last affected EMI's closingBalance to use as starting point for remaining EMIs
+        const lastAffectedEmi = affectedEmis[affectedEmis.length - 1];
+        let currentOpeningBalance = lastAffectedEmi?.closingBalance ?? loan.approvedAmount ?? 0;
+
+        // Update remaining EMIs sequentially to maintain balance continuity
+        for (const emi of remainingEmis) {
+          const newPrincipal = emi.principalAmount + deferredPerEmi;
+          // emiAmount = principal + interest (consistent total payable)
+          const newEmiAmount = newPrincipal + emi.interestAmount;
+          const newTotalPayable = newPrincipal + emi.interestAmount;
+
+          // Calculate balances
+          const openingBalance = currentOpeningBalance;
+          const closingBalance = Math.max(0, openingBalance - newPrincipal); // Ensure non-negative
+
+          await tx.loanEmiSchedule.update({
+            where: { id: emi.id },
+            data: {
+              openingBalance,
+              principalAmount: newPrincipal,
+              emiAmount: newEmiAmount,
+              totalPayableAmount: newTotalPayable,
+              closingBalance,
+            },
+          });
+
+          // Next EMI's opening balance is this EMI's closing balance
+          currentOpeningBalance = closingBalance;
+        }
+      } else {
+        // No remaining EMIs: create new ones to cover deferred principal
+        // Determine number of new EMIs needed (assume ~equal distribution)
+        const lastEmi = futureEmis[futureEmis.length - 1];
+        const maxNewEmis = Math.ceil(affectedEmis.length * 0.5); // Conservative: spread over half original period
+        const numberOfNewEmis = Math.max(1, maxNewEmis);
+        const principalPerNewEmi = totalDeferredPrincipal / numberOfNewEmis;
+
+        // Get the last affected EMI's closingBalance for the first new EMI
+        const lastAffectedEmi = affectedEmis[affectedEmis.length - 1];
+        let currentOpeningBalance = lastAffectedEmi?.closingBalance ?? loan.approvedAmount ?? 0;
+
+        // Find the highest emiNo to continue sequence
+        const maxEmiNo = Math.max(...futureEmis.map((e) => e.emiNo));
+
+        // Create new EMI rows to recover deferred principal
+        for (let i = 0; i < numberOfNewEmis; i++) {
+          const newEmiNo = maxEmiNo + 1 + i;
+          // Space new EMIs one month apart starting after moratorium end
+          const newDueDate = new Date(endDate);
+          newDueDate.setMonth(newDueDate.getMonth() + i + 1);
+
+          const openingBalance = currentOpeningBalance;
+          // Conservative interest calc on deferred principal
+          const interestOnDeferred = (principalPerNewEmi * (loan.interestRate ?? 0)) / 100 / 12;
+          const closingBalance = Math.max(0, openingBalance - principalPerNewEmi);
+
+          await tx.loanEmiSchedule.create({
+            data: {
+              loanApplicationId: loanId,
+              emiNo: newEmiNo,
+              emiStartDate: new Date(endDate.getFullYear(), endDate.getMonth() + i, endDate.getDate()),
+              dueDate: newDueDate,
+              openingBalance,
+              principalAmount: principalPerNewEmi,
+              interestAmount: interestOnDeferred,
+              emiAmount: principalPerNewEmi + interestOnDeferred,
+              closingBalance,
+              totalPayableAmount: principalPerNewEmi + interestOnDeferred,
+              status: "pending",
+            },
+          });
+
+          currentOpeningBalance = closingBalance;
+        }
+      }
+    }
+
+    return tx.emiMoratorium.create({
+      data: {
+        loanApplicationId: loanId,
+        type,
+        startDate,
+        endDate,
+        interestAccrued,
+        status: "active",
+      },
+    });
   });
+
+  if (userId && branchId) {
+    await logAction({
+      entityType: "LOAN",
+      entityId: loanId,
+      action: "UPDATE_LOAN_STATUS",
+      performedBy: userId,
+      branchId,
+      oldValue: null,
+      newValue: {
+        moratoriumType: type,
+        startDate,
+        endDate,
+        interestAccrued: moratorium.interestAccrued,
+      },
+      remarks: "Moratorium applied on active loan",
+    });
+  }
+
   return { message: "Moratorium applied successfully", moratorium };
 };
 
-export const editEmiService = async (emiId: string, newDueDate: Date) => {
+export const editEmiService = async (
+  emiId: string,
+  newDueDate: Date,
+  userId?: string,
+  branchId?: string,
+) => {
   const emi = await prisma.loanEmiSchedule.findUnique({
     where: { id: emiId },
   });
 
   if (!emi) {
-    throw new Error("EMI not found");
+    throw AppError.notFound("EMI not found");
   }
 
-  return prisma.loanEmiSchedule.update({
+  const updated = await prisma.loanEmiSchedule.update({
     where: { id: emiId },
     data: {
       dueDate: newDueDate, // ✅ only Date
     },
   });
+
+  if (userId && branchId) {
+    await logAction({
+      entityType: "EMI_SCHEDULE",
+      entityId: emiId,
+      action: "UPDATE_LOAN_STATUS",
+      performedBy: userId,
+      branchId,
+      oldValue: { dueDate: emi.dueDate },
+      newValue: { dueDate: updated.dueDate },
+      remarks: "EMI due date updated manually",
+    });
+  }
+
+  return updated;
 };

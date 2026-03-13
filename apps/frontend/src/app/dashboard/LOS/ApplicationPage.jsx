@@ -2,7 +2,6 @@ import React, { useMemo, useState } from "react";
 import {
   Plus,
   X,
-  Search,
   FileText,
   Check,
   Ban,
@@ -24,34 +23,22 @@ import {
   Printer,
   Shield,
   Users,
-  FileCheck,
   Clock,
-  Home,
-  BadgeCheck,
-  CircleDot,
-  FileSignature,
   Landmark,
-  Copy,
   CheckCircle,
-  Info,
-  ArrowLeft,
 } from "lucide-react";
 import Button from "../../../components/ui/Button";
 import SearchField from "../../../components/ui/SearchField";
-import InputField from "../../../components/ui/InputField";
-import SelectField from "../../../components/ui/SelectField";
 import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
-import Pagination from "../../../components/common/Pagination";
 import StatusCard from "../../../components/common/StatusCard";
-import { TableBody, TableShell } from "../../../components/tables/core";
+import SectionInfoCard from "../../../components/details/InfoCard";
+import LoanApplicationFormModal from "../../../components/modals/LoanApplicationFormModal";
+import ApplicationPageTable from "../../../components/tables/ApplicationPageTable";
 import {
   useLoanApplications,
   useUpdateLoanStatus,
 } from "../../../hooks/useLoanApplication";
-import {
-  APPLICATION_FORM_INITIAL_DATA,
-  SAMPLE_LOAN_APPLICATIONS,
-} from "../../../lib/LOSDummyData";
+import { SAMPLE_LOAN_APPLICATIONS } from "../../../lib/LOSDummyData";
 
 export default function ApplicationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,7 +47,6 @@ export default function ApplicationPage() {
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [showApproveDialog, setShowApproveDialog] = useState(false);
-  const [createForm, setCreateForm] = useState(APPLICATION_FORM_INITIAL_DATA);
 
   const { data: applicationsResponse, isLoading } = useLoanApplications();
   const { mutate: updateStatus } = useUpdateLoanStatus();
@@ -75,18 +61,10 @@ export default function ApplicationPage() {
     return apiData.length > 0 ? apiData : SAMPLE_LOAN_APPLICATIONS;
   }, [applicationsResponse]);
 
+  const shouldShowLoadingOnly =
+    isLoading && !applicationsResponse && SAMPLE_LOAN_APPLICATIONS.length === 0;
+
   const PAGE_SIZE = 10;
-
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    // TODO: wire useCreateLoanApplication mutation with backend payload mapping.
-    setCreateForm(APPLICATION_FORM_INITIAL_DATA);
-    setIsModalOpen(false);
-  };
-
-  const handleCreateFormChange = (field, value) => {
-    setCreateForm((prev) => ({ ...prev, [field]: value }));
-  };
 
   const handleViewDetails = (app) => {
     setSelectedApp(app);
@@ -263,10 +241,10 @@ export default function ApplicationPage() {
     <div className="min-h-screen bg-linear-to-br from-slate-50 to-blue-50 p-4 md:p-8 font-sans">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-          <h1 className="text-4xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             Loan Applications
           </h1>
-          <p className="text-slate-600 mt-1">
+          <p className="text-xs sm:text-sm text-slate-600 mt-1">
             Manage and track all loan applications
           </p>
         </div>
@@ -327,97 +305,79 @@ export default function ApplicationPage() {
         />
       </div>
 
-      {isLoading ? (
+      {shouldShowLoadingOnly ? (
         <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center text-slate-500">
           Loading applications...
         </div>
       ) : (
-        <TableShell>
-          <thead className="bg-linear-to-r from-slate-50 to-blue-50 text-slate-600 text-xs font-semibold uppercase tracking-wider">
-            <tr>
-              {tableColumns.map((col) => (
-                <th key={col.header} className="px-6 py-4">
-                  {col.header}
-                </th>
-              ))}
-              <th className="px-6 py-4 text-right">Actions</th>
-            </tr>
-          </thead>
-          <TableBody
-            columns={tableColumns}
-            data={paginatedApplications}
-            actions={[
-              {
-                label: "View",
-                onClick: handleViewDetails,
-              },
-            ]}
-          />
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </TableShell>
+        <ApplicationPageTable
+          paginatedApplications={paginatedApplications}
+          tableColumns={tableColumns}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          shouldShowLoadingOnly={shouldShowLoadingOnly}
+          onViewDetails={handleViewDetails}
+        />
       )}
 
       {/* VIEW DETAILS MODAL - COMPREHENSIVE REDESIGN */}
       {viewModalOpen && selectedApp && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-60 p-4">
-          <div className="bg-white rounded-2xl w-full max-w-6xl shadow-2xl relative max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-60 p-2 sm:p-4">
+          <div className="bg-white rounded-2xl w-full max-w-2xl sm:max-w-4xl lg:max-w-6xl shadow-2xl relative max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
             {/* Modal Header with Gradient */}
-            <div className="sticky top-0 bg-linear-to-r from-blue-600 to-indigo-600 px-6 py-4 flex items-center justify-between z-10">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
-                  <FileText className="text-white" size={24} />
+            <div className="sticky top-0 bg-linear-to-r from-blue-600 to-indigo-600 px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 z-10">
+              <div className="flex items-start sm:items-center gap-3 sm:gap-4 flex-1">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center shrink-0">
+                  <FileText className="text-white" size={20} />
                 </div>
-                <div>
-                  <h2 className="text-xl font-bold text-white">
+                <div className="min-w-0">
+                  <h2 className="text-lg sm:text-xl font-bold text-white wrap-break-word">
                     Loan Application Details
                   </h2>
-                  <div className="flex items-center gap-3 mt-1">
-                    <p className="text-sm text-blue-100">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 mt-1">
+                    <p className="text-xs sm:text-sm text-blue-100 truncate">
                       ID: {selectedApp.id}
                     </p>
-                    <span className="w-1 h-1 rounded-full bg-blue-300"></span>
-                    <p className="text-sm text-blue-100">
-                      Loan Number: {selectedApp.loanNumber}
+                    <span className="w-1 h-1 rounded-full bg-blue-300 hidden sm:block"></span>
+                    <p className="text-xs sm:text-sm text-blue-100 truncate">
+                      Loan #: {selectedApp.loanNumber}
                     </p>
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 ml-auto sm:ml-0">
                 <button
-                  className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-white/10 hover:bg-white/20 items-center justify-center transition-colors hidden sm:flex"
                   onClick={() => window.print()}
                 >
-                  <Printer size={20} className="text-white" />
+                  <Printer size={18} className="text-white" />
                 </button>
                 <button
-                  className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-white/10 hover:bg-white/20 items-center justify-center transition-colors hidden sm:flex"
                   onClick={() => {
                     /* Handle download */
                   }}
                 >
-                  <Download size={20} className="text-white" />
+                  <Download size={18} className="text-white" />
                 </button>
                 <button
                   onClick={() => setViewModalOpen(false)}
-                  className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors ml-2"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
                 >
-                  <X size={20} className="text-white" />
+                  <X size={18} className="text-white" />
                 </button>
               </div>
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 space-y-6">
+            <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
               {/* Status Banner with Timeline */}
-              <div className="bg-linear-to-r from-slate-50 to-blue-50 rounded-xl p-5 border border-blue-100">
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
+              <div className="bg-linear-to-r from-slate-50 to-blue-50 rounded-xl p-3 sm:p-5 border border-blue-100">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 sm:gap-4">
                     <div
-                      className={`w-16 h-16 rounded-2xl flex items-center justify-center ${
+                      className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0 ${
                         selectedApp.status?.toLowerCase() === "approved"
                           ? "bg-green-100"
                           : selectedApp.status?.toLowerCase() === "rejected"
@@ -426,19 +386,21 @@ export default function ApplicationPage() {
                       }`}
                     >
                       {selectedApp.status?.toLowerCase() === "approved" && (
-                        <CheckCircle size={32} className="text-green-600" />
+                        <CheckCircle size={28} className="text-green-600" />
                       )}
                       {selectedApp.status?.toLowerCase() === "rejected" && (
-                        <Ban size={32} className="text-red-600" />
+                        <Ban size={28} className="text-red-600" />
                       )}
                       {selectedApp.status?.toLowerCase() === "pending" && (
-                        <AlertCircle size={32} className="text-yellow-600" />
+                        <AlertCircle size={28} className="text-yellow-600" />
                       )}
                     </div>
                     <div>
-                      <p className="text-sm text-slate-500">Current Status</p>
-                      <div className="flex items-center gap-3 mt-1">
-                        <h3 className="text-2xl font-bold text-slate-800 capitalize">
+                      <p className="text-xs sm:text-sm text-slate-500">
+                        Current Status
+                      </p>
+                      <div className="flex items-center gap-2 sm:gap-3 mt-1 flex-wrap">
+                        <h3 className="text-xl sm:text-2xl font-bold text-slate-800 capitalize">
                           {selectedApp.status || "Pending"}
                         </h3>
                         <span
@@ -451,16 +413,16 @@ export default function ApplicationPage() {
                   </div>
 
                   {/* Quick Stats */}
-                  <div className="flex gap-4">
-                    <div className="text-right">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 text-sm">
+                    <div className="text-left sm:text-right">
                       <p className="text-xs text-slate-500">Application Date</p>
-                      <p className="font-medium text-slate-800">
+                      <p className="font-medium text-slate-800 truncate">
                         {formatDate(selectedApp.applicationDate)}
                       </p>
                     </div>
-                    <div className="text-right">
+                    <div className="text-left sm:text-right">
                       <p className="text-xs text-slate-500">Last Updated</p>
-                      <p className="font-medium text-slate-800">
+                      <p className="font-medium text-slate-800 truncate">
                         {formatDate(selectedApp.updatedAt)}
                       </p>
                     </div>
@@ -470,8 +432,8 @@ export default function ApplicationPage() {
                 {/* Timeline/Approval Info */}
                 {(selectedApp.approvedAt || selectedApp.rejectedAt) && (
                   <div className="mt-4 pt-4 border-t border-blue-200">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Clock size={16} className="text-slate-400" />
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-xs sm:text-sm">
+                      <Clock size={16} className="text-slate-400 shrink-0" />
                       {selectedApp.approvedAt && (
                         <span>
                           Approved on {formatDate(selectedApp.approvedAt)} by{" "}
@@ -491,204 +453,185 @@ export default function ApplicationPage() {
               </div>
 
               {/* Personal Information Section - Enhanced */}
-              <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-                <div className="bg-linear-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200">
-                  <h3 className="font-semibold text-slate-800 flex items-center gap-2">
-                    <User size={18} className="text-blue-600" />
-                    Personal Information
-                  </h3>
+              <SectionInfoCard title="Personal Information" icon={User}>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <InfoCard
+                    icon={<User size={16} className="text-blue-500" />}
+                    label="Full Name"
+                    value={
+                      selectedApp.customer
+                        ? `${selectedApp.customer.title || ""} ${selectedApp.customer.firstName || ""} ${selectedApp.customer.middleName || ""} ${selectedApp.customer.lastName || ""}`.trim()
+                        : null
+                    }
+                    fallback="Not provided"
+                  />
+                  <InfoCard
+                    icon={<Mail size={16} className="text-blue-500" />}
+                    label="Email"
+                    value={selectedApp.customer?.email}
+                    fallback="Not provided"
+                  />
+                  <InfoCard
+                    icon={<Phone size={16} className="text-blue-500" />}
+                    label="Phone"
+                    value={selectedApp.customer?.contactNumber}
+                    fallback="Not provided"
+                  />
+                  <InfoCard
+                    icon={<Phone size={16} className="text-blue-500" />}
+                    label="Alternate Phone"
+                    value={selectedApp.customer?.alternateNumber}
+                    fallback="Not provided"
+                  />
+                  <InfoCard
+                    icon={<Calendar size={16} className="text-blue-500" />}
+                    label="Date of Birth"
+                    value={
+                      selectedApp.customer?.dob
+                        ? formatDate(selectedApp.customer.dob)
+                        : null
+                    }
+                    fallback="Not provided"
+                  />
+                  <InfoCard
+                    icon={<Hash size={16} className="text-blue-500" />}
+                    label="Gender"
+                    value={selectedApp.customer?.gender}
+                    fallback="Not provided"
+                  />
+                  <InfoCard
+                    icon={<Hash size={16} className="text-blue-500" />}
+                    label="Marital Status"
+                    value={selectedApp.customer?.maritalStatus}
+                    fallback="Not provided"
+                  />
+                  <InfoCard
+                    icon={<Hash size={16} className="text-blue-500" />}
+                    label="Nationality"
+                    value={selectedApp.customer?.nationality}
+                    fallback="Not provided"
+                  />
+                  <InfoCard
+                    icon={<Hash size={16} className="text-blue-500" />}
+                    label="Category"
+                    value={selectedApp.customer?.category}
+                    fallback="Not provided"
+                  />
+                  <InfoCard
+                    icon={<User size={16} className="text-blue-500" />}
+                    label="Spouse Name"
+                    value={selectedApp.customer?.spouseName}
+                    fallback="Not provided"
+                  />
                 </div>
-                <div className="p-5">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <InfoCard
-                      icon={<User size={16} className="text-blue-500" />}
-                      label="Full Name"
-                      value={
-                        selectedApp.customer
-                          ? `${selectedApp.customer.title || ""} ${selectedApp.customer.firstName || ""} ${selectedApp.customer.middleName || ""} ${selectedApp.customer.lastName || ""}`.trim()
-                          : null
-                      }
-                      fallback="Not provided"
-                    />
-                    <InfoCard
-                      icon={<Mail size={16} className="text-blue-500" />}
-                      label="Email"
-                      value={selectedApp.customer?.email}
-                      fallback="Not provided"
-                    />
-                    <InfoCard
-                      icon={<Phone size={16} className="text-blue-500" />}
-                      label="Phone"
-                      value={selectedApp.customer?.contactNumber}
-                      fallback="Not provided"
-                    />
-                    <InfoCard
-                      icon={<Phone size={16} className="text-blue-500" />}
-                      label="Alternate Phone"
-                      value={selectedApp.customer?.alternateNumber}
-                      fallback="Not provided"
-                    />
-                    <InfoCard
-                      icon={<Calendar size={16} className="text-blue-500" />}
-                      label="Date of Birth"
-                      value={
-                        selectedApp.customer?.dob
-                          ? formatDate(selectedApp.customer.dob)
-                          : null
-                      }
-                      fallback="Not provided"
-                    />
-                    <InfoCard
-                      icon={<Hash size={16} className="text-blue-500" />}
-                      label="Gender"
-                      value={selectedApp.customer?.gender}
-                      fallback="Not provided"
-                    />
-                    <InfoCard
-                      icon={<Hash size={16} className="text-blue-500" />}
-                      label="Marital Status"
-                      value={selectedApp.customer?.maritalStatus}
-                      fallback="Not provided"
-                    />
-                    <InfoCard
-                      icon={<Hash size={16} className="text-blue-500" />}
-                      label="Nationality"
-                      value={selectedApp.customer?.nationality}
-                      fallback="Not provided"
-                    />
-                    <InfoCard
-                      icon={<Hash size={16} className="text-blue-500" />}
-                      label="Category"
-                      value={selectedApp.customer?.category}
-                      fallback="Not provided"
-                    />
-                    <InfoCard
-                      icon={<User size={16} className="text-blue-500" />}
-                      label="Spouse Name"
-                      value={selectedApp.customer?.spouseName}
-                      fallback="Not provided"
-                    />
-                  </div>
 
-                  {/* Address - Full Width */}
-                  <div className="mt-4 pt-4 border-t border-slate-100">
-                    <InfoCard
-                      icon={<MapPin size={16} className="text-blue-500" />}
-                      label="Residential Address"
-                      value={
-                        selectedApp.customer
-                          ? `${selectedApp.customer.address || ""}, ${selectedApp.customer.city || ""}, ${selectedApp.customer.state || ""} - ${selectedApp.customer.pinCode || ""}`.trim()
-                          : null
-                      }
-                      fallback="Not provided"
-                      fullWidth
-                    />
-                  </div>
+                {/* Address - Full Width */}
+                <div className="mt-4 pt-4 border-t border-slate-100">
+                  <InfoCard
+                    icon={<MapPin size={16} className="text-blue-500" />}
+                    label="Residential Address"
+                    value={
+                      selectedApp.customer
+                        ? `${selectedApp.customer.address || ""}, ${selectedApp.customer.city || ""}, ${selectedApp.customer.state || ""} - ${selectedApp.customer.pinCode || ""}`.trim()
+                        : null
+                    }
+                    fallback="Not provided"
+                    fullWidth
+                  />
                 </div>
-              </div>
+              </SectionInfoCard>
 
               {/* KYC & Identity Section */}
-              <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-                <div className="bg-linear-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200">
-                  <h3 className="font-semibold text-slate-800 flex items-center gap-2">
-                    <Shield size={18} className="text-blue-600" />
-                    KYC & Identity Details
-                  </h3>
+              <SectionInfoCard title="KYC & Identity Details" icon={Shield}>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <InfoCard
+                    icon={<CreditCard size={16} className="text-blue-500" />}
+                    label="Aadhaar Number"
+                    value={selectedApp.customer?.aadhaarNumber}
+                    fallback="Not provided"
+                  />
+                  <InfoCard
+                    icon={<FileText size={16} className="text-blue-500" />}
+                    label="PAN Number"
+                    value={selectedApp.customer?.panNumber}
+                    fallback="Not provided"
+                  />
+                  <InfoCard
+                    icon={<FileText size={16} className="text-blue-500" />}
+                    label="Voter ID"
+                    value={selectedApp.customer?.voterId}
+                    fallback="Not provided"
+                  />
+                  <InfoCard
+                    icon={<FileText size={16} className="text-blue-500" />}
+                    label="Passport Number"
+                    value={selectedApp.customer?.passportNumber}
+                    fallback="Not provided"
+                  />
                 </div>
-                <div className="p-5">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <InfoCard
-                      icon={<CreditCard size={16} className="text-blue-500" />}
-                      label="Aadhaar Number"
-                      value={selectedApp.customer?.aadhaarNumber}
-                      fallback="Not provided"
-                    />
-                    <InfoCard
-                      icon={<FileText size={16} className="text-blue-500" />}
-                      label="PAN Number"
-                      value={selectedApp.customer?.panNumber}
-                      fallback="Not provided"
-                    />
-                    <InfoCard
-                      icon={<FileText size={16} className="text-blue-500" />}
-                      label="Voter ID"
-                      value={selectedApp.customer?.voterId}
-                      fallback="Not provided"
-                    />
-                    <InfoCard
-                      icon={<FileText size={16} className="text-blue-500" />}
-                      label="Passport Number"
-                      value={selectedApp.customer?.passportNumber}
-                      fallback="Not provided"
-                    />
-                  </div>
 
-                  {/* KYC Status */}
-                  {selectedApp.kyc && (
-                    <div className="mt-4 p-3 bg-slate-50 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-slate-700">
-                            KYC Status:
-                          </span>
-                          <span
-                            className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              selectedApp.kyc.status === "VERIFIED"
-                                ? "bg-green-100 text-green-700"
-                                : selectedApp.kyc.status === "PENDING"
-                                  ? "bg-yellow-100 text-yellow-700"
-                                  : "bg-red-100 text-red-700"
-                            }`}
-                          >
-                            {selectedApp.kyc.status}
-                          </span>
-                        </div>
-                        {selectedApp.kyc.verifiedBy && (
-                          <span className="text-xs text-slate-500">
-                            Verified by: {selectedApp.kyc.verifiedBy} on{" "}
-                            {formatDate(selectedApp.kyc.verifiedAt)}
-                          </span>
-                        )}
+                {/* KYC Status */}
+                {selectedApp.kyc && (
+                  <div className="mt-4 p-3 bg-slate-50 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-slate-700">
+                          KYC Status:
+                        </span>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            selectedApp.kyc.status === "VERIFIED"
+                              ? "bg-green-100 text-green-700"
+                              : selectedApp.kyc.status === "PENDING"
+                                ? "bg-yellow-100 text-yellow-700"
+                                : "bg-red-100 text-red-700"
+                          }`}
+                        >
+                          {selectedApp.kyc.status}
+                        </span>
                       </div>
-
-                      {/* Documents */}
-                      {selectedApp.kyc.documents &&
-                        selectedApp.kyc.documents.length > 0 && (
-                          <div className="mt-3">
-                            <p className="text-xs font-medium text-slate-500 mb-2">
-                              Uploaded Documents
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                              {selectedApp.kyc.documents.map((doc, idx) => (
-                                <div
-                                  key={idx}
-                                  className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-slate-200"
-                                >
-                                  <FileText
-                                    size={14}
-                                    className="text-blue-500"
-                                  />
-                                  <span className="text-xs text-slate-700">
-                                    {doc.documentType}
-                                  </span>
-                                  <span
-                                    className={`w-2 h-2 rounded-full ${
-                                      doc.verificationStatus === "verified"
-                                        ? "bg-green-500"
-                                        : doc.verificationStatus === "pending"
-                                          ? "bg-yellow-500"
-                                          : "bg-red-500"
-                                    }`}
-                                  ></span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
+                      {selectedApp.kyc.verifiedBy && (
+                        <span className="text-xs text-slate-500">
+                          Verified by: {selectedApp.kyc.verifiedBy} on{" "}
+                          {formatDate(selectedApp.kyc.verifiedAt)}
+                        </span>
+                      )}
                     </div>
-                  )}
-                </div>
-              </div>
+
+                    {/* Documents */}
+                    {selectedApp.kyc.documents &&
+                      selectedApp.kyc.documents.length > 0 && (
+                        <div className="mt-3">
+                          <p className="text-xs font-medium text-slate-500 mb-2">
+                            Uploaded Documents
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {selectedApp.kyc.documents.map((doc, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-slate-200"
+                              >
+                                <FileText size={14} className="text-blue-500" />
+                                <span className="text-xs text-slate-700">
+                                  {doc.documentType}
+                                </span>
+                                <span
+                                  className={`w-2 h-2 rounded-full ${
+                                    doc.verificationStatus === "verified"
+                                      ? "bg-green-500"
+                                      : doc.verificationStatus === "pending"
+                                        ? "bg-yellow-500"
+                                        : "bg-red-500"
+                                  }`}
+                                ></span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                  </div>
+                )}
+              </SectionInfoCard>
 
               {/* Employment & Financial Section */}
               <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
@@ -879,13 +822,13 @@ export default function ApplicationPage() {
 
                   {/* CIBIL Score with Visual */}
                   <div className="mt-4 pt-4 border-t border-slate-100">
-                    <div className="flex items-center gap-6">
-                      <div className="text-center">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+                      <div className="text-center sm:text-left">
                         <p className="text-xs text-slate-500 mb-1">
                           CIBIL Score
                         </p>
                         <div
-                          className={`w-24 h-24 rounded-2xl flex items-center justify-center text-2xl font-bold ${
+                          className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-bold mx-auto sm:mx-0 ${
                             selectedApp.cibilScore >= 750
                               ? "bg-green-100 text-green-700"
                               : selectedApp.cibilScore >= 650
@@ -898,11 +841,11 @@ export default function ApplicationPage() {
                           {selectedApp.cibilScore || "N/A"}
                         </div>
                       </div>
-                      <div>
-                        <p className="font-medium text-slate-800">
+                      <div className="flex-1">
+                        <p className="font-medium text-slate-700 sm:text-slate-800 text-sm sm:text-base">
                           Credit Assessment
                         </p>
-                        <p className="text-sm text-slate-600 mt-1">
+                        <p className="text-xs sm:text-sm text-slate-600 mt-1">
                           {selectedApp.cibilScore >= 750
                             ? "Excellent credit history"
                             : selectedApp.cibilScore >= 650
@@ -1024,26 +967,27 @@ export default function ApplicationPage() {
             </div>
 
             {/* Modal Footer with Actions */}
-            <div className="sticky bottom-0 bg-white border-t border-slate-200 px-6 py-4 flex justify-between items-center">
-              <div className="text-sm text-slate-500">
-                <Clock size={14} className="inline mr-1" />
+            <div className="sticky bottom-0 bg-white border-t border-slate-200 px-3 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4">
+              <div className="text-xs sm:text-sm text-slate-500 truncate">
+                <Clock size={12} className="inline mr-1" />
                 Created: {formatDate(selectedApp.createdAt)} | Branch:{" "}
                 {selectedApp.branchId}
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
                 <Button
                   onClick={() => setViewModalOpen(false)}
-                  className="px-6 py-2.5 border border-slate-200 rounded-xl text-slate-600! bg-white hover:bg-slate-50 transition-colors"
+                  className="px-4 sm:px-6 py-2 sm:py-2.5 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-600! bg-white hover:bg-slate-50 transition-colors w-full sm:w-auto"
                 >
                   Close
                 </Button>
                 {selectedApp.status?.toLowerCase() !== "approved" && (
                   <Button
                     onClick={() => setShowApproveDialog(true)}
-                    className="px-6 py-2.5 bg-linear-to-r from-green-500 to-green-600 text-white rounded-xl font-medium hover:from-green-600 hover:to-green-700 transition-colors shadow-lg shadow-green-200 flex items-center gap-2"
+                    className="px-4 sm:px-6 py-2 sm:py-2.5 bg-linear-to-r from-green-500 to-green-600 text-white rounded-xl font-medium text-xs sm:text-sm hover:from-green-600 hover:to-green-700 transition-colors shadow-lg shadow-green-200 flex items-center justify-center sm:gap-2 w-full sm:w-auto"
                   >
-                    <CheckCircle size={18} />
-                    Approve Application
+                    <CheckCircle size={16} className="sm:hidden" />
+                    <CheckCircle size={18} className="hidden sm:block" />
+                    <span className="ml-1 sm:ml-0">Approve</span>
                   </Button>
                 )}
               </div>
@@ -1051,157 +995,11 @@ export default function ApplicationPage() {
           </div>
         </div>
       )}
-
-      {/* CREATE APPLICATION MODAL */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-100 flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-4xl rounded-2xl shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-800">
-                New Loan Application
-              </h2>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center"
-              >
-                <X size={20} className="text-slate-500" />
-              </button>
-            </div>
-            <form className="p-6 space-y-5" onSubmit={handleFormSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InputField
-                  label="Full Name"
-                  value={createForm.name}
-                  onChange={(e) =>
-                    handleCreateFormChange("name", e.target.value)
-                  }
-                  placeholder="Enter applicant name"
-                />
-                <InputField
-                  label="Email"
-                  type="email"
-                  value={createForm.email}
-                  onChange={(e) =>
-                    handleCreateFormChange("email", e.target.value)
-                  }
-                  placeholder="Enter email"
-                />
-                <InputField
-                  label="Phone"
-                  value={createForm.phone}
-                  onChange={(e) =>
-                    handleCreateFormChange("phone", e.target.value)
-                  }
-                  placeholder="Enter phone"
-                />
-                <InputField
-                  label="Monthly Income"
-                  type="number"
-                  value={createForm.income}
-                  onChange={(e) =>
-                    handleCreateFormChange("income", e.target.value)
-                  }
-                  placeholder="Enter monthly income"
-                />
-                <InputField
-                  label="Loan Amount"
-                  type="number"
-                  value={createForm.amount}
-                  onChange={(e) =>
-                    handleCreateFormChange("amount", e.target.value)
-                  }
-                  placeholder="Enter loan amount"
-                />
-                <InputField
-                  label="PAN"
-                  value={createForm.pan}
-                  onChange={(e) =>
-                    handleCreateFormChange("pan", e.target.value)
-                  }
-                  placeholder="Enter PAN number"
-                />
-                <InputField
-                  label="Aadhaar"
-                  value={createForm.aadhaar}
-                  onChange={(e) =>
-                    handleCreateFormChange("aadhaar", e.target.value)
-                  }
-                  placeholder="Enter Aadhaar number"
-                />
-                <InputField
-                  label="CIBIL"
-                  type="number"
-                  value={createForm.cibil}
-                  onChange={(e) =>
-                    handleCreateFormChange("cibil", e.target.value)
-                  }
-                  placeholder="Enter CIBIL score"
-                />
-                <InputField
-                  label="Tenure (Months)"
-                  type="number"
-                  value={createForm.tenure}
-                  onChange={(e) =>
-                    handleCreateFormChange("tenure", e.target.value)
-                  }
-                />
-                <InputField
-                  label="Interest (%)"
-                  type="number"
-                  value={createForm.interest}
-                  onChange={(e) =>
-                    handleCreateFormChange("interest", e.target.value)
-                  }
-                />
-                <SelectField
-                  label="Loan Type"
-                  value={createForm.loanType}
-                  onChange={(val) => handleCreateFormChange("loanType", val)}
-                  options={[
-                    { label: "Personal Loan", value: "Personal Loan" },
-                    { label: "Business Loan", value: "Business Loan" },
-                    { label: "Home Loan", value: "Home Loan" },
-                    { label: "Vehicle Loan", value: "Vehicle Loan" },
-                  ]}
-                />
-                <InputField
-                  label="Occupation"
-                  value={createForm.occupation}
-                  onChange={(e) =>
-                    handleCreateFormChange("occupation", e.target.value)
-                  }
-                  placeholder="Enter occupation"
-                />
-              </div>
-
-              <InputField
-                label="Address"
-                value={createForm.address}
-                onChange={(e) =>
-                  handleCreateFormChange("address", e.target.value)
-                }
-                placeholder="Enter current address"
-              />
-
-              <div className="flex items-center justify-end gap-3 pt-2">
-                <Button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="bg-white border border-slate-300 text-slate-700! hover:bg-slate-50"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  className="bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
-                >
-                  Save Application
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      {/* // Loan Application Form */}
+      <LoanApplicationFormModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
 
       <ConfirmationDialog
         open={showApproveDialog}

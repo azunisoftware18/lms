@@ -3,6 +3,7 @@ import { CreditProvider } from "./providers/creditProvider.interface.js";
 import { getCreditProvider } from "./creditProvider.factory.js";
 import { logAction } from "../../audit/audit.helper.js";
 import { buildCreditReportSearch } from "../../common/utils/search.js";
+import { AppError } from "../../common/utils/apiError.js";
 
 const creditProvider = getCreditProvider();
 
@@ -23,7 +24,7 @@ export const getOrCreateCreditReport = async (
   });
 
   if (!customer) {
-    throw new Error(`Customer not found`);
+    throw AppError.notFound("Customer not found");
   }
 
   // Check if credit report already exists
@@ -168,7 +169,7 @@ export const refreshCreditReportService = async (
   let resolvedCustomerId = params.customerId;
  if (!resolvedCustomerId) {
   if (!params.q) {
-    throw new Error("Customer ID or search query is required");
+     throw AppError.badRequest("Customer ID or search query is required");
   }
 
   const existingReport = await prisma.creditReport.findFirst({
@@ -179,7 +180,7 @@ export const refreshCreditReportService = async (
   });
 
   if (!existingReport) {
-    throw new Error("No credit report found for the search query");
+    throw AppError.notFound("No credit report found for the search query");
   }
 
   resolvedCustomerId = existingReport.customerId;
@@ -190,7 +191,7 @@ export const refreshCreditReportService = async (
   });
 
   if (!customer) {
-    throw new Error(`Customer not found`);
+    throw AppError.notFound("Customer not found");
   }
   // Fetch existing credit report before invalidating
   const existingReport = await prisma.creditReport.findFirst({

@@ -4,6 +4,11 @@ import PublicRoute from './publicRoute';
 
 // Private pages
 import DashboardPage from '../app/dashboard/DashboardPage';
+import ApplicationPage from '../app/dashboard/LOS/ApplicationPage.jsx';
+import DocumentPage from '../app/dashboard/LOS/DocumentPage.jsx';
+import BranchManagement from '../app/dashboard/Configuration/BranchManagement.jsx';
+import BorrowerPage from '../app/dashboard/BorrowerPage.jsx';
+
 
 // Public Pages
 import Layout from '../layout/Layout.jsx';
@@ -51,7 +56,6 @@ import Foreclosure from '../app/dashboard/LMS/Foreclosure.jsx';
 import LoanClosure from '../app/dashboard/LMS/LoanClosure.jsx';
 import LoanAccountView from '../app/dashboard/ViewDetail/LoanAccountView.jsx';
 import BranchManagement from '../app/dashboard/Configuration/BranchManagement.jsx';
-import BranchAdmin from '../app/dashboard/Configuration/BranchAdmin.jsx';
 
 export default function AppRoutes() {
 	const dispatch = useDispatch();
@@ -140,6 +144,8 @@ export default function AppRoutes() {
 				}>
 				{/* Dashboard page */}
 				<Route index element={<DashboardPage />} />
+
+				{/* LMS Pages */}
 				<Route path="loan-account-creation" element={<LoanAccountCreation />} />
 				<Route path="emi-schedule" element={<EMISchedule />} />
 				<Route path="repayment-management" element={<RepaymentManagement />} />
@@ -150,6 +156,15 @@ export default function AppRoutes() {
 				<Route path="loan-closure" element={<LoanClosure />} />
 				<Route path="branch-management" element={<BranchManagement />} />
 				<Route path="branch-admin" element={<BranchAdmin />} />
+
+
+				{/* LOS pages */}
+				<Route path='los/applications' element={<ApplicationPage />} />
+				<Route path='los/documents' element={<DocumentPage />} />
+				<Route path='los/kyc-verification' element={<KycVerificationPage />} />
+				<Route path='borrowers' element={< BorrowerPage />} />
+				
+				
 
 				{/* View Detail Pages */}
 				<Route path="loan-account-view/:loanId" element={<LoanAccountView />} />

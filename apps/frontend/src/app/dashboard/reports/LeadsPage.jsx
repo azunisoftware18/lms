@@ -8,7 +8,7 @@ import {
   LEADS_DUMMY_DATA,
   LEADS_PAGE_DUMMY_CONFIG,
   getLeadLoanTypeColor,
-} from "../../../lib/ReportsDummyData";
+} from "../../../lib/LOSDummyData";
 import { colorVariables } from "../../../lib";
 
 export default function LeadsPage() {

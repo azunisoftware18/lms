@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+import { prisma } from "../../db/prismaService.js";
+import { AppError } from "../../common/utils/apiError.js";
 import {
   getEmiAmountService,
   getLoanEmiService,
@@ -17,6 +19,61 @@ import {
   forecloseLoanService,
 } from "./emi.service.js";
 
+const getParam = (req: Request, key: string) => {
+  const value = req.params[key as keyof typeof req.params];
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) return value[0] || "";
+  return "";
+};
+
+const requireActor = (req: Request) => {
+  const userId = typeof req.user?.id === "string" ? req.user.id.trim() : "";
+  const branchId =
+    typeof req.user?.branchId === "string" ? req.user.branchId.trim() : "";
+
+  if (!userId || !branchId) {
+    throw AppError.badRequest("User id and branch id are required");
+  }
+
+  return { userId, branchId };
+};
+
+const hasBranchAccess = (req: Request, branchId: string) => {
+  const accessibleBranchIds = (req as any).accessibleBranchIds as string[] | null | undefined;
+  if (accessibleBranchIds == null) return true;
+  return accessibleBranchIds.includes(branchId);
+};
+
+const ensureLoanBranchAccess = async (req: Request, loanId: string) => {
+  const loan = await prisma.loanApplication.findUnique({
+    where: { id: loanId },
+    select: { branchId: true },
+  });
+
+  if (!loan) {
+    throw AppError.notFound("Loan application not found");
+  }
+
+  if (!hasBranchAccess(req, loan.branchId)) {
+    throw AppError.forbidden("You are not allowed to access this loan");
+  }
+};
+
+const ensureEmiBranchAccess = async (req: Request, emiId: string) => {
+  const emi = await prisma.loanEmiSchedule.findUnique({
+    where: { id: emiId },
+    select: { loanApplication: { select: { branchId: true } } },
+  });
+
+  if (!emi?.loanApplication) {
+    throw AppError.notFound("EMI not found");
+  }
+
+  if (!hasBranchAccess(req, emi.loanApplication.branchId)) {
+    throw AppError.forbidden("You are not allowed to access this EMI");
+  }
+};
+
 export const getAllEmisController = async (req: Request, res: Response) => {
   try {
     const result = await getAllEmisService({
@@ -24,6 +81,7 @@ export const getAllEmisController = async (req: Request, res: Response) => {
       limit: Number(req.query.limit),
       q: typeof req.query.q === 'string' ? req.query.q : undefined,
       status: typeof req.query.status === 'string' ? req.query.status : undefined,
+      accessibleBranchIds: (req as any).accessibleBranchIds,
     });
 
     return res.status(200).json({
@@ -33,10 +91,10 @@ export const getAllEmisController = async (req: Request, res: Response) => {
       meta: result.meta,
     });
   } catch (error: any) {
-    return res.status(500).json({
+    return res.status(error.statusCode || 500).json({
       success: false,
-      message: "Failed to retrieve EMIs",
-      error: error.message,
+      message: error.message || "Failed to retrieve EMIs",
+      error: error.message || "INTERNAL_SERVER_ERROR",
     });
   }
 };
@@ -46,39 +104,22 @@ export const generateEmiScheduleController = async (
   res: Response,
 ) => {
   try {
-    const loanId = typeof req.params.id === 'string' ? req.params.id : req.params.id[0];
-    const userId = req.user?.id;
-    const branchId = req.user?.branchId;
+    const loanId = getParam(req, "id");
+    const { userId, branchId } = requireActor(req);
 
-    if (!userId || !branchId) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized: User or branch information missing",
-      });
+    if (!loanId) {
+      throw AppError.badRequest("Loan id is required");
     }
+
+    await ensureLoanBranchAccess(req, loanId);
 
     const schedule = await generateEmiScheduleService(loanId, userId, branchId);
     res.status(200).json({ success: true, data: schedule });
   } catch (error: any) {
-    if (error.message === "EMI schedule already generated") {
-      return res.status(400).json({
-        success: false,
-        message: error.message,
-      });
-    }
-    if (
-      error.message ===
-      "Invalid loan data for EMI schedule can be generated only for approved loans"
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: error.message,
-      });
-    }
-    res.status(500).json({
+    res.status(error.statusCode || 500).json({
       success: false,
-      message: "Failed to generate EMI schedule",
-      error: error.message,
+      message: error.message || "Failed to generate EMI schedule",
+      error: error.message || "INTERNAL_SERVER_ERROR",
     });
   }
 };
@@ -88,7 +129,13 @@ export const getThisMonthEmiAmountController = async (
   res: Response,
 ) => {
   try {
-    const loanApplicationId = typeof req.params.loanApplicationId === 'string' ? req.params.loanApplicationId : req.params.loanApplicationId[0];
+    const loanApplicationId = getParam(req, "loanApplicationId");
+
+    if (!loanApplicationId) {
+      throw AppError.badRequest("Loan application id is required");
+    }
+
+    await ensureLoanBranchAccess(req, loanApplicationId);
 
     const result = await getThisMonthEmiAmountService(loanApplicationId);
 
@@ -98,47 +145,59 @@ export const getThisMonthEmiAmountController = async (
       data: result,
     });
   } catch (error: any) {
-    res.status(404).json({
+    res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message,
+      message: error.message || "Failed to fetch EMI amount",
     });
   }
 };
 
 export const getLoanEmiController = async (req: Request, res: Response) => {
   try {
-    const loanId = typeof req.params.id === 'string' ? req.params.id : req.params.id[0];
+    const loanId = getParam(req, "id");
+    if (!loanId) {
+      throw AppError.badRequest("Loan id is required");
+    }
+    await ensureLoanBranchAccess(req, loanId);
     const emis = await getLoanEmiService(loanId);
     res.status(200).json({
       success: true,
       data: emis,
     });
   } catch (error: any) {
-    res.status(500).json({
+    res.status(error.statusCode || 500).json({
       success: false,
-      message: "Failed to fetch EMI schedule",
-      error: error.message,
+      message: error.message || "Failed to fetch EMI schedule",
+      error: error.message || "INTERNAL_SERVER_ERROR",
     });
   }
 };
 
 export const markEmiPaidController = async (req: Request, res: Response) => {
   try {
-    const { amountPaid, paymentMode, isBounce } = req.body;
-    const emiId = typeof req.params.emiId === 'string' ? req.params.emiId : req.params.emiId[0];
+    const { amountPaid, paymentMode } = req.body;
+    const emiId = getParam(req, "emiId");
+    const { userId, branchId } = requireActor(req);
+
+    if (!emiId) {
+      throw AppError.badRequest("EMI id is required");
+    }
+
+    await ensureEmiBranchAccess(req, emiId);
 
     const emi = await markEmiPaidService({
       emiId,
       amountPaid,
       paymentMode,
-      // isBounce,
+      paidByUserId: userId,
+      branchId,
     });
 
     res.status(200).json({ success: true, data: emi });
   } catch (error: any) {
-    res.status(400).json({
+    res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message,
+      message: error.message || "Failed to mark EMI as paid",
     });
   }
 };
@@ -148,13 +207,17 @@ export const getEmiPayableAmountController = async (
   res: Response,
 ) => {
   try {
-    const emiId = typeof req.params.emiId === 'string' ? req.params.emiId : req.params.emiId[0];
+    const emiId = getParam(req, "emiId");
+    if (!emiId) {
+      throw AppError.badRequest("EMI id is required");
+    }
+    await ensureEmiBranchAccess(req, emiId);
     const emi = await getPayableEmiAmountService(emiId);
     res.status(200).json({ success: true, data: emi });
   } catch (error: any) {
-    res.status(400).json({
+    res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message,
+      message: error.message || "Failed to get payable EMI amount",
     });
   }
 };
@@ -170,10 +233,10 @@ export const generateEmiAmount = async (req: Request, res: Response) => {
     });
     res.status(200).json({ success: true, data: { emiAmount, totalPayable } });
   } catch (error: any) {
-    res.status(500).json({
+    res.status(error.statusCode || 500).json({
       success: false,
-      message: "Failed to calculate EMI amount",
-      error: error.message,
+      message: error.message || "Failed to calculate EMI amount",
+      error: error.message || "INTERNAL_SERVER_ERROR",
     });
   }
 };
@@ -206,47 +269,31 @@ export const generateEmiAmount = async (req: Request, res: Response) => {
 
 export const payEmiServiceController = async (req: Request, res: Response) => {
   try {
-    const emiId = typeof req.params.emiId === 'string' ? req.params.emiId : req.params.emiId[0];
+    const emiId = getParam(req, "emiId");
+    if (!emiId) {
+      throw AppError.badRequest("EMI id is required");
+    }
+    await ensureEmiBranchAccess(req, emiId);
     const { amount, paymentMode } = req.body;
     const emi = await payEmiService(emiId, amount, paymentMode);
 
     res.status(200).json({ success: true, data: emi });
   } catch (error: any) {
-    if (error.message === "EMI already paid") {
-      return res.status(400).json({
-        success: false,
-        message: error.message,
-      });
-    }
-    if (error.message === "Insufficient payment amount") {
-      return res.status(400).json({
-        success: false,
-        message: error.message,
-      });
-    }
-    if (error.message === "EMI not found") {
-      return res.status(404).json({
-        success: false,
-        message: error.message,
-      });
-    }
-    if (error.message === "Loan is not active") {
-      return res.status(400).json({
-        success: false,
-        message: error.message,
-      });
-    }
-    res.status(500).json({
+    res.status(error.statusCode || 500).json({
       success: false,
-      message: "Failed to pay EMI",
-      error: error.message,
+      message: error.message || "Failed to pay EMI",
+      error: error.message || "INTERNAL_SERVER_ERROR",
     });
   }
 };
 
 export const forecloseLoanController = async (req: Request, res: Response) => {
   try {
-    const loanId = typeof req.params.loanId === 'string' ? req.params.loanId : req.params.loanId[0];
+    const loanId = getParam(req, "loanId");
+    if (!loanId) {
+      throw AppError.badRequest("Loan id is required");
+    }
+    await ensureLoanBranchAccess(req, loanId);
     // Implement foreclose loan logic here
     const result = await forecloseLoanService(loanId);
     res.status(200).json({
@@ -255,10 +302,10 @@ export const forecloseLoanController = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
+    res.status(error.statusCode || 500).json({
       success: false,
-      message: "Failed to foreclose loan",
-      error: error.message,
+      message: error.message || "Failed to foreclose loan",
+      error: error.message || "INTERNAL_SERVER_ERROR",
     });
   }
 };
@@ -268,47 +315,30 @@ export const payforecloseLoanController = async (
   res: Response,
 ) => {
   try {
-    const loanId = typeof req.params.loanId === 'string' ? req.params.loanId : req.params.loanId[0];
+    const loanId = getParam(req, "loanId");
+    const { userId, branchId } = requireActor(req);
+    if (!loanId) {
+      throw AppError.badRequest("Loan id is required");
+    }
+    await ensureLoanBranchAccess(req, loanId);
     const data = req.body;
     // Implement foreclose loan logic here
-    const result = await payforecloseLoanService(loanId, data);
+    const result = await payforecloseLoanService(
+      loanId,
+      data,
+      userId,
+      branchId,
+    );
     res.status(200).json({
       success: true,
       message: "Loan foreclosed successfully",
       data: result,
     });
   } catch (error: any) {
-    if (error.message === "Insufficient payment amount to foreclose the loan") {
-      return res.status(400).json({
-        success: false,
-        message: error.message,
-      });
-    }
-    if (error.message === "Payment amount must be greater than zero") {
-      return res.status(400).json({
-        success: false,
-        message: error.message,
-      });
-    }
-    if (error.message === "Loan not found or already foreclosed") {
-      return res.status(404).json({
-        success: false,
-        message: error.message,
-      });
-    }
-    if (
-      error.message ===
-      "At least 6 EMIs must be paid before foreclosing the loan"
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: error.message,
-      });
-    }
-    res.status(500).json({
+    res.status(error.statusCode || 500).json({
       success: false,
-      message: "Failed to foreclose loan",
-      error: error.message,
+      message: error.message || "Failed to foreclose loan",
+      error: error.message || "INTERNAL_SERVER_ERROR",
     });
   }
 };
@@ -317,7 +347,8 @@ export const applyMoratoriumController = async (
   res: Response,
 ) => {
   try {
-    const loanId = typeof req.params.loanId === 'string' ? req.params.loanId : req.params.loanId[0];
+    const loanId = getParam(req, "loanId");
+    const { userId, branchId } = requireActor(req);
     const { type, startDate, endDate } = req.body;
 
     if (!loanId || !type || !startDate || !endDate) {
@@ -327,11 +358,15 @@ export const applyMoratoriumController = async (
       });
     }
 
+    await ensureLoanBranchAccess(req, loanId);
+
     const result = await applyMoratoriumService({
       loanId,
       type,
       startDate: new Date(startDate),
       endDate: new Date(endDate),
+      userId,
+      branchId,
     });
     res.status(200).json({
       success: true,
@@ -339,31 +374,23 @@ export const applyMoratoriumController = async (
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
+    res.status(error.statusCode || 500).json({
       success: false,
-      message: "Failed to apply moratorium",
-      error: error.message,
-    });
-  }
-};
-export const getpayableEmiAmountController = async (
-  req: Request,
-  res: Response,
-) => {
-  try {
-    const emiId = typeof req.params.emiId === 'string' ? req.params.emiId : req.params.emiId[0];
-    const emi = await getPayableEmiAmountService(emiId);
-    res.status(200).json({ success: true, data: emi });
-  } catch (error: any) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
+      message: error.message || "Failed to apply moratorium",
+      error: error.message || "INTERNAL_SERVER_ERROR",
     });
   }
 };
 export const editEmiController = async (req: Request, res: Response) => {
   try {
-    const emiId = typeof req.params.emiId === 'string' ? req.params.emiId : req.params.emiId[0];
+    const emiId = getParam(req, "emiId");
+    const { userId, branchId } = requireActor(req);
+
+    if (!emiId) {
+      throw AppError.badRequest("EMI id is required");
+    }
+
+    await ensureEmiBranchAccess(req, emiId);
 
     const { dueDate } = req.body;
 
@@ -374,7 +401,12 @@ export const editEmiController = async (req: Request, res: Response) => {
       });
     }
 
-    const updatedEmi = await editEmiService(emiId, new Date(dueDate));
+    const updatedEmi = await editEmiService(
+      emiId,
+      new Date(dueDate),
+      userId,
+      branchId,
+    );
 
     res.status(200).json({
       success: true,
@@ -382,10 +414,10 @@ export const editEmiController = async (req: Request, res: Response) => {
       data: updatedEmi,
     });
   } catch (error: any) {
-    res.status(500).json({
+    res.status(error.statusCode || 500).json({
       success: false,
-      message: "Failed to update EMI",
-      error: error.message,
+      message: error.message || "Failed to update EMI",
+      error: error.message || "INTERNAL_SERVER_ERROR",
     });
   }
 };
