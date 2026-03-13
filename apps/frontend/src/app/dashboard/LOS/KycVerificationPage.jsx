@@ -5,7 +5,7 @@ import QuickActionCard from "../../../components/common/QuickAction";
 import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
 import Button from "../../../components/ui/Button";
 import KycVerificationTable from "../../../components/tables/KycVerificationTable";
-import { Icons } from "../../../components/common/Icon";
+import * as Icons from "lucide-react";
 import { ShieldCheck, BarChart, Activity, Target } from "lucide-react";
 import { useUpdateLoanStatus } from "../../../hooks/useLoanApplication.js";
 import toast from "react-hot-toast";

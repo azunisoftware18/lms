@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Icons } from "../../components/common/Icon";
+import * as Icons from "lucide-react";
 import {
   companyDefaultDetails,
   companyTabs,

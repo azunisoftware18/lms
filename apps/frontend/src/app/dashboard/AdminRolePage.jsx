@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Icons } from "../../components/common/Icon";
+import * as Icons from "lucide-react";
 import { adminRoles as dummyRoles } from "../../lib/dashboardDummyData";
 
 import Button from "../../components/ui/Button";

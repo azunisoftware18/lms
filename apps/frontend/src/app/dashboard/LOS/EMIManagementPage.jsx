@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
 import QuickActionCard from "../../../components/common/QuickAction";
 import EMIManagementTable from "../../../components/tables/EMIManagementTable";
-import { Icons } from "../../../components/common/Icon";
+import * as Icons from "lucide-react";
 
 import { EMI_APPROVED_LOANS, EMI_VOUCHERS } from "../../../lib/LOSDummyData";
 import { colorVariables } from "../../../lib/index";

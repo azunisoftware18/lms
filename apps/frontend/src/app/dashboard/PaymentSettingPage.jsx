@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Icons } from "../../components/common/Icon";
+import * as Icons from "lucide-react";
 
 import Button from "../../components/ui/Button";
 import InputField from "../../components/ui/InputField";

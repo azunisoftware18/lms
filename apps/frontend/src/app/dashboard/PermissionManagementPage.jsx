@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { Icons } from "../../components/common/Icon";
+import * as Icons from "lucide-react";
 import {
   users as dummyUsers,
   permissions as dummyPermissions,
@@ -241,4 +241,3 @@ export default function PermissionManagementPage() {
     </div>
   );
 }
-
