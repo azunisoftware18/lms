@@ -91,9 +91,7 @@ export const updateBranchAdminService = async (
       where: { id },
     });
     if (!existingUser || existingUser.role !== "ADMIN") {
-      const error: any = new Error("Branch admin user not found");
-      error.statusCode = 404;
-      throw error;
+      throw AppError.notFound("Branch admin user not found");
     }
 
     // Validate branch if being updated
@@ -102,9 +100,7 @@ export const updateBranchAdminService = async (
         where: { id: data.branchId },
       });
       if (!branch || !branch.isActive) {
-        const error: any = new Error("Branch not found or inactive");
-        error.statusCode = 400;
-        throw error;
+        throw AppError.badRequest("Branch not found or inactive");
       }
        updatedBranchName = branch.name;
     }
@@ -115,9 +111,7 @@ export const updateBranchAdminService = async (
         where: { email: data.email },
       });
       if (existingEmailUser) {
-        const error: any = new Error("User with this email already exists");
-        error.statusCode = 409;
-        throw error;
+        throw AppError.conflict("User with this email already exists");
       }
     }
 
@@ -127,9 +121,7 @@ export const updateBranchAdminService = async (
         where: { userName: data.userName },
       });
       if (existingUserName) {
-        const error: any = new Error("Username already exists");
-        error.statusCode = 409;
-        throw error;
+        throw AppError.conflict("Username already exists");
       }
     }
 
@@ -187,9 +179,9 @@ export const updateBranchAdminService = async (
       stack: err.stack,
       statusCode: err.statusCode,
     });
+    if (err?.code) mapPrismaError(err);
     if (!err.statusCode) {
-      err.statusCode = 500;
-      err.message = "Failed to update branch admin";
+      throw AppError.internal("Failed to update branch admin");
     }
     throw err;
   }

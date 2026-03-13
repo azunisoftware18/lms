@@ -21,6 +21,7 @@ import {
   loanApplicationIdParamSchema,
   approveLoanInputSchema,
   createFullLoanApplicationSchema,
+  reuploadLoanDocumentParamSchema,
 } from "./loanApplication.schema.js";
 import { authMiddleware } from "../../common/middlewares/auth.middleware.js";
 import upload from "../../common/middlewares/multer.middleware.js";
@@ -28,6 +29,7 @@ import { checkPermissionMiddleware } from "../../common/middlewares/permission.m
 import { markLoanDefaultController } from "../loanDefault/loanDefault.controller.js";
 import { createRateLimiter } from "../../common/middlewares/rateLimit.middleware.js";
 import { validateLoanDocumentUpload } from "../../common/middlewares/uploadValidation.middleware.js";
+import { branchMiddleware } from "../../common/middlewares/branch.middleware.js";
 
 const createLoanApplicationLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000,  // 15 minutes
@@ -47,11 +49,24 @@ const uploadLoanDocumentsLimiter = createRateLimiter({
   message: "Too many document upload requests. Please try again later.",
 });
 
+const rejectDocumentLimiter = createRateLimiter({
+  windowMs: 10 * 60 * 1000,
+  max: 120,
+  message: "Too many document rejection requests. Please try again later.",
+});
+
+const reuploadLoanDocumentsLimiter = createRateLimiter({
+  windowMs: 10 * 60 * 1000,
+  max: 50,
+  message: "Too many document reupload requests. Please try again later.",
+});
+
 // Define your loan application routes here
 
 loanApplicationRouter.get(
   "/",
   authMiddleware,
+  branchMiddleware,
   checkPermissionMiddleware("VIEW_LOAN_APPLICATIONS"),
   getAllLoanApplicationsController,
 );
@@ -59,6 +74,7 @@ loanApplicationRouter.get(
 loanApplicationRouter.get(
   "/:id",
   authMiddleware,
+  branchMiddleware,
   validate(loanApplicationIdParamSchema, "params"),
   checkPermissionMiddleware("VIEW_LOAN_APPLICATION"),
   getLoanApplicationByIdController,
@@ -66,6 +82,7 @@ loanApplicationRouter.get(
 loanApplicationRouter.put(
   "/:id/status",
   authMiddleware,
+  branchMiddleware,
   checkPermissionMiddleware("UPDATE_LOAN_STATUS"),
   validate(updateLoanApplicationSchema, "body"),
   validate(loanApplicationIdParamSchema, "params"),
@@ -74,6 +91,7 @@ loanApplicationRouter.put(
 loanApplicationRouter.put(
   "/:id/review",
   authMiddleware,
+  branchMiddleware,
   checkPermissionMiddleware("REVIEW_LOAN"),
   validate(loanApplicationIdParamSchema, "params"),
   reviewLoanController,
@@ -82,6 +100,7 @@ loanApplicationRouter.put(
 loanApplicationRouter.post(
   "/:id/approve",
   authMiddleware,
+  branchMiddleware,
   checkPermissionMiddleware("APPROVE_LOAN"),
   validate(loanApplicationIdParamSchema, "params"),
   validate(approveLoanInputSchema, "body"),
@@ -90,6 +109,7 @@ loanApplicationRouter.post(
 loanApplicationRouter.put(
   "/:id/reject",
   authMiddleware,
+  branchMiddleware,
   checkPermissionMiddleware("REJECT_LOAN"),
   validate(loanApplicationIdParamSchema, "params"),
   rejectLoanController,
@@ -98,6 +118,7 @@ loanApplicationRouter.put(
 loanApplicationRouter.post(
   "/:id/documents",
   authMiddleware,
+  branchMiddleware,
   checkPermissionMiddleware("UPLOAD_DOCUMENTS"),
   validate(loanApplicationIdParamSchema, "params"),
   uploadLoanDocumentsLimiter,
@@ -108,6 +129,7 @@ loanApplicationRouter.post(
 loanApplicationRouter.post(
   "/documents/:id/verify",
   authMiddleware,
+  branchMiddleware,
   validate(loanApplicationIdParamSchema, "params"),
   checkPermissionMiddleware("VERIFY_DOCUMENTS"),
   verifyDocumentLimiter,
@@ -116,8 +138,10 @@ loanApplicationRouter.post(
 loanApplicationRouter.post(
   "/documents/:id/reject",
   authMiddleware,
+  branchMiddleware,
   validate(loanApplicationIdParamSchema, "params"),
   checkPermissionMiddleware("VERIFY_DOCUMENTS"),
+  rejectDocumentLimiter,
   rejectDocumentController,
 );
 
@@ -125,6 +149,7 @@ loanApplicationRouter.post(
 loanApplicationRouter.get(
   "/:id/documents",
   authMiddleware,
+  branchMiddleware,
   validate(loanApplicationIdParamSchema, "params"),
   checkPermissionMiddleware("VIEW_LOAN_APPLICATION"),
   getAlldoumentsforLoanApplicationController
@@ -133,6 +158,7 @@ loanApplicationRouter.get(
 loanApplicationRouter.post(
   "/loans/:loanId/check-default",
   authMiddleware,
+  branchMiddleware,
   validate(loanApplicationIdParamSchema, "params"),
   checkPermissionMiddleware("CHECK_LOAN_DEFAULT"),
   markLoanDefaultController,
@@ -143,7 +169,10 @@ loanApplicationRouter.post(
 loanApplicationRouter.post(
   "/documents/:loanApplicationId/:documentType/reupload",
   authMiddleware,
+  branchMiddleware,
+  validate(reuploadLoanDocumentParamSchema, "params"),
   checkPermissionMiddleware("UPLOAD_DOCUMENTS"),
+  reuploadLoanDocumentsLimiter,
   upload.single("document"),
   reuploadLoanDocumentController,
 );
@@ -153,6 +182,7 @@ loanApplicationRouter.post(
 loanApplicationRouter.post(
   "/loan/create",
   authMiddleware,
+  branchMiddleware,
   checkPermissionMiddleware("CREATE_LOAN_APPLICATION"),
   createLoanApplicationLimiter,
   validate(createFullLoanApplicationSchema, "body"),

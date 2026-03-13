@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { refreshCreditReportService } from "./creditReport.service.js";
 import { getCreditProvider } from "./creditProvider.factory.js";
 import { prisma } from "../../db/prismaService.js";
-import { buildCreditReportSearch } from "../../common/utils/search.js";
+import { AppError } from "../../common/utils/apiError.js";
 
 const creditProvider = getCreditProvider();
 
@@ -12,7 +12,7 @@ export const refreshCreditReportController = async (
 ) => {
   try {
     if (!req.user) {
-      return res.status(401).json({ message: "Unauthorized" });
+      throw AppError.unauthorized("Unauthorized");
     }
 
     const q =
@@ -22,15 +22,11 @@ export const refreshCreditReportController = async (
     const { reason } = req.body;
 
     if (!q) {
-      return res.status(400).json({
-        message: "Search query (q) is required",
-      });
+      throw AppError.badRequest("Search query (q) is required");
     }
 
     if (!reason) {
-      return res.status(400).json({
-        message: "Reason for refreshing credit report is required",
-      });
+      throw AppError.badRequest("Reason for refreshing credit report is required");
     }
 
     // ✅ Search CUSTOMER by customer fields OR via loan application
@@ -58,9 +54,7 @@ export const refreshCreditReportController = async (
     }
 
     if (!customer) {
-      return res.status(404).json({
-        message: "Customer not found for the search query (PAN, Aadhaar, Contact, or Loan Number)",
-      });
+      throw AppError.notFound("Customer not found for the search query (PAN, Aadhaar, Contact, or Loan Number)");
     }
 
     const report = await refreshCreditReportService(
@@ -80,7 +74,7 @@ export const refreshCreditReportController = async (
     });
 
   } catch (error: any) {
-    return res.status(500).json({
+    return res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || "Internal Server Error",
     });

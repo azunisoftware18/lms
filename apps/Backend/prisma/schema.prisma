@@ -1009,6 +1009,7 @@ model LoanEmiSchedule {
 
   openingBalance     Float
   principalAmount    Float
+  deferredPrincipal  Float @default(0) // Principal deferred during INTEREST_ONLY moratorium
   interestAmount     Float
   emiAmount          Float // Scheduled EMI amount
   emiPaymentAmount   Float? // Actual amount paid (can be partial / excess)
@@ -1182,9 +1183,10 @@ model LoanType {
 
   //SLA & WorkFlow 
   estimatedProcessingTimeDays Int? //turnaround time
-  documentsRequired           String? //list of documents /comma separated 
-
+  documentsRequired           String //list of documents /comma separated 
+  documentsOptions            String? // any optional documents that can help in faster processing
   //Audit Fields
+  deletedAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

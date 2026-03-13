@@ -102,18 +102,25 @@ export async function uploadLoanDocumentsService(
       }
     }
 
+    const uploadedDocumentTypes = Array.from(
+      new Set(documents.map((doc) => doc.documentType)),
+    );
+
     await logAction({
-      entityType: "LOAN",
+      entityType: "DOCUMENT",
       entityId: loanApplicationId,
-      action: "UPDATE_LOAN_STATUS",
+      action: "UPLOAD_DOCUMENT",
       performedBy: documents[0].uploadedBy,
       branchId: loanApplication.branchId,
       oldValue: null,
-      newValue: { documents: { status: "uploaded" } },
+      newValue: { uploadedDocumentTypes },
     });
 
     const uploadedDocuments = await tx.document.findMany({
-      where: { loanApplicationId },
+      where: {
+        loanApplicationId,
+        documentType: { in: uploadedDocumentTypes },
+      },
       orderBy: { createdAt: "asc" },
     });
 
