@@ -8,6 +8,18 @@ import ApplicationPage from '../app/dashboard/LOS/ApplicationPage.jsx';
 import DocumentPage from '../app/dashboard/LOS/DocumentPage.jsx';
 import BranchManagement from '../app/dashboard/Configuration/BranchManagement.jsx';
 import BorrowerPage from '../app/dashboard/BorrowerPage.jsx';
+import CreditCheckPage from '../app/dashboard/LOS/CreditCheckPage.jsx';
+import TechnicalReviewPage from '../app/dashboard/LOS/TechnicalReviewPage.jsx';
+import LegalCompliancePage from '../app/dashboard/LOS/LegalCompilancePage.jsx';
+import EMIManagementPage from '../app/dashboard/LOS/EMIManagementPage.jsx';
+import SanctionPage from '../app/dashboard/LOS/SanctionPage.jsx';
+import DisbursementManagementPage from '../app/dashboard/LOS/DisbursementManagementPage.jsx';
+
+
+
+
+
+
 
 
 // Public Pages
@@ -143,8 +155,10 @@ export default function AppRoutes() {
 						<AdminLayout />
 					</PrivateRoute>
 				}>
+
 				{/* Dashboard page */}
 				<Route index element={<DashboardPage />} />
+				<Route path='borrowers' element={< BorrowerPage />} />
 
 				{/* LMS Pages */}
 				<Route path="loan-account-creation" element={<LoanAccountCreation />} />
@@ -162,11 +176,16 @@ export default function AppRoutes() {
 				<Route path='los/applications' element={<ApplicationPage />} />
 				<Route path='los/documents' element={<DocumentPage />} />
 				<Route path='los/kyc-verification' element={<KycVerificationPage />} />
-				<Route path='borrowers' element={< BorrowerPage />} />
+				<Route path='los/credit-check' element={<CreditCheckPage />} />
+				<Route path='los/technical-review' element={<TechnicalReviewPage />} />
+				<Route path='los/legal-compliance' element={<LegalCompliancePage />} />
+				<Route path='los/emi-management' element={<EMIManagementPage />} />
+				<Route path='los/sanction' element={<SanctionPage />} />
+				<Route path='los/disbursement' element={<DisbursementManagementPage />} />
 				
 				
 
-				{/* View Detail Pages */}
+				{/* View Detail Pages */} 
 				<Route path="loan-account-view/:loanId" element={<LoanAccountView />} />
 			</Route>
 		</Routes>

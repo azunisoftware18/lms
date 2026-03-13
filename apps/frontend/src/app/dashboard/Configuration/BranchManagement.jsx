@@ -61,14 +61,14 @@ export default function BranchManagement() {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-slate-50 p-4 md:p-8">
       {/* ===== HEADER SECTION ===== */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
             Branch Master
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-gray-500 mt-1">
             Manage all your company locations and branch details with hierarchy.
           </p>
         </div>
@@ -89,7 +89,7 @@ export default function BranchManagement() {
       </div>
 
       {/* ===== STATUS CARDS ===== */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
         <StatusCard
           title="Total Branches"
           value={stats.total}
@@ -125,12 +125,6 @@ export default function BranchManagement() {
 
       {/* ===== BRANCH TABLE SECTION ===== */}
       <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-        <div className="p-6 flex justify-between items-center border-b border-gray-100">
-          <h2 className="font-bold text-gray-800">Branch Directory</h2>
-          <button className="text-blue-600 text-sm hover:underline">
-            View All
-          </button>
-        </div>
 
         <div className="overflow-x-auto">
           <BranchTable
