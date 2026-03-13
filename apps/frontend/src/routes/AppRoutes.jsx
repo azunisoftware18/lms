@@ -51,6 +51,7 @@ import Foreclosure from '../app/dashboard/LMS/Foreclosure.jsx';
 import LoanClosure from '../app/dashboard/LMS/LoanClosure.jsx';
 import LoanAccountView from '../app/dashboard/ViewDetail/LoanAccountView.jsx';
 import BranchManagement from '../app/dashboard/Configuration/BranchManagement.jsx';
+import BorrowerPage from '../app/dashboard/BorrowerPage.jsx';
 
 export default function AppRoutes() {
 	const dispatch = useDispatch();
@@ -148,6 +149,7 @@ export default function AppRoutes() {
 				<Route path="foreclosure" element={<Foreclosure />} />
 				<Route path="loan-closure" element={<LoanClosure />} />
 				<Route path="branch-management" element={<BranchManagement />} />
+				<Route path='borrowers' element={< BorrowerPage />} />
 
 				{/* View Detail Pages */}
 				<Route path="loan-account-view/:loanId" element={<LoanAccountView />} />
