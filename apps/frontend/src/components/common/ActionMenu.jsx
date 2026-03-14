@@ -26,8 +26,8 @@ export default function ActionMenu({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target) && 
-          triggerRef.current && !triggerRef.current.contains(event.target)) {
+      if (menuRef.current && !menuRef.current.contains(event.target) &&
+        triggerRef.current && !triggerRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     };
@@ -44,18 +44,18 @@ export default function ActionMenu({
   }, []);
 
   useEffect(() => {
-  const handleScroll = () => {
-    setIsOpen(false);
-  };
+    const handleScroll = () => {
+      setIsOpen(false);
+    };
 
-  if (isOpen) {
-    window.addEventListener("scroll", handleScroll, true);
-  }
+    if (isOpen) {
+      window.addEventListener("scroll", handleScroll, true);
+    }
 
-  return () => {
-    window.removeEventListener("scroll", handleScroll, true);
-  };
-}, [isOpen]);
+    return () => {
+      window.removeEventListener("scroll", handleScroll, true);
+    };
+  }, [isOpen]);
 
   // alignment class adjustment
   const alignmentClass = align === "right" ? "-translate-x-full" : "";
@@ -77,9 +77,9 @@ export default function ActionMenu({
       {isOpen && createPortal(
         <div
           ref={menuRef}
-          style={{ 
-            position: 'absolute', 
-            top: `${coords.top}px`, 
+          style={{
+            position: 'absolute',
+            top: `${coords.top}px`,
             left: `${coords.left}px`,
             zIndex: 9999 // Sabse upar dikhne ke liye
           }}
@@ -100,15 +100,15 @@ export default function ActionMenu({
                   disabled={action.disabled}
                   className={`flex w-full items-center px-3 py-2 text-sm rounded-lg transition-colors group
                     ${action.disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}
-                    ${action.isDanger 
-                      ? "text-red-600 hover:bg-red-50" 
+                    ${action.isDanger
+                      ? "text-red-600 hover:bg-red-50"
                       : "text-gray-700 hover:bg-gray-50 hover:text-blue-600"
                     }`}
                   role="menuitem"
                 >
                   {action.icon && (
                     <span className={`mr-3 transition-colors ${action.isDanger ? "text-red-500" : "text-gray-400 group-hover:text-blue-500"}`}>
-                      {React.cloneElement(action.icon, { size: 16 })}
+                      <action.icon size={16} />
                     </span>
                   )}
                   <span className="flex-1 text-left font-medium">{action.label}</span>
@@ -117,7 +117,7 @@ export default function ActionMenu({
             ))}
           </div>
         </div>,
-        document.body 
+        document.body
       )}
     </div>
   );

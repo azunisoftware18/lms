@@ -73,8 +73,8 @@ export default function Header() {
 
   const Avatar = ({ size = "sm" }) => (
     <div className={`
-      rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center
-      text-white font-bold flex-shrink-0
+      rounded-full bg-linear-to-br from-blue-500 to-blue-700 flex items-center justify-center
+      text-white font-bold shrink-0
       ${size === "sm" ? "w-9 h-9 text-sm" : "w-11 h-11 text-base"}
     `}>
       {getInitials(user)}
@@ -107,12 +107,12 @@ export default function Header() {
         ${scrolled ? "shadow-md" : "shadow-sm border-b border-gray-100"}
       `}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-16 lg:h-[68px] gap-3">
+          <div className="flex items-center justify-between h-16 lg:h-17 gap-3">
 
             {/* LOGO */}
             <Link
               to="/"
-              className="flex items-center gap-2.5 shrink-0 group min-w-[180px]"
+              className="flex items-center gap-2.5 shrink-0 group min-w-45"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <div className="w-9 h-9 bg-linear-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-blue-200 group-hover:shadow-md transition-shadow">
@@ -226,7 +226,7 @@ export default function Header() {
             </nav>
 
             {/* ── RIGHT ACTIONS ── */}
-            <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex items-center gap-2 shrink-0">
               {/* Apply Now — hidden on small mobile, shown md+ */}
               <div className="hidden md:block">
                 <Button
@@ -247,7 +247,7 @@ export default function Header() {
                       className="flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-200"
                     >
                       <Avatar />
-                      <div className="hidden xl:block text-left max-w-[110px]">
+                      <div className="hidden xl:block text-left max-w-27.5">
                         <div className="text-sm font-semibold text-gray-800 truncate leading-tight">
                           {user?.fullName || user?.userName || "User"}
                         </div>
@@ -259,7 +259,7 @@ export default function Header() {
                     {showUserDropdown && (
                       <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 rounded-2xl shadow-2xl z-50 overflow-hidden">
                         {/* User card */}
-                        <div className="bg-gradient-to-br from-blue-600 to-blue-800 p-4 text-white">
+                        <div className="bg-linear-to-br from-blue-600 to-blue-800 p-4 text-white">
                           <div className="flex items-center gap-3">
                             <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center font-black text-lg">
                               {getInitials(user)}
@@ -326,7 +326,7 @@ export default function Header() {
           {/* Drawer */}
           <div className="lg:hidden fixed top-0 left-0 h-full w-[min(320px,85vw)] bg-white z-50 flex flex-col shadow-2xl">
             {/* Drawer header */}
-            <div className="bg-gradient-to-br from-blue-700 to-blue-900 px-5 py-5 flex-shrink-0">
+            <div className="bg-linear-to-br from-blue-700 to-blue-900 px-5 py-5 shrink-0">
               <div className="flex items-center justify-between mb-4">
                 <Link to="/" className="flex items-center gap-2.5" onClick={() => setIsMobileMenuOpen(false)}>
                   <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
@@ -345,7 +345,7 @@ export default function Header() {
               {/* Mobile: user card inside drawer header */}
               {isAuthenticated && user ? (
                 <div className="bg-white/10 rounded-xl p-3 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold shrink-0">
                     {getInitials(user)}
                   </div>
                   <div className="min-w-0 flex-1">
@@ -459,7 +459,7 @@ export default function Header() {
             </nav>
 
             {/* Drawer footer */}
-            <div className="flex-shrink-0 px-5 py-4 border-t border-gray-100 space-y-1.5 text-xs text-gray-500">
+            <div className="shrink-0 px-5 py-4 border-t border-gray-100 space-y-1.5 text-xs text-gray-500">
               <div className="flex items-center gap-2"><Phone size={11} /> +1-800-FINOVA</div>
               <div className="flex items-center gap-2"><MapPin size={11} /> Jaipur, Rajasthan</div>
             </div>

@@ -260,7 +260,7 @@ export default function Sidebar() {
 
           ]
         },
-        { name: "Admin Roles", icon: <ShieldCheck size={20} />, path: "/admin/admin-roles" },
+        { name: "Role Management", icon: <ShieldCheck size={20} />, path: "/admin/role-management" },
         { name: "Permission Management", icon: <ShieldCheck size={20} />, path: "/admin/permission-management" },
 
         {
