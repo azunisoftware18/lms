@@ -1,13 +1,12 @@
 import React, { useState, useMemo } from "react";
-import { Phone, Mail, MapPin, Edit, Trash2, User } from "lucide-react";
-import Pagination from "../../../components/common/Pagination";
+import { Edit, Trash2, User } from "lucide-react";
 import ActionMenu from "../../../components/common/ActionMenu";
 import SearchField from "../../../components/ui/SearchField";
+import LeadsTable from "../../../components/tables/LeadsTable";
 import {
   LEAD_ACTION_DEFINITIONS,
   LEADS_DUMMY_DATA,
   LEADS_PAGE_DUMMY_CONFIG,
-  getLeadLoanTypeColor,
 } from "../../../lib/LOSDummyData";
 import { colorVariables } from "../../../lib";
 
@@ -132,173 +131,20 @@ export default function LeadsPage() {
         </div>
 
         {/* Table Container */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-          {isLoading && (
-            <div className="p-6 text-center text-gray-500">
-              Loading user Leads...
-            </div>
-          )}
-
-          {/* Table */}
-          {!isLoading && (
-            <>
-              <div className="overflow-x-auto flex-1">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead>
-                    <tr className="bg-gray-50">
-                      <th className="px-8 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                        Customer
-                      </th>
-                      <th className="px-8 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                        Contact Details
-                      </th>
-                      <th className="px-8 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                        Location
-                      </th>
-                      <th className="px-8 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                        Loan Type
-                      </th>
-                      <th className="px-8 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                        Loan Amount
-                      </th>
-                      <th className="px-8 py-4 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {currentItems.length > 0 ? (
-                      currentItems.map((item) => (
-                        <tr
-                          key={item.id}
-                          className="hover:bg-gray-50 transition-colors"
-                        >
-                          {/* Name Column */}
-                          <td className="px-8 py-5">
-                            <div className="flex items-center">
-                              <div className="h-10 w-10 shrink-0 rounded-full bg-linear-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold">
-                                {(item.fullName || "")
-                                  .charAt(0)
-                                  .toUpperCase() || "U"}
-                              </div>
-                              <div className="ml-4">
-                                <div className="text-base font-semibold text-gray-900">
-                                  {item.fullName || "Unknown"}
-                                </div>
-                                <div
-                                  className={`text-xs font-medium ${colorVariables.PRIMARY_COLOR} ${colorVariables.LIGHT_BG} px-2 py-0.5 rounded-md inline-block mt-1`}
-                                >
-                                  {item.leadNumber || "N/A"}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-
-                          {/* Contact Column */}
-                          <td className="px-8 py-5">
-                            <div className="space-y-2">
-                              <div className="flex items-center gap-2">
-                                <Phone size={14} className="text-gray-400" />
-                                <span className="text-sm text-gray-900 font-medium">
-                                  {item.contactNumber || "No phone number"}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
-                                <Mail size={12} />
-                                {item.email || "No email"}
-                              </div>
-                            </div>
-                          </td>
-
-                          {/* Location Column */}
-                          <td className="px-8 py-5">
-                            <div className="flex items-center gap-2">
-                              <MapPin size={14} className="text-gray-400" />
-                              <div>
-                                <div className="text-sm font-medium text-gray-900">
-                                  {item.city || "Unknown"}
-                                </div>
-                                <div className="text-xs text-gray-500">
-                                  {item.state || ""}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-
-                          {/* Loan Type Column */}
-                          <td className="px-8 py-5">
-                            <span
-                              className={`inline-flex items-center px-3 py-1.5 rounded-2xl text-sm font-medium border 
-                                ${getLeadLoanTypeColor(item.loanType?.name)}`}
-                            >
-                              {item.loanType?.name || "—"}
-                            </span>
-                          </td>
-
-                          <td className="px-8 py-5">
-                            <span className="text-sm font-semibold text-gray-900">
-                              ₹{" "}
-                              {item.loanAmount
-                                ? item.loanAmount.toLocaleString("en-IN")
-                                : "0"}
-                            </span>
-                          </td>
-
-                          {/* Actions Column */}
-                          <td className="px-8 py-5 text-right relative">
-                            <div className="flex justify-end">
-                              <ActionMenu actions={getActions(item)} />
-                            </div>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="6" className="px-8 py-12 text-center">
-                          <div className="text-gray-400 mb-4">
-                            <svg
-                              className="w-16 h-16 mx-auto"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={1.5}
-                                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                              />
-                            </svg>
-                          </div>
-                          <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                            {searchTerm
-                              ? "No matching users found"
-                              : "No lead data available"}
-                          </h3>
-                          <p className="text-gray-500">
-                            {searchTerm
-                              ? "Try adjusting your search to find what you're looking for."
-                              : "There are no leads in the system yet."}
-                          </p>
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-      {totalPages > 1 && (
-        <Pagination
+        <LeadsTable
+          items={currentItems}
+          loading={isLoading}
+          getActions={getActions}
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          containerClassName="fixed bottom-20 right-6 z-50 flex gap-2 bg-white px-4 py-2 rounded-xl shadow-lg border border-gray-200"
-          maxVisiblePages={LEADS_PAGE_DUMMY_CONFIG.MAX_VISIBLE_PAGES}
+          search={searchTerm}
+          setSearch={(value) => {
+            setSearchTerm(value);
+            setCurrentPage(1);
+          }}
         />
-      )}
+      </div>
     </div>
   );
 }
