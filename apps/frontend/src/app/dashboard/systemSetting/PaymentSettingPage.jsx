@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import * as Icons from "lucide-react";
 
-import Button from "../../components/ui/Button";
-import InputField from "../../components/ui/InputField";
-import SelectField from "../../components/ui/SelectField";
-import TextAreaField from "../../components/ui/TextAreaField";
-import ToggleSwitch from "../../components/ui/ToggleSwitch";
+import Button from "../../../components/ui/Button";
+import InputField from "../../../components/ui/InputField";
+import SelectField from "../../../components/ui/SelectField";
+import TextAreaField from "../../../components/ui/TextAreaField";
+import ToggleSwitch from "../../../components/ui/ToggleSwitch";
 
-import { paymentModeConfig } from "../../lib/dashboardDummyData";
+import { paymentModeConfig } from "../../../lib/dashboardDummyData";
 
 export default function PaymentSettingPage() {
   const {

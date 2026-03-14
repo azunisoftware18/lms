@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
   securitySettingsData,
   securitySections as importedSecuritySections,
-} from "../../lib/dashboardDummyData";
+} from "../../../lib/dashboardDummyData";
 import {
   Shield,
   Save,
@@ -33,12 +33,12 @@ const iconMap = {
   Clock,
   Cpu,
 };
-import SecuritySettingTable from "../../components/tables/SecuritySettingTable";
-import InputField from "../../components/ui/InputField";
-import ToggleSwitch from "../../components/ui/ToggleSwitch";
-import Button from "../../components/ui/Button";
-import SelectField from "../../components/ui/SelectField";
-import ConfirmationDialog from "../../components/common/ConfirmationDialog";
+import SecuritySettingTable from "../../../components/tables/SecuritySettingTable";
+import InputField from "../../../components/ui/InputField";
+import ToggleSwitch from "../../../components/ui/ToggleSwitch";
+import Button from "../../../components/ui/Button";
+import SelectField from "../../../components/ui/SelectField";
+import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
 
 export default function SecuritySettingPage() {
   const [securitySettings, setSecuritySettings] =

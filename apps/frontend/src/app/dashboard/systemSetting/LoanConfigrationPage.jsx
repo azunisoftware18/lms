@@ -5,16 +5,16 @@ import {
   loanConfigurationDummy,
   loanConfigCategories,
   loanConfigStats,
-} from "../../lib/dashboardDummyData";
+} from "../../../lib/dashboardDummyData";
 
-import Button from "../../components/ui/Button";
-import SearchField from "../../components/ui/SearchField";
+import Button from "../../../components/ui/Button";
+import SearchField from "../../../components/ui/SearchField";
 
-import { TableShell } from "../../components/tables/core";
+import { TableShell } from "../../../components/tables/core";
 
-import ActionMenu from "../../components/common/ActionMenu";
+import ActionMenu from "../../../components/common/ActionMenu";
 
-import Pagination from "../../components/common/Pagination";
+import Pagination from "../../../components/common/Pagination";
 
 export default function LoanConfigurationPage() {
   const [loanConfig, setLoanConfig] = useState(loanConfigurationDummy);
