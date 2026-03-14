@@ -12,6 +12,10 @@ export const createEmployeeRoleService = async (
 ) => {
   const normalizedName = data.name.trim();
 
+  if (!normalizedName) {
+    throw AppError.badRequest("name is required");
+  }
+
   const existingRole = await prisma.employeeRole.findFirst({
     where: { name: normalizedName },
   });

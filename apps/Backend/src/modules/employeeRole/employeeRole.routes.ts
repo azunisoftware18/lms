@@ -20,7 +20,7 @@ employeeRoleRouter.post(
 
 employeeRoleRouter.get(
   "/",
-  checkPermissionMiddleware("CREATE_EMPLOYEE"),
+  checkPermissionMiddleware("READ_EMPLOYEE_ROLE"),
   getEmployeeRolesController,
 );
 

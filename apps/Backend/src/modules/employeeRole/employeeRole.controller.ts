@@ -4,6 +4,7 @@ import {
   createEmployeeRoleService,
   getEmployeeRolesService,
 } from "./employeeRole.service.js";
+import { createEmployeeRoleSchema } from "./employeeRole.schema.js";
 
 export const createEmployeeRoleController = async (
   req: Request,
@@ -19,7 +20,12 @@ export const createEmployeeRoleController = async (
       throw AppError.forbidden("Only SUPER_ADMIN can create employee roles");
     }
 
-    const employeeRole = await createEmployeeRoleService(req.body);
+    const parsedPayload = createEmployeeRoleSchema.safeParse(req.body);
+    if (!parsedPayload.success) {
+      throw AppError.badRequest("Invalid request data");
+    }
+
+    const employeeRole = await createEmployeeRoleService(parsedPayload.data);
 
     res.status(201).json({
       success: true,

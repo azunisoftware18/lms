@@ -34,11 +34,11 @@ export async function createEmployeeService(
   ]);
 
   if (existingEmailUser) {
-    throw AppError.conflict("Employee already exists");
+     throw AppError.conflict("Employee with this email already exists");
   }
 
   if (existingUserNameUser) {
-    throw AppError.conflict("Employee already exists");
+     throw AppError.conflict("Employee with this username already exists");
   }
 
   const hashedPassword = await hashPassword(data.password);

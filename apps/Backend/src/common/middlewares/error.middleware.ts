@@ -19,7 +19,11 @@ const errorMiddleware = (
       409: "Request could not be completed",
     };
 
-    const safeConflictMessages = new Set(["Employee already exists"]);
+    const safeConflictMessages = new Set([
+      "Employee already exists",
+      "Employee with this email already exists",
+      "Employee with this username already exists",
+    ]);
     const message =
       err.statusCode === 409 && safeConflictMessages.has(err.message)
         ? err.message

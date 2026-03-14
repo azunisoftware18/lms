@@ -27,7 +27,7 @@ const emergencyRelationshipSchema = z
       ].includes(v),
     {
       message:
-        'Invalid emergencyRelationship: expected one of "FATHER"|"MOTHER"|"SPOUSE"|"SIBLING"|"FRIEND"|"OTHER"',
+        'Invalid emergencyRelationship: expected one of "FATHER"|"MOTHER"|"SPOUSE"|"SIBLING"|"FRIEND"|"OTHER" (aliases: "BROTHER" and "SISTER" map to "SIBLING")',
     },
   )
   .transform((v) => (v === "BROTHER" || v === "SISTER" ? "SIBLING" : v));
