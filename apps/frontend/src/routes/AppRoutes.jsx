@@ -4,6 +4,24 @@ import PublicRoute from './publicRoute';
 
 // Private pages
 import DashboardPage from '../app/dashboard/DashboardPage';
+import ApplicationPage from '../app/dashboard/LOS/ApplicationPage.jsx';
+import DocumentPage from '../app/dashboard/LOS/DocumentPage.jsx';
+import BranchManagement from '../app/dashboard/Configuration/BranchManagement.jsx';
+import BorrowerPage from '../app/dashboard/BorrowerPage.jsx';
+import CreditCheckPage from '../app/dashboard/LOS/CreditCheckPage.jsx';
+import TechnicalReviewPage from '../app/dashboard/LOS/TechnicalReviewPage.jsx';
+import LegalCompliancePage from '../app/dashboard/LOS/LegalCompilancePage.jsx';
+import EMIManagementPage from '../app/dashboard/LOS/EMIManagementPage.jsx';
+import SanctionPage from '../app/dashboard/LOS/SanctionPage.jsx';
+import DisbursementManagementPage from '../app/dashboard/LOS/DisbursementManagementPage.jsx';
+import BranchAdmin from '../app/dashboard/Configuration/BranchAdmin.jsx';
+
+
+
+
+
+
+
 
 // Public Pages
 import Layout from '../layout/Layout.jsx';
@@ -50,7 +68,8 @@ import RecoveryManagement from '../app/dashboard/LMS/RecoveryManagement.jsx';
 import Foreclosure from '../app/dashboard/LMS/Foreclosure.jsx';
 import LoanClosure from '../app/dashboard/LMS/LoanClosure.jsx';
 import LoanAccountView from '../app/dashboard/ViewDetail/LoanAccountView.jsx';
-import BranchManagement from '../app/dashboard/Configuration/BranchManagement.jsx';
+import KycVerificationPage from '../app/dashboard/LOS/KycVerificationPage.jsx';
+
 
 export default function AppRoutes() {
 	const dispatch = useDispatch();
@@ -137,8 +156,12 @@ export default function AppRoutes() {
 						<AdminLayout />
 					</PrivateRoute>
 				}>
+
 				{/* Dashboard page */}
 				<Route index element={<DashboardPage />} />
+				<Route path='borrowers' element={< BorrowerPage />} />
+
+				{/* LMS Pages */}
 				<Route path="loan-account-creation" element={<LoanAccountCreation />} />
 				<Route path="emi-schedule" element={<EMISchedule />} />
 				<Route path="repayment-management" element={<RepaymentManagement />} />
@@ -148,8 +171,23 @@ export default function AppRoutes() {
 				<Route path="foreclosure" element={<Foreclosure />} />
 				<Route path="loan-closure" element={<LoanClosure />} />
 				<Route path="branch-management" element={<BranchManagement />} />
+				<Route path="branch-admin" element={<BranchAdmin />} />
 
-				{/* View Detail Pages */}
+
+				{/* LOS pages */}
+				<Route path='los/applications' element={<ApplicationPage />} />
+				<Route path='los/documents' element={<DocumentPage />} />
+				<Route path='los/kyc-verification' element={<KycVerificationPage />} />
+				<Route path='los/credit-check' element={<CreditCheckPage />} />
+				<Route path='los/technical-review' element={<TechnicalReviewPage />} />
+				<Route path='los/legal-compliance' element={<LegalCompliancePage />} />
+				<Route path='los/emi-management' element={<EMIManagementPage />} />
+				<Route path='los/sanction' element={<SanctionPage />} />
+				<Route path='los/disbursement' element={<DisbursementManagementPage />} />
+				
+				
+
+				{/* View Detail Pages */} 
 				<Route path="loan-account-view/:loanId" element={<LoanAccountView />} />
 			</Route>
 		</Routes>

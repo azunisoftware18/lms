@@ -27,7 +27,6 @@ import {
 
 import { mockMandates, mockDebits } from "../../../lib/dumyData";
 
-
 // ═════════════════════════════════════════════════════════════
 // PAGE 1 — MANDATE CREATION
 // ═════════════════════════════════════════════════════════════
@@ -41,7 +40,7 @@ function MandateCreation() {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       console.log("Form submitted:", formData);
       alert("Mandate created successfully!");
-    } catch (error) {
+    } catch {
       alert("Failed to create mandate.");
     } finally {
       setIsSubmitting(false);
@@ -50,7 +49,6 @@ function MandateCreation() {
 
   return (
     <div className="space-y-6">
-
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
@@ -87,7 +85,6 @@ function MandateCreation() {
   );
 }
 
-
 // ═════════════════════════════════════════════════════════════
 // PAGE 2 — MANDATE MANAGEMENT
 // ═════════════════════════════════════════════════════════════
@@ -106,7 +103,6 @@ function MandateManagement() {
 
   return (
     <div className="space-y-6">
-
       {/* Header */}
       <div>
         <h2 className="text-base sm:text-lg font-black text-slate-800 tracking-tight">
@@ -119,7 +115,6 @@ function MandateManagement() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-
         <StatusCard
           title="Total Mandates"
           value={mandates.length}
@@ -166,7 +161,6 @@ function MandateManagement() {
   );
 }
 
-
 // ═════════════════════════════════════════════════════════════
 // PAGE 3 — DEBIT HISTORY
 // ═════════════════════════════════════════════════════════════
@@ -180,7 +174,6 @@ function DebitHistory() {
 
   return (
     <div className="space-y-6">
-
       {/* Header */}
       <div>
         <h2 className="text-base sm:text-lg font-black text-slate-800 tracking-tight">
@@ -193,7 +186,6 @@ function DebitHistory() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-
         <StatusCard
           title="Total Collected"
           value={"₹" + totalAmount.toLocaleString("en-IN")}
@@ -224,13 +216,17 @@ function DebitHistory() {
   );
 }
 
-
 // ═════════════════════════════════════════════════════════════
 // MAIN COMPONENT
 // ═════════════════════════════════════════════════════════════
 const TABS = [
   { id: "create", label: "Mandate Creation", short: "Create", icon: Plus },
-  { id: "manage", label: "Mandate Management", short: "Manage", icon: LayoutGrid },
+  {
+    id: "manage",
+    label: "Mandate Management",
+    short: "Manage",
+    icon: LayoutGrid,
+  },
   { id: "history", label: "Debit History", short: "History", icon: Activity },
 ];
 
@@ -266,9 +262,7 @@ export default function NachAutoDebit() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-
-      <main className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-
+      <main className="max-w-350 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Page Header */}
         <div className="mb-6">
           <div className="flex items-center gap-2 mb-1">
@@ -293,8 +287,9 @@ export default function NachAutoDebit() {
         {/* Tabs */}
         <div className="mb-6 border-b border-slate-200">
           <nav className="flex overflow-x-auto scrollbar-hide">
-
-            {TABS.map(({ id, label, short, icon: Icon }) => {
+            {TABS.map((tab) => {
+              const { id, label, short, icon } = tab;
+              const TabIcon = icon;
               const active = activeTab === id;
 
               return (
@@ -308,7 +303,7 @@ export default function NachAutoDebit() {
                       : "border-transparent text-slate-500 hover:text-slate-700"
                   }`}
                 >
-                  <Icon size={16} />
+                  <TabIcon size={16} />
                   <span className="hidden sm:inline">{label}</span>
                   <span className="sm:hidden">{short}</span>
                 </button>

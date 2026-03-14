@@ -1,17 +1,8 @@
 import { useState, useMemo } from "react";
 
-import { Icons } from "../../components/common/Icon";
+import * as Icons from "lucide-react";
 import { dashboardStats, recentLoans } from "../../lib/dashboardDummyData";
-
-import {
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-} from "../../components/tables";
-
-import ActionMenu from "../../components/common/ActionMenu";
+import DashboardTable from "../../components/tables/DashboardTable";
 
 export default function AdminDashboardPage() {
   /* EMI STATE */
@@ -80,79 +71,8 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* ===== LEFT SIDE TABLE ===== */}
 
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-          <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-            <h2 className="font-bold text-gray-800">Recent Loan Requests</h2>
-
-            <button className="text-blue-600 text-sm hover:underline">
-              View All
-            </button>
-          </div>
-
-          <div className="overflow-x-auto flex-1">
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Borrower</TableCell>
-                  <TableCell>Amount</TableCell>
-                  <TableCell>Type</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell className="text-right">Action</TableCell>
-                </TableRow>
-              </TableHead>
-
-              <TableBody>
-                {recentLoans.map((loan) => (
-                  <TableRow key={loan.id} className="hover:bg-gray-50">
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <span className="font-medium text-gray-800 text-sm">
-                          {loan.name}
-                        </span>
-
-                        <span className="text-xs text-gray-400">{loan.id}</span>
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="text-gray-700 font-medium text-sm">
-                      {loan.amount}
-                    </TableCell>
-
-                    <TableCell className="text-gray-500 text-sm">
-                      {loan.type}
-                    </TableCell>
-
-                    <TableCell>
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium border
-                        ${
-                          loan.status === "Approved"
-                            ? "bg-green-50 text-green-700 border-green-100"
-                            : ""
-                        }
-                        ${
-                          loan.status === "Pending"
-                            ? "bg-orange-50 text-orange-700 border-orange-100"
-                            : ""
-                        }
-                        ${
-                          loan.status === "Rejected"
-                            ? "bg-red-50 text-red-700 border-red-100"
-                            : ""
-                        }`}
-                      >
-                        {loan.status}
-                      </span>
-                    </TableCell>
-
-                    <TableCell className="text-right">
-                      <ActionMenu />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+        <div className="lg:col-span-2">
+          <DashboardTable loans={recentLoans} />
         </div>
 
         {/* ===== RIGHT SIDE ===== */}
@@ -167,9 +87,9 @@ export default function AdminDashboardPage() {
             </h3>
 
             <div className="flex items-center justify-center py-4">
-              <div className="relative w-32 h-32 rounded-full border-[10px] border-gray-100 flex items-center justify-center">
+              <div className="relative w-32 h-32 rounded-full border-10 border-gray-100 flex items-center justify-center">
                 <div
-                  className="absolute inset-0 rounded-full border-[10px] border-blue-600 border-t-transparent border-r-transparent transform -rotate-45"
+                  className="absolute inset-0 rounded-full border-10 border-blue-600 border-t-transparent border-r-transparent transform -rotate-45"
                   style={{ clipPath: "circle(50%)" }}
                 />
 
@@ -268,7 +188,7 @@ export default function AdminDashboardPage() {
                   </span>
                 </div>
 
-                <div className="w-full h-[1px] bg-blue-200 my-2"></div>
+                <div className="w-full h-px bg-blue-200 my-2"></div>
 
                 <div className="flex justify-between text-xs text-blue-600">
                   <span>Total Interest</span>

@@ -29,6 +29,7 @@ import Button from "../../../components/ui/Button";
 import SearchField from "../../../components/ui/SearchField";
 import SelectField from "../../../components/ui/SelectField";
 import Pagination from "../../../components/common/Pagination";
+import TechnicalReviewTable from "../../../components/tables/TechnicalReviewTable";
 import { colorVariables } from "../../../lib";
 import {
   TECHNICAL_REVIEW_REPORTS,
@@ -299,6 +300,79 @@ export default function TechnicalReviewPage() {
     setSelectedReport(report);
     setIsDetailsModalOpen(true);
   };
+
+  const tableActions = [
+    {
+      label: "View Details",
+      icon: <Eye className="w-4 h-4" />,
+      onClick: handleViewDetails,
+    },
+    {
+      label: "Edit Report",
+      icon: <Edit2 className="w-4 h-4" />,
+      onClick: (report) => console.log("Edit", report),
+    },
+    {
+      label: "Download PDF",
+      icon: <Download className="w-4 h-4" />,
+      onClick: (report) => console.log("Download", report),
+    },
+    {
+      label: "Share",
+      icon: <Share2 className="w-4 h-4" />,
+      onClick: (report) => console.log("Share", report),
+    },
+    {
+      label: "Delete",
+      icon: <Trash2 className="w-4 h-4" />,
+      onClick: (report) => console.log("Delete", report),
+      isDanger: true,
+    },
+  ];
+
+  const desktopColumns = [
+    {
+      accessor: "engineerName",
+      header: "Engineer",
+      render: (value, row) => (
+        <div>
+          <div className="text-sm font-medium text-slate-800">{value}</div>
+          <div className="text-xs text-slate-500">ID: {row.id}</div>
+        </div>
+      ),
+    },
+    { accessor: "agencyName", header: "Agency" },
+    { accessor: "propertyType", header: "Property" },
+    {
+      accessor: "city",
+      header: "Location",
+      render: (value, row) => (
+        <div>
+          <div className="text-sm text-slate-600">{value}</div>
+          <div className="text-xs text-slate-400">{row.state}</div>
+        </div>
+      ),
+    },
+    {
+      accessor: "marketValue",
+      header: "Value",
+      render: (value) => (
+        <span className="text-sm font-medium text-slate-800">{value}</span>
+      ),
+    },
+    { accessor: "recommendedLtv", header: "LTV" },
+    { accessor: "constructionStatus", header: "Construction" },
+    {
+      accessor: "qualityOfConstruction",
+      header: "Quality",
+      render: (value) => getQualityBadge(value),
+    },
+    {
+      accessor: "status",
+      header: "Status",
+      render: (value) => getStatusBadge(value),
+    },
+  ];
 
   const resetFilters = () => {
     setSearchTerm("");
@@ -687,109 +761,11 @@ export default function TechnicalReviewPage() {
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           {/* Desktop Table View */}
           {isDesktop && (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-slate-50 border-b border-slate-200">
-                  <tr>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Engineer
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Agency
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Property
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Location
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Value
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      LTV
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Construction
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Quality
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200">
-                  {paginatedReports.length > 0 ? (
-                    paginatedReports.map((report) => (
-                      <tr
-                        key={report.id}
-                        className="hover:bg-slate-50 transition-colors duration-150"
-                      >
-                        <td className="px-4 xl:px-6 py-4">
-                          <div className="text-sm font-medium text-slate-800">
-                            {report.engineerName}
-                          </div>
-                          <div className="text-xs text-slate-500">
-                            ID: {report.id}
-                          </div>
-                        </td>
-                        <td className="px-4 xl:px-6 py-4 text-sm text-slate-600">
-                          {report.agencyName}
-                        </td>
-                        <td className="px-4 xl:px-6 py-4 text-sm text-slate-600">
-                          {report.propertyType}
-                        </td>
-                        <td className="px-4 xl:px-6 py-4">
-                          <div className="text-sm text-slate-600">
-                            {report.city}
-                          </div>
-                          <div className="text-xs text-slate-400">
-                            {report.state}
-                          </div>
-                        </td>
-                        <td className="px-4 xl:px-6 py-4 text-sm font-medium text-slate-800">
-                          {report.marketValue}
-                        </td>
-                        <td className="px-4 xl:px-6 py-4 text-sm text-slate-600">
-                          {report.recommendedLtv}
-                        </td>
-                        <td className="px-4 xl:px-6 py-4 text-sm text-slate-600">
-                          {report.constructionStatus}
-                        </td>
-                        <td className="px-4 xl:px-6 py-4">
-                          {getQualityBadge(report.qualityOfConstruction)}
-                        </td>
-                        <td className="px-4 xl:px-6 py-4">
-                          {getStatusBadge(report.status)}
-                        </td>
-                        <td className="px-4 xl:px-6 py-4">
-                          <ActionMenu actions={getReportActions(report)} />
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="10" className="px-6 py-16 text-center">
-                        <div className="flex flex-col items-center justify-center">
-                          <FileText className="w-16 h-16 text-slate-300 mb-4" />
-                          <p className="text-slate-500 text-lg font-medium">
-                            No reports found
-                          </p>
-                          <p className="text-slate-400 text-sm mt-2">
-                            Try adjusting your search or filters
-                          </p>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+            <TechnicalReviewTable
+              columns={desktopColumns}
+              data={paginatedReports}
+              actions={tableActions}
+            />
           )}
 
           {/* Tablet View */}

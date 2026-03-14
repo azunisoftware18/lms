@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Icons } from "../../components/common/Icon";
+import * as Icons from "lucide-react";
 
 import Button from "../../components/ui/Button";
 import InputField from "../../components/ui/InputField";
@@ -7,7 +7,7 @@ import SelectField from "../../components/ui/SelectField";
 import TextAreaField from "../../components/ui/TextAreaField";
 import ToggleSwitch from "../../components/ui/ToggleSwitch";
 
-import { paymentModeConfig, daysConfig } from "../../lib/dashboardDummyData";
+import { paymentModeConfig } from "../../lib/dashboardDummyData";
 
 export default function PaymentSettingPage() {
   const {
@@ -17,10 +17,8 @@ export default function PaymentSettingPage() {
     CreditCard,
     Smartphone,
     Percent,
-    IndianRupee,
     Clock,
     Building,
-    QrCode,
     Shield,
   } = Icons;
 
@@ -94,13 +92,13 @@ export default function PaymentSettingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-4 md:p-6">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 to-blue-50 p-4 md:p-6">
       <div className="max-w-6xl mx-auto">
         {/* HEADER */}
 
         <div className="mb-8 bg-white rounded-2xl shadow-lg p-6">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl shadow-md">
+            <div className="p-3 bg-linear-to-r from-purple-600 to-indigo-600 rounded-xl shadow-md">
               <Wallet className="w-8 h-8 text-white" />
             </div>
 
@@ -286,7 +284,7 @@ export default function PaymentSettingPage() {
 
           {/* FOOTER */}
 
-          <div className="p-6 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white">
+          <div className="p-6 border-t border-gray-200 bg-linear-to-r from-gray-50 to-white">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-4">
                 <div className="p-2 bg-purple-100 rounded-lg">

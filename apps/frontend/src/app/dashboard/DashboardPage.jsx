@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 
-import { Icons } from "../../components/common/Icon";
+import * as Icons from "lucide-react";
 import { dashboardStats, recentLoans } from "../../lib/dashboardDummyData";
 import DashboardTable from "../../components/tables/DashboardTable";
 import ActionMenu from "../../components/common/ActionMenu";
