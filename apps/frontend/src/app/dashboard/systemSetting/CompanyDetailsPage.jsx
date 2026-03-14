@@ -6,9 +6,9 @@ import {
   companyTabs,
   businessTypes,
   industries,
-} from "../../lib/dashboardDummyData";
+} from "../../../lib/dashboardDummyData";
 
-import { colorVariables } from "../../lib/index";
+import { colorVariables } from "../../../lib/index";
 export default function CompanyDetailsPage() {
   const [companyDetails, setCompanyDetails] = useState(companyDefaultDetails);
   const [isSaving, setIsSaving] = useState(false);

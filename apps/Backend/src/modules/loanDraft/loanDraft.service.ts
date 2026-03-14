@@ -1,9 +1,8 @@
 import { prisma } from "../../db/prismaService.js";
-import { createLoanApplicationService } from "../LoanApplication/loanApplication.service.js";
+import { createFullLoanApplicationService } from "../LoanApplication/loanApplication.service.js";
 import * as Enums from "../../../generated/prisma-client/enums.js";
 import {
     createLoanApplicationSchema,
-    loanApplicationDraftSchema,
 } from "../LoanApplication/loanApplication.schema.js";
 
 const loanDraftDelegate = (prisma as any).loanApplicationDraft;
@@ -62,12 +61,10 @@ export const updateLoanDraftService = async (draftId:string,
 
     const merged = deepMergeDraft(existingDraftData, incomingDraftData);
 
-    const parsedDraft = loanApplicationDraftSchema.parse(merged);
-
     return loanDraftDelegate.update({
         where:{id:draftId},
         data:{
-            draftData:parsedDraft
+            draftData: merged
         }
     })
 }
@@ -106,12 +103,9 @@ export const submitLoanDraftService =  async (
         draft.draftData,
     );
 
-    const createdLoanApplication = await createLoanApplicationService(
+    const createdLoanApplication = await createFullLoanApplicationService(
         validatedPayload as any,
-        {
-            id: user.id,
-            role: user.role,
-        }
+        user.id,
     )
 
     const submittedDraft = await loanDraftDelegate.update({
@@ -121,6 +115,6 @@ export const submitLoanDraftService =  async (
 
     return {
         draft: submittedDraft,
-        loanApplication: createdLoanApplication.loanApplication,
+        loanApplication: createdLoanApplication,
     }
 }

@@ -155,7 +155,15 @@ export const getUserPermissionsController = async (
   res: Response,
 ) => {
   try {
-    const { userId } = req.params;
+    const userIdParam = req.params.userId;
+    const userId = Array.isArray(userIdParam) ? userIdParam[0] : userIdParam;
+
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "userId param is required" });
+    }
+
     const permissions = await getUserPermissionsService(userId);
     res.status(200).json({ success: true, data: permissions });
   } catch (error: any) {

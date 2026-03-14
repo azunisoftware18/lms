@@ -1,3 +1,5 @@
+import type { Role } from "../../../generated/prisma-client/enums.js";
+
 export type Gender = "MALE" | "FEMALE" | "OTHER";
 export type MaritalStatus = "SINGLE" | "MARRIED" | "DIVORCED" | "WIDOWED";
 export type Relationship =
@@ -13,7 +15,7 @@ export interface CreateEmployee {
   fullName: string;
   email: string;
   password: string;
-  role: "EMPLOYEE";
+  role?: Role;
   contactNumber: string;
   isActive?: boolean;
 
@@ -40,8 +42,8 @@ export interface CreateEmployee {
   department?: string;
   dateOfJoining?: string | Date;
   experience?: string;
-  reportingManagerId?: string;
   workLocation?: WorkLocation;
   salary?: number;
+  employeeRoleId: string;
   branchId: string;
 }

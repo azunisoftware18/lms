@@ -9,15 +9,20 @@ export default function TableBody({ columns = [], data = [], actions = [] }) {
 
   return (
     <tbody className="divide-y divide-slate-100">
-      {data.map((row, index) => (
-        <TableRow
-          key={row.id || index}
-          columns={columns}
-          row={row}
-          actions={actions}
-          isLast={index === data.length - 1}
-        />
-      ))}
+      {data.map((row, index) => {
+        const rowActions =
+          typeof actions === "function" ? actions(row) : actions;
+
+        return (
+          <TableRow
+            key={row.id || index}
+            columns={columns}
+            row={row}
+            actions={rowActions}
+            isLast={index === data.length - 1}
+          />
+        );
+      })}
     </tbody>
   );
 }

@@ -79,6 +79,7 @@ model Employee {
   id                 String        @id @default(cuid())
   userId             String        @unique
   employeeId         String        @unique
+  employeeRoleId     String?
   atlMobileNumber    String
   dob                DateTime
   designation        String
@@ -100,13 +101,11 @@ model Employee {
   department         String
   dateOfJoining      DateTime
   experience         String
-  reportingManagerId String
-  // reportingManager   Employee? @relation("ManagerEmployees", fields: [reportingManagerId], references: [id])
-  // subordinates       Employee[] @relation("ManagerEmployees")
   workLocation       WorkLocation
   salary             Float
   branchId           String
   branch             Branch       @relation(fields: [branchId], references: [id])
+  employeeRole       EmployeeRole? @relation(fields: [employeeRoleId], references: [id])
 
   // Optional username if separate from `User`
   loanAssignments LoanAssignment[]
@@ -115,6 +114,19 @@ model Employee {
   updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], map: "fk_employee_user")
+
+  @@index([employeeRoleId])
+}
+
+model EmployeeRole {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  description String?
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  employees Employee[]
 }
 
 model Partner {
