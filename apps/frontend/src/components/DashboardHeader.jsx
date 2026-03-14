@@ -1,79 +1,78 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Bell,
-  Search,
-  Menu,
-  User,
-  LogOut,
-} from 'lucide-react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { logout } from '../store/slices/authSlice';
+import React, { useState, useEffect } from "react";
+import { Bell, Search, Menu, User, LogOut } from "lucide-react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useLogout } from "../hooks/useAuth";
 
 export default function DashboardHeader({ toggleSidebar }) {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const logoutMutation = useLogout();
   const { user } = useSelector((state) => state.auth);
-  
+
   const handleLogout = () => {
-    dispatch(logout());
     setShowDropdown(false);
-    navigate('/');
+    logoutMutation.mutate(undefined, {
+      onSettled: () => {
+        navigate("/");
+      },
+    });
   };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (showDropdown && !event.target.closest('.user-dropdown-area')) {
+      if (showDropdown && !event.target.closest(".user-dropdown-area")) {
         setShowDropdown(false);
       }
     };
 
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
     };
   }, [showDropdown]);
 
   const getInitials = () => {
     if (user?.fullName) {
       return user.fullName
-        .split(' ')
-        .map(name => name[0])
-        .join('')
+        .split(" ")
+        .map((name) => name[0])
+        .join("")
         .toUpperCase()
         .slice(0, 2);
     }
     if (user?.userName) {
       return user.userName.slice(0, 2).toUpperCase();
     }
-    return 'SA';
+    return "SA";
   };
 
   const getUserName = () => {
     if (user?.fullName) {
-      const names = user.fullName.split(' ');
+      const names = user.fullName.split(" ");
       if (names.length > 1) {
         return `${names[0]} ${names[names.length - 1][0]}.`;
       }
       return user.fullName;
     }
-    return user?.userName || 'User';
+    return user?.userName || "User";
   };
 
   const getUserRole = () => {
     switch (user?.role) {
-      case 'ADMIN': return 'Super Admin';
-      case 'MANAGER': return 'Manager';
-      case 'STAFF': return 'Staff';
-      default: return user?.role || 'User';
+      case "ADMIN":
+        return "Super Admin";
+      case "MANAGER":
+        return "Manager";
+      case "STAFF":
+        return "Staff";
+      default:
+        return user?.role || "User";
     }
   };
 
   return (
     <nav className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-10">
-
       {/* LEFT SIDE: Mobile Menu & Search */}
       <div className="flex items-center gap-4 flex-1">
         {/* Mobile Menu Button - Visible only on mobile */}
@@ -83,7 +82,6 @@ export default function DashboardHeader({ toggleSidebar }) {
         >
           <Menu size={24} />
         </button>
-
       </div>
 
       {/* RIGHT SIDE: Icons & Profile */}
@@ -108,11 +106,9 @@ export default function DashboardHeader({ toggleSidebar }) {
             {getInitials()}
           </div>
 
-              
-
           {/* Dropdown Menu - Shows on click for mobile, hover for desktop */}
           <div
-            className={`absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 ${showDropdown ? 'block' : 'hidden'} md:group-hover:block animate-in fade-in slide-in-from-top-2 z-20`}
+            className={`absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 ${showDropdown ? "block" : "hidden"} md:group-hover:block animate-in fade-in slide-in-from-top-2 z-20`}
           >
             {/* User Info in Dropdown (Mobile only) */}
             <div className="md:hidden px-4 py-3 border-b border-gray-100">
@@ -124,9 +120,7 @@ export default function DashboardHeader({ toggleSidebar }) {
                   <div className="font-semibold text-gray-800 text-sm">
                     {getUserName()}
                   </div>
-                  <div className="text-xs text-gray-500">
-                    {getUserRole()}
-                  </div>
+                  <div className="text-xs text-gray-500">{getUserRole()}</div>
                 </div>
               </div>
             </div>
@@ -143,7 +137,7 @@ export default function DashboardHeader({ toggleSidebar }) {
             </button>
 
             {/* Additional Admin Links */}
-            {user?.role === 'ADMIN' && (
+            {user?.role === "ADMIN" && (
               <>
                 <div className="border-t border-gray-100 my-1"></div>
                 <a
@@ -151,8 +145,19 @@ export default function DashboardHeader({ toggleSidebar }) {
                   className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                   onClick={() => setShowDropdown(false)}
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.67 3.623a10.953 10.953 0 01-1.67.623 5.002 5.002 0 00-10 0 10.953 10.953 0 01-1.67-.623m13.67 0a9 9 0 10-13.34 0" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.67 3.623a10.953 10.953 0 01-1.67.623 5.002 5.002 0 00-10 0 10.953 10.953 0 01-1.67-.623m13.67 0a9 9 0 10-13.34 0"
+                    />
                   </svg>
                   User Management
                 </a>
@@ -171,4 +176,4 @@ export default function DashboardHeader({ toggleSidebar }) {
       </div>
     </nav>
   );
-};
+}
