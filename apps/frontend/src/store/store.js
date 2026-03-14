@@ -7,6 +7,7 @@ import coApplicationReducer from './slices/coApplicationSlice'
 import creditReportReducer from './slices/creditReportSlice'
 import emiReducer from './slices/emiSlice'
 import loanApplicationReducer from './slices/loanApplicationSlice'
+import loanDraftReducer from './slices/loanDraftSlice'
 
 
 export const store = configureStore({
@@ -18,7 +19,8 @@ export const store = configureStore({
     coApplication: coApplicationReducer,
     creditReport: creditReportReducer,
     emi:emiReducer,
-    loanApplication: loanApplicationReducer
+    loanApplication: loanApplicationReducer,
+    loanDraft: loanDraftReducer,
 }
 })
 

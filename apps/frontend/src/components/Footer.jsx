@@ -215,7 +215,7 @@ export default function Footer () {
 
           <div className="mt-6 pt-4 border-t border-blue-700">
             <p className="text-sm font-semibold text-white flex items-start mb-2">
-              <MapPin className="w-4 h-4 mr-2 mt-[2px] text-yellow-400 flex-shrink-0" />
+              <MapPin className="w-4 h-4 mr-2 mt-0.5 text-yellow-400 shrink-0" />
               Head Office
             </p>
             <p className="text-sm pl-6">

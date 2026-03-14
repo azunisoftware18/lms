@@ -275,12 +275,109 @@ export async function rejectDocumentService(
 export async function getAllDocumentsForLoanApplicationService(
   loanApplicationId: string,
 ) {
+  const loanApplication = await prisma.loanApplication.findUnique({
+    where: { id: loanApplicationId },
+    select: {
+      id: true,
+      customer: {
+        select: {
+          firstName: true,
+          lastName: true,
+        },
+      },
+      coapplicants: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
+      guarantors: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
+    },
+  });
+
+  if (!loanApplication) {
+    throw AppError.notFound("Loan application not found");
+  }
+
+  const coApplicantIds = loanApplication.coapplicants.map((c) => c.id);
+  const guarantorIds = loanApplication.guarantors.map((g) => g.id);
+
   const documents = await prisma.document.findMany({
-    where: { loanApplicationId },
+    where: {
+      OR: [
+        { loanApplicationId },
+        ...(coApplicantIds.length > 0
+          ? [{ coApplicantId: { in: coApplicantIds } }]
+          : []),
+        ...(guarantorIds.length > 0
+          ? [{ guarantorId: { in: guarantorIds } }]
+          : []),
+      ],
+    },
+    select: {
+      id: true,
+      documentType: true,
+      documentPath: true,
+      verificationStatus: true,
+      verified: true,
+      verifiedAt: true,
+      createdAt: true,
+      updatedAt: true,
+      rejectionReason: true,
+      loanApplicationId: true,
+      coApplicantId: true,
+      guarantorId: true,
+    },
     orderBy: { createdAt: "asc" },
   });
 
-  return sanitizeDocumentList(documents);
+  const coApplicantMap = new Map(
+    loanApplication.coapplicants.map((c) => [c.id, c]),
+  );
+  const guarantorMap = new Map(loanApplication.guarantors.map((g) => [g.id, g]));
+
+  return documents.map((doc) => {
+    if (doc.coApplicantId) {
+      const coApplicant = coApplicantMap.get(doc.coApplicantId);
+      return {
+        ...sanitizeDocumentResponse(doc),
+        documentPath: doc.documentPath,
+        ownerType: "CO_APPLICANT",
+        ownerId: doc.coApplicantId,
+        ownerName: coApplicant
+          ? `${coApplicant.firstName} ${coApplicant.lastName ?? ""}`.trim()
+          : null,
+      };
+    }
+
+    if (doc.guarantorId) {
+      const guarantor = guarantorMap.get(doc.guarantorId);
+      return {
+        ...sanitizeDocumentResponse(doc),
+        documentPath: doc.documentPath,
+        ownerType: "GUARANTOR",
+        ownerId: doc.guarantorId,
+        ownerName: guarantor
+          ? `${guarantor.firstName} ${guarantor.lastName ?? ""}`.trim()
+          : null,
+      };
+    }
+
+    return {
+      ...sanitizeDocumentResponse(doc),
+      documentPath: doc.documentPath,
+      ownerType: "APPLICANT",
+      ownerId: loanApplication.id,
+      ownerName: `${loanApplication.customer.firstName} ${loanApplication.customer.lastName ?? ""}`.trim(),
+    };
+  });
 }
 
 export const reuploadLoanDocumentService = async (
@@ -405,10 +502,34 @@ export const getAllLoanApplicationsService = async (params: {
   const [data, total] = await Promise.all([
     prisma.loanApplication.findMany({
       where,
-      include: {
-        customer: true,
-        kyc: { include: { documents: true } },
-        coapplicants: true,
+      select: {
+        id: true,
+        loanNumber: true,
+        status: true,
+        requestedAmount: true,
+        approvedAmount: true,
+        tenureMonths: true,
+        loanPurpose: true,
+        createdAt: true,
+        updatedAt: true,
+        customer: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        kyc: {
+          select: {
+            status: true,
+            documents: {
+              select: { id: true },
+            },
+          },
+        },
+        coapplicants: {
+          select: { id: true },
+        },
       },
       orderBy: { createdAt: "desc" },
       skip,
@@ -448,39 +569,73 @@ export const getLoanApplicationByIdService = async (
 ) => {
   const loanApplication = await prisma.loanApplication.findUnique({
     where: { id },
-    include: {
-      customer: true,
-      loanType: true,
-      emis: true,
-      kyc: {
-        include: {
-          documents: true,
+    select: {
+      id: true,
+      branchId: true,
+      loanNumber: true,
+      status: true,
+      requestedAmount: true,
+      tenureMonths: true,
+      loanPurpose: true,
+      customer: {
+        select: {
+          firstName: true,
+          lastName: true,
+          contactNumber: true,
+          email: true,
         },
       },
-      loanRecoveries: {
-        include: {
-          recoveryPayments: true,
+      loanType: {
+        select: {
+          name: true,
+          defaultInterestRate: true,
+          maxTenureMonths: true,
+        },
+      },
+      kyc: {
+        select: {
+          documents: {
+            select: {
+              documentType: true,
+              verificationStatus: true,
+              verified: true,
+            },
+            orderBy: { createdAt: "asc" },
+          },
         },
       },
       coapplicants: {
-        include: {
-          documents: true,
-          addresses: true,
-          occupationalDetails: {
-            include: { address: true },
+        select: {
+          firstName: true,
+          lastName: true,
+          relation: true,
+          contactNumber: true,
+          documents: {
+            select: {
+              id: true,
+              documentType: true,
+              verificationStatus: true,
+              verified: true,
+            },
+            orderBy: { createdAt: "asc" },
           },
-          employmentDetails: true,
-          financialDetails: true,
         },
       },
       guarantors: {
-        include: {
-          addresses: true,
-          occupationalDetails: {
-            include: { address: true },
+        select: {
+          firstName: true,
+          lastName: true,
+          relationshipWithApplicant: true,
+          contactNumber: true,
+          documents: {
+            select: {
+              id: true,
+              documentType: true,
+              verificationStatus: true,
+              verified: true,
+            },
+            orderBy: { createdAt: "asc" },
           },
-          employmentDetails: true,
-          financialDetails: true,
         },
       },
     },
@@ -490,33 +645,33 @@ export const getLoanApplicationByIdService = async (
     throw AppError.notFound("Loan application not found");
   }
 
-  if (!user) return loanApplication;
+  if (user) {
+    let userBranchId: string | undefined;
+    if (user.role === "EMPLOYEE") {
+      const employee = await prisma.employee.findUnique({
+        where: { userId: user.id },
+        select: { branchId: true },
+      });
 
-  let userBranchId: string | undefined;
-  if (user.role === "EMPLOYEE") {
-    const employee = await prisma.employee.findUnique({
-      where: { userId: user.id },
-      select: { branchId: true },
-    });
+      if (!employee) {
+        throw AppError.notFound("Employee record not found");
+      }
 
-    if (!employee) {
-      throw AppError.notFound("Employee record not found");
+      userBranchId = employee.branchId;
     }
 
-    userBranchId = employee.branchId;
-  }
+    const accessibleBranches = await getAccessibleBranchIds({
+      id: user.id,
+      role: user.role,
+      branchId: userBranchId,
+    });
 
-  const accessibleBranches = await getAccessibleBranchIds({
-    id: user.id,
-    role: user.role,
-    branchId: userBranchId,
-  });
-
-  if (
-    Array.isArray(accessibleBranches) &&
-    !accessibleBranches.includes(loanApplication.branchId)
-  ) {
-    throw AppError.forbidden("Unauthorized: No access to this loan");
+    if (
+      Array.isArray(accessibleBranches) &&
+      !accessibleBranches.includes(loanApplication.branchId)
+    ) {
+      throw AppError.forbidden("Unauthorized: No access to this loan");
+    }
   }
 
   return {
@@ -547,12 +702,24 @@ export const getLoanApplicationByIdService = async (
       name: `${c.firstName} ${c.lastName}`,
       relation: c.relation,
       contactNumber: c.contactNumber,
-      addresses: c.addresses,
-      occupationalDetails: c.occupationalDetails,
-      employmentDetails: c.employmentDetails,
-      financialDetails: c.financialDetails,
+      documents: c.documents.map((doc) => ({
+        id: doc.id,
+        type: doc.documentType,
+        status: doc.verificationStatus,
+        verified: doc.verified,
+      })),
     })),
-    guarantors: loanApplication.guarantors,
+    guarantors: loanApplication.guarantors.map((g) => ({
+      name: `${g.firstName} ${g.lastName}`,
+      relation: g.relationshipWithApplicant,
+      contactNumber: g.contactNumber,
+      documents: g.documents.map((doc) => ({
+        id: doc.id,
+        type: doc.documentType,
+        status: doc.verificationStatus,
+        verified: doc.verified,
+      })),
+    })),
   };
 };
 

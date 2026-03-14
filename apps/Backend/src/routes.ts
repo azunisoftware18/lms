@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import userRoutes from "./modules/user/userRoutes/user.routes.js";
 import { authRouter } from "./modules/auth/auth.route.js";
 import { employeeRouter } from "./modules/employee/employee.routes.js";
+import employeeRoleRouter from "./modules/employeeRole/employeeRole.routes.js";
 import partnerRouter from "./modules/partner/partner.routes.js";
 import { leadRouter } from "./modules/lead/lead.routes.js";
 import loanApplicationRouter from "./modules/LoanApplication/loanApplication.routes.js";
@@ -25,6 +26,8 @@ import slaRouter from "./modules/sla/sla.router.js";
 import { superAdminRouter } from "./modules/superAdmin/dashboard.routers.js";
 import loanDisbursementRouter from "./modules/loanDisbursement/loanDisburesment.router.js";
 import nachRouter from "./modules/nach/nach.router.js";
+import guarantorRouter from "./modules/guarantor/guarantor.routes.js";
+import loanDraftRouter from "./modules/loanDraft/loanDraft.router.js";
 
 const router = Router();
 
@@ -34,6 +37,7 @@ router.get("/", (req: Request, res: Response) => {
 router.use("/user", userRoutes);
 router.use("/auth", authRouter);
 router.use("/employee", employeeRouter);
+router.use("/employee-roles", employeeRoleRouter);
 router.use("/partner", partnerRouter);
 router.use("/lead", leadRouter);
 router.use("/loan-applications", loanApplicationRouter);
@@ -57,5 +61,7 @@ router.use("/sla", slaRouter);
 router.use("/super-admin", superAdminRouter);
 router.use("/disbursement", loanDisbursementRouter);
 router.use("/nach",nachRouter)
+router.use("/guarantor", guarantorRouter);
+router.use("/loan-drafts", loanDraftRouter);
 
 export default router;

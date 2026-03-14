@@ -10,13 +10,46 @@ import { prisma } from "../../db/prismaService.js";
 import { logAction } from "../../audit/audit.helper.js";
 import { AppError } from "../../common/utils/apiError.js";
 
+const buildSafeEmployeeResponse = (payload: any) => {
+  const user = payload?.user ?? null;
+  const employee = payload?.employee ?? null;
+
+  return {
+    user: user
+      ? {
+          id: user.id,
+          fullName: user.fullName,
+          email: user.email,
+          userName: user.userName,
+          role: user.role,
+          contactNumber: user.contactNumber,
+          branchId: user.branchId,
+          isActive: user.isActive,
+        }
+      : null,
+    employee: employee
+      ? {
+          id: employee.id,
+          userId: employee.userId,
+          employeeId: employee.employeeId,
+          employeeRoleId: employee.employeeRoleId,
+          designation: employee.designation,
+          department: employee.department,
+          branchId: employee.branchId,
+          createdAt: employee.createdAt,
+          updatedAt: employee.updatedAt,
+        }
+      : null,
+  };
+};
+
 export const createEmployeeController = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const result = await createEmployeeService(req.body);
+    const result = await createEmployeeService(req.body, req.user?.role);
     const { user, employee } = result as any;
     const { password: _pw, ...safeUser } = user;
 
@@ -50,7 +83,7 @@ export const createEmployeeController = async (
     res.status(201).json({
       success: true,
       message: "Employee created successfully",
-      data: { user: safeUser, employee },
+      data: buildSafeEmployeeResponse({ user: safeUser, employee }),
     });
   } catch (error) {
     next(error);
@@ -120,12 +153,13 @@ export const updateEmployeeController = async (
       updateData,
       req.user?.id,
       req.user?.branchId,
+      req.user?.role,
     );
 
     res.status(200).json({
       success: true,
       message: "Employee updated successfully",
-      data: updatedEmployee,
+      data: buildSafeEmployeeResponse(updatedEmployee),
     });
   } catch (error) {
     next(error);

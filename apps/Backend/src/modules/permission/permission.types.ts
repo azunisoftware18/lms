@@ -8,6 +8,23 @@ export type AssignPermissionsBody = {
   permissions: string[]; // array of permission codes
 };
 
+export type AssignPermissionGroupsBody = {
+  userId: string;
+  groups: string[];
+};
+
+export type AppRole = "SUPER_ADMIN" | "ADMIN" | "EMPLOYEE" | "PARTNER";
+
+export type AssignRolePermissionsBody = {
+  role: AppRole;
+  permissions: string[];
+};
+
+export type AssignRolePermissionGroupsBody = {
+  role: AppRole;
+  groups: string[];
+};
+
 export type UserIdParam = {
   userId: string;
 };
@@ -23,6 +40,13 @@ export type PermissionDto = {
 export type UserPermissionDto = {
   id: string;
   userId: string;
+  permissionId: string;
+  allowed: boolean;
+};
+
+export type RolePermissionDto = {
+  id: string;
+  role: AppRole;
   permissionId: string;
   allowed: boolean;
 };
