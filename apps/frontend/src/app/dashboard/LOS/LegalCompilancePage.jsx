@@ -26,6 +26,7 @@ import Pagination from "../../../components/common/Pagination";
 import Button from "../../../components/ui/Button";
 import SearchField from "../../../components/ui/SearchField";
 import FilterDropdown from "../../../components/ui/FilterDropdown";
+import LegalCompilanceTable from "../../../components/tables/core/LegalCompilanceTable.jsx";
 import { colorVariables } from "../../../lib";
 import {
   LEGAL_COMPLIANCE_REPORTS,
@@ -760,195 +761,83 @@ export default function LegalCompliancePage() {
         </div>
 
         {/* Reports Section - Responsive layouts */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-          {/* Desktop Table View */}
-          {device.isDesktop && (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-slate-50 border-b border-slate-200">
-                  <tr>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Engineer
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Agency
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Property
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Location
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Value
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      LTV
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Construction
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Quality
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-4 xl:px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200">
-                  {paginatedReports.length > 0 ? (
-                    paginatedReports.map((report) => (
-                      <tr
-                        key={report.id}
-                        className="hover:bg-slate-50 transition-colors duration-150"
-                      >
-                        <td className="px-4 xl:px-6 py-4">
-                          <div className="text-sm font-medium text-slate-800">
-                            {report.engineerName}
-                          </div>
-                          <div className="text-xs text-slate-400">
-                            ID: {report.id}
-                          </div>
-                        </td>
-                        <td className="px-4 xl:px-6 py-4 text-sm text-slate-600">
-                          {report.agencyName}
-                        </td>
-                        <td className="px-4 xl:px-6 py-4 text-sm text-slate-600">
-                          {report.propertyType}
-                        </td>
-                        <td className="px-4 xl:px-6 py-4">
-                          <div className="text-sm text-slate-600">
-                            {report.city}
-                          </div>
-                          <div className="text-xs text-slate-400">
-                            {report.state}
-                          </div>
-                        </td>
-                        <td className="px-4 xl:px-6 py-4 text-sm font-medium text-slate-800">
-                          {report.marketValue}
-                        </td>
-                        <td className="px-4 xl:px-6 py-4 text-sm text-slate-600">
-                          {report.recommendedLtv}
-                        </td>
-                        <td className="px-4 xl:px-6 py-4 text-sm text-slate-600">
-                          {report.constructionStatus}
-                        </td>
-                        <td className="px-4 xl:px-6 py-4">
-                          {getQualityBadge(report.qualityOfConstruction)}
-                        </td>
-                        <td className="px-4 xl:px-6 py-4">
-                          {getStatusBadge(report.status)}
-                        </td>
-                        <td className="px-4 xl:px-6 py-4">
-                          <ActionMenu
-                            actions={[
-                              {
-                                label: "View",
-                                icon: <Eye className="w-4 h-4" />,
-                                onClick: () => handleView(report),
-                              },
-                              {
-                                label: "Edit",
-                                icon: <Edit2 className="w-4 h-4" />,
-                                onClick: () => handleEdit(report),
-                              },
-                              {
-                                label: "Delete",
-                                icon: <Trash2 className="w-4 h-4" />,
-                                onClick: () => handleDelete(report),
-                                isDanger: true,
-                              },
-                            ]}
-                          />
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="10" className="px-6 py-16 text-center">
-                        <div className="flex flex-col items-center justify-center">
-                          <FileText className="w-16 h-16 text-slate-300 mb-4" />
-                          <p className="text-slate-500 text-lg font-medium">
-                            No reports found
-                          </p>
-                          <p className="text-slate-400 text-sm mt-2">
-                            Try adjusting your search or filters
-                          </p>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
+        {device.isDesktop && (
+          <LegalCompilanceTable
+            items={paginatedReports}
+            loading={false}
+            getStatusBadge={getStatusBadge}
+            getQualityBadge={getQualityBadge}
+            onView={handleView}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        )}
 
-          {/* Tablet View */}
-          {device.isTablet && (
-            <div className="p-4">
-              {paginatedReports.length > 0 ? (
-                <>
-                  {viewMode === "grid" && (
-                    <div className="grid grid-cols-2 gap-4">
-                      {paginatedReports.map((report) => (
-                        <TabletGridCard key={report.id} report={report} />
-                      ))}
-                    </div>
-                  )}
-                  {viewMode === "list" && (
-                    <div className="space-y-3">
-                      {paginatedReports.map((report) => (
-                        <TabletListItem key={report.id} report={report} />
-                      ))}
-                    </div>
-                  )}
-                  {viewMode === "compact" && (
-                    <div className="grid grid-cols-3 gap-3">
-                      {paginatedReports.map((report) => (
-                        <TabletCompactCard key={report.id} report={report} />
-                      ))}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="flex flex-col items-center justify-center py-12">
-                  <FileText className="w-16 h-16 text-slate-300 mb-4" />
-                  <p className="text-slate-500 text-lg font-medium">
-                    No reports found
-                  </p>
-                  <p className="text-slate-400 text-sm mt-2">
-                    Try adjusting your search or filters
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
+        {(device.isTablet || device.isMobile) && (
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            {/* Tablet View */}
+            {device.isTablet && (
+              <div className="p-4">
+                {paginatedReports.length > 0 ? (
+                  <>
+                    {viewMode === "grid" && (
+                      <div className="grid grid-cols-2 gap-4">
+                        {paginatedReports.map((report) => (
+                          <TabletGridCard key={report.id} report={report} />
+                        ))}
+                      </div>
+                    )}
+                    {viewMode === "list" && (
+                      <div className="space-y-3">
+                        {paginatedReports.map((report) => (
+                          <TabletListItem key={report.id} report={report} />
+                        ))}
+                      </div>
+                    )}
+                    {viewMode === "compact" && (
+                      <div className="grid grid-cols-3 gap-3">
+                        {paginatedReports.map((report) => (
+                          <TabletCompactCard key={report.id} report={report} />
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <FileText className="w-16 h-16 text-slate-300 mb-4" />
+                    <p className="text-slate-500 text-lg font-medium">
+                      No reports found
+                    </p>
+                    <p className="text-slate-400 text-sm mt-2">
+                      Try adjusting your search or filters
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
 
-          {/* Mobile View */}
-          {device.isMobile && (
-            <div className="p-3">
-              {paginatedReports.length > 0 ? (
-                paginatedReports.map((report) => (
-                  <MobileReportCard key={report.id} report={report} />
-                ))
-              ) : (
-                <div className="flex flex-col items-center justify-center py-12">
-                  <FileText className="w-16 h-16 text-slate-300 mb-4" />
-                  <p className="text-slate-500 text-base font-medium">
-                    No reports found
-                  </p>
-                  <p className="text-slate-400 text-xs mt-2">
-                    Try adjusting your search or filters
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+            {/* Mobile View */}
+            {device.isMobile && (
+              <div className="p-3">
+                {paginatedReports.length > 0 ? (
+                  paginatedReports.map((report) => (
+                    <MobileReportCard key={report.id} report={report} />
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <FileText className="w-16 h-16 text-slate-300 mb-4" />
+                    <p className="text-slate-500 text-base font-medium">
+                      No reports found
+                    </p>
+                    <p className="text-slate-400 text-xs mt-2">
+                      Try adjusting your search or filters
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Pagination */}
         {filteredReports.length > 0 && (

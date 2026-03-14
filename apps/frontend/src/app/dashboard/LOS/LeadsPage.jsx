@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from "react";
 import { Edit, Trash2, User } from "lucide-react";
-import ActionMenu from "../../../components/common/ActionMenu";
 import SearchField from "../../../components/ui/SearchField";
 import LeadsTable from "../../../components/tables/LeadsTable";
 import {
