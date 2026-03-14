@@ -11,9 +11,23 @@ const errorMiddleware = (
 ) => {
   if (err instanceof AppError) {
     logger.error("AppError: %o", err);
+    const genericMessageByStatus: Record<number, string> = {
+      400: "Invalid request",
+      401: "Unauthorized",
+      403: "Forbidden",
+      404: "Resource not found",
+      409: "Request could not be completed",
+    };
+
+    const safeConflictMessages = new Set(["Employee already exists"]);
+    const message =
+      err.statusCode === 409 && safeConflictMessages.has(err.message)
+        ? err.message
+        : genericMessageByStatus[err.statusCode] || "Internal Server Error";
+
     return res.status(err.statusCode).json({
       success: false,
-      message: err.message,
+      message,
     });
   }
   
@@ -21,7 +35,7 @@ const errorMiddleware = (
     logger.error("Error: %o", err);
     return res.status(500).json({
       success: false,
-      message: err.message || "Internal Server Error",
+      message: "Internal Server Error",
     });
   }
   
