@@ -21,6 +21,10 @@ import {
 	Banknote,
 	Home,
 	User,
+  BarChart2,
+  FileText,
+  Settings,
+  Building2,
 } from 'lucide-react';
 // import FinovaLogo from '../../assets/finova_logo.avif';
 
@@ -1890,3 +1894,104 @@ export const dummyBranchAdmins = [
     branch: { name: "Finova Bangalore" }
   }
 ];
+
+export const dummyLoanProducts = [
+  {
+    id: 1,
+    name: "Personal Loan Standard",
+    category: "PERSONAL_LOAN",
+    minInterestRate: 9,
+    maxInterestRate: 14,
+    minAmount: 50000,
+    maxAmount: 500000,
+    minTenureMonths: 12,
+    maxTenureMonths: 60,
+    processingFee: 2,
+    secured: false,
+    createdAt: "2024-01-12",
+    status: "active",
+    minAge: 21,
+    maxAge: 60,
+    minIncome: 20000,
+    minCibilScore: 650,
+    maxCibilScore: 900,
+    prepaymentAllowed: true,
+    foreclosureAllowed: true,
+  },
+  {
+    id: 2,
+    name: "Vehicle Loan Premium",
+    category: "VEHICLE_LOAN",
+    minInterestRate: 8,
+    maxInterestRate: 12,
+    minAmount: 100000,
+    maxAmount: 2000000,
+    minTenureMonths: 12,
+    maxTenureMonths: 84,
+    processingFee: 1.5,
+    secured: true,
+    createdAt: "2024-02-05",
+    status: "active",
+    minAge: 21,
+    maxAge: 65,
+    minIncome: 25000,
+    minCibilScore: 680,
+    maxCibilScore: 900,
+    prepaymentAllowed: true,
+    foreclosureAllowed: false,
+  }
+];
+
+export const modules = [
+    { id: 'dashboard', name: 'Dashboard', icon: BarChart2, description: 'Analytics and overview' },
+    { id: 'customers', name: 'Customers', icon: Users, description: 'Customer management' },
+    { id: 'loans', name: 'Loans', icon: CreditCard, description: 'Loan processing' },
+    { id: 'payments', name: 'Payments', icon: FileText, description: 'Payment collection' },
+    { id: 'reports', name: 'Reports', icon: BarChart2, description: 'Reports and analytics' },
+    { id: 'settings', name: 'Settings', icon: Settings, description: 'System configuration' },
+    { id: 'adminManagement', name: 'Admin Management', icon: Lock, description: 'Admin controls' },
+    { id: 'branch', name: 'Branch Management', icon: Building2, description: 'Branch operations' },
+  ];
+
+  export const initialRoles = [
+      {
+        id: 1,
+        name: 'Super Admin',
+        description: 'Complete system access with all permissions',
+        email: 'superadmin@loanapp.com',
+        password: 'admin123',
+        permissions: ['dashboard', 'customers', 'loans', 'payments', 'reports', 'settings', 'adminManagement', 'branch'],
+        userCount: 1,
+        color: 'bg-red-50 text-red-700 border-red-200'
+      },
+      {
+        id: 2,
+        name: 'Manager',
+        description: 'Managerial access for loan operations',
+        email: 'manager@loanapp.com',
+        password: 'manager123',
+        permissions: ['dashboard', 'customers', 'loans', 'payments', 'reports'],
+        userCount: 3,
+        color: 'bg-blue-50 text-blue-700 border-blue-200'
+      },
+      {
+        id: 3,
+        name: 'Accountant',
+        description: 'Financial operations and payments',
+        email: 'accountant@loanapp.com',
+        password: 'accountant123',
+        permissions: ['dashboard', 'payments', 'reports'],
+        userCount: 2,
+        color: 'bg-green-50 text-green-700 border-green-200'
+      },
+      {
+        id: 4,
+        name: 'Telecaller',
+        description: 'Customer communication and follow-ups',
+        email: 'telecaller@loanapp.com',
+        password: 'telecaller123',
+        permissions: ['dashboard', 'customers'],
+        userCount: 5,
+        color: 'bg-purple-50 text-purple-700 border-purple-200'
+      },
+    ];

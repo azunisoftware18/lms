@@ -69,6 +69,10 @@ import Foreclosure from '../app/dashboard/LMS/Foreclosure.jsx';
 import LoanClosure from '../app/dashboard/LMS/LoanClosure.jsx';
 import LoanAccountView from '../app/dashboard/ViewDetail/LoanAccountView.jsx';
 import KycVerificationPage from '../app/dashboard/LOS/KycVerificationPage.jsx';
+import PermissionManagement from '../app/dashboard/PermissionManagement.jsx';
+import RoleManagement from '../app/dashboard/RoleManagement.jsx';
+import Profile from '../app/dashboard/Profile.jsx';
+import LoanProduct from '../app/dashboard/Configuration/LoanProduct.jsx';
 
 
 export default function AppRoutes() {
@@ -160,6 +164,9 @@ export default function AppRoutes() {
 				{/* Dashboard page */}
 				<Route index element={<DashboardPage />} />
 				<Route path='borrowers' element={< BorrowerPage />} />
+ 				<Route path='profile' element={< Profile />} />
+ 				<Route path='permission-management' element={< PermissionManagement />} />
+ 				<Route path='role-management' element={< RoleManagement />} />
 
 				{/* LMS Pages */}
 				<Route path="loan-account-creation" element={<LoanAccountCreation />} />
@@ -170,8 +177,6 @@ export default function AppRoutes() {
 				<Route path="recovery-management" element={<RecoveryManagement />} />
 				<Route path="foreclosure" element={<Foreclosure />} />
 				<Route path="loan-closure" element={<LoanClosure />} />
-				<Route path="branch-management" element={<BranchManagement />} />
-				<Route path="branch-admin" element={<BranchAdmin />} />
 
 
 				{/* LOS pages */}
@@ -184,6 +189,11 @@ export default function AppRoutes() {
 				<Route path='los/emi-management' element={<EMIManagementPage />} />
 				<Route path='los/sanction' element={<SanctionPage />} />
 				<Route path='los/disbursement' element={<DisbursementManagementPage />} />
+
+				 				{/* Configuration */}
+ 				<Route path="branch-management" element={<BranchManagement />} />
+ 				<Route path="branch-admin" element={<BranchAdmin />} />
+ 				<Route path="loan-product" element={<LoanProduct />} />
 				
 				
 
