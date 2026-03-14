@@ -24,17 +24,28 @@ export const checkPermissionMiddleware = (permissionCode: string) => {
         return next();
       }
       // For other roles, check specific permissions
-      const permission = await prisma.userPermission.findFirst({
-        where: {
-          userId: id,
-          allowed: true,
-          permission: {
-            code: permissionCode,
+      const [userPermission, rolePermission] = await Promise.all([
+        prisma.userPermission.findFirst({
+          where: {
+            userId: id,
+            allowed: true,
+            permission: {
+              code: permissionCode,
+            },
           },
-        },
-      });
+        }),
+        (prisma as any).rolePermission.findFirst({
+          where: {
+            role,
+            allowed: true,
+            permission: {
+              code: permissionCode,
+            },
+          },
+        }),
+      ]);
 
-      if (!permission) {
+      if (!userPermission && !rolePermission) {
         return res.status(403).json({
           success: false,
           message: "Forbidden: Insufficient permissions",

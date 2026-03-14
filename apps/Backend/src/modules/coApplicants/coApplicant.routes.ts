@@ -1,6 +1,6 @@
 import{ Router } from "express";
 const coApplicantRouter = Router();
-import { getAllCoApplicantController, reuploadCoApplicantDocumentController, uploadCoApplicantDocumentsController } from "./coApplicant.controller.js";
+import { getAllCoApplicantController, reuploadCoApplicantDocumentController, uploadCoApplicantDocumentsController, verifyCoApplicantDocumentController } from "./coApplicant.controller.js";
 import { authMiddleware } from "../../common/middlewares/auth.middleware.js";
 import upload from "../../common/middlewares/multer.middleware.js";
 import { checkPermissionMiddleware } from "../../common/middlewares/permission.middleware.js";
@@ -10,6 +10,7 @@ import {
   coApplicantIdParamSchema,
   coApplicantLoanParamSchema,
   coApplicantReuploadParamSchema,
+  coApplicantDocumentIdParamSchema,
 } from "./coApplicant.schema.js";
 
 const coApplicantDocumentLimiter = createRateLimiter({
@@ -41,12 +42,20 @@ coApplicantRouter.put(
 
 
 coApplicantRouter.get(
-    "/loan/:loanApplicationId",
-    authMiddleware,
+  "/loan/:loanApplicationId",
+  authMiddleware,
   validate(coApplicantLoanParamSchema, "params"),
-    checkPermissionMiddleware("VIEW_COAPPLICANTS"),
-    getAllCoApplicantController,
-    
-)
+  checkPermissionMiddleware("VIEW_COAPPLICANTS"),
+  getAllCoApplicantController,
+);
+
+coApplicantRouter.put(
+  "/documents/:documentId/verify",
+  authMiddleware,
+  coApplicantDocumentLimiter,
+  validate(coApplicantDocumentIdParamSchema, "params"),
+  checkPermissionMiddleware("VERIFY_DOCUMENT"),
+  verifyCoApplicantDocumentController,
+);
 
 export default coApplicantRouter;

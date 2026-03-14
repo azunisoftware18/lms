@@ -678,11 +678,14 @@ model Guarantor {
 
   employmentType EmploymentType?
 
-  addresses Address[]
+  kycId     String?   @unique
+  kyc       Kyc?      @relation("GuarantorKyc", fields: [kycId], references: [id])
 
+  addresses           Address[]
   occupationalDetails OccupationalDetails[]
   employmentDetails   EmploymentDetails[]
   financialDetails    GuarantorFinancialDetails?
+  documents           Document[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -935,6 +938,7 @@ model Permission {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   userPermissions UserPermission[]
+  rolePermissions RolePermission[]
 }
 
 model UserPermission {
@@ -949,10 +953,22 @@ model UserPermission {
   @@unique([userId, permissionId])
 }
 
+model RolePermission {
+  id           String  @id @default(cuid())
+  role         Role
+  permissionId String
+  allowed      Boolean @default(true)
+
+  permission Permission @relation(fields: [permissionId], references: [id])
+
+  @@unique([role, permissionId])
+}
+
 model Document {
   id                 String             @id @default(cuid())
   loanApplicationId  String?
   coApplicantId      String?
+  guarantorId        String?
   documentType       String
   documentPath       String
   verificationStatus VerificationStatus @default(pending)
@@ -968,9 +984,11 @@ model Document {
   kyc                Kyc?               @relation("KycDocuments", fields: [kycId], references: [id])
   loanApplication    LoanApplication?   @relation(fields: [loanApplicationId], references: [id])
   coApplicant        CoApplicant?       @relation(fields: [coApplicantId], references: [id])
+  guarantor          Guarantor?         @relation(fields: [guarantorId], references: [id])
   branch             Branch             @relation(fields: [branchId], references: [id])
 
-  @@unique([loanApplicationId, documentType]) // ✅ prevents duplicate uploads
+  @@unique([loanApplicationId, documentType]) // ✅ prevents duplicate uploads per loan
+  @@unique([guarantorId, documentType])       // ✅ prevents duplicate uploads per guarantor
 }
 
 model Kyc {
@@ -978,6 +996,7 @@ model Kyc {
   loanApplication LoanApplication?
   documents       Document[]       @relation("KycDocuments")
   coApplicant     CoApplicant?     @relation("CoApplicantKyc")
+  guarantor       Guarantor?       @relation("GuarantorKyc")
   userId          String
   status          KycStatus        @default(PENDING)
   remarks         String?

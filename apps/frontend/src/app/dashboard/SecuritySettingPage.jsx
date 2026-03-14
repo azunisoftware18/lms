@@ -33,7 +33,7 @@ const iconMap = {
   Clock,
   Cpu,
 };
-import { TableBody, TableShell } from "../../components/tables/core";
+import SecuritySettingTable from "../../components/tables/SecuritySettingTable";
 import InputField from "../../components/ui/InputField";
 import ToggleSwitch from "../../components/ui/ToggleSwitch";
 import Button from "../../components/ui/Button";
@@ -801,34 +801,11 @@ export default function SecuritySettingPage() {
                         </div>
                       </div>
 
-                      <TableShell>
-                        <thead className="bg-slate-50 border-b border-slate-200">
-                          <tr>
-                            {ipTableColumns.map((column) => (
-                              <th
-                                key={column.accessor}
-                                className="px-6 py-4 font-bold text-slate-800 uppercase tracking-wider text-[11px]"
-                              >
-                                {column.header}
-                              </th>
-                            ))}
-                            <th className="px-6 py-4 font-bold text-slate-800 uppercase tracking-wider text-[11px] text-right">
-                              Actions
-                            </th>
-                          </tr>
-                        </thead>
-
-                        <TableBody
-                          columns={ipTableColumns}
-                          data={ipTableData}
-                          actions={[
-                            {
-                              label: "Remove",
-                              onClick: removeIpAddress,
-                            },
-                          ]}
-                        />
-                      </TableShell>
+                      <SecuritySettingTable
+                        columns={ipTableColumns}
+                        data={ipTableData}
+                        onRemove={removeIpAddress}
+                      />
                     </div>
                   )}
                 </div>

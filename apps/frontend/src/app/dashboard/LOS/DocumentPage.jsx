@@ -8,14 +8,12 @@ import {
   Banknote,
   Upload,
   UserPlus,
-  Eye,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Button from "../../../components/ui/Button";
 import SearchField from "../../../components/ui/SearchField";
 import StatusCard from "../../../components/common/StatusCard";
-import TableShell from "../../../components/tables/core/TableShell";
-import TableEmpty from "../../../components/tables/core/TableEmpty";
+import DocumentPageTable from "../../../components/tables/DocumentPageTable";
 import {
   DOCUMENT_APPLICATIONS,
   DOCUMENT_REPOSITORY,
@@ -212,116 +210,12 @@ export default function DocumentPage() {
             <div className="p-6 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-900">Documents</h2>
             </div>
-            <TableShell>
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Document
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Category
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Applicant
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Upload Date
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              {currentDocuments.length === 0 ? (
-                <TableEmpty colSpan={6} />
-              ) : (
-                <tbody className="divide-y divide-gray-200">
-                  {currentDocuments.map((doc) => (
-                    <tr key={doc.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <FileText className="w-5 h-5 text-gray-400" />
-                          <span className="font-medium text-gray-900">
-                            {doc.name}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
-                        {doc.category?.replace("_", " ") || "—"}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            doc.applicantType === "APPLICANT"
-                              ? "bg-blue-100 text-blue-700"
-                              : "bg-purple-100 text-purple-700"
-                          }`}
-                        >
-                          {doc.applicantType === "APPLICANT"
-                            ? "Primary"
-                            : "Co-applicant"}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
-                        {doc.uploadDate}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
-                            doc.status === "VERIFIED"
-                              ? "bg-green-100 text-green-700"
-                              : doc.status === "PENDING"
-                                ? "bg-yellow-100 text-yellow-700"
-                                : "bg-red-100 text-red-700"
-                          }`}
-                        >
-                          {doc.status === "VERIFIED" && (
-                            <CheckCircle className="w-3 h-3 mr-1" />
-                          )}
-                          {doc.status === "PENDING" && (
-                            <Clock className="w-3 h-3 mr-1" />
-                          )}
-                          {doc.status === "REJECTED" && (
-                            <XCircle className="w-3 h-3 mr-1" />
-                          )}
-                          {doc.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => window.open(doc.url, "_blank")}
-                            className="text-blue-600 hover:text-blue-800"
-                            title="View Document"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
-                          {doc.status === "PENDING" && (
-                            <>
-                              <button
-                                onClick={() => handleVerify(doc.id)}
-                                className="px-3 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200 text-xs font-medium"
-                              >
-                                Verify
-                              </button>
-                              <button
-                                onClick={() => handleReject(doc.id)}
-                                className="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 text-xs font-medium"
-                              >
-                                Reject
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              )}
-            </TableShell>
+            <DocumentPageTable
+              documents={currentDocuments}
+              onViewDocument={(doc) => window.open(doc.url, "_blank")}
+              onVerify={handleVerify}
+              onReject={handleReject}
+            />
           </div>
         </div>
       </div>
