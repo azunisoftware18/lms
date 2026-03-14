@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { showError, showSuccess } from "../lib/utils/toastService";
@@ -25,16 +26,20 @@ export const useLoanDraft = (id) => {
     queryKey: ["loanDraft", id],
     queryFn: () => getLoanDraftById(id),
     enabled: !!id,
-    onSuccess: (data) => {
-      dispatch(setDraft(data));
+  });
+
+  useEffect(() => {
+    if (query.data) {
+      dispatch(setDraft(query.data));
       dispatch(clearError());
-    },
-    onError: (queryError) => {
-      const message = queryError?.message || "Failed to fetch loan draft";
+    }
+
+    if (query.error) {
+      const message = query.error?.message || "Failed to fetch loan draft";
       dispatch(setError(message));
       showError(message);
-    },
-  });
+    }
+  }, [dispatch, query.data, query.error]);
 
   return {
     draft,
@@ -57,6 +62,7 @@ export const useCreateLoanDraft = () => {
     onSuccess: (data) => {
       dispatch(setDraft(data));
       dispatch(clearError());
+      dispatch(setLoading(false));
       queryClient.invalidateQueries({ queryKey: ["loanDraft"] });
       showSuccess("Loan draft created successfully");
     },
@@ -68,6 +74,7 @@ export const useCreateLoanDraft = () => {
     },
   });
 };
+
 
 export const useUpdateLoanDraft = () => {
   const dispatch = useDispatch();
