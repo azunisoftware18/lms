@@ -69,6 +69,9 @@ import LoanConfigurationPage from "../app/dashboard/systemSetting/LoanConfigrati
 import SecuritySettingPage from "../app/dashboard/systemSetting/SecuritySettingPage.jsx";
 import PaymentSettingPage from "../app/dashboard/systemSetting/PaymentSettingPage.jsx";
 
+{/* reports page  */}
+import LeadsPage from "../app/dashboard/reports/LeadsPage.jsx";
+
 export default function AppRoutes() {
   const dispatch = useDispatch();
 
@@ -158,6 +161,7 @@ export default function AppRoutes() {
 				{/* Dashboard page */}
 				<Route index element={<DashboardPage />} />
 				<Route path='borrowers' element={< BorrowerPage />} />
+        
 
 				{/* LMS Pages */}
 				<Route path="loan-account-creation" element={<LoanAccountCreation />} />
@@ -182,6 +186,7 @@ export default function AppRoutes() {
 				<Route path='los/emi-management' element={<EMIManagementPage />} />
 				<Route path='los/sanction' element={<SanctionPage />} />
 				<Route path='los/disbursement' element={<DisbursementManagementPage />} />
+
 				
 				
 
@@ -193,7 +198,12 @@ export default function AppRoutes() {
         <Route path="system-setting/loan-configuration" element={<LoanConfigurationPage />} />
         <Route path="system-setting/security-settings" element={<SecuritySettingPage />} />
         <Route path="system-setting/payment-settings" element={<PaymentSettingPage />} />
+
+        {/* reports page  */}
+        <Route path='reports/leads' element={< LeadsPage />} />
       </Route>
+
+
     </Routes>
   );
 }
