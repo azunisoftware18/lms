@@ -420,6 +420,7 @@ export const ModelName = {
   RolePermission: 'RolePermission',
   Document: 'Document',
   Kyc: 'Kyc',
+  RequiredKycDocument: 'RequiredKycDocument',
   LoanEmiSchedule: 'LoanEmiSchedule',
   EmiPayment: 'EmiPayment',
   EmiMoratorium: 'EmiMoratorium',
@@ -450,7 +451,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "loanNumberCounter" | "user" | "userProfile" | "admin" | "employee" | "employeeRole" | "partner" | "address" | "partnerCommission" | "branch" | "leads" | "loanApplicationDraft" | "loanApplication" | "coApplicant" | "coApplicantFinancialDetails" | "customer" | "occupationalDetails" | "employmentDetails" | "financialDetails" | "guarantor" | "guarantorFinancialDetails" | "existingLoan" | "creditCard" | "bankAccount" | "insurancePolicy" | "property" | "reference" | "loanRequirement" | "loanQuestionnaire" | "loanRecovery" | "recoveryPayment" | "permission" | "userPermission" | "rolePermission" | "document" | "kyc" | "loanEmiSchedule" | "emiPayment" | "emiMoratorium" | "creditReport" | "creditAccount" | "loanType" | "technicalReport" | "legalReport" | "loanAssignment" | "auditLog" | "sLAPolicy" | "sLABreachLog" | "loanDisbursement" | "nachMandate" | "nachDebit"
+    modelProps: "loanNumberCounter" | "user" | "userProfile" | "admin" | "employee" | "employeeRole" | "partner" | "address" | "partnerCommission" | "branch" | "leads" | "loanApplicationDraft" | "loanApplication" | "coApplicant" | "coApplicantFinancialDetails" | "customer" | "occupationalDetails" | "employmentDetails" | "financialDetails" | "guarantor" | "guarantorFinancialDetails" | "existingLoan" | "creditCard" | "bankAccount" | "insurancePolicy" | "property" | "reference" | "loanRequirement" | "loanQuestionnaire" | "loanRecovery" | "recoveryPayment" | "permission" | "userPermission" | "rolePermission" | "document" | "kyc" | "requiredKycDocument" | "loanEmiSchedule" | "emiPayment" | "emiMoratorium" | "creditReport" | "creditAccount" | "loanType" | "technicalReport" | "legalReport" | "loanAssignment" | "auditLog" | "sLAPolicy" | "sLABreachLog" | "loanDisbursement" | "nachMandate" | "nachDebit"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2830,6 +2831,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    RequiredKycDocument: {
+      payload: Prisma.$RequiredKycDocumentPayload<ExtArgs>
+      fields: Prisma.RequiredKycDocumentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RequiredKycDocumentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RequiredKycDocumentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload>
+        }
+        findFirst: {
+          args: Prisma.RequiredKycDocumentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RequiredKycDocumentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload>
+        }
+        findMany: {
+          args: Prisma.RequiredKycDocumentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload>[]
+        }
+        create: {
+          args: Prisma.RequiredKycDocumentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload>
+        }
+        createMany: {
+          args: Prisma.RequiredKycDocumentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.RequiredKycDocumentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload>
+        }
+        update: {
+          args: Prisma.RequiredKycDocumentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload>
+        }
+        deleteMany: {
+          args: Prisma.RequiredKycDocumentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RequiredKycDocumentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.RequiredKycDocumentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload>
+        }
+        aggregate: {
+          args: Prisma.RequiredKycDocumentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRequiredKycDocument>
+        }
+        groupBy: {
+          args: Prisma.RequiredKycDocumentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RequiredKycDocumentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RequiredKycDocumentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RequiredKycDocumentCountAggregateOutputType> | number
+        }
+      }
+    }
     LoanEmiSchedule: {
       payload: Prisma.$LoanEmiSchedulePayload<ExtArgs>
       fields: Prisma.LoanEmiScheduleFieldRefs
@@ -3969,7 +4036,6 @@ export const PartnerScalarFieldEnum = {
   establishedYear: 'establishedYear',
   partnerType: 'partnerType',
   businessNature: 'businessNature',
-  addressId: 'addressId',
   designation: 'designation',
   businessCategory: 'businessCategory',
   specialization: 'specialization',
@@ -4004,6 +4070,7 @@ export const AddressScalarFieldEnum = {
   customerId: 'customerId',
   coApplicantId: 'coApplicantId',
   guarantorId: 'guarantorId',
+  partnerId: 'partnerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -4622,6 +4689,19 @@ export const KycScalarFieldEnum = {
 export type KycScalarFieldEnum = (typeof KycScalarFieldEnum)[keyof typeof KycScalarFieldEnum]
 
 
+export const RequiredKycDocumentScalarFieldEnum = {
+  id: 'id',
+  documentType: 'documentType',
+  displayName: 'displayName',
+  isActive: 'isActive',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RequiredKycDocumentScalarFieldEnum = (typeof RequiredKycDocumentScalarFieldEnum)[keyof typeof RequiredKycDocumentScalarFieldEnum]
+
+
 export const LoanEmiScheduleScalarFieldEnum = {
   id: 'id',
   loanApplicationId: 'loanApplicationId',
@@ -4762,8 +4842,12 @@ export const LoanTypeScalarFieldEnum = {
   isPublic: 'isPublic',
   approvalRequired: 'approvalRequired',
   estimatedProcessingTimeDays: 'estimatedProcessingTimeDays',
-  documentsRequired: 'documentsRequired',
-  documentsOptions: 'documentsOptions',
+  applicantDocumentsRequired: 'applicantDocumentsRequired',
+  applicantDocumentsOptional: 'applicantDocumentsOptional',
+  coApplicantDocumentsRequired: 'coApplicantDocumentsRequired',
+  coApplicantDocumentsOptional: 'coApplicantDocumentsOptional',
+  guarantorDocumentsRequired: 'guarantorDocumentsRequired',
+  guarantorDocumentsOptional: 'guarantorDocumentsOptional',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -5047,7 +5131,6 @@ export const PartnerOrderByRelevanceFieldEnum = {
   gstNumber: 'gstNumber',
   branchId: 'branchId',
   businessNature: 'businessNature',
-  addressId: 'addressId',
   designation: 'designation',
   businessCategory: 'businessCategory',
   specialization: 'specialization',
@@ -5070,7 +5153,8 @@ export const AddressOrderByRelevanceFieldEnum = {
   phoneNumber: 'phoneNumber',
   customerId: 'customerId',
   coApplicantId: 'coApplicantId',
-  guarantorId: 'guarantorId'
+  guarantorId: 'guarantorId',
+  partnerId: 'partnerId'
 } as const
 
 export type AddressOrderByRelevanceFieldEnum = (typeof AddressOrderByRelevanceFieldEnum)[keyof typeof AddressOrderByRelevanceFieldEnum]
@@ -5466,6 +5550,16 @@ export const KycOrderByRelevanceFieldEnum = {
 export type KycOrderByRelevanceFieldEnum = (typeof KycOrderByRelevanceFieldEnum)[keyof typeof KycOrderByRelevanceFieldEnum]
 
 
+export const RequiredKycDocumentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  documentType: 'documentType',
+  displayName: 'displayName',
+  createdById: 'createdById'
+} as const
+
+export type RequiredKycDocumentOrderByRelevanceFieldEnum = (typeof RequiredKycDocumentOrderByRelevanceFieldEnum)[keyof typeof RequiredKycDocumentOrderByRelevanceFieldEnum]
+
+
 export const LoanEmiScheduleOrderByRelevanceFieldEnum = {
   id: 'id',
   loanApplicationId: 'loanApplicationId'
@@ -5517,8 +5611,12 @@ export const LoanTypeOrderByRelevanceFieldEnum = {
   code: 'code',
   name: 'name',
   description: 'description',
-  documentsRequired: 'documentsRequired',
-  documentsOptions: 'documentsOptions'
+  applicantDocumentsRequired: 'applicantDocumentsRequired',
+  applicantDocumentsOptional: 'applicantDocumentsOptional',
+  coApplicantDocumentsRequired: 'coApplicantDocumentsRequired',
+  coApplicantDocumentsOptional: 'coApplicantDocumentsOptional',
+  guarantorDocumentsRequired: 'guarantorDocumentsRequired',
+  guarantorDocumentsOptional: 'guarantorDocumentsOptional'
 } as const
 
 export type LoanTypeOrderByRelevanceFieldEnum = (typeof LoanTypeOrderByRelevanceFieldEnum)[keyof typeof LoanTypeOrderByRelevanceFieldEnum]
@@ -6178,6 +6276,7 @@ export type GlobalOmitConfig = {
   rolePermission?: Prisma.RolePermissionOmit
   document?: Prisma.DocumentOmit
   kyc?: Prisma.KycOmit
+  requiredKycDocument?: Prisma.RequiredKycDocumentOmit
   loanEmiSchedule?: Prisma.LoanEmiScheduleOmit
   emiPayment?: Prisma.EmiPaymentOmit
   emiMoratorium?: Prisma.EmiMoratoriumOmit

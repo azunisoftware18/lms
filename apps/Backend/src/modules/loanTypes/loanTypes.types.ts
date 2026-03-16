@@ -61,8 +61,18 @@ export interface LoanTypeDTO {
 
   // SLA & Workflow
   estimatedProcessingTimeDays?: number | null;
-  documentsRequired: string;
-  documentsOptions?: string | null;
+
+  // Applicant documents
+  applicantDocumentsRequired: string;
+  applicantDocumentsOptional?: string | null;
+
+  // Co-Applicant documents
+  coApplicantDocumentsRequired: string;
+  coApplicantDocumentsOptional?: string | null;
+
+  // Guarantor documents
+  guarantorDocumentsRequired: string;
+  guarantorDocumentsOptional?: string | null;
 
   // Audit
   createdAt: Date;

@@ -53,8 +53,15 @@ const loanTypeBaseSchema = z.object({
   approvalRequired: z.boolean().default(true),
 
   estimatedProcessingTimeDays: z.number().int().positive().optional(),
-  documentsRequired: z.string(),
-  documentsOptions: z.string().optional(),
+  // documentsRequired: z.string(),
+  // documentsOptions: z.string().optional(),
+
+  applicantDocumentsRequired: z.string(),
+  applicantDocumentsOptional: z.string().optional(),
+  coApplicantDocumentsRequired: z.string(),
+  coApplicantDocumentsOptional: z.string().optional(),
+  guarantorDocumentsRequired: z.string(),
+  guarantorDocumentsOptional: z.string().optional(),
 });
 
 export const createLoanTypeSchema = loanTypeBaseSchema
@@ -84,31 +91,40 @@ export const createLoanTypeSchema = loanTypeBaseSchema
       });
     }
 
-    const invalidRequiredDocs = getInvalidLoanDocumentTypes(data.documentsRequired);
-    if (invalidRequiredDocs.length > 0) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `documentsRequired has invalid types: ${invalidRequiredDocs.join(", ")}`,
-        path: ["documentsRequired"],
-      });
-    }
-
-    if (data.documentsOptions) {
-      const invalidOptionalDocs = getInvalidLoanDocumentTypes(data.documentsOptions);
-      if (invalidOptionalDocs.length > 0) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `documentsOptions has invalid types: ${invalidOptionalDocs.join(", ")}`,
-          path: ["documentsOptions"],
-        });
+    const perPartyFields: Array<[string, string | undefined]> = [
+      ["applicantDocumentsRequired", data.applicantDocumentsRequired],
+      ["applicantDocumentsOptional", data.applicantDocumentsOptional],
+      ["coApplicantDocumentsRequired", data.coApplicantDocumentsRequired],
+      ["coApplicantDocumentsOptional", data.coApplicantDocumentsOptional],
+      ["guarantorDocumentsRequired", data.guarantorDocumentsRequired],
+      ["guarantorDocumentsOptional", data.guarantorDocumentsOptional],
+    ];
+    for (const [fieldName, fieldValue] of perPartyFields) {
+      if (fieldValue) {
+        const invalid = getInvalidLoanDocumentTypes(fieldValue);
+        if (invalid.length > 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `${fieldName} has invalid types: ${invalid.join(", ")}`,
+            path: [fieldName],
+          });
+        }
       }
     }
   })
   .transform((data) => ({
     ...data,
-    documentsRequired: normalizeLoanDocumentCsv(data.documentsRequired),
-    documentsOptions: data.documentsOptions
-      ? normalizeLoanDocumentCsv(data.documentsOptions)
+    applicantDocumentsRequired: normalizeLoanDocumentCsv(data.applicantDocumentsRequired),
+    applicantDocumentsOptional: data.applicantDocumentsOptional
+      ? normalizeLoanDocumentCsv(data.applicantDocumentsOptional)
+      : undefined,
+    coApplicantDocumentsRequired: normalizeLoanDocumentCsv(data.coApplicantDocumentsRequired),
+    coApplicantDocumentsOptional: data.coApplicantDocumentsOptional
+      ? normalizeLoanDocumentCsv(data.coApplicantDocumentsOptional)
+      : undefined,
+    guarantorDocumentsRequired: normalizeLoanDocumentCsv(data.guarantorDocumentsRequired),
+    guarantorDocumentsOptional: data.guarantorDocumentsOptional
+      ? normalizeLoanDocumentCsv(data.guarantorDocumentsOptional)
       : undefined,
   }));
 
@@ -142,35 +158,46 @@ export const updateLoanTypeSchema = loanTypeBaseSchema
       });
     }
 
-    if (data.documentsRequired !== undefined) {
-      const invalidRequiredDocs = getInvalidLoanDocumentTypes(data.documentsRequired);
-      if (invalidRequiredDocs.length > 0) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `documentsRequired has invalid types: ${invalidRequiredDocs.join(", ")}`,
-          path: ["documentsRequired"],
-        });
-      }
-    }
-
-    if (data.documentsOptions !== undefined) {
-      const invalidOptionalDocs = getInvalidLoanDocumentTypes(data.documentsOptions);
-      if (invalidOptionalDocs.length > 0) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `documentsOptions has invalid types: ${invalidOptionalDocs.join(", ")}`,
-          path: ["documentsOptions"],
-        });
+    const perPartyFields: Array<[string, string | undefined]> = [
+      ["applicantDocumentsRequired", data.applicantDocumentsRequired],
+      ["applicantDocumentsOptional", data.applicantDocumentsOptional],
+      ["coApplicantDocumentsRequired", data.coApplicantDocumentsRequired],
+      ["coApplicantDocumentsOptional", data.coApplicantDocumentsOptional],
+      ["guarantorDocumentsRequired", data.guarantorDocumentsRequired],
+      ["guarantorDocumentsOptional", data.guarantorDocumentsOptional],
+    ];
+    for (const [fieldName, fieldValue] of perPartyFields) {
+      if (fieldValue !== undefined) {
+        const invalid = getInvalidLoanDocumentTypes(fieldValue);
+        if (invalid.length > 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `${fieldName} has invalid types: ${invalid.join(", ")}`,
+            path: [fieldName],
+          });
+        }
       }
     }
   })
   .transform((data) => ({
     ...data,
-    ...(data.documentsRequired !== undefined && {
-      documentsRequired: normalizeLoanDocumentCsv(data.documentsRequired),
+    ...(data.applicantDocumentsRequired !== undefined && {
+      applicantDocumentsRequired: normalizeLoanDocumentCsv(data.applicantDocumentsRequired),
     }),
-    ...(data.documentsOptions !== undefined && {
-      documentsOptions: normalizeLoanDocumentCsv(data.documentsOptions),
+    ...(data.applicantDocumentsOptional !== undefined && {
+      applicantDocumentsOptional: normalizeLoanDocumentCsv(data.applicantDocumentsOptional),
+    }),
+    ...(data.coApplicantDocumentsRequired !== undefined && {
+      coApplicantDocumentsRequired: normalizeLoanDocumentCsv(data.coApplicantDocumentsRequired),
+    }),
+    ...(data.coApplicantDocumentsOptional !== undefined && {
+      coApplicantDocumentsOptional: normalizeLoanDocumentCsv(data.coApplicantDocumentsOptional),
+    }),
+    ...(data.guarantorDocumentsRequired !== undefined && {
+      guarantorDocumentsRequired: normalizeLoanDocumentCsv(data.guarantorDocumentsRequired),
+    }),
+    ...(data.guarantorDocumentsOptional !== undefined && {
+      guarantorDocumentsOptional: normalizeLoanDocumentCsv(data.guarantorDocumentsOptional),
     }),
   }));
 

@@ -11,6 +11,17 @@ export type Relationship =
   | "OTHER";
 export type WorkLocation = "OFFICE" | "REMOTE" | "HYBRID";
 
+export interface EmployeeAddressInput {
+  addressLine1: string;
+  addressLine2?: string;
+  city: string;
+  district?: string;
+  state: string;
+  pinCode: string;
+  landmark?: string;
+  phoneNumber?: string;
+}
+
 export interface CreateEmployee {
   fullName: string;
   email: string;
@@ -33,6 +44,10 @@ export interface CreateEmployee {
   city?: string;
   state?: string;
   pinCode?: string;
+  addresses?: {
+    currentAddress?: EmployeeAddressInput;
+    permanentAddress?: EmployeeAddressInput;
+  };
 
   // Emergency
   emergencyContact: string;

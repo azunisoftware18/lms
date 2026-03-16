@@ -198,6 +198,11 @@ export type Document = Prisma.DocumentModel
  */
 export type Kyc = Prisma.KycModel
 /**
+ * Model RequiredKycDocument
+ * 
+ */
+export type RequiredKycDocument = Prisma.RequiredKycDocumentModel
+/**
  * Model LoanEmiSchedule
  * 
  */
