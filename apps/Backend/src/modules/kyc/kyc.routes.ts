@@ -65,10 +65,10 @@ router.get(
 router.post(
   "/required-documents",
   authMiddleware,
+  checkPermissionMiddleware("MANAGE_KYC"), // or appropriate permission
   validate(createRequiredKycDocumentSchema),
   createRequiredKycDocumentController,
 );
-
 router.get(
   "/required-documents",
   authMiddleware,

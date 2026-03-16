@@ -266,6 +266,20 @@ export async function updateEmployeeService(
       updateData.pinCode
     );
 
+    let normalizedAddressPayload:
+      | {
+          addressType: any;
+          addressLine1: string;
+          addressLine2: string | null;
+          city: string;
+          district: string;
+          state: string;
+          pinCode: string;
+          landmark: string | null;
+          phoneNumber: string | null;
+        }
+      | null = null;
+
     if (selectedAddress || hasLegacyAddressInput) {
       const addressPayload = {
         addressType: currentAddress
@@ -284,22 +298,10 @@ export async function updateEmployeeService(
         phoneNumber: selectedAddress?.phoneNumber ?? null,
       };
 
-      const normalizedAddressPayload = {
+      normalizedAddressPayload = {
         ...addressPayload,
         addressType: addressPayload.addressType as any,
       };
-
-      if (existing.addressId) {
-        await prisma.address.update({
-          where: { id: existing.addressId },
-          data: normalizedAddressPayload,
-        });
-      } else {
-        const newAddress = await prisma.address.create({
-          data: normalizedAddressPayload,
-        });
-        employeeUpdateData.addressId = newAddress.id;
-      }
     }
 
     // user-scoped fields
@@ -407,10 +409,29 @@ export async function updateEmployeeService(
     if (Object.keys(employeeUpdateData).length > 0)
       Object.assign(prismaData, employeeUpdateData);
 
-    const updatedEmployee = await (prisma as any).employee.update({
-      where: { id },
-      data: prismaData,
-      include: { user: true, employeeRole: true },
+    const updatedEmployee = await prisma.$transaction(async (tx) => {
+      if (normalizedAddressPayload) {
+        if (existing.addressId) {
+          await tx.address.update({
+            where: { id: existing.addressId },
+            data: normalizedAddressPayload,
+          });
+        } else {
+          const newAddress = await tx.address.create({
+            data: normalizedAddressPayload,
+          });
+          employeeUpdateData.addressId = newAddress.id;
+        }
+      }
+
+      if (Object.keys(employeeUpdateData).length > 0)
+        Object.assign(prismaData, employeeUpdateData);
+
+      return (tx as any).employee.update({
+        where: { id },
+        data: prismaData,
+        include: { user: true, employeeRole: true },
+      });
     });
     const { user, ...employeeOnly } = updatedEmployee as any;
 

@@ -38,7 +38,7 @@ const employeeAddressSchema = z.object({
   city: z.string().trim().min(1),
   district: z.string().trim().optional(),
   state: z.string().trim().min(1),
-  pinCode: z.string().trim().min(1),
+  pinCode: z.string().trim().min(1).max(6),
   landmark: z.string().trim().optional(),
   phoneNumber: z.string().trim().optional(),
 });
