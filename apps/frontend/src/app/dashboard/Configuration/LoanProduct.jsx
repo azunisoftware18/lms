@@ -17,14 +17,23 @@ export default function LoanProduct() {
     [loanTypes],
   );
 
+  const formatAmountUnit = (amount) => {
+    const numericAmount = Number(amount || 0);
+    if (!numericAmount) return "0 Lac";
+    if (numericAmount >= 10000000) {
+      return `${(numericAmount / 10000000).toFixed(1)} Cr`;
+    }
+    return `${(numericAmount / 100000).toFixed(1)} L`;
+  };
+
   const mappedProducts = products.map((p) => ({
     id: p.id,
     name: p.name || "Unnamed Product",
     category: p.category ? p.category.replace("_", " ") : "Unknown",
-    interest: `${p.minInterestRate || 0}% - ${p.maxInterestRate || 0}%`,
+    interest: `${p.minInterestRate || 0} - ${p.maxInterestRate || 0}`,
     amount:
       p.minAmount && p.maxAmount
-        ? `₹${(p.minAmount / 100000).toFixed(1)}L - ₹${(p.maxAmount / 10000000).toFixed(1)}Cr`
+        ? `${formatAmountUnit(p.minAmount)} - ${formatAmountUnit(p.maxAmount)}`
         : "Amount not set",
     tenure:
       p.minTenureMonths && p.maxTenureMonths
