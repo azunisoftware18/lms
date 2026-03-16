@@ -183,12 +183,40 @@ export const uploadLoanDocumentsController = async (
     }
 
     /* ---------------- 3️⃣ Required + optional documents check ---------------- */
-    const requiredDocuments = loanType?.documentsRequired
-      ? parseLoanDocumentCsv(loanType.documentsRequired)
+    const applicantRequiredDocuments = loanType?.applicantDocumentsRequired
+      ? parseLoanDocumentCsv(loanType.applicantDocumentsRequired)
       : [];
-    const optionalDocuments = loanType?.documentsOptions
-      ? parseLoanDocumentCsv(loanType.documentsOptions)
+    const applicantOptionalDocuments = loanType?.applicantDocumentsOptional
+      ? parseLoanDocumentCsv(loanType.applicantDocumentsOptional)
       : [];
+    const coApplicantRequiredDocuments = loanType?.coApplicantDocumentsRequired
+      ? parseLoanDocumentCsv(loanType.coApplicantDocumentsRequired)
+      : [];
+    const coApplicantOptionalDocuments = loanType?.coApplicantDocumentsOptional
+      ? parseLoanDocumentCsv(loanType.coApplicantDocumentsOptional)
+      : [];
+    const guarantorRequiredDocuments = loanType?.guarantorDocumentsRequired
+      ? parseLoanDocumentCsv(loanType.guarantorDocumentsRequired)
+      : [];
+    const guarantorOptionalDocuments = loanType?.guarantorDocumentsOptional
+      ? parseLoanDocumentCsv(loanType.guarantorDocumentsOptional)
+      : [];
+
+    const requiredDocuments = Array.from(
+      new Set([
+        ...applicantRequiredDocuments,
+        ...coApplicantRequiredDocuments,
+        ...guarantorRequiredDocuments,
+      ]),
+    );
+
+    const optionalDocuments = Array.from(
+      new Set([
+        ...applicantOptionalDocuments,
+        ...coApplicantOptionalDocuments,
+        ...guarantorOptionalDocuments,
+      ]),
+    );
 
     const allowedDocumentTypes = Array.from(
       new Set([...requiredDocuments, ...optionalDocuments]),
@@ -263,6 +291,12 @@ export const uploadLoanDocumentsController = async (
       message: "Documents uploaded successfully",
       data: documents,
       meta: {
+        applicantRequiredDocuments,
+        applicantOptionalDocuments,
+        coApplicantRequiredDocuments,
+        coApplicantOptionalDocuments,
+        guarantorRequiredDocuments,
+        guarantorOptionalDocuments,
         requiredDocuments,
         optionalDocuments,
         missingRequiredDocuments: missingDocs,

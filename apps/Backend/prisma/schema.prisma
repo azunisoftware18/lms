@@ -1000,8 +1000,9 @@ model Document {
   guarantor          Guarantor?         @relation(fields: [guarantorId], references: [id])
   branch             Branch             @relation(fields: [branchId], references: [id])
 
-  @@unique([loanApplicationId, documentType]) // ✅ prevents duplicate uploads per loan
+  @@unique([coApplicantId, documentType])     // ✅ prevents duplicate uploads per co-applicant
   @@unique([guarantorId, documentType])       // ✅ prevents duplicate uploads per guarantor
+  @@index([loanApplicationId, documentType])  // supports loan-level queries without forcing cross-party uniqueness
 }
 
 model Kyc {
@@ -1206,6 +1207,7 @@ model LoanType {
 
   //Disbursement Rules
   maxLoanToValueRatio Float? //for secured loans
+  
   prepaymentAllowed   Boolean @default(true)
   foreclosureAllowed  Boolean @default(true)
 

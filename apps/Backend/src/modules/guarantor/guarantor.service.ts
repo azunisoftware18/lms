@@ -50,6 +50,7 @@ export async function uploadGuarantorDocumentsService(
     }
 
     const branchId = guarantor.loanApplication.branchId;
+    const loanApplicationId = guarantor.loanApplication.id;
     assertBranchAccess(requester, branchId);
 
     /* 2️⃣ Get or create KYC for this guarantor */
@@ -97,8 +98,8 @@ export async function uploadGuarantorDocumentsService(
         uploadedBy: doc.uploadedBy,
         kycId,
         branchId,
+        loanApplicationId,
         guarantorId,
-        // loanApplicationId intentionally left null for guarantor docs
       })),
     });
 
