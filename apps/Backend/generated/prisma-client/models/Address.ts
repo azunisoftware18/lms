@@ -38,6 +38,7 @@ export type AddressMinAggregateOutputType = {
   customerId: string | null
   coApplicantId: string | null
   guarantorId: string | null
+  partnerId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +57,7 @@ export type AddressMaxAggregateOutputType = {
   customerId: string | null
   coApplicantId: string | null
   guarantorId: string | null
+  partnerId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -74,6 +76,7 @@ export type AddressCountAggregateOutputType = {
   customerId: number
   coApplicantId: number
   guarantorId: number
+  partnerId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -94,6 +97,7 @@ export type AddressMinAggregateInputType = {
   customerId?: true
   coApplicantId?: true
   guarantorId?: true
+  partnerId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -112,6 +116,7 @@ export type AddressMaxAggregateInputType = {
   customerId?: true
   coApplicantId?: true
   guarantorId?: true
+  partnerId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -130,6 +135,7 @@ export type AddressCountAggregateInputType = {
   customerId?: true
   coApplicantId?: true
   guarantorId?: true
+  partnerId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -221,6 +227,7 @@ export type AddressGroupByOutputType = {
   customerId: string | null
   coApplicantId: string | null
   guarantorId: string | null
+  partnerId: string | null
   createdAt: Date
   updatedAt: Date
   _count: AddressCountAggregateOutputType | null
@@ -260,14 +267,15 @@ export type AddressWhereInput = {
   customerId?: Prisma.StringNullableFilter<"Address"> | string | null
   coApplicantId?: Prisma.StringNullableFilter<"Address"> | string | null
   guarantorId?: Prisma.StringNullableFilter<"Address"> | string | null
+  partnerId?: Prisma.StringNullableFilter<"Address"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Address"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Address"> | Date | string
   customer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
   coApplicant?: Prisma.XOR<Prisma.CoApplicantNullableScalarRelationFilter, Prisma.CoApplicantWhereInput> | null
   guarantor?: Prisma.XOR<Prisma.GuarantorNullableScalarRelationFilter, Prisma.GuarantorWhereInput> | null
+  partner?: Prisma.XOR<Prisma.PartnerNullableScalarRelationFilter, Prisma.PartnerWhereInput> | null
   occupationalDetails?: Prisma.OccupationalDetailsListRelationFilter
   employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
-  partner?: Prisma.XOR<Prisma.PartnerNullableScalarRelationFilter, Prisma.PartnerWhereInput> | null
   lead?: Prisma.XOR<Prisma.LeadsNullableScalarRelationFilter, Prisma.LeadsWhereInput> | null
   technicalReport?: Prisma.XOR<Prisma.TechnicalReportNullableScalarRelationFilter, Prisma.TechnicalReportWhereInput> | null
   properties?: Prisma.PropertyListRelationFilter
@@ -287,14 +295,15 @@ export type AddressOrderByWithRelationInput = {
   customerId?: Prisma.SortOrderInput | Prisma.SortOrder
   coApplicantId?: Prisma.SortOrderInput | Prisma.SortOrder
   guarantorId?: Prisma.SortOrderInput | Prisma.SortOrder
+  partnerId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   customer?: Prisma.CustomerOrderByWithRelationInput
   coApplicant?: Prisma.CoApplicantOrderByWithRelationInput
   guarantor?: Prisma.GuarantorOrderByWithRelationInput
+  partner?: Prisma.PartnerOrderByWithRelationInput
   occupationalDetails?: Prisma.OccupationalDetailsOrderByRelationAggregateInput
   employee?: Prisma.EmployeeOrderByWithRelationInput
-  partner?: Prisma.PartnerOrderByWithRelationInput
   lead?: Prisma.LeadsOrderByWithRelationInput
   technicalReport?: Prisma.TechnicalReportOrderByWithRelationInput
   properties?: Prisma.PropertyOrderByRelationAggregateInput
@@ -318,14 +327,15 @@ export type AddressWhereUniqueInput = Prisma.AtLeast<{
   customerId?: Prisma.StringNullableFilter<"Address"> | string | null
   coApplicantId?: Prisma.StringNullableFilter<"Address"> | string | null
   guarantorId?: Prisma.StringNullableFilter<"Address"> | string | null
+  partnerId?: Prisma.StringNullableFilter<"Address"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Address"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Address"> | Date | string
   customer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
   coApplicant?: Prisma.XOR<Prisma.CoApplicantNullableScalarRelationFilter, Prisma.CoApplicantWhereInput> | null
   guarantor?: Prisma.XOR<Prisma.GuarantorNullableScalarRelationFilter, Prisma.GuarantorWhereInput> | null
+  partner?: Prisma.XOR<Prisma.PartnerNullableScalarRelationFilter, Prisma.PartnerWhereInput> | null
   occupationalDetails?: Prisma.OccupationalDetailsListRelationFilter
   employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
-  partner?: Prisma.XOR<Prisma.PartnerNullableScalarRelationFilter, Prisma.PartnerWhereInput> | null
   lead?: Prisma.XOR<Prisma.LeadsNullableScalarRelationFilter, Prisma.LeadsWhereInput> | null
   technicalReport?: Prisma.XOR<Prisma.TechnicalReportNullableScalarRelationFilter, Prisma.TechnicalReportWhereInput> | null
   properties?: Prisma.PropertyListRelationFilter
@@ -345,6 +355,7 @@ export type AddressOrderByWithAggregationInput = {
   customerId?: Prisma.SortOrderInput | Prisma.SortOrder
   coApplicantId?: Prisma.SortOrderInput | Prisma.SortOrder
   guarantorId?: Prisma.SortOrderInput | Prisma.SortOrder
+  partnerId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.AddressCountOrderByAggregateInput
@@ -369,6 +380,7 @@ export type AddressScalarWhereWithAggregatesInput = {
   customerId?: Prisma.StringNullableWithAggregatesFilter<"Address"> | string | null
   coApplicantId?: Prisma.StringNullableWithAggregatesFilter<"Address"> | string | null
   guarantorId?: Prisma.StringNullableWithAggregatesFilter<"Address"> | string | null
+  partnerId?: Prisma.StringNullableWithAggregatesFilter<"Address"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Address"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Address"> | Date | string
 }
@@ -389,9 +401,9 @@ export type AddressCreateInput = {
   customer?: Prisma.CustomerCreateNestedOneWithoutAddressesInput
   coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutAddressesInput
   guarantor?: Prisma.GuarantorCreateNestedOneWithoutAddressesInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutAddressesInput
   occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutAddressInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutAddressInput
-  partner?: Prisma.PartnerCreateNestedOneWithoutAddressInput
   lead?: Prisma.LeadsCreateNestedOneWithoutAddressInput
   technicalReport?: Prisma.TechnicalReportCreateNestedOneWithoutAddressInput
   properties?: Prisma.PropertyCreateNestedManyWithoutAddressInput
@@ -411,11 +423,11 @@ export type AddressUncheckedCreateInput = {
   customerId?: string | null
   coApplicantId?: string | null
   guarantorId?: string | null
+  partnerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutAddressInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutAddressInput
-  partner?: Prisma.PartnerUncheckedCreateNestedOneWithoutAddressInput
   lead?: Prisma.LeadsUncheckedCreateNestedOneWithoutAddressInput
   technicalReport?: Prisma.TechnicalReportUncheckedCreateNestedOneWithoutAddressInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutAddressInput
@@ -437,9 +449,9 @@ export type AddressUpdateInput = {
   customer?: Prisma.CustomerUpdateOneWithoutAddressesNestedInput
   coApplicant?: Prisma.CoApplicantUpdateOneWithoutAddressesNestedInput
   guarantor?: Prisma.GuarantorUpdateOneWithoutAddressesNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutAddressesNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutAddressNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutAddressNestedInput
-  partner?: Prisma.PartnerUpdateOneWithoutAddressNestedInput
   lead?: Prisma.LeadsUpdateOneWithoutAddressNestedInput
   technicalReport?: Prisma.TechnicalReportUpdateOneWithoutAddressNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutAddressNestedInput
@@ -459,11 +471,11 @@ export type AddressUncheckedUpdateInput = {
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutAddressNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutAddressNestedInput
-  partner?: Prisma.PartnerUncheckedUpdateOneWithoutAddressNestedInput
   lead?: Prisma.LeadsUncheckedUpdateOneWithoutAddressNestedInput
   technicalReport?: Prisma.TechnicalReportUncheckedUpdateOneWithoutAddressNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutAddressNestedInput
@@ -483,6 +495,7 @@ export type AddressCreateManyInput = {
   customerId?: string | null
   coApplicantId?: string | null
   guarantorId?: string | null
+  partnerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -516,6 +529,7 @@ export type AddressUncheckedUpdateManyInput = {
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -523,6 +537,16 @@ export type AddressUncheckedUpdateManyInput = {
 export type AddressNullableScalarRelationFilter = {
   is?: Prisma.AddressWhereInput | null
   isNot?: Prisma.AddressWhereInput | null
+}
+
+export type AddressListRelationFilter = {
+  every?: Prisma.AddressWhereInput
+  some?: Prisma.AddressWhereInput
+  none?: Prisma.AddressWhereInput
+}
+
+export type AddressOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type AddressOrderByRelevanceInput = {
@@ -545,6 +569,7 @@ export type AddressCountOrderByAggregateInput = {
   customerId?: Prisma.SortOrder
   coApplicantId?: Prisma.SortOrder
   guarantorId?: Prisma.SortOrder
+  partnerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -563,6 +588,7 @@ export type AddressMaxOrderByAggregateInput = {
   customerId?: Prisma.SortOrder
   coApplicantId?: Prisma.SortOrder
   guarantorId?: Prisma.SortOrder
+  partnerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -581,18 +607,9 @@ export type AddressMinOrderByAggregateInput = {
   customerId?: Prisma.SortOrder
   coApplicantId?: Prisma.SortOrder
   guarantorId?: Prisma.SortOrder
+  partnerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-}
-
-export type AddressListRelationFilter = {
-  every?: Prisma.AddressWhereInput
-  some?: Prisma.AddressWhereInput
-  none?: Prisma.AddressWhereInput
-}
-
-export type AddressOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type AddressCreateNestedOneWithoutEmployeeInput = {
@@ -611,20 +628,46 @@ export type AddressUpdateOneWithoutEmployeeNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AddressUpdateToOneWithWhereWithoutEmployeeInput, Prisma.AddressUpdateWithoutEmployeeInput>, Prisma.AddressUncheckedUpdateWithoutEmployeeInput>
 }
 
-export type AddressCreateNestedOneWithoutPartnerInput = {
-  create?: Prisma.XOR<Prisma.AddressCreateWithoutPartnerInput, Prisma.AddressUncheckedCreateWithoutPartnerInput>
-  connectOrCreate?: Prisma.AddressCreateOrConnectWithoutPartnerInput
-  connect?: Prisma.AddressWhereUniqueInput
+export type AddressCreateNestedManyWithoutPartnerInput = {
+  create?: Prisma.XOR<Prisma.AddressCreateWithoutPartnerInput, Prisma.AddressUncheckedCreateWithoutPartnerInput> | Prisma.AddressCreateWithoutPartnerInput[] | Prisma.AddressUncheckedCreateWithoutPartnerInput[]
+  connectOrCreate?: Prisma.AddressCreateOrConnectWithoutPartnerInput | Prisma.AddressCreateOrConnectWithoutPartnerInput[]
+  createMany?: Prisma.AddressCreateManyPartnerInputEnvelope
+  connect?: Prisma.AddressWhereUniqueInput | Prisma.AddressWhereUniqueInput[]
 }
 
-export type AddressUpdateOneWithoutPartnerNestedInput = {
-  create?: Prisma.XOR<Prisma.AddressCreateWithoutPartnerInput, Prisma.AddressUncheckedCreateWithoutPartnerInput>
-  connectOrCreate?: Prisma.AddressCreateOrConnectWithoutPartnerInput
-  upsert?: Prisma.AddressUpsertWithoutPartnerInput
-  disconnect?: Prisma.AddressWhereInput | boolean
-  delete?: Prisma.AddressWhereInput | boolean
-  connect?: Prisma.AddressWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.AddressUpdateToOneWithWhereWithoutPartnerInput, Prisma.AddressUpdateWithoutPartnerInput>, Prisma.AddressUncheckedUpdateWithoutPartnerInput>
+export type AddressUncheckedCreateNestedManyWithoutPartnerInput = {
+  create?: Prisma.XOR<Prisma.AddressCreateWithoutPartnerInput, Prisma.AddressUncheckedCreateWithoutPartnerInput> | Prisma.AddressCreateWithoutPartnerInput[] | Prisma.AddressUncheckedCreateWithoutPartnerInput[]
+  connectOrCreate?: Prisma.AddressCreateOrConnectWithoutPartnerInput | Prisma.AddressCreateOrConnectWithoutPartnerInput[]
+  createMany?: Prisma.AddressCreateManyPartnerInputEnvelope
+  connect?: Prisma.AddressWhereUniqueInput | Prisma.AddressWhereUniqueInput[]
+}
+
+export type AddressUpdateManyWithoutPartnerNestedInput = {
+  create?: Prisma.XOR<Prisma.AddressCreateWithoutPartnerInput, Prisma.AddressUncheckedCreateWithoutPartnerInput> | Prisma.AddressCreateWithoutPartnerInput[] | Prisma.AddressUncheckedCreateWithoutPartnerInput[]
+  connectOrCreate?: Prisma.AddressCreateOrConnectWithoutPartnerInput | Prisma.AddressCreateOrConnectWithoutPartnerInput[]
+  upsert?: Prisma.AddressUpsertWithWhereUniqueWithoutPartnerInput | Prisma.AddressUpsertWithWhereUniqueWithoutPartnerInput[]
+  createMany?: Prisma.AddressCreateManyPartnerInputEnvelope
+  set?: Prisma.AddressWhereUniqueInput | Prisma.AddressWhereUniqueInput[]
+  disconnect?: Prisma.AddressWhereUniqueInput | Prisma.AddressWhereUniqueInput[]
+  delete?: Prisma.AddressWhereUniqueInput | Prisma.AddressWhereUniqueInput[]
+  connect?: Prisma.AddressWhereUniqueInput | Prisma.AddressWhereUniqueInput[]
+  update?: Prisma.AddressUpdateWithWhereUniqueWithoutPartnerInput | Prisma.AddressUpdateWithWhereUniqueWithoutPartnerInput[]
+  updateMany?: Prisma.AddressUpdateManyWithWhereWithoutPartnerInput | Prisma.AddressUpdateManyWithWhereWithoutPartnerInput[]
+  deleteMany?: Prisma.AddressScalarWhereInput | Prisma.AddressScalarWhereInput[]
+}
+
+export type AddressUncheckedUpdateManyWithoutPartnerNestedInput = {
+  create?: Prisma.XOR<Prisma.AddressCreateWithoutPartnerInput, Prisma.AddressUncheckedCreateWithoutPartnerInput> | Prisma.AddressCreateWithoutPartnerInput[] | Prisma.AddressUncheckedCreateWithoutPartnerInput[]
+  connectOrCreate?: Prisma.AddressCreateOrConnectWithoutPartnerInput | Prisma.AddressCreateOrConnectWithoutPartnerInput[]
+  upsert?: Prisma.AddressUpsertWithWhereUniqueWithoutPartnerInput | Prisma.AddressUpsertWithWhereUniqueWithoutPartnerInput[]
+  createMany?: Prisma.AddressCreateManyPartnerInputEnvelope
+  set?: Prisma.AddressWhereUniqueInput | Prisma.AddressWhereUniqueInput[]
+  disconnect?: Prisma.AddressWhereUniqueInput | Prisma.AddressWhereUniqueInput[]
+  delete?: Prisma.AddressWhereUniqueInput | Prisma.AddressWhereUniqueInput[]
+  connect?: Prisma.AddressWhereUniqueInput | Prisma.AddressWhereUniqueInput[]
+  update?: Prisma.AddressUpdateWithWhereUniqueWithoutPartnerInput | Prisma.AddressUpdateWithWhereUniqueWithoutPartnerInput[]
+  updateMany?: Prisma.AddressUpdateManyWithWhereWithoutPartnerInput | Prisma.AddressUpdateManyWithWhereWithoutPartnerInput[]
+  deleteMany?: Prisma.AddressScalarWhereInput | Prisma.AddressScalarWhereInput[]
 }
 
 export type EnumAddressTypeFieldUpdateOperationsInput = {
@@ -837,8 +880,8 @@ export type AddressCreateWithoutEmployeeInput = {
   customer?: Prisma.CustomerCreateNestedOneWithoutAddressesInput
   coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutAddressesInput
   guarantor?: Prisma.GuarantorCreateNestedOneWithoutAddressesInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutAddressesInput
   occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutAddressInput
-  partner?: Prisma.PartnerCreateNestedOneWithoutAddressInput
   lead?: Prisma.LeadsCreateNestedOneWithoutAddressInput
   technicalReport?: Prisma.TechnicalReportCreateNestedOneWithoutAddressInput
   properties?: Prisma.PropertyCreateNestedManyWithoutAddressInput
@@ -858,10 +901,10 @@ export type AddressUncheckedCreateWithoutEmployeeInput = {
   customerId?: string | null
   coApplicantId?: string | null
   guarantorId?: string | null
+  partnerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutAddressInput
-  partner?: Prisma.PartnerUncheckedCreateNestedOneWithoutAddressInput
   lead?: Prisma.LeadsUncheckedCreateNestedOneWithoutAddressInput
   technicalReport?: Prisma.TechnicalReportUncheckedCreateNestedOneWithoutAddressInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutAddressInput
@@ -899,8 +942,8 @@ export type AddressUpdateWithoutEmployeeInput = {
   customer?: Prisma.CustomerUpdateOneWithoutAddressesNestedInput
   coApplicant?: Prisma.CoApplicantUpdateOneWithoutAddressesNestedInput
   guarantor?: Prisma.GuarantorUpdateOneWithoutAddressesNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutAddressesNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutAddressNestedInput
-  partner?: Prisma.PartnerUpdateOneWithoutAddressNestedInput
   lead?: Prisma.LeadsUpdateOneWithoutAddressNestedInput
   technicalReport?: Prisma.TechnicalReportUpdateOneWithoutAddressNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutAddressNestedInput
@@ -920,10 +963,10 @@ export type AddressUncheckedUpdateWithoutEmployeeInput = {
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutAddressNestedInput
-  partner?: Prisma.PartnerUncheckedUpdateOneWithoutAddressNestedInput
   lead?: Prisma.LeadsUncheckedUpdateOneWithoutAddressNestedInput
   technicalReport?: Prisma.TechnicalReportUncheckedUpdateOneWithoutAddressNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutAddressNestedInput
@@ -980,15 +1023,713 @@ export type AddressCreateOrConnectWithoutPartnerInput = {
   create: Prisma.XOR<Prisma.AddressCreateWithoutPartnerInput, Prisma.AddressUncheckedCreateWithoutPartnerInput>
 }
 
-export type AddressUpsertWithoutPartnerInput = {
+export type AddressCreateManyPartnerInputEnvelope = {
+  data: Prisma.AddressCreateManyPartnerInput | Prisma.AddressCreateManyPartnerInput[]
+  skipDuplicates?: boolean
+}
+
+export type AddressUpsertWithWhereUniqueWithoutPartnerInput = {
+  where: Prisma.AddressWhereUniqueInput
   update: Prisma.XOR<Prisma.AddressUpdateWithoutPartnerInput, Prisma.AddressUncheckedUpdateWithoutPartnerInput>
   create: Prisma.XOR<Prisma.AddressCreateWithoutPartnerInput, Prisma.AddressUncheckedCreateWithoutPartnerInput>
+}
+
+export type AddressUpdateWithWhereUniqueWithoutPartnerInput = {
+  where: Prisma.AddressWhereUniqueInput
+  data: Prisma.XOR<Prisma.AddressUpdateWithoutPartnerInput, Prisma.AddressUncheckedUpdateWithoutPartnerInput>
+}
+
+export type AddressUpdateManyWithWhereWithoutPartnerInput = {
+  where: Prisma.AddressScalarWhereInput
+  data: Prisma.XOR<Prisma.AddressUpdateManyMutationInput, Prisma.AddressUncheckedUpdateManyWithoutPartnerInput>
+}
+
+export type AddressScalarWhereInput = {
+  AND?: Prisma.AddressScalarWhereInput | Prisma.AddressScalarWhereInput[]
+  OR?: Prisma.AddressScalarWhereInput[]
+  NOT?: Prisma.AddressScalarWhereInput | Prisma.AddressScalarWhereInput[]
+  id?: Prisma.StringFilter<"Address"> | string
+  addressType?: Prisma.EnumAddressTypeFilter<"Address"> | $Enums.AddressType
+  addressLine1?: Prisma.StringFilter<"Address"> | string
+  addressLine2?: Prisma.StringNullableFilter<"Address"> | string | null
+  city?: Prisma.StringFilter<"Address"> | string
+  district?: Prisma.StringFilter<"Address"> | string
+  state?: Prisma.StringFilter<"Address"> | string
+  pinCode?: Prisma.StringFilter<"Address"> | string
+  landmark?: Prisma.StringNullableFilter<"Address"> | string | null
+  phoneNumber?: Prisma.StringNullableFilter<"Address"> | string | null
+  customerId?: Prisma.StringNullableFilter<"Address"> | string | null
+  coApplicantId?: Prisma.StringNullableFilter<"Address"> | string | null
+  guarantorId?: Prisma.StringNullableFilter<"Address"> | string | null
+  partnerId?: Prisma.StringNullableFilter<"Address"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Address"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Address"> | Date | string
+}
+
+export type AddressCreateWithoutLeadInput = {
+  id?: string
+  addressType: $Enums.AddressType
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  district: string
+  state: string
+  pinCode: string
+  landmark?: string | null
+  phoneNumber?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer?: Prisma.CustomerCreateNestedOneWithoutAddressesInput
+  coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutAddressesInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutAddressesInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutAddressesInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutAddressInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutAddressInput
+  technicalReport?: Prisma.TechnicalReportCreateNestedOneWithoutAddressInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutAddressInput
+}
+
+export type AddressUncheckedCreateWithoutLeadInput = {
+  id?: string
+  addressType: $Enums.AddressType
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  district: string
+  state: string
+  pinCode: string
+  landmark?: string | null
+  phoneNumber?: string | null
+  customerId?: string | null
+  coApplicantId?: string | null
+  guarantorId?: string | null
+  partnerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutAddressInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutAddressInput
+  technicalReport?: Prisma.TechnicalReportUncheckedCreateNestedOneWithoutAddressInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutAddressInput
+}
+
+export type AddressCreateOrConnectWithoutLeadInput = {
+  where: Prisma.AddressWhereUniqueInput
+  create: Prisma.XOR<Prisma.AddressCreateWithoutLeadInput, Prisma.AddressUncheckedCreateWithoutLeadInput>
+}
+
+export type AddressUpsertWithoutLeadInput = {
+  update: Prisma.XOR<Prisma.AddressUpdateWithoutLeadInput, Prisma.AddressUncheckedUpdateWithoutLeadInput>
+  create: Prisma.XOR<Prisma.AddressCreateWithoutLeadInput, Prisma.AddressUncheckedCreateWithoutLeadInput>
   where?: Prisma.AddressWhereInput
 }
 
-export type AddressUpdateToOneWithWhereWithoutPartnerInput = {
+export type AddressUpdateToOneWithWhereWithoutLeadInput = {
   where?: Prisma.AddressWhereInput
-  data: Prisma.XOR<Prisma.AddressUpdateWithoutPartnerInput, Prisma.AddressUncheckedUpdateWithoutPartnerInput>
+  data: Prisma.XOR<Prisma.AddressUpdateWithoutLeadInput, Prisma.AddressUncheckedUpdateWithoutLeadInput>
+}
+
+export type AddressUpdateWithoutLeadInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  addressType?: Prisma.EnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType
+  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  landmark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneWithoutAddressesNestedInput
+  coApplicant?: Prisma.CoApplicantUpdateOneWithoutAddressesNestedInput
+  guarantor?: Prisma.GuarantorUpdateOneWithoutAddressesNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutAddressesNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutAddressNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutAddressNestedInput
+  technicalReport?: Prisma.TechnicalReportUpdateOneWithoutAddressNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutAddressNestedInput
+}
+
+export type AddressUncheckedUpdateWithoutLeadInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  addressType?: Prisma.EnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType
+  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  landmark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutAddressNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutAddressNestedInput
+  technicalReport?: Prisma.TechnicalReportUncheckedUpdateOneWithoutAddressNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutAddressNestedInput
+}
+
+export type AddressCreateWithoutCoApplicantInput = {
+  id?: string
+  addressType: $Enums.AddressType
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  district: string
+  state: string
+  pinCode: string
+  landmark?: string | null
+  phoneNumber?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer?: Prisma.CustomerCreateNestedOneWithoutAddressesInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutAddressesInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutAddressesInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutAddressInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutAddressInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutAddressInput
+  technicalReport?: Prisma.TechnicalReportCreateNestedOneWithoutAddressInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutAddressInput
+}
+
+export type AddressUncheckedCreateWithoutCoApplicantInput = {
+  id?: string
+  addressType: $Enums.AddressType
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  district: string
+  state: string
+  pinCode: string
+  landmark?: string | null
+  phoneNumber?: string | null
+  customerId?: string | null
+  guarantorId?: string | null
+  partnerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutAddressInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutAddressInput
+  lead?: Prisma.LeadsUncheckedCreateNestedOneWithoutAddressInput
+  technicalReport?: Prisma.TechnicalReportUncheckedCreateNestedOneWithoutAddressInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutAddressInput
+}
+
+export type AddressCreateOrConnectWithoutCoApplicantInput = {
+  where: Prisma.AddressWhereUniqueInput
+  create: Prisma.XOR<Prisma.AddressCreateWithoutCoApplicantInput, Prisma.AddressUncheckedCreateWithoutCoApplicantInput>
+}
+
+export type AddressCreateManyCoApplicantInputEnvelope = {
+  data: Prisma.AddressCreateManyCoApplicantInput | Prisma.AddressCreateManyCoApplicantInput[]
+  skipDuplicates?: boolean
+}
+
+export type AddressUpsertWithWhereUniqueWithoutCoApplicantInput = {
+  where: Prisma.AddressWhereUniqueInput
+  update: Prisma.XOR<Prisma.AddressUpdateWithoutCoApplicantInput, Prisma.AddressUncheckedUpdateWithoutCoApplicantInput>
+  create: Prisma.XOR<Prisma.AddressCreateWithoutCoApplicantInput, Prisma.AddressUncheckedCreateWithoutCoApplicantInput>
+}
+
+export type AddressUpdateWithWhereUniqueWithoutCoApplicantInput = {
+  where: Prisma.AddressWhereUniqueInput
+  data: Prisma.XOR<Prisma.AddressUpdateWithoutCoApplicantInput, Prisma.AddressUncheckedUpdateWithoutCoApplicantInput>
+}
+
+export type AddressUpdateManyWithWhereWithoutCoApplicantInput = {
+  where: Prisma.AddressScalarWhereInput
+  data: Prisma.XOR<Prisma.AddressUpdateManyMutationInput, Prisma.AddressUncheckedUpdateManyWithoutCoApplicantInput>
+}
+
+export type AddressCreateWithoutCustomerInput = {
+  id?: string
+  addressType: $Enums.AddressType
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  district: string
+  state: string
+  pinCode: string
+  landmark?: string | null
+  phoneNumber?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutAddressesInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutAddressesInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutAddressesInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutAddressInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutAddressInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutAddressInput
+  technicalReport?: Prisma.TechnicalReportCreateNestedOneWithoutAddressInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutAddressInput
+}
+
+export type AddressUncheckedCreateWithoutCustomerInput = {
+  id?: string
+  addressType: $Enums.AddressType
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  district: string
+  state: string
+  pinCode: string
+  landmark?: string | null
+  phoneNumber?: string | null
+  coApplicantId?: string | null
+  guarantorId?: string | null
+  partnerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutAddressInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutAddressInput
+  lead?: Prisma.LeadsUncheckedCreateNestedOneWithoutAddressInput
+  technicalReport?: Prisma.TechnicalReportUncheckedCreateNestedOneWithoutAddressInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutAddressInput
+}
+
+export type AddressCreateOrConnectWithoutCustomerInput = {
+  where: Prisma.AddressWhereUniqueInput
+  create: Prisma.XOR<Prisma.AddressCreateWithoutCustomerInput, Prisma.AddressUncheckedCreateWithoutCustomerInput>
+}
+
+export type AddressCreateManyCustomerInputEnvelope = {
+  data: Prisma.AddressCreateManyCustomerInput | Prisma.AddressCreateManyCustomerInput[]
+  skipDuplicates?: boolean
+}
+
+export type AddressUpsertWithWhereUniqueWithoutCustomerInput = {
+  where: Prisma.AddressWhereUniqueInput
+  update: Prisma.XOR<Prisma.AddressUpdateWithoutCustomerInput, Prisma.AddressUncheckedUpdateWithoutCustomerInput>
+  create: Prisma.XOR<Prisma.AddressCreateWithoutCustomerInput, Prisma.AddressUncheckedCreateWithoutCustomerInput>
+}
+
+export type AddressUpdateWithWhereUniqueWithoutCustomerInput = {
+  where: Prisma.AddressWhereUniqueInput
+  data: Prisma.XOR<Prisma.AddressUpdateWithoutCustomerInput, Prisma.AddressUncheckedUpdateWithoutCustomerInput>
+}
+
+export type AddressUpdateManyWithWhereWithoutCustomerInput = {
+  where: Prisma.AddressScalarWhereInput
+  data: Prisma.XOR<Prisma.AddressUpdateManyMutationInput, Prisma.AddressUncheckedUpdateManyWithoutCustomerInput>
+}
+
+export type AddressCreateWithoutOccupationalDetailsInput = {
+  id?: string
+  addressType: $Enums.AddressType
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  district: string
+  state: string
+  pinCode: string
+  landmark?: string | null
+  phoneNumber?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer?: Prisma.CustomerCreateNestedOneWithoutAddressesInput
+  coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutAddressesInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutAddressesInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutAddressesInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutAddressInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutAddressInput
+  technicalReport?: Prisma.TechnicalReportCreateNestedOneWithoutAddressInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutAddressInput
+}
+
+export type AddressUncheckedCreateWithoutOccupationalDetailsInput = {
+  id?: string
+  addressType: $Enums.AddressType
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  district: string
+  state: string
+  pinCode: string
+  landmark?: string | null
+  phoneNumber?: string | null
+  customerId?: string | null
+  coApplicantId?: string | null
+  guarantorId?: string | null
+  partnerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutAddressInput
+  lead?: Prisma.LeadsUncheckedCreateNestedOneWithoutAddressInput
+  technicalReport?: Prisma.TechnicalReportUncheckedCreateNestedOneWithoutAddressInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutAddressInput
+}
+
+export type AddressCreateOrConnectWithoutOccupationalDetailsInput = {
+  where: Prisma.AddressWhereUniqueInput
+  create: Prisma.XOR<Prisma.AddressCreateWithoutOccupationalDetailsInput, Prisma.AddressUncheckedCreateWithoutOccupationalDetailsInput>
+}
+
+export type AddressUpsertWithoutOccupationalDetailsInput = {
+  update: Prisma.XOR<Prisma.AddressUpdateWithoutOccupationalDetailsInput, Prisma.AddressUncheckedUpdateWithoutOccupationalDetailsInput>
+  create: Prisma.XOR<Prisma.AddressCreateWithoutOccupationalDetailsInput, Prisma.AddressUncheckedCreateWithoutOccupationalDetailsInput>
+  where?: Prisma.AddressWhereInput
+}
+
+export type AddressUpdateToOneWithWhereWithoutOccupationalDetailsInput = {
+  where?: Prisma.AddressWhereInput
+  data: Prisma.XOR<Prisma.AddressUpdateWithoutOccupationalDetailsInput, Prisma.AddressUncheckedUpdateWithoutOccupationalDetailsInput>
+}
+
+export type AddressUpdateWithoutOccupationalDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  addressType?: Prisma.EnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType
+  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  landmark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneWithoutAddressesNestedInput
+  coApplicant?: Prisma.CoApplicantUpdateOneWithoutAddressesNestedInput
+  guarantor?: Prisma.GuarantorUpdateOneWithoutAddressesNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutAddressesNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutAddressNestedInput
+  lead?: Prisma.LeadsUpdateOneWithoutAddressNestedInput
+  technicalReport?: Prisma.TechnicalReportUpdateOneWithoutAddressNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutAddressNestedInput
+}
+
+export type AddressUncheckedUpdateWithoutOccupationalDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  addressType?: Prisma.EnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType
+  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  landmark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutAddressNestedInput
+  lead?: Prisma.LeadsUncheckedUpdateOneWithoutAddressNestedInput
+  technicalReport?: Prisma.TechnicalReportUncheckedUpdateOneWithoutAddressNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutAddressNestedInput
+}
+
+export type AddressCreateWithoutGuarantorInput = {
+  id?: string
+  addressType: $Enums.AddressType
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  district: string
+  state: string
+  pinCode: string
+  landmark?: string | null
+  phoneNumber?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer?: Prisma.CustomerCreateNestedOneWithoutAddressesInput
+  coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutAddressesInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutAddressesInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutAddressInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutAddressInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutAddressInput
+  technicalReport?: Prisma.TechnicalReportCreateNestedOneWithoutAddressInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutAddressInput
+}
+
+export type AddressUncheckedCreateWithoutGuarantorInput = {
+  id?: string
+  addressType: $Enums.AddressType
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  district: string
+  state: string
+  pinCode: string
+  landmark?: string | null
+  phoneNumber?: string | null
+  customerId?: string | null
+  coApplicantId?: string | null
+  partnerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutAddressInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutAddressInput
+  lead?: Prisma.LeadsUncheckedCreateNestedOneWithoutAddressInput
+  technicalReport?: Prisma.TechnicalReportUncheckedCreateNestedOneWithoutAddressInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutAddressInput
+}
+
+export type AddressCreateOrConnectWithoutGuarantorInput = {
+  where: Prisma.AddressWhereUniqueInput
+  create: Prisma.XOR<Prisma.AddressCreateWithoutGuarantorInput, Prisma.AddressUncheckedCreateWithoutGuarantorInput>
+}
+
+export type AddressCreateManyGuarantorInputEnvelope = {
+  data: Prisma.AddressCreateManyGuarantorInput | Prisma.AddressCreateManyGuarantorInput[]
+  skipDuplicates?: boolean
+}
+
+export type AddressUpsertWithWhereUniqueWithoutGuarantorInput = {
+  where: Prisma.AddressWhereUniqueInput
+  update: Prisma.XOR<Prisma.AddressUpdateWithoutGuarantorInput, Prisma.AddressUncheckedUpdateWithoutGuarantorInput>
+  create: Prisma.XOR<Prisma.AddressCreateWithoutGuarantorInput, Prisma.AddressUncheckedCreateWithoutGuarantorInput>
+}
+
+export type AddressUpdateWithWhereUniqueWithoutGuarantorInput = {
+  where: Prisma.AddressWhereUniqueInput
+  data: Prisma.XOR<Prisma.AddressUpdateWithoutGuarantorInput, Prisma.AddressUncheckedUpdateWithoutGuarantorInput>
+}
+
+export type AddressUpdateManyWithWhereWithoutGuarantorInput = {
+  where: Prisma.AddressScalarWhereInput
+  data: Prisma.XOR<Prisma.AddressUpdateManyMutationInput, Prisma.AddressUncheckedUpdateManyWithoutGuarantorInput>
+}
+
+export type AddressCreateWithoutPropertiesInput = {
+  id?: string
+  addressType: $Enums.AddressType
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  district: string
+  state: string
+  pinCode: string
+  landmark?: string | null
+  phoneNumber?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer?: Prisma.CustomerCreateNestedOneWithoutAddressesInput
+  coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutAddressesInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutAddressesInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutAddressesInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutAddressInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutAddressInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutAddressInput
+  technicalReport?: Prisma.TechnicalReportCreateNestedOneWithoutAddressInput
+}
+
+export type AddressUncheckedCreateWithoutPropertiesInput = {
+  id?: string
+  addressType: $Enums.AddressType
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  district: string
+  state: string
+  pinCode: string
+  landmark?: string | null
+  phoneNumber?: string | null
+  customerId?: string | null
+  coApplicantId?: string | null
+  guarantorId?: string | null
+  partnerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutAddressInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutAddressInput
+  lead?: Prisma.LeadsUncheckedCreateNestedOneWithoutAddressInput
+  technicalReport?: Prisma.TechnicalReportUncheckedCreateNestedOneWithoutAddressInput
+}
+
+export type AddressCreateOrConnectWithoutPropertiesInput = {
+  where: Prisma.AddressWhereUniqueInput
+  create: Prisma.XOR<Prisma.AddressCreateWithoutPropertiesInput, Prisma.AddressUncheckedCreateWithoutPropertiesInput>
+}
+
+export type AddressUpsertWithoutPropertiesInput = {
+  update: Prisma.XOR<Prisma.AddressUpdateWithoutPropertiesInput, Prisma.AddressUncheckedUpdateWithoutPropertiesInput>
+  create: Prisma.XOR<Prisma.AddressCreateWithoutPropertiesInput, Prisma.AddressUncheckedCreateWithoutPropertiesInput>
+  where?: Prisma.AddressWhereInput
+}
+
+export type AddressUpdateToOneWithWhereWithoutPropertiesInput = {
+  where?: Prisma.AddressWhereInput
+  data: Prisma.XOR<Prisma.AddressUpdateWithoutPropertiesInput, Prisma.AddressUncheckedUpdateWithoutPropertiesInput>
+}
+
+export type AddressUpdateWithoutPropertiesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  addressType?: Prisma.EnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType
+  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  landmark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneWithoutAddressesNestedInput
+  coApplicant?: Prisma.CoApplicantUpdateOneWithoutAddressesNestedInput
+  guarantor?: Prisma.GuarantorUpdateOneWithoutAddressesNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutAddressesNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutAddressNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutAddressNestedInput
+  lead?: Prisma.LeadsUpdateOneWithoutAddressNestedInput
+  technicalReport?: Prisma.TechnicalReportUpdateOneWithoutAddressNestedInput
+}
+
+export type AddressUncheckedUpdateWithoutPropertiesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  addressType?: Prisma.EnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType
+  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  landmark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutAddressNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutAddressNestedInput
+  lead?: Prisma.LeadsUncheckedUpdateOneWithoutAddressNestedInput
+  technicalReport?: Prisma.TechnicalReportUncheckedUpdateOneWithoutAddressNestedInput
+}
+
+export type AddressCreateWithoutTechnicalReportInput = {
+  id?: string
+  addressType: $Enums.AddressType
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  district: string
+  state: string
+  pinCode: string
+  landmark?: string | null
+  phoneNumber?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer?: Prisma.CustomerCreateNestedOneWithoutAddressesInput
+  coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutAddressesInput
+  guarantor?: Prisma.GuarantorCreateNestedOneWithoutAddressesInput
+  partner?: Prisma.PartnerCreateNestedOneWithoutAddressesInput
+  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutAddressInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutAddressInput
+  lead?: Prisma.LeadsCreateNestedOneWithoutAddressInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutAddressInput
+}
+
+export type AddressUncheckedCreateWithoutTechnicalReportInput = {
+  id?: string
+  addressType: $Enums.AddressType
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  district: string
+  state: string
+  pinCode: string
+  landmark?: string | null
+  phoneNumber?: string | null
+  customerId?: string | null
+  coApplicantId?: string | null
+  guarantorId?: string | null
+  partnerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutAddressInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutAddressInput
+  lead?: Prisma.LeadsUncheckedCreateNestedOneWithoutAddressInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutAddressInput
+}
+
+export type AddressCreateOrConnectWithoutTechnicalReportInput = {
+  where: Prisma.AddressWhereUniqueInput
+  create: Prisma.XOR<Prisma.AddressCreateWithoutTechnicalReportInput, Prisma.AddressUncheckedCreateWithoutTechnicalReportInput>
+}
+
+export type AddressUpsertWithoutTechnicalReportInput = {
+  update: Prisma.XOR<Prisma.AddressUpdateWithoutTechnicalReportInput, Prisma.AddressUncheckedUpdateWithoutTechnicalReportInput>
+  create: Prisma.XOR<Prisma.AddressCreateWithoutTechnicalReportInput, Prisma.AddressUncheckedCreateWithoutTechnicalReportInput>
+  where?: Prisma.AddressWhereInput
+}
+
+export type AddressUpdateToOneWithWhereWithoutTechnicalReportInput = {
+  where?: Prisma.AddressWhereInput
+  data: Prisma.XOR<Prisma.AddressUpdateWithoutTechnicalReportInput, Prisma.AddressUncheckedUpdateWithoutTechnicalReportInput>
+}
+
+export type AddressUpdateWithoutTechnicalReportInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  addressType?: Prisma.EnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType
+  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  landmark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneWithoutAddressesNestedInput
+  coApplicant?: Prisma.CoApplicantUpdateOneWithoutAddressesNestedInput
+  guarantor?: Prisma.GuarantorUpdateOneWithoutAddressesNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutAddressesNestedInput
+  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutAddressNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutAddressNestedInput
+  lead?: Prisma.LeadsUpdateOneWithoutAddressNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutAddressNestedInput
+}
+
+export type AddressUncheckedUpdateWithoutTechnicalReportInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  addressType?: Prisma.EnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType
+  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
+  landmark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutAddressNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutAddressNestedInput
+  lead?: Prisma.LeadsUncheckedUpdateOneWithoutAddressNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutAddressNestedInput
+}
+
+export type AddressCreateManyPartnerInput = {
+  id?: string
+  addressType: $Enums.AddressType
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  district: string
+  state: string
+  pinCode: string
+  landmark?: string | null
+  phoneNumber?: string | null
+  customerId?: string | null
+  coApplicantId?: string | null
+  guarantorId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type AddressUpdateWithoutPartnerInput = {
@@ -1037,92 +1778,7 @@ export type AddressUncheckedUpdateWithoutPartnerInput = {
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutAddressNestedInput
 }
 
-export type AddressCreateWithoutLeadInput = {
-  id?: string
-  addressType: $Enums.AddressType
-  addressLine1: string
-  addressLine2?: string | null
-  city: string
-  district: string
-  state: string
-  pinCode: string
-  landmark?: string | null
-  phoneNumber?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  customer?: Prisma.CustomerCreateNestedOneWithoutAddressesInput
-  coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutAddressesInput
-  guarantor?: Prisma.GuarantorCreateNestedOneWithoutAddressesInput
-  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutAddressInput
-  employee?: Prisma.EmployeeCreateNestedOneWithoutAddressInput
-  partner?: Prisma.PartnerCreateNestedOneWithoutAddressInput
-  technicalReport?: Prisma.TechnicalReportCreateNestedOneWithoutAddressInput
-  properties?: Prisma.PropertyCreateNestedManyWithoutAddressInput
-}
-
-export type AddressUncheckedCreateWithoutLeadInput = {
-  id?: string
-  addressType: $Enums.AddressType
-  addressLine1: string
-  addressLine2?: string | null
-  city: string
-  district: string
-  state: string
-  pinCode: string
-  landmark?: string | null
-  phoneNumber?: string | null
-  customerId?: string | null
-  coApplicantId?: string | null
-  guarantorId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutAddressInput
-  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutAddressInput
-  partner?: Prisma.PartnerUncheckedCreateNestedOneWithoutAddressInput
-  technicalReport?: Prisma.TechnicalReportUncheckedCreateNestedOneWithoutAddressInput
-  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutAddressInput
-}
-
-export type AddressCreateOrConnectWithoutLeadInput = {
-  where: Prisma.AddressWhereUniqueInput
-  create: Prisma.XOR<Prisma.AddressCreateWithoutLeadInput, Prisma.AddressUncheckedCreateWithoutLeadInput>
-}
-
-export type AddressUpsertWithoutLeadInput = {
-  update: Prisma.XOR<Prisma.AddressUpdateWithoutLeadInput, Prisma.AddressUncheckedUpdateWithoutLeadInput>
-  create: Prisma.XOR<Prisma.AddressCreateWithoutLeadInput, Prisma.AddressUncheckedCreateWithoutLeadInput>
-  where?: Prisma.AddressWhereInput
-}
-
-export type AddressUpdateToOneWithWhereWithoutLeadInput = {
-  where?: Prisma.AddressWhereInput
-  data: Prisma.XOR<Prisma.AddressUpdateWithoutLeadInput, Prisma.AddressUncheckedUpdateWithoutLeadInput>
-}
-
-export type AddressUpdateWithoutLeadInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  addressType?: Prisma.EnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType
-  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
-  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  landmark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  customer?: Prisma.CustomerUpdateOneWithoutAddressesNestedInput
-  coApplicant?: Prisma.CoApplicantUpdateOneWithoutAddressesNestedInput
-  guarantor?: Prisma.GuarantorUpdateOneWithoutAddressesNestedInput
-  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutAddressNestedInput
-  employee?: Prisma.EmployeeUpdateOneWithoutAddressNestedInput
-  partner?: Prisma.PartnerUpdateOneWithoutAddressNestedInput
-  technicalReport?: Prisma.TechnicalReportUpdateOneWithoutAddressNestedInput
-  properties?: Prisma.PropertyUpdateManyWithoutAddressNestedInput
-}
-
-export type AddressUncheckedUpdateWithoutLeadInput = {
+export type AddressUncheckedUpdateManyWithoutPartnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   addressType?: Prisma.EnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType
   addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1138,572 +1794,6 @@ export type AddressUncheckedUpdateWithoutLeadInput = {
   guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutAddressNestedInput
-  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutAddressNestedInput
-  partner?: Prisma.PartnerUncheckedUpdateOneWithoutAddressNestedInput
-  technicalReport?: Prisma.TechnicalReportUncheckedUpdateOneWithoutAddressNestedInput
-  properties?: Prisma.PropertyUncheckedUpdateManyWithoutAddressNestedInput
-}
-
-export type AddressCreateWithoutCoApplicantInput = {
-  id?: string
-  addressType: $Enums.AddressType
-  addressLine1: string
-  addressLine2?: string | null
-  city: string
-  district: string
-  state: string
-  pinCode: string
-  landmark?: string | null
-  phoneNumber?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  customer?: Prisma.CustomerCreateNestedOneWithoutAddressesInput
-  guarantor?: Prisma.GuarantorCreateNestedOneWithoutAddressesInput
-  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutAddressInput
-  employee?: Prisma.EmployeeCreateNestedOneWithoutAddressInput
-  partner?: Prisma.PartnerCreateNestedOneWithoutAddressInput
-  lead?: Prisma.LeadsCreateNestedOneWithoutAddressInput
-  technicalReport?: Prisma.TechnicalReportCreateNestedOneWithoutAddressInput
-  properties?: Prisma.PropertyCreateNestedManyWithoutAddressInput
-}
-
-export type AddressUncheckedCreateWithoutCoApplicantInput = {
-  id?: string
-  addressType: $Enums.AddressType
-  addressLine1: string
-  addressLine2?: string | null
-  city: string
-  district: string
-  state: string
-  pinCode: string
-  landmark?: string | null
-  phoneNumber?: string | null
-  customerId?: string | null
-  guarantorId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutAddressInput
-  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutAddressInput
-  partner?: Prisma.PartnerUncheckedCreateNestedOneWithoutAddressInput
-  lead?: Prisma.LeadsUncheckedCreateNestedOneWithoutAddressInput
-  technicalReport?: Prisma.TechnicalReportUncheckedCreateNestedOneWithoutAddressInput
-  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutAddressInput
-}
-
-export type AddressCreateOrConnectWithoutCoApplicantInput = {
-  where: Prisma.AddressWhereUniqueInput
-  create: Prisma.XOR<Prisma.AddressCreateWithoutCoApplicantInput, Prisma.AddressUncheckedCreateWithoutCoApplicantInput>
-}
-
-export type AddressCreateManyCoApplicantInputEnvelope = {
-  data: Prisma.AddressCreateManyCoApplicantInput | Prisma.AddressCreateManyCoApplicantInput[]
-  skipDuplicates?: boolean
-}
-
-export type AddressUpsertWithWhereUniqueWithoutCoApplicantInput = {
-  where: Prisma.AddressWhereUniqueInput
-  update: Prisma.XOR<Prisma.AddressUpdateWithoutCoApplicantInput, Prisma.AddressUncheckedUpdateWithoutCoApplicantInput>
-  create: Prisma.XOR<Prisma.AddressCreateWithoutCoApplicantInput, Prisma.AddressUncheckedCreateWithoutCoApplicantInput>
-}
-
-export type AddressUpdateWithWhereUniqueWithoutCoApplicantInput = {
-  where: Prisma.AddressWhereUniqueInput
-  data: Prisma.XOR<Prisma.AddressUpdateWithoutCoApplicantInput, Prisma.AddressUncheckedUpdateWithoutCoApplicantInput>
-}
-
-export type AddressUpdateManyWithWhereWithoutCoApplicantInput = {
-  where: Prisma.AddressScalarWhereInput
-  data: Prisma.XOR<Prisma.AddressUpdateManyMutationInput, Prisma.AddressUncheckedUpdateManyWithoutCoApplicantInput>
-}
-
-export type AddressScalarWhereInput = {
-  AND?: Prisma.AddressScalarWhereInput | Prisma.AddressScalarWhereInput[]
-  OR?: Prisma.AddressScalarWhereInput[]
-  NOT?: Prisma.AddressScalarWhereInput | Prisma.AddressScalarWhereInput[]
-  id?: Prisma.StringFilter<"Address"> | string
-  addressType?: Prisma.EnumAddressTypeFilter<"Address"> | $Enums.AddressType
-  addressLine1?: Prisma.StringFilter<"Address"> | string
-  addressLine2?: Prisma.StringNullableFilter<"Address"> | string | null
-  city?: Prisma.StringFilter<"Address"> | string
-  district?: Prisma.StringFilter<"Address"> | string
-  state?: Prisma.StringFilter<"Address"> | string
-  pinCode?: Prisma.StringFilter<"Address"> | string
-  landmark?: Prisma.StringNullableFilter<"Address"> | string | null
-  phoneNumber?: Prisma.StringNullableFilter<"Address"> | string | null
-  customerId?: Prisma.StringNullableFilter<"Address"> | string | null
-  coApplicantId?: Prisma.StringNullableFilter<"Address"> | string | null
-  guarantorId?: Prisma.StringNullableFilter<"Address"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Address"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Address"> | Date | string
-}
-
-export type AddressCreateWithoutCustomerInput = {
-  id?: string
-  addressType: $Enums.AddressType
-  addressLine1: string
-  addressLine2?: string | null
-  city: string
-  district: string
-  state: string
-  pinCode: string
-  landmark?: string | null
-  phoneNumber?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutAddressesInput
-  guarantor?: Prisma.GuarantorCreateNestedOneWithoutAddressesInput
-  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutAddressInput
-  employee?: Prisma.EmployeeCreateNestedOneWithoutAddressInput
-  partner?: Prisma.PartnerCreateNestedOneWithoutAddressInput
-  lead?: Prisma.LeadsCreateNestedOneWithoutAddressInput
-  technicalReport?: Prisma.TechnicalReportCreateNestedOneWithoutAddressInput
-  properties?: Prisma.PropertyCreateNestedManyWithoutAddressInput
-}
-
-export type AddressUncheckedCreateWithoutCustomerInput = {
-  id?: string
-  addressType: $Enums.AddressType
-  addressLine1: string
-  addressLine2?: string | null
-  city: string
-  district: string
-  state: string
-  pinCode: string
-  landmark?: string | null
-  phoneNumber?: string | null
-  coApplicantId?: string | null
-  guarantorId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutAddressInput
-  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutAddressInput
-  partner?: Prisma.PartnerUncheckedCreateNestedOneWithoutAddressInput
-  lead?: Prisma.LeadsUncheckedCreateNestedOneWithoutAddressInput
-  technicalReport?: Prisma.TechnicalReportUncheckedCreateNestedOneWithoutAddressInput
-  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutAddressInput
-}
-
-export type AddressCreateOrConnectWithoutCustomerInput = {
-  where: Prisma.AddressWhereUniqueInput
-  create: Prisma.XOR<Prisma.AddressCreateWithoutCustomerInput, Prisma.AddressUncheckedCreateWithoutCustomerInput>
-}
-
-export type AddressCreateManyCustomerInputEnvelope = {
-  data: Prisma.AddressCreateManyCustomerInput | Prisma.AddressCreateManyCustomerInput[]
-  skipDuplicates?: boolean
-}
-
-export type AddressUpsertWithWhereUniqueWithoutCustomerInput = {
-  where: Prisma.AddressWhereUniqueInput
-  update: Prisma.XOR<Prisma.AddressUpdateWithoutCustomerInput, Prisma.AddressUncheckedUpdateWithoutCustomerInput>
-  create: Prisma.XOR<Prisma.AddressCreateWithoutCustomerInput, Prisma.AddressUncheckedCreateWithoutCustomerInput>
-}
-
-export type AddressUpdateWithWhereUniqueWithoutCustomerInput = {
-  where: Prisma.AddressWhereUniqueInput
-  data: Prisma.XOR<Prisma.AddressUpdateWithoutCustomerInput, Prisma.AddressUncheckedUpdateWithoutCustomerInput>
-}
-
-export type AddressUpdateManyWithWhereWithoutCustomerInput = {
-  where: Prisma.AddressScalarWhereInput
-  data: Prisma.XOR<Prisma.AddressUpdateManyMutationInput, Prisma.AddressUncheckedUpdateManyWithoutCustomerInput>
-}
-
-export type AddressCreateWithoutOccupationalDetailsInput = {
-  id?: string
-  addressType: $Enums.AddressType
-  addressLine1: string
-  addressLine2?: string | null
-  city: string
-  district: string
-  state: string
-  pinCode: string
-  landmark?: string | null
-  phoneNumber?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  customer?: Prisma.CustomerCreateNestedOneWithoutAddressesInput
-  coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutAddressesInput
-  guarantor?: Prisma.GuarantorCreateNestedOneWithoutAddressesInput
-  employee?: Prisma.EmployeeCreateNestedOneWithoutAddressInput
-  partner?: Prisma.PartnerCreateNestedOneWithoutAddressInput
-  lead?: Prisma.LeadsCreateNestedOneWithoutAddressInput
-  technicalReport?: Prisma.TechnicalReportCreateNestedOneWithoutAddressInput
-  properties?: Prisma.PropertyCreateNestedManyWithoutAddressInput
-}
-
-export type AddressUncheckedCreateWithoutOccupationalDetailsInput = {
-  id?: string
-  addressType: $Enums.AddressType
-  addressLine1: string
-  addressLine2?: string | null
-  city: string
-  district: string
-  state: string
-  pinCode: string
-  landmark?: string | null
-  phoneNumber?: string | null
-  customerId?: string | null
-  coApplicantId?: string | null
-  guarantorId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutAddressInput
-  partner?: Prisma.PartnerUncheckedCreateNestedOneWithoutAddressInput
-  lead?: Prisma.LeadsUncheckedCreateNestedOneWithoutAddressInput
-  technicalReport?: Prisma.TechnicalReportUncheckedCreateNestedOneWithoutAddressInput
-  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutAddressInput
-}
-
-export type AddressCreateOrConnectWithoutOccupationalDetailsInput = {
-  where: Prisma.AddressWhereUniqueInput
-  create: Prisma.XOR<Prisma.AddressCreateWithoutOccupationalDetailsInput, Prisma.AddressUncheckedCreateWithoutOccupationalDetailsInput>
-}
-
-export type AddressUpsertWithoutOccupationalDetailsInput = {
-  update: Prisma.XOR<Prisma.AddressUpdateWithoutOccupationalDetailsInput, Prisma.AddressUncheckedUpdateWithoutOccupationalDetailsInput>
-  create: Prisma.XOR<Prisma.AddressCreateWithoutOccupationalDetailsInput, Prisma.AddressUncheckedCreateWithoutOccupationalDetailsInput>
-  where?: Prisma.AddressWhereInput
-}
-
-export type AddressUpdateToOneWithWhereWithoutOccupationalDetailsInput = {
-  where?: Prisma.AddressWhereInput
-  data: Prisma.XOR<Prisma.AddressUpdateWithoutOccupationalDetailsInput, Prisma.AddressUncheckedUpdateWithoutOccupationalDetailsInput>
-}
-
-export type AddressUpdateWithoutOccupationalDetailsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  addressType?: Prisma.EnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType
-  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
-  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  landmark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  customer?: Prisma.CustomerUpdateOneWithoutAddressesNestedInput
-  coApplicant?: Prisma.CoApplicantUpdateOneWithoutAddressesNestedInput
-  guarantor?: Prisma.GuarantorUpdateOneWithoutAddressesNestedInput
-  employee?: Prisma.EmployeeUpdateOneWithoutAddressNestedInput
-  partner?: Prisma.PartnerUpdateOneWithoutAddressNestedInput
-  lead?: Prisma.LeadsUpdateOneWithoutAddressNestedInput
-  technicalReport?: Prisma.TechnicalReportUpdateOneWithoutAddressNestedInput
-  properties?: Prisma.PropertyUpdateManyWithoutAddressNestedInput
-}
-
-export type AddressUncheckedUpdateWithoutOccupationalDetailsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  addressType?: Prisma.EnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType
-  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
-  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  landmark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutAddressNestedInput
-  partner?: Prisma.PartnerUncheckedUpdateOneWithoutAddressNestedInput
-  lead?: Prisma.LeadsUncheckedUpdateOneWithoutAddressNestedInput
-  technicalReport?: Prisma.TechnicalReportUncheckedUpdateOneWithoutAddressNestedInput
-  properties?: Prisma.PropertyUncheckedUpdateManyWithoutAddressNestedInput
-}
-
-export type AddressCreateWithoutGuarantorInput = {
-  id?: string
-  addressType: $Enums.AddressType
-  addressLine1: string
-  addressLine2?: string | null
-  city: string
-  district: string
-  state: string
-  pinCode: string
-  landmark?: string | null
-  phoneNumber?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  customer?: Prisma.CustomerCreateNestedOneWithoutAddressesInput
-  coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutAddressesInput
-  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutAddressInput
-  employee?: Prisma.EmployeeCreateNestedOneWithoutAddressInput
-  partner?: Prisma.PartnerCreateNestedOneWithoutAddressInput
-  lead?: Prisma.LeadsCreateNestedOneWithoutAddressInput
-  technicalReport?: Prisma.TechnicalReportCreateNestedOneWithoutAddressInput
-  properties?: Prisma.PropertyCreateNestedManyWithoutAddressInput
-}
-
-export type AddressUncheckedCreateWithoutGuarantorInput = {
-  id?: string
-  addressType: $Enums.AddressType
-  addressLine1: string
-  addressLine2?: string | null
-  city: string
-  district: string
-  state: string
-  pinCode: string
-  landmark?: string | null
-  phoneNumber?: string | null
-  customerId?: string | null
-  coApplicantId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutAddressInput
-  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutAddressInput
-  partner?: Prisma.PartnerUncheckedCreateNestedOneWithoutAddressInput
-  lead?: Prisma.LeadsUncheckedCreateNestedOneWithoutAddressInput
-  technicalReport?: Prisma.TechnicalReportUncheckedCreateNestedOneWithoutAddressInput
-  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutAddressInput
-}
-
-export type AddressCreateOrConnectWithoutGuarantorInput = {
-  where: Prisma.AddressWhereUniqueInput
-  create: Prisma.XOR<Prisma.AddressCreateWithoutGuarantorInput, Prisma.AddressUncheckedCreateWithoutGuarantorInput>
-}
-
-export type AddressCreateManyGuarantorInputEnvelope = {
-  data: Prisma.AddressCreateManyGuarantorInput | Prisma.AddressCreateManyGuarantorInput[]
-  skipDuplicates?: boolean
-}
-
-export type AddressUpsertWithWhereUniqueWithoutGuarantorInput = {
-  where: Prisma.AddressWhereUniqueInput
-  update: Prisma.XOR<Prisma.AddressUpdateWithoutGuarantorInput, Prisma.AddressUncheckedUpdateWithoutGuarantorInput>
-  create: Prisma.XOR<Prisma.AddressCreateWithoutGuarantorInput, Prisma.AddressUncheckedCreateWithoutGuarantorInput>
-}
-
-export type AddressUpdateWithWhereUniqueWithoutGuarantorInput = {
-  where: Prisma.AddressWhereUniqueInput
-  data: Prisma.XOR<Prisma.AddressUpdateWithoutGuarantorInput, Prisma.AddressUncheckedUpdateWithoutGuarantorInput>
-}
-
-export type AddressUpdateManyWithWhereWithoutGuarantorInput = {
-  where: Prisma.AddressScalarWhereInput
-  data: Prisma.XOR<Prisma.AddressUpdateManyMutationInput, Prisma.AddressUncheckedUpdateManyWithoutGuarantorInput>
-}
-
-export type AddressCreateWithoutPropertiesInput = {
-  id?: string
-  addressType: $Enums.AddressType
-  addressLine1: string
-  addressLine2?: string | null
-  city: string
-  district: string
-  state: string
-  pinCode: string
-  landmark?: string | null
-  phoneNumber?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  customer?: Prisma.CustomerCreateNestedOneWithoutAddressesInput
-  coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutAddressesInput
-  guarantor?: Prisma.GuarantorCreateNestedOneWithoutAddressesInput
-  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutAddressInput
-  employee?: Prisma.EmployeeCreateNestedOneWithoutAddressInput
-  partner?: Prisma.PartnerCreateNestedOneWithoutAddressInput
-  lead?: Prisma.LeadsCreateNestedOneWithoutAddressInput
-  technicalReport?: Prisma.TechnicalReportCreateNestedOneWithoutAddressInput
-}
-
-export type AddressUncheckedCreateWithoutPropertiesInput = {
-  id?: string
-  addressType: $Enums.AddressType
-  addressLine1: string
-  addressLine2?: string | null
-  city: string
-  district: string
-  state: string
-  pinCode: string
-  landmark?: string | null
-  phoneNumber?: string | null
-  customerId?: string | null
-  coApplicantId?: string | null
-  guarantorId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutAddressInput
-  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutAddressInput
-  partner?: Prisma.PartnerUncheckedCreateNestedOneWithoutAddressInput
-  lead?: Prisma.LeadsUncheckedCreateNestedOneWithoutAddressInput
-  technicalReport?: Prisma.TechnicalReportUncheckedCreateNestedOneWithoutAddressInput
-}
-
-export type AddressCreateOrConnectWithoutPropertiesInput = {
-  where: Prisma.AddressWhereUniqueInput
-  create: Prisma.XOR<Prisma.AddressCreateWithoutPropertiesInput, Prisma.AddressUncheckedCreateWithoutPropertiesInput>
-}
-
-export type AddressUpsertWithoutPropertiesInput = {
-  update: Prisma.XOR<Prisma.AddressUpdateWithoutPropertiesInput, Prisma.AddressUncheckedUpdateWithoutPropertiesInput>
-  create: Prisma.XOR<Prisma.AddressCreateWithoutPropertiesInput, Prisma.AddressUncheckedCreateWithoutPropertiesInput>
-  where?: Prisma.AddressWhereInput
-}
-
-export type AddressUpdateToOneWithWhereWithoutPropertiesInput = {
-  where?: Prisma.AddressWhereInput
-  data: Prisma.XOR<Prisma.AddressUpdateWithoutPropertiesInput, Prisma.AddressUncheckedUpdateWithoutPropertiesInput>
-}
-
-export type AddressUpdateWithoutPropertiesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  addressType?: Prisma.EnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType
-  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
-  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  landmark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  customer?: Prisma.CustomerUpdateOneWithoutAddressesNestedInput
-  coApplicant?: Prisma.CoApplicantUpdateOneWithoutAddressesNestedInput
-  guarantor?: Prisma.GuarantorUpdateOneWithoutAddressesNestedInput
-  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutAddressNestedInput
-  employee?: Prisma.EmployeeUpdateOneWithoutAddressNestedInput
-  partner?: Prisma.PartnerUpdateOneWithoutAddressNestedInput
-  lead?: Prisma.LeadsUpdateOneWithoutAddressNestedInput
-  technicalReport?: Prisma.TechnicalReportUpdateOneWithoutAddressNestedInput
-}
-
-export type AddressUncheckedUpdateWithoutPropertiesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  addressType?: Prisma.EnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType
-  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
-  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  landmark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutAddressNestedInput
-  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutAddressNestedInput
-  partner?: Prisma.PartnerUncheckedUpdateOneWithoutAddressNestedInput
-  lead?: Prisma.LeadsUncheckedUpdateOneWithoutAddressNestedInput
-  technicalReport?: Prisma.TechnicalReportUncheckedUpdateOneWithoutAddressNestedInput
-}
-
-export type AddressCreateWithoutTechnicalReportInput = {
-  id?: string
-  addressType: $Enums.AddressType
-  addressLine1: string
-  addressLine2?: string | null
-  city: string
-  district: string
-  state: string
-  pinCode: string
-  landmark?: string | null
-  phoneNumber?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  customer?: Prisma.CustomerCreateNestedOneWithoutAddressesInput
-  coApplicant?: Prisma.CoApplicantCreateNestedOneWithoutAddressesInput
-  guarantor?: Prisma.GuarantorCreateNestedOneWithoutAddressesInput
-  occupationalDetails?: Prisma.OccupationalDetailsCreateNestedManyWithoutAddressInput
-  employee?: Prisma.EmployeeCreateNestedOneWithoutAddressInput
-  partner?: Prisma.PartnerCreateNestedOneWithoutAddressInput
-  lead?: Prisma.LeadsCreateNestedOneWithoutAddressInput
-  properties?: Prisma.PropertyCreateNestedManyWithoutAddressInput
-}
-
-export type AddressUncheckedCreateWithoutTechnicalReportInput = {
-  id?: string
-  addressType: $Enums.AddressType
-  addressLine1: string
-  addressLine2?: string | null
-  city: string
-  district: string
-  state: string
-  pinCode: string
-  landmark?: string | null
-  phoneNumber?: string | null
-  customerId?: string | null
-  coApplicantId?: string | null
-  guarantorId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  occupationalDetails?: Prisma.OccupationalDetailsUncheckedCreateNestedManyWithoutAddressInput
-  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutAddressInput
-  partner?: Prisma.PartnerUncheckedCreateNestedOneWithoutAddressInput
-  lead?: Prisma.LeadsUncheckedCreateNestedOneWithoutAddressInput
-  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutAddressInput
-}
-
-export type AddressCreateOrConnectWithoutTechnicalReportInput = {
-  where: Prisma.AddressWhereUniqueInput
-  create: Prisma.XOR<Prisma.AddressCreateWithoutTechnicalReportInput, Prisma.AddressUncheckedCreateWithoutTechnicalReportInput>
-}
-
-export type AddressUpsertWithoutTechnicalReportInput = {
-  update: Prisma.XOR<Prisma.AddressUpdateWithoutTechnicalReportInput, Prisma.AddressUncheckedUpdateWithoutTechnicalReportInput>
-  create: Prisma.XOR<Prisma.AddressCreateWithoutTechnicalReportInput, Prisma.AddressUncheckedCreateWithoutTechnicalReportInput>
-  where?: Prisma.AddressWhereInput
-}
-
-export type AddressUpdateToOneWithWhereWithoutTechnicalReportInput = {
-  where?: Prisma.AddressWhereInput
-  data: Prisma.XOR<Prisma.AddressUpdateWithoutTechnicalReportInput, Prisma.AddressUncheckedUpdateWithoutTechnicalReportInput>
-}
-
-export type AddressUpdateWithoutTechnicalReportInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  addressType?: Prisma.EnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType
-  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
-  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  landmark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  customer?: Prisma.CustomerUpdateOneWithoutAddressesNestedInput
-  coApplicant?: Prisma.CoApplicantUpdateOneWithoutAddressesNestedInput
-  guarantor?: Prisma.GuarantorUpdateOneWithoutAddressesNestedInput
-  occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutAddressNestedInput
-  employee?: Prisma.EmployeeUpdateOneWithoutAddressNestedInput
-  partner?: Prisma.PartnerUpdateOneWithoutAddressNestedInput
-  lead?: Prisma.LeadsUpdateOneWithoutAddressNestedInput
-  properties?: Prisma.PropertyUpdateManyWithoutAddressNestedInput
-}
-
-export type AddressUncheckedUpdateWithoutTechnicalReportInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  addressType?: Prisma.EnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType
-  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
-  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
-  state?: Prisma.StringFieldUpdateOperationsInput | string
-  pinCode?: Prisma.StringFieldUpdateOperationsInput | string
-  landmark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutAddressNestedInput
-  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutAddressNestedInput
-  partner?: Prisma.PartnerUncheckedUpdateOneWithoutAddressNestedInput
-  lead?: Prisma.LeadsUncheckedUpdateOneWithoutAddressNestedInput
-  properties?: Prisma.PropertyUncheckedUpdateManyWithoutAddressNestedInput
 }
 
 export type AddressCreateManyCoApplicantInput = {
@@ -1719,6 +1809,7 @@ export type AddressCreateManyCoApplicantInput = {
   phoneNumber?: string | null
   customerId?: string | null
   guarantorId?: string | null
+  partnerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1738,9 +1829,9 @@ export type AddressUpdateWithoutCoApplicantInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneWithoutAddressesNestedInput
   guarantor?: Prisma.GuarantorUpdateOneWithoutAddressesNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutAddressesNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutAddressNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutAddressNestedInput
-  partner?: Prisma.PartnerUpdateOneWithoutAddressNestedInput
   lead?: Prisma.LeadsUpdateOneWithoutAddressNestedInput
   technicalReport?: Prisma.TechnicalReportUpdateOneWithoutAddressNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutAddressNestedInput
@@ -1759,11 +1850,11 @@ export type AddressUncheckedUpdateWithoutCoApplicantInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutAddressNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutAddressNestedInput
-  partner?: Prisma.PartnerUncheckedUpdateOneWithoutAddressNestedInput
   lead?: Prisma.LeadsUncheckedUpdateOneWithoutAddressNestedInput
   technicalReport?: Prisma.TechnicalReportUncheckedUpdateOneWithoutAddressNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutAddressNestedInput
@@ -1782,6 +1873,7 @@ export type AddressUncheckedUpdateManyWithoutCoApplicantInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1799,6 +1891,7 @@ export type AddressCreateManyCustomerInput = {
   phoneNumber?: string | null
   coApplicantId?: string | null
   guarantorId?: string | null
+  partnerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1818,9 +1911,9 @@ export type AddressUpdateWithoutCustomerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coApplicant?: Prisma.CoApplicantUpdateOneWithoutAddressesNestedInput
   guarantor?: Prisma.GuarantorUpdateOneWithoutAddressesNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutAddressesNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutAddressNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutAddressNestedInput
-  partner?: Prisma.PartnerUpdateOneWithoutAddressNestedInput
   lead?: Prisma.LeadsUpdateOneWithoutAddressNestedInput
   technicalReport?: Prisma.TechnicalReportUpdateOneWithoutAddressNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutAddressNestedInput
@@ -1839,11 +1932,11 @@ export type AddressUncheckedUpdateWithoutCustomerInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutAddressNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutAddressNestedInput
-  partner?: Prisma.PartnerUncheckedUpdateOneWithoutAddressNestedInput
   lead?: Prisma.LeadsUncheckedUpdateOneWithoutAddressNestedInput
   technicalReport?: Prisma.TechnicalReportUncheckedUpdateOneWithoutAddressNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutAddressNestedInput
@@ -1862,6 +1955,7 @@ export type AddressUncheckedUpdateManyWithoutCustomerInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   guarantorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1879,6 +1973,7 @@ export type AddressCreateManyGuarantorInput = {
   phoneNumber?: string | null
   customerId?: string | null
   coApplicantId?: string | null
+  partnerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1898,9 +1993,9 @@ export type AddressUpdateWithoutGuarantorInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneWithoutAddressesNestedInput
   coApplicant?: Prisma.CoApplicantUpdateOneWithoutAddressesNestedInput
+  partner?: Prisma.PartnerUpdateOneWithoutAddressesNestedInput
   occupationalDetails?: Prisma.OccupationalDetailsUpdateManyWithoutAddressNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutAddressNestedInput
-  partner?: Prisma.PartnerUpdateOneWithoutAddressNestedInput
   lead?: Prisma.LeadsUpdateOneWithoutAddressNestedInput
   technicalReport?: Prisma.TechnicalReportUpdateOneWithoutAddressNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutAddressNestedInput
@@ -1919,11 +2014,11 @@ export type AddressUncheckedUpdateWithoutGuarantorInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   occupationalDetails?: Prisma.OccupationalDetailsUncheckedUpdateManyWithoutAddressNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutAddressNestedInput
-  partner?: Prisma.PartnerUncheckedUpdateOneWithoutAddressNestedInput
   lead?: Prisma.LeadsUncheckedUpdateOneWithoutAddressNestedInput
   technicalReport?: Prisma.TechnicalReportUncheckedUpdateOneWithoutAddressNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutAddressNestedInput
@@ -1942,6 +2037,7 @@ export type AddressUncheckedUpdateManyWithoutGuarantorInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2000,14 +2096,15 @@ export type AddressSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   customerId?: boolean
   coApplicantId?: boolean
   guarantorId?: boolean
+  partnerId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   customer?: boolean | Prisma.Address$customerArgs<ExtArgs>
   coApplicant?: boolean | Prisma.Address$coApplicantArgs<ExtArgs>
   guarantor?: boolean | Prisma.Address$guarantorArgs<ExtArgs>
+  partner?: boolean | Prisma.Address$partnerArgs<ExtArgs>
   occupationalDetails?: boolean | Prisma.Address$occupationalDetailsArgs<ExtArgs>
   employee?: boolean | Prisma.Address$employeeArgs<ExtArgs>
-  partner?: boolean | Prisma.Address$partnerArgs<ExtArgs>
   lead?: boolean | Prisma.Address$leadArgs<ExtArgs>
   technicalReport?: boolean | Prisma.Address$technicalReportArgs<ExtArgs>
   properties?: boolean | Prisma.Address$propertiesArgs<ExtArgs>
@@ -2030,18 +2127,19 @@ export type AddressSelectScalar = {
   customerId?: boolean
   coApplicantId?: boolean
   guarantorId?: boolean
+  partnerId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AddressOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "addressType" | "addressLine1" | "addressLine2" | "city" | "district" | "state" | "pinCode" | "landmark" | "phoneNumber" | "customerId" | "coApplicantId" | "guarantorId" | "createdAt" | "updatedAt", ExtArgs["result"]["address"]>
+export type AddressOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "addressType" | "addressLine1" | "addressLine2" | "city" | "district" | "state" | "pinCode" | "landmark" | "phoneNumber" | "customerId" | "coApplicantId" | "guarantorId" | "partnerId" | "createdAt" | "updatedAt", ExtArgs["result"]["address"]>
 export type AddressInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   customer?: boolean | Prisma.Address$customerArgs<ExtArgs>
   coApplicant?: boolean | Prisma.Address$coApplicantArgs<ExtArgs>
   guarantor?: boolean | Prisma.Address$guarantorArgs<ExtArgs>
+  partner?: boolean | Prisma.Address$partnerArgs<ExtArgs>
   occupationalDetails?: boolean | Prisma.Address$occupationalDetailsArgs<ExtArgs>
   employee?: boolean | Prisma.Address$employeeArgs<ExtArgs>
-  partner?: boolean | Prisma.Address$partnerArgs<ExtArgs>
   lead?: boolean | Prisma.Address$leadArgs<ExtArgs>
   technicalReport?: boolean | Prisma.Address$technicalReportArgs<ExtArgs>
   properties?: boolean | Prisma.Address$propertiesArgs<ExtArgs>
@@ -2054,9 +2152,9 @@ export type $AddressPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     customer: Prisma.$CustomerPayload<ExtArgs> | null
     coApplicant: Prisma.$CoApplicantPayload<ExtArgs> | null
     guarantor: Prisma.$GuarantorPayload<ExtArgs> | null
+    partner: Prisma.$PartnerPayload<ExtArgs> | null
     occupationalDetails: Prisma.$OccupationalDetailsPayload<ExtArgs>[]
     employee: Prisma.$EmployeePayload<ExtArgs> | null
-    partner: Prisma.$PartnerPayload<ExtArgs> | null
     lead: Prisma.$LeadsPayload<ExtArgs> | null
     technicalReport: Prisma.$TechnicalReportPayload<ExtArgs> | null
     properties: Prisma.$PropertyPayload<ExtArgs>[]
@@ -2075,6 +2173,7 @@ export type $AddressPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     customerId: string | null
     coApplicantId: string | null
     guarantorId: string | null
+    partnerId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["address"]>
@@ -2420,9 +2519,9 @@ export interface Prisma__AddressClient<T, Null = never, ExtArgs extends runtime.
   customer<T extends Prisma.Address$customerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Address$customerArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   coApplicant<T extends Prisma.Address$coApplicantArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Address$coApplicantArgs<ExtArgs>>): Prisma.Prisma__CoApplicantClient<runtime.Types.Result.GetResult<Prisma.$CoApplicantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   guarantor<T extends Prisma.Address$guarantorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Address$guarantorArgs<ExtArgs>>): Prisma.Prisma__GuarantorClient<runtime.Types.Result.GetResult<Prisma.$GuarantorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  partner<T extends Prisma.Address$partnerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Address$partnerArgs<ExtArgs>>): Prisma.Prisma__PartnerClient<runtime.Types.Result.GetResult<Prisma.$PartnerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   occupationalDetails<T extends Prisma.Address$occupationalDetailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Address$occupationalDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OccupationalDetailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   employee<T extends Prisma.Address$employeeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Address$employeeArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  partner<T extends Prisma.Address$partnerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Address$partnerArgs<ExtArgs>>): Prisma.Prisma__PartnerClient<runtime.Types.Result.GetResult<Prisma.$PartnerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   lead<T extends Prisma.Address$leadArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Address$leadArgs<ExtArgs>>): Prisma.Prisma__LeadsClient<runtime.Types.Result.GetResult<Prisma.$LeadsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   technicalReport<T extends Prisma.Address$technicalReportArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Address$technicalReportArgs<ExtArgs>>): Prisma.Prisma__TechnicalReportClient<runtime.Types.Result.GetResult<Prisma.$TechnicalReportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   properties<T extends Prisma.Address$propertiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Address$propertiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2468,6 +2567,7 @@ export interface AddressFieldRefs {
   readonly customerId: Prisma.FieldRef<"Address", 'String'>
   readonly coApplicantId: Prisma.FieldRef<"Address", 'String'>
   readonly guarantorId: Prisma.FieldRef<"Address", 'String'>
+  readonly partnerId: Prisma.FieldRef<"Address", 'String'>
   readonly createdAt: Prisma.FieldRef<"Address", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Address", 'DateTime'>
 }
@@ -2870,6 +2970,25 @@ export type Address$guarantorArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
+ * Address.partner
+ */
+export type Address$partnerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Partner
+   */
+  select?: Prisma.PartnerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Partner
+   */
+  omit?: Prisma.PartnerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PartnerInclude<ExtArgs> | null
+  where?: Prisma.PartnerWhereInput
+}
+
+/**
  * Address.occupationalDetails
  */
 export type Address$occupationalDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2910,25 +3029,6 @@ export type Address$employeeArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   include?: Prisma.EmployeeInclude<ExtArgs> | null
   where?: Prisma.EmployeeWhereInput
-}
-
-/**
- * Address.partner
- */
-export type Address$partnerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Partner
-   */
-  select?: Prisma.PartnerSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Partner
-   */
-  omit?: Prisma.PartnerOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PartnerInclude<ExtArgs> | null
-  where?: Prisma.PartnerWhereInput
 }
 
 /**

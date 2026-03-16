@@ -7,10 +7,19 @@ export const validate =
     const result = schema.safeParse(req[source]);
 
     if (!result.success) {
-      return res.status(400).json({
+      const response: any = {
         success: false,
         message: "Invalid request data",
-      });
+      };
+
+      if (process.env.NODE_ENV !== "production") {
+        response.errors = result.error.issues.map((issue) => ({
+          path: issue.path.join("."),
+          message: issue.message,
+        }));
+      }
+
+      return res.status(400).json(response);
     }
 
     // replace request data with validated & sanitized data
