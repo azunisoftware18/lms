@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 
-import { Icons } from "../../components/common/Icon";
+import * as Icons from "lucide-react";
 import { dashboardStats, recentLoans } from "../../lib/dashboardDummyData";
 import DashboardTable from "../../components/tables/DashboardTable";
 
@@ -87,9 +87,9 @@ export default function AdminDashboardPage() {
             </h3>
 
             <div className="flex items-center justify-center py-4">
-              <div className="relative w-32 h-32 rounded-full border-[10px] border-gray-100 flex items-center justify-center">
+              <div className="relative w-32 h-32 rounded-full border-10 border-gray-100 flex items-center justify-center">
                 <div
-                  className="absolute inset-0 rounded-full border-[10px] border-blue-600 border-t-transparent border-r-transparent transform -rotate-45"
+                  className="absolute inset-0 rounded-full border-10 border-blue-600 border-t-transparent border-r-transparent transform -rotate-45"
                   style={{ clipPath: "circle(50%)" }}
                 />
 
@@ -188,7 +188,7 @@ export default function AdminDashboardPage() {
                   </span>
                 </div>
 
-                <div className="w-full h-[1px] bg-blue-200 my-2"></div>
+                <div className="w-full h-px bg-blue-200 my-2"></div>
 
                 <div className="flex justify-between text-xs text-blue-600">
                   <span>Total Interest</span>

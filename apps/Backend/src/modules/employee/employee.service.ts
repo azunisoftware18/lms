@@ -12,9 +12,21 @@ import { logAction } from "../../audit/audit.helper.js";
 import { getAccessibleBranchIds } from "../../common/utils/branchAccess.js";
 import { buildBranchFilter } from "../../common/utils/branchFilter.js";
 import { AppError } from "../../common/utils/apiError.js";
+import { Role } from "../../../generated/prisma-client/enums.js";
+import type { Role as UserRole } from "../../../generated/prisma-client/enums.js";
 //Todo: add permission checks where necessary
 
-export async function createEmployeeService(data: CreateEmployee) {
+export async function createEmployeeService(
+  data: CreateEmployee,
+  requestedByRole?: string,
+) {
+  const requestedRole = (data.role ?? Role.EMPLOYEE) as UserRole;
+  if (requestedRole !== Role.EMPLOYEE && requestedByRole !== Role.SUPER_ADMIN) {
+    throw AppError.forbidden(
+      "Only SUPER_ADMIN can create employees with elevated roles",
+    );
+  }
+
   // check if a user with the email already exists
   const [existingEmailUser, existingUserNameUser] = await Promise.all([
     prisma.user.findUnique({ where: { email: data.email } }),
@@ -22,11 +34,11 @@ export async function createEmployeeService(data: CreateEmployee) {
   ]);
 
   if (existingEmailUser) {
-    throw AppError.conflict("Email already exists");
+     throw AppError.conflict("Employee with this email already exists");
   }
 
   if (existingUserNameUser) {
-    throw AppError.conflict("Username already exists");
+     throw AppError.conflict("Employee with this username already exists");
   }
 
   const hashedPassword = await hashPassword(data.password);
@@ -45,6 +57,14 @@ export async function createEmployeeService(data: CreateEmployee) {
     throw AppError.badRequest("Invalid or inactive branch");
   }
 
+  const employeeRole = await (prisma as any).employeeRole.findUnique({
+    where: { id: data.employeeRoleId },
+  });
+
+  if (!employeeRole || !employeeRole.isActive) {
+    throw AppError.badRequest("Invalid or inactive employee role");
+  }
+
   try {
     const employeeId = await generateUniqueEmployeeId();
 
@@ -60,15 +80,30 @@ export async function createEmployeeService(data: CreateEmployee) {
       : null;
 
     const { user, employee } = await prisma.$transaction(async (tx) => {
-      const employeeAddress = data.address
+      const currentAddress = data.addresses?.currentAddress;
+      const permanentAddress = data.addresses?.permanentAddress;
+      const selectedAddress = currentAddress ?? permanentAddress;
+
+      const employeeAddress = selectedAddress || data.address
         ? await tx.address.create({
             data: {
-              addressType: "CURRENT_RESIDENTIAL",
-              addressLine1: data.address,
-              city: data.city ?? "",
-              district: data.city ?? "",
-              state: data.state ?? "",
-              pinCode: data.pinCode ?? "",
+              addressType: currentAddress
+                ? "CURRENT_RESIDENTIAL"
+                : permanentAddress
+                  ? "PERMANENT"
+                  : "CURRENT_RESIDENTIAL",
+              addressLine1: selectedAddress?.addressLine1 ?? data.address ?? "",
+              addressLine2: selectedAddress?.addressLine2 ?? null,
+              city: selectedAddress?.city ?? data.city ?? "",
+              district:
+                selectedAddress?.district ??
+                selectedAddress?.city ??
+                data.city ??
+                "",
+              state: selectedAddress?.state ?? data.state ?? "",
+              pinCode: selectedAddress?.pinCode ?? data.pinCode ?? "",
+              landmark: selectedAddress?.landmark ?? null,
+              phoneNumber: selectedAddress?.phoneNumber ?? null,
             },
           })
         : null;
@@ -79,17 +114,18 @@ export async function createEmployeeService(data: CreateEmployee) {
           email: data.email,
           userName: data.userName,
           password: hashedPassword,
-          role: data.role,
+          role: requestedRole,
           contactNumber: data.contactNumber,
           branchId: data.branchId,
           isActive: typeof data.isActive === "boolean" ? data.isActive : true,
         },
       });
 
-      const createdEmployee = await tx.employee.create({
+      const createdEmployee = await (tx as any).employee.create({
         data: {
           userId: createdUser.id,
           employeeId,
+          employeeRoleId: data.employeeRoleId,
           atlMobileNumber: data.atlMobileNumber ?? "",
           dob: dobVal ?? new Date(),
           gender: (data.gender ?? "OTHER") as any,
@@ -98,13 +134,15 @@ export async function createEmployeeService(data: CreateEmployee) {
           emergencyContact: data.emergencyContact ?? "",
           emergencyRelationship: (data.emergencyRelationship ?? "OTHER") as any,
           experience: data.experience ?? "",
-          reportingManagerId: data.reportingManagerId ?? "",
           workLocation: (data.workLocation ?? "OFFICE") as any,
           department: data.department ?? "",
           dateOfJoining: dojVal ?? new Date(),
           salary: typeof data.salary === "number" ? data.salary : 0,
           addressId: employeeAddress?.id,
           branchId: data.branchId,
+        },
+        include: {
+          employeeRole: true,
         },
       });
 
@@ -117,7 +155,7 @@ export async function createEmployeeService(data: CreateEmployee) {
   } catch (error: unknown) {
     const eAny = error as any;
     if (eAny && eAny.code === "P2002") {
-      throw AppError.conflict("Duplicate entry");
+      throw AppError.conflict("Employee already exists");
     }
     throw error;
   }
@@ -146,8 +184,11 @@ export async function getAllEmployeesService(params: {
    };
 
   const [data, total] = await Promise.all([
-    prisma.employee.findMany({
+    (prisma as any).employee.findMany({
       where,
+      include: {
+        employeeRole: true,
+      },
       orderBy: { createdAt: "desc" },
       skip,
       take: limit,
@@ -162,11 +203,12 @@ export async function getAllEmployeesService(params: {
 }
 
 export async function getEmployeeByIdService(id: string) {
-  const employee = await prisma.employee.findUnique({
+  const employee = await (prisma as any).employee.findUnique({
     where: { id },
     include: {
       user: true,
       branch: true,
+      employeeRole: true,
     },
   });
 
@@ -197,11 +239,15 @@ export async function updateEmployeeService(
   updateData: Partial<CreateEmployee> & Record<string, any>,
   userId?: string,
   branchId?: string,
+  requestedByRole?: string,
 ) {
   try {
-    const existing = await prisma.employee.findUnique({
+    const existing = await (prisma as any).employee.findUnique({
       where: { id },
-      include: { user: { select: { id: true, email: true, userName: true } } },
+      include: {
+        user: { select: { id: true, email: true, userName: true } },
+        employeeRole: true,
+      },
     });
     if (!existing) {
       throw AppError.notFound("Employee not found");
@@ -209,6 +255,54 @@ export async function updateEmployeeService(
 
     const userUpdateData: Record<string, any> = {};
     const employeeUpdateData: Record<string, any> = {};
+
+    const currentAddress = updateData.addresses?.currentAddress;
+    const permanentAddress = updateData.addresses?.permanentAddress;
+    const selectedAddress = currentAddress ?? permanentAddress;
+    const hasLegacyAddressInput = !!(
+      updateData.address ||
+      updateData.city ||
+      updateData.state ||
+      updateData.pinCode
+    );
+
+    let normalizedAddressPayload:
+      | {
+          addressType: any;
+          addressLine1: string;
+          addressLine2: string | null;
+          city: string;
+          district: string;
+          state: string;
+          pinCode: string;
+          landmark: string | null;
+          phoneNumber: string | null;
+        }
+      | null = null;
+
+    if (selectedAddress || hasLegacyAddressInput) {
+      const addressPayload = {
+        addressType: currentAddress
+          ? "CURRENT_RESIDENTIAL"
+          : permanentAddress
+            ? "PERMANENT"
+            : "CURRENT_RESIDENTIAL",
+        addressLine1: selectedAddress?.addressLine1 ?? updateData.address ?? "",
+        addressLine2: selectedAddress?.addressLine2 ?? null,
+        city: selectedAddress?.city ?? updateData.city ?? "",
+        district:
+          selectedAddress?.district ?? selectedAddress?.city ?? updateData.city ?? "",
+        state: selectedAddress?.state ?? updateData.state ?? "",
+        pinCode: selectedAddress?.pinCode ?? updateData.pinCode ?? "",
+        landmark: selectedAddress?.landmark ?? null,
+        phoneNumber: selectedAddress?.phoneNumber ?? null,
+      };
+
+      normalizedAddressPayload = {
+        ...addressPayload,
+        addressType: addressPayload.addressType as any,
+      };
+    }
 
     // user-scoped fields
     const userFields = [
@@ -237,6 +331,16 @@ export async function updateEmployeeService(
       }
     }
 
+    if (
+      userUpdateData.role &&
+      userUpdateData.role !== Role.EMPLOYEE &&
+      requestedByRole !== Role.SUPER_ADMIN
+    ) {
+      throw AppError.forbidden(
+        "Only SUPER_ADMIN can assign elevated employee roles",
+      );
+    }
+
     if (userUpdateData.password) {
       userUpdateData.password = await hashPassword(userUpdateData.password);
     }
@@ -250,7 +354,7 @@ export async function updateEmployeeService(
         select: { id: true },
       });
       if (emailInUse) {
-        throw AppError.conflict("Email already exists");
+        throw AppError.conflict("Employee already exists");
       }
     }
 
@@ -266,13 +370,14 @@ export async function updateEmployeeService(
         select: { id: true },
       });
       if (usernameInUse) {
-        throw AppError.conflict("Username already exists");
+        throw AppError.conflict("Employee already exists");
       }
     }
 
     // employee-scoped fields
     const empFields = [
       "employeeId",
+      "employeeRoleId",
       "designation",
       "branchId",
       "department",
@@ -288,16 +393,45 @@ export async function updateEmployeeService(
       }
     }
 
+    if (employeeUpdateData.employeeRoleId) {
+      const nextEmployeeRole = await (prisma as any).employeeRole.findUnique({
+        where: { id: employeeUpdateData.employeeRoleId },
+      });
+
+      if (!nextEmployeeRole || !nextEmployeeRole.isActive) {
+        throw AppError.badRequest("Invalid or inactive employee role");
+      }
+    }
+
     const prismaData: any = {};
     if (Object.keys(userUpdateData).length > 0)
       prismaData.user = { update: userUpdateData } as any;
     if (Object.keys(employeeUpdateData).length > 0)
       Object.assign(prismaData, employeeUpdateData);
 
-    const updatedEmployee = await prisma.employee.update({
-      where: { id },
-      data: prismaData,
-      include: { user: true },
+    const updatedEmployee = await prisma.$transaction(async (tx) => {
+      if (normalizedAddressPayload) {
+        if (existing.addressId) {
+          await tx.address.update({
+            where: { id: existing.addressId },
+            data: normalizedAddressPayload,
+          });
+        } else {
+          const newAddress = await tx.address.create({
+            data: normalizedAddressPayload,
+          });
+          employeeUpdateData.addressId = newAddress.id;
+        }
+      }
+
+      if (Object.keys(employeeUpdateData).length > 0)
+        Object.assign(prismaData, employeeUpdateData);
+
+      return (tx as any).employee.update({
+        where: { id },
+        data: prismaData,
+        include: { user: true, employeeRole: true },
+      });
     });
     const { user, ...employeeOnly } = updatedEmployee as any;
 
@@ -332,7 +466,7 @@ export async function updateEmployeeService(
   } catch (error: unknown) {
     const eAny = error as any;
     if (eAny && eAny.code === "P2002") {
-      throw AppError.conflict("Duplicate entry");
+      throw AppError.conflict("Employee already exists");
     }
     throw error;
   }

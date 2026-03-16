@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Role } from "../../../generated/prisma-client/enums.js";
 
 const strongPasswordSchema = z
   .string()
@@ -8,6 +9,40 @@ const strongPasswordSchema = z
   .regex(/[0-9]/, "Password must contain at least one number")
   .regex(/[^A-Za-z0-9]/, "Password must contain at least one special character");
 
+const emergencyRelationshipSchema = z
+  .string()
+  .trim()
+  .transform((s) => s.toUpperCase())
+  .refine(
+    (v) =>
+      [
+        "FATHER",
+        "MOTHER",
+        "SPOUSE",
+        "SIBLING",
+        "FRIEND",
+        "OTHER",
+        "BROTHER",
+        "SISTER",
+      ].includes(v),
+    {
+      message:
+        'Invalid emergencyRelationship: expected one of "FATHER"|"MOTHER"|"SPOUSE"|"SIBLING"|"FRIEND"|"OTHER" (aliases: "BROTHER" and "SISTER" map to "SIBLING")',
+    },
+  )
+  .transform((v) => (v === "BROTHER" || v === "SISTER" ? "SIBLING" : v));
+
+const employeeAddressSchema = z.object({
+  addressLine1: z.string().trim().min(1),
+  addressLine2: z.string().trim().optional(),
+  city: z.string().trim().min(1),
+  district: z.string().trim().optional(),
+  state: z.string().trim().min(1),
+  pinCode: z.string().trim().min(1).max(6),
+  landmark: z.string().trim().optional(),
+  phoneNumber: z.string().trim().optional(),
+});
+
 /* ================= CREATE ================= */
 
 export const createEmployeeSchema = z
@@ -16,7 +51,7 @@ export const createEmployeeSchema = z
     fullName: z.string().trim().min(1),
     email: z.string().trim().email(),
     password: strongPasswordSchema,
-    role: z.enum(["ADMIN", "EMPLOYEE", "PARTNER"]),
+    role: z.nativeEnum(Role).optional(),
     contactNumber: z.string().trim().min(10).max(15),
     isActive: z.coerce.boolean(),
     userName: z.string().trim().min(1),
@@ -26,11 +61,10 @@ export const createEmployeeSchema = z
     maritalStatus: z.enum(["SINGLE", "MARRIED", "DIVORCED", "WIDOWED"]),
     designation: z.string().min(1),
     emergencyContact: z.string().min(10),
-    emergencyRelationship: z.string().min(1),
+    emergencyRelationship: emergencyRelationshipSchema,
     experience: z
       .union([z.string().min(1), z.number().nonnegative()])
       .optional(),
-    reportingManagerId: z.string().optional(),
     workLocation: z
       .string()
       .trim()
@@ -42,11 +76,38 @@ export const createEmployeeSchema = z
     department: z.string().min(1),
     dateOfJoining: z.string().optional(),
     salary: z.number().positive().optional(),
-    address: z.string().min(1),
-    city: z.string().min(1),
-    state: z.string().min(1),
-    pinCode: z.string().min(6),
+    employeeRoleId: z.string().min(1, "Employee role is required"),
+    address: z.string().min(1).optional(),
+    city: z.string().min(1).optional(),
+    state: z.string().min(1).optional(),
+    pinCode: z.string().min(6).optional(),
+    addresses: z
+      .object({
+        currentAddress: employeeAddressSchema.optional(),
+        permanentAddress: employeeAddressSchema.optional(),
+      })
+      .optional(),
     branchId: z.string().min(1, "Branch assignment is required"),
+  })
+  .superRefine((data, ctx) => {
+    const hasLegacyAddress = !!(
+      data.address &&
+      data.city &&
+      data.state &&
+      data.pinCode
+    );
+    const hasNestedAddress = !!(
+      data.addresses?.currentAddress || data.addresses?.permanentAddress
+    );
+
+    if (!hasLegacyAddress && !hasNestedAddress) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["addresses"],
+        message:
+          "Provide address fields using either legacy address/city/state/pinCode or addresses.currentAddress/permanentAddress",
+      });
+    }
   })
   .strict();
 
@@ -57,7 +118,7 @@ export const updateEmployeeSchema = z
     fullName: z.string().trim().min(1).optional(),
     email: z.string().trim().email().optional(),
     password: strongPasswordSchema.optional(),
-    role: z.enum(["EMPLOYEE"]).optional(),
+    role: z.nativeEnum(Role).optional(),
     contactNumber: z.string().trim().min(10).max(15).optional(),
     isActive: z.coerce.boolean().optional(),
     userName: z.string().trim().min(1).optional(),
@@ -70,11 +131,10 @@ export const updateEmployeeSchema = z
       .optional(),
     designation: z.string().min(1).optional(),
     emergencyContact: z.string().min(10).optional(),
-    emergencyRelationship: z.string().min(1).optional(),
+    emergencyRelationship: emergencyRelationshipSchema.optional(),
     experience: z
       .union([z.string().min(1), z.number().nonnegative()])
       .optional(),
-    reportingManagerId: z.string().optional(),
     workLocation: z
       .string()
       .trim()
@@ -86,10 +146,17 @@ export const updateEmployeeSchema = z
     department: z.string().min(1).optional(),
     dateOfJoining: z.string().optional(),
     salary: z.number().positive().optional(),
+    employeeRoleId: z.string().min(1).optional(),
     address: z.string().min(1).optional(),
     city: z.string().min(1).optional(),
     state: z.string().min(1).optional(),
     pinCode: z.string().min(6).optional(),
+    addresses: z
+      .object({
+        currentAddress: employeeAddressSchema.optional(),
+        permanentAddress: employeeAddressSchema.optional(),
+      })
+      .optional(),
   })
   .strict();
 

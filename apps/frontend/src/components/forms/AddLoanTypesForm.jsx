@@ -1,7 +1,6 @@
-import { useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useEffect, useMemo } from "react";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import {
-  X,
   Info,
   Percent,
   Users,
@@ -18,200 +17,471 @@ import {
   FileText,
   Clock,
   CreditCard,
-  IndianRupee
-} from 'lucide-react';
-import toast from 'react-hot-toast';
-import { useCreateLoanType, useUpdateLoanType } from '../../hooks/useLoanType';
-import InputField from '../ui/InputField';
-import ToggleSwitch from '../ui/ToggleSwitch';
-import TextAreaField from '../ui/TextAreaField';
-import SelectField from '../ui/SelectField';
-import Button from '../ui/Button';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { loanTypeSchema } from '../../validations/LoanTypeValidation';
+  IndianRupee,
+  Building,
+  DollarSign,
+  BadgeCheck,
+  Calendar,
+  Settings,
+} from "lucide-react";
+import toast from "react-hot-toast";
+import { useCreateLoanType, useUpdateLoanType } from "../../hooks/useLoanType";
+import InputField from "../ui/InputField";
+import ToggleSwitch from "../ui/ToggleSwitch";
+import TextAreaField from "../ui/TextAreaField";
+import SelectField from "../ui/SelectField";
+import Button from "../ui/Button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loanTypeSchema } from "../../validations/LoanTypeValidation";
 
-export default function AddLoanTypesForm ({ onClose, editData }) {
+const LOAN_CATEGORIES = [
+  { value: "PERSONAL_LOAN", label: "Personal Loan", icon: User },
+  { value: "VEHICLE_LOAN", label: "Vehicle Loan", icon: Car },
+  { value: "HOME_LOAN", label: "Home Loan", icon: Home },
+  { value: "EDUCATION_LOAN", label: "Education Loan", icon: GraduationCap },
+  { value: "BUSINESS_LOAN", label: "Business Loan", icon: Briefcase },
+  { value: "GOLD_LOAN", label: "Gold Loan", icon: Gem },
+];
+
+const DOCUMENT_OPTIONS = [
+  { value: "PAN", label: "PAN" },
+  { value: "AADHAAR", label: "Aadhaar" },
+  { value: "PASSPORT", label: "Passport" },
+  { value: "VOTER_ID", label: "Voter ID" },
+  { value: "DRIVING_LICENSE", label: "Driving License" },
+  { value: "ADDRESS_PROOF", label: "Address Proof" },
+  { value: "UTILITY_BILL", label: "Utility Bill" },
+  { value: "RENT_AGREEMENT", label: "Rent Agreement" },
+
+  { value: "SELFIE_CAPTURE", label: "Selfie Capture" },
+
+  { value: "SALARY_SLIP", label: "Salary Slip" },
+  { value: "FORM_16", label: "Form 16" },
+  { value: "EMPLOYMENT_ID", label: "Employment ID" },
+  { value: "APPOINTMENT_LETTER", label: "Appointment Letter" },
+
+  { value: "ITR", label: "ITR" },
+  {
+    value: "GST_REGISTRATION_CERTIFICATE",
+    label: "GST Registration Certificate",
+  },
+  {
+    value: "SHOP_ESTABLISHMENT_CERTIFICATE",
+    label: "Shop & Establishment Certificate",
+  },
+  {
+    value: "BUSINESS_REGISTRATION_CERTIFICATE",
+    label: "Business Registration Certificate",
+  },
+  { value: "PARTNERSHIP_DEED", label: "Partnership Deed" },
+  { value: "MOA", label: "MOA" },
+  { value: "AOA", label: "AOA" },
+  {
+    value: "BUSINESS_FINANCIAL_STATEMENTS",
+    label: "Business Financial Statements",
+  },
+  { value: "GST_RETURNS", label: "GST Returns" },
+  { value: "UDYAM_REGISTRATION", label: "Udyam Registration" },
+
+  { value: "BANK_STATEMENT", label: "Bank Statement" },
+  {
+    value: "OTHER_BANK_ACCOUNTS_STATEMENT",
+    label: "Other Bank Accounts Statement",
+  },
+
+  { value: "BANK_VERIFICATION_REPORT", label: "Bank Verification Report" },
+  {
+    value: "BANK_STATEMENT_ANALYSIS_REPORT",
+    label: "Bank Statement Analysis Report",
+  },
+
+  { value: "PROPERTY_TITLE_DEED", label: "Property Title Deed" },
+  { value: "SALE_AGREEMENT", label: "Sale Agreement" },
+  { value: "ALLOTMENT_LETTER", label: "Allotment Letter" },
+  {
+    value: "BUILDER_OR_SOCIETY_NOC",
+    label: "Builder/Society NOC",
+  },
+  { value: "PROPERTY_TAX_RECEIPTS", label: "Property Tax Receipts" },
+  {
+    value: "PROPERTY_TECHNICAL_REPORT",
+    label: "Property Technical Report",
+  },
+  { value: "LEGAL_SCRUTINY_REPORT", label: "Legal Scrutiny Report" },
+
+  {
+    value: "OFFICE_VERIFICATION_REPORT",
+    label: "Office Verification Report",
+  },
+  {
+    value: "RESIDENCE_VERIFICATION_REPORT",
+    label: "Residence Verification Report",
+  },
+  {
+    value: "FIELD_INVESTIGATION_REPORT",
+    label: "Field Investigation Report",
+  },
+  { value: "REFERENCE_CHECK_REPORT", label: "Reference Check Report" },
+
+  {
+    value: "SIGNED_LOAN_APPLICATION_FORM",
+    label: "Signed Loan Application Form",
+  },
+  { value: "KYC_DECLARATION", label: "KYC Declaration" },
+  {
+    value: "CREDIT_BUREAU_CONSENT_FORM",
+    label: "Credit Bureau Consent Form",
+  },
+  {
+    value: "LOAN_PROCESSING_FEE_RECEIPT",
+    label: "Loan Processing Fee Receipt",
+  },
+  {
+    value: "CUSTOMER_DECLARATION_FORM",
+    label: "Customer Declaration Form",
+  },
+
+  { value: "CREDIT_APPRAISAL_NOTE", label: "Credit Appraisal Note" },
+  { value: "RISK_ASSESSMENT_REPORT", label: "Risk Assessment Report" },
+  { value: "SANCTION_LETTER", label: "Sanction Letter" },
+  { value: "INTERNAL_APPROVAL_MEMO", label: "Internal Approval Memo" },
+
+  { value: "SIGNED_LOAN_AGREEMENT", label: "Signed Loan Agreement" },
+  {
+    value: "ACCEPTED_SANCTION_LETTER",
+    label: "Accepted Sanction Letter",
+  },
+  { value: "ECS_NACH_MANDATE_FORM", label: "ECS/NACH Mandate Form" },
+  { value: "POST_DATED_CHEQUES", label: "Post Dated Cheques" },
+  {
+    value: "INSURANCE_POLICY_DOCUMENTS",
+    label: "Insurance Policy Documents",
+  },
+
+  {
+    value: "DISBURSEMENT_REQUEST_FORM",
+    label: "Disbursement Request Form",
+  },
+  { value: "BANK_ACCOUNT_PROOF", label: "Bank Account Proof" },
+  { value: "CANCELLED_CHEQUE", label: "Cancelled Cheque" },
+  {
+    value: "DISBURSEMENT_APPROVAL_NOTE",
+    label: "Disbursement Approval Note",
+  },
+  { value: "VENDOR_INVOICE", label: "Vendor Invoice" },
+  { value: "PAYMENT_REQUEST", label: "Payment Request" },
+
+  { value: "PHOTO", label: "Photo" },
+  { value: "SIGNATURE", label: "Signature" },
+  { value: "INCOME_PROOF", label: "Income Proof" },
+  { value: "OTHER", label: "Other" },
+];
+
+// Party-scoped document lists
+const APPLICANT_DOCUMENT_OPTIONS = DOCUMENT_OPTIONS.filter(
+  (opt) =>
+    !opt.value.startsWith("CO_APPLICANT_") &&
+    !opt.value.startsWith("GUARANTOR_"),
+);
+
+const CO_APPLICANT_DOCUMENT_OPTIONS = DOCUMENT_OPTIONS.filter(
+  (opt) =>
+    !opt.value.startsWith("APPLICANT_") && !opt.value.startsWith("GUARANTOR_"),
+);
+
+const GUARANTOR_DOCUMENT_OPTIONS = DOCUMENT_OPTIONS.filter(
+  (opt) =>
+    !opt.value.startsWith("APPLICANT_") &&
+    !opt.value.startsWith("CO_APPLICANT_"),
+);
+
+const normalizeInterestType = (value) => {
+  const raw = String(value || "")
+    .trim()
+    .toUpperCase();
+  if (raw === "FLAT") return "FLAT";
+  if (raw === "REDUCING" || raw === "REDUCING_BALANCE") return "REDUCING";
+  return raw;
+};
+
+const normalizeProcessingFeeType = (value) => {
+  const raw = String(value || "")
+    .trim()
+    .toUpperCase();
+  if (raw === "FIXED" || raw === "FIXED_AMOUNT") return "FIXED";
+  if (raw === "PERCENTAGE") return "PERCENTAGE";
+  return raw;
+};
+
+const toNumberOrUndefined = (value) => {
+  if (value === "" || value === null || value === undefined) return undefined;
+  const parsed = Number(value);
+  return Number.isNaN(parsed) ? undefined : parsed;
+};
+
+export default function AddLoanTypesForm({ onClose, editData }) {
   const createLoanTypeMutation = useCreateLoanType();
   const updateLoanTypeMutation = useUpdateLoanType();
 
-  // Loan category options with icons
-  const loanCategories = [
-    { value: 'PERSONAL_LOAN', label: 'Personal Loan', icon: User },
-    { value: 'VEHICLE_LOAN', label: 'Vehicle Loan', icon: Car },
-    { value: 'HOME_LOAN', label: 'Home Loan', icon: Home },
-    { value: 'EDUCATION_LOAN', label: 'Education Loan', icon: GraduationCap },
-    { value: 'BUSINESS_LOAN', label: 'Business Loan', icon: Briefcase },
-    { value: 'GOLD_LOAN', label: 'Gold Loan', icon: Gem },
-  ];
-
   // Interest type options
   const interestTypes = [
-    { value: 'FLAT', label: 'Flat' },
-    { value: 'REDUCING', label: 'Reducing Balance' },
+    { value: "FLAT", label: "Flat" },
+    { value: "REDUCING", label: "Reducing Balance" },
   ];
 
   // Processing fee type options
   const processingFeeTypes = [
-    { value: 'PERCENTAGE', label: 'Percentage' },
-    { value: 'FIXED', label: 'Fixed Amount' },
+    { value: "PERCENTAGE", label: "Percentage" },
+    { value: "FIXED", label: "Fixed Amount" },
   ];
+
+  const chargeTypes = processingFeeTypes;
 
   // Employment type options
   const employmentTypes = [
-    { value: 'salaried', label: 'Salaried' },
-    { value: 'self_employed', label: 'Self-Employed' },
-  ];
-
-  // Document requirement options
-  const documentOptions = [
-    { value: 'Aadhaar_Card', label: 'Aadhaar Card' },
-    { value: 'PAN_Card', label: 'PAN Card' },
-    { value: 'Photo', label: 'Photo' },
-    { value: 'Salary_Slip', label: 'Salary Slip' },
+    { value: "salaried", label: "Salaried" },
+    { value: "self_employed", label: "Self-Employed" },
   ];
 
   const {
     control,
     handleSubmit,
-    watch,
     setValue,
-    getValues,
     formState: { errors, isValid },
-    reset
- } = useForm({
-  resolver: zodResolver(loanTypeSchema),
-  mode: "onChange",
+    reset,
+  } = useForm({
+    resolver: zodResolver(loanTypeSchema),
+    mode: "onChange",
     defaultValues: {
-      // Section 1: Basic Information
-      loanCode: '',
-      loanName: '',
-      loanCategory: '',
+      loanCode: "",
+      loanName: "",
+      loanCategory: "",
       securedLoan: false,
-      description: '',
-      
-      // Section 2: Loan Amount & Tenure
-      minLoanAmount: '',
-      maxLoanAmount: '',
-      minTenure: '',
-      maxTenure: '',
-      
-      // Section 3: Interest Details
-      interestType: 'FLAT',
-      minInterestRate: '',
-      maxInterestRate: '',
-      defaultInterestRate: '',
-      
-      // Section 4: Processing Fee & Tax
-      processingFeeType: 'PERCENTAGE',
-      processingFeeValue: '',
+      description: "",
+      minLoanAmount: "",
+      maxLoanAmount: "",
+      minTenure: "",
+      maxTenure: "",
+      interestType: "FLAT",
+      minInterestRate: "",
+      maxInterestRate: "",
+      defaultInterestRate: "",
+      processingFeeType: "PERCENTAGE",
+      processingFeeValue: "",
       gstApplicable: false,
-      gstPercentage: '',
-      
-      // Section 5: Eligibility Criteria
-      minAge: '',
-      maxAge: '',
-      minMonthlyIncome: '',
-      employmentType: '',
-      minCibilScore: '',
-      maxCibilScore: '',
-      
-      // Section 6: Loan Rules
+      gstPercentage: "",
+      minAge: "",
+      maxAge: "",
+      minMonthlyIncome: "",
+      employmentType: "",
+      minCibilScore: "",
+      maxCibilScore: "",
+      maxLoanToValueRatio: "",
       prepaymentAllowed: false,
       foreclosureAllowed: false,
-      prepaymentCharges: '',
-      foreclosureCharges: '',
-      
-      // Section 7: Status & Visibility
+      prepaymentCharges: "",
+      foreclosureCharges: "",
+      latePaymentFeeType: "",
+      latePaymentFee: "",
+      bounceCharges: "",
       activeStatus: true,
       publicVisibility: true,
       approvalRequired: true,
-      estimatedProcessingTimeDays: '',
-      
-      // Section 8: Documentation
-      documentsRequired: [],
-    }
+      estimatedProcessingTimeDays: "",
+      applicantDocumentsRequired: [],
+      applicantDocumentsOptional: [],
+      coApplicantDocumentsRequired: [],
+      coApplicantDocumentsOptional: [],
+      guarantorDocumentsRequired: [],
+      guarantorDocumentsOptional: [],
+    },
   });
 
   // Watch values for conditional rendering
-  const watchLoanCategory = watch('loanCategory');
-  const watchGstApplicable = watch('gstApplicable');
-  const watchPrepaymentAllowed = watch('prepaymentAllowed');
-  const watchForeclosureAllowed = watch('foreclosureAllowed');
-  const watchDocumentsRequired = watch('documentsRequired');
+  const watchLoanCategory = useWatch({ control, name: "loanCategory" });
+  const watchGstApplicable = useWatch({ control, name: "gstApplicable" });
+  const watchSecuredLoan = useWatch({ control, name: "securedLoan" });
+  const watchPrepaymentAllowed = useWatch({
+    control,
+    name: "prepaymentAllowed",
+  });
+  const watchForeclosureAllowed = useWatch({
+    control,
+    name: "foreclosureAllowed",
+  });
+  const watchApplicantDocumentsRequired = useWatch({
+    control,
+    name: "applicantDocumentsRequired",
+  });
+  const watchApplicantDocumentsOptional = useWatch({
+    control,
+    name: "applicantDocumentsOptional",
+  });
+  const watchCoApplicantDocumentsRequired = useWatch({
+    control,
+    name: "coApplicantDocumentsRequired",
+  });
+  const watchCoApplicantDocumentsOptional = useWatch({
+    control,
+    name: "coApplicantDocumentsOptional",
+  });
+  const watchGuarantorDocumentsRequired = useWatch({
+    control,
+    name: "guarantorDocumentsRequired",
+  });
+  const watchGuarantorDocumentsOptional = useWatch({
+    control,
+    name: "guarantorDocumentsOptional",
+  });
+
+  const applicantOptionalOptions = useMemo(
+    () =>
+      APPLICANT_DOCUMENT_OPTIONS.filter(
+        (option) => !watchApplicantDocumentsRequired?.includes(option.value),
+      ),
+    [watchApplicantDocumentsRequired],
+  );
+
+  const coApplicantOptionalOptions = useMemo(
+    () =>
+      CO_APPLICANT_DOCUMENT_OPTIONS.filter(
+        (option) => !watchCoApplicantDocumentsRequired?.includes(option.value),
+      ),
+    [watchCoApplicantDocumentsRequired],
+  );
+
+  const guarantorOptionalOptions = useMemo(
+    () =>
+      GUARANTOR_DOCUMENT_OPTIONS.filter(
+        (option) => !watchGuarantorDocumentsRequired?.includes(option.value),
+      ),
+    [watchGuarantorDocumentsRequired],
+  );
 
   // Set edit data
   useEffect(() => {
     if (editData) {
       reset({
-        loanCode: editData.code || '',
-        loanName: editData.name || '',
-        loanCategory: editData.category || '',
+        loanCode: editData.code || "",
+        loanName: editData.name || "",
+        loanCategory: editData.category || "",
         securedLoan: editData.secured || false,
-        description: editData.description || '',
-
-        minLoanAmount: editData.minAmount || '',
-        maxLoanAmount: editData.maxAmount || '',
-        minTenure: editData.minTenureMonths || '',
-        maxTenure: editData.maxTenureMonths || '',
-
-        interestType: editData.interestType || 'FLAT',
-        minInterestRate: editData.minInterestRate || '',
-        maxInterestRate: editData.maxInterestRate || '',
-        defaultInterestRate: editData.defaultInterestRate || '',
-
-        processingFeeType: editData.processingFeeType || 'PERCENTAGE',
-        processingFeeValue: editData.processingFee || '',
-
+        description: editData.description || "",
+        minLoanAmount: editData.minAmount || "",
+        maxLoanAmount: editData.maxAmount || "",
+        minTenure: editData.minTenureMonths || "",
+        maxTenure: editData.maxTenureMonths || "",
+        interestType: editData.interestType || "FLAT",
+        minInterestRate: editData.minInterestRate || "",
+        maxInterestRate: editData.maxInterestRate || "",
+        defaultInterestRate: editData.defaultInterestRate || "",
+        processingFeeType: editData.processingFeeType || "PERCENTAGE",
+        processingFeeValue: editData.processingFee || "",
         gstApplicable: editData.gstApplicable || false,
-        gstPercentage: editData.gstPercentage || '',
-
-        minAge: editData.minAge || '',
-        maxAge: editData.maxAge || '',
-
-        minMonthlyIncome: editData.minIncome || '',
-        employmentType: editData.employmentType || '',
-
-        minCibilScore: editData.minCibilScore || '',
-        maxCibilScore: editData.maxCibilScore || '',
-
+        gstPercentage: editData.gstPercentage || "",
+        minAge: editData.minAge || "",
+        maxAge: editData.maxAge || "",
+        minMonthlyIncome: editData.minIncome || "",
+        employmentType: editData.employmentType || "",
+        minCibilScore: editData.minCibilScore || "",
+        maxCibilScore: editData.maxCibilScore || "",
+        maxLoanToValueRatio: editData.maxLoanToValueRatio || "",
         prepaymentAllowed: editData.prepaymentAllowed || false,
         foreclosureAllowed: editData.foreclosureAllowed || false,
-        prepaymentCharges: editData.prepaymentCharges || '',
-        foreclosureCharges: editData.foreclosureCharges || '',
-
+        prepaymentCharges: editData.prepaymentCharges || "",
+        foreclosureCharges: editData.foreclosureCharges || "",
+        latePaymentFeeType: editData.latePaymentFeeType || "",
+        latePaymentFee: editData.latePaymentFee || "",
+        bounceCharges: editData.bounceCharges || "",
         activeStatus: editData.isActive ?? true,
         publicVisibility: editData.isPublic ?? true,
         approvalRequired: editData.approvalRequired ?? true,
-
-        estimatedProcessingTimeDays: editData.estimatedProcessingTimeDays || '',
-
-        documentsRequired: editData.documentsRequired
-          ? editData.documentsRequired.split(",")
+        estimatedProcessingTimeDays: editData.estimatedProcessingTimeDays || "",
+        applicantDocumentsRequired: editData.applicantDocumentsRequired
+          ? editData.applicantDocumentsRequired.split(",")
+          : [],
+        applicantDocumentsOptional: editData.applicantDocumentsOptional
+          ? editData.applicantDocumentsOptional.split(",")
+          : [],
+        coApplicantDocumentsRequired: editData.coApplicantDocumentsRequired
+          ? editData.coApplicantDocumentsRequired.split(",")
+          : [],
+        coApplicantDocumentsOptional: editData.coApplicantDocumentsOptional
+          ? editData.coApplicantDocumentsOptional.split(",")
+          : [],
+        guarantorDocumentsRequired: editData.guarantorDocumentsRequired
+          ? editData.guarantorDocumentsRequired.split(",")
+          : [],
+        guarantorDocumentsOptional: editData.guarantorDocumentsOptional
+          ? editData.guarantorDocumentsOptional.split(",")
           : [],
       });
     }
   }, [editData, reset]);
 
+  useEffect(() => {
+    const nextOptional = (watchApplicantDocumentsOptional || []).filter(
+      (doc) => !watchApplicantDocumentsRequired?.includes(doc),
+    );
+    if (
+      nextOptional.length !== (watchApplicantDocumentsOptional || []).length
+    ) {
+      setValue("applicantDocumentsOptional", nextOptional, {
+        shouldValidate: true,
+      });
+    }
+  }, [
+    watchApplicantDocumentsRequired,
+    watchApplicantDocumentsOptional,
+    setValue,
+  ]);
+
+  useEffect(() => {
+    const nextOptional = (watchCoApplicantDocumentsOptional || []).filter(
+      (doc) => !watchCoApplicantDocumentsRequired?.includes(doc),
+    );
+    if (
+      nextOptional.length !== (watchCoApplicantDocumentsOptional || []).length
+    ) {
+      setValue("coApplicantDocumentsOptional", nextOptional, {
+        shouldValidate: true,
+      });
+    }
+  }, [
+    watchCoApplicantDocumentsRequired,
+    watchCoApplicantDocumentsOptional,
+    setValue,
+  ]);
+
+  useEffect(() => {
+    const nextOptional = (watchGuarantorDocumentsOptional || []).filter(
+      (doc) => !watchGuarantorDocumentsRequired?.includes(doc),
+    );
+    if (
+      nextOptional.length !== (watchGuarantorDocumentsOptional || []).length
+    ) {
+      setValue("guarantorDocumentsOptional", nextOptional, {
+        shouldValidate: true,
+      });
+    }
+  }, [
+    watchGuarantorDocumentsRequired,
+    watchGuarantorDocumentsOptional,
+    setValue,
+  ]);
+
   // Generate loan code based on category
   useEffect(() => {
     if (watchLoanCategory) {
-      const prefix = watchLoanCategory.split('_')[0].substring(0, 3).toUpperCase();
+      const category = LOAN_CATEGORIES.find(
+        (c) => c.value === watchLoanCategory,
+      );
+      const prefix = category?.label.substring(0, 3).toUpperCase() || "LON";
       const randomNum = Math.floor(1000 + Math.random() * 9000);
-      setValue('loanCode', `${prefix}-${randomNum}`);
+      setValue("loanCode", `${prefix}-${randomNum}`);
     }
   }, [watchLoanCategory, setValue]);
 
-  const handleDocumentChange = (doc) => {
-    const currentDocs = watchDocumentsRequired || [];
-    if (currentDocs.includes(doc)) {
-      setValue('documentsRequired', currentDocs.filter(d => d !== doc));
-    } else {
-      setValue('documentsRequired', [...currentDocs, doc]);
-    }
-  };
-
-
-  // Handle form submission
   const onSubmit = async (data) => {
     const payload = {
       code: data.loanCode,
@@ -219,71 +489,71 @@ export default function AddLoanTypesForm ({ onClose, editData }) {
       category: data.loanCategory,
       secured: data.securedLoan,
       description: data.description || undefined,
-
       minAmount: Number(data.minLoanAmount),
       maxAmount: Number(data.maxLoanAmount),
       minTenureMonths: Number(data.minTenure),
       maxTenureMonths: Number(data.maxTenure),
-
-      interestType: data.interestType,
+      interestType: normalizeInterestType(data.interestType),
       minInterestRate: Number(data.minInterestRate),
       maxInterestRate: Number(data.maxInterestRate),
       defaultInterestRate: Number(data.defaultInterestRate),
-
-      processingFeeType: data.processingFeeType,
+      processingFeeType: normalizeProcessingFeeType(data.processingFeeType),
       processingFee: data.processingFeeValue
         ? Number(data.processingFeeValue)
         : undefined,
-
       gstApplicable: data.gstApplicable,
       gstPercentage:
         data.gstApplicable && data.gstPercentage
           ? Number(data.gstPercentage)
           : undefined,
-
       minAge: Number(data.minAge),
       maxAge: Number(data.maxAge),
-
       minIncome: data.minMonthlyIncome
         ? Number(data.minMonthlyIncome)
         : undefined,
-
       employmentType: data.employmentType || undefined,
-
       minCibilScore: data.minCibilScore
         ? Number(data.minCibilScore)
         : undefined,
-
       maxCibilScore: data.maxCibilScore
         ? Number(data.maxCibilScore)
         : undefined,
-
+      maxLoanToValueRatio: watchSecuredLoan
+        ? toNumberOrUndefined(data.maxLoanToValueRatio)
+        : undefined,
       prepaymentAllowed: data.prepaymentAllowed,
       foreclosureAllowed: data.foreclosureAllowed,
-
       prepaymentCharges:
         data.prepaymentAllowed && data.prepaymentCharges
           ? Number(data.prepaymentCharges)
           : undefined,
-
       foreclosureCharges:
         data.foreclosureAllowed && data.foreclosureCharges
           ? Number(data.foreclosureCharges)
           : undefined,
-
+      latePaymentFeeType: data.latePaymentFeeType
+        ? normalizeProcessingFeeType(data.latePaymentFeeType)
+        : undefined,
+      latePaymentFee: toNumberOrUndefined(data.latePaymentFee),
+      bounceCharges: toNumberOrUndefined(data.bounceCharges),
       isActive: data.activeStatus,
       isPublic: data.publicVisibility,
       approvalRequired: data.approvalRequired,
-
-      estimatedProcessingTimeDays:
-        data.estimatedProcessingTimeDays
-          ? Number(data.estimatedProcessingTimeDays)
-          : undefined,
-
-      documentsRequired:
-        data.documentsRequired.length > 0
-          ? data.documentsRequired.join(",")
-          : undefined,
+      estimatedProcessingTimeDays: data.estimatedProcessingTimeDays
+        ? Number(data.estimatedProcessingTimeDays)
+        : undefined,
+      applicantDocumentsRequired: data.applicantDocumentsRequired.join(","),
+      applicantDocumentsOptional: data.applicantDocumentsOptional.length
+        ? data.applicantDocumentsOptional.join(",")
+        : undefined,
+      coApplicantDocumentsRequired: data.coApplicantDocumentsRequired.join(","),
+      coApplicantDocumentsOptional: data.coApplicantDocumentsOptional.length
+        ? data.coApplicantDocumentsOptional.join(",")
+        : undefined,
+      guarantorDocumentsRequired: data.guarantorDocumentsRequired.join(","),
+      guarantorDocumentsOptional: data.guarantorDocumentsOptional.length
+        ? data.guarantorDocumentsOptional.join(",")
+        : undefined,
     };
 
     try {
@@ -292,698 +562,862 @@ export default function AddLoanTypesForm ({ onClose, editData }) {
           id: editData.id,
           data: payload,
         });
-
         toast.success("Loan Type updated successfully");
       } else {
         await createLoanTypeMutation.mutateAsync(payload);
-
         toast.success("Loan Type created successfully");
       }
-
       onClose();
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message ||
-        "Operation failed"
-      );
+      toast.error(error?.response?.data?.message || "Operation failed");
     }
   };
 
   return (
-    <div className="max-w-5xl mx-auto py-6 px-4">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4 rounded-t-xl">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900">
-              {editData ? 'Edit Loan Type' : 'Create New Loan Type'}
-            </h2>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      {/* Header - Now part of the form but styled consistently */}
+      <div className="px-6 py-4 border-b border-gray-200 bg-linear-to-r from-gray-50 to-white">
+        <h2 className="text-xl font-semibold text-gray-900">
+          {editData ? "Edit Loan Type" : "Create New Loan Type"}
+        </h2>
+        <p className="text-sm text-gray-500 mt-1">
+          Fill in the details below to {editData ? "update" : "create"} a loan
+          product
+        </p>
+      </div>
+
+      {/* Form Content */}
+      <div className="p-6 space-y-6 max-h-[calc(90vh-180px)] overflow-y-auto">
+        {/* Section 1: Basic Information */}
+        <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <Info className="w-5 h-5 text-blue-600" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900">
+              Basic Information
+            </h3>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <X className="w-5 h-5 text-gray-500" />
-          </button>
+
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Controller
+                name="loanCode"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Loan Code"
+                    {...field}
+                    readOnly
+                    className="bg-gray-50 cursor-not-allowed"
+                    icon={FileText}
+                  />
+                )}
+              />
+
+              <Controller
+                name="loanName"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Loan Name"
+                    placeholder="Enter loan product name"
+                    error={errors.loanName?.message}
+                    isRequired
+                    icon={BadgeCheck}
+                    {...field}
+                  />
+                )}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Loan Category <span className="text-red-500">*</span>
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                {LOAN_CATEGORIES.map((category) => {
+                  const Icon = category.icon;
+                  const isSelected = watchLoanCategory === category.value;
+                  return (
+                    <button
+                      key={category.value}
+                      type="button"
+                      onClick={() =>
+                        setValue("loanCategory", category.value, {
+                          shouldValidate: true,
+                        })
+                      }
+                      className={`p-3 border-2 rounded-lg text-center transition-all ${
+                        isSelected
+                          ? "border-blue-500 bg-blue-50 ring-2 ring-blue-100"
+                          : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                      }`}
+                    >
+                      <Icon
+                        className={`w-5 h-5 mx-auto mb-1 ${isSelected ? "text-blue-600" : "text-gray-600"}`}
+                      />
+                      <span className="text-xs font-medium">
+                        {category.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              {errors.loanCategory && (
+                <p className="text-red-500 text-xs flex items-center mt-1">
+                  <AlertCircle className="w-3 h-3 mr-1" />
+                  {errors.loanCategory.message}
+                </p>
+              )}
+            </div>
+
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <TextAreaField
+                  label="Description (optional)"
+                  placeholder="Enter a brief description of this loan product..."
+                  rows={2}
+                  maxLength={500}
+                  error={errors.description?.message}
+                  {...field}
+                />
+              )}
+            />
+
+            <div className="pt-2 border-t border-gray-100">
+              <Controller
+                name="securedLoan"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <ToggleSwitch
+                    label="Secured Loan"
+                    checked={value}
+                    onChange={onChange}
+                    description="Requires collateral or security"
+                  />
+                )}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Section 2: Loan Amount & Tenure */}
+        <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-2 bg-green-100 rounded-lg">
+              <IndianRupee className="w-5 h-5 text-green-600" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900">
+              Loan Amount & Tenure
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Controller
+              name="minLoanAmount"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  label="Minimum Loan Amount"
+                  type="number"
+                  placeholder="0.00"
+                  error={errors.minLoanAmount?.message}
+                  isRequired
+                  icon={IndianRupee}
+                  {...field}
+                />
+              )}
+            />
+
+            <Controller
+              name="maxLoanAmount"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  label="Maximum Loan Amount"
+                  type="number"
+                  placeholder="0.00"
+                  error={errors.maxLoanAmount?.message}
+                  isRequired
+                  icon={IndianRupee}
+                  {...field}
+                />
+              )}
+            />
+
+            <Controller
+              name="minTenure"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  label="Minimum Tenure (months)"
+                  type="number"
+                  placeholder="0"
+                  error={errors.minTenure?.message}
+                  isRequired
+                  icon={Calendar}
+                  {...field}
+                />
+              )}
+            />
+
+            <Controller
+              name="maxTenure"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  label="Maximum Tenure (months)"
+                  type="number"
+                  placeholder="0"
+                  error={errors.maxTenure?.message}
+                  isRequired
+                  icon={Calendar}
+                  {...field}
+                />
+              )}
+            />
+
+            {watchSecuredLoan && (
+              <Controller
+                name="maxLoanToValueRatio"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Max Loan To Value Ratio (%)"
+                    type="number"
+                    placeholder="e.g., 80"
+                    error={errors.maxLoanToValueRatio?.message}
+                    icon={Percent}
+                    {...field}
+                  />
+                )}
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Section 3: Interest Details */}
+        <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-2 bg-purple-100 rounded-lg">
+              <Percent className="w-5 h-5 text-purple-600" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900">
+              Interest Details
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Controller
+              name="interestType"
+              control={control}
+              render={({ field }) => (
+                <SelectField
+                  label="Interest Type"
+                  options={interestTypes}
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.interestType?.message}
+                />
+              )}
+            />
+
+            <Controller
+              name="minInterestRate"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  label="Minimum Interest Rate (%)"
+                  type="number"
+                  placeholder="0.00"
+                  error={errors.minInterestRate?.message}
+                  icon={Percent}
+                  {...field}
+                />
+              )}
+            />
+
+            <Controller
+              name="maxInterestRate"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  label="Maximum Interest Rate (%)"
+                  type="number"
+                  placeholder="0.00"
+                  error={errors.maxInterestRate?.message}
+                  icon={Percent}
+                  {...field}
+                />
+              )}
+            />
+
+            <Controller
+              name="defaultInterestRate"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  label="Default Interest Rate (%)"
+                  type="number"
+                  placeholder="0.00"
+                  error={errors.defaultInterestRate?.message}
+                  icon={Percent}
+                  {...field}
+                />
+              )}
+            />
+          </div>
+        </div>
+
+        {/* Section 4: Processing Fee & Tax */}
+        <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-2 bg-orange-100 rounded-lg">
+              <CheckCircle className="w-5 h-5 text-orange-600" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900">
+              Processing Fee & Tax
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Controller
+              name="processingFeeType"
+              control={control}
+              render={({ field }) => (
+                <SelectField
+                  label="Processing Fee Type"
+                  options={processingFeeTypes}
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.processingFeeType?.message}
+                />
+              )}
+            />
+
+            <Controller
+              name="processingFeeValue"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  label="Processing Fee Value"
+                  type="number"
+                  placeholder="0.00"
+                  error={errors.processingFeeValue?.message}
+                  icon={IndianRupee}
+                  {...field}
+                />
+              )}
+            />
+
+            <div className="space-y-3">
+              <Controller
+                name="gstApplicable"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <ToggleSwitch
+                    label="GST Applicable"
+                    checked={value}
+                    onChange={onChange}
+                    description="Goods and Services Tax"
+                  />
+                )}
+              />
+
+              {watchGstApplicable && (
+                <Controller
+                  name="gstPercentage"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="GST Percentage (%)"
+                      type="number"
+                      placeholder="0.00"
+                      error={errors.gstPercentage?.message}
+                      icon={Percent}
+                      {...field}
+                    />
+                  )}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Section 5: Eligibility Criteria */}
+        <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-2 bg-indigo-100 rounded-lg">
+              <Users className="w-5 h-5 text-indigo-600" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900">
+              Eligibility Criteria
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Controller
+              name="minAge"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  label="Minimum Age"
+                  type="number"
+                  placeholder="18"
+                  error={errors.minAge?.message}
+                  isRequired
+                  icon={User}
+                  {...field}
+                />
+              )}
+            />
+
+            <Controller
+              name="maxAge"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  label="Maximum Age"
+                  type="number"
+                  placeholder="65"
+                  error={errors.maxAge?.message}
+                  isRequired
+                  icon={User}
+                  {...field}
+                />
+              )}
+            />
+
+            <Controller
+              name="minMonthlyIncome"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  label="Minimum Monthly Income"
+                  type="number"
+                  placeholder="0.00"
+                  error={errors.minMonthlyIncome?.message}
+                  icon={IndianRupee}
+                  {...field}
+                />
+              )}
+            />
+
+            <Controller
+              name="employmentType"
+              control={control}
+              render={({ field }) => (
+                <SelectField
+                  label="Employment Type"
+                  options={employmentTypes}
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.employmentType?.message}
+                />
+              )}
+            />
+
+            <Controller
+              name="minCibilScore"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  label="Minimum CIBIL Score"
+                  type="number"
+                  placeholder="300"
+                  error={errors.minCibilScore?.message}
+                  icon={CreditCard}
+                  {...field}
+                />
+              )}
+            />
+
+            <Controller
+              name="maxCibilScore"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  label="Maximum CIBIL Score"
+                  type="number"
+                  placeholder="900"
+                  error={errors.maxCibilScore?.message}
+                  icon={CreditCard}
+                  {...field}
+                />
+              )}
+            />
+          </div>
+        </div>
+
+        {/* Section 6: Loan Rules */}
+        <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-2 bg-red-100 rounded-lg">
+              <Shield className="w-5 h-5 text-red-600" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900">Loan Rules</h3>
+          </div>
+
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Controller
+                name="prepaymentAllowed"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <ToggleSwitch
+                    label="Prepayment Allowed"
+                    checked={value}
+                    onChange={onChange}
+                    description="Allow early partial repayment"
+                  />
+                )}
+              />
+
+              <Controller
+                name="foreclosureAllowed"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <ToggleSwitch
+                    label="Foreclosure Allowed"
+                    checked={value}
+                    onChange={onChange}
+                    description="Allow complete early repayment"
+                  />
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {watchPrepaymentAllowed && (
+                <Controller
+                  name="prepaymentCharges"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Prepayment Charges (%)"
+                      type="number"
+                      placeholder="0.00"
+                      error={errors.prepaymentCharges?.message}
+                      icon={Percent}
+                      {...field}
+                    />
+                  )}
+                />
+              )}
+
+              {watchForeclosureAllowed && (
+                <Controller
+                  name="foreclosureCharges"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Foreclosure Charges (%)"
+                      type="number"
+                      placeholder="0.00"
+                      error={errors.foreclosureCharges?.message}
+                      icon={Percent}
+                      {...field}
+                    />
+                  )}
+                />
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Controller
+                name="latePaymentFeeType"
+                control={control}
+                render={({ field }) => (
+                  <SelectField
+                    label="Late Payment Fee Type"
+                    options={chargeTypes}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Select fee type"
+                    error={errors.latePaymentFeeType?.message}
+                  />
+                )}
+              />
+
+              <Controller
+                name="latePaymentFee"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Late Payment Fee"
+                    type="number"
+                    placeholder="0.00"
+                    error={errors.latePaymentFee?.message}
+                    icon={IndianRupee}
+                    {...field}
+                  />
+                )}
+              />
+
+              <Controller
+                name="bounceCharges"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Bounce Charges"
+                    type="number"
+                    placeholder="0.00"
+                    error={errors.bounceCharges?.message}
+                    icon={IndianRupee}
+                    {...field}
+                  />
+                )}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Section 7: Documents */}
+        <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-2 bg-teal-100 rounded-lg">
+              <FileText className="w-5 h-5 text-teal-600" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900">Documents</h3>
+          </div>
+
+          <div className="space-y-5">
+            <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+              <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-blue-600" />
+                Applicant Documents
+              </h4>
+              <div className="space-y-3">
+                <SelectField
+                  label="Required"
+                  options={APPLICANT_DOCUMENT_OPTIONS}
+                  value={watchApplicantDocumentsRequired || []}
+                  onChange={(value) =>
+                    setValue("applicantDocumentsRequired", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select required applicant documents"
+                  error={errors.applicantDocumentsRequired?.message}
+                  className="bg-white rounded-lg"
+                />
+
+                <SelectField
+                  label="Optional"
+                  options={applicantOptionalOptions}
+                  value={watchApplicantDocumentsOptional || []}
+                  onChange={(value) =>
+                    setValue("applicantDocumentsOptional", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select optional applicant documents"
+                  error={errors.applicantDocumentsOptional?.message}
+                  className="bg-white rounded-lg"
+                />
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+              <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-indigo-600" />
+                Co-Applicant Documents
+              </h4>
+              <div className="space-y-3">
+                <SelectField
+                  label="Required"
+                  options={CO_APPLICANT_DOCUMENT_OPTIONS}
+                  value={watchCoApplicantDocumentsRequired || []}
+                  onChange={(value) =>
+                    setValue("coApplicantDocumentsRequired", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select required co-applicant documents"
+                  error={errors.coApplicantDocumentsRequired?.message}
+                  className="bg-white rounded-lg"
+                />
+
+                <SelectField
+                  label="Optional"
+                  options={coApplicantOptionalOptions}
+                  value={watchCoApplicantDocumentsOptional || []}
+                  onChange={(value) =>
+                    setValue("coApplicantDocumentsOptional", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select optional co-applicant documents"
+                  error={errors.coApplicantDocumentsOptional?.message}
+                  className="bg-white rounded-lg"
+                />
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+              <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-emerald-600" />
+                Guarantor Documents
+              </h4>
+              <div className="space-y-3">
+                <SelectField
+                  label="Required"
+                  options={GUARANTOR_DOCUMENT_OPTIONS}
+                  value={watchGuarantorDocumentsRequired || []}
+                  onChange={(value) =>
+                    setValue("guarantorDocumentsRequired", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select required guarantor documents"
+                  error={errors.guarantorDocumentsRequired?.message}
+                  className="bg-white rounded-lg"
+                />
+
+                <SelectField
+                  label="Optional"
+                  options={guarantorOptionalOptions}
+                  value={watchGuarantorDocumentsOptional || []}
+                  onChange={(value) =>
+                    setValue("guarantorDocumentsOptional", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select optional guarantor documents"
+                  error={errors.guarantorDocumentsOptional?.message}
+                  className="bg-white rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 8: Status & Visibility */}
+        <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-2 bg-teal-100 rounded-lg">
+              <Eye className="w-5 h-5 text-teal-600" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900">
+              Status & Visibility
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <Controller
+                name="activeStatus"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <ToggleSwitch
+                    label="Active Status"
+                    checked={value}
+                    onChange={onChange}
+                    description="Enable this loan product"
+                  />
+                )}
+              />
+
+              <Controller
+                name="publicVisibility"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <ToggleSwitch
+                    label="Public Visibility"
+                    checked={value}
+                    onChange={onChange}
+                    description="Show on customer portal"
+                  />
+                )}
+              />
+
+              <Controller
+                name="approvalRequired"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <ToggleSwitch
+                    label="Approval Required"
+                    checked={value}
+                    onChange={onChange}
+                    description="Requires manual approval"
+                  />
+                )}
+              />
+            </div>
+
+            <div className="space-y-4">
+              <Controller
+                name="estimatedProcessingTimeDays"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Estimated Processing Time (days)"
+                    type="number"
+                    placeholder="e.g., 7"
+                    error={errors.estimatedProcessingTimeDays?.message}
+                    icon={Clock}
+                    {...field}
+                  />
+                )}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-b-xl shadow-sm">
-        <div className="p-6 space-y-6 max-h-[calc(100vh-200px)] overflow-y-auto">
-          {/* Section 1: Basic Information */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-            <div className="flex items-center mb-6">
-              <Info className="w-5 h-5 text-blue-600 mr-3" />
-              <h3 className="text-lg font-medium text-gray-900">Basic Information</h3>
-            </div>
-            
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Loan Code */}
-                <Controller
-                  name="loanCode"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField
-                      label="Loan Code"
-                      {...field}
-                      readOnly
-                      className="bg-gray-50 cursor-not-allowed"
-                    />
-                  )}
-                />
-
-                {/* Loan Name */}
-                <Controller
-                  name="loanName"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField
-                      label="Loan Name"
-                      placeholder="Enter loan product name"
-                      error={errors.loanName?.message}
-                      isRequired
-                      {...field}
-                    />
-                  )}
-                />
+      {/* Footer with Actions */}
+      <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+        <div className="flex justify-end gap-3">
+          <Button type="button" onClick={onClose} variant="outline">
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            disabled={
+              !isValid ||
+              createLoanTypeMutation.isLoading ||
+              updateLoanTypeMutation.isLoading
+            }
+            className="min-w-35"
+          >
+            {createLoanTypeMutation.isLoading ||
+            updateLoanTypeMutation.isLoading ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span>{editData ? "Updating..." : "Creating..."}</span>
               </div>
-              
-              <div className="space-y-1">
-                <label className="block text-sm font-medium text-gray-700">
-                  Loan Category <span className="text-red-500 ml-1">*</span>
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {loanCategories.map(category => {
-                    const Icon = category.icon;
-                    const isSelected = watchLoanCategory === category.value;
-                    return (
-                      <button
-                        key={category.value}
-                        type="button"
-                        onClick={() => setValue('loanCategory', category.value, { shouldValidate: true, shouldDirty: true })}
-                        className={`p-4 border rounded-lg text-center transition-all ${
-                          isSelected
-                            ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-100'
-                            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                        }`}
-                      >
-                        <Icon className={`w-6 h-6 mx-auto mb-2 ${
-                          isSelected ? 'text-blue-600' : 'text-gray-600'
-                        }`} />
-                        <span className="text-sm font-medium">{category.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-                {errors.loanCategory && (
-                  <p className="text-red-500 text-xs flex items-center mt-1">
-                    <AlertCircle className="w-3 h-3 mr-1" />
-                    {errors.loanCategory.message}
-                  </p>
-                )}
-              </div>
-              
-              {/* Description */}
-              <Controller
-                name="description"
-                control={control}
-                render={({ field }) => (
-                  <TextAreaField
-                    label="Description (optional)"
-                    placeholder="Enter a brief description of this loan product..."
-                    rows={3}
-                    maxLength={500}
-                    error={errors.description?.message}
-                    {...field}
-                  />
-                )}
-              />
-              
-              <div className="pt-4 border-t border-gray-100">
-                <Controller
-                  name="securedLoan"
-                  control={control}
-                  render={({ field: { value, onChange } }) => (
-                    <ToggleSwitch
-                      label="Secured Loan"
-                      checked={value}
-                      onChange={onChange}
-                    />
-                  )}
-                />
-                <p className="text-xs text-gray-500 mt-1 ml-1">Requires collateral or security</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Section 2: Loan Amount & Tenure */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-            <div className="flex items-center mb-6">
-              <IndianRupee className="w-5 h-5 text-blue-600 mr-3" />
-              <h3 className="text-lg font-medium text-gray-900">Loan Amount & Tenure</h3>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Min Loan Amount */}
-              <Controller
-                name="minLoanAmount"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Minimum Loan Amount"
-                    type="number"
-                    placeholder="0.00"
-                    error={errors.minLoanAmount?.message}
-                    isRequired
-                    {...field}
-                  />
-                )}
-              />
-
-              {/* Max Loan Amount */}
-              <Controller
-                name="maxLoanAmount"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Maximum Loan Amount"
-                    type="number"
-                    placeholder="0.00"
-                    error={errors.maxLoanAmount?.message}
-                    isRequired
-                    {...field}
-                  />
-                )}
-              />
-
-              {/* Min Tenure */}
-              <Controller
-                name="minTenure"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Minimum Tenure (months)"
-                    type="number"
-                    placeholder="0"
-                    error={errors.minTenure?.message}
-                    isRequired
-                    {...field}
-                  />
-                )}
-              />
-
-              {/* Max Tenure */}
-              <Controller
-                name="maxTenure"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Maximum Tenure (months)"
-                    type="number"
-                    placeholder="0"
-                    error={errors.maxTenure?.message}
-                    isRequired
-                    {...field}
-                  />
-                )}
-              />
-            </div>
-          </div>
-
-          {/* Section 3: Interest Details */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-            <div className="flex items-center mb-6">
-              <Percent className="w-5 h-5 text-blue-600 mr-3" />
-              <h3 className="text-lg font-medium text-gray-900">Interest Details</h3>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Interest Type */}
-              <Controller
-                name="interestType"
-                control={control}
-                render={({ field }) => (
-                  <SelectField
-                    label="Interest Type"
-                    options={interestTypes}
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={errors.interestType?.message}
-                  />
-                )}
-              />
-
-              {/* Min Interest Rate */}
-              <Controller
-                name="minInterestRate"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Minimum Interest Rate (%)"
-                    type="number"
-                    placeholder="0.00"
-                    error={errors.minInterestRate?.message}
-                    {...field}
-                  />
-                )}
-              />
-
-              {/* Max Interest Rate */}
-              <Controller
-                name="maxInterestRate"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Maximum Interest Rate (%)"
-                    type="number"
-                    placeholder="0.00"
-                    error={errors.maxInterestRate?.message}
-                    {...field}
-                  />
-                )}
-              />
-
-              {/* Default Interest Rate */}
-              <Controller
-                name="defaultInterestRate"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Default Interest Rate (%)"
-                    type="number"
-                    placeholder="0.00"
-                    error={errors.defaultInterestRate?.message}
-                    {...field}
-                  />
-                )}
-              />
-            </div>
-          </div>
-
-          {/* Section 4: Processing Fee & Tax */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-            <div className="flex items-center mb-6">
-              <CheckCircle className="w-5 h-5 text-blue-600 mr-3" />
-              <h3 className="text-lg font-medium text-gray-900">Processing Fee & Tax</h3>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Processing Fee Type */}
-              <Controller
-                name="processingFeeType"
-                control={control}
-                render={({ field }) => (
-                  <SelectField
-                    label="Processing Fee Type"
-                    options={processingFeeTypes}
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={errors.processingFeeType?.message}
-                  />
-                )}
-              />
-
-              {/* Processing Fee Value */}
-              <Controller
-                name="processingFeeValue"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Processing Fee Value"
-                    type="number"
-                    placeholder="0.00"
-                    error={errors.processingFeeValue?.message}
-                    {...field}
-                  />
-                )}
-              />
-              
-              <div className="space-y-4">
-                <Controller
-                  name="gstApplicable"
-                  control={control}
-                  render={({ field: { value, onChange } }) => (
-                    <ToggleSwitch
-                      label="GST Applicable"
-                      checked={value}
-                      onChange={onChange}
-                    />
-                  )}
-                />
-                <p className="text-xs text-gray-500 mt-1 ml-1">Goods and Services Tax</p>
-                
-                {watchGstApplicable && (
-                  <div className="transition-all duration-300 ease-in-out">
-                    <Controller
-                      name="gstPercentage"
-                      control={control}
-                      render={({ field }) => (
-                        <InputField
-                          label="GST Percentage (%)"
-                          type="number"
-                          placeholder="0.00"
-                          error={errors.gstPercentage?.message}
-                          {...field}
-                        />
-                      )}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Section 5: Eligibility Criteria */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-            <div className="flex items-center mb-6">
-              <Users className="w-5 h-5 text-blue-600 mr-3" />
-              <h3 className="text-lg font-medium text-gray-900">Eligibility Criteria</h3>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Min Age */}
-              <Controller
-                name="minAge"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Minimum Age"
-                    type="number"
-                    placeholder="18"
-                    error={errors.minAge?.message}
-                    isRequired
-                    {...field}
-                  />
-                )}
-              />
-
-              {/* Max Age */}
-              <Controller
-                name="maxAge"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Maximum Age"
-                    type="number"
-                    placeholder="65"
-                    error={errors.maxAge?.message}
-                    isRequired
-                    {...field}
-                  />
-                )}
-              />
-
-              {/* Min Monthly Income */}
-              <Controller
-                name="minMonthlyIncome"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Minimum Monthly Income (optional)"
-                    type="number"
-                    placeholder="0.00"
-                    error={errors.minMonthlyIncome?.message}
-                    {...field}
-                  />
-                )}
-              />
-
-              {/* Employment Type */}
-              <Controller
-                name="employmentType"
-                control={control}
-                render={({ field }) => (
-                  <SelectField
-                    label="Employment Type (optional)"
-                    options={employmentTypes}
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={errors.employmentType?.message}
-                  />
-                )}
-              />
-              
-              {/* Min CIBIL Score */}
-              <Controller
-                name="minCibilScore"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Minimum CIBIL Score (optional)"
-                    type="number"
-                    placeholder="300"
-                    error={errors.minCibilScore?.message}
-                    icon={CreditCard}
-                    {...field}
-                  />
-                )}
-              />
-
-              {/* Max CIBIL Score */}
-              <Controller
-                name="maxCibilScore"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Maximum CIBIL Score (optional)"
-                    type="number"
-                    placeholder="900"
-                    error={errors.maxCibilScore?.message}
-                    icon={CreditCard}
-                    {...field}
-                  />
-                )}
-              />
-            </div>
-          </div>
-
-          {/* Section 6: Loan Rules */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-            <div className="flex items-center mb-6">
-              <Shield className="w-5 h-5 text-blue-600 mr-3" />
-              <h3 className="text-lg font-medium text-gray-900">Loan Rules</h3>
-            </div>
-            
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <Controller
-                    name="prepaymentAllowed"
-                    control={control}
-                    render={({ field: { value, onChange } }) => (
-                      <ToggleSwitch
-                        label="Prepayment Allowed"
-                        checked={value}
-                        onChange={onChange}
-                      />
-                    )}
-                  />
-                  <p className="text-xs text-gray-500 mt-1 ml-1">Allow early partial repayment</p>
-                </div>
-                
-                <div>
-                  <Controller
-                    name="foreclosureAllowed"
-                    control={control}
-                    render={({ field: { value, onChange } }) => (
-                      <ToggleSwitch
-                        label="Foreclosure Allowed"
-                        checked={value}
-                        onChange={onChange}
-                      />
-                    )}
-                  />
-                  <p className="text-xs text-gray-500 mt-1 ml-1">Allow complete early repayment</p>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {watchPrepaymentAllowed && (
-                  <div className="transition-all duration-300 ease-in-out">
-                    <Controller
-                      name="prepaymentCharges"
-                      control={control}
-                      render={({ field }) => (
-                        <InputField
-                          label="Prepayment Charges (%)"
-                          type="number"
-                          placeholder="0.00"
-                          error={errors.prepaymentCharges?.message}
-                          {...field}
-                        />
-                      )}
-                    />
-                  </div>
-                )}
-                
-                {watchForeclosureAllowed && (
-                  <div className="transition-all duration-300 ease-in-out">
-                    <Controller
-                      name="foreclosureCharges"
-                      control={control}
-                      render={({ field }) => (
-                        <InputField
-                          label="Foreclosure Charges (%)"
-                          type="number"
-                          placeholder="0.00"
-                          error={errors.foreclosureCharges?.message}
-                          {...field}
-                        />
-                      )}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Section 7: Status & Visibility */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-            <div className="flex items-center mb-6">
-              <Eye className="w-5 h-5 text-blue-600 mr-3" />
-              <h3 className="text-lg font-medium text-gray-900">Status & Visibility</h3>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div>
-                  <Controller
-                    name="activeStatus"
-                    control={control}
-                    render={({ field: { value, onChange } }) => (
-                      <ToggleSwitch
-                        label="Active Status"
-                        checked={value}
-                        onChange={onChange}
-                      />
-                    )}
-                  />
-                  <p className="text-xs text-gray-500 mt-1 ml-1">Enable this loan product</p>
-                </div>
-                
-                <div>
-                  <Controller
-                    name="publicVisibility"
-                    control={control}
-                    render={({ field: { value, onChange } }) => (
-                      <ToggleSwitch
-                        label="Public Visibility"
-                        checked={value}
-                        onChange={onChange}
-                      />
-                    )}
-                  />
-                  <p className="text-xs text-gray-500 mt-1 ml-1">Show on customer portal</p>
-                </div>
-                
-                <div>
-                  <Controller
-                    name="approvalRequired"
-                    control={control}
-                    render={({ field: { value, onChange } }) => (
-                      <ToggleSwitch
-                        label="Approval Required"
-                        checked={value}
-                        onChange={onChange}
-                      />
-                    )}
-                  />
-                  <p className="text-xs text-gray-500 mt-1 ml-1">Requires manual approval</p>
-                </div>
-              </div>
-              
-              <div className="space-y-4">
-                {/* Estimated Processing Time */}
-                <Controller
-                  name="estimatedProcessingTimeDays"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField
-                      label="Estimated Processing Time (days)"
-                      type="number"
-                      placeholder="e.g., 7"
-                      error={errors.estimatedProcessingTimeDays?.message}
-                      icon={Clock}
-                      {...field}
-                    />
-                  )}
-                />
-                
-                <div className="space-y-1">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Documents Required
-                  </label>
-                  <div className="flex items-start space-x-2">
-                    <FileText className="w-4 h-4 text-gray-400 mt-1" />
-                    <div className="relative w-full">
-                      <div className="space-y-2">
-                        <div className="grid grid-cols-2 gap-3">
-                          {documentOptions.map((doc) => (
-                            <label
-                              key={doc.value}
-                              className="flex items-center gap-2 p-2 border rounded-lg cursor-pointer hover:bg-gray-50"
-                            >
-                              <input
-                                type="checkbox"
-                                checked={watchDocumentsRequired?.includes(doc.value)}
-                                onChange={() => handleDocumentChange(doc.value)}
-                                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                              />
-                              <span className="text-sm text-gray-700">
-                                {doc.label}
-                              </span>
-                            </label>
-                          ))}
-                        </div>
-                        <p className="text-xs text-gray-500">
-                          Select required documents for this loan
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            ) : editData ? (
+              "Update Loan Type"
+            ) : (
+              "Create Loan Type"
+            )}
+          </Button>
         </div>
 
-        {/* Footer */}
-        <div className="border-t border-gray-200 bg-white px-6 py-4 rounded-b-xl">
-          <div className="flex flex-col sm:flex-row-reverse sm:justify-start gap-3">
-            <Button
-              type="submit"
-              disabled={!isValid || createLoanTypeMutation.isLoading || updateLoanTypeMutation.isLoading}
-            >
-              {createLoanTypeMutation.isLoading || updateLoanTypeMutation.isLoading ? (
-                <div className="flex items-center gap-2">
-                  <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span>{editData ? "Updating..." : "Creating..."}</span>
-                </div>
-              ) : (
-                editData ? "Update Loan Type" : "Create Loan Type"
-              )}
-            </Button>
-            <Button
-              type="button"
-              onClick={onClose}
-              variant="outline"
-            >
-              Cancel
-            </Button>
+        {!isValid && (
+          <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <p className="text-sm text-yellow-800 flex items-center">
+              <AlertCircle className="w-4 h-4 mr-2 shrink-0" />
+              Please fill all required fields correctly to create the loan type
+            </p>
           </div>
-          
-          {!isValid && (
-            <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <p className="text-sm text-yellow-800 flex items-center">
-                <AlertCircle className="w-4 h-4 mr-2" />
-                Please fill all required fields correctly to create the loan type
-              </p>
-            </div>
-          )}
-        </div>
-      </form>
-    </div>
+        )}
+      </div>
+    </form>
   );
 }

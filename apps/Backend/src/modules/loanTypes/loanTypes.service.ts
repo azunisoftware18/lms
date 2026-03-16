@@ -100,8 +100,12 @@ export const createLoanTypeService = async (loanTypeData: LoanTypeDTO) => {
         isPublic: data.isPublic,
 
         estimatedProcessingTimeDays: data.estimatedProcessingTimeDays,
-        documentsRequired: data.documentsRequired,
-        documentsOptions: data.documentsOptions,
+        applicantDocumentsRequired: data.applicantDocumentsRequired,
+        applicantDocumentsOptional: data.applicantDocumentsOptional,
+        coApplicantDocumentsRequired: data.coApplicantDocumentsRequired,
+        coApplicantDocumentsOptional: data.coApplicantDocumentsOptional,
+        guarantorDocumentsRequired: data.guarantorDocumentsRequired,
+        guarantorDocumentsOptional: data.guarantorDocumentsOptional,
       },
     });
 

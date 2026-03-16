@@ -33,8 +33,7 @@ import Button from "../../../components/ui/Button";
 import SearchField from "../../../components/ui/SearchField";
 import FilterDropdown from "../../../components/ui/FilterDropdown";
 import SelectField from "../../../components/ui/SelectField";
-import TableShell from "../../../components/tables/core/TableShell";
-import TableBody from "../../../components/tables/core/TableBody";
+import SanctionTable from "../../../components/tables/SanctionTable";
 import { colorVariables } from "../../../lib";
 import {
   SANCTION_LOAN_TYPES,
@@ -65,7 +64,10 @@ function CreateSanctionModal({ isOpen, onClose }) {
           Sanction creation form is not configured yet.
         </div>
         <div className="flex justify-end border-t border-slate-200 px-6 py-4">
-          <Button onClick={onClose} className="bg-white! text-slate-700! border border-slate-300">
+          <Button
+            onClick={onClose}
+            className="bg-white! text-slate-700! border border-slate-300"
+          >
             Close
           </Button>
         </div>
@@ -142,7 +144,10 @@ function SanctionDetailsModal({ isOpen, onClose, sanction }) {
           </div>
         </div>
         <div className="flex justify-end border-t border-slate-200 px-6 py-4">
-          <Button onClick={onClose} className="bg-white! text-slate-700! border border-slate-300">
+          <Button
+            onClick={onClose}
+            className="bg-white! text-slate-700! border border-slate-300"
+          >
             Close
           </Button>
         </div>
@@ -363,7 +368,8 @@ export default function SanctionPage() {
 
   // Pagination
   const totalPages = Math.ceil(filteredSanctions.length / itemsPerPage);
-  const resolvedCurrentPage = totalPages > 0 ? Math.min(currentPage, totalPages) : 1;
+  const resolvedCurrentPage =
+    totalPages > 0 ? Math.min(currentPage, totalPages) : 1;
   const paginatedSanctions = filteredSanctions.slice(
     (resolvedCurrentPage - 1) * itemsPerPage,
     resolvedCurrentPage * itemsPerPage,
@@ -434,7 +440,9 @@ export default function SanctionPage() {
     {
       accessor: "sanctionedAmount",
       header: "Sanctioned",
-      render: (value) => <span className="font-semibold text-slate-800">{value}</span>,
+      render: (value) => (
+        <span className="font-semibold text-slate-800">{value}</span>
+      ),
     },
     { accessor: "interestRate", header: "Interest" },
     { accessor: "tenure", header: "Tenure" },
@@ -501,9 +509,7 @@ export default function SanctionPage() {
             {sanction.interestRate}
           </span>
         </div>
-        <ActionMenu
-          actions={getActionItems(sanction)}
-        />
+        <ActionMenu actions={getActionItems(sanction)} />
       </div>
     </div>
   );
@@ -552,9 +558,7 @@ export default function SanctionPage() {
 
       <div className="flex items-center justify-between pt-3 border-t border-slate-100">
         <span className="text-xs text-slate-500">{sanction.sanctionDate}</span>
-        <ActionMenu
-          actions={getActionItems(sanction)}
-        />
+        <ActionMenu actions={getActionItems(sanction)} />
       </div>
     </div>
   );
@@ -679,7 +683,9 @@ export default function SanctionPage() {
                 <Filter className="w-4 h-4" />
                 Search & Filters
                 {filteredSanctions.length > 0 && (
-                  <span className={`ml-2 px-2 py-0.5 ${colorVariables.LIGHT_BG} ${colorVariables.PRIMARY_COLOR} rounded-full text-xs`}>
+                  <span
+                    className={`ml-2 px-2 py-0.5 ${colorVariables.LIGHT_BG} ${colorVariables.PRIMARY_COLOR} rounded-full text-xs`}
+                  >
                     {filteredSanctions.length} results
                   </span>
                 )}
@@ -840,28 +846,11 @@ export default function SanctionPage() {
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           {/* Desktop Table View */}
           {device.isDesktop && (
-            <TableShell>
-              <thead className="bg-slate-50 border-b border-slate-200">
-                <tr>
-                  {desktopColumns.map((column) => (
-                    <th
-                      key={column.accessor}
-                      className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider"
-                    >
-                      {column.header}
-                    </th>
-                  ))}
-                  <th className="px-6 py-4 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <TableBody
-                columns={desktopColumns}
-                data={paginatedSanctions}
-                actions={tableActions}
-              />
-            </TableShell>
+            <SanctionTable
+              columns={desktopColumns}
+              data={paginatedSanctions}
+              actions={tableActions}
+            />
           )}
 
           {/* Tablet View */}

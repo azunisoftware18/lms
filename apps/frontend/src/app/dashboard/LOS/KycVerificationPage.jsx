@@ -3,14 +3,9 @@ import { KYC_CIBIL_DATA, KYC_APPLICATIONS } from "../../../lib/LOSDummyData";
 import { colorVariables } from "../../../lib/index";
 import QuickActionCard from "../../../components/common/QuickAction";
 import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
-import Pagination from "../../../components/common/Pagination";
 import Button from "../../../components/ui/Button";
-import {
-  TableShell,
-  TableHead,
-  TableBody,
-} from "../../../components/tables/core";
-import { Icons } from "../../../components/common/Icon";
+import KycVerificationTable from "../../../components/tables/KycVerificationTable";
+import * as Icons from "lucide-react";
 import { ShieldCheck, BarChart, Activity, Target } from "lucide-react";
 import { useUpdateLoanStatus } from "../../../hooks/useLoanApplication.js";
 import toast from "react-hot-toast";
@@ -675,25 +670,16 @@ export default function KycVerificationPage() {
       </div>
 
       {/* TABLE */}
-      <TableShell>
-        <TableHead
-          title={`KYC Applications (${filteredData.length})`}
-          columns={kycColumns}
-          search={searchTerm}
-          setSearch={(v) => {
-            setSearchTerm(v);
-            setCurrentPage(1);
-          }}
-        />
-        <TableBody
-          columns={kycColumns}
-          data={paginatedData}
-          actions={kycActions}
-        />
-      </TableShell>
-
-      {/* PAGINATION */}
-      <Pagination
+      <KycVerificationTable
+        title={`KYC Applications (${filteredData.length})`}
+        columns={kycColumns}
+        data={paginatedData}
+        actions={kycActions}
+        search={searchTerm}
+        onSearchChange={(v) => {
+          setSearchTerm(v);
+          setCurrentPage(1);
+        }}
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}

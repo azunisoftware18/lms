@@ -1,6 +1,6 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useDispatch, useSelector } from 'react-redux';
-import { showSuccess, showError } from '../lib/utils/toastService';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useDispatch, useSelector } from "react-redux";
+import { showSuccess, showError } from "../lib/utils/toastService";
 import {
   setLoanTypes,
   setLoading,
@@ -9,13 +9,13 @@ import {
   addLoanType,
   updateLoanTypeInList,
   removeLoanTypeFromList,
-} from '../store/slices/loanTypeSlice';
+} from "../store/slices/loanTypeSlice";
 import {
   createLoanType,
   getLoanTypes,
   updateLoanType,
   deleteLoanType,
-} from '../lib/api/loanType.api';
+} from "../lib/api/loanType.api";
 
 export const useLoanTypes = (param) => {
   const dispatch = useDispatch();
@@ -24,14 +24,15 @@ export const useLoanTypes = (param) => {
   const error = useSelector((state) => state.loanTypes.error);
 
   const query = useQuery({
-    queryKey: ['loanTypes', param],
+    queryKey: ["loanTypes", param],
     queryFn: () => getLoanTypes(param),
     onSuccess: (data) => {
-      dispatch(setLoanTypes(data));
+      const normalizedLoanTypes = Array.isArray(data) ? data : data?.data || [];
+      dispatch(setLoanTypes(normalizedLoanTypes));
       dispatch(clearError());
     },
     onError: (queryError) => {
-      const message = queryError?.message || 'Failed to fetch loan types';
+      const message = queryError?.message || "Failed to fetch loan types";
       dispatch(setError(message));
       showError(message);
     },
@@ -60,11 +61,11 @@ export const useCreateLoanType = () => {
       dispatch(addLoanType(data));
       dispatch(setLoading(false));
       dispatch(clearError());
-      queryClient.invalidateQueries({ queryKey: ['loanTypes'] });
-      showSuccess('Loan type created successfully!');
+      queryClient.invalidateQueries({ queryKey: ["loanTypes"] });
+      showSuccess("Loan type created successfully!");
     },
     onError: (mutationError) => {
-      const message = mutationError?.message || 'Failed to create loan type';
+      const message = mutationError?.message || "Failed to create loan type";
       dispatch(setError(message));
       dispatch(setLoading(false));
       showError(message);
@@ -85,11 +86,11 @@ export const useUpdateLoanType = () => {
       dispatch(updateLoanTypeInList(data));
       dispatch(setLoading(false));
       dispatch(clearError());
-      queryClient.invalidateQueries({ queryKey: ['loanTypes'] });
-      showSuccess('Loan type updated successfully!');
+      queryClient.invalidateQueries({ queryKey: ["loanTypes"] });
+      showSuccess("Loan type updated successfully!");
     },
     onError: (mutationError) => {
-      const message = mutationError?.message || 'Failed to update loan type';
+      const message = mutationError?.message || "Failed to update loan type";
       dispatch(setError(message));
       dispatch(setLoading(false));
       showError(message);
@@ -110,11 +111,11 @@ export const useDeleteLoanType = () => {
       dispatch(removeLoanTypeFromList(id));
       dispatch(setLoading(false));
       dispatch(clearError());
-      queryClient.invalidateQueries({ queryKey: ['loanTypes'] });
-      showSuccess('Loan type deleted successfully!');
+      queryClient.invalidateQueries({ queryKey: ["loanTypes"] });
+      showSuccess("Loan type deleted successfully!");
     },
     onError: (mutationError) => {
-      const message = mutationError?.message || 'Failed to delete loan type';
+      const message = mutationError?.message || "Failed to delete loan type";
       dispatch(setError(message));
       dispatch(setLoading(false));
       showError(message);

@@ -1,13 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { login, logout } from "../lib/api/auth.api";
-// import {
-//   loginStart,
-//   setUser,
-//   loginError,
-//   clearUser,
-// } from "../../store/slices/authSlice";
-import { loginStart, setUser, loginError, clearUser } from "../store/slices/authSlice"; // ✅ Updated import path
+
+import {
+  loginStart,
+  setUser,
+  loginError,
+  clearUser,
+} from "../store/slices/authSlice"; // ✅ Updated import path
 import toast from "react-hot-toast";
 
 export const useLogin = () => {
@@ -21,15 +21,18 @@ export const useLogin = () => {
     },
 
     onSuccess: (data) => {
+      const userData = data?.data ?? data?.user ?? data;
 
-  const userData = data?.data;
+      if (!userData || typeof userData !== "object") {
+        dispatch(loginError("Invalid login response"));
+        toast.error("Invalid login response");
+        return;
+      }
 
-  dispatch(setUser(userData));
-
-  localStorage.setItem("user", JSON.stringify(userData));
-
-  toast.success("Login successful");
-},
+      dispatch(setUser(userData));
+      localStorage.setItem("user", JSON.stringify(userData));
+      toast.success("Login successful");
+    },
 
     onError: (error) => {
       const message = error?.response?.data?.message || "Invalid credentials";
@@ -48,13 +51,10 @@ export const useLogout = () => {
     mutationFn: logout,
 
     onSuccess: () => {
-
-  localStorage.removeItem("user");
-
-  dispatch(clearUser());
-
-  toast.success("Logged out successfully");
-},
+      localStorage.removeItem("user");
+      dispatch(clearUser());
+      toast.success("Logged out successfully");
+    },
 
     onError: (error) => {
       const message = error?.response?.data?.message || "Logout failed";

@@ -22,11 +22,13 @@ import { colorVariables } from "../../lib/index.js";
 import Button from "../../components/ui/Button.jsx";
 import InputField from "../../components/ui/InputField.jsx";
 import StatusCard from "../../components/common/StatusCard";
-import { TableShell, TableBody, TableHead } from "../../components/tables/core";
+import LoanRequestTable from "../../components/tables/LoanRequestTable.jsx";
 const DetailItem = ({ label, value }) => (
   <div className="flex flex-col p-3 bg-gray-50 rounded-lg">
     <p className="text-xs font-medium text-gray-500 uppercase">{label}</p>
-    <p className="text-sm font-bold text-gray-800 break-words mt-1">{value}</p>
+    <p className="text-sm font-bold text-gray-800 wrap-break-word mt-1">
+      {value}
+    </p>
   </div>
 );
 export const StatusBadge = ({ status }) => {
@@ -185,7 +187,7 @@ export default function LoanRequestPage() {
 
   // --- Handlers ---
 
-  const handleLoanSubmit = (loanData) => {
+  const _handleLoanSubmit = (loanData) => {
     const isNew = !loans.some((l) => l.id === loanData.id);
     let updatedLoans;
 
@@ -312,20 +314,6 @@ export default function LoanRequestPage() {
   }, [filters.sourceType]);
 
   if (showForm) {
-    // Prepare data for the (assumed) LoanForm component when editing
-    const initialData = isEditing
-      ? {
-          id: selectedLoan?.id || "",
-          customerName: selectedLoan?.borrower || "",
-          amount: selectedLoan?.amount?.replace(/[^0-9]/g, "") || "",
-          product: selectedLoan?.type || "",
-          tenure: selectedLoan?.details?.tenure?.replace(/[^0-9]/g, "") || "12",
-          mobile: selectedLoan?.details?.mobile || "",
-          email: selectedLoan?.details?.email || "",
-          loanCategory: selectedLoan?.details?.loanCategory || "",
-        }
-      : {};
-
     return (
       <div className="p-6 bg-white min-h-screen">
         <div className="max-w-4xl mx-auto">
@@ -357,7 +345,7 @@ export default function LoanRequestPage() {
               management (`showForm`, `isEditing`).
             </p>
             <p className="text-sm mt-2">
-              **Mock Data Used:** The `handleLoanSubmit` function uses a mock
+              **Mock Data Used:** The `_handleLoanSubmit` function uses a mock
               logic to update the main loan table upon submission.
             </p>
           </div>
@@ -482,81 +470,21 @@ export default function LoanRequestPage() {
 
         {/* === Loan Table === */}
         <div className="bg-white rounded-xl shadow-lg overflow-x-auto border border-gray-100">
-          <TableShell>
-            <TableHead
-              columns={[
-                { label: "Loan ID", accessor: "id" },
-                { label: "Borrower", accessor: "borrower" },
-                { label: "Amount", accessor: "amount" },
-                { label: "Source / Partner", accessor: "loanSource" },
-                { label: "Status", accessor: "status" },
-                { label: "Approved By", accessor: "approvedBy" },
-              ]}
-            />
-
-            <TableBody
-              columns={[
-                {
-                  accessor: "id",
-                  render: (value) => (
-                    <span
-                      className={`font-bold ${colorVariables.PRIMARY_COLOR}`}
-                    >
-                      {value}
-                    </span>
-                  ),
-                },
-
-                { accessor: "borrower" },
-
-                {
-                  accessor: "amount",
-                  render: (value) => (
-                    <span className="font-semibold">{value}</span>
-                  ),
-                },
-
-                {
-                  accessor: "loanSource",
-                  render: (value) => (
-                    <span className="flex items-center gap-1 font-medium">
-                      {MOCK_EMPLOYEES.includes(value) ? (
-                        <Users size={14} className="text-green-500" />
-                      ) : (
-                        <Building size={14} className="text-purple-500" />
-                      )}
-                      {value}
-                    </span>
-                  ),
-                },
-
-                {
-                  accessor: "status",
-                  render: (value) => <StatusBadge status={value} />,
-                },
-
-                {
-                  accessor: "approvedBy",
-                  render: (value) =>
-                    value || <span className="text-gray-400 italic">N/A</span>,
-                },
-              ]}
-              data={filteredLoans}
-              actions={[
-                {
-                  label: "View",
-                  icon: <Eye size={16} />,
-                  onClick: (row) => setSelectedLoan(row),
-                },
-              ]}
-            />
-          </TableShell>
-          {filteredLoans.length > 0 && (
-            <div className="p-4 text-center text-sm font-medium text-gray-600 border-t bg-gray-50 rounded-b-xl">
-              Showing {filteredLoans.length} of {loans.length} total
-              applications.
-            </div>
-          )}
+          <LoanRequestTable
+            items={filteredLoans}
+            onView={setSelectedLoan}
+            employees={MOCK_EMPLOYEES}
+            primaryColorClass={colorVariables.PRIMARY_COLOR}
+            statusBadge={(status) => <StatusBadge status={status} />}
+            footer={
+              filteredLoans.length > 0 ? (
+                <div className="p-4 text-center text-sm font-medium text-gray-600 border-t bg-gray-50 rounded-b-xl">
+                  Showing {filteredLoans.length} of {loans.length} total
+                  applications.
+                </div>
+              ) : null
+            }
+          />
         </div>
       </div>
 

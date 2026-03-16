@@ -1,27 +1,20 @@
-import { Routes, Route } from 'react-router-dom';
-import PrivateRoute from './privateRouter';
-import PublicRoute from './publicRoute';
+import { Routes, Route } from "react-router-dom";
+import PrivateRoute from "./privateRouter";
+import PublicRoute from "./publicRoute";
 
 // Private pages
-import DashboardPage from '../app/dashboard/DashboardPage';
-import ApplicationPage from '../app/dashboard/LOS/ApplicationPage.jsx';
-import DocumentPage from '../app/dashboard/LOS/DocumentPage.jsx';
-import BranchManagement from '../app/dashboard/Configuration/BranchManagement.jsx';
-import BorrowerPage from '../app/dashboard/BorrowerPage.jsx';
-import CreditCheckPage from '../app/dashboard/LOS/CreditCheckPage.jsx';
-import TechnicalReviewPage from '../app/dashboard/LOS/TechnicalReviewPage.jsx';
-import LegalCompliancePage from '../app/dashboard/LOS/LegalCompilancePage.jsx';
-import EMIManagementPage from '../app/dashboard/LOS/EMIManagementPage.jsx';
-import SanctionPage from '../app/dashboard/LOS/SanctionPage.jsx';
-import DisbursementManagementPage from '../app/dashboard/LOS/DisbursementManagementPage.jsx';
-import BranchAdmin from '../app/dashboard/Configuration/BranchAdmin.jsx';
-
-
-
-
-
-
-
+import DashboardPage from "../app/dashboard/DashboardPage";
+import ApplicationPage from "../app/dashboard/LOS/ApplicationPage.jsx";
+import DocumentPage from "../app/dashboard/LOS/DocumentPage.jsx";
+import BranchManagement from "../app/dashboard/Configuration/BranchManagement.jsx";
+import BorrowerPage from "../app/dashboard/BorrowerPage.jsx";
+import CreditCheckPage from "../app/dashboard/LOS/CreditCheckPage.jsx";
+import TechnicalReviewPage from "../app/dashboard/LOS/TechnicalReviewPage.jsx";
+import LegalCompliancePage from "../app/dashboard/LOS/LegalCompilancePage.jsx";
+import EMIManagementPage from "../app/dashboard/LOS/EMIManagementPage.jsx";
+import SanctionPage from "../app/dashboard/LOS/SanctionPage.jsx";
+import DisbursementManagementPage from "../app/dashboard/LOS/DisbursementManagementPage.jsx";
+import BranchAdmin from "../app/dashboard/Configuration/BranchAdmin.jsx";
 
 // Public Pages
 import Layout from '../layout/Layout.jsx';
@@ -70,9 +63,16 @@ import LoanClosure from '../app/dashboard/LMS/LoanClosure.jsx';
 import LoanAccountView from '../app/dashboard/ViewDetail/LoanAccountView.jsx';
 import KycVerificationPage from '../app/dashboard/LOS/KycVerificationPage.jsx';
 
+// Security Setting Pages
+import CompanyDetailsPage from "../app/dashboard/systemSetting/CompanyDetailsPage.jsx";
+import LoanConfigurationPage from "../app/dashboard/systemSetting/LoanConfigrationPage.jsx";
+import SecuritySettingPage from "../app/dashboard/systemSetting/SecuritySettingPage.jsx";
+import PaymentSettingPage from "../app/dashboard/systemSetting/PaymentSettingPage.jsx";
+import Leads from "../app/dashboard/LOS/Leads.jsx";
+import LoanProduct from "../app/dashboard/Configuration/LoanProduct.jsx";
 
 export default function AppRoutes() {
-	const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -82,71 +82,71 @@ export default function AppRoutes() {
     }
   }, [dispatch]);
 
-	return (
-		<Routes>
-			{/* Public Layout */}
-			<Route
-				path="/"
-				element={
-					<PublicRoute>
-						<Layout />
-					</PublicRoute>
-				}>
-				{/* Public Page  */}
-				<Route index element={<HomePage />} />
-				<Route path="about-us" element={<AboutUsPage />} />
-				<Route path="annual-report" element={<AnnualReportPage />} />
-				<Route path="board-of-directors" element={<BoardOfDirectorsPage />} />
-				<Route path="committees" element={<CommitteesPage />} />
-				<Route path="contact" element={<ContactUsPage />} />
-				<Route
-					path="corporate-governance"
-					element={<CorporateGovernancePage />}
-				/>
-				<Route path="credit-rating" element={<CreditRatingPage />} />
-				<Route path="investor-relations" element={<CsrPage />} />
-				<Route path="employee-benefits" element={<EmployeesBenefitPage />} />
-				<Route
-					path="financial-information"
-					element={<FinancialInformationPage />}
-				/>
-				<Route path="hr" element={<FinovaHrPage />} />
-				<Route
-					path="join-the-finova-family"
-					element={<JointheFinovaFaimilyPage />}
-				/>
-				<Route path="key-managerial-personnel" element={<KMP />} />
-				<Route path="news-and-media" element={<NewsAndMediaPage />} />
-				<Route path="notice-of-ballot" element={<NoticeOfBallotPage />} />
-				<Route path="opportunity" element={<OpportunityPage />} />
-				<Route path="other-disclosures" element={<OtherDisclosuresPage />} />
-				<Route path="our-investors" element={<OurInvestorsPage />} />
-				<Route path="our-method" element={<OurMethodPage />} />
-				<Route path="policies-and-codes" element={<PoliciesAndCodesPage />} />
-				<Route path="policies" element={<PoliciesPage />} />
-				<Route path="products" element={<ProductsPage />} />
-				<Route
-					path="public-disclosure-under-liquidity-risk"
-					element={<PublicDisclosureUnderLiquidityRiskPage />}
-				/>
-				<Route
-					path="sarfaesi-auction-notices"
-					element={<SarfaesiAuctionNoticesPage />}
-				/>
-				{/* <Route path="sarfaesi-secured-assets" element={<SarfaesiPage />} /> */}
-				<Route
-					path="shareholder-information"
-					element={<ShareholderInformationPage />}
-				/>
-				<Route
-					path="disclosures-under-regulation-62-of-lodr"
-					element={<UnderRegulationPage />}
-				/>
-				<Route path="vision-and-mission" element={<VisionAndMissionPage />} />
-				<Route path="welcome-to-finova" element={<WelcometoFinovaPage />} />
-				<Route path="login" element={<LoginForm />} />
-
-			</Route>
+  return (
+    <Routes>
+      {/* Public Layout */}
+      <Route
+        path="/"
+        element={
+          <PublicRoute>
+            <Layout />
+          </PublicRoute>
+        }
+      >
+        {/* Public Page  */}
+        <Route index element={<HomePage />} />
+        <Route path="about-us" element={<AboutUsPage />} />
+        <Route path="annual-report" element={<AnnualReportPage />} />
+        <Route path="board-of-directors" element={<BoardOfDirectorsPage />} />
+        <Route path="committees" element={<CommitteesPage />} />
+        <Route path="contact" element={<ContactUsPage />} />
+        <Route
+          path="corporate-governance"
+          element={<CorporateGovernancePage />}
+        />
+        <Route path="credit-rating" element={<CreditRatingPage />} />
+        <Route path="investor-relations" element={<CsrPage />} />
+        <Route path="employee-benefits" element={<EmployeesBenefitPage />} />
+        <Route
+          path="financial-information"
+          element={<FinancialInformationPage />}
+        />
+        <Route path="hr" element={<FinovaHrPage />} />
+        <Route
+          path="join-the-finova-family"
+          element={<JointheFinovaFaimilyPage />}
+        />
+        <Route path="key-managerial-personnel" element={<KMP />} />
+        <Route path="news-and-media" element={<NewsAndMediaPage />} />
+        <Route path="notice-of-ballot" element={<NoticeOfBallotPage />} />
+        <Route path="opportunity" element={<OpportunityPage />} />
+        <Route path="other-disclosures" element={<OtherDisclosuresPage />} />
+        <Route path="our-investors" element={<OurInvestorsPage />} />
+        <Route path="our-method" element={<OurMethodPage />} />
+        <Route path="policies-and-codes" element={<PoliciesAndCodesPage />} />
+        <Route path="policies" element={<PoliciesPage />} />
+        <Route path="products" element={<ProductsPage />} />
+        <Route
+          path="public-disclosure-under-liquidity-risk"
+          element={<PublicDisclosureUnderLiquidityRiskPage />}
+        />
+        <Route
+          path="sarfaesi-auction-notices"
+          element={<SarfaesiAuctionNoticesPage />}
+        />
+        {/* <Route path="sarfaesi-secured-assets" element={<SarfaesiPage />} /> */}
+        <Route
+          path="shareholder-information"
+          element={<ShareholderInformationPage />}
+        />
+        <Route
+          path="disclosures-under-regulation-62-of-lodr"
+          element={<UnderRegulationPage />}
+        />
+        <Route path="vision-and-mission" element={<VisionAndMissionPage />} />
+        <Route path="welcome-to-finova" element={<WelcometoFinovaPage />} />
+        <Route path="login" element={<LoginForm />} />
+      </Route>
 
 			{/* Private Dashboard */}
 			<Route
@@ -160,18 +160,19 @@ export default function AppRoutes() {
 				{/* Dashboard page */}
 				<Route index element={<DashboardPage />} />
 				<Route path='borrowers' element={< BorrowerPage />} />
+        
 
 				{/* LMS Pages */}
-				<Route path="loan-account-creation" element={<LoanAccountCreation />} />
-				<Route path="emi-schedule" element={<EMISchedule />} />
-				<Route path="repayment-management" element={<RepaymentManagement />} />
-				<Route path="nach-auto-debit" element={<NachAutoDebit />} />
-				<Route path="dpd-tracking" element={<DpdTracking />} />
-				<Route path="recovery-management" element={<RecoveryManagement />} />
-				<Route path="foreclosure" element={<Foreclosure />} />
-				<Route path="loan-closure" element={<LoanClosure />} />
-				<Route path="branch-management" element={<BranchManagement />} />
-				<Route path="branch-admin" element={<BranchAdmin />} />
+				<Route path="lms/loan-account-creation" element={<LoanAccountCreation />} />
+				<Route path="lms/emi-schedule" element={<EMISchedule />} />
+				<Route path="lms/repayment-management" element={<RepaymentManagement />} />
+				<Route path="lms/nach-auto-debit" element={<NachAutoDebit />} />
+				<Route path="lms/dpd-tracking" element={<DpdTracking />} />
+				<Route path="lms/recovery-management" element={<RecoveryManagement />} />
+				<Route path="lms/foreclosure" element={<Foreclosure />} />
+				<Route path="lms/loan-closure" element={<LoanClosure />} />
+				<Route path="lms/branch-management" element={<BranchManagement />} />
+				<Route path="lms/branch-admin" element={<BranchAdmin />} />
 
 
 				{/* LOS pages */}
@@ -184,12 +185,24 @@ export default function AppRoutes() {
 				<Route path='los/emi-management' element={<EMIManagementPage />} />
 				<Route path='los/sanction' element={<SanctionPage />} />
 				<Route path='los/disbursement' element={<DisbursementManagementPage />} />
+        <Route path='los/leads' element={< Leads />} />
 				
 				
 
-				{/* View Detail Pages */} 
-				<Route path="loan-account-view/:loanId" element={<LoanAccountView />} />
-			</Route>
-		</Routes>
-	);
+        {/* View Detail Pages */}
+        <Route path="loan-account-view/:loanId" element={<LoanAccountView />} />
+
+        {/* System Setting Page  */}
+        <Route path="system-setting/company-details" element={<CompanyDetailsPage />} />
+        <Route path="system-setting/loan-configuration" element={<LoanConfigurationPage />} />
+        <Route path="system-setting/security-settings" element={<SecuritySettingPage />} />
+        <Route path="system-setting/payment-settings" element={<PaymentSettingPage />} />
+
+        
+
+        {/* Loan Product  */}
+        <Route path="loan-product" element={< LoanProduct />} />
+      </Route>
+    </Routes>
+  );
 }

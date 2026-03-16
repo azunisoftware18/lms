@@ -1,13 +1,8 @@
 import React, { useState, useMemo } from "react";
-import Pagination from "../../../components/common/Pagination";
 import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
 import QuickActionCard from "../../../components/common/QuickAction";
-import {
-  TableShell,
-  TableHead,
-  TableBody,
-} from "../../../components/tables/core";
-import { Icons } from "../../../components/common/Icon";
+import EMIManagementTable from "../../../components/tables/EMIManagementTable";
+import * as Icons from "lucide-react";
 
 import { EMI_APPROVED_LOANS, EMI_VOUCHERS } from "../../../lib/LOSDummyData";
 import { colorVariables } from "../../../lib/index";
@@ -281,15 +276,6 @@ export default function EMIManagementPage() {
     { value: "all", label: `EMI Vouchers (${emiVouchers.length})` },
   ];
 
-  const voucherStatusOptions =
-    activeTab === "all"
-      ? [
-          { value: "", label: "All Statuses" },
-          { value: "ACTIVE", label: "EMI Approved" },
-          { value: "PENDING", label: "EMI Pending" },
-        ]
-      : [];
-
   // ---------- UI ----------
   return (
     <div className="p-6 bg-gray-50 min-h-screen space-y-6">
@@ -320,49 +306,31 @@ export default function EMIManagementPage() {
       </div>
 
       {/* TABLE */}
-      <TableShell>
-        <TableHead
-          title={
-            activeTab === "approved"
-              ? `Approved Applications (${filteredData.length})`
-              : `EMI Vouchers (${filteredData.length})`
-          }
-          columns={activeColumns}
-          search={searchTerm}
-          setSearch={(v) => {
-            setSearchTerm(v);
-            setCurrentPage(1);
-          }}
-          filterValue={activeTab}
-          setFilterValue={(v) => {
-            setActiveTab(v);
-            setFilterStatus("");
-            setCurrentPage(1);
-          }}
-          filterOptions={viewOptions}
-          secondaryFilterValue={filterStatus}
-          setSecondaryFilterValue={(v) => {
-            setFilterStatus(v);
-            setCurrentPage(1);
-          }}
-          secondaryFilterOptions={voucherStatusOptions}
-          secondaryFilterPlaceholder="Filter EMI status"
-        />
-        <TableBody
-          columns={activeColumns}
-          data={paginatedData}
-          actions={activeActions}
-        />
-      </TableShell>
-
-      {/* PAGINATION */}
-      {totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-        />
-      )}
+      <EMIManagementTable
+        title={
+          activeTab === "approved"
+            ? `Approved Applications (${filteredData.length})`
+            : `EMI Vouchers (${filteredData.length})`
+        }
+        columns={activeColumns}
+        data={paginatedData}
+        actions={activeActions}
+        search={searchTerm}
+        onSearchChange={(v) => {
+          setSearchTerm(v);
+          setCurrentPage(1);
+        }}
+        filterValue={activeTab}
+        onFilterChange={(v) => {
+          setActiveTab(v);
+          setFilterStatus("");
+          setCurrentPage(1);
+        }}
+        filterOptions={viewOptions}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
 
       {/* CONFIRMATION DIALOG */}
       <ConfirmationDialog

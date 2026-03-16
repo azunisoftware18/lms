@@ -43,6 +43,11 @@ export type Admin = Prisma.AdminModel
  */
 export type Employee = Prisma.EmployeeModel
 /**
+ * Model EmployeeRole
+ * 
+ */
+export type EmployeeRole = Prisma.EmployeeRoleModel
+/**
  * Model Partner
  * 
  */
@@ -178,6 +183,11 @@ export type Permission = Prisma.PermissionModel
  */
 export type UserPermission = Prisma.UserPermissionModel
 /**
+ * Model RolePermission
+ * 
+ */
+export type RolePermission = Prisma.RolePermissionModel
+/**
  * Model Document
  * 
  */
@@ -187,6 +197,11 @@ export type Document = Prisma.DocumentModel
  * 
  */
 export type Kyc = Prisma.KycModel
+/**
+ * Model RequiredKycDocument
+ * 
+ */
+export type RequiredKycDocument = Prisma.RequiredKycDocumentModel
 /**
  * Model LoanEmiSchedule
  * 

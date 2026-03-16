@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
   securitySettingsData,
   securitySections as importedSecuritySections,
-} from "../../lib/dashboardDummyData";
+} from "../../../lib/dashboardDummyData";
 import {
   Shield,
   Save,
@@ -33,12 +33,12 @@ const iconMap = {
   Clock,
   Cpu,
 };
-import { TableBody, TableShell } from "../../components/tables/core";
-import InputField from "../../components/ui/InputField";
-import ToggleSwitch from "../../components/ui/ToggleSwitch";
-import Button from "../../components/ui/Button";
-import SelectField from "../../components/ui/SelectField";
-import ConfirmationDialog from "../../components/common/ConfirmationDialog";
+import SecuritySettingTable from "../../../components/tables/SecuritySettingTable";
+import InputField from "../../../components/ui/InputField";
+import ToggleSwitch from "../../../components/ui/ToggleSwitch";
+import Button from "../../../components/ui/Button";
+import SelectField from "../../../components/ui/SelectField";
+import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
 
 export default function SecuritySettingPage() {
   const [securitySettings, setSecuritySettings] =
@@ -801,34 +801,11 @@ export default function SecuritySettingPage() {
                         </div>
                       </div>
 
-                      <TableShell>
-                        <thead className="bg-slate-50 border-b border-slate-200">
-                          <tr>
-                            {ipTableColumns.map((column) => (
-                              <th
-                                key={column.accessor}
-                                className="px-6 py-4 font-bold text-slate-800 uppercase tracking-wider text-[11px]"
-                              >
-                                {column.header}
-                              </th>
-                            ))}
-                            <th className="px-6 py-4 font-bold text-slate-800 uppercase tracking-wider text-[11px] text-right">
-                              Actions
-                            </th>
-                          </tr>
-                        </thead>
-
-                        <TableBody
-                          columns={ipTableColumns}
-                          data={ipTableData}
-                          actions={[
-                            {
-                              label: "Remove",
-                              onClick: removeIpAddress,
-                            },
-                          ]}
-                        />
-                      </TableShell>
+                      <SecuritySettingTable
+                        columns={ipTableColumns}
+                        data={ipTableData}
+                        onRemove={removeIpAddress}
+                      />
                     </div>
                   )}
                 </div>

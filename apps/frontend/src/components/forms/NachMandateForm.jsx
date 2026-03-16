@@ -55,7 +55,7 @@ export default function NachMandateForm({
   };
 
   const FeatureHighlights = () => (
-    <div className="flex flex-col sm:flex-row gap-3 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl">
+    <div className="flex flex-col sm:flex-row gap-3 p-4 bg-linear-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl">
       {[
         { icon: Zap, label: "Auto EMI Debit", sub: "Automated monthly collection" },
         { icon: Shield, label: "Bank Grade Security", sub: "256-bit encrypted mandate" },
@@ -208,7 +208,7 @@ export default function NachMandateForm({
               <Button
                 type="button"
                 onClick={handleReset}
-                className="!bg-white !text-slate-600 border border-slate-200 hover:!bg-slate-50"
+                className="bg-white! text-slate-600! border border-slate-200 hover:bg-slate-50!"
               >
                 Reset
               </Button>
@@ -216,7 +216,7 @@ export default function NachMandateForm({
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="!px-6 !py-2.5"
+                className="px-6! py-2.5!"
               >
                 {isSubmitting ? "Creating..." : (
                   <>

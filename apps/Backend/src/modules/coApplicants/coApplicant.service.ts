@@ -73,7 +73,6 @@ export async function uploadDocumentsService(
 
       kycId = co.kyc.id;
       branchId = co.loanApplication.branchId;
-      loanApplicationId = co.loanApplication.id;
       whereClause = { coApplicantId: targetId };
 
       assertBranchAccess(requester, branchId);
@@ -107,7 +106,7 @@ export async function uploadDocumentsService(
         uploadedBy: doc.uploadedBy,
         kycId,
         branchId: branchId!,
-        loanApplicationId: loanApplicationId!,
+        loanApplicationId: target === "loan" ? loanApplicationId : undefined,
         coApplicantId: target === "coApplicant" ? targetId : undefined,
       })),
     });
@@ -130,6 +129,17 @@ export async function uploadDocumentsService(
     return tx.document.findMany({
       where: whereClause,
       orderBy: { createdAt: "asc" },
+      select: {
+        id: true,
+        documentType: true,
+        documentPath: true,
+        verificationStatus: true,
+        verified: true,
+        verifiedAt: true,
+        rejectionReason: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   });
 }
@@ -194,6 +204,17 @@ export async function reuploadCoApplicantDocumentService(
         verifiedBy: null,
         verifiedAt: null,
       },
+      select: {
+        id: true,
+        documentType: true,
+        documentPath: true,
+        verificationStatus: true,
+        verified: true,
+        verifiedAt: true,
+        rejectionReason: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
     await logAction({
@@ -216,6 +237,96 @@ export async function reuploadCoApplicantDocumentService(
   });
 }
 
+export async function verifyCoApplicantDocumentService(
+  documentId: string,
+  requester: RequestUserContext,
+) {
+  return prisma.$transaction(async (tx) => {
+    const existingDoc = await tx.document.findUnique({
+      where: { id: documentId },
+      select: {
+        id: true,
+        coApplicantId: true,
+        kycId: true,
+        verificationStatus: true,
+        coApplicant: {
+          select: {
+            loanApplication: {
+              select: {
+                branchId: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!existingDoc) throw AppError.notFound("Document not found");
+    if (!existingDoc.coApplicantId)
+      throw AppError.badRequest("Document does not belong to a co-applicant");
+    if (!existingDoc.coApplicant?.loanApplication) {
+      throw AppError.notFound("Loan application for co-applicant not found");
+    }
+
+    const branchId = existingDoc.coApplicant.loanApplication.branchId;
+    assertBranchAccess(requester, branchId);
+
+    const document = await tx.document.update({
+      where: { id: documentId },
+      data: {
+        verified: true,
+        verifiedBy: requester.id,
+        verifiedAt: new Date(),
+        verificationStatus: "verified",
+      },
+      select: {
+        id: true,
+        documentType: true,
+        documentPath: true,
+        verificationStatus: true,
+        verified: true,
+        verifiedAt: true,
+        rejectionReason: true,
+        createdAt: true,
+        updatedAt: true,
+        kycId: true,
+      },
+    });
+
+    if (document.kycId) {
+      const unverifiedCount = await tx.document.count({
+        where: {
+          kycId: document.kycId,
+          verificationStatus: { not: "verified" },
+        },
+      });
+
+      if (unverifiedCount === 0) {
+        await tx.kyc.update({
+          where: { id: document.kycId },
+          data: {
+            status: "VERIFIED",
+            verifiedBy: requester.id,
+            verifiedAt: new Date(),
+          },
+        });
+      }
+    }
+
+    await logAction({
+      action: "VERIFY_DOCUMENT",
+      performedBy: requester.id,
+      entityType: "DOCUMENT",
+      entityId: documentId,
+      branchId,
+      oldValue: { verificationStatus: existingDoc.verificationStatus },
+      newValue: { verificationStatus: "verified" },
+    });
+
+    return document;
+  });
+}
+
 export const getAllCoApplicantInLoanService = async (
   loanApplicationId: string,
   requester?: RequestUserContext,
@@ -233,12 +344,34 @@ export const getAllCoApplicantInLoanService = async (
 
   const coApplicants = await prisma.coApplicant.findMany({
     where: { loanApplicationId },
-    include: {
-      documents: true,
-      addresses: true,
-      occupationalDetails: { include: { address: true } },
-      employmentDetails: true,
-      financialDetails: true,
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      relation: true,
+      contactNumber: true,
+      email: true,
+      employmentType: true,
+      createdAt: true,
+      updatedAt: true,
+      kyc: {
+        select: {
+          id: true,
+          status: true,
+          verifiedAt: true,
+        },
+      },
+      documents: {
+        select: {
+          id: true,
+          documentType: true,
+          verificationStatus: true,
+          verified: true,
+          verifiedAt: true,
+          updatedAt: true,
+        },
+        orderBy: { createdAt: "asc" },
+      },
     },
   });
   return coApplicants;

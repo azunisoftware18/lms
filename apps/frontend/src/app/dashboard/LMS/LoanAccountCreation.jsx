@@ -6,7 +6,7 @@ import {
   FileText,
   CheckCircle,
   AlertCircle,
-  XCircle
+  XCircle,
 } from "lucide-react";
 
 import Button from "../../../components/ui/Button";
@@ -16,7 +16,7 @@ import { mockLoans } from "../../../lib/dumyData";
 
 export default function LoanAccountCreation() {
   const navigate = useNavigate(); // Initialize navigate
-  const [showModal, setShowModal] = useState(false);
+  const [, setShowModal] = useState(false);
   const [loans] = useState(mockLoans);
 
   const counts = {
@@ -33,12 +33,11 @@ export default function LoanAccountCreation() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
       <main className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
-
         {/* HEADER */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center">
-              <LayoutGrid size={18} className="text-white"/>
+              <LayoutGrid size={18} className="text-white" />
             </div>
             <div>
               <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-800">
@@ -54,7 +53,7 @@ export default function LoanAccountCreation() {
             onClick={() => setShowModal(true)}
             className="w-full sm:w-auto"
           >
-            <Plus size={16} className="mr-2"/>
+            <Plus size={16} className="mr-2" />
             New Loan Account
           </Button>
         </div>
@@ -105,7 +104,6 @@ export default function LoanAccountCreation() {
             />
           </div>
         </div>
-
       </main>
 
       {/* Create Loan Modal - Add later */}

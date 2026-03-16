@@ -1,14 +1,14 @@
 import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Icons } from "../../components/common/Icon";
+import * as Icons from "lucide-react";
 import {
   companyDefaultDetails,
   companyTabs,
   businessTypes,
   industries,
-} from "../../lib/dashboardDummyData";
+} from "../../../lib/dashboardDummyData";
 
-import { colorVariables } from "../../lib/index";
+import { colorVariables } from "../../../lib/index";
 export default function CompanyDetailsPage() {
   const [companyDetails, setCompanyDetails] = useState(companyDefaultDetails);
   const [isSaving, setIsSaving] = useState(false);

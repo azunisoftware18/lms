@@ -389,6 +389,7 @@ export const ModelName = {
   UserProfile: 'UserProfile',
   Admin: 'Admin',
   Employee: 'Employee',
+  EmployeeRole: 'EmployeeRole',
   Partner: 'Partner',
   Address: 'Address',
   PartnerCommission: 'PartnerCommission',
@@ -416,8 +417,10 @@ export const ModelName = {
   RecoveryPayment: 'RecoveryPayment',
   Permission: 'Permission',
   UserPermission: 'UserPermission',
+  RolePermission: 'RolePermission',
   Document: 'Document',
   Kyc: 'Kyc',
+  RequiredKycDocument: 'RequiredKycDocument',
   LoanEmiSchedule: 'LoanEmiSchedule',
   EmiPayment: 'EmiPayment',
   EmiMoratorium: 'EmiMoratorium',
@@ -448,7 +451,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "loanNumberCounter" | "user" | "userProfile" | "admin" | "employee" | "partner" | "address" | "partnerCommission" | "branch" | "leads" | "loanApplicationDraft" | "loanApplication" | "coApplicant" | "coApplicantFinancialDetails" | "customer" | "occupationalDetails" | "employmentDetails" | "financialDetails" | "guarantor" | "guarantorFinancialDetails" | "existingLoan" | "creditCard" | "bankAccount" | "insurancePolicy" | "property" | "reference" | "loanRequirement" | "loanQuestionnaire" | "loanRecovery" | "recoveryPayment" | "permission" | "userPermission" | "document" | "kyc" | "loanEmiSchedule" | "emiPayment" | "emiMoratorium" | "creditReport" | "creditAccount" | "loanType" | "technicalReport" | "legalReport" | "loanAssignment" | "auditLog" | "sLAPolicy" | "sLABreachLog" | "loanDisbursement" | "nachMandate" | "nachDebit"
+    modelProps: "loanNumberCounter" | "user" | "userProfile" | "admin" | "employee" | "employeeRole" | "partner" | "address" | "partnerCommission" | "branch" | "leads" | "loanApplicationDraft" | "loanApplication" | "coApplicant" | "coApplicantFinancialDetails" | "customer" | "occupationalDetails" | "employmentDetails" | "financialDetails" | "guarantor" | "guarantorFinancialDetails" | "existingLoan" | "creditCard" | "bankAccount" | "insurancePolicy" | "property" | "reference" | "loanRequirement" | "loanQuestionnaire" | "loanRecovery" | "recoveryPayment" | "permission" | "userPermission" | "rolePermission" | "document" | "kyc" | "requiredKycDocument" | "loanEmiSchedule" | "emiPayment" | "emiMoratorium" | "creditReport" | "creditAccount" | "loanType" | "technicalReport" | "legalReport" | "loanAssignment" | "auditLog" | "sLAPolicy" | "sLABreachLog" | "loanDisbursement" | "nachMandate" | "nachDebit"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -779,6 +782,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.EmployeeCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.EmployeeCountAggregateOutputType> | number
+        }
+      }
+    }
+    EmployeeRole: {
+      payload: Prisma.$EmployeeRolePayload<ExtArgs>
+      fields: Prisma.EmployeeRoleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmployeeRoleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeRolePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmployeeRoleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeRolePayload>
+        }
+        findFirst: {
+          args: Prisma.EmployeeRoleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeRolePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmployeeRoleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeRolePayload>
+        }
+        findMany: {
+          args: Prisma.EmployeeRoleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeRolePayload>[]
+        }
+        create: {
+          args: Prisma.EmployeeRoleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeRolePayload>
+        }
+        createMany: {
+          args: Prisma.EmployeeRoleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.EmployeeRoleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeRolePayload>
+        }
+        update: {
+          args: Prisma.EmployeeRoleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeRolePayload>
+        }
+        deleteMany: {
+          args: Prisma.EmployeeRoleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmployeeRoleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.EmployeeRoleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeRolePayload>
+        }
+        aggregate: {
+          args: Prisma.EmployeeRoleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmployeeRole>
+        }
+        groupBy: {
+          args: Prisma.EmployeeRoleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeRoleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmployeeRoleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeRoleCountAggregateOutputType> | number
         }
       }
     }
@@ -2564,6 +2633,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    RolePermission: {
+      payload: Prisma.$RolePermissionPayload<ExtArgs>
+      fields: Prisma.RolePermissionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RolePermissionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RolePermissionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload>
+        }
+        findFirst: {
+          args: Prisma.RolePermissionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RolePermissionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload>
+        }
+        findMany: {
+          args: Prisma.RolePermissionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload>[]
+        }
+        create: {
+          args: Prisma.RolePermissionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload>
+        }
+        createMany: {
+          args: Prisma.RolePermissionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.RolePermissionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload>
+        }
+        update: {
+          args: Prisma.RolePermissionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload>
+        }
+        deleteMany: {
+          args: Prisma.RolePermissionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RolePermissionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.RolePermissionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload>
+        }
+        aggregate: {
+          args: Prisma.RolePermissionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRolePermission>
+        }
+        groupBy: {
+          args: Prisma.RolePermissionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RolePermissionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RolePermissionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RolePermissionCountAggregateOutputType> | number
+        }
+      }
+    }
     Document: {
       payload: Prisma.$DocumentPayload<ExtArgs>
       fields: Prisma.DocumentFieldRefs
@@ -2693,6 +2828,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.KycCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.KycCountAggregateOutputType> | number
+        }
+      }
+    }
+    RequiredKycDocument: {
+      payload: Prisma.$RequiredKycDocumentPayload<ExtArgs>
+      fields: Prisma.RequiredKycDocumentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RequiredKycDocumentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RequiredKycDocumentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload>
+        }
+        findFirst: {
+          args: Prisma.RequiredKycDocumentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RequiredKycDocumentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload>
+        }
+        findMany: {
+          args: Prisma.RequiredKycDocumentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload>[]
+        }
+        create: {
+          args: Prisma.RequiredKycDocumentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload>
+        }
+        createMany: {
+          args: Prisma.RequiredKycDocumentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.RequiredKycDocumentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload>
+        }
+        update: {
+          args: Prisma.RequiredKycDocumentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload>
+        }
+        deleteMany: {
+          args: Prisma.RequiredKycDocumentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RequiredKycDocumentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.RequiredKycDocumentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RequiredKycDocumentPayload>
+        }
+        aggregate: {
+          args: Prisma.RequiredKycDocumentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRequiredKycDocument>
+        }
+        groupBy: {
+          args: Prisma.RequiredKycDocumentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RequiredKycDocumentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RequiredKycDocumentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RequiredKycDocumentCountAggregateOutputType> | number
         }
       }
     }
@@ -3781,6 +3982,7 @@ export const EmployeeScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   employeeId: 'employeeId',
+  employeeRoleId: 'employeeRoleId',
   atlMobileNumber: 'atlMobileNumber',
   dob: 'dob',
   designation: 'designation',
@@ -3795,7 +3997,6 @@ export const EmployeeScalarFieldEnum = {
   department: 'department',
   dateOfJoining: 'dateOfJoining',
   experience: 'experience',
-  reportingManagerId: 'reportingManagerId',
   workLocation: 'workLocation',
   salary: 'salary',
   branchId: 'branchId',
@@ -3804,6 +4005,18 @@ export const EmployeeScalarFieldEnum = {
 } as const
 
 export type EmployeeScalarFieldEnum = (typeof EmployeeScalarFieldEnum)[keyof typeof EmployeeScalarFieldEnum]
+
+
+export const EmployeeRoleScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeRoleScalarFieldEnum = (typeof EmployeeRoleScalarFieldEnum)[keyof typeof EmployeeRoleScalarFieldEnum]
 
 
 export const PartnerScalarFieldEnum = {
@@ -3823,7 +4036,6 @@ export const PartnerScalarFieldEnum = {
   establishedYear: 'establishedYear',
   partnerType: 'partnerType',
   businessNature: 'businessNature',
-  addressId: 'addressId',
   designation: 'designation',
   businessCategory: 'businessCategory',
   specialization: 'specialization',
@@ -3858,6 +4070,7 @@ export const AddressScalarFieldEnum = {
   customerId: 'customerId',
   coApplicantId: 'coApplicantId',
   guarantorId: 'guarantorId',
+  partnerId: 'partnerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -4204,6 +4417,7 @@ export const GuarantorScalarFieldEnum = {
   periodOfStay: 'periodOfStay',
   rentPerMonth: 'rentPerMonth',
   employmentType: 'employmentType',
+  kycId: 'kycId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -4429,10 +4643,21 @@ export const UserPermissionScalarFieldEnum = {
 export type UserPermissionScalarFieldEnum = (typeof UserPermissionScalarFieldEnum)[keyof typeof UserPermissionScalarFieldEnum]
 
 
+export const RolePermissionScalarFieldEnum = {
+  id: 'id',
+  role: 'role',
+  permissionId: 'permissionId',
+  allowed: 'allowed'
+} as const
+
+export type RolePermissionScalarFieldEnum = (typeof RolePermissionScalarFieldEnum)[keyof typeof RolePermissionScalarFieldEnum]
+
+
 export const DocumentScalarFieldEnum = {
   id: 'id',
   loanApplicationId: 'loanApplicationId',
   coApplicantId: 'coApplicantId',
+  guarantorId: 'guarantorId',
   documentType: 'documentType',
   documentPath: 'documentPath',
   verificationStatus: 'verificationStatus',
@@ -4462,6 +4687,19 @@ export const KycScalarFieldEnum = {
 } as const
 
 export type KycScalarFieldEnum = (typeof KycScalarFieldEnum)[keyof typeof KycScalarFieldEnum]
+
+
+export const RequiredKycDocumentScalarFieldEnum = {
+  id: 'id',
+  documentType: 'documentType',
+  displayName: 'displayName',
+  isActive: 'isActive',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RequiredKycDocumentScalarFieldEnum = (typeof RequiredKycDocumentScalarFieldEnum)[keyof typeof RequiredKycDocumentScalarFieldEnum]
 
 
 export const LoanEmiScheduleScalarFieldEnum = {
@@ -4604,8 +4842,12 @@ export const LoanTypeScalarFieldEnum = {
   isPublic: 'isPublic',
   approvalRequired: 'approvalRequired',
   estimatedProcessingTimeDays: 'estimatedProcessingTimeDays',
-  documentsRequired: 'documentsRequired',
-  documentsOptions: 'documentsOptions',
+  applicantDocumentsRequired: 'applicantDocumentsRequired',
+  applicantDocumentsOptional: 'applicantDocumentsOptional',
+  coApplicantDocumentsRequired: 'coApplicantDocumentsRequired',
+  coApplicantDocumentsOptional: 'coApplicantDocumentsOptional',
+  guarantorDocumentsRequired: 'guarantorDocumentsRequired',
+  guarantorDocumentsOptional: 'guarantorDocumentsOptional',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -4852,6 +5094,7 @@ export const EmployeeOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
   employeeId: 'employeeId',
+  employeeRoleId: 'employeeRoleId',
   atlMobileNumber: 'atlMobileNumber',
   designation: 'designation',
   genderOther: 'genderOther',
@@ -4861,11 +5104,19 @@ export const EmployeeOrderByRelevanceFieldEnum = {
   emergencyRelationshipOther: 'emergencyRelationshipOther',
   department: 'department',
   experience: 'experience',
-  reportingManagerId: 'reportingManagerId',
   branchId: 'branchId'
 } as const
 
 export type EmployeeOrderByRelevanceFieldEnum = (typeof EmployeeOrderByRelevanceFieldEnum)[keyof typeof EmployeeOrderByRelevanceFieldEnum]
+
+
+export const EmployeeRoleOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description'
+} as const
+
+export type EmployeeRoleOrderByRelevanceFieldEnum = (typeof EmployeeRoleOrderByRelevanceFieldEnum)[keyof typeof EmployeeRoleOrderByRelevanceFieldEnum]
 
 
 export const PartnerOrderByRelevanceFieldEnum = {
@@ -4880,7 +5131,6 @@ export const PartnerOrderByRelevanceFieldEnum = {
   gstNumber: 'gstNumber',
   branchId: 'branchId',
   businessNature: 'businessNature',
-  addressId: 'addressId',
   designation: 'designation',
   businessCategory: 'businessCategory',
   specialization: 'specialization',
@@ -4903,7 +5153,8 @@ export const AddressOrderByRelevanceFieldEnum = {
   phoneNumber: 'phoneNumber',
   customerId: 'customerId',
   coApplicantId: 'coApplicantId',
-  guarantorId: 'guarantorId'
+  guarantorId: 'guarantorId',
+  partnerId: 'partnerId'
 } as const
 
 export type AddressOrderByRelevanceFieldEnum = (typeof AddressOrderByRelevanceFieldEnum)[keyof typeof AddressOrderByRelevanceFieldEnum]
@@ -5118,7 +5369,8 @@ export const GuarantorOrderByRelevanceFieldEnum = {
   passportNumber: 'passportNumber',
   qualification: 'qualification',
   relationshipOther: 'relationshipOther',
-  periodOfStay: 'periodOfStay'
+  periodOfStay: 'periodOfStay',
+  kycId: 'kycId'
 } as const
 
 export type GuarantorOrderByRelevanceFieldEnum = (typeof GuarantorOrderByRelevanceFieldEnum)[keyof typeof GuarantorOrderByRelevanceFieldEnum]
@@ -5263,10 +5515,19 @@ export const UserPermissionOrderByRelevanceFieldEnum = {
 export type UserPermissionOrderByRelevanceFieldEnum = (typeof UserPermissionOrderByRelevanceFieldEnum)[keyof typeof UserPermissionOrderByRelevanceFieldEnum]
 
 
+export const RolePermissionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  permissionId: 'permissionId'
+} as const
+
+export type RolePermissionOrderByRelevanceFieldEnum = (typeof RolePermissionOrderByRelevanceFieldEnum)[keyof typeof RolePermissionOrderByRelevanceFieldEnum]
+
+
 export const DocumentOrderByRelevanceFieldEnum = {
   id: 'id',
   loanApplicationId: 'loanApplicationId',
   coApplicantId: 'coApplicantId',
+  guarantorId: 'guarantorId',
   documentType: 'documentType',
   documentPath: 'documentPath',
   rejectionReason: 'rejectionReason',
@@ -5287,6 +5548,16 @@ export const KycOrderByRelevanceFieldEnum = {
 } as const
 
 export type KycOrderByRelevanceFieldEnum = (typeof KycOrderByRelevanceFieldEnum)[keyof typeof KycOrderByRelevanceFieldEnum]
+
+
+export const RequiredKycDocumentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  documentType: 'documentType',
+  displayName: 'displayName',
+  createdById: 'createdById'
+} as const
+
+export type RequiredKycDocumentOrderByRelevanceFieldEnum = (typeof RequiredKycDocumentOrderByRelevanceFieldEnum)[keyof typeof RequiredKycDocumentOrderByRelevanceFieldEnum]
 
 
 export const LoanEmiScheduleOrderByRelevanceFieldEnum = {
@@ -5340,8 +5611,12 @@ export const LoanTypeOrderByRelevanceFieldEnum = {
   code: 'code',
   name: 'name',
   description: 'description',
-  documentsRequired: 'documentsRequired',
-  documentsOptions: 'documentsOptions'
+  applicantDocumentsRequired: 'applicantDocumentsRequired',
+  applicantDocumentsOptional: 'applicantDocumentsOptional',
+  coApplicantDocumentsRequired: 'coApplicantDocumentsRequired',
+  coApplicantDocumentsOptional: 'coApplicantDocumentsOptional',
+  guarantorDocumentsRequired: 'guarantorDocumentsRequired',
+  guarantorDocumentsOptional: 'guarantorDocumentsOptional'
 } as const
 
 export type LoanTypeOrderByRelevanceFieldEnum = (typeof LoanTypeOrderByRelevanceFieldEnum)[keyof typeof LoanTypeOrderByRelevanceFieldEnum]
@@ -5970,6 +6245,7 @@ export type GlobalOmitConfig = {
   userProfile?: Prisma.UserProfileOmit
   admin?: Prisma.AdminOmit
   employee?: Prisma.EmployeeOmit
+  employeeRole?: Prisma.EmployeeRoleOmit
   partner?: Prisma.PartnerOmit
   address?: Prisma.AddressOmit
   partnerCommission?: Prisma.PartnerCommissionOmit
@@ -5997,8 +6273,10 @@ export type GlobalOmitConfig = {
   recoveryPayment?: Prisma.RecoveryPaymentOmit
   permission?: Prisma.PermissionOmit
   userPermission?: Prisma.UserPermissionOmit
+  rolePermission?: Prisma.RolePermissionOmit
   document?: Prisma.DocumentOmit
   kyc?: Prisma.KycOmit
+  requiredKycDocument?: Prisma.RequiredKycDocumentOmit
   loanEmiSchedule?: Prisma.LoanEmiScheduleOmit
   emiPayment?: Prisma.EmiPaymentOmit
   emiMoratorium?: Prisma.EmiMoratoriumOmit
