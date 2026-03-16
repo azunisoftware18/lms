@@ -72,6 +72,9 @@ import PaymentSettingPage from "../app/dashboard/systemSetting/PaymentSettingPag
 {/* reports page  */}
 import LeadsPage from "../app/dashboard/reports/LeadsPage.jsx";
 
+ {/* Loan Product  */}
+import LoanProduct from "../app/dashboard/Configuration/LoanProduct.jsx";
+
 export default function AppRoutes() {
   const dispatch = useDispatch();
 
@@ -201,9 +204,10 @@ export default function AppRoutes() {
 
         {/* reports page  */}
         <Route path='reports/leads' element={< LeadsPage />} />
+
+        {/* Loan Product  */}
+        <Route path="loan-product" element={< LoanProduct />} />
       </Route>
-
-
     </Routes>
   );
 }
