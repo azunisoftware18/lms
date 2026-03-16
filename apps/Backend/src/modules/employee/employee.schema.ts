@@ -32,6 +32,17 @@ const emergencyRelationshipSchema = z
   )
   .transform((v) => (v === "BROTHER" || v === "SISTER" ? "SIBLING" : v));
 
+const employeeAddressSchema = z.object({
+  addressLine1: z.string().trim().min(1),
+  addressLine2: z.string().trim().optional(),
+  city: z.string().trim().min(1),
+  district: z.string().trim().optional(),
+  state: z.string().trim().min(1),
+  pinCode: z.string().trim().min(1).max(6),
+  landmark: z.string().trim().optional(),
+  phoneNumber: z.string().trim().optional(),
+});
+
 /* ================= CREATE ================= */
 
 export const createEmployeeSchema = z
@@ -66,11 +77,37 @@ export const createEmployeeSchema = z
     dateOfJoining: z.string().optional(),
     salary: z.number().positive().optional(),
     employeeRoleId: z.string().min(1, "Employee role is required"),
-    address: z.string().min(1),
-    city: z.string().min(1),
-    state: z.string().min(1),
-    pinCode: z.string().min(6),
+    address: z.string().min(1).optional(),
+    city: z.string().min(1).optional(),
+    state: z.string().min(1).optional(),
+    pinCode: z.string().min(6).optional(),
+    addresses: z
+      .object({
+        currentAddress: employeeAddressSchema.optional(),
+        permanentAddress: employeeAddressSchema.optional(),
+      })
+      .optional(),
     branchId: z.string().min(1, "Branch assignment is required"),
+  })
+  .superRefine((data, ctx) => {
+    const hasLegacyAddress = !!(
+      data.address &&
+      data.city &&
+      data.state &&
+      data.pinCode
+    );
+    const hasNestedAddress = !!(
+      data.addresses?.currentAddress || data.addresses?.permanentAddress
+    );
+
+    if (!hasLegacyAddress && !hasNestedAddress) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["addresses"],
+        message:
+          "Provide address fields using either legacy address/city/state/pinCode or addresses.currentAddress/permanentAddress",
+      });
+    }
   })
   .strict();
 
@@ -114,6 +151,12 @@ export const updateEmployeeSchema = z
     city: z.string().min(1).optional(),
     state: z.string().min(1).optional(),
     pinCode: z.string().min(6).optional(),
+    addresses: z
+      .object({
+        currentAddress: employeeAddressSchema.optional(),
+        permanentAddress: employeeAddressSchema.optional(),
+      })
+      .optional(),
   })
   .strict();
 

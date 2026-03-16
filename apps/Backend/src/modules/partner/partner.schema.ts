@@ -19,6 +19,17 @@ export const paymentCycleEnum = z.enum([
   "PER_TRANSACTION",
 ]);
 
+const partnerAddressSchema = z.object({
+  addressLine1: z.string().trim().min(1),
+  addressLine2: z.string().trim().optional(),
+  city: z.string().trim().min(1),
+  district: z.string().trim().optional(),
+  state: z.string().trim().min(1),
+  pinCode: z.string().trim().min(1),
+  landmark: z.string().trim().optional(),
+  phoneNumber: z.string().trim().optional(),
+});
+
 /* ================= CREATE ================= */
 
 export const createPartnerSchema = z
@@ -52,6 +63,20 @@ export const createPartnerSchema = z
     city: z.string().trim().optional(),
     state: z.string().trim().optional(),
     pinCode: z.string().trim().optional(),
+    currentAddressLine1: z.string().trim().optional(),
+    currentCity: z.string().trim().optional(),
+    currentState: z.string().trim().optional(),
+    currentPinCode: z.string().trim().optional(),
+    permanentAddressLine1: z.string().trim().optional(),
+    permanentCity: z.string().trim().optional(),
+    permanentState: z.string().trim().optional(),
+    permanentPinCode: z.string().trim().optional(),
+    addresses: z
+      .object({
+        currentAddress: partnerAddressSchema.optional(),
+        permanentAddress: partnerAddressSchema.optional(),
+      })
+      .optional(),
     designation: z.string().trim().optional(),
     businessCategory: z.string().trim().optional(),
     specialization: z.string().trim().optional(),

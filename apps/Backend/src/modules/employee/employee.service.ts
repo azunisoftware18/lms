@@ -80,15 +80,30 @@ export async function createEmployeeService(
       : null;
 
     const { user, employee } = await prisma.$transaction(async (tx) => {
-      const employeeAddress = data.address
+      const currentAddress = data.addresses?.currentAddress;
+      const permanentAddress = data.addresses?.permanentAddress;
+      const selectedAddress = currentAddress ?? permanentAddress;
+
+      const employeeAddress = selectedAddress || data.address
         ? await tx.address.create({
             data: {
-              addressType: "CURRENT_RESIDENTIAL",
-              addressLine1: data.address,
-              city: data.city ?? "",
-              district: data.city ?? "",
-              state: data.state ?? "",
-              pinCode: data.pinCode ?? "",
+              addressType: currentAddress
+                ? "CURRENT_RESIDENTIAL"
+                : permanentAddress
+                  ? "PERMANENT"
+                  : "CURRENT_RESIDENTIAL",
+              addressLine1: selectedAddress?.addressLine1 ?? data.address ?? "",
+              addressLine2: selectedAddress?.addressLine2 ?? null,
+              city: selectedAddress?.city ?? data.city ?? "",
+              district:
+                selectedAddress?.district ??
+                selectedAddress?.city ??
+                data.city ??
+                "",
+              state: selectedAddress?.state ?? data.state ?? "",
+              pinCode: selectedAddress?.pinCode ?? data.pinCode ?? "",
+              landmark: selectedAddress?.landmark ?? null,
+              phoneNumber: selectedAddress?.phoneNumber ?? null,
             },
           })
         : null;
@@ -241,6 +256,54 @@ export async function updateEmployeeService(
     const userUpdateData: Record<string, any> = {};
     const employeeUpdateData: Record<string, any> = {};
 
+    const currentAddress = updateData.addresses?.currentAddress;
+    const permanentAddress = updateData.addresses?.permanentAddress;
+    const selectedAddress = currentAddress ?? permanentAddress;
+    const hasLegacyAddressInput = !!(
+      updateData.address ||
+      updateData.city ||
+      updateData.state ||
+      updateData.pinCode
+    );
+
+    let normalizedAddressPayload:
+      | {
+          addressType: any;
+          addressLine1: string;
+          addressLine2: string | null;
+          city: string;
+          district: string;
+          state: string;
+          pinCode: string;
+          landmark: string | null;
+          phoneNumber: string | null;
+        }
+      | null = null;
+
+    if (selectedAddress || hasLegacyAddressInput) {
+      const addressPayload = {
+        addressType: currentAddress
+          ? "CURRENT_RESIDENTIAL"
+          : permanentAddress
+            ? "PERMANENT"
+            : "CURRENT_RESIDENTIAL",
+        addressLine1: selectedAddress?.addressLine1 ?? updateData.address ?? "",
+        addressLine2: selectedAddress?.addressLine2 ?? null,
+        city: selectedAddress?.city ?? updateData.city ?? "",
+        district:
+          selectedAddress?.district ?? selectedAddress?.city ?? updateData.city ?? "",
+        state: selectedAddress?.state ?? updateData.state ?? "",
+        pinCode: selectedAddress?.pinCode ?? updateData.pinCode ?? "",
+        landmark: selectedAddress?.landmark ?? null,
+        phoneNumber: selectedAddress?.phoneNumber ?? null,
+      };
+
+      normalizedAddressPayload = {
+        ...addressPayload,
+        addressType: addressPayload.addressType as any,
+      };
+    }
+
     // user-scoped fields
     const userFields = [
       "fullName",
@@ -346,10 +409,29 @@ export async function updateEmployeeService(
     if (Object.keys(employeeUpdateData).length > 0)
       Object.assign(prismaData, employeeUpdateData);
 
-    const updatedEmployee = await (prisma as any).employee.update({
-      where: { id },
-      data: prismaData,
-      include: { user: true, employeeRole: true },
+    const updatedEmployee = await prisma.$transaction(async (tx) => {
+      if (normalizedAddressPayload) {
+        if (existing.addressId) {
+          await tx.address.update({
+            where: { id: existing.addressId },
+            data: normalizedAddressPayload,
+          });
+        } else {
+          const newAddress = await tx.address.create({
+            data: normalizedAddressPayload,
+          });
+          employeeUpdateData.addressId = newAddress.id;
+        }
+      }
+
+      if (Object.keys(employeeUpdateData).length > 0)
+        Object.assign(prismaData, employeeUpdateData);
+
+      return (tx as any).employee.update({
+        where: { id },
+        data: prismaData,
+        include: { user: true, employeeRole: true },
+      });
     });
     const { user, ...employeeOnly } = updatedEmployee as any;
 

@@ -155,8 +155,7 @@ model Partner {
   establishedYear            Int?
   partnerType                PartnerType
   businessNature             String?
-  addressId                  String?             @unique
-  address                    Address?            @relation("PartnerAddress", fields: [addressId], references: [id])
+  addresses                  Address[]           @relation("PartnerAddresses")
   designation                String?
   businessCategory           String?
   specialization             String?
@@ -197,11 +196,12 @@ model Address {
   coApplicant         CoApplicant?          @relation(fields: [coApplicantId], references: [id])
   guarantorId         String?
   guarantor           Guarantor?            @relation(fields: [guarantorId], references: [id])
+  partnerId           String?
+  partner             Partner?              @relation("PartnerAddresses", fields: [partnerId], references: [id])
   occupationalDetails OccupationalDetails[] // For office/business addresses
 
   // Relations to other entities (one address per entity)
   employee        Employee?        @relation("EmployeeAddress")
-  partner         Partner?         @relation("PartnerAddress")
   lead            Leads?           @relation("LeadAddress")
   technicalReport TechnicalReport? @relation("TechnicalReportAddress")
   properties      Property[]
@@ -211,6 +211,7 @@ model Address {
 
   @@index([customerId])
   @@index([coApplicantId])
+  @@index([partnerId])
 }
 
 model PartnerCommission {
@@ -1023,6 +1024,16 @@ model Kyc {
   user      User     @relation(fields: [userId], references: [id])
 }
 
+model RequiredKycDocument {
+  id           String   @id @default(cuid())
+  documentType String   @unique
+  displayName  String?
+  isActive     Boolean  @default(true)
+  createdById  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
 enum KycStatus {
   NOT_STARTED
   PENDING
@@ -1214,8 +1225,21 @@ model LoanType {
 
   //SLA & WorkFlow 
   estimatedProcessingTimeDays Int? //turnaround time
-  documentsRequired           String //list of documents /comma separated 
-  documentsOptions            String? // any optional documents that can help in faster processing
+  // documentsRequired           String //list of documents /comma separated 
+  // documentsOptions            String? // any optional documents that can help in faster processing
+
+  // Applicant documents
+  applicantDocumentsRequired  String @default("") // required docs for primary applicant (comma-separated)
+  applicantDocumentsOptional  String? // optional docs for primary applicant (comma-separated)
+
+  // Co-Applicant documents
+  coApplicantDocumentsRequired String @default("") // required docs for co-applicant (comma-separated)
+  coApplicantDocumentsOptional String? // optional docs for co-applicant (comma-separated)
+
+  // Guarantor documents
+  guarantorDocumentsRequired  String @default("") // required docs for guarantor (comma-separated)
+  guarantorDocumentsOptional  String? // optional docs for guarantor (comma-separated)
+
   //Audit Fields
   deletedAt DateTime?
   createdAt DateTime @default(now())

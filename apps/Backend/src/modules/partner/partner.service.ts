@@ -13,6 +13,71 @@ import { logAction } from "../../audit/audit.helper.js";
 import { generateUniqueLeadNumber } from "../../common/generateId/generateLeadNumber.js";
 import createLoanApplicationSchema from "../LoanApplication/loanApplication.schema.js";
 
+const buildPartnerAddressPayloads = (data: any) => {
+  const currentAddressInput = data.addresses?.currentAddress;
+  const permanentAddressInput = data.addresses?.permanentAddress;
+
+  const currentAddressLine1 =
+    currentAddressInput?.addressLine1 ??
+    data.currentAddressLine1 ??
+    data.fullAddress ??
+    data.address;
+  const currentAddressLine2 = currentAddressInput?.addressLine2;
+  const currentCity = currentAddressInput?.city ?? data.currentCity ?? data.city;
+  const currentDistrict = currentAddressInput?.district ?? currentCity;
+  const currentState = currentAddressInput?.state ?? data.currentState ?? data.state;
+  const currentPinCode =
+    currentAddressInput?.pinCode ?? data.currentPinCode ?? data.pinCode;
+  const currentLandmark = currentAddressInput?.landmark;
+  const currentPhoneNumber = currentAddressInput?.phoneNumber;
+
+  const permanentAddressLine1 =
+    permanentAddressInput?.addressLine1 ??
+    data.permanentAddressLine1 ??
+    currentAddressLine1;
+  const permanentAddressLine2 = permanentAddressInput?.addressLine2;
+  const permanentCity = permanentAddressInput?.city ?? data.permanentCity ?? currentCity;
+  const permanentDistrict = permanentAddressInput?.district ?? permanentCity;
+  const permanentState =
+    permanentAddressInput?.state ?? data.permanentState ?? currentState;
+  const permanentPinCode =
+    permanentAddressInput?.pinCode ?? data.permanentPinCode ?? currentPinCode;
+  const permanentLandmark = permanentAddressInput?.landmark;
+  const permanentPhoneNumber = permanentAddressInput?.phoneNumber;
+
+  const currentAddress =
+    currentAddressLine1 || currentCity || currentState || currentPinCode
+      ? {
+          addressType: "CURRENT_RESIDENTIAL" as const,
+          addressLine1: currentAddressLine1 ?? "",
+          addressLine2: currentAddressLine2 ?? null,
+          city: currentCity ?? "",
+          district: currentDistrict ?? "",
+          state: currentState ?? "",
+          pinCode: currentPinCode ?? "",
+          landmark: currentLandmark ?? null,
+          phoneNumber: currentPhoneNumber ?? null,
+        }
+      : null;
+
+  const permanentAddress =
+    permanentAddressLine1 || permanentCity || permanentState || permanentPinCode
+      ? {
+          addressType: "PERMANENT" as const,
+          addressLine1: permanentAddressLine1 ?? "",
+          addressLine2: permanentAddressLine2 ?? null,
+          city: permanentCity ?? "",
+          district: permanentDistrict ?? "",
+          state: permanentState ?? "",
+          pinCode: permanentPinCode ?? "",
+          landmark: permanentLandmark ?? null,
+          phoneNumber: permanentPhoneNumber ?? null,
+        }
+      : null;
+
+  return { currentAddress, permanentAddress };
+};
+
 export async function createPartnerService(partnerData: CreatePartner) {
   const existing = await prisma.user.findUnique({
     where: { email: partnerData.email },
@@ -61,11 +126,6 @@ export async function createPartnerService(partnerData: CreatePartner) {
         establishedYear: partnerData.establishedYear ?? null,
         partnerType: (partnerData.partnerType ?? "INDIVIDUAL") as any,
         businessNature: partnerData.businessNature ?? null,
-
-        fullAddress: partnerData.fullAddress,
-        city: partnerData.city,
-        state: partnerData.state,
-        pinCode: partnerData.pinCode,
         designation: partnerData.designation,
         businessCategory: partnerData.businessCategory ?? "",
         specialization: partnerData.specialization ?? "",
@@ -87,6 +147,28 @@ export async function createPartnerService(partnerData: CreatePartner) {
         commissionEarned: 0,
       },
     });
+
+    const { currentAddress, permanentAddress } = buildPartnerAddressPayloads(
+      partnerData,
+    );
+
+    if (currentAddress) {
+      await prisma.address.create({
+        data: {
+          ...currentAddress,
+          partner: { connect: { id: partner.id } },
+        },
+      });
+    }
+
+    if (permanentAddress) {
+      await prisma.address.create({
+        data: {
+          ...permanentAddress,
+          partner: { connect: { id: partner.id } },
+        },
+      });
+    }
 
     await logAction({
       entityType: "PARTNER_COMMISSION",
@@ -159,10 +241,16 @@ export const getPartnerByIdService = async (id: string) => {
     },
   });
   if (partner) {
+    const addresses = await prisma.address.findMany({
+      where: { partnerId: partner.id },
+      orderBy: { createdAt: "asc" },
+    });
+
     const { password, ...safeUser } = partner.user;
     return {
       ...partner,
       user: safeUser,
+      addresses,
     };
   }
   if (!partner) {
@@ -621,9 +709,6 @@ export const createChildPartnerService = async (
         targetArea: data.targetArea ?? "",
         parentPartnerId: parentPartner.id,
         branchId: parentPartner.branchId,
-        city: data.city,
-        state: data.state,
-        pinCode: data.pinCode,
         designation: data.designation,
         businessCategory: data.businessCategory ?? "",
         specialization: data.specialization ?? "",
@@ -632,6 +717,26 @@ export const createChildPartnerService = async (
         businessRegistrationNumber: data.businessRegistrationNumber ?? "",
       },
     });
+
+    const { currentAddress, permanentAddress } = buildPartnerAddressPayloads(data);
+
+    if (currentAddress) {
+      await tx.address.create({
+        data: {
+          ...currentAddress,
+            partner: { connect: { id: partner.id } },
+        },
+      });
+    }
+
+    if (permanentAddress) {
+      await tx.address.create({
+        data: {
+          ...permanentAddress,
+            partner: { connect: { id: partner.id } },
+        },
+      });
+    }
 
     const { password: _pw, ...safeUser } = user as any;
     return {

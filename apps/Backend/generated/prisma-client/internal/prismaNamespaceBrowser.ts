@@ -87,6 +87,7 @@ export const ModelName = {
   RolePermission: 'RolePermission',
   Document: 'Document',
   Kyc: 'Kyc',
+  RequiredKycDocument: 'RequiredKycDocument',
   LoanEmiSchedule: 'LoanEmiSchedule',
   EmiPayment: 'EmiPayment',
   EmiMoratorium: 'EmiMoratorium',
@@ -230,7 +231,6 @@ export const PartnerScalarFieldEnum = {
   establishedYear: 'establishedYear',
   partnerType: 'partnerType',
   businessNature: 'businessNature',
-  addressId: 'addressId',
   designation: 'designation',
   businessCategory: 'businessCategory',
   specialization: 'specialization',
@@ -265,6 +265,7 @@ export const AddressScalarFieldEnum = {
   customerId: 'customerId',
   coApplicantId: 'coApplicantId',
   guarantorId: 'guarantorId',
+  partnerId: 'partnerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -883,6 +884,19 @@ export const KycScalarFieldEnum = {
 export type KycScalarFieldEnum = (typeof KycScalarFieldEnum)[keyof typeof KycScalarFieldEnum]
 
 
+export const RequiredKycDocumentScalarFieldEnum = {
+  id: 'id',
+  documentType: 'documentType',
+  displayName: 'displayName',
+  isActive: 'isActive',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RequiredKycDocumentScalarFieldEnum = (typeof RequiredKycDocumentScalarFieldEnum)[keyof typeof RequiredKycDocumentScalarFieldEnum]
+
+
 export const LoanEmiScheduleScalarFieldEnum = {
   id: 'id',
   loanApplicationId: 'loanApplicationId',
@@ -1023,8 +1037,12 @@ export const LoanTypeScalarFieldEnum = {
   isPublic: 'isPublic',
   approvalRequired: 'approvalRequired',
   estimatedProcessingTimeDays: 'estimatedProcessingTimeDays',
-  documentsRequired: 'documentsRequired',
-  documentsOptions: 'documentsOptions',
+  applicantDocumentsRequired: 'applicantDocumentsRequired',
+  applicantDocumentsOptional: 'applicantDocumentsOptional',
+  coApplicantDocumentsRequired: 'coApplicantDocumentsRequired',
+  coApplicantDocumentsOptional: 'coApplicantDocumentsOptional',
+  guarantorDocumentsRequired: 'guarantorDocumentsRequired',
+  guarantorDocumentsOptional: 'guarantorDocumentsOptional',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1308,7 +1326,6 @@ export const PartnerOrderByRelevanceFieldEnum = {
   gstNumber: 'gstNumber',
   branchId: 'branchId',
   businessNature: 'businessNature',
-  addressId: 'addressId',
   designation: 'designation',
   businessCategory: 'businessCategory',
   specialization: 'specialization',
@@ -1331,7 +1348,8 @@ export const AddressOrderByRelevanceFieldEnum = {
   phoneNumber: 'phoneNumber',
   customerId: 'customerId',
   coApplicantId: 'coApplicantId',
-  guarantorId: 'guarantorId'
+  guarantorId: 'guarantorId',
+  partnerId: 'partnerId'
 } as const
 
 export type AddressOrderByRelevanceFieldEnum = (typeof AddressOrderByRelevanceFieldEnum)[keyof typeof AddressOrderByRelevanceFieldEnum]
@@ -1727,6 +1745,16 @@ export const KycOrderByRelevanceFieldEnum = {
 export type KycOrderByRelevanceFieldEnum = (typeof KycOrderByRelevanceFieldEnum)[keyof typeof KycOrderByRelevanceFieldEnum]
 
 
+export const RequiredKycDocumentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  documentType: 'documentType',
+  displayName: 'displayName',
+  createdById: 'createdById'
+} as const
+
+export type RequiredKycDocumentOrderByRelevanceFieldEnum = (typeof RequiredKycDocumentOrderByRelevanceFieldEnum)[keyof typeof RequiredKycDocumentOrderByRelevanceFieldEnum]
+
+
 export const LoanEmiScheduleOrderByRelevanceFieldEnum = {
   id: 'id',
   loanApplicationId: 'loanApplicationId'
@@ -1778,8 +1806,12 @@ export const LoanTypeOrderByRelevanceFieldEnum = {
   code: 'code',
   name: 'name',
   description: 'description',
-  documentsRequired: 'documentsRequired',
-  documentsOptions: 'documentsOptions'
+  applicantDocumentsRequired: 'applicantDocumentsRequired',
+  applicantDocumentsOptional: 'applicantDocumentsOptional',
+  coApplicantDocumentsRequired: 'coApplicantDocumentsRequired',
+  coApplicantDocumentsOptional: 'coApplicantDocumentsOptional',
+  guarantorDocumentsRequired: 'guarantorDocumentsRequired',
+  guarantorDocumentsOptional: 'guarantorDocumentsOptional'
 } as const
 
 export type LoanTypeOrderByRelevanceFieldEnum = (typeof LoanTypeOrderByRelevanceFieldEnum)[keyof typeof LoanTypeOrderByRelevanceFieldEnum]
