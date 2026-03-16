@@ -34,150 +34,8 @@ import Button from "../ui/Button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loanTypeSchema } from "../../validations/LoanTypeValidation";
 
-const LOAN_CATEGORIES = [
-  { value: "PERSONAL_LOAN", label: "Personal Loan", icon: User },
-  { value: "VEHICLE_LOAN", label: "Vehicle Loan", icon: Car },
-  { value: "HOME_LOAN", label: "Home Loan", icon: Home },
-  { value: "EDUCATION_LOAN", label: "Education Loan", icon: GraduationCap },
-  { value: "BUSINESS_LOAN", label: "Business Loan", icon: Briefcase },
-  { value: "GOLD_LOAN", label: "Gold Loan", icon: Gem },
-];
+import { LOAN_CATEGORIES, DOCUMENT_OPTIONS } from "../../constants/loanType";
 
-const DOCUMENT_OPTIONS = [
-  { value: "PAN", label: "PAN" },
-  { value: "AADHAAR", label: "Aadhaar" },
-  { value: "PASSPORT", label: "Passport" },
-  { value: "VOTER_ID", label: "Voter ID" },
-  { value: "DRIVING_LICENSE", label: "Driving License" },
-  { value: "ADDRESS_PROOF", label: "Address Proof" },
-  { value: "UTILITY_BILL", label: "Utility Bill" },
-  { value: "RENT_AGREEMENT", label: "Rent Agreement" },
-
-  { value: "SELFIE_CAPTURE", label: "Selfie Capture" },
-
-  { value: "SALARY_SLIP", label: "Salary Slip" },
-  { value: "FORM_16", label: "Form 16" },
-  { value: "EMPLOYMENT_ID", label: "Employment ID" },
-  { value: "APPOINTMENT_LETTER", label: "Appointment Letter" },
-
-  { value: "ITR", label: "ITR" },
-  {
-    value: "GST_REGISTRATION_CERTIFICATE",
-    label: "GST Registration Certificate",
-  },
-  {
-    value: "SHOP_ESTABLISHMENT_CERTIFICATE",
-    label: "Shop & Establishment Certificate",
-  },
-  {
-    value: "BUSINESS_REGISTRATION_CERTIFICATE",
-    label: "Business Registration Certificate",
-  },
-  { value: "PARTNERSHIP_DEED", label: "Partnership Deed" },
-  { value: "MOA", label: "MOA" },
-  { value: "AOA", label: "AOA" },
-  {
-    value: "BUSINESS_FINANCIAL_STATEMENTS",
-    label: "Business Financial Statements",
-  },
-  { value: "GST_RETURNS", label: "GST Returns" },
-  { value: "UDYAM_REGISTRATION", label: "Udyam Registration" },
-
-  { value: "BANK_STATEMENT", label: "Bank Statement" },
-  {
-    value: "OTHER_BANK_ACCOUNTS_STATEMENT",
-    label: "Other Bank Accounts Statement",
-  },
-
-  { value: "BANK_VERIFICATION_REPORT", label: "Bank Verification Report" },
-  {
-    value: "BANK_STATEMENT_ANALYSIS_REPORT",
-    label: "Bank Statement Analysis Report",
-  },
-
-  { value: "PROPERTY_TITLE_DEED", label: "Property Title Deed" },
-  { value: "SALE_AGREEMENT", label: "Sale Agreement" },
-  { value: "ALLOTMENT_LETTER", label: "Allotment Letter" },
-  {
-    value: "BUILDER_OR_SOCIETY_NOC",
-    label: "Builder/Society NOC",
-  },
-  { value: "PROPERTY_TAX_RECEIPTS", label: "Property Tax Receipts" },
-  {
-    value: "PROPERTY_TECHNICAL_REPORT",
-    label: "Property Technical Report",
-  },
-  { value: "LEGAL_SCRUTINY_REPORT", label: "Legal Scrutiny Report" },
-
-  {
-    value: "OFFICE_VERIFICATION_REPORT",
-    label: "Office Verification Report",
-  },
-  {
-    value: "RESIDENCE_VERIFICATION_REPORT",
-    label: "Residence Verification Report",
-  },
-  {
-    value: "FIELD_INVESTIGATION_REPORT",
-    label: "Field Investigation Report",
-  },
-  { value: "REFERENCE_CHECK_REPORT", label: "Reference Check Report" },
-
-  {
-    value: "SIGNED_LOAN_APPLICATION_FORM",
-    label: "Signed Loan Application Form",
-  },
-  { value: "KYC_DECLARATION", label: "KYC Declaration" },
-  {
-    value: "CREDIT_BUREAU_CONSENT_FORM",
-    label: "Credit Bureau Consent Form",
-  },
-  {
-    value: "LOAN_PROCESSING_FEE_RECEIPT",
-    label: "Loan Processing Fee Receipt",
-  },
-  {
-    value: "CUSTOMER_DECLARATION_FORM",
-    label: "Customer Declaration Form",
-  },
-
-  { value: "CREDIT_APPRAISAL_NOTE", label: "Credit Appraisal Note" },
-  { value: "RISK_ASSESSMENT_REPORT", label: "Risk Assessment Report" },
-  { value: "SANCTION_LETTER", label: "Sanction Letter" },
-  { value: "INTERNAL_APPROVAL_MEMO", label: "Internal Approval Memo" },
-
-  { value: "SIGNED_LOAN_AGREEMENT", label: "Signed Loan Agreement" },
-  {
-    value: "ACCEPTED_SANCTION_LETTER",
-    label: "Accepted Sanction Letter",
-  },
-  { value: "ECS_NACH_MANDATE_FORM", label: "ECS/NACH Mandate Form" },
-  { value: "POST_DATED_CHEQUES", label: "Post Dated Cheques" },
-  {
-    value: "INSURANCE_POLICY_DOCUMENTS",
-    label: "Insurance Policy Documents",
-  },
-
-  {
-    value: "DISBURSEMENT_REQUEST_FORM",
-    label: "Disbursement Request Form",
-  },
-  { value: "BANK_ACCOUNT_PROOF", label: "Bank Account Proof" },
-  { value: "CANCELLED_CHEQUE", label: "Cancelled Cheque" },
-  {
-    value: "DISBURSEMENT_APPROVAL_NOTE",
-    label: "Disbursement Approval Note",
-  },
-  { value: "VENDOR_INVOICE", label: "Vendor Invoice" },
-  { value: "PAYMENT_REQUEST", label: "Payment Request" },
-
-  { value: "PHOTO", label: "Photo" },
-  { value: "SIGNATURE", label: "Signature" },
-  { value: "INCOME_PROOF", label: "Income Proof" },
-  { value: "OTHER", label: "Other" },
-];
-
-// Party-scoped document lists
 const APPLICANT_DOCUMENT_OPTIONS = DOCUMENT_OPTIONS.filter(
   (opt) =>
     !opt.value.startsWith("CO_APPLICANT_") &&
@@ -194,6 +52,21 @@ const GUARANTOR_DOCUMENT_OPTIONS = DOCUMENT_OPTIONS.filter(
     !opt.value.startsWith("APPLICANT_") &&
     !opt.value.startsWith("CO_APPLICANT_"),
 );
+
+const INTEREST_TYPES = [
+  { value: "FLAT", label: "Flat" },
+  { value: "REDUCING", label: "Reducing Balance" },
+];
+
+const PROCESSING_FEE_TYPES = [
+  { value: "PERCENTAGE", label: "Percentage" },
+  { value: "FIXED", label: "Fixed Amount" },
+];
+
+const EMPLOYMENT_TYPES = [
+  { value: "salaried", label: "Salaried" },
+  { value: "self_employed", label: "Self-Employed" },
+];
 
 const normalizeInterestType = (value) => {
   const raw = String(value || "")
@@ -223,25 +96,10 @@ export default function AddLoanTypesForm({ onClose, editData }) {
   const createLoanTypeMutation = useCreateLoanType();
   const updateLoanTypeMutation = useUpdateLoanType();
 
-  // Interest type options
-  const interestTypes = [
-    { value: "FLAT", label: "Flat" },
-    { value: "REDUCING", label: "Reducing Balance" },
-  ];
-
-  // Processing fee type options
-  const processingFeeTypes = [
-    { value: "PERCENTAGE", label: "Percentage" },
-    { value: "FIXED", label: "Fixed Amount" },
-  ];
-
-  const chargeTypes = processingFeeTypes;
-
-  // Employment type options
-  const employmentTypes = [
-    { value: "salaried", label: "Salaried" },
-    { value: "self_employed", label: "Self-Employed" },
-  ];
+  const interestTypes = INTEREST_TYPES;
+  const processingFeeTypes = PROCESSING_FEE_TYPES;
+  const chargeTypes = PROCESSING_FEE_TYPES;
+  const employmentTypes = EMPLOYMENT_TYPES;
 
   const {
     control,

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { X } from "lucide-react";
 import AddLoanTypesForm from "../forms/AddLoanTypesForm";
+import ErrorBoundary from "../common/ErrorBoundary";
 
 export default function AddLoanTypesModal({ isOpen, onClose, editData }) {
   // Lock body scroll when modal is open
@@ -16,18 +17,16 @@ export default function AddLoanTypesModal({ isOpen, onClose, editData }) {
   if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm px-4 py-8 "
       onClick={onClose}
     >
       {/* Center modal with flex */}
       <div className="flex min-h-full items-center justify-center">
-        
-        <div 
+        <div
           className="relative w-full max-w-5xl bg-white rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 transform"
           onClick={(e) => e.stopPropagation()}
         >
-          
           {/* Close Button */}
           <button
             onClick={onClose}
@@ -37,14 +36,12 @@ export default function AddLoanTypesModal({ isOpen, onClose, editData }) {
             <X size={20} />
           </button>
 
-          {/* Form Content */}
+          {/* Form Content with Error Boundary */}
           <div className="overflow-visible">
-            <AddLoanTypesForm 
-              onClose={onClose} 
-              editData={editData} 
-            />
+            <ErrorBoundary>
+              <AddLoanTypesForm onClose={onClose} editData={editData} />
+            </ErrorBoundary>
           </div>
-
         </div>
       </div>
     </div>
