@@ -71,6 +71,7 @@ export default function Sidebar() {
           permission: "VIEW_LOS",
           subItems: [
 
+            { name: "Leads", path: "/admin/los/leads" },
             { name: "Applications", path: "/admin/los/applications" },
             { name: "Documents", path: "/admin/los/documents" },
             { name: "Kyc Verification", path: "/admin/los/kyc-verification" },
@@ -93,24 +94,24 @@ export default function Sidebar() {
             {
               name: "Loan Account Creation",
               path: currentUser?.role === "EMPLOYEE"
-                ? "/employee/loan-account-creation"
-                : "/admin/loan-account-creation",
+                ? "/employee/lms/loan-account-creation"
+                : "/admin/lms/loan-account-creation",
               permission: "CREATE_LOAN"
             },
 
             {
               name: "EMI Schedule",
               path: currentUser?.role === "EMPLOYEE"
-                ? "/employee/emi-schedule"
-                : "/admin/emi-schedule",
+                ? "/employee/lms/emi-schedule"
+                : "/admin/lms/emi-schedule",
               permission: "VIEW_EMI_SCHEDULE"
             },
 
             {
               name: "Repayment Management",
               path: currentUser?.role === "EMPLOYEE"
-                ? "/employee/repayment-management"
-                : "/admin/repayment-management",
+                ? "/employee/lms/repayment-management"
+                : "/admin/lms/repayment-management",
               permission: "VIEW_REPAYMENT_MANAGEMENT"
             },
 
@@ -140,36 +141,36 @@ export default function Sidebar() {
             {
               name: "NACH Auto Debit",
               path: currentUser?.role === "EMPLOYEE"
-                ? "/employee/nach-auto-debit"
-                : "/admin/nach-auto-debit",
+                ? "/employee/lms/nach-auto-debit"
+                : "/admin/lms/nach-auto-debit",
               permission: "VIEW_NACH_AUTO_DEBIT"
             },
             {
               name: "DPD Tracking",
               path: currentUser?.role === "EMPLOYEE"
-                ? "/employee/dpd-tracking"
-                : "/admin/dpd-tracking",
+                ? "/employee/lms/dpd-tracking"
+                : "/admin/lms/dpd-tracking",
               permission: "VIEW_DPD_TRACKING"
             },
             {
               name: "Recovery Management",
               path: currentUser?.role === "EMPLOYEE"
-                ? "/employee/recovery-management"
-                : "/admin/recovery-management",
+                ? "/employee/lms/recovery-management"
+                : "/admin/lms/recovery-management",
               permission: "VIEW_RECOVERY_MANAGEMENT"
             },
             {
               name: "Foreclosure",
               path: currentUser?.role === "EMPLOYEE"
-                ? "/employee/foreclosure"
-                : "/admin/foreclosure",
+                ? "/employee/lms/foreclosure"
+                : "/admin/lms/foreclosure",
               permission: "VIEW_FORECLOSURE"
             },
             {
               name: "Loan Closure",
               path: currentUser?.role === "EMPLOYEE"
-                ? "/employee/loan-closure"
-                : "/admin/loan-closure",
+                ? "/employee/lms/loan-closure"
+                : "/admin/lms/loan-closure",
               permission: "VIEW_LOAN_CLOSURE"
             },
           ]

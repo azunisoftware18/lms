@@ -68,11 +68,7 @@ import CompanyDetailsPage from "../app/dashboard/systemSetting/CompanyDetailsPag
 import LoanConfigurationPage from "../app/dashboard/systemSetting/LoanConfigrationPage.jsx";
 import SecuritySettingPage from "../app/dashboard/systemSetting/SecuritySettingPage.jsx";
 import PaymentSettingPage from "../app/dashboard/systemSetting/PaymentSettingPage.jsx";
-
-{/* reports page  */}
-import LeadsPage from "../app/dashboard/reports/LeadsPage.jsx";
-
- {/* Loan Product  */}
+import Leads from "../app/dashboard/LOS/Leads.jsx";
 import LoanProduct from "../app/dashboard/Configuration/LoanProduct.jsx";
 
 export default function AppRoutes() {
@@ -167,16 +163,16 @@ export default function AppRoutes() {
         
 
 				{/* LMS Pages */}
-				<Route path="loan-account-creation" element={<LoanAccountCreation />} />
-				<Route path="emi-schedule" element={<EMISchedule />} />
-				<Route path="repayment-management" element={<RepaymentManagement />} />
-				<Route path="nach-auto-debit" element={<NachAutoDebit />} />
-				<Route path="dpd-tracking" element={<DpdTracking />} />
-				<Route path="recovery-management" element={<RecoveryManagement />} />
-				<Route path="foreclosure" element={<Foreclosure />} />
-				<Route path="loan-closure" element={<LoanClosure />} />
-				<Route path="branch-management" element={<BranchManagement />} />
-				<Route path="branch-admin" element={<BranchAdmin />} />
+				<Route path="lms/loan-account-creation" element={<LoanAccountCreation />} />
+				<Route path="lms/emi-schedule" element={<EMISchedule />} />
+				<Route path="lms/repayment-management" element={<RepaymentManagement />} />
+				<Route path="lms/nach-auto-debit" element={<NachAutoDebit />} />
+				<Route path="lms/dpd-tracking" element={<DpdTracking />} />
+				<Route path="lms/recovery-management" element={<RecoveryManagement />} />
+				<Route path="lms/foreclosure" element={<Foreclosure />} />
+				<Route path="lms/loan-closure" element={<LoanClosure />} />
+				<Route path="lms/branch-management" element={<BranchManagement />} />
+				<Route path="lms/branch-admin" element={<BranchAdmin />} />
 
 
 				{/* LOS pages */}
@@ -189,7 +185,7 @@ export default function AppRoutes() {
 				<Route path='los/emi-management' element={<EMIManagementPage />} />
 				<Route path='los/sanction' element={<SanctionPage />} />
 				<Route path='los/disbursement' element={<DisbursementManagementPage />} />
-
+        <Route path='los/leads' element={< Leads />} />
 				
 				
 
@@ -202,8 +198,7 @@ export default function AppRoutes() {
         <Route path="system-setting/security-settings" element={<SecuritySettingPage />} />
         <Route path="system-setting/payment-settings" element={<PaymentSettingPage />} />
 
-        {/* reports page  */}
-        <Route path='reports/leads' element={< LeadsPage />} />
+        
 
         {/* Loan Product  */}
         <Route path="loan-product" element={< LoanProduct />} />
