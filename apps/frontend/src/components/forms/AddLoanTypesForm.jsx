@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import {
   Info,
@@ -43,6 +43,182 @@ const LOAN_CATEGORIES = [
   { value: "GOLD_LOAN", label: "Gold Loan", icon: Gem },
 ];
 
+const DOCUMENT_OPTIONS = [
+  { value: "PAN", label: "PAN" },
+  { value: "AADHAAR", label: "Aadhaar" },
+  { value: "PASSPORT", label: "Passport" },
+  { value: "VOTER_ID", label: "Voter ID" },
+  { value: "DRIVING_LICENSE", label: "Driving License" },
+  { value: "ADDRESS_PROOF", label: "Address Proof" },
+  { value: "UTILITY_BILL", label: "Utility Bill" },
+  { value: "RENT_AGREEMENT", label: "Rent Agreement" },
+
+  { value: "SELFIE_CAPTURE", label: "Selfie Capture" },
+
+  { value: "SALARY_SLIP", label: "Salary Slip" },
+  { value: "FORM_16", label: "Form 16" },
+  { value: "EMPLOYMENT_ID", label: "Employment ID" },
+  { value: "APPOINTMENT_LETTER", label: "Appointment Letter" },
+
+  { value: "ITR", label: "ITR" },
+  {
+    value: "GST_REGISTRATION_CERTIFICATE",
+    label: "GST Registration Certificate",
+  },
+  {
+    value: "SHOP_ESTABLISHMENT_CERTIFICATE",
+    label: "Shop & Establishment Certificate",
+  },
+  {
+    value: "BUSINESS_REGISTRATION_CERTIFICATE",
+    label: "Business Registration Certificate",
+  },
+  { value: "PARTNERSHIP_DEED", label: "Partnership Deed" },
+  { value: "MOA", label: "MOA" },
+  { value: "AOA", label: "AOA" },
+  {
+    value: "BUSINESS_FINANCIAL_STATEMENTS",
+    label: "Business Financial Statements",
+  },
+  { value: "GST_RETURNS", label: "GST Returns" },
+  { value: "UDYAM_REGISTRATION", label: "Udyam Registration" },
+
+  { value: "BANK_STATEMENT", label: "Bank Statement" },
+  {
+    value: "OTHER_BANK_ACCOUNTS_STATEMENT",
+    label: "Other Bank Accounts Statement",
+  },
+
+  { value: "BANK_VERIFICATION_REPORT", label: "Bank Verification Report" },
+  {
+    value: "BANK_STATEMENT_ANALYSIS_REPORT",
+    label: "Bank Statement Analysis Report",
+  },
+
+  { value: "PROPERTY_TITLE_DEED", label: "Property Title Deed" },
+  { value: "SALE_AGREEMENT", label: "Sale Agreement" },
+  { value: "ALLOTMENT_LETTER", label: "Allotment Letter" },
+  {
+    value: "BUILDER_OR_SOCIETY_NOC",
+    label: "Builder/Society NOC",
+  },
+  { value: "PROPERTY_TAX_RECEIPTS", label: "Property Tax Receipts" },
+  {
+    value: "PROPERTY_TECHNICAL_REPORT",
+    label: "Property Technical Report",
+  },
+  { value: "LEGAL_SCRUTINY_REPORT", label: "Legal Scrutiny Report" },
+
+  {
+    value: "OFFICE_VERIFICATION_REPORT",
+    label: "Office Verification Report",
+  },
+  {
+    value: "RESIDENCE_VERIFICATION_REPORT",
+    label: "Residence Verification Report",
+  },
+  {
+    value: "FIELD_INVESTIGATION_REPORT",
+    label: "Field Investigation Report",
+  },
+  { value: "REFERENCE_CHECK_REPORT", label: "Reference Check Report" },
+
+  {
+    value: "SIGNED_LOAN_APPLICATION_FORM",
+    label: "Signed Loan Application Form",
+  },
+  { value: "KYC_DECLARATION", label: "KYC Declaration" },
+  {
+    value: "CREDIT_BUREAU_CONSENT_FORM",
+    label: "Credit Bureau Consent Form",
+  },
+  {
+    value: "LOAN_PROCESSING_FEE_RECEIPT",
+    label: "Loan Processing Fee Receipt",
+  },
+  {
+    value: "CUSTOMER_DECLARATION_FORM",
+    label: "Customer Declaration Form",
+  },
+
+  { value: "CREDIT_APPRAISAL_NOTE", label: "Credit Appraisal Note" },
+  { value: "RISK_ASSESSMENT_REPORT", label: "Risk Assessment Report" },
+  { value: "SANCTION_LETTER", label: "Sanction Letter" },
+  { value: "INTERNAL_APPROVAL_MEMO", label: "Internal Approval Memo" },
+
+  { value: "SIGNED_LOAN_AGREEMENT", label: "Signed Loan Agreement" },
+  {
+    value: "ACCEPTED_SANCTION_LETTER",
+    label: "Accepted Sanction Letter",
+  },
+  { value: "ECS_NACH_MANDATE_FORM", label: "ECS/NACH Mandate Form" },
+  { value: "POST_DATED_CHEQUES", label: "Post Dated Cheques" },
+  {
+    value: "INSURANCE_POLICY_DOCUMENTS",
+    label: "Insurance Policy Documents",
+  },
+
+  {
+    value: "DISBURSEMENT_REQUEST_FORM",
+    label: "Disbursement Request Form",
+  },
+  { value: "BANK_ACCOUNT_PROOF", label: "Bank Account Proof" },
+  { value: "CANCELLED_CHEQUE", label: "Cancelled Cheque" },
+  {
+    value: "DISBURSEMENT_APPROVAL_NOTE",
+    label: "Disbursement Approval Note",
+  },
+  { value: "VENDOR_INVOICE", label: "Vendor Invoice" },
+  { value: "PAYMENT_REQUEST", label: "Payment Request" },
+
+  { value: "PHOTO", label: "Photo" },
+  { value: "SIGNATURE", label: "Signature" },
+  { value: "INCOME_PROOF", label: "Income Proof" },
+  { value: "OTHER", label: "Other" },
+];
+
+// Party-scoped document lists
+const APPLICANT_DOCUMENT_OPTIONS = DOCUMENT_OPTIONS.filter(
+  (opt) =>
+    !opt.value.startsWith("CO_APPLICANT_") &&
+    !opt.value.startsWith("GUARANTOR_"),
+);
+
+const CO_APPLICANT_DOCUMENT_OPTIONS = DOCUMENT_OPTIONS.filter(
+  (opt) =>
+    !opt.value.startsWith("APPLICANT_") && !opt.value.startsWith("GUARANTOR_"),
+);
+
+const GUARANTOR_DOCUMENT_OPTIONS = DOCUMENT_OPTIONS.filter(
+  (opt) =>
+    !opt.value.startsWith("APPLICANT_") &&
+    !opt.value.startsWith("CO_APPLICANT_"),
+);
+
+const normalizeInterestType = (value) => {
+  const raw = String(value || "")
+    .trim()
+    .toUpperCase();
+  if (raw === "FLAT") return "FLAT";
+  if (raw === "REDUCING" || raw === "REDUCING_BALANCE") return "REDUCING";
+  return raw;
+};
+
+const normalizeProcessingFeeType = (value) => {
+  const raw = String(value || "")
+    .trim()
+    .toUpperCase();
+  if (raw === "FIXED" || raw === "FIXED_AMOUNT") return "FIXED";
+  if (raw === "PERCENTAGE") return "PERCENTAGE";
+  return raw;
+};
+
+const toNumberOrUndefined = (value) => {
+  if (value === "" || value === null || value === undefined) return undefined;
+  const parsed = Number(value);
+  return Number.isNaN(parsed) ? undefined : parsed;
+};
+
 export default function AddLoanTypesForm({ onClose, editData }) {
   const createLoanTypeMutation = useCreateLoanType();
   const updateLoanTypeMutation = useUpdateLoanType();
@@ -59,22 +235,12 @@ export default function AddLoanTypesForm({ onClose, editData }) {
     { value: "FIXED", label: "Fixed Amount" },
   ];
 
+  const chargeTypes = processingFeeTypes;
+
   // Employment type options
   const employmentTypes = [
     { value: "salaried", label: "Salaried" },
     { value: "self_employed", label: "Self-Employed" },
-  ];
-
-  // Document requirement options
-  const documentOptions = [
-    { value: "Aadhaar_Card", label: "Aadhaar Card" },
-    { value: "PAN_Card", label: "PAN Card" },
-    { value: "Photo", label: "Photo" },
-    { value: "Salary_Slip", label: "Salary Slip" },
-    { value: "Bank_Statement", label: "Bank Statement" },
-    { value: "Income_Proof", label: "Income Proof" },
-    { value: "Address_Proof", label: "Address Proof" },
-    { value: "Property_Docs", label: "Property Documents" },
   ];
 
   const {
@@ -110,21 +276,31 @@ export default function AddLoanTypesForm({ onClose, editData }) {
       employmentType: "",
       minCibilScore: "",
       maxCibilScore: "",
+      maxLoanToValueRatio: "",
       prepaymentAllowed: false,
       foreclosureAllowed: false,
       prepaymentCharges: "",
       foreclosureCharges: "",
+      latePaymentFeeType: "",
+      latePaymentFee: "",
+      bounceCharges: "",
       activeStatus: true,
       publicVisibility: true,
       approvalRequired: true,
       estimatedProcessingTimeDays: "",
-      documentsRequired: [],
+      applicantDocumentsRequired: [],
+      applicantDocumentsOptional: [],
+      coApplicantDocumentsRequired: [],
+      coApplicantDocumentsOptional: [],
+      guarantorDocumentsRequired: [],
+      guarantorDocumentsOptional: [],
     },
   });
 
   // Watch values for conditional rendering
   const watchLoanCategory = useWatch({ control, name: "loanCategory" });
   const watchGstApplicable = useWatch({ control, name: "gstApplicable" });
+  const watchSecuredLoan = useWatch({ control, name: "securedLoan" });
   const watchPrepaymentAllowed = useWatch({
     control,
     name: "prepaymentAllowed",
@@ -133,10 +309,54 @@ export default function AddLoanTypesForm({ onClose, editData }) {
     control,
     name: "foreclosureAllowed",
   });
-  const watchDocumentsRequired = useWatch({
+  const watchApplicantDocumentsRequired = useWatch({
     control,
-    name: "documentsRequired",
+    name: "applicantDocumentsRequired",
   });
+  const watchApplicantDocumentsOptional = useWatch({
+    control,
+    name: "applicantDocumentsOptional",
+  });
+  const watchCoApplicantDocumentsRequired = useWatch({
+    control,
+    name: "coApplicantDocumentsRequired",
+  });
+  const watchCoApplicantDocumentsOptional = useWatch({
+    control,
+    name: "coApplicantDocumentsOptional",
+  });
+  const watchGuarantorDocumentsRequired = useWatch({
+    control,
+    name: "guarantorDocumentsRequired",
+  });
+  const watchGuarantorDocumentsOptional = useWatch({
+    control,
+    name: "guarantorDocumentsOptional",
+  });
+
+  const applicantOptionalOptions = useMemo(
+    () =>
+      APPLICANT_DOCUMENT_OPTIONS.filter(
+        (option) => !watchApplicantDocumentsRequired?.includes(option.value),
+      ),
+    [watchApplicantDocumentsRequired],
+  );
+
+  const coApplicantOptionalOptions = useMemo(
+    () =>
+      CO_APPLICANT_DOCUMENT_OPTIONS.filter(
+        (option) => !watchCoApplicantDocumentsRequired?.includes(option.value),
+      ),
+    [watchCoApplicantDocumentsRequired],
+  );
+
+  const guarantorOptionalOptions = useMemo(
+    () =>
+      GUARANTOR_DOCUMENT_OPTIONS.filter(
+        (option) => !watchGuarantorDocumentsRequired?.includes(option.value),
+      ),
+    [watchGuarantorDocumentsRequired],
+  );
 
   // Set edit data
   useEffect(() => {
@@ -165,20 +385,90 @@ export default function AddLoanTypesForm({ onClose, editData }) {
         employmentType: editData.employmentType || "",
         minCibilScore: editData.minCibilScore || "",
         maxCibilScore: editData.maxCibilScore || "",
+        maxLoanToValueRatio: editData.maxLoanToValueRatio || "",
         prepaymentAllowed: editData.prepaymentAllowed || false,
         foreclosureAllowed: editData.foreclosureAllowed || false,
         prepaymentCharges: editData.prepaymentCharges || "",
         foreclosureCharges: editData.foreclosureCharges || "",
+        latePaymentFeeType: editData.latePaymentFeeType || "",
+        latePaymentFee: editData.latePaymentFee || "",
+        bounceCharges: editData.bounceCharges || "",
         activeStatus: editData.isActive ?? true,
         publicVisibility: editData.isPublic ?? true,
         approvalRequired: editData.approvalRequired ?? true,
         estimatedProcessingTimeDays: editData.estimatedProcessingTimeDays || "",
-        documentsRequired: editData.documentsRequired
-          ? editData.documentsRequired.split(",")
+        applicantDocumentsRequired: editData.applicantDocumentsRequired
+          ? editData.applicantDocumentsRequired.split(",")
+          : [],
+        applicantDocumentsOptional: editData.applicantDocumentsOptional
+          ? editData.applicantDocumentsOptional.split(",")
+          : [],
+        coApplicantDocumentsRequired: editData.coApplicantDocumentsRequired
+          ? editData.coApplicantDocumentsRequired.split(",")
+          : [],
+        coApplicantDocumentsOptional: editData.coApplicantDocumentsOptional
+          ? editData.coApplicantDocumentsOptional.split(",")
+          : [],
+        guarantorDocumentsRequired: editData.guarantorDocumentsRequired
+          ? editData.guarantorDocumentsRequired.split(",")
+          : [],
+        guarantorDocumentsOptional: editData.guarantorDocumentsOptional
+          ? editData.guarantorDocumentsOptional.split(",")
           : [],
       });
     }
   }, [editData, reset]);
+
+  useEffect(() => {
+    const nextOptional = (watchApplicantDocumentsOptional || []).filter(
+      (doc) => !watchApplicantDocumentsRequired?.includes(doc),
+    );
+    if (
+      nextOptional.length !== (watchApplicantDocumentsOptional || []).length
+    ) {
+      setValue("applicantDocumentsOptional", nextOptional, {
+        shouldValidate: true,
+      });
+    }
+  }, [
+    watchApplicantDocumentsRequired,
+    watchApplicantDocumentsOptional,
+    setValue,
+  ]);
+
+  useEffect(() => {
+    const nextOptional = (watchCoApplicantDocumentsOptional || []).filter(
+      (doc) => !watchCoApplicantDocumentsRequired?.includes(doc),
+    );
+    if (
+      nextOptional.length !== (watchCoApplicantDocumentsOptional || []).length
+    ) {
+      setValue("coApplicantDocumentsOptional", nextOptional, {
+        shouldValidate: true,
+      });
+    }
+  }, [
+    watchCoApplicantDocumentsRequired,
+    watchCoApplicantDocumentsOptional,
+    setValue,
+  ]);
+
+  useEffect(() => {
+    const nextOptional = (watchGuarantorDocumentsOptional || []).filter(
+      (doc) => !watchGuarantorDocumentsRequired?.includes(doc),
+    );
+    if (
+      nextOptional.length !== (watchGuarantorDocumentsOptional || []).length
+    ) {
+      setValue("guarantorDocumentsOptional", nextOptional, {
+        shouldValidate: true,
+      });
+    }
+  }, [
+    watchGuarantorDocumentsRequired,
+    watchGuarantorDocumentsOptional,
+    setValue,
+  ]);
 
   // Generate loan code based on category
   useEffect(() => {
@@ -192,18 +482,6 @@ export default function AddLoanTypesForm({ onClose, editData }) {
     }
   }, [watchLoanCategory, setValue]);
 
-  const handleDocumentChange = (doc) => {
-    const currentDocs = watchDocumentsRequired || [];
-    if (currentDocs.includes(doc)) {
-      setValue(
-        "documentsRequired",
-        currentDocs.filter((d) => d !== doc),
-      );
-    } else {
-      setValue("documentsRequired", [...currentDocs, doc]);
-    }
-  };
-
   const onSubmit = async (data) => {
     const payload = {
       code: data.loanCode,
@@ -215,11 +493,11 @@ export default function AddLoanTypesForm({ onClose, editData }) {
       maxAmount: Number(data.maxLoanAmount),
       minTenureMonths: Number(data.minTenure),
       maxTenureMonths: Number(data.maxTenure),
-      interestType: data.interestType,
+      interestType: normalizeInterestType(data.interestType),
       minInterestRate: Number(data.minInterestRate),
       maxInterestRate: Number(data.maxInterestRate),
       defaultInterestRate: Number(data.defaultInterestRate),
-      processingFeeType: data.processingFeeType,
+      processingFeeType: normalizeProcessingFeeType(data.processingFeeType),
       processingFee: data.processingFeeValue
         ? Number(data.processingFeeValue)
         : undefined,
@@ -240,6 +518,9 @@ export default function AddLoanTypesForm({ onClose, editData }) {
       maxCibilScore: data.maxCibilScore
         ? Number(data.maxCibilScore)
         : undefined,
+      maxLoanToValueRatio: watchSecuredLoan
+        ? toNumberOrUndefined(data.maxLoanToValueRatio)
+        : undefined,
       prepaymentAllowed: data.prepaymentAllowed,
       foreclosureAllowed: data.foreclosureAllowed,
       prepaymentCharges:
@@ -250,16 +531,29 @@ export default function AddLoanTypesForm({ onClose, editData }) {
         data.foreclosureAllowed && data.foreclosureCharges
           ? Number(data.foreclosureCharges)
           : undefined,
+      latePaymentFeeType: data.latePaymentFeeType
+        ? normalizeProcessingFeeType(data.latePaymentFeeType)
+        : undefined,
+      latePaymentFee: toNumberOrUndefined(data.latePaymentFee),
+      bounceCharges: toNumberOrUndefined(data.bounceCharges),
       isActive: data.activeStatus,
       isPublic: data.publicVisibility,
       approvalRequired: data.approvalRequired,
       estimatedProcessingTimeDays: data.estimatedProcessingTimeDays
         ? Number(data.estimatedProcessingTimeDays)
         : undefined,
-      documentsRequired:
-        data.documentsRequired.length > 0
-          ? data.documentsRequired.join(",")
-          : undefined,
+      applicantDocumentsRequired: data.applicantDocumentsRequired.join(","),
+      applicantDocumentsOptional: data.applicantDocumentsOptional.length
+        ? data.applicantDocumentsOptional.join(",")
+        : undefined,
+      coApplicantDocumentsRequired: data.coApplicantDocumentsRequired.join(","),
+      coApplicantDocumentsOptional: data.coApplicantDocumentsOptional.length
+        ? data.coApplicantDocumentsOptional.join(",")
+        : undefined,
+      guarantorDocumentsRequired: data.guarantorDocumentsRequired.join(","),
+      guarantorDocumentsOptional: data.guarantorDocumentsOptional.length
+        ? data.guarantorDocumentsOptional.join(",")
+        : undefined,
     };
 
     try {
@@ -485,6 +779,23 @@ export default function AddLoanTypesForm({ onClose, editData }) {
                 />
               )}
             />
+
+            {watchSecuredLoan && (
+              <Controller
+                name="maxLoanToValueRatio"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Max Loan To Value Ratio (%)"
+                    type="number"
+                    placeholder="e.g., 80"
+                    error={errors.maxLoanToValueRatio?.message}
+                    icon={Percent}
+                    {...field}
+                  />
+                )}
+              />
+            )}
           </div>
         </div>
 
@@ -814,10 +1125,189 @@ export default function AddLoanTypesForm({ onClose, editData }) {
                 />
               )}
             </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Controller
+                name="latePaymentFeeType"
+                control={control}
+                render={({ field }) => (
+                  <SelectField
+                    label="Late Payment Fee Type"
+                    options={chargeTypes}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Select fee type"
+                    error={errors.latePaymentFeeType?.message}
+                  />
+                )}
+              />
+
+              <Controller
+                name="latePaymentFee"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Late Payment Fee"
+                    type="number"
+                    placeholder="0.00"
+                    error={errors.latePaymentFee?.message}
+                    icon={IndianRupee}
+                    {...field}
+                  />
+                )}
+              />
+
+              <Controller
+                name="bounceCharges"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Bounce Charges"
+                    type="number"
+                    placeholder="0.00"
+                    error={errors.bounceCharges?.message}
+                    icon={IndianRupee}
+                    {...field}
+                  />
+                )}
+              />
+            </div>
           </div>
         </div>
 
-        {/* Section 7: Status & Visibility */}
+        {/* Section 7: Documents */}
+        <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-2 bg-teal-100 rounded-lg">
+              <FileText className="w-5 h-5 text-teal-600" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900">Documents</h3>
+          </div>
+
+          <div className="space-y-5">
+            <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+              <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-blue-600" />
+                Applicant Documents
+              </h4>
+              <div className="space-y-3">
+                <SelectField
+                  label="Required"
+                  options={APPLICANT_DOCUMENT_OPTIONS}
+                  value={watchApplicantDocumentsRequired || []}
+                  onChange={(value) =>
+                    setValue("applicantDocumentsRequired", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select required applicant documents"
+                  error={errors.applicantDocumentsRequired?.message}
+                  className="bg-white rounded-lg"
+                />
+
+                <SelectField
+                  label="Optional"
+                  options={applicantOptionalOptions}
+                  value={watchApplicantDocumentsOptional || []}
+                  onChange={(value) =>
+                    setValue("applicantDocumentsOptional", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select optional applicant documents"
+                  error={errors.applicantDocumentsOptional?.message}
+                  className="bg-white rounded-lg"
+                />
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+              <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-indigo-600" />
+                Co-Applicant Documents
+              </h4>
+              <div className="space-y-3">
+                <SelectField
+                  label="Required"
+                  options={CO_APPLICANT_DOCUMENT_OPTIONS}
+                  value={watchCoApplicantDocumentsRequired || []}
+                  onChange={(value) =>
+                    setValue("coApplicantDocumentsRequired", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select required co-applicant documents"
+                  error={errors.coApplicantDocumentsRequired?.message}
+                  className="bg-white rounded-lg"
+                />
+
+                <SelectField
+                  label="Optional"
+                  options={coApplicantOptionalOptions}
+                  value={watchCoApplicantDocumentsOptional || []}
+                  onChange={(value) =>
+                    setValue("coApplicantDocumentsOptional", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select optional co-applicant documents"
+                  error={errors.coApplicantDocumentsOptional?.message}
+                  className="bg-white rounded-lg"
+                />
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+              <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-emerald-600" />
+                Guarantor Documents
+              </h4>
+              <div className="space-y-3">
+                <SelectField
+                  label="Required"
+                  options={GUARANTOR_DOCUMENT_OPTIONS}
+                  value={watchGuarantorDocumentsRequired || []}
+                  onChange={(value) =>
+                    setValue("guarantorDocumentsRequired", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select required guarantor documents"
+                  error={errors.guarantorDocumentsRequired?.message}
+                  className="bg-white rounded-lg"
+                />
+
+                <SelectField
+                  label="Optional"
+                  options={guarantorOptionalOptions}
+                  value={watchGuarantorDocumentsOptional || []}
+                  onChange={(value) =>
+                    setValue("guarantorDocumentsOptional", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select optional guarantor documents"
+                  error={errors.guarantorDocumentsOptional?.message}
+                  className="bg-white rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 8: Status & Visibility */}
         <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center gap-2 mb-4">
             <div className="p-2 bg-teal-100 rounded-lg">
@@ -885,29 +1375,6 @@ export default function AddLoanTypesForm({ onClose, editData }) {
                   />
                 )}
               />
-
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Documents Required
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  {documentOptions.map((doc) => (
-                    <label
-                      key={doc.value}
-                      className="flex items-center gap-2 p-2 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={watchDocumentsRequired?.includes(doc.value)}
-                        onChange={() => handleDocumentChange(doc.value)}
-                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                      />
-                      <FileText className="w-4 h-4 text-gray-400" />
-                      <span className="text-xs text-gray-700">{doc.label}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         </div>

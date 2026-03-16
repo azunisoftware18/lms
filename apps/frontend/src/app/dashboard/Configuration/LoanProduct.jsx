@@ -1,17 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import { Plus, Percent, Users, CheckCircle, IndianRupee } from "lucide-react";
-import { dummyLoanProducts } from "../../../lib/dumyData";
 import StatusCard from "../../../components/common/StatusCard";
 import LoanProductTable from "../../../components/tables/LoanProductTable";
 import Button from "../../../components/ui/Button";
 import AddLoanTypesModal from "../../../components/modals/AddLoanTypesModal";
+import { useDeleteLoanType, useLoanTypes } from "../../../hooks/useLoanType";
 
 export default function LoanProduct() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { loanTypes, loading } = useLoanTypes();
+  const deleteLoanTypeMutation = useDeleteLoanType();
   const [showAddLoanPopup, setShowAddLoanPopup] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
-  const mappedProducts = (Array.isArray(products) ? products : []).map((p) => ({
+
+  const products = useMemo(
+    () => (Array.isArray(loanTypes) ? loanTypes : []),
+    [loanTypes],
+  );
+
+  const mappedProducts = products.map((p) => ({
     id: p.id,
     name: p.name || "Unnamed Product",
     category: p.category ? p.category.replace("_", " ") : "Unknown",
@@ -24,34 +30,34 @@ export default function LoanProduct() {
       p.minTenureMonths && p.maxTenureMonths
         ? `${p.minTenureMonths / 12}-${p.maxTenureMonths / 12} yrs`
         : "Tenure not set",
-    fee: `${p.processingFee || 0}%`,
-    status: p.status || "active",
+    fee:
+      p.processingFeeType === "FIXED"
+        ? `₹${p.processingFee || 0}`
+        : `${p.processingFee || 0}%`,
+    status: p.isActive ? "active" : "inactive",
     type: p.secured ? "Secured" : "Unsecured",
     applicants: 0,
     created: p.createdAt || new Date().toISOString(),
     original: p, // Store original data for view modal
   }));
 
-  useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
-      setProducts(dummyLoanProducts);
-      setLoading(false);
-    }, 500);
-
-    return () => window.clearTimeout(timeoutId);
-  }, []);
-
-  const deleteProduct = (id) => {
+  const deleteProduct = async (id) => {
     if (!window.confirm("Delete this product?")) return;
 
-    setProducts((prev) => prev.filter((p) => p.id !== id));
+    await deleteLoanTypeMutation.mutateAsync(id);
   };
 
   // Calculate stats
-  const activeProductsCount = products.filter(
-    (p) => p.status === "active",
-  ).length;
+  const activeProductsCount = products.filter((p) => p.isActive).length;
   const totalProducts = products.length;
+  const averageInterestRate = useMemo(() => {
+    if (!products.length) return "0%";
+    const totalDefaultInterest = products.reduce(
+      (sum, product) => sum + (Number(product.defaultInterestRate) || 0),
+      0,
+    );
+    return `${(totalDefaultInterest / products.length).toFixed(1)}%`;
+  }, [products]);
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8">
@@ -101,7 +107,7 @@ export default function LoanProduct() {
 
         <StatusCard
           title="Avg Interest Rate"
-          value="9.8%"
+          value={averageInterestRate}
           icon={Percent}
           variant="orange"
         />
