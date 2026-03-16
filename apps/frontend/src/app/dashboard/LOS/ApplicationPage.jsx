@@ -67,16 +67,21 @@ export default function ProfessionalNBFCPortal() {
     {
       header: "Risk Grade (CIBIL)",
       accessor: "cibilScore",
-      render: (score) => (
-        <div className="flex flex-col">
-          <span className={`text-sm font-bold ${score >= 750 ? "text-green-600" : "text-orange-500"}`}>
-            {score || "---"}
-          </span>
-          <div className="w-16 h-1 bg-slate-100 rounded-full overflow-hidden">
-             <div className="h-full bg-blue-500" style={{ width: `${(score/900)*100}%` }}></div>
+      render: (score) => {
+        const safeScore = Math.max(0, Math.min(900, score || 0));
+        const pct = (safeScore / 900) * 100;
+
+        return (
+          <div className="flex flex-col">
+            <span className={`text-sm font-bold ${safeScore >= 750 ? "text-green-600" : "text-orange-500"}`}>
+              {score || "---"}
+            </span>
+            <div className="w-16 h-1 bg-slate-100 rounded-full overflow-hidden">
+              <div className="h-full bg-blue-500" style={{ width: `${pct}%` }}></div>
+            </div>
           </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       header: "Status",
