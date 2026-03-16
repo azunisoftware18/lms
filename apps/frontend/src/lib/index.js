@@ -25,3 +25,12 @@ export const getTypeColor = (type) => {
   }
 };
 
+export const colorClassMap = {
+  blue: { bg: "bg-blue-50", iconBg: "bg-blue-600" },
+  green: { bg: "bg-green-50", iconBg: "bg-green-600" },
+  purple: { bg: "bg-purple-50", iconBg: "bg-purple-600" },
+  yellow: { bg: "bg-yellow-50", iconBg: "bg-yellow-600" },
+  orange: { bg: "bg-orange-50", iconBg: "bg-orange-600" },
+  red: { bg: "bg-red-50", iconBg: "bg-red-600" },
+};
+

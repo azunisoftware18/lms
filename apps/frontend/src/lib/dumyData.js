@@ -17,16 +17,421 @@ import {
 	Gem,
 	Leaf,
 	Lightbulb,
+  FileText,
 	CreditCard,
 	Banknote,
 	Home,
-	User,
-  BarChart2,
-  FileText,
-  Settings,
-  Building2,
+	User,  
+  Globe,
+  Scale,
+  MessageSquare,
+  Star,
+  Phone,
+  Mail,
+  Building,
+  CheckCircle,
+  Clock,
+  Lock,
+  ThumbsUp,
+  IndianRupee,
 } from 'lucide-react';
 // import FinovaLogo from '../../assets/finova_logo.avif';
+
+
+// Company Information
+export const companyInfo = {
+  name: 'Mascot Projects Private Limited',
+  shortName: 'Mascot Projects',
+  estYear: 2010,
+  headquarters: 'Jaipur',
+  registrationNo: 'B-14.12345',
+  phone: '+91 8094932111',
+  email: 'care@mascotfin.in',
+  address: '302-303, Third Floor, Goyal Tower, Transport Nagar, Jaipur, Rajasthan 302003',
+  workingHours: 'Mon-Sat: 9:30 AM - 6:30 PM'
+};
+
+
+// Company Philosophy / Commitment
+export const commitmentData = {
+  title: 'Our Commitment',
+  paragraphs: [
+    'At Mascot Projects Private Limited, we believe that access to responsible and timely finance plays a vital role in empowering individuals and enabling businesses to grow. As a registered Non-Banking Financial Company based in Jaipur, our objective is to bridge the gap between financial needs and accessible credit solutions.',
+    'Over the years, the financial landscape in India has evolved significantly, creating new opportunities for individuals, entrepreneurs, and small businesses. At Mascot Projects Private Limited, we are committed to supporting this growth by offering transparent, reliable, and customer-centric lending solutions.',
+    'Our focus has always been on building long-term relationships with our customers by maintaining trust, ethical practices, and responsible lending standards. Through our key financial products including Personal Loans, Loan Against Property, and Secured Business Loans, we aim to help customers meet their financial aspirations while ensuring financial discipline and stability.',
+    'We continue to strengthen our processes, risk management practices, and service standards so that our customers receive efficient and seamless financial support when they need it the most.',
+    'As we move forward, our goal is to expand our reach, embrace innovation, and remain a trusted financial partner for individuals and businesses across India.'
+  ]
+};
+
+
+// Vision Data
+export const visionData = {
+  title: 'Our Vision',
+  mainText: 'To become a trusted and progressive financial institution that empowers individuals, professionals, and businesses with easy access to responsible credit, while contributing to sustainable economic growth across India.',
+  secondaryText: 'Building a lending ecosystem where financial solutions are simple, transparent, and accessible, enabling customers to unlock opportunities and achieve long-term financial success.'
+};
+
+
+// Mission Data
+export const missionData = {
+  title: 'Our Mission',
+  subtitle: 'Delivering reliable, transparent, and customer-centric financial solutions',
+  points: [
+    { text: 'Provide quick and efficient lending solutions with simplified processes.', icon: Zap },
+    { text: 'Offer tailored financial products such as Personal Loans, Loan Against Property, and Secured Business Loans.', icon: Briefcase },
+    { text: 'Maintain the highest standards of compliance, governance, and ethical lending practices.', icon: Shield },
+    { text: 'Leverage technology and efficient processes to deliver a seamless borrowing experience.', icon: Globe },
+    { text: 'Build long-term relationships based on trust, reliability, and financial empowerment.', icon: Users }
+  ]
+};
+
+
+// Core Values Data
+export const coreValuesData = [
+  {
+    title: 'Integrity',
+    description: 'We conduct our business with the highest standards of honesty, transparency, and ethical practices, ensuring trust in every relationship we build.',
+    icon: Shield,
+    color: 'blue'
+  },
+  {
+    title: 'Customer First',
+    description: 'Our customers are at the heart of everything we do. We aim to provide solutions that are simple, responsive, and aligned with their financial goals.',
+    icon: Users,
+    color: 'green'
+  },
+  {
+    title: 'Responsibility',
+    description: 'As a responsible lending institution, we promote prudent credit practices and financial discipline, ensuring sustainable growth for both our customers and the organization.',
+    icon: Scale,
+    color: 'purple'
+  },
+  {
+    title: 'Excellence',
+    description: 'We continuously strive to improve our processes, services, and products to deliver high-quality financial solutions with efficiency and professionalism.',
+    icon: Star,
+    color: 'yellow'
+  },
+  {
+    title: 'Growth Partnership',
+    description: 'We believe in supporting the financial progress of individuals and businesses, helping them grow and succeed through timely and reliable credit solutions.',
+    icon: TrendingUp,
+    color: 'orange'
+  }
+];
+
+
+// Why Choose Us Data
+export const whyChooseUsData = [
+  {
+    title: 'RBI Registered NBFC',
+    description: 'As a registered Non-Banking Financial Company, we operate under regulatory guidelines, ensuring trust, transparency, and compliance in all our financial services.',
+    icon: Landmark,
+    color: 'blue'
+  },
+  {
+    title: 'Customer-Centric Approach',
+    description: 'We place our customers at the center of everything we do, providing tailored loan solutions that suit individual and business financial needs.',
+    icon: Users,
+    color: 'green'
+  },
+  {
+    title: 'Quick & Simplified Loan Process',
+    description: 'Our streamlined loan processing system enables faster approvals and minimal documentation, making borrowing easier and more convenient.',
+    icon: Clock,
+    color: 'purple'
+  },
+  {
+    title: 'Transparent Lending Practices',
+    description: 'We maintain complete transparency in terms of interest rates, fees, and repayment structures, ensuring customers clearly understand their financial commitments.',
+    icon: FileText,
+    color: 'yellow'
+  },
+  {
+    title: 'Flexible Financial Solutions',
+    description: 'Our loan products such as Personal Loans, Loan Against Property, and Secured Business Loans are designed to support diverse financial requirements.',
+    icon: Briefcase,
+    color: 'orange'
+  },
+  {
+    title: 'Strong Risk & Compliance Framework',
+    description: 'We follow prudent credit assessment and compliance standards to ensure responsible lending and long-term sustainability.',
+    icon: Shield,
+    color: 'red'
+  }
+];
+
+
+// Loan Products Data
+export const loanProductsData = {
+  personal: {
+    title: 'Personal Loans',
+    description: 'Mascot Projects Private Limited offers Personal Loans designed to meet immediate financial needs such as medical expenses, travel, education, weddings, or other personal commitments. Our personal loans are structured to provide quick access to funds with simple documentation and flexible repayment options.',
+    icon: Users,
+    color: 'green',
+    keyFeatures: [
+      'Quick loan processing and approval',
+      'Minimal documentation',
+      'Competitive interest rates',
+      'Flexible repayment tenure',
+      'Transparent loan structure'
+    ],
+    whyChoose: 'Our aim is to ensure customers can access funds easily without complex procedures, helping them manage their financial requirements efficiently.',
+    details: {
+      amount: '₹50K - ₹25L',
+      rate: '10.99% p.a.',
+      tenure: '12-84 months',
+      approval: '24hr Approval'
+    }
+  },
+  lap: {
+    title: 'Loan Against Property',
+    description: 'Our Loan Against Property product allows individuals and businesses to unlock the value of their residential or commercial property to meet larger financial needs. This product is ideal for business expansion, working capital requirements, education funding, or major personal financial goals.',
+    icon: Home,
+    color: 'purple',
+    keyFeatures: [
+      'Higher loan eligibility based on property value',
+      'Competitive interest rates',
+      'Flexible repayment tenure',
+      'Suitable for business or personal financial needs',
+      'Secured financing with structured assessment'
+    ],
+    whyChoose: 'Mascot Projects Private Limited ensures a transparent and efficient property-backed lending process, helping customers leverage their assets effectively.',
+    details: {
+      amount: '₹10L - ₹5Cr',
+      rate: '8.75% p.a.',
+      tenure: 'Up to 15 years',
+      value: '70% of property value'
+    }
+  },
+  securedBusiness: {
+    title: 'Secured Business Loans',
+    description: 'Mascot Projects Private Limited provides Secured Business Loans to support entrepreneurs, MSMEs, and growing businesses in meeting their capital requirements. These loans help businesses manage working capital, expansion plans, equipment purchases, and operational growth.',
+    icon: Briefcase,
+    color: 'orange',
+    keyFeatures: [
+      'Designed for small and medium businesses',
+      'Flexible loan amounts based on collateral',
+      'Competitive interest rates',
+      'Structured repayment plans',
+      'Fast loan processing'
+    ],
+    whyChoose: 'Whether you need working capital, want to expand, or purchase equipment, our secured business loans provide the financial support you need to take your business to the next level.',
+    details: {
+      amount: '₹10L - ₹5Cr',
+      rate: '9.5% p.a.',
+      tenure: '12-60 months',
+      type: 'For MSMEs'
+    }
+  }
+};
+
+
+
+// Core Loan Products Overview
+export const coreLoanProducts = [
+  {
+    title: 'Personal Loan',
+    amount: '₹50,000 - ₹25 Lakhs',
+    rate: 'Starting 10.99% p.a',
+    tenure: '12-84 months',
+    icon: Users,
+    color: 'green',
+    desc: 'Medical, travel, education, weddings & more'
+  },
+  {
+    title: 'Loan Against Property',
+    amount: '₹10 Lakhs - ₹5 Cr',
+    rate: 'Starting 8.75% p.a',
+    tenure: 'Up to 15 years',
+    icon: Home,
+    color: 'purple',
+    desc: 'Residential or commercial property'
+  },
+  {
+    title: 'Secured Business Loan',
+    amount: '₹10 Lakhs - ₹5 Cr',
+    rate: 'Starting 9.5% p.a',
+    tenure: '12-60 months',
+    icon: Briefcase,
+    color: 'orange',
+    desc: 'Working capital, expansion, equipment'
+  }
+];
+
+
+
+// Company Strength Data
+export const companyStrengthData = {
+  stats: [
+    { number: '50K+', label: 'Happy Customers', icon: Users },
+    { number: '₹1000Cr+', label: 'Loans Disbursed', icon: IndianRupee },
+    { number: '25+', label: 'Branches Across India', icon: Briefcase },
+    { number: '14+', label: 'Years of Excellence', icon: Award }
+  ],
+  accreditations: [
+    'Registered with RBI as NBFC',
+    'ISO 9001:2015 Certified',
+    'CIBIL Authorised Partner'
+  ],
+  awards: [
+    'Best MSME Lender 2023',
+    'Excellence in Customer Service 2022'
+  ]
+};
+
+
+// Fair Practices Code Data
+export const fairPracticesData = {
+  title: 'Fair Practices Code',
+  description: 'Mascot Projects Private Limited is committed to adopting fair, transparent, and responsible lending practices in all its dealings with customers. This Fair Practices Code has been framed in accordance with the guidelines issued by the Reserve Bank of India for Non-Banking Financial Companies.',
+  objective: 'The objective of this policy is to ensure that customers are treated fairly and that all lending activities are conducted with transparency and integrity.',
+  principles: [
+    {
+      title: 'Transparent Communication',
+      description: 'Mascot Projects Private Limited ensures that all loan terms and conditions, including interest rates, fees, repayment schedules, and penalties, are clearly communicated to customers before loan approval.',
+      icon: MessageSquare,
+      color: 'blue'
+    },
+    {
+      title: 'Proper Loan Assessment',
+      description: 'Loan applications are evaluated through a fair and systematic credit assessment process based on the borrower\'s repayment capacity and financial profile.',
+      icon: FileCheck,
+      color: 'green'
+    },
+    {
+      title: 'Clear Loan Documentation',
+      description: 'Customers will be provided with copies of the loan agreement along with all relevant terms and conditions at the time of loan sanction and disbursement.',
+      icon: FileText,
+      color: 'purple'
+    },
+    {
+      title: 'Non-Discriminatory Practices',
+      description: 'The company follows a non-discriminatory approach in dealing with customers and does not discriminate based on gender, religion, caste, or region.',
+      icon: Users,
+      color: 'yellow'
+    },
+    {
+      title: 'Privacy & Confidentiality',
+      description: 'All customer information and financial data are treated as strictly confidential and are used only for legitimate business purposes.',
+      icon: Lock,
+      color: 'orange'
+    },
+    {
+      title: 'Responsible Recovery Practices',
+      description: 'Loan recovery procedures are conducted in a professional, courteous, and ethical manner without harassment or undue pressure.',
+      icon: Phone,
+      color: 'red'
+    }
+  ]
+};
+
+
+// Grievance Redressal Data
+export const grievanceData = {
+  title: 'Grievance Redressal Mechanism',
+  description: 'Mascot Projects Private Limited believes in maintaining strong relationships with its customers by addressing their concerns promptly and effectively. The company has established a structured grievance redressal mechanism to resolve customer complaints in a fair and timely manner.',
+  supportChannels: [
+    {
+      type: 'Customer Service Email',
+      value: 'care@mascotfin.in',
+      icon: Mail,
+      note: '24x7 Support',
+      color: 'blue'
+    },
+    {
+      type: 'Customer Care Phone',
+      value: '+91 8094932111',
+      icon: Phone,
+      note: 'Mon-Sat: 9:30 AM - 6:30 PM',
+      color: 'green'
+    },
+    {
+      type: 'Written Complaint',
+      value: 'Registered Office',
+      icon: FileText,
+      note: '302-303, Goyal Tower, Transport Nagar, Jaipur',
+      color: 'purple'
+    }
+  ],
+  processSteps: [
+    { step: 1, title: 'Register Complaint', description: 'Email, phone, or written communication', icon: MessageSquare },
+    { step: 2, title: 'Internal Review', description: 'Reviewed by grievance officer', icon: FileCheck },
+    { step: 3, title: 'Resolution Timeline', description: '7-15 working days', icon: Clock },
+    { step: 4, title: 'Escalation', description: 'To Grievance Redressal Officer', icon: TrendingUp },
+    { step: 5, title: 'RBI Ombudsman', description: 'Regulatory escalation if unresolved', icon: Shield }
+  ],
+  officerDetails: {
+    name: 'Mr. Rajesh Sharma',
+    phone: '+91 8094932111',
+    email: 'grievance@mascotfin.in',
+    address: '302-303, Goyal Tower, Transport Nagar, Jaipur'
+  }
+};
+
+
+// Loan Application Process Data
+export const loanProcessSteps = [
+  { step: 1, title: 'Apply Online', icon: FileText, desc: 'Fill simple application form' },
+  { step: 2, title: 'Document Submission', icon: CheckCircle, desc: 'Upload basic documents' },
+  { step: 3, title: 'Verification', icon: ThumbsUp, desc: 'Quick verification process' },
+  { step: 4, title: 'Loan Disbursement', icon: DollarSign, desc: 'Get money in your account' }
+];
+
+
+// Hero Section Data
+export const heroData = {
+  tagline: 'Your Trusted Partner in Financial Growth & Business Solutions',
+  description: 'Empowering businesses and individuals with tailored loan solutions, expert financial guidance, and unmatched support.',
+  keyProducts: [
+    { 
+      name: 'Personal Loan', 
+      icon: Users, 
+      desc: 'Medical, travel, education, weddings & more',
+      features: 'Quick processing • Minimal docs • Flexible tenure',
+      color: 'bg-green-100',
+      link: '/personal-loan'
+    },
+    { 
+      name: 'Loan Against Property', 
+      icon: Home, 
+      desc: 'Unlock value of residential/commercial property',
+      features: 'Higher eligibility • Competitive rates • Long tenure',
+      color: 'bg-purple-100',
+      link: '/loan-against-property'
+    },
+    { 
+      name: 'Secured Business Loan', 
+      icon: Briefcase, 
+      desc: 'Working capital, expansion, equipment purchase',
+      features: 'For MSMEs • Flexible amounts • Fast processing',
+      color: 'bg-yellow-100',
+      link: '/secured-business-loan'
+    },
+    { 
+      name: 'Business Loan', 
+      icon: Building, 
+      desc: 'Support for entrepreneurs & growing businesses',
+      features: 'Competitive rates • Structured repayment',
+      color: 'bg-blue-100',
+      link: '/business-loan'
+    }
+  ]
+};
+
+
+// Images
+export const dumyImg = {
+  HERO_BANNER: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  ABOUT_US: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  LEADERSHIP: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  PERSONAL_LOAN: 'https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  LAP: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  BUSINESS_LOAN: 'https://images.unsplash.com/photo-1556740714-a8395b3bf30f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+};
+
+
 
 export const keyPillars = [
 	{
@@ -48,20 +453,6 @@ export const keyPillars = [
 			'Supported by renowned investors like Peak XV Partners and Norwest Venture Partners.',
 	},
 ];
-
-export const dumyImg = {
-	ABOUT_US:
-		'https://plus.unsplash.com/premium_photo-1675055730240-96a4ed84e482?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=627',
-
-	LEADERSHIP:
-		'https://images.unsplash.com/photo-1652565436975-5ac0c22fb3ee?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170',
-
-	OPPORTUNITY:
-		'https://www.shutterstock.com/shutterstock/photos/2622897831/display_1500/stock-photo-senior-indian-couple-with-young-daughter-discussing-financial-paperwork-with-male-advisor-or-bank-2622897831.jpg',
-
-	HOMEIMG2:
-		'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmluYW5jZSUyMGNlbnRlcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60',
-};
 
 // Dummy Data for Annual Reports and Returns (categorized by year)
 export const annualData = {
@@ -284,7 +675,7 @@ export const financialData = {
 export const features = [
 	{
 		title: 'Smart Budgeting',
-		icon: DollarSign,
+		icon: IndianRupee,  
 		description:
 			'Automatically categorize transactions and set budget limits with real-time alerts.',
 	},
@@ -1895,103 +2286,205 @@ export const dummyBranchAdmins = [
   }
 ];
 
-export const dummyLoanProducts = [
+// Add this products array to your existing dumyData.js file
+export const products = [
   {
     id: 1,
-    name: "Personal Loan Standard",
-    category: "PERSONAL_LOAN",
-    minInterestRate: 9,
-    maxInterestRate: 14,
-    minAmount: 50000,
-    maxAmount: 500000,
-    minTenureMonths: 12,
-    maxTenureMonths: 60,
-    processingFee: 2,
-    secured: false,
-    createdAt: "2024-01-12",
-    status: "active",
-    minAge: 21,
-    maxAge: 60,
-    minIncome: 20000,
-    minCibilScore: 650,
-    maxCibilScore: 900,
-    prepaymentAllowed: true,
-    foreclosureAllowed: true,
+    name: 'Smart Wallet',
+    description: 'Digital wallet for seamless transactions and expense tracking',
+    icon: 'Wallet',
+    route: '/products/smart-wallet'
   },
   {
     id: 2,
-    name: "Vehicle Loan Premium",
-    category: "VEHICLE_LOAN",
-    minInterestRate: 8,
-    maxInterestRate: 12,
-    minAmount: 100000,
-    maxAmount: 2000000,
-    minTenureMonths: 12,
-    maxTenureMonths: 84,
-    processingFee: 1.5,
-    secured: true,
-    createdAt: "2024-02-05",
-    status: "active",
-    minAge: 21,
-    maxAge: 65,
-    minIncome: 25000,
-    minCibilScore: 680,
-    maxCibilScore: 900,
-    prepaymentAllowed: true,
-    foreclosureAllowed: false,
+    name: 'Premium Card',
+    description: 'Zero-fee credit card with cashback rewards',
+    icon: 'CreditCard',
+    route: '/products/premium-card'
+  },
+  {
+    id: 3,
+    name: 'Investment Hub',
+    description: 'Start investing with as little as $10',
+    icon: 'TrendingUp',
+    route: '/products/investment'
+  },
+  {
+    id: 4,
+    name: 'Secure Vault',
+    description: 'Bank-grade security for your savings',
+    icon: 'Shield',
+    route: '/products/vault'
   }
 ];
 
-export const modules = [
-    { id: 'dashboard', name: 'Dashboard', icon: BarChart2, description: 'Analytics and overview' },
-    { id: 'customers', name: 'Customers', icon: Users, description: 'Customer management' },
-    { id: 'loans', name: 'Loans', icon: CreditCard, description: 'Loan processing' },
-    { id: 'payments', name: 'Payments', icon: FileText, description: 'Payment collection' },
-    { id: 'reports', name: 'Reports', icon: BarChart2, description: 'Reports and analytics' },
-    { id: 'settings', name: 'Settings', icon: Settings, description: 'System configuration' },
-    { id: 'adminManagement', name: 'Admin Management', icon: Lock, description: 'Admin controls' },
-    { id: 'branch', name: 'Branch Management', icon: Building2, description: 'Branch operations' },
-  ];
 
-  export const initialRoles = [
-      {
-        id: 1,
-        name: 'Super Admin',
-        description: 'Complete system access with all permissions',
-        email: 'superadmin@loanapp.com',
-        password: 'admin123',
-        permissions: ['dashboard', 'customers', 'loans', 'payments', 'reports', 'settings', 'adminManagement', 'branch'],
-        userCount: 1,
-        color: 'bg-red-50 text-red-700 border-red-200'
-      },
-      {
-        id: 2,
-        name: 'Manager',
-        description: 'Managerial access for loan operations',
-        email: 'manager@loanapp.com',
-        password: 'manager123',
-        permissions: ['dashboard', 'customers', 'loans', 'payments', 'reports'],
-        userCount: 3,
-        color: 'bg-blue-50 text-blue-700 border-blue-200'
-      },
-      {
-        id: 3,
-        name: 'Accountant',
-        description: 'Financial operations and payments',
-        email: 'accountant@loanapp.com',
-        password: 'accountant123',
-        permissions: ['dashboard', 'payments', 'reports'],
-        userCount: 2,
-        color: 'bg-green-50 text-green-700 border-green-200'
-      },
-      {
-        id: 4,
-        name: 'Telecaller',
-        description: 'Customer communication and follow-ups',
-        email: 'telecaller@loanapp.com',
-        password: 'telecaller123',
-        permissions: ['dashboard', 'customers'],
-        userCount: 5,
-        color: 'bg-purple-50 text-purple-700 border-purple-200'
-      },
-    ];
+// Add testimonials
+export const testimonials = [
+  {
+    name: 'Rajesh Kumar',
+    role: 'Business Owner',
+    content: 'Got my business loan approved in just 2 days. Mascot Projects made the process so smooth and hassle-free!',
+    rating: 5,
+    image: ''
+  },
+  {
+    name: 'Priya Sharma',
+    role: 'Home Buyer',
+    content: 'The team guided me through the entire home loan process. Best interest rates and transparent dealings.',
+    rating: 5,
+    image: ''
+  },
+  {
+    name: 'Amit Patel',
+    role: 'Entrepreneur',
+    content: 'Excellent service! They understood my business needs and provided the perfect loan solution.',
+    rating: 5,
+    image: ''
+  }
+];
+
+// Add loan products data
+export const loanProducts = [
+  {
+    id: 1,
+    name: 'Business Loan',
+    description: 'Expand your business with our flexible business loans',
+    minAmount: '₹10 Lakhs',
+    maxAmount: '₹2 Cr',
+    interestRate: '10.5% - 14%',
+    tenure: '12-60 months',
+    icon: 'Briefcase'
+  },
+  {
+    id: 2,
+    name: 'Personal Loan',
+    description: 'Meet your personal financial needs',
+    minAmount: '₹50,000',
+    maxAmount: '₹25 Lakhs',
+    interestRate: '11.99% - 18%',
+    tenure: '12-84 months',
+    icon: 'Users'
+  },
+  {
+    id: 3,
+    name: 'Home Loan',
+    description: 'Make your dream home a reality',
+    minAmount: '₹5 Lakhs',
+    maxAmount: '₹5 Cr',
+    interestRate: '8.5% - 11%',
+    tenure: 'Up to 30 years',
+    icon: 'Home'
+  },
+  {
+    id: 4,
+    name: 'Education Loan',
+    description: 'Fund your education in India or abroad',
+    minAmount: '₹2 Lakhs',
+    maxAmount: '₹50 Lakhs',
+    interestRate: '9.5% - 13%',
+    tenure: 'Up to 15 years',
+    icon: 'Award'
+  }
+];
+
+
+// Company Overview Data
+export const companyOverview = {
+  title: "Welcome to Mascot Projects Private Limited",
+  description: [
+    {
+      type: "highlight",
+      content: "<strong>Mascot Projects Private Limited</strong> is a trusted <strong>RBI-registered Non-Banking Financial Company (NBFC)</strong> headquartered in <strong>Jaipur</strong>, committed to providing accessible and responsible financial solutions to individuals, entrepreneurs, and businesses."
+    },
+    {
+      type: "normal",
+      content: "With a strong focus on customer convenience and transparent lending practices, Mascot Projects Private Limited offers a range of tailored financial products designed to meet diverse financial needs. Our core offerings include <strong>Personal Loans, Loan Against Property (LAP), and Secured Business Loans</strong>, helping customers unlock financial opportunities and achieve their personal and business goals."
+    },
+    {
+      type: "commitment",
+      content: "At Mascot Projects Private Limited, we believe that access to timely finance is essential for growth and stability. Our lending approach combines prudent risk management, simplified processes, and customer-centric service to deliver quick and reliable credit solutions."
+    },
+    {
+      type: "normal",
+      content: "We take pride in our <strong>customer-first approach</strong>, ensuring that every financial solution is tailored to meet the unique requirements of our clients. Our team of experienced professionals works tirelessly to make the loan process smooth, transparent, and hassle-free."
+    }
+  ],
+  closingTagline: "Join hands with Mascot Projects Private Limited and experience financial solutions designed for your success!"
+};
+
+
+// Chairman Message Data
+export const chairmanMessageData = {
+  name: "Chairman",
+  designation: "Mascot Projects Private Limited",
+  image: dumyImg.LEADERSHIP,
+  messages: [
+    "At Mascot Projects Private Limited, we are committed to building a trusted and progressive financial institution that empowers individuals, professionals, and businesses with easy access to responsible credit. Our vision is to contribute to sustainable economic growth across India by creating a lending ecosystem where financial solutions are simple, transparent, and accessible to all.",
+    "We believe that every individual and business deserves the opportunity to unlock their potential and achieve long-term financial success. With this belief at our core, we continuously strive to deliver reliable, transparent, and customer-centric financial solutions that support the evolving needs of our customers.",
+    "Our journey is guided by the values of integrity, customer-first approach, responsibility, excellence, and growth partnership. These principles shape our decisions and actions as we work towards making a positive impact in the lives of our customers and the communities we serve."
+  ]
+};
+
+
+// Company Philosophy Data
+export const philosophyData = [
+  {
+    title: "Customer-Centric Approach",
+    description: "We believe that every financial solution should be tailored to meet the unique requirements of our customers. Our processes are designed with customer convenience as the top priority, ensuring a smooth and hassle-free experience.",
+    icon: Users,
+    color: "blue"
+  },
+  {
+    title: "Transparent Lending",
+    description: "We maintain complete transparency in all our dealings with no hidden charges. Our customers deserve to understand every aspect of their financial products before making decisions, building trust through openness.",
+    icon: Scale,
+    color: "green"
+  },
+  {
+    title: "Prudent Risk Management",
+    description: "Our lending approach combines prudent risk management with simplified processes to deliver quick and reliable credit solutions while maintaining financial stability and protecting the interests of all stakeholders.",
+    icon: Shield,
+    color: "purple"
+  },
+  {
+    title: "Simplified Processes",
+    description: "We believe that access to timely finance should be hassle-free. Our streamlined procedures ensure quick approvals and disbursals without unnecessary complexity, making borrowing a smooth experience for our customers.",
+    icon: Zap,
+    color: "yellow"
+  }
+];
+
+
+// Compliance Data
+export const complianceData = {
+  title: "Compliance & Governance",
+  subtitle: "Upholding the highest standards of regulatory compliance and corporate governance",
+  rbiCompliance: {
+    title: "RBI Registration & Compliance",
+    description: "Mascot Projects Private Limited is a fully compliant RBI-registered Non-Banking Financial Company (NBFC), adhering to all regulatory guidelines and requirements.",
+    points: [
+      { text: "RBI Registered NBFC", subtext: "Registration No. B-14.12345" },
+      { text: "Fully compliant", subtext: "with RBI Fair Practices Code" },
+      { text: "Regular audits", subtext: "by empaneled chartered accountant firms" },
+      { text: "Strict adherence", subtext: "to KYC & AML guidelines" }
+    ]
+  },
+  corporateGovernance: {
+    title: "Corporate Governance",
+    description: "We maintain robust corporate governance practices with experienced leadership and comprehensive oversight mechanisms to ensure ethical operations.",
+    points: [
+      { text: "Experienced Board of Directors", subtext: "providing strategic guidance" },
+      { text: "Regular board meetings", subtext: "and committee reviews" },
+      { text: "Whistle-blower policy", subtext: "in place for ethical governance" },
+      { text: "Robust risk management", subtext: "framework for financial stability" }
+    ]
+  },
+  highlights: [
+    { icon: FileText, text: 'RBI Registered NBFC', subtext: 'Reg No. B-14.12345' },
+    { icon: Lock, text: 'Data Security', subtext: 'Certified & Protected' },
+    { icon: Scale, text: 'Fair Practices', subtext: 'RBI Code Compliant' },
+    { icon: CheckCircle, text: 'Regular Audits', subtext: 'Quarterly Reviews' }
+  ],
+  statement: "Mascot Projects Private Limited is committed to maintaining the highest standards of regulatory compliance and corporate governance, ensuring trust and transparency in all our financial operations."
+};

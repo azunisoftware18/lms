@@ -22,7 +22,7 @@ export default function LeadFormModal ({ isOpen, onClose }) {
             <h2 className="text-xl font-bold text-slate-800">Apply Now</h2>
             <p className="text-sm text-slate-500">Fill in the details to apply loan</p>
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="p-2 hover:bg-white hover:shadow-sm rounded-full text-slate-400 hover:text-red-500 transition-all border border-transparent hover:border-slate-100"
           >
