@@ -1,4 +1,4 @@
-import { ArrowRight, FileText, CheckCircle, ThumbsUp, DollarSign } from 'lucide-react';
+import { ArrowRight} from 'lucide-react';
 import { loanProcessSteps } from '../../../lib/dumyData';
 
 export default function LoanProcessSection() {
