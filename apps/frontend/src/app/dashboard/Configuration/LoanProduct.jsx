@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Plus, Percent, Users, CheckCircle, IndianRupee } from "lucide-react";
 import StatusCard from "../../../components/common/StatusCard";
 import LoanProductTable from "../../../components/tables/LoanProductTable";
@@ -26,6 +26,14 @@ export default function LoanProduct() {
     return `${(numericAmount / 100000).toFixed(1)} L`;
   };
 
+  const formatTenureYears = (months) => {
+    const numericMonths = Number(months || 0);
+    if (!numericMonths) return "0 yrs";
+
+    const years = numericMonths / 12;
+    return `${Number(years.toFixed(2))}`;
+  };
+
   const mappedProducts = products.map((p) => ({
     id: p.id,
     name: p.name || "Unnamed Product",
@@ -37,7 +45,7 @@ export default function LoanProduct() {
         : "Amount not set",
     tenure:
       p.minTenureMonths && p.maxTenureMonths
-        ? `${p.minTenureMonths / 12}-${p.maxTenureMonths / 12} yrs`
+        ? `${formatTenureYears(p.minTenureMonths)}-${formatTenureYears(p.maxTenureMonths)} yrs`
         : "Tenure not set",
     fee:
       p.processingFeeType === "FIXED"
