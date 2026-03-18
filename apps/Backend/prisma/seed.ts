@@ -99,8 +99,7 @@ async function main(): Promise<void> {
     }),
   ]);
 
-  console.log(" Seed completed successfully:", user);
-  console.log(" Permissions created/updated:", permissions.length);
+  console.log(" Seed completed successfully. Admin user:", user.userName);  console.log(" Permissions created/updated:", permissions.length);
   console.log(" Head Office Branch created:", superBranch);
   console.log(" SLA Policies created:", slaPolicies.length);
 }

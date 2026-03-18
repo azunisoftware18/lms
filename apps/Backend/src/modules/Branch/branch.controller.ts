@@ -58,11 +58,14 @@ export const getAllBranchesController = async (
   next: NextFunction,
 ) => {
   try {
+    if (!req.user) {
+      throw AppError.unauthorized("Unauthorized");
+    }
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const search = (req.query.search || req.query.q) as string;
     
-    const branches = await getAllBranchesService((req as any).user, {
+    const branches = await getAllBranchesService(req.user, {
       page,
       limit,
       search,

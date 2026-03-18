@@ -1,11 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
+import { apiGet, apiPost } from "../lib/api/apiClient";
 import { showSuccess, showError } from "../lib/utils/toastService";
-import {
-  getAllLegalReports,
-  createLegalReport,
-  approveLegalReport,
-} from "../lib/api/legalReport.api";
+import { normalizeParams } from "../lib/utils/paramHelper";
 import {
   setLoading,
   setError,
@@ -15,12 +12,13 @@ import {
   updateLegalReportInList,
 } from "../store/slices/legalReportSlice";
 
-export const useLegalReports = (params) => {
+export const useLegalReports = (params = {}) => {
   const dispatch = useDispatch();
+  const normalizedParams = normalizeParams(params);
 
   return useQuery({
-    queryKey: ["legalReports", params],
-    queryFn: () => getAllLegalReports(params),
+    queryKey: ["legalReports", normalizedParams],
+    queryFn: () => apiGet("/legal-reports", { params: normalizedParams }),
     onSuccess: (data) => {
       dispatch(setLegalReports(data));
       dispatch(clearError());
@@ -38,7 +36,7 @@ export const useCreateLegalReport = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: createLegalReport,
+    mutationFn: ({ loanId, data }) => apiPost(`/loan/${loanId}/legal-report`, data),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -63,7 +61,7 @@ export const useApproveLegalReport = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: approveLegalReport,
+    mutationFn: (reportId) => apiPost(`/legal-report/${reportId}/approve`),
     onMutate: () => {
       dispatch(setLoading(true));
     },

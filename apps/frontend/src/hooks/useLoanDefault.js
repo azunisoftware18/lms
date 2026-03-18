@@ -1,8 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
+import { apiGet } from "../lib/api/apiClient";
 import { showSuccess, showError } from "../lib/utils/toastService";
+import { normalizeParams } from "../lib/utils/paramHelper";
 import {
-  getDefaultedLoans,
   getDefaultedLoanById,
   checkLoanDefault
 } from "../lib/api/loanDefault.api";
@@ -14,12 +15,16 @@ import {
   setSelectedLoan,
 } from "../store/slices/loanDefultslice";
 
-export const useDefaultedLoans = () => {
+export const useDefaultedLoans = (params = {}) => {
   const dispatch = useDispatch();
+  const normalizedParams = normalizeParams(params);
 
   return useQuery({
-    queryKey: ["defaultedLoans"],
-    queryFn: getDefaultedLoans,
+    queryKey: ["defaultedLoans", normalizedParams],
+    queryFn: () =>
+      apiGet("/loan-default/defaulted", {
+        params: normalizedParams,
+      }),
     onSuccess: (data) => {
       dispatch(setDefaultedLoans(data));
       dispatch(clearError());

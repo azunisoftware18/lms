@@ -1,12 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
+import { apiGet, apiPost, apiPut } from "../lib/api/apiClient";
 import { showSuccess, showError } from "../lib/utils/toastService";
-import {
-  getAllKycs,
-  getMyKyc,
-  uploadKycDocuments,
-  verifyKycDocument,
-} from "../lib/api/kyc.api";
+import { normalizeParams } from "../lib/utils/paramHelper";
 import {
   setLoading,
   setError,
@@ -16,16 +12,21 @@ import {
   updateKycInList,
 } from "../store/slices/kycSlice";
 
-export const useAllKycs = (params) => {
+export const useAllKycs = (params = {}) => {
   const dispatch = useDispatch();
   const kycs = useSelector((state) => state.kyc.kycs);
   const meta = useSelector((state) => state.kyc.meta);
   const loading = useSelector((state) => state.kyc.loading);
   const error = useSelector((state) => state.kyc.error);
 
+  const normalizedParams = normalizeParams(params);
+
   const { isFetching, refetch } = useQuery({
-    queryKey: ["kycs", params],
-    queryFn: () => getAllKycs(params),
+    queryKey: ["kycs", normalizedParams],
+    queryFn: () =>
+      apiGet('/kyc/all', {
+        params: normalizedParams,
+      }),
     keepPreviousData: true,
     onSuccess: (data) => {
       dispatch(setKycs(data));
@@ -49,7 +50,7 @@ export const useMyKyc = () => {
 
   const query = useQuery({
     queryKey: ["myKyc"],
-    queryFn: getMyKyc,
+    queryFn: () => apiGet('/kyc/me'),
     onSuccess: (data) => {
       dispatch(setMyKyc(data));
       dispatch(clearError());
@@ -76,7 +77,16 @@ export const useUploadKycDocuments = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: uploadKycDocuments,
+    mutationFn: ({ id, files }) => {
+      const formData = new FormData();
+      if (files?.aadhaar_front) formData.append('aadhaar_front', files.aadhaar_front);
+      if (files?.aadhaar_back) formData.append('aadhaar_back', files.aadhaar_back);
+      if (files?.pan_card) formData.append('pan_card', files.pan_card);
+      if (files?.photo) formData.append('photo', files.photo);
+      return apiPost(`/kyc/document/${id}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+    },
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -101,7 +111,7 @@ export const useVerifyKycDocument = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: verifyKycDocument,
+    mutationFn: (id) => apiPut(`/kyc/${id}/verify`),
     onMutate: () => {
       dispatch(setLoading(true));
     },

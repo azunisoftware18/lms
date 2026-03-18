@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
+import { apiGet } from "../lib/api/apiClient";
 import { showError } from "../lib/utils/toastService";
-import { checkEligibility } from "../lib/api/ruleEngine.api";
 import {
   setLoading,
   setError,
@@ -14,7 +14,7 @@ export const useEligibility = (loanApplicationId) => {
 
   return useQuery({
     queryKey: ["eligibility", loanApplicationId],
-    queryFn: () => checkEligibility(loanApplicationId),
+    queryFn: () => apiGet(`/rule-engine/eligibility-check/${loanApplicationId}`),
     enabled: !!loanApplicationId,
     onSuccess: (data) => {
       dispatch(setEligibilityData(data));

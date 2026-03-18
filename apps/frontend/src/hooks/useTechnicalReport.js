@@ -1,11 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
+import { apiGet, apiPost } from "../lib/api/apiClient";
 import { showSuccess, showError } from "../lib/utils/toastService";
-import {
-  getAllTechnicalReports,
-  createTechnicalReport,
-  approveTechnicalReport,
-} from "../lib/api/technicalReport.api";
+import { normalizeParams } from "../lib/utils/paramHelper";
 import {
   setLoading,
   setError,
@@ -15,12 +12,13 @@ import {
   updateTechnicalReportInList,
 } from "../store/slices/technicalReportSlice";
 
-export const useTechnicalReports = (params) => {
+export const useTechnicalReports = (params = {}) => {
   const dispatch = useDispatch();
+  const normalizedParams = normalizeParams(params);
 
   return useQuery({
-    queryKey: ["technicalReports", params],
-    queryFn: () => getAllTechnicalReports(params),
+    queryKey: ["technicalReports", normalizedParams],
+    queryFn: () => apiGet("/technical-reports", { params: normalizedParams }),
     onSuccess: (data) => {
       dispatch(setTechnicalReports(data));
       dispatch(clearError());
@@ -38,7 +36,8 @@ export const useCreateTechnicalReport = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: createTechnicalReport,
+    mutationFn: ({ loanId, data }) =>
+      apiPost(`/loan-applications/${loanId}/technical-reports`, data),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -63,7 +62,7 @@ export const useApproveTechnicalReport = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: approveTechnicalReport,
+    mutationFn: (reportId) => apiPost(`/technical-reports/${reportId}/approve`),
     onMutate: () => {
       dispatch(setLoading(true));
     },

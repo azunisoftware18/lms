@@ -288,15 +288,20 @@ export const getAllBranchesService = async (
   const skip = (page - 1) * limit;
 
   const whereClause = {
-    ...scope,
-    ...(search && {
-      OR: [
-        { name: { contains: search, mode: "insensitive" as const } },
-        { code: { contains: search, mode: "insensitive" as const } },
-      ],
-    }),
+    AND: [
+      scope,
+      ...(search
+        ? [
+            {
+              OR: [
+                { name: { contains: search, mode: "insensitive" as const } },
+                { code: { contains: search, mode: "insensitive" as const } },
+              ],
+            },
+          ]
+        : []),
+    ],
   };
-
   const [branches, total] = await Promise.all([
     prisma.branch.findMany({
       where: whereClause,

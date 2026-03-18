@@ -1,14 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { showSuccess, showError } from "../lib/utils/toastService";
-import {
-  getAllPartners,
-  createPartner,
-  updatePartner,
-  createPartnerLead,
-  createPartnerLoan,
-} from "../lib/api/partner.api";
-import {
+import { apiGet, apiPost, apiPatch } from "../lib/api/apiClient";
+import { showSuccess, showError } from "../lib/utils/toastService";import { normalizeParams } from '../lib/utils/paramHelper';import {
   setLoading,
   setError,
   clearError,
@@ -18,16 +11,21 @@ import {
   setSelectedPartner,
 } from "../store/slices/partnerSlice";
 
-export const usePartners = (params) => {
+export const usePartners = (params = {}) => {
   const dispatch = useDispatch();
   const partners = useSelector((state) => state.partner.partners);
   const meta = useSelector((state) => state.partner.meta);
   const loading = useSelector((state) => state.partner.loading);
   const error = useSelector((state) => state.partner.error);
 
+  const normalizedParams = normalizeParams(params);
+
   const { isFetching, refetch } = useQuery({
-    queryKey: ["partners", params],
-    queryFn: () => getAllPartners(params),
+    queryKey: ["partners", normalizedParams],
+    queryFn: () =>
+      apiGet("/partners/all", {
+        params: normalizedParams,
+      }),
     keepPreviousData: true,
     onSuccess: (data) => {
       dispatch(setPartners(data));
@@ -48,7 +46,7 @@ export const useCreatePartner = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: createPartner,
+    mutationFn: (payload) => apiPost("/partners", payload),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -73,7 +71,7 @@ export const useUpdatePartner = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: updatePartner,
+    mutationFn: ({ id, data }) => apiPatch(`/partners/${id}`, data),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -97,7 +95,7 @@ export const useCreatePartnerLead = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: createPartnerLead,
+    mutationFn: (payload) => apiPost("/partners/create-lead", payload),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -119,7 +117,7 @@ export const useCreatePartnerLoan = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: createPartnerLoan,
+    mutationFn: (payload) => apiPost("/partners/create-loan-application", payload),
     onMutate: () => {
       dispatch(setLoading(true));
     },

@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
+import { apiGet, apiPost, apiPatch, apiDelete } from '../lib/api/apiClient';
 import { showSuccess, showError } from '../lib/utils/toastService';
+import { normalizeParams } from '../lib/utils/paramHelper';
 import {
     setEmployees,
     setLoading,
@@ -10,24 +12,19 @@ import {
     removeEmployeeFromList,
     clearError,
 } from '../store/slices/employeeSlice';
-import {
-    createEmployee,
-    getEmployees,
-    getEmployeeById,
-    updateEmployee,
-    deleteEmployee,
-    getEmployeeDashboard,
-    getEmployeeByBranchId
-} from '../lib/api/employee.api';
-
-export const useEmployees = (params) => {
+export const useEmployees = (params = {}) => {
     const dispatch = useDispatch();
     const employees = useSelector(state => state.employee.employees);
     const meta = useSelector(state => state.employee.meta);
     const loading = useSelector(state => state.employee.loading);
     const error = useSelector(state => state.employee.error);
 
-    const query = useQuery(['employees', params], () => getEmployees(params), {
+    const normalizedParams = normalizeParams(params);
+
+    const query = useQuery(['employees', normalizedParams], () =>
+        apiGet('/employee/all', {
+            params: normalizedParams,
+        }), {
         keepPreviousData: true,
         onSuccess: (data) => {
             dispatch(setEmployees(data));
@@ -76,7 +73,7 @@ export const useCreateEmployee = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation(createEmployee, {
+    return useMutation((payload) => apiPost('/employee', payload), {
         onMutate: () => {
             dispatch(setLoading(true));
         },
@@ -101,7 +98,7 @@ export const useUpdateEmployee = () => {
     const dispatch = useDispatch();
 
     return useMutation(
-        ({ id, data }) => updateEmployee(id, data),
+        ({ id, data }) => apiPatch(`/employee/${id}`, data),
         {
             onMutate: () => {
                 dispatch(setLoading(true));
@@ -127,7 +124,7 @@ export const useDeleteEmployee = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation(deleteEmployee, {
+    return useMutation((id) => apiDelete(`/employee/${id}`), {
         onMutate: () => {
             dispatch(setLoading(true));
         },
@@ -152,7 +149,7 @@ export const useEmployeeByBranchId = (branchId) => {
 
     return useQuery(
         ['employeesByBranch', branchId],
-        () => getEmployeeByBranchId(branchId),
+        () => apiGet(`/employee/branch/${branchId}`),
         {
             enabled: !!branchId,
             onSuccess: (data) => {
@@ -171,7 +168,7 @@ export const useEmployeeByBranchId = (branchId) => {
 export const useEmployeeDashboard = () => {
     const dispatch = useDispatch();
 
-    return useQuery(['employeeDashboard'], getEmployeeDashboard, {
+    return useQuery(['employeeDashboard'], () => apiGet('/employee/dashboard'), {
         onSuccess: (data) => {
             dispatch(clearError());
         },
