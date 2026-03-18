@@ -1,23 +1,36 @@
-import React, { useMemo, useState } from "react";
-import { 
-  Plus, FileText, Check, Ban, AlertCircle, Hash, 
-  IndianRupee, Users, ShieldCheck, Briefcase 
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  Plus,
+  FileText,
+  Check,
+  Ban,
+  AlertCircle,
+  Hash,
+  IndianRupee,
+  Users,
+  ShieldCheck,
+  Briefcase,
 } from "lucide-react";
 import Button from "../../../components/ui/Button";
 import StatusCard from "../../../components/common/StatusCard";
 import ApplicationPageTable from "../../../components/tables/ApplicationPageTable";
 import LoanApplicationView from "../ViewDetail/LoanApplicationView";
 import LoanApplicationForm from "../../../components/forms/LoanApplicationForm";
+import {
+  useLoanApplications,
+  useUpdateLoanStatus,
+} from "../../../hooks/useLoanApplication";
+import { SAMPLE_LOAN_APPLICATIONS } from "../../../lib/LOSDummyData";
 
 export default function ProfessionalNBFCPortal() {
   const [showForm, setShowForm] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm] = useState("");
   const [selectedApp, setSelectedApp] = useState(null);
   const [viewModalOpen, setViewModalOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage] = useState(1);
   const [showApproveDialog, setShowApproveDialog] = useState(false);
 
-  const { data: applicationsResponse, isLoading } = useLoanApplications();
+  const { data: applicationsResponse } = useLoanApplications();
   const { mutate: updateStatus } = useUpdateLoanStatus();
 
   const applications = useMemo(() => {
@@ -30,15 +43,7 @@ export default function ProfessionalNBFCPortal() {
     return apiData.length > 0 ? apiData : SAMPLE_LOAN_APPLICATIONS;
   }, [applicationsResponse]);
 
-  const shouldShowLoadingOnly =
-    isLoading && !applicationsResponse && SAMPLE_LOAN_APPLICATIONS.length === 0;
-
   const PAGE_SIZE = 10;
-
-  const handleViewDetails = (app) => {
-    setSelectedApp(app);
-    setViewModalOpen(true);
-  };
 
   const handleApproveApplication = () => {
     if (!selectedApp?.id) return;
@@ -60,63 +65,10 @@ export default function ProfessionalNBFCPortal() {
       app.customer?.panNumber?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredApplications.length / PAGE_SIZE),
-  );
   const paginatedApplications = filteredApplications.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE,
   );
-
-  const stats = {
-    total: applications.length,
-    approved: applications.filter((a) => a.status?.toLowerCase() === "approved")
-      .length,
-    rejected: applications.filter((a) => a.status?.toLowerCase() === "rejected")
-      .length,
-    pending: applications.filter(
-      (a) =>
-        a.status?.toLowerCase() === "pending" ||
-        a.status?.toLowerCase() === "kyc_pending",
-    ).length,
-  };
-
-  // Get status color
-  const getStatusColor = (status) => {
-    switch (status?.toLowerCase()) {
-      case "approved":
-        return "bg-green-100 text-green-700 border-green-200";
-      case "rejected":
-        return "bg-red-100 text-red-700 border-red-200";
-      case "pending":
-      case "kyc_pending":
-        return "bg-yellow-100 text-yellow-700 border-yellow-200";
-      default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
-    }
-  };
-
-  // Format date helper
-  const formatDate = (dateString) => {
-    if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
-
-  // Format currency helper
-  const formatCurrency = (amount) => {
-    if (!amount && amount !== 0) return "N/A";
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
 
   const tableColumns = [
     {
@@ -132,7 +84,8 @@ export default function ProfessionalNBFCPortal() {
               {`${app.applicant?.firstName || ""} ${app.applicant?.lastName || ""}`}
             </div>
             <div className="text-xs text-slate-500 flex items-center gap-1">
-              <Hash size={12} /> {app.applicant?.panNumber || "No PAN"} | {app.applicant?.category || "Gen"}
+              <Hash size={12} /> {app.applicant?.panNumber || "No PAN"} |{" "}
+              {app.applicant?.category || "Gen"}
             </div>
           </div>
         </div>
@@ -148,7 +101,8 @@ export default function ProfessionalNBFCPortal() {
             {app.occupation?.category || "Salaried"}
           </div>
           <div className="text-xs text-green-600 font-semibold">
-            Monthly: ₹{app.financials?.grossMonthlyIncome?.toLocaleString() || "0"}
+            Monthly: ₹
+            {app.financials?.grossMonthlyIncome?.toLocaleString() || "0"}
           </div>
         </div>
       ),
@@ -172,14 +126,15 @@ export default function ProfessionalNBFCPortal() {
       accessor: "cibilScore",
       render: (value) => (
         <span
-          className={`px-3 py-1.5 rounded-lg font-medium text-sm ${value >= 750
+          className={`px-3 py-1.5 rounded-lg font-medium text-sm ${
+            value >= 750
               ? "bg-green-100 text-green-700"
               : value >= 650
                 ? "bg-yellow-100 text-yellow-700"
                 : value
                   ? "bg-red-100 text-red-700"
                   : "bg-slate-100 text-slate-700"
-            }`}
+          }`}
         >
           {value ?? "N/A"}
         </span>
@@ -189,13 +144,17 @@ export default function ProfessionalNBFCPortal() {
       header: "Status",
       accessor: "status",
       render: (status) => (
-        <span className={`px-2 py-1 rounded-md text-[11px] font-bold border uppercase ${
-          status === 'approved' ? 'bg-green-50 border-green-200 text-green-700' : 'bg-amber-50 border-amber-200 text-amber-700'
-        }`}>
+        <span
+          className={`px-2 py-1 rounded-md text-[11px] font-bold border uppercase ${
+            status === "approved"
+              ? "bg-green-50 border-green-200 text-green-700"
+              : "bg-amber-50 border-amber-200 text-amber-700"
+          }`}
+        >
           {status}
         </span>
       ),
-    }
+    },
   ];
 
   useEffect(() => {
@@ -211,11 +170,7 @@ export default function ProfessionalNBFCPortal() {
   }, [showForm]);
 
   if (showForm) {
-    return (
-      <LoanApplicationForm
-        onClose={() => setShowForm(false)}
-      />
-    );
+    return <LoanApplicationForm onClose={() => setShowForm(false)} />;
   }
 
   return (
@@ -226,15 +181,21 @@ export default function ProfessionalNBFCPortal() {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <ShieldCheck className="text-blue-600" size={28} />
-              <h1 className="text-2xl font-black text-slate-900 tracking-tight">MASCOT PROJECTS LOS</h1>
+              <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+                MASCOT PROJECTS LOS
+              </h1>
             </div>
-            <p className="text-slate-500 text-sm font-medium">Non-Banking Finance Operations Control</p>
+            <p className="text-slate-500 text-sm font-medium">
+              Non-Banking Finance Operations Control
+            </p>
           </div>
-          <Button onClick={() => setShowForm(true)} className="bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200">
+          <Button
+            onClick={() => setShowForm(true)}
+            className="bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200"
+          >
             <Plus size={18} className="mr-2" /> Start New Underwriting
           </Button>
         </div>
-
 
         <Button
           onClick={() => setShowForm(true)}
@@ -245,18 +206,22 @@ export default function ProfessionalNBFCPortal() {
           <Plus size={20} />
           <span className="font-semibold">New Application</span>
         </Button>
-      </div>
 
         {/* Application Data Grid */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
             <h3 className="font-bold text-slate-700">Recent Applications</h3>
-            <div className="text-xs font-medium text-slate-400 italic font-mono">Real-time NBFC Sync Enabled</div>
+            <div className="text-xs font-medium text-slate-400 italic font-mono">
+              Real-time NBFC Sync Enabled
+            </div>
           </div>
-          <ApplicationPageTable 
-            applications={[]} // Replace with your hook data
-            tableColumns={nbfcColumns} 
-            onViewDetails={(app) => { setSelectedApp(app); setViewModalOpen(true); }}
+          <ApplicationPageTable
+            applications={paginatedApplications}
+            tableColumns={tableColumns}
+            onViewDetails={(app) => {
+              setSelectedApp(app);
+              setViewModalOpen(true);
+            }}
           />
         </div>
       </div>
@@ -264,13 +229,12 @@ export default function ProfessionalNBFCPortal() {
       {/* Modals */}
       {showForm && <LoanApplicationForm onClose={() => setShowForm(false)} />}
       {viewModalOpen && (
-        <LoanApplicationView 
-          application={selectedApp} 
-          onClose={() => setViewModalOpen(false)} 
+        <LoanApplicationView
+          application={selectedApp}
+          onClose={() => setViewModalOpen(false)}
         />
       )}
       {/* // Loan Application Form */}
-
 
       <ConfirmationDialog
         open={showApproveDialog}

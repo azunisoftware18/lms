@@ -103,22 +103,6 @@ export default function BranchManagementTable({
         <span className="font-mono text-xs text-blue-600">{value}</span>
       ),
     },
-    {
-      header: "Type",
-      accessor: "type",
-      render: (value) => (
-        <span
-          className={`inline-flex items-center whitespace-nowrap px-2.5 py-1 rounded-full text-xs font-semibold border
-          ${
-            value === "MAIN"
-              ? "bg-purple-50 text-purple-700 border-purple-200"
-              : "bg-blue-50 text-blue-700 border-blue-200"
-          }`}
-        >
-          {value === "MAIN" ? "Main Branch" : "Subsidiary"}
-        </span>
-      ),
-    },
 
     {
       header: "Parent",
@@ -185,8 +169,12 @@ export default function BranchManagementTable({
         refreshing={loading}
         filterOptions={[
           { label: "All Types", value: "" },
-          { label: "Main Branch", value: "MAIN" },
-          { label: "Subsidiary", value: "SUB" },
+          { label: "Head Office", value: "HEAD_OFFICE" },
+          { label: "Zonal", value: "ZONAL" },
+          { label: "Regional", value: "REGIONAL" },
+          { label: "Branch", value: "BRANCH" },
+          { label: "Main Branch (Legacy)", value: "MAIN" },
+          { label: "Subsidiary (Legacy)", value: "SUB" },
         ]}
       />
 

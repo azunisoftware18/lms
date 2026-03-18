@@ -15,7 +15,7 @@ export default function TableShell({ children }) {
       )}
 
       {/* Add custom scrollbar styles */}
-      <style jsx>{`
+      <style>{`
         .scrollbar-thin::-webkit-scrollbar {
           height: 6px;
         }

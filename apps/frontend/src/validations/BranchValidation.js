@@ -12,9 +12,12 @@ export const branchSchema = z
       .min(1, "Branch code is required")
       .min(2, "Branch code must be at least 2 characters"),
 
-    type: z.enum(["MAIN", "SUB"], {
-      errorMap: () => ({ message: "Branch type is required" }),
-    }),
+    type: z.enum(
+      ["HEAD_OFFICE", "ZONAL", "REGIONAL", "BRANCH", "MAIN", "SUB"],
+      {
+        errorMap: () => ({ message: "Branch type is required" }),
+      },
+    ),
 
     parentBranchId: z.string().optional(),
 
@@ -30,7 +33,8 @@ export const branchSchema = z
   })
 
   .superRefine((data, ctx) => {
-    if (data.type === "SUB" && !data.parentBranchId) {
+    const isTopLevelType = data.type === "HEAD_OFFICE" || data.type === "MAIN";
+    if (!isTopLevelType && !data.parentBranchId) {
       ctx.addIssue({
         path: ["parentBranchId"],
         message: "Please select a parent branch",
