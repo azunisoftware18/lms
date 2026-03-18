@@ -6,11 +6,7 @@ import { dummyBranches } from "../../../lib/dumyData";
 import Button from "../../../components/ui/Button";
 import AddBranchFormModal from "../../../components/modals/AddBranchFormModal";
 import { toast } from "react-hot-toast";
-import {
-  createbranch,
-  updateBranch,
-  getBranches,
-} from "../../../lib/api/branch.api";
+import { apiGet, apiPost, apiPut } from "../../../lib/api/apiClient";
 
 export default function BranchManagement() {
   const isTopLevelType = (type) => type === "HEAD_OFFICE" || type === "MAIN";
@@ -58,14 +54,14 @@ export default function BranchManagement() {
 
       if (selectedBranch?.id) {
         // Update existing branch
-        result = await updateBranch(selectedBranch.id, data);
+        result = await apiPut(`/branch/${selectedBranch.id}`, data);
         setBranches((prevBranches) =>
           prevBranches.map((b) => (b.id === result.id ? result : b)),
         );
         toast.success("Branch updated successfully");
       } else {
         // Create new branch
-        result = await createbranch(data);
+        result = await apiPost("/branch", data);
         setBranches((prevBranches) => [result, ...prevBranches]);
         toast.success("Branch created successfully");
       }
@@ -87,7 +83,7 @@ export default function BranchManagement() {
   const handleRefreshBranches = async () => {
     try {
       setLoading(true);
-      const data = await getBranches();
+      const data = await apiGet("/branch");
       setBranches(Array.isArray(data) ? data : data.data || dummyBranches);
       toast.success("Branch data refreshed");
     } catch {
@@ -104,7 +100,7 @@ export default function BranchManagement() {
     const loadData = async () => {
       try {
         setLoading(true);
-        const data = await getBranches();
+        const data = await apiGet("/branch");
         setBranches(Array.isArray(data) ? data : data.data || dummyBranches);
       } catch {
         // Fallback to dummy data if API fails
