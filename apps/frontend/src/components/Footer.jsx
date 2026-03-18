@@ -5,7 +5,9 @@ import {
   ArrowUp,
   Zap,
   MapPin,
+  Instagram,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 
 export default function Footer () {
@@ -23,12 +25,14 @@ export default function Footer () {
       <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* ===== Logo & Disclosure ===== */}
         <div className="md:col-span-1 space-y-4">
-          <h2 className="text-3xl font-extrabold text-white flex items-center">
-            Finova <Zap className="w-6 h-6 ml-2 text-yellow-400" />
-          </h2>
+          <Link to="/">
+            <h2 className="text-3xl font-extrabold text-white flex items-center">
+              Mascotfin 
+            </h2>
+          </Link>
           <p className="text-sm leading-relaxed">
             Investing in a brighter future, with purpose. Providing tailored
-            financial solutions for MSMEs across various industries.
+            mascotfin solutions for MSMEs across various industries.
           </p>
 
           <div className="pt-4">
@@ -50,7 +54,7 @@ export default function Footer () {
                 to="https://www.instagram.com/"
                 className={`${ACCENT_COLOR_BG} p-2 rounded-full text-white ${ACCENT_COLOR_HOVER} transition`}
               >
-                <Linkedin className="w-5 h-5" />
+                <Instagram className="w-5 h-5" />
               </HashLink>
             </div>
           </div>
@@ -219,8 +223,7 @@ export default function Footer () {
               Head Office
             </p>
             <p className="text-sm pl-6">
-              4th Floor, Unique Aspire Amrapali Marg, Vaishali Nagar, Jaipur,
-              Rajasthan – 302021
+             302-303, Goyal Tower, Transport Nagar, Jaipur
             </p>
           </div>
         </div>
@@ -229,7 +232,7 @@ export default function Footer () {
       {/* ===== Copyright ===== */}
       <div className="border-t border-blue-800 mt-12 pt-8 text-xs text-center text-blue-300 px-6">
         <p className="mb-4">
-          &copy; {new Date().getFullYear()} Finova Capital. All rights reserved.
+          &copy; {new Date().getFullYear()} Mascotfin Capital. All rights reserved.
         </p>
         <p className="max-w-4xl mx-auto leading-relaxed text-blue-400/80">
           **RBI Disclosure:** The company is having a valid Certificate of

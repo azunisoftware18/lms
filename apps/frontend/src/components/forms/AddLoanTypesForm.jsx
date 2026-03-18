@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useEffect, useMemo } from "react";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import {
   Info,
   Percent,
@@ -22,175 +22,323 @@ import {
   DollarSign,
   BadgeCheck,
   Calendar,
-  Settings
-} from 'lucide-react';
-import toast from 'react-hot-toast';
-import { useCreateLoanType, useUpdateLoanType } from '../../hooks/useLoanType';
-import InputField from '../ui/InputField';
-import ToggleSwitch from '../ui/ToggleSwitch';
-import TextAreaField from '../ui/TextAreaField';
-import SelectField from '../ui/SelectField';
-import Button from '../ui/Button';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { loanTypeSchema } from '../../validations/LoanTypeValidation';
+  Settings,
+} from "lucide-react";
+import toast from "react-hot-toast";
+import { useCreateLoanType, useUpdateLoanType } from "../../hooks/useLoanType";
+import InputField from "../ui/InputField";
+import ToggleSwitch from "../ui/ToggleSwitch";
+import TextAreaField from "../ui/TextAreaField";
+import SelectField from "../ui/SelectField";
+import Button from "../ui/Button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loanTypeSchema } from "../../validations/LoanTypeValidation";
+
+import { LOAN_CATEGORIES, DOCUMENT_OPTIONS } from "../../constants/loanType";
+
+const APPLICANT_DOCUMENT_OPTIONS = DOCUMENT_OPTIONS.filter(
+  (opt) =>
+    !opt.value.startsWith("CO_APPLICANT_") &&
+    !opt.value.startsWith("GUARANTOR_"),
+);
+
+const CO_APPLICANT_DOCUMENT_OPTIONS = DOCUMENT_OPTIONS.filter(
+  (opt) =>
+    !opt.value.startsWith("APPLICANT_") && !opt.value.startsWith("GUARANTOR_"),
+);
+
+const GUARANTOR_DOCUMENT_OPTIONS = DOCUMENT_OPTIONS.filter(
+  (opt) =>
+    !opt.value.startsWith("APPLICANT_") &&
+    !opt.value.startsWith("CO_APPLICANT_"),
+);
+
+const INTEREST_TYPES = [
+  { value: "FLAT", label: "Flat" },
+  { value: "REDUCING", label: "Reducing Balance" },
+];
+
+const PROCESSING_FEE_TYPES = [
+  { value: "PERCENTAGE", label: "Percentage" },
+  { value: "FIXED", label: "Fixed Amount" },
+];
+
+const EMPLOYMENT_TYPES = [
+  { value: "salaried", label: "Salaried" },
+  { value: "self_employed", label: "Self-Employed" },
+];
+
+const normalizeInterestType = (value) => {
+  const raw = String(value || "")
+    .trim()
+    .toUpperCase();
+  if (raw === "FLAT") return "FLAT";
+  if (raw === "REDUCING" || raw === "REDUCING_BALANCE") return "REDUCING";
+  return raw;
+};
+
+const normalizeProcessingFeeType = (value) => {
+  const raw = String(value || "")
+    .trim()
+    .toUpperCase();
+  if (raw === "FIXED" || raw === "FIXED_AMOUNT") return "FIXED";
+  if (raw === "PERCENTAGE") return "PERCENTAGE";
+  return raw;
+};
+
+const toNumberOrUndefined = (value) => {
+  if (value === "" || value === null || value === undefined) return undefined;
+  const parsed = Number(value);
+  return Number.isNaN(parsed) ? undefined : parsed;
+};
 
 export default function AddLoanTypesForm({ onClose, editData }) {
   const createLoanTypeMutation = useCreateLoanType();
   const updateLoanTypeMutation = useUpdateLoanType();
 
-  // Loan category options with icons
-  const loanCategories = [
-    { value: 'PERSONAL_LOAN', label: 'Personal Loan', icon: User },
-    { value: 'VEHICLE_LOAN', label: 'Vehicle Loan', icon: Car },
-    { value: 'HOME_LOAN', label: 'Home Loan', icon: Home },
-    { value: 'EDUCATION_LOAN', label: 'Education Loan', icon: GraduationCap },
-    { value: 'BUSINESS_LOAN', label: 'Business Loan', icon: Briefcase },
-    { value: 'GOLD_LOAN', label: 'Gold Loan', icon: Gem },
-  ];
-
-  // Interest type options
-  const interestTypes = [
-    { value: 'FLAT', label: 'Flat' },
-    { value: 'REDUCING', label: 'Reducing Balance' },
-  ];
-
-  // Processing fee type options
-  const processingFeeTypes = [
-    { value: 'PERCENTAGE', label: 'Percentage' },
-    { value: 'FIXED', label: 'Fixed Amount' },
-  ];
-
-  // Employment type options
-  const employmentTypes = [
-    { value: 'salaried', label: 'Salaried' },
-    { value: 'self_employed', label: 'Self-Employed' },
-  ];
-
-  // Document requirement options
-  const documentOptions = [
-    { value: 'Aadhaar_Card', label: 'Aadhaar Card' },
-    { value: 'PAN_Card', label: 'PAN Card' },
-    { value: 'Photo', label: 'Photo' },
-    { value: 'Salary_Slip', label: 'Salary Slip' },
-    { value: 'Bank_Statement', label: 'Bank Statement' },
-    { value: 'Income_Proof', label: 'Income Proof' },
-    { value: 'Address_Proof', label: 'Address Proof' },
-    { value: 'Property_Docs', label: 'Property Documents' },
-  ];
+  const interestTypes = INTEREST_TYPES;
+  const processingFeeTypes = PROCESSING_FEE_TYPES;
+  const chargeTypes = PROCESSING_FEE_TYPES;
+  const employmentTypes = EMPLOYMENT_TYPES;
 
   const {
     control,
     handleSubmit,
-    watch,
     setValue,
     formState: { errors, isValid },
-    reset
+    reset,
   } = useForm({
     resolver: zodResolver(loanTypeSchema),
     mode: "onChange",
     defaultValues: {
-      loanCode: '',
-      loanName: '',
-      loanCategory: '',
+      loanCode: "",
+      loanName: "",
+      loanCategory: "",
       securedLoan: false,
-      description: '',
-      minLoanAmount: '',
-      maxLoanAmount: '',
-      minTenure: '',
-      maxTenure: '',
-      interestType: 'FLAT',
-      minInterestRate: '',
-      maxInterestRate: '',
-      defaultInterestRate: '',
-      processingFeeType: 'PERCENTAGE',
-      processingFeeValue: '',
+      description: "",
+      minLoanAmount: "",
+      maxLoanAmount: "",
+      minTenure: "",
+      maxTenure: "",
+      interestType: "FLAT",
+      minInterestRate: "",
+      maxInterestRate: "",
+      defaultInterestRate: "",
+      processingFeeType: "PERCENTAGE",
+      processingFeeValue: "",
       gstApplicable: false,
-      gstPercentage: '',
-      minAge: '',
-      maxAge: '',
-      minMonthlyIncome: '',
-      employmentType: '',
-      minCibilScore: '',
-      maxCibilScore: '',
+      gstPercentage: "",
+      minAge: "",
+      maxAge: "",
+      minMonthlyIncome: "",
+      employmentType: "",
+      minCibilScore: "",
+      maxCibilScore: "",
+      maxLoanToValueRatio: "",
       prepaymentAllowed: false,
       foreclosureAllowed: false,
-      prepaymentCharges: '',
-      foreclosureCharges: '',
+      prepaymentCharges: "",
+      foreclosureCharges: "",
+      latePaymentFeeType: "",
+      latePaymentFee: "",
+      bounceCharges: "",
       activeStatus: true,
       publicVisibility: true,
       approvalRequired: true,
-      estimatedProcessingTimeDays: '',
-      documentsRequired: [],
-    }
+      estimatedProcessingTimeDays: "",
+      applicantDocumentsRequired: [],
+      applicantDocumentsOptional: [],
+      coApplicantDocumentsRequired: [],
+      coApplicantDocumentsOptional: [],
+      guarantorDocumentsRequired: [],
+      guarantorDocumentsOptional: [],
+    },
   });
 
   // Watch values for conditional rendering
-  const watchLoanCategory = watch('loanCategory');
-  const watchGstApplicable = watch('gstApplicable');
-  const watchPrepaymentAllowed = watch('prepaymentAllowed');
-  const watchForeclosureAllowed = watch('foreclosureAllowed');
-  const watchDocumentsRequired = watch('documentsRequired');
+  const watchLoanCategory = useWatch({ control, name: "loanCategory" });
+  const watchGstApplicable = useWatch({ control, name: "gstApplicable" });
+  const watchSecuredLoan = useWatch({ control, name: "securedLoan" });
+  const watchPrepaymentAllowed = useWatch({
+    control,
+    name: "prepaymentAllowed",
+  });
+  const watchForeclosureAllowed = useWatch({
+    control,
+    name: "foreclosureAllowed",
+  });
+  const watchApplicantDocumentsRequired = useWatch({
+    control,
+    name: "applicantDocumentsRequired",
+  });
+  const watchApplicantDocumentsOptional = useWatch({
+    control,
+    name: "applicantDocumentsOptional",
+  });
+  const watchCoApplicantDocumentsRequired = useWatch({
+    control,
+    name: "coApplicantDocumentsRequired",
+  });
+  const watchCoApplicantDocumentsOptional = useWatch({
+    control,
+    name: "coApplicantDocumentsOptional",
+  });
+  const watchGuarantorDocumentsRequired = useWatch({
+    control,
+    name: "guarantorDocumentsRequired",
+  });
+  const watchGuarantorDocumentsOptional = useWatch({
+    control,
+    name: "guarantorDocumentsOptional",
+  });
+
+  const applicantOptionalOptions = useMemo(
+    () =>
+      APPLICANT_DOCUMENT_OPTIONS.filter(
+        (option) => !watchApplicantDocumentsRequired?.includes(option.value),
+      ),
+    [watchApplicantDocumentsRequired],
+  );
+
+  const coApplicantOptionalOptions = useMemo(
+    () =>
+      CO_APPLICANT_DOCUMENT_OPTIONS.filter(
+        (option) => !watchCoApplicantDocumentsRequired?.includes(option.value),
+      ),
+    [watchCoApplicantDocumentsRequired],
+  );
+
+  const guarantorOptionalOptions = useMemo(
+    () =>
+      GUARANTOR_DOCUMENT_OPTIONS.filter(
+        (option) => !watchGuarantorDocumentsRequired?.includes(option.value),
+      ),
+    [watchGuarantorDocumentsRequired],
+  );
 
   // Set edit data
   useEffect(() => {
     if (editData) {
       reset({
-        loanCode: editData.code || '',
-        loanName: editData.name || '',
-        loanCategory: editData.category || '',
+        loanCode: editData.code || "",
+        loanName: editData.name || "",
+        loanCategory: editData.category || "",
         securedLoan: editData.secured || false,
-        description: editData.description || '',
-        minLoanAmount: editData.minAmount || '',
-        maxLoanAmount: editData.maxAmount || '',
-        minTenure: editData.minTenureMonths || '',
-        maxTenure: editData.maxTenureMonths || '',
-        interestType: editData.interestType || 'FLAT',
-        minInterestRate: editData.minInterestRate || '',
-        maxInterestRate: editData.maxInterestRate || '',
-        defaultInterestRate: editData.defaultInterestRate || '',
-        processingFeeType: editData.processingFeeType || 'PERCENTAGE',
-        processingFeeValue: editData.processingFee || '',
+        description: editData.description || "",
+        minLoanAmount: editData.minAmount || "",
+        maxLoanAmount: editData.maxAmount || "",
+        minTenure: editData.minTenureMonths || "",
+        maxTenure: editData.maxTenureMonths || "",
+        interestType: editData.interestType || "FLAT",
+        minInterestRate: editData.minInterestRate || "",
+        maxInterestRate: editData.maxInterestRate || "",
+        defaultInterestRate: editData.defaultInterestRate || "",
+        processingFeeType: editData.processingFeeType || "PERCENTAGE",
+        processingFeeValue: editData.processingFee || "",
         gstApplicable: editData.gstApplicable || false,
-        gstPercentage: editData.gstPercentage || '',
-        minAge: editData.minAge || '',
-        maxAge: editData.maxAge || '',
-        minMonthlyIncome: editData.minIncome || '',
-        employmentType: editData.employmentType || '',
-        minCibilScore: editData.minCibilScore || '',
-        maxCibilScore: editData.maxCibilScore || '',
+        gstPercentage: editData.gstPercentage || "",
+        minAge: editData.minAge || "",
+        maxAge: editData.maxAge || "",
+        minMonthlyIncome: editData.minIncome || "",
+        employmentType: editData.employmentType || "",
+        minCibilScore: editData.minCibilScore || "",
+        maxCibilScore: editData.maxCibilScore || "",
+        maxLoanToValueRatio: editData.maxLoanToValueRatio || "",
         prepaymentAllowed: editData.prepaymentAllowed || false,
         foreclosureAllowed: editData.foreclosureAllowed || false,
-        prepaymentCharges: editData.prepaymentCharges || '',
-        foreclosureCharges: editData.foreclosureCharges || '',
+        prepaymentCharges: editData.prepaymentCharges || "",
+        foreclosureCharges: editData.foreclosureCharges || "",
+        latePaymentFeeType: editData.latePaymentFeeType || "",
+        latePaymentFee: editData.latePaymentFee || "",
+        bounceCharges: editData.bounceCharges || "",
         activeStatus: editData.isActive ?? true,
         publicVisibility: editData.isPublic ?? true,
         approvalRequired: editData.approvalRequired ?? true,
-        estimatedProcessingTimeDays: editData.estimatedProcessingTimeDays || '',
-        documentsRequired: editData.documentsRequired
-          ? editData.documentsRequired.split(",")
+        estimatedProcessingTimeDays: editData.estimatedProcessingTimeDays || "",
+        applicantDocumentsRequired: editData.applicantDocumentsRequired
+          ? editData.applicantDocumentsRequired.split(",")
+          : [],
+        applicantDocumentsOptional: editData.applicantDocumentsOptional
+          ? editData.applicantDocumentsOptional.split(",")
+          : [],
+        coApplicantDocumentsRequired: editData.coApplicantDocumentsRequired
+          ? editData.coApplicantDocumentsRequired.split(",")
+          : [],
+        coApplicantDocumentsOptional: editData.coApplicantDocumentsOptional
+          ? editData.coApplicantDocumentsOptional.split(",")
+          : [],
+        guarantorDocumentsRequired: editData.guarantorDocumentsRequired
+          ? editData.guarantorDocumentsRequired.split(",")
+          : [],
+        guarantorDocumentsOptional: editData.guarantorDocumentsOptional
+          ? editData.guarantorDocumentsOptional.split(",")
           : [],
       });
     }
   }, [editData, reset]);
 
+  useEffect(() => {
+    const nextOptional = (watchApplicantDocumentsOptional || []).filter(
+      (doc) => !watchApplicantDocumentsRequired?.includes(doc),
+    );
+    if (
+      nextOptional.length !== (watchApplicantDocumentsOptional || []).length
+    ) {
+      setValue("applicantDocumentsOptional", nextOptional, {
+        shouldValidate: true,
+      });
+    }
+  }, [
+    watchApplicantDocumentsRequired,
+    watchApplicantDocumentsOptional,
+    setValue,
+  ]);
+
+  useEffect(() => {
+    const nextOptional = (watchCoApplicantDocumentsOptional || []).filter(
+      (doc) => !watchCoApplicantDocumentsRequired?.includes(doc),
+    );
+    if (
+      nextOptional.length !== (watchCoApplicantDocumentsOptional || []).length
+    ) {
+      setValue("coApplicantDocumentsOptional", nextOptional, {
+        shouldValidate: true,
+      });
+    }
+  }, [
+    watchCoApplicantDocumentsRequired,
+    watchCoApplicantDocumentsOptional,
+    setValue,
+  ]);
+
+  useEffect(() => {
+    const nextOptional = (watchGuarantorDocumentsOptional || []).filter(
+      (doc) => !watchGuarantorDocumentsRequired?.includes(doc),
+    );
+    if (
+      nextOptional.length !== (watchGuarantorDocumentsOptional || []).length
+    ) {
+      setValue("guarantorDocumentsOptional", nextOptional, {
+        shouldValidate: true,
+      });
+    }
+  }, [
+    watchGuarantorDocumentsRequired,
+    watchGuarantorDocumentsOptional,
+    setValue,
+  ]);
+
   // Generate loan code based on category
   useEffect(() => {
     if (watchLoanCategory) {
-      const category = loanCategories.find(c => c.value === watchLoanCategory);
-      const prefix = category?.label.substring(0, 3).toUpperCase() || 'LON';
+      const category = LOAN_CATEGORIES.find(
+        (c) => c.value === watchLoanCategory,
+      );
+      const prefix = category?.label.substring(0, 3).toUpperCase() || "LON";
       const randomNum = Math.floor(1000 + Math.random() * 9000);
-      setValue('loanCode', `${prefix}-${randomNum}`);
+      setValue("loanCode", `${prefix}-${randomNum}`);
     }
   }, [watchLoanCategory, setValue]);
-
-  const handleDocumentChange = (doc) => {
-    const currentDocs = watchDocumentsRequired || [];
-    if (currentDocs.includes(doc)) {
-      setValue('documentsRequired', currentDocs.filter(d => d !== doc));
-    } else {
-      setValue('documentsRequired', [...currentDocs, doc]);
-    }
-  };
 
   const onSubmit = async (data) => {
     const payload = {
@@ -203,34 +351,75 @@ export default function AddLoanTypesForm({ onClose, editData }) {
       maxAmount: Number(data.maxLoanAmount),
       minTenureMonths: Number(data.minTenure),
       maxTenureMonths: Number(data.maxTenure),
-      interestType: data.interestType,
+      interestType: normalizeInterestType(data.interestType),
       minInterestRate: Number(data.minInterestRate),
       maxInterestRate: Number(data.maxInterestRate),
       defaultInterestRate: Number(data.defaultInterestRate),
-      processingFeeType: data.processingFeeType,
-      processingFee: data.processingFeeValue ? Number(data.processingFeeValue) : undefined,
+      processingFeeType: normalizeProcessingFeeType(data.processingFeeType),
+      processingFee: data.processingFeeValue
+        ? Number(data.processingFeeValue)
+        : undefined,
       gstApplicable: data.gstApplicable,
-      gstPercentage: data.gstApplicable && data.gstPercentage ? Number(data.gstPercentage) : undefined,
+      gstPercentage:
+        data.gstApplicable && data.gstPercentage
+          ? Number(data.gstPercentage)
+          : undefined,
       minAge: Number(data.minAge),
       maxAge: Number(data.maxAge),
-      minIncome: data.minMonthlyIncome ? Number(data.minMonthlyIncome) : undefined,
+      minIncome: data.minMonthlyIncome
+        ? Number(data.minMonthlyIncome)
+        : undefined,
       employmentType: data.employmentType || undefined,
-      minCibilScore: data.minCibilScore ? Number(data.minCibilScore) : undefined,
-      maxCibilScore: data.maxCibilScore ? Number(data.maxCibilScore) : undefined,
+      minCibilScore: data.minCibilScore
+        ? Number(data.minCibilScore)
+        : undefined,
+      maxCibilScore: data.maxCibilScore
+        ? Number(data.maxCibilScore)
+        : undefined,
+      maxLoanToValueRatio: watchSecuredLoan
+        ? toNumberOrUndefined(data.maxLoanToValueRatio)
+        : undefined,
       prepaymentAllowed: data.prepaymentAllowed,
       foreclosureAllowed: data.foreclosureAllowed,
-      prepaymentCharges: data.prepaymentAllowed && data.prepaymentCharges ? Number(data.prepaymentCharges) : undefined,
-      foreclosureCharges: data.foreclosureAllowed && data.foreclosureCharges ? Number(data.foreclosureCharges) : undefined,
+      prepaymentCharges:
+        data.prepaymentAllowed && data.prepaymentCharges
+          ? Number(data.prepaymentCharges)
+          : undefined,
+      foreclosureCharges:
+        data.foreclosureAllowed && data.foreclosureCharges
+          ? Number(data.foreclosureCharges)
+          : undefined,
+      latePaymentFeeType: data.latePaymentFeeType
+        ? normalizeProcessingFeeType(data.latePaymentFeeType)
+        : undefined,
+      latePaymentFee: toNumberOrUndefined(data.latePaymentFee),
+      bounceCharges: toNumberOrUndefined(data.bounceCharges),
       isActive: data.activeStatus,
       isPublic: data.publicVisibility,
       approvalRequired: data.approvalRequired,
-      estimatedProcessingTimeDays: data.estimatedProcessingTimeDays ? Number(data.estimatedProcessingTimeDays) : undefined,
-      documentsRequired: data.documentsRequired.length > 0 ? data.documentsRequired.join(",") : undefined,
+      estimatedProcessingTimeDays: data.estimatedProcessingTimeDays
+        ? Number(data.estimatedProcessingTimeDays)
+        : undefined,
+      applicantDocumentsRequired: data.applicantDocumentsRequired.join(","),
+      applicantDocumentsOptional: data.applicantDocumentsOptional.length
+        ? data.applicantDocumentsOptional.join(",")
+        : undefined,
+      coApplicantDocumentsRequired: data.coApplicantDocumentsRequired.join(","),
+      coApplicantDocumentsOptional: data.coApplicantDocumentsOptional.length
+        ? data.coApplicantDocumentsOptional.join(",")
+        : undefined,
+      guarantorDocumentsRequired: data.guarantorDocumentsRequired.join(","),
+      guarantorDocumentsOptional: data.guarantorDocumentsOptional.length
+        ? data.guarantorDocumentsOptional.join(",")
+        : undefined,
     };
 
     try {
       if (editData) {
-        await updateLoanTypeMutation.mutateAsync({ id: editData.id, data: payload });
+        await updateLoanTypeMutation.mutateAsync({
+          id: editData.id,
+          data: payload,
+        });
         toast.success("Loan Type updated successfully");
       } else {
         await createLoanTypeMutation.mutateAsync(payload);
@@ -245,12 +434,13 @@ export default function AddLoanTypesForm({ onClose, editData }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {/* Header - Now part of the form but styled consistently */}
-      <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white">
+      <div className="px-6 py-4 border-b border-gray-200 bg-linear-to-r from-gray-50 to-white">
         <h2 className="text-xl font-semibold text-gray-900">
-          {editData ? 'Edit Loan Type' : 'Create New Loan Type'}
+          {editData ? "Edit Loan Type" : "Create New Loan Type"}
         </h2>
         <p className="text-sm text-gray-500 mt-1">
-          Fill in the details below to {editData ? 'update' : 'create'} a loan product
+          Fill in the details below to {editData ? "update" : "create"} a loan
+          product
         </p>
       </div>
 
@@ -262,9 +452,11 @@ export default function AddLoanTypesForm({ onClose, editData }) {
             <div className="p-2 bg-blue-100 rounded-lg">
               <Info className="w-5 h-5 text-blue-600" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900">Basic Information</h3>
+            <h3 className="text-lg font-medium text-gray-900">
+              Basic Information
+            </h3>
           </div>
-          
+
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Controller
@@ -302,22 +494,30 @@ export default function AddLoanTypesForm({ onClose, editData }) {
                 Loan Category <span className="text-red-500">*</span>
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                {loanCategories.map(category => {
+                {LOAN_CATEGORIES.map((category) => {
                   const Icon = category.icon;
                   const isSelected = watchLoanCategory === category.value;
                   return (
                     <button
                       key={category.value}
                       type="button"
-                      onClick={() => setValue('loanCategory', category.value, { shouldValidate: true })}
+                      onClick={() =>
+                        setValue("loanCategory", category.value, {
+                          shouldValidate: true,
+                        })
+                      }
                       className={`p-3 border-2 rounded-lg text-center transition-all ${
                         isSelected
-                          ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-100'
-                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                          ? "border-blue-500 bg-blue-50 ring-2 ring-blue-100"
+                          : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                       }`}
                     >
-                      <Icon className={`w-5 h-5 mx-auto mb-1 ${isSelected ? 'text-blue-600' : 'text-gray-600'}`} />
-                      <span className="text-xs font-medium">{category.label}</span>
+                      <Icon
+                        className={`w-5 h-5 mx-auto mb-1 ${isSelected ? "text-blue-600" : "text-gray-600"}`}
+                      />
+                      <span className="text-xs font-medium">
+                        {category.label}
+                      </span>
                     </button>
                   );
                 })}
@@ -368,7 +568,9 @@ export default function AddLoanTypesForm({ onClose, editData }) {
             <div className="p-2 bg-green-100 rounded-lg">
               <IndianRupee className="w-5 h-5 text-green-600" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900">Loan Amount & Tenure</h3>
+            <h3 className="text-lg font-medium text-gray-900">
+              Loan Amount & Tenure
+            </h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -435,6 +637,23 @@ export default function AddLoanTypesForm({ onClose, editData }) {
                 />
               )}
             />
+
+            {watchSecuredLoan && (
+              <Controller
+                name="maxLoanToValueRatio"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Max Loan To Value Ratio (%)"
+                    type="number"
+                    placeholder="e.g., 80"
+                    error={errors.maxLoanToValueRatio?.message}
+                    icon={Percent}
+                    {...field}
+                  />
+                )}
+              />
+            )}
           </div>
         </div>
 
@@ -444,7 +663,9 @@ export default function AddLoanTypesForm({ onClose, editData }) {
             <div className="p-2 bg-purple-100 rounded-lg">
               <Percent className="w-5 h-5 text-purple-600" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900">Interest Details</h3>
+            <h3 className="text-lg font-medium text-gray-900">
+              Interest Details
+            </h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -515,7 +736,9 @@ export default function AddLoanTypesForm({ onClose, editData }) {
             <div className="p-2 bg-orange-100 rounded-lg">
               <CheckCircle className="w-5 h-5 text-orange-600" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900">Processing Fee & Tax</h3>
+            <h3 className="text-lg font-medium text-gray-900">
+              Processing Fee & Tax
+            </h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -588,7 +811,9 @@ export default function AddLoanTypesForm({ onClose, editData }) {
             <div className="p-2 bg-indigo-100 rounded-lg">
               <Users className="w-5 h-5 text-indigo-600" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900">Eligibility Criteria</h3>
+            <h3 className="text-lg font-medium text-gray-900">
+              Eligibility Criteria
+            </h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -758,16 +983,197 @@ export default function AddLoanTypesForm({ onClose, editData }) {
                 />
               )}
             </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Controller
+                name="latePaymentFeeType"
+                control={control}
+                render={({ field }) => (
+                  <SelectField
+                    label="Late Payment Fee Type"
+                    options={chargeTypes}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Select fee type"
+                    error={errors.latePaymentFeeType?.message}
+                  />
+                )}
+              />
+
+              <Controller
+                name="latePaymentFee"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Late Payment Fee"
+                    type="number"
+                    placeholder="0.00"
+                    error={errors.latePaymentFee?.message}
+                    icon={IndianRupee}
+                    {...field}
+                  />
+                )}
+              />
+
+              <Controller
+                name="bounceCharges"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Bounce Charges"
+                    type="number"
+                    placeholder="0.00"
+                    error={errors.bounceCharges?.message}
+                    icon={IndianRupee}
+                    {...field}
+                  />
+                )}
+              />
+            </div>
           </div>
         </div>
 
-        {/* Section 7: Status & Visibility */}
+        {/* Section 7: Documents */}
+        <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-2 bg-teal-100 rounded-lg">
+              <FileText className="w-5 h-5 text-teal-600" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900">Documents</h3>
+          </div>
+
+          <div className="space-y-5">
+            <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+              <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-blue-600" />
+                Applicant Documents
+              </h4>
+              <div className="space-y-3">
+                <SelectField
+                  label="Required"
+                  options={APPLICANT_DOCUMENT_OPTIONS}
+                  value={watchApplicantDocumentsRequired || []}
+                  onChange={(value) =>
+                    setValue("applicantDocumentsRequired", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select required applicant documents"
+                  error={errors.applicantDocumentsRequired?.message}
+                  className="bg-white rounded-lg"
+                />
+
+                <SelectField
+                  label="Optional"
+                  options={applicantOptionalOptions}
+                  value={watchApplicantDocumentsOptional || []}
+                  onChange={(value) =>
+                    setValue("applicantDocumentsOptional", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select optional applicant documents"
+                  error={errors.applicantDocumentsOptional?.message}
+                  className="bg-white rounded-lg"
+                />
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+              <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-indigo-600" />
+                Co-Applicant Documents
+              </h4>
+              <div className="space-y-3">
+                <SelectField
+                  label="Required"
+                  options={CO_APPLICANT_DOCUMENT_OPTIONS}
+                  value={watchCoApplicantDocumentsRequired || []}
+                  onChange={(value) =>
+                    setValue("coApplicantDocumentsRequired", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select required co-applicant documents"
+                  error={errors.coApplicantDocumentsRequired?.message}
+                  className="bg-white rounded-lg"
+                />
+
+                <SelectField
+                  label="Optional"
+                  options={coApplicantOptionalOptions}
+                  value={watchCoApplicantDocumentsOptional || []}
+                  onChange={(value) =>
+                    setValue("coApplicantDocumentsOptional", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select optional co-applicant documents"
+                  error={errors.coApplicantDocumentsOptional?.message}
+                  className="bg-white rounded-lg"
+                />
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+              <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-emerald-600" />
+                Guarantor Documents
+              </h4>
+              <div className="space-y-3">
+                <SelectField
+                  label="Required"
+                  options={GUARANTOR_DOCUMENT_OPTIONS}
+                  value={watchGuarantorDocumentsRequired || []}
+                  onChange={(value) =>
+                    setValue("guarantorDocumentsRequired", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select required guarantor documents"
+                  error={errors.guarantorDocumentsRequired?.message}
+                  className="bg-white rounded-lg"
+                />
+
+                <SelectField
+                  label="Optional"
+                  options={guarantorOptionalOptions}
+                  value={watchGuarantorDocumentsOptional || []}
+                  onChange={(value) =>
+                    setValue("guarantorDocumentsOptional", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select optional guarantor documents"
+                  error={errors.guarantorDocumentsOptional?.message}
+                  className="bg-white rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 8: Status & Visibility */}
         <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center gap-2 mb-4">
             <div className="p-2 bg-teal-100 rounded-lg">
               <Eye className="w-5 h-5 text-teal-600" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900">Status & Visibility</h3>
+            <h3 className="text-lg font-medium text-gray-900">
+              Status & Visibility
+            </h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -827,29 +1233,6 @@ export default function AddLoanTypesForm({ onClose, editData }) {
                   />
                 )}
               />
-
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Documents Required
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  {documentOptions.map((doc) => (
-                    <label
-                      key={doc.value}
-                      className="flex items-center gap-2 p-2 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={watchDocumentsRequired?.includes(doc.value)}
-                        onChange={() => handleDocumentChange(doc.value)}
-                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                      />
-                      <FileText className="w-4 h-4 text-gray-400" />
-                      <span className="text-xs text-gray-700">{doc.label}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -858,25 +1241,28 @@ export default function AddLoanTypesForm({ onClose, editData }) {
       {/* Footer with Actions */}
       <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
         <div className="flex justify-end gap-3">
-          <Button
-            type="button"
-            onClick={onClose}
-            variant="outline"
-          >
+          <Button type="button" onClick={onClose} variant="outline">
             Cancel
           </Button>
           <Button
             type="submit"
-            disabled={!isValid || createLoanTypeMutation.isLoading || updateLoanTypeMutation.isLoading}
-            className="min-w-[140px]"
+            disabled={
+              !isValid ||
+              createLoanTypeMutation.isLoading ||
+              updateLoanTypeMutation.isLoading
+            }
+            className="min-w-35"
           >
-            {createLoanTypeMutation.isLoading || updateLoanTypeMutation.isLoading ? (
+            {createLoanTypeMutation.isLoading ||
+            updateLoanTypeMutation.isLoading ? (
               <div className="flex items-center justify-center gap-2">
                 <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 <span>{editData ? "Updating..." : "Creating..."}</span>
               </div>
+            ) : editData ? (
+              "Update Loan Type"
             ) : (
-              editData ? "Update Loan Type" : "Create Loan Type"
+              "Create Loan Type"
             )}
           </Button>
         </div>
@@ -884,7 +1270,7 @@ export default function AddLoanTypesForm({ onClose, editData }) {
         {!isValid && (
           <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
             <p className="text-sm text-yellow-800 flex items-center">
-              <AlertCircle className="w-4 h-4 mr-2 flex-shrink-0" />
+              <AlertCircle className="w-4 h-4 mr-2 shrink-0" />
               Please fill all required fields correctly to create the loan type
             </p>
           </div>

@@ -93,7 +93,7 @@ export default function Header() {
       <div className="hidden lg:block bg-blue-900 text-white text-xs">
         <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <span className="flex items-center gap-1.5"><Phone size={12} /> +1-800-FINOVA</span>
+            <span className="flex items-center gap-1.5"><Phone size={12} /> +91 8094932111</span>
             <span className="flex items-center gap-1.5"><MapPin size={12} /> Jaipur, Rajasthan</span>
             <span className="flex items-center gap-1.5"><Clock size={12} /> Mon–Fri: 9AM–6PM</span>
           </div>
@@ -116,11 +116,11 @@ export default function Header() {
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <div className="w-9 h-9 bg-linear-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-blue-200 group-hover:shadow-md transition-shadow">
-                <span className="text-white font-black text-base">F</span>
+                <span className="text-white font-black text-base">M</span>
               </div>
               <div className="leading-tight">
-                <div className="text-lg font-black text-blue-700 tracking-tight">Azzunique Capital</div>
-                <div className="text-[10px] text-gray-400 font-medium hidden sm:block -mt-0.5">Financial Solutions</div>
+                <div className="text-lg font-black text-blue-700 tracking-tight">Mascotfin</div>
+                <div className="text-[10px] text-gray-400 font-medium hidden sm:block -mt-0.5"> Pvt. Ltd. - Est. 2010</div>
               </div>
             </Link>
 
@@ -333,8 +333,8 @@ export default function Header() {
                     <span className="text-white font-black text-base">F</span>
                   </div>
                   <div>
-                    <div className="text-white font-bold">Azzunique Capital</div>
-                    <div className="text-blue-200 text-xs">Financial Solutions</div>
+                    <div className="text-white font-bold">Mascotfin</div>
+                    <div className="text-blue-200 text-xs">Pvt. Ltd. - Est. 2010</div>
                   </div>
                 </Link>
                 <button onClick={() => setIsMobileMenuOpen(false)} className="text-white/70 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors">
@@ -460,7 +460,7 @@ export default function Header() {
 
             {/* Drawer footer */}
             <div className="shrink-0 px-5 py-4 border-t border-gray-100 space-y-1.5 text-xs text-gray-500">
-              <div className="flex items-center gap-2"><Phone size={11} /> +1-800-FINOVA</div>
+              <div className="flex items-center gap-2"><Phone size={11} /> +91 8094932111</div>
               <div className="flex items-center gap-2"><MapPin size={11} /> Jaipur, Rajasthan</div>
             </div>
           </div>
