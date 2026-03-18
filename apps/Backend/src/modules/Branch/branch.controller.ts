@@ -11,6 +11,38 @@ import {
 } from "./branch.service.js";
 import { AppError } from "../../common/utils/apiError.js";
 
+const toPublicBranch = (branch: any): any => {
+  if (!branch) return branch;
+
+  return {
+    id: branch.id,
+    name: branch.name,
+    code: branch.code,
+    type: branch.type,
+    isActive: branch.isActive,
+    createdAt: branch.createdAt,
+    updatedAt: branch.updatedAt,
+    parentBranch: branch.parentBranch
+      ? {
+          id: branch.parentBranch.id,
+          name: branch.parentBranch.name,
+          code: branch.parentBranch.code,
+          type: branch.parentBranch.type,
+          isActive: branch.parentBranch.isActive,
+        }
+      : null,
+    subBranches: Array.isArray(branch.subBranches)
+      ? branch.subBranches.map((sub: any) => ({
+          id: sub.id,
+          name: sub.name,
+          code: sub.code,
+          type: sub.type,
+          isActive: sub.isActive,
+        }))
+      : [],
+  };
+};
+
 export const createBranchController = async (
   req: Request,
   res: Response,
@@ -24,7 +56,7 @@ export const createBranchController = async (
     res.status(201).json({
       success: true,
       message: "Branch created successfully",
-      data: branch,
+      data: toPublicBranch(branch),
     });
   } catch (error) {
     next(error);
@@ -45,7 +77,7 @@ export const updateBranchController = async (
     res.status(200).json({
       success: true,
       message: "Branch updated successfully",
-      data: branch,
+      data: toPublicBranch(branch),
     });
   } catch (error) {
     next(error);
@@ -70,10 +102,18 @@ export const getAllBranchesController = async (
       limit,
       search,
     });
+
+    const sanitized = {
+      data: Array.isArray(branches?.data)
+        ? branches.data.map((branch) => toPublicBranch(branch))
+        : [],
+      pagination: branches?.pagination,
+    };
+
     res.status(200).json({
       success: true,
       message: "Branches retrieved successfully",
-      data: branches,
+      data: sanitized,
     });
   } catch (error) {
     next(error);
@@ -112,7 +152,7 @@ export const getBranchByIdController = async (
     res.status(200).json({
       success: true,
       message: "Branch retrieved successfully",
-      data: branch,
+      data: toPublicBranch(branch),
     });
   } catch (error) {
     next(error);
@@ -134,10 +174,18 @@ export const getAllMainBranchesController = async (
       limit,
       search,
     });
+
+    const sanitized = {
+      data: Array.isArray(mainBranches?.data)
+        ? mainBranches.data.map((branch) => toPublicBranch(branch))
+        : [],
+      pagination: mainBranches?.pagination,
+    };
+
     res.status(200).json({
       success: true,
       message: "Main branches retrieved successfully",
-      data: mainBranches,
+      data: sanitized,
     });
   } catch (error) {
     next(error);
@@ -157,7 +205,9 @@ export const createBulkBranchesController = async (
     res.status(201).json({
       success: true,
       message: `${branches.length} branch(es) created successfully`,
-      data: branches,
+      data: Array.isArray(branches)
+        ? branches.map((branch) => toPublicBranch(branch))
+        : [],
     });
   } catch (error) {
     next(error);
@@ -178,7 +228,9 @@ export const reassignBulkBranchesController = async (
     res.status(200).json({
       success: true,
       message: `${branches.length} branch(es) reassigned successfully`,
-      data: branches,
+      data: Array.isArray(branches)
+        ? branches.map((branch) => toPublicBranch(branch))
+        : [],
     });
   } catch (error) {
     next(error);

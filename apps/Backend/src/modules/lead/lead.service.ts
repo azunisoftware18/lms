@@ -300,8 +300,20 @@ export const assignLeadService = async (
             pinCode: true,
           },
         },
-        assignedToUser: true,
-        assignedByUser: true,
+        assignedToUser: {
+          select: {
+            id: true,
+            email: true,
+            role: true,
+          },
+        },
+        assignedByUser: {
+          select: {
+            id: true,
+            email: true,
+            role: true,
+          },
+        },
       },
     });
     return {
