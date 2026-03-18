@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { showSuccess, showError } from "../lib/utils/toastService";
 import {
   getLoanApplications,
@@ -10,7 +10,7 @@ import {
   rejectLoanApplication,
   uploadLoanApplicationDocument,
   verifyDocument,
-  rejectDocument
+  rejectDocument,
 } from "../lib/api/loanApplication.api";
 import {
   setLoading,
@@ -24,13 +24,11 @@ import {
 
 export const useLoanApplications = (params) => {
   const dispatch = useDispatch();
-  const loading = useSelector(state => state.loanApplication?.loading);
-  const error = useSelector(state => state.loanApplication?.error);
 
   return useQuery({
     queryKey: ["loanApplications", params],
     queryFn: () => getLoanApplications(params),
-    keepPreviousData: true, 
+    keepPreviousData: true,
     onSuccess: (data) => {
       dispatch(setLoanApplications(data));
     },
@@ -169,7 +167,7 @@ export const useUploadDocuments = () => {
     onMutate: () => {
       dispatch(setLoading(true));
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       qc.invalidateQueries(["loanApplication"]);
       dispatch(setLoading(false));
       dispatch(clearError());
@@ -193,7 +191,7 @@ export const useVerifyDocument = () => {
     onMutate: () => {
       dispatch(setLoading(true));
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       qc.invalidateQueries(["loanApplication"]);
       dispatch(setLoading(false));
       dispatch(clearError());
@@ -217,7 +215,7 @@ export const useRejectDocument = () => {
     onMutate: () => {
       dispatch(setLoading(true));
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       qc.invalidateQueries(["loanApplication"]);
       dispatch(setLoading(false));
       dispatch(clearError());

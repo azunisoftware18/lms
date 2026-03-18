@@ -43,10 +43,9 @@ import LoanApplicationView from "../ViewDetail/LoanApplicationView";
 
 export default function ApplicationPage() {
   const [showForm, setShowForm] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm] = useState("");
   const [selectedApp, setSelectedApp] = useState(null);
   const [viewModalOpen, setViewModalOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const [showApproveDialog, setShowApproveDialog] = useState(false);
 
   const { data: applicationsResponse, isLoading } = useLoanApplications();
@@ -92,15 +91,6 @@ export default function ApplicationPage() {
       app.customer?.panNumber?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredApplications.length / PAGE_SIZE),
-  );
-  const paginatedApplications = filteredApplications.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE,
-  );
-
   const stats = {
     total: applications.length,
     approved: applications.filter((a) => a.status?.toLowerCase() === "approved")
@@ -127,27 +117,6 @@ export default function ApplicationPage() {
       default:
         return "bg-gray-100 text-gray-700 border-gray-200";
     }
-  };
-
-  // Format date helper
-  const formatDate = (dateString) => {
-    if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
-
-  // Format currency helper
-  const formatCurrency = (amount) => {
-    if (!amount && amount !== 0) return "N/A";
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
   };
 
   const tableColumns = [
@@ -211,14 +180,15 @@ export default function ApplicationPage() {
       accessor: "cibilScore",
       render: (value) => (
         <span
-          className={`px-3 py-1.5 rounded-lg font-medium text-sm ${value >= 750
+          className={`px-3 py-1.5 rounded-lg font-medium text-sm ${
+            value >= 750
               ? "bg-green-100 text-green-700"
               : value >= 650
                 ? "bg-yellow-100 text-yellow-700"
                 : value
                   ? "bg-red-100 text-red-700"
                   : "bg-slate-100 text-slate-700"
-            }`}
+          }`}
         >
           {value ?? "N/A"}
         </span>
@@ -250,11 +220,7 @@ export default function ApplicationPage() {
   }, [showForm]);
 
   if (showForm) {
-    return (
-      <LoanApplicationForm
-        onClose={() => setShowForm(false)}
-      />
-    );
+    return <LoanApplicationForm onClose={() => setShowForm(false)} />;
   }
 
   return (
@@ -268,7 +234,6 @@ export default function ApplicationPage() {
             Manage and track all loan applications
           </p>
         </div>
-
 
         <Button
           onClick={() => setShowForm(true)}
@@ -340,7 +305,6 @@ export default function ApplicationPage() {
         />
       )}
       {/* // Loan Application Form */}
-
 
       <ConfirmationDialog
         open={showApproveDialog}
