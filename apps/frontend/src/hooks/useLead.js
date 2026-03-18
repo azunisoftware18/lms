@@ -12,13 +12,13 @@ import {
   clearError,
 } from "../store/slices/leadSlice";
 
-const getLeads = (params = {}) => apiGet("/leads", { params });
-const createLead = (payload) => apiPost("/leads", payload);
+const getLeads = (params = {}) => apiGet("/lead/all", { params });
+const createLead = (payload) => apiPost("/lead", payload);
 const updateLeadStatus = ({ id, status }) =>
-  apiPatch(`/leads/${id}/status`, { status });
+  apiPatch(`/lead/update-status/${id}`, { status });
 const assignLead = ({ id, payload }) =>
-  apiPatch(`/leads/${id}/assign`, payload);
-const convertLeadToLoan = (id) => apiPost(`/leads/${id}/convert-to-loan`);
+  apiPatch(`/lead/assign/${id}`, payload);
+const convertLeadToLoan = (id) => apiGet(`/lead/convert-to-loan/${id}`);
 
 export const useLead = (params) => {
   const dispatch = useDispatch();
