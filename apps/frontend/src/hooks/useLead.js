@@ -139,7 +139,8 @@ export const useConvertLeadToLoan = () => {
             if (data?.id) {
                 dispatch(removeLeadFromList(data.id));
             }
-            queryClient.invalidateQueries(["leads"]);            dispatch(setLoading(false));
+            queryClient.invalidateQueries(["leads"]);      
+            dispatch(setLoading(false));
             dispatch(clearError());
             showSuccess("Lead converted to loan successfully!");
         },

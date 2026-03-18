@@ -1,17 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
+import { apiGet, apiPost, apiPatch } from "../lib/api/apiClient";
 import { showSuccess, showError } from "../lib/utils/toastService";
-import {
-  getLoanApplications,
-  getLoanApplicationById,
-  createLoanApplication,
-  updateLoanApplicationStatus,
-  approveLoanApplication,
-  rejectLoanApplication,
-  uploadLoanApplicationDocument,
-  verifyDocument,
-  rejectDocument
-} from "../lib/api/loanApplication.api";
+import { normalizeParams } from "../lib/utils/paramHelper";
 import {
   setLoading,
   setError,
@@ -27,12 +18,15 @@ export const useLoanApplications = (params = {}) => {
   const loading = useSelector(state => state.loanApplication?.loading);
   const error = useSelector(state => state.loanApplication?.error);
 
+  const normalizedParams = normalizeParams(params);
+
   return useQuery({
-    queryKey: ["loanApplications", params],
-    queryFn: () => getLoanApplications(params),
+    queryKey: ["loanApplications", normalizedParams],
+    queryFn: () => apiGet('/loan-applications', { params: normalizedParams }),
     keepPreviousData: true, 
     onSuccess: (data) => {
       dispatch(setLoanApplications(data));
+      dispatch(clearError());
     },
     onError: (err) => {
       const message = err?.message || "Failed to fetch loan applications";
@@ -51,6 +45,7 @@ export const useLoanApplication = (id) => {
     enabled: !!id,
     onSuccess: (data) => {
       dispatch(setLoanApplication(data));
+      dispatch(clearError());
     },
     onError: (err) => {
       const message = err?.message || "Failed to fetch loan application";
@@ -71,7 +66,7 @@ export const useCreateLoanApplication = () => {
     },
     onSuccess: (data) => {
       dispatch(addLoanApplication(data));
-      qc.invalidateQueries(["loanApplications"]);
+      qc.invalidateQueries({ queryKey: ["loanApplications"] });
       dispatch(setLoading(false));
       dispatch(clearError());
       showSuccess("Loan application created successfully!");
@@ -96,7 +91,7 @@ export const useUpdateLoanStatus = () => {
     },
     onSuccess: (data) => {
       dispatch(updateLoanApplicationInList(data));
-      qc.invalidateQueries(["loanApplications"]);
+      qc.invalidateQueries({ queryKey: ["loanApplications"] });
       dispatch(setLoading(false));
       dispatch(clearError());
       showSuccess("Loan status updated successfully!");
@@ -121,7 +116,7 @@ export const useApproveLoan = () => {
     },
     onSuccess: (data) => {
       dispatch(updateLoanApplicationInList(data));
-      qc.invalidateQueries(["loanApplications"]);
+      qc.invalidateQueries({ queryKey: ["loanApplications"] });
       dispatch(setLoading(false));
       dispatch(clearError());
       showSuccess("Loan approved successfully!");
@@ -146,7 +141,7 @@ export const useRejectLoan = () => {
     },
     onSuccess: (data) => {
       dispatch(updateLoanApplicationInList(data));
-      qc.invalidateQueries(["loanApplications"]);
+      qc.invalidateQueries({ queryKey: ["loanApplications"] });
       dispatch(setLoading(false));
       dispatch(clearError());
       showSuccess("Loan rejected successfully!");
@@ -176,7 +171,7 @@ export const useUploadDocuments = () => {
       dispatch(setLoading(true));
     },
     onSuccess: () => {
-      qc.invalidateQueries(["loanApplication"]);
+      qc.invalidateQueries({ queryKey: ["loanApplication"] });
       dispatch(setLoading(false));
       dispatch(clearError());
       showSuccess("Documents uploaded successfully!");
@@ -201,7 +196,7 @@ export const useVerifyDocument = () => {
       dispatch(setLoading(true));
     },
     onSuccess: () => {
-      qc.invalidateQueries(["loanApplication"]);
+      qc.invalidateQueries({ queryKey: ["loanApplication"] });
       dispatch(setLoading(false));
       dispatch(clearError());
       showSuccess("Document verified successfully!");
@@ -228,7 +223,7 @@ export const useRejectDocument = () => {
       dispatch(setLoading(true));
     },
     onSuccess: () => {
-      qc.invalidateQueries(["loanApplication"]);
+      qc.invalidateQueries({ queryKey: ["loanApplication"] });
       dispatch(setLoading(false));
       dispatch(clearError());
       showSuccess("Document rejected successfully!");
