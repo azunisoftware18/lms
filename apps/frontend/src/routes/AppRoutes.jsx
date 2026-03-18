@@ -66,6 +66,11 @@ import CompanyDetailsPage from "../app/dashboard/systemSetting/CompanyDetailsPag
 import LoanConfigurationPage from "../app/dashboard/systemSetting/LoanConfigrationPage.jsx";
 import SecuritySettingPage from "../app/dashboard/systemSetting/SecuritySettingPage.jsx";
 import PaymentSettingPage from "../app/dashboard/systemSetting/PaymentSettingPage.jsx";
+<<<<<<< HEAD
+// import Leads from "../app/dashboard/LOS/Leads.jsx";
+import LoanProduct from "../app/dashboard/Configuration/LoanProduct.jsx";
+import LeadsPage from "../app/dashboard/LOS/LeadsPage.jsx";
+=======
 import Leads from "../app/dashboard/LOS/Leads.jsx";
 // LoanType
 import LoanProduct from "../app/dashboard/Configuration/LoanProduct.jsx";
@@ -73,6 +78,7 @@ import LoanProduct from "../app/dashboard/Configuration/LoanProduct.jsx";
 import BranchManagement from "../app/dashboard/Configuration/BranchManagement.jsx";
 // Branch Admin
 import BranchAdmin from "../app/dashboard/Configuration/BranchAdmin.jsx";
+>>>>>>> 4e7633575ba7370c7157a5440875bf08ec32e0d0
 
 export default function AppRoutes() {
   const dispatch = useDispatch();
@@ -151,6 +157,17 @@ export default function AppRoutes() {
         <Route path="login" element={<LoginForm />} />
       </Route>
 
+<<<<<<< HEAD
+
+			{/* Private Dashboard */}
+			<Route
+				path="/admin"
+				element={
+					<PrivateRoute>
+						<AdminLayout />
+					</PrivateRoute>
+				}>
+=======
       {/* Private Dashboard */}
       <Route
         path="/admin"
@@ -163,6 +180,7 @@ export default function AppRoutes() {
         {/* Dashboard page */}
         <Route index element={<DashboardPage />} />
         <Route path="borrowers" element={<BorrowerPage />} />
+>>>>>>> 4e7633575ba7370c7157a5440875bf08ec32e0d0
 
         {/* LMS Pages */}
         <Route
@@ -184,6 +202,34 @@ export default function AppRoutes() {
         <Route path="lms/loan-closure" element={<LoanClosure />} />
         <Route path="lms/branch-admin" element={<BranchAdmin />} />
 
+<<<<<<< HEAD
+				{/* LMS Pages */}
+				<Route path="lms/loan-account-creation" element={<LoanAccountCreation />} />
+				<Route path="lms/emi-schedule" element={<EMISchedule />} />
+				<Route path="lms/repayment-management" element={<RepaymentManagement />} />
+				<Route path="lms/nach-auto-debit" element={<NachAutoDebit />} />
+				<Route path="lms/dpd-tracking" element={<DpdTracking />} />
+				<Route path="lms/recovery-management" element={<RecoveryManagement />} />
+				<Route path="lms/foreclosure" element={<Foreclosure />} />
+				<Route path="lms/loan-closure" element={<LoanClosure />} />
+				<Route path="lms/branch-management" element={<BranchManagement />} />
+				<Route path="lms/branch-admin" element={<BranchAdmin />} />
+
+
+				{/* LOS pages */}
+				<Route path='los/applications' element={<ApplicationPage />} />
+				<Route path='los/documents' element={<DocumentPage />} />
+				<Route path='los/kyc-verification' element={<KycVerificationPage />} />
+				<Route path='los/credit-check' element={<CreditCheckPage />} />
+				<Route path='los/technical-review' element={<TechnicalReviewPage />} />
+				<Route path='los/legal-compliance' element={<LegalCompliancePage />} />
+				<Route path='los/emi-management' element={<EMIManagementPage />} />
+				<Route path='los/sanction' element={<SanctionPage />} />
+				<Route path='los/disbursement' element={<DisbursementManagementPage />} />
+        <Route path='los/leads' element={< LeadsPage />} />
+				
+				
+=======
         {/* LOS pages */}
         <Route path="los/applications" element={<ApplicationPage />} />
         <Route path="los/documents" element={<DocumentPage />} />
@@ -198,6 +244,7 @@ export default function AppRoutes() {
           element={<DisbursementManagementPage />}
         />
         <Route path="los/leads" element={<Leads />} />
+>>>>>>> 4e7633575ba7370c7157a5440875bf08ec32e0d0
 
         {/* View Detail Pages */}
         <Route path="loan-account-view/:loanId" element={<LoanAccountView />} />

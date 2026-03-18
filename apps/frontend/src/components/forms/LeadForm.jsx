@@ -7,8 +7,11 @@ import InputField from "../ui/InputField";
 import TextAreaField from "../ui/TextAreaField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { leadSchema } from "../../validations/LeadValidation";
+import { useCreateLead } from "../../hooks/useLead";
 
 export default function LeadForm({ onSuccess }) {
+    const createLeadMutation = useCreateLead();
+  
   // 1. Initialize useForm
   const {
     register,
@@ -42,6 +45,7 @@ export default function LeadForm({ onSuccess }) {
     };
 
     try {
+      await createLeadMutation.mutateAsync(payload);
       console.log("Saving locally:", payload);
       await new Promise((res) => setTimeout(res, 1500));
       alert("Lead created successfully!");

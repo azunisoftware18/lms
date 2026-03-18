@@ -65,7 +65,7 @@ export default function CommitmentSection() {
           <div className="relative z-10">
             {/* Heading - NO ANIMATION HERE */}
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
-              Our <span className="text-blue-600">{commitmentData.title}</span>
+               <span className="text-blue-600">{commitmentData.title}</span>
             </h2>
             
             <motion.div 

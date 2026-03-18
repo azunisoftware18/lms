@@ -86,10 +86,10 @@ export default function HeroSection() {
                 animate={{ rotate: [0, 10, 0] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               >
-                <Shield className="w-6 h-6 text-blue-600" />
+                {/* <Shield className="w-6 h-6 text-blue-600" /> */}
               </motion.div>
-              <span className="text-sm font-semibold text-blue-600 uppercase tracking-wider">
-                Mascot Projects Pvt. Ltd. - Est. 2010
+              <span className="text-sm font-semibold text-blue-600 uppercase tracking-wider"> 
+                {/* Mascot Projects Pvt. Ltd. - Est. 2010 */}
               </span>
             </motion.div>
             
