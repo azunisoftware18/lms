@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
-import { showSuccess, showError, dismissToast } from '../lib/utils/toastService';
+import { apiGet, apiPost, apiPut, apiDelete } from '../lib/api/apiClient';
+import { showSuccess, showError } from '../lib/utils/toastService';
+import { normalizeParams } from '../lib/utils/paramHelper';
 import {
     setBranches,
     setMainBranches,
@@ -11,20 +13,11 @@ import {
     removeBranchFromList,
     clearError,
 } from '../store/slices/branchSlice';
-import {
-    getBranches,
-    createbranch,
-    getBranchById,
-    updateBranch,
-    deleteBranch,
-    getMainBranches
-} from '../lib/api/branch.api';
-
 export const useCreateBranch = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation(createbranch, {
+    return useMutation((payload) => apiPost('/branch', payload), {
         onMutate: () => {
             dispatch(setLoading(true));
         },
@@ -49,7 +42,7 @@ export const useUpdateBranch = () => {
     const dispatch = useDispatch();
 
     return useMutation(
-        ({ id, branchData }) => updateBranch(id, branchData),
+        ({ id, branchData }) => apiPut(`/branch/${id}`, branchData),
         {
             onMutate: () => {
                 dispatch(setLoading(true));
@@ -75,7 +68,7 @@ export const useDeleteBranch = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation(deleteBranch, {
+    return useMutation((id) => apiDelete(`/branch/${id}`), {
         onMutate: () => {
             dispatch(setLoading(true));
         },
@@ -95,13 +88,15 @@ export const useDeleteBranch = () => {
     });
 };
 
-export const useBranches = () => {
+export const useBranches = (params = {}) => {
     const dispatch = useDispatch();
     const branches = useSelector(state => state.branch.branches);
     const loading = useSelector(state => state.branch.loading);
     const error = useSelector(state => state.branch.error);
 
-    const query = useQuery(['branches'], getBranches, {
+    const normalizedParams = normalizeParams(params);
+
+    const query = useQuery(['branches', normalizedParams], () => apiGet('/branch', { params: normalizedParams }), {
         onSuccess: (data) => {
             dispatch(setBranches(data));
             dispatch(clearError());
@@ -129,7 +124,7 @@ export const useBranchById = (id) => {
 
     return useQuery(
         ['branch', id],
-        () => getBranchById(id),
+        () => apiGet(`/branch/${id}`),
         {
             enabled: !!id,
             onSuccess: (data) => {
@@ -145,13 +140,15 @@ export const useBranchById = (id) => {
     );
 };
 
-export const useMainBranches = () => {
+export const useMainBranches = (params = {}) => {
     const dispatch = useDispatch();
     const mainBranches = useSelector(state => state.branch.mainBranches);
     const loading = useSelector(state => state.branch.loading);
     const error = useSelector(state => state.branch.error);
 
-    const query = useQuery(['mainBranches'], getMainBranches, {
+    const normalizedParams = normalizeParams(params);
+
+    const query = useQuery(['mainBranches', normalizedParams], () => apiGet('/branch/main', { params: normalizedParams }), {
         onSuccess: (data) => {
             dispatch(setMainBranches(data));
             dispatch(clearError());

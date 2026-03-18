@@ -1,38 +1,7 @@
-import api from "../api";
-import { getErrorMessage } from "../utils/errorHandler";
+/**
+ * Loan Draft API
+ * Re-exports from global apiClient for convenience
+ * Use hooks from useLoanDraft.js instead of these direct functions
+ */
 
-export const createLoanDraft = async () => {
-  try {
-    const res = await api.post("/loan-drafts");
-    return res.data;
-  } catch (error) {
-    throw new Error(getErrorMessage(error));
-  }
-};
-
-export const updateLoanDraft = async ({ id, data }) => {
-  try {
-    const res = await api.patch(`/loan-drafts/${id}`, data);
-    return res.data;
-  } catch (error) {
-    throw new Error(getErrorMessage(error));
-  }
-};
-
-export const getLoanDraftById = async (id) => {
-  try {
-    const res = await api.get(`/loan-drafts/${id}`);
-    return res.data;
-  } catch (error) {
-    throw new Error(getErrorMessage(error));
-  }
-};
-
-export const submitLoanDraft = async (id) => {
-  try {
-    const res = await api.post(`/loan-drafts/${id}/submit`);
-    return res.data;
-  } catch (error) {
-    throw new Error(getErrorMessage(error));
-  }
-};
+export { apiClient, apiGet, apiPost, apiPatch, apiDelete, apiPut } from "./apiClient";

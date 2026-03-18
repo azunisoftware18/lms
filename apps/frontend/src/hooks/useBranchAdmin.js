@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
+import { apiGet, apiPost, apiPut, apiDelete } from '../lib/api/apiClient';
 import { showSuccess, showError } from '../lib/utils/toastService';
+import { normalizeParams } from '../lib/utils/paramHelper';
 import {
     setBranchAdmins,
     setLoading,
@@ -10,19 +12,11 @@ import {
     removeBranchAdminFromList,
     clearError,
 } from '../store/slices/branchAdminSlice';
-import {
-    getBranchAdmins,
-    createBranchAdmin,
-    getBranchAdminById,
-    updateBranchAdmins,
-    deleteBranchAdmin
-} from '../lib/api/branchAdmin.api';
-
 export const useCreateBranchAdmin = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation(createBranchAdmin, {
+    return useMutation((payload) => apiPost('/branch-admin', payload), {
         onMutate: () => {
             dispatch(setLoading(true));
         },
@@ -47,7 +41,7 @@ export const useUpdateBranchAdmin = () => {
     const dispatch = useDispatch();
 
     return useMutation(
-        ({ id, data }) => updateBranchAdmins(id, data),
+        ({ id, data }) => apiPut(`/branch-admin/${id}`, data),
         {
             onMutate: () => {
                 dispatch(setLoading(true));
@@ -73,7 +67,7 @@ export const useDeleteBranchAdmin = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation(deleteBranchAdmin, {
+    return useMutation((id) => apiDelete(`/branch-admin/${id}`), {
         onMutate: () => {
             dispatch(setLoading(true));
         },
@@ -93,13 +87,15 @@ export const useDeleteBranchAdmin = () => {
     });
 };
 
-export const useBranchAdmins = () => {
+export const useBranchAdmins = (params = {}) => {
     const dispatch = useDispatch();
     const branchAdmins = useSelector(state => state.branchAdmin.branchAdmins);
     const loading = useSelector(state => state.branchAdmin.loading);
     const error = useSelector(state => state.branchAdmin.error);
 
-    const query = useQuery(['branchAdmins'], getBranchAdmins, {
+    const normalizedParams = normalizeParams(params);
+
+    const query = useQuery(['branchAdmins', normalizedParams], () => apiGet('/branch-admin', { params: normalizedParams }), {
         onSuccess: (data) => {
             dispatch(setBranchAdmins(data));
             dispatch(clearError());
@@ -126,7 +122,7 @@ export const useBranchAdminById = (id) => {
 
     return useQuery(
         ['branchAdmin', id],
-        () => getBranchAdminById(id),
+        () => apiGet(`/branch-admin/${id}`),
         {
             enabled: !!id,
             onSuccess: (data) => {
