@@ -68,8 +68,9 @@ import CompanyDetailsPage from "../app/dashboard/systemSetting/CompanyDetailsPag
 import LoanConfigurationPage from "../app/dashboard/systemSetting/LoanConfigrationPage.jsx";
 import SecuritySettingPage from "../app/dashboard/systemSetting/SecuritySettingPage.jsx";
 import PaymentSettingPage from "../app/dashboard/systemSetting/PaymentSettingPage.jsx";
-import Leads from "../app/dashboard/LOS/Leads.jsx";
+// import Leads from "../app/dashboard/LOS/Leads.jsx";
 import LoanProduct from "../app/dashboard/Configuration/LoanProduct.jsx";
+import LeadsPage from "../app/dashboard/LOS/LeadsPage.jsx";
 
 export default function AppRoutes() {
   const dispatch = useDispatch();
@@ -148,6 +149,7 @@ export default function AppRoutes() {
         <Route path="login" element={<LoginForm />} />
       </Route>
 
+
 			{/* Private Dashboard */}
 			<Route
 				path="/admin"
@@ -185,7 +187,7 @@ export default function AppRoutes() {
 				<Route path='los/emi-management' element={<EMIManagementPage />} />
 				<Route path='los/sanction' element={<SanctionPage />} />
 				<Route path='los/disbursement' element={<DisbursementManagementPage />} />
-        <Route path='los/leads' element={< Leads />} />
+        <Route path='los/leads' element={< LeadsPage />} />
 				
 				
 

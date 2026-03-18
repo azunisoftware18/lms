@@ -119,8 +119,8 @@ export default function Header() {
                 <span className="text-white font-black text-base">M</span>
               </div>
               <div className="leading-tight">
-                <div className="text-lg font-black text-blue-700 tracking-tight">Mascotfin</div>
-                <div className="text-[10px] text-gray-400 font-medium hidden sm:block -mt-0.5"> Pvt. Ltd. - Est. 2010</div>
+                <div className="text-lg font-black text-blue-700 tracking-tight">Mascot Financ</div>
+                <div className="text-[10px] text-gray-400 font-medium hidden sm:block -mt-0.5">RBI NBFC</div>
               </div>
             </Link>
 

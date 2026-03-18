@@ -1,39 +1,42 @@
 import React, { useState, useMemo } from "react";
-import { Edit, Trash2, User } from "lucide-react";
+import { Edit, Trash2, User, Plus } from "lucide-react";
 import SearchField from "../../../components/ui/SearchField";
 import LeadsTable from "../../../components/tables/LeadsTable";
+import LeadFormModal from "../../../components/modals/LeadFormModal";
+import Button from "../../../components/ui/Button";
 import {
   LEAD_ACTION_DEFINITIONS,
-  LEADS_DUMMY_DATA,
-  LEADS_PAGE_DUMMY_CONFIG,
 } from "../../../lib/LOSDummyData";
 import { colorVariables } from "../../../lib";
+import { useLead } from "../../../hooks/useLead";
 
 export default function LeadsPage() {
-  const isLoading = false;
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = LEADS_PAGE_DUMMY_CONFIG.ITEMS_PER_PAGE;
   const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const getLeads = getLeads();
+  
+  const itemsPerPage = 10;
 
-  // Offline mode: use local dummy data instead of API
-  const loanData = useMemo(() => {
-    return [...LEADS_DUMMY_DATA].sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
-    );
-  }, []);
+  // Use React Query hook
+  const { leads = [], loading, refetch } = useLead({
+    page: currentPage,
+    limit: itemsPerPage,
+    search: searchTerm
+  });
 
+  console.log("📊 Leads data:", leads); // Debug
+
+  // Filter data based on search (client-side filtering)
   const filteredData = useMemo(() => {
-    if (!searchTerm) return loanData;
-
+    if (!searchTerm || !leads?.data) return leads?.data || [];
+    
     const lower = searchTerm.toLowerCase();
-
-    return loanData.filter((item) => {
-      // Safely handle null/undefined properties
+    return leads.data.filter((item) => {
       const fullName = item?.fullName || "";
       const email = item?.email || "";
       const contactNumber = item?.contactNumber || "";
       const city = item?.city || "";
-      // Note: In your JSON, loanType is a nested object
       const loanTypeName = item?.loanType?.name || "";
 
       return (
@@ -44,15 +47,10 @@ export default function LeadsPage() {
         loanTypeName.toLowerCase().includes(lower)
       );
     });
-  }, [loanData, searchTerm]);
+  }, [leads, searchTerm]);
 
-  const totalItems = Array.isArray(filteredData) ? filteredData.length : 0;
+  const totalItems = leads?.total || filteredData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-
-  const currentItems = filteredData.slice(startIndex, endIndex);
 
   const getActions = (item) => {
     const iconMap = {
@@ -66,11 +64,11 @@ export default function LeadsPage() {
       onClick: () => {
         if (action.key === "edit") {
           console.log("Edit clicked", item.id);
-          return;
+          // TODO: Open edit modal
         }
-
         if (action.key === "delete") {
           console.log("Delete clicked", item.id);
+          // TODO: Show delete confirmation
         }
       },
     }));
@@ -78,15 +76,35 @@ export default function LeadsPage() {
 
   return (
     <div className="p-6 bg-linear-to-br from-gray-50 to-gray-100 min-h-screen">
+      {/* Lead Form Modal */}
+      <LeadFormModal 
+        isOpen={isModalOpen} 
+        onClose={() => {
+          setIsModalOpen(false);
+          refetch(); // Refresh data after closing
+        }} 
+      />
+
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            User Lead Management
-          </h1>
-          <p className="text-gray-600">
-            Manage and view all loan application details
-          </p>
+        <div className="mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              User Lead Management
+            </h1>
+            <p className="text-gray-600">
+              Manage and view all loan application details
+            </p>
+          </div>
+          
+          {/* Add New Lead Button */}
+          <Button 
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <Plus size={18} />
+            <span>New Lead</span>
+          </Button>
         </div>
 
         {/* Stats and Search Bar */}
@@ -131,8 +149,8 @@ export default function LeadsPage() {
 
         {/* Table Container */}
         <LeadsTable
-          items={currentItems}
-          loading={isLoading}
+          items={filteredData}
+          loading={loading}
           getActions={getActions}
           currentPage={currentPage}
           totalPages={totalPages}
