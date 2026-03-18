@@ -304,7 +304,7 @@ export type DocumentOrderByWithRelationInput = {
 
 export type DocumentWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  loanApplicationId_documentType?: Prisma.DocumentLoanApplicationIdDocumentTypeCompoundUniqueInput
+  coApplicantId_documentType?: Prisma.DocumentCoApplicantIdDocumentTypeCompoundUniqueInput
   guarantorId_documentType?: Prisma.DocumentGuarantorIdDocumentTypeCompoundUniqueInput
   AND?: Prisma.DocumentWhereInput | Prisma.DocumentWhereInput[]
   OR?: Prisma.DocumentWhereInput[]
@@ -329,7 +329,7 @@ export type DocumentWhereUniqueInput = Prisma.AtLeast<{
   coApplicant?: Prisma.XOR<Prisma.CoApplicantNullableScalarRelationFilter, Prisma.CoApplicantWhereInput> | null
   guarantor?: Prisma.XOR<Prisma.GuarantorNullableScalarRelationFilter, Prisma.GuarantorWhereInput> | null
   branch?: Prisma.XOR<Prisma.BranchScalarRelationFilter, Prisma.BranchWhereInput>
-}, "id" | "loanApplicationId_documentType" | "guarantorId_documentType">
+}, "id" | "coApplicantId_documentType" | "guarantorId_documentType">
 
 export type DocumentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -519,8 +519,8 @@ export type DocumentOrderByRelevanceInput = {
   search: string
 }
 
-export type DocumentLoanApplicationIdDocumentTypeCompoundUniqueInput = {
-  loanApplicationId: string
+export type DocumentCoApplicantIdDocumentTypeCompoundUniqueInput = {
+  coApplicantId: string
   documentType: string
 }
 

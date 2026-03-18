@@ -1,6 +1,7 @@
 import { prisma } from "../../db/prismaService.js";
 import { CreateLead, UpdateLead } from "./lead.types.js";
 import { generateUniqueLeadNumber } from "../../common/generateId/generateLeadNumber.js";
+import { AddressType } from "../../../generated/prisma-client/enums.js";
 
 import { generateLoanNumber } from "../../common/generateId/generateLoanNumber.js";
 import { buildLeadSearch } from "../../common/utils/search.js";
@@ -25,6 +26,9 @@ export const createLeadService = async (leadData: CreateLead) => {
   }
 
   const leadNumber = await generateUniqueLeadNumber(); // ✅ 4-digit only
+  const shouldCreateAddress = Boolean(
+    leadData.address || leadData.city || leadData.state || leadData.pinCode,
+  );
 
   return await prisma.leads.create({
     data: {
@@ -35,12 +39,52 @@ export const createLeadService = async (leadData: CreateLead) => {
       dob,
       gender: leadData.gender,
       loanAmount: leadData.loanAmount,
-      loanTypeId: leadData.loanTypeId,
-      city: leadData.city ?? null,
-      state: leadData.state ?? null,
-      pinCode: leadData.pinCode ?? null,
-      address: leadData.address ?? null,
+      loanType: {
+        connect: {
+          id: leadData.loanTypeId,
+        },
+      },
       status: "PENDING",
+      ...(shouldCreateAddress
+        ? {
+            address: {
+              create: {
+                addressType: AddressType.CURRENT_RESIDENTIAL,
+                addressLine1: leadData.address?.trim() || "NA",
+                city: leadData.city?.trim() || "NA",
+                district: leadData.city?.trim() || "NA",
+                state: leadData.state?.trim() || "NA",
+                pinCode: leadData.pinCode?.trim() || "000000",
+              },
+            },
+          }
+        : {}),
+    },
+    select: {
+      id: true,
+      fullName: true,
+      contactNumber: true,
+      email: true,
+      leadNumber: true,
+      dob: true,
+      gender: true,
+      loanAmount: true,
+      status: true,
+      assignedTo: true,
+      assignedBy: true,
+      convertedLoanApplicationId: true,
+      createdAt: true,
+      updatedAt: true,
+      loanTypeId: true,
+      loanType: true,
+      address: {
+        select: {
+          addressLine1: true,
+          city: true,
+          state: true,
+          pinCode: true,
+        },
+      },
     },
   });
 };
@@ -56,14 +100,48 @@ export const getAllLeadsService = async (params: {
   const [data, total] = await Promise.all([
     prisma.leads.findMany({
       where,
-      include: { loanType: true },
+      select: {
+        id: true,
+        fullName: true,
+        contactNumber: true,
+        email: true,
+        leadNumber: true,
+        dob: true,
+        gender: true,
+        loanAmount: true,
+        status: true,
+        assignedTo: true,
+        assignedBy: true,
+        convertedLoanApplicationId: true,
+        createdAt: true,
+        updatedAt: true,
+        loanTypeId: true,
+        loanType: true,
+        address: {
+          select: {
+            addressLine1: true,
+            city: true,
+            state: true,
+            pinCode: true,
+          },
+        },
+      },
       skip,
       take: limit,
     }),
     prisma.leads.count({ where }),
   ]);
+
+  const normalizedData = data.map((lead) => ({
+    ...lead,
+    address: lead.address?.addressLine1 ?? null,
+    city: lead.address?.city ?? null,
+    state: lead.address?.state ?? null,
+    pinCode: lead.address?.pinCode ?? null,
+  }));
+
   return {
-    data,
+    data: normalizedData,
     meta: {
       total,
       page,
@@ -75,12 +153,41 @@ export const getAllLeadsService = async (params: {
 export const getLeadByIdService = async (id: string) => {
   const lead = await prisma.leads.findUnique({
     where: { id },
-    include: {
+    select: {
+      id: true,
+      fullName: true,
+      contactNumber: true,
+      email: true,
+      leadNumber: true,
+      dob: true,
+      gender: true,
+      loanAmount: true,
+      status: true,
+      assignedTo: true,
+      assignedBy: true,
+      convertedLoanApplicationId: true,
+      createdAt: true,
+      updatedAt: true,
+      loanTypeId: true,
       loanType: true,
+      address: {
+        select: {
+          addressLine1: true,
+          city: true,
+          state: true,
+          pinCode: true,
+        },
+      },
     },
   });
   if (lead) {
-    return lead;
+    return {
+      ...lead,
+      address: lead.address?.addressLine1 ?? null,
+      city: lead.address?.city ?? null,
+      state: lead.address?.state ?? null,
+      pinCode: lead.address?.pinCode ?? null,
+    };
   }
   throw new Error("Lead not found");
 };
@@ -113,9 +220,40 @@ export const updateLeadStatusService = async (id: string, status: string) => {
     const updatedLead = await prisma.leads.update({
       where: { id },
       data: { status: normalized as any },
-      include: { loanType: true },
+      select: {
+        id: true,
+        fullName: true,
+        contactNumber: true,
+        email: true,
+        leadNumber: true,
+        dob: true,
+        gender: true,
+        loanAmount: true,
+        status: true,
+        assignedTo: true,
+        assignedBy: true,
+        convertedLoanApplicationId: true,
+        createdAt: true,
+        updatedAt: true,
+        loanTypeId: true,
+        loanType: true,
+        address: {
+          select: {
+            addressLine1: true,
+            city: true,
+            state: true,
+            pinCode: true,
+          },
+        },
+      },
     });
-    return updatedLead;
+    return {
+      ...updatedLead,
+      address: updatedLead.address?.addressLine1 ?? null,
+      city: updatedLead.address?.city ?? null,
+      state: updatedLead.address?.state ?? null,
+      pinCode: updatedLead.address?.pinCode ?? null,
+    };
   } catch (error: unknown) {
     const eAny = error as any;
     // record not found
@@ -137,13 +275,42 @@ export const assignLeadService = async (
     const updated = await prisma.leads.update({
       where: { id },
       data: { assignedTo, assignedBy },
-      include: {
+      select: {
+        id: true,
+        fullName: true,
+        contactNumber: true,
+        email: true,
+        leadNumber: true,
+        dob: true,
+        gender: true,
+        loanAmount: true,
+        status: true,
+        assignedTo: true,
+        assignedBy: true,
+        convertedLoanApplicationId: true,
+        createdAt: true,
+        updatedAt: true,
+        loanTypeId: true,
+        loanType: true,
+        address: {
+          select: {
+            addressLine1: true,
+            city: true,
+            state: true,
+            pinCode: true,
+          },
+        },
         assignedToUser: true,
         assignedByUser: true,
-        include: { loanType: true },
       },
     });
-    return updated;
+    return {
+      ...updated,
+      address: updated.address?.addressLine1 ?? null,
+      city: updated.address?.city ?? null,
+      state: updated.address?.state ?? null,
+      pinCode: updated.address?.pinCode ?? null,
+    };
   } catch (error: unknown) {
     const eAny = error as any;
     if (eAny && eAny.code === "P2025") {
@@ -157,7 +324,12 @@ export const assignLeadService = async (
 
 export const convertLeadToLoanApplicationService = async (leadId: string) => {
   return prisma.$transaction(async (tx) => {
-    const lead = await tx.leads.findUnique({ where: { id: leadId } });
+    const lead = await tx.leads.findUnique({
+      where: { id: leadId },
+      include: {
+        address: true,
+      },
+    });
     if (!lead) {
       const e: any = new Error("Lead not found");
       e.statusCode = 404;
@@ -213,13 +385,29 @@ export const convertLeadToLoanApplicationService = async (leadId: string) => {
             title: titleFromGender as any,
             firstName,
             lastName,
+            fatherName: "Unknown",
+            motherName: "Unknown",
             gender: lead.gender as any,
             dob: lead.dob as Date,
             contactNumber: lead.contactNumber,
-            address: lead.address ?? "",
-            city: lead.city ?? "",
-            state: lead.state ?? "",
-            pinCode: lead.pinCode ?? "",
+            category: "GENERAL",
+            maritalStatus: "SINGLE",
+            aadhaarNumber: "000000000000",
+            panNumber: `TMP${Date.now().toString().slice(-7)}A`,
+            nationality: "Indian",
+            relationshipWithCoApplicant: "OTHER",
+            addresses: {
+              create: [
+                {
+                  addressType: AddressType.CURRENT_RESIDENTIAL,
+                  addressLine1: lead.address?.addressLine1 ?? "NA",
+                  city: lead.address?.city ?? "NA",
+                  district: lead.address?.district ?? lead.address?.city ?? "NA",
+                  state: lead.address?.state ?? "NA",
+                  pinCode: lead.address?.pinCode ?? "000000",
+                },
+              ],
+            },
             employmentType: "salaried" as any,
             status: "ACTIVE",
             email: lead.email ?? undefined,
