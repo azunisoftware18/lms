@@ -1,63 +1,81 @@
-import { Request, Response } from "express";
-import { checkAndMarkLoanDefault } from "./loanDefault.service.js";
-import { getAllDefaultedLoansService ,getDefaultLoanByIdService } from "./loanDefault.service.js";
+import { NextFunction, Request, Response } from "express";
+import {
+  checkAndMarkLoanDefault,
+  getAllDefaultedLoansService,
+  getDefaultLoanByIdService,
+} from "./loanDefault.service.js";
+import { AppError } from "../../common/utils/apiError.js";
 
+export const markLoanDefaultController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!req.user) throw AppError.unauthorized("Unauthorized");
 
-export const markLoanDefaultController = async (req: Request, res: Response) => {
-    const { loanId } = req.params;
+    const loanId = typeof req.params.loanId === "string" ? req.params.loanId : req.params.loanId[0];
+    const result = await checkAndMarkLoanDefault(loanId);
 
-    try {
-        const result = await checkAndMarkLoanDefault(loanId);
-       if(!result){
-        return res.status(404).json({ message: "Loan application not found or not active" });
-       }
-        res.status(200).json({
-          success: true,
-          message: "Loan default status checked and updated successfully",
-          data: result,
-        });
-    } catch (error: any) {
-        res.status(500).json({
-          success: false,
-          message: error.message || "Failed to process loan default",
-          error: error.message,
-        });
-    }
-} 
+    return res.status(200).json({
+      success: true,
+      message: "Loan default status checked and updated successfully",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
+export const getAllDefaultedLoansController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!req.user) throw AppError.unauthorized("Unauthorized");
 
-export const getAllDefaultedLoansController = async (req: Request, res: Response) => {
-    try {
-        const defaultedLoans = await getAllDefaultedLoansService();
-        res.status(200).json({
-            success: true,
-            message: "Defaulted loans retrieved successfully",
-            data: defaultedLoans,
-        });
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            message: error.message || "Failed to retrieve defaulted loans",
-            error: error.message,
-        });
-    }
-}
+    const result = await getAllDefaultedLoansService(
+      {
+        page: Number(req.query.page) || undefined,
+        limit: Number(req.query.limit) || undefined,
+        branchId: typeof req.query.branchId === "string" ? req.query.branchId : undefined,
+      },
+      { id: req.user.id, role: req.user.role, branchId: req.user.branchId },
+    );
 
-export const getDefaultedLoanByIdController = async ( req: Request, res: Response ) => {
-    const { loanId } = req.params;
-    try {
-        const defaultedLoans = await getDefaultLoanByIdService(loanId);
-        res.json({
-            success: true,
-            message: "Defaulted loan retrieved successfully",
-            data: defaultedLoans,
-        });
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            message: error.message || "Failed to retrieve defaulted loan",
-            error: error.message,
-        });
-    }
+    return res.status(200).json({
+      success: true,
+      message: "Defaulted loans retrieved successfully",
+      data: result.data,
+      meta: result.meta,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
-}
+export const getDefaultedLoanByIdController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!req.user) throw AppError.unauthorized("Unauthorized");
+
+    const loanId = typeof req.params.loanId === "string" ? req.params.loanId : req.params.loanId[0];
+    const loan = await getDefaultLoanByIdService(loanId, {
+      id: req.user.id,
+      role: req.user.role,
+      branchId: req.user.branchId,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Defaulted loan retrieved successfully",
+      data: loan,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -76,6 +76,8 @@ export async function uploadDocumentsService(
       whereClause = { coApplicantId: targetId };
 
       assertBranchAccess(requester, branchId);
+      // Set loanApplicationId for co-applicant documents
+      loanApplicationId = co.loanApplication.id;
     }
 
     /* 2️⃣ Check already uploaded document types */
@@ -106,7 +108,7 @@ export async function uploadDocumentsService(
         uploadedBy: doc.uploadedBy,
         kycId,
         branchId: branchId!,
-        loanApplicationId: target === "loan" ? loanApplicationId : undefined,
+        loanApplicationId: target === "loan" ? loanApplicationId : (target === "coApplicant" ? loanApplicationId : undefined),
         coApplicantId: target === "coApplicant" ? targetId : undefined,
       })),
     });

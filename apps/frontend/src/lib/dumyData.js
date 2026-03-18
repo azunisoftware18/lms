@@ -34,6 +34,12 @@ import {
   Lock,
   ThumbsUp,
   IndianRupee,
+  Percent,
+  Calendar,
+  Target,
+  ClipboardList,
+  Search,
+  BarChart,
 } from 'lucide-react';
 // import FinovaLogo from '../../assets/finova_logo.avif';
 
@@ -161,6 +167,64 @@ export const whyChooseUsData = [
     color: 'red'
   }
 ];
+
+export const challengeData = {
+  title: "Bridging the Finance Gap",
+  stats: [
+    { text: "55M+ Micro Enterprises", icon: CheckCircle },
+    { text: "₹3 Trillion Gap", icon: CheckCircle },
+    { text: "Informal Sector", icon: CheckCircle }
+  ],
+  missingMiddlePoints: [
+    "Underserved by traditional lenders",
+    "Informal income documentation",
+    "Difficult to assess using conventional methods",
+    "High employment potential (4x labor intensity)"
+  ]
+};
+
+export const methodSteps = [
+  {
+    number: 1,
+    title: "Doorstep Assessment",
+    desc: "Our representatives visit customers to conduct detailed cash flow analysis at their premises",
+    icon: Search
+  },
+  {
+    number: 2,
+    title: "Industry-Specific Evaluation",
+    desc: "We assess each business based on its unique sector characteristics and requirements",
+    icon: Target
+  },
+  {
+    number: 3,
+    title: "Tailored Solutions",
+    desc: "Customized financial products designed to meet specific needs of MSMEs",
+    icon: TrendingUp
+  }
+];  
+
+export const economicImpactData = {
+  title: "Economic Impact",
+  icon: BarChart,
+  description: "MSMEs contribute 8% to India's GDP, 45% to manufacturing output, and 40% to exports. They are the backbone of the Indian economy and the largest employment generator after agriculture.",
+  points: [
+    { text: "8% GDP Contribution", icon: CheckCircle },
+    { text: "45% Manufacturing Output", icon: CheckCircle },
+    { text: "40% of Exports", icon: CheckCircle }
+  ]
+};
+
+export const employmentData = {
+  title: "Employment Generation",
+  icon: Users,
+  description: "The MSME sector employs around 6 crore individuals across 2.6 crore enterprises, with labor intensity four times higher than large enterprises.",
+  points: [
+    { text: "6 Crore+ Employment", icon: CheckCircle },
+    { text: "2.6 Crore Enterprises", icon: CheckCircle },
+    { text: "4x Labor Intensity", icon: CheckCircle }
+  ]
+};
 
 
 // Loan Products Data
@@ -428,7 +492,11 @@ export const dumyImg = {
   LEADERSHIP: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
   PERSONAL_LOAN: 'https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
   LAP: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-  BUSINESS_LOAN: 'https://images.unsplash.com/photo-1556740714-a8395b3bf30f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+  BUSINESS_LOAN: 'https://images.unsplash.com/photo-1556740714-a8395b3bf30f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  MSME: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+  GROWTH: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+  CONTACT: "https://images.unsplash.com/photo-1417733403748-83bbc7c05140?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+  OFFICE: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
 };
 
 
@@ -913,36 +981,77 @@ export const investorsData = [
 ];
 
 export const methods = [
-	{
-		title: 'Absence of Credit History',
-		icon: CreditCard,
-		desc: 'Many MSMEs lack a well-established credit history. We recognize this and use alternative methods to assess creditworthiness and provide necessary financial support.',
-	},
-	{
-		title: 'Detailed Cash Flow Analysis',
-		icon: Zap,
-		desc: "Understanding and analyzing the cash flow of an MSME is crucial. We conduct detailed cash flow analysis at the customer's doorstep to gain a comprehensive financial understanding.",
-	},
-	{
-		title: 'Seasonality of Every Business',
-		icon: Repeat,
-		desc: 'Seasonal fluctuations in business revenue are accommodated. We structure our offerings to align with seasonal cash flow requirements accordingly.',
-	},
-	{
-		title: 'Variety of Collaterals',
-		icon: Shield,
-		desc: "MSMEs may have unique collaterals that don't fit traditional models. We have a flexible approach that accepts a wide range of assets for securing financing.",
-	},
-	{
-		title: 'Poor Banking Practices',
-		icon: Landmark,
-		desc: 'MSMEs often face difficulties due to outdated banking practices and complex procedures. We strive to simplify the process and provide efficient, hassle-free solutions.',
-	},
-	{
-		title: 'Properties in Rural Areas',
-		icon: Map,
-		desc: 'Many MSMEs operate in rural areas where documentation differs. Our understanding of rural dynamics helps us navigate these challenges and tailor financial solutions.',
-	},
+  {
+    icon: "Search",
+    title: "In-Depth Cash Flow Analysis",
+    desc: "We conduct detailed cash flow analysis at the customer's doorstep to accurately assess their financial situation, moving beyond traditional income documentation."
+  },
+  {
+    icon: "Users",
+    title: "Serving the 'Missing Middle'",
+    desc: "Our focus is on the underserved micro enterprises that traditional lenders often overlook due to informal income structures."
+  },
+  {
+    icon: "TrendingUp",
+    title: "Industry-Specific Assessment",
+    desc: "We recognize that each MSME sector has unique characteristics and tailor our evaluation process accordingly."
+  },
+  {
+    icon: "Shield",
+    title: "Risk Mitigation Framework",
+    desc: "Our seasoned professionals employ robust risk management practices to ensure sustainable lending."
+  },
+  {
+    icon: "Clock",
+    title: "Quick Turnaround Time",
+    desc: "Streamlined processes enable faster approvals and disbursements, helping businesses seize opportunities without delay."
+  },
+  {
+    icon: "FileText",
+    title: "Minimal Documentation",
+    desc: "We simplify the paperwork, making it easier for MSMEs to access credit without complex formalities."
+  },
+  {
+    icon: "IndianRupee",
+    title: "Bridging the Finance Gap",
+    desc: "Targeting the ₹3 trillion unmet finance gap affecting over 55 million micro enterprises across India."
+  },
+  {
+    icon: "Target",
+    title: "Customized Solutions",
+    desc: "Tailored financial products designed to meet the specific needs of different MSME sectors."
+  },
+  {
+    icon: "Award",
+    title: "Experienced Leadership",
+    desc: "Our team, led by seasoned professionals from the finance industry, brings deep expertise to every assessment."
+  }
+];
+
+export const methodStats = [
+  { value: "₹3 Trillion", label: "Unmet Finance Gap", color: "blue" },
+  { value: "55 Million+", label: "Micro Enterprises Affected", color: "green" },
+  { value: "4x", label: "Labor Intensity vs Large Enterprises", color: "purple" },
+  { value: "6 Crore+", label: "Employment Generated", color: "orange" }
+];
+
+export const methodHighlights = [
+  {
+    title: "Doorstep Cash Flow Analysis",
+    desc: "Our representatives visit customers to conduct detailed financial assessment"
+  },
+  {
+    title: "Informal Sector Expertise",
+    desc: "Specialized in evaluating undocumented income structures"
+  },
+  {
+    title: "MSME Sector Focus",
+    desc: "Dedicated to serving micro, small and medium enterprises"
+  },
+  {
+    title: "Innovative Approach",
+    desc: "Radically different from traditional lending methods"
+  }
 ];
 
 export const policyData = [
@@ -2487,4 +2596,302 @@ export const complianceData = {
     { icon: CheckCircle, text: 'Regular Audits', subtext: 'Quarterly Reviews' }
   ],
   statement: "Mascot Projects Private Limited is committed to maintaining the highest standards of regulatory compliance and corporate governance, ensuring trust and transparency in all our financial operations."
+};
+
+
+export const whyChooseData = [
+  { 
+    icon: ShieldCheck, 
+    title: "RBI Registered NBFC", 
+    desc: "Operating under regulatory guidelines ensuring trust and compliance" 
+  },
+  { 
+    icon: Heart, 
+    title: "Customer-Centric Approach", 
+    desc: "Tailored solutions that suit your individual financial needs" 
+  },
+  { 
+    icon: Clock, 
+    title: "Quick & Simplified Process", 
+    desc: "Streamlined processing for faster approvals and minimal documentation" 
+  },
+  { 
+    icon: FileText, 
+    title: "Transparent Lending", 
+    desc: "Complete transparency in interest rates, fees, and repayment structures" 
+  }
+];
+
+
+export const productOverviewData = [
+  { 
+    icon: IndianRupee, 
+    title: "Loan Amount", 
+    value: "₹50,000 to ₹25,00,000" 
+  },
+  { 
+    icon: Percent, 
+    title: "Interest Rate", 
+    value: "Starting from 10.99% p.a." 
+  },
+  { 
+    icon: Calendar, 
+    title: "Tenure", 
+    value: "12 to 84 months" 
+  }
+];
+
+
+export const eligibilityData = {
+  salaried: [
+    "Age: 21 to 60 years",
+    "Minimum monthly income: ₹25,000",
+    "Minimum 2 years of work experience",
+    "At least 1 year with current employer"
+  ],
+  selfEmployed: [
+    "Age: 25 to 65 years",
+    "Minimum annual income: ₹3,00,000",
+    "Business continuity: 3+ years",
+    "ITR filed for last 2 years"
+  ]
+};
+
+export const keyFeaturesData = [
+  { icon: Clock, title: "Quick Approval", desc: "Loan approved within 24 hours" },
+  { icon: FileText, title: "Minimal Documentation", desc: "Simple document submission process" },
+  { icon: Percent, title: "Competitive Rates", desc: "Attractive interest rates starting 10.99%" },
+  { icon: Calendar, title: "Flexible Tenure", desc: "Choose repayment period up to 7 years" },
+  { icon: Shield, title: "No Collateral", desc: "Unsecured loan, no security required" },
+  { icon: IndianRupee, title: "High Loan Amount", desc: "Get up to ₹25 Lakhs" }
+];
+
+
+export const documentsData = [
+  { 
+    title: "Identity Proof (Any One)", 
+    items: ["Aadhaar Card", "PAN Card", "Voter ID", "Passport", "Driving License"] 
+  },
+  { 
+    title: "Address Proof (Any One)", 
+    items: ["Aadhaar Card", "Passport", "Utility Bills (Electricity/Water)", "Rental Agreement", "Bank Statement with address"] 
+  },
+  { 
+    title: "Income Proof (Salaried)", 
+    items: ["Last 3 months salary slips", "Last 6 months bank statements", "Form 16 for last 2 years", "Employment ID card"] 
+  },
+  { 
+    title: "Income Proof (Self-Employed)", 
+    items: ["Last 2 years ITR with computation", "Last 6 months bank statements", "Business registration proof", "GST registration (if applicable)"] 
+  }
+];
+
+export const coreValuesDatas = [
+  { icon: Award, title: "Integrity", desc: "Conducting business with highest standards of honesty, transparency, and ethical practices." },
+  { icon: Heart, title: "Customer First", desc: "Providing solutions that are simple, responsive, and aligned with customer financial goals." },
+  { icon: Shield, title: "Responsibility", desc: "Promoting prudent credit practices and financial discipline for sustainable growth." },
+  { icon: Target, title: "Excellence", desc: "Continuously improving processes and services for high-quality financial solutions." },
+  { icon: TrendingUp, title: "Growth Partnership", desc: "Supporting financial progress through timely and reliable credit solutions." },
+  { icon: Users, title: "Trust", desc: "Building long-term relationships based on reliability and financial empowerment." }
+];
+
+
+export const missionPoints = {
+  left: [
+    "Quick and efficient lending solutions with simplified processes",
+    "Tailored financial products for diverse needs"
+  ],
+  right: [
+    "Highest standards of compliance and ethical lending",
+    "Seamless borrowing experience through technology"
+  ]
+};
+
+export const loanProcessData = [
+  { num: 1, icon: ClipboardList, title: "Submit Application", time: "5-10 minutes", bg: "bg-blue-600", desc: "Fill online application with basic details" },
+  { num: 2, icon: FileCheck, title: "Document Verification", time: "24-48 hours", bg: "bg-blue-600", desc: "Upload required documents" },
+  { num: 3, icon: Search, title: "Credit Assessment", time: "24-48 hours", bg: "bg-blue-600", desc: "Evaluation of creditworthiness" },
+  { num: 4, icon: ThumbsUp, title: "Loan Approval", time: "Instant", bg: "bg-blue-600", desc: "Receive final terms" },
+  { num: 5, icon: Banknote, title: "Loan Disbursement", time: "Within 24 hours", bg: "bg-green-600", desc: "Funds credited to account" }
+];  
+
+
+export const benefitsDatas = [
+  "No Hidden Charges",
+  "Quick Approval",
+  "Minimal Documentation",
+  "100% Digital Process"
+]; 
+
+export const processHighlightsData = [
+  "Paperless Process",
+  "Track Application Online",
+  "Dedicated Relationship Manager"
+];
+
+
+export const opportunityData = {
+  title: "Opportunity",
+  subtitle: "Seize the possibilities with every opportunity",
+  content: [
+    {
+      type: "paragraph",
+      text: "Micro, small, and medium enterprises (MSMEs) play a significant role in India's economy. They contribute nearly 8% of the country's GDP, account for 45% of the manufacturing output, and contribute 40% of the exports. Furthermore, they provide the largest share of employment after agriculture. MSMEs serve as the nurseries for entrepreneurship and innovation in the nation."
+    },
+    {
+      type: "paragraph",
+      text: "One of the major advantages of the MSME sector is its employment potential at a low capital cost. It is estimated that this sector employs around 6 crore individuals across 2.6 crore enterprises. The labor intensity in the MSME sector is approximately four times higher than that of large enterprises. This emphasizes the crucial role played by MSMEs in creating job opportunities and driving economic growth."
+    },
+    {
+      type: "paragraph",
+      text: "However, there is an unmet finance gap of Rs 3 trillion, primarily affecting over 55 million micro enterprises. This presents a significant opportunity for growth and development. The future of India depends on the productivity and success of its massive youth population, many of whom work in the MSME sector. Despite the immense potential, banks and NBFCs have been hesitant to tap into this opportunity due to the sector's informal and undocumented income structure."
+    },
+    {
+      type: "paragraph",
+      text: "This underserved customer segment, often referred to as the 'missing middle,' poses unique challenges for traditional lending institutions. Assessing the income of this unorganized sector is a daunting task. Recognizing this opportunity, our team, led by seasoned professionals from the finance industry, has developed an innovative and radically different approach. We employ a detailed cash flow analysis conducted at the customer's doorstep, allowing us to accurately assess their financial situation and provide tailored solutions."
+    },
+    {
+      type: "paragraph",
+      text: "By bridging the finance gap and catering to the needs of the MSME sector, we can unlock the true potential of these enterprises, propel their growth, and contribute to the overall development of the economy. This is a significant opportunity to make a meaningful impact and drive positive change in the lives of entrepreneurs and workers in the MSME sector."
+    }
+  ],
+  stats: [
+    { label: "GDP Contribution", value: "8%", color: "blue" },
+    { label: "Manufacturing Output", value: "45%", color: "green" },
+    { label: "Export Contribution", value: "40%", color: "purple" },
+    { label: "Employment", value: "6 Cr+", color: "orange" },
+    { label: "Enterprises", value: "2.6 Cr", color: "red" },
+    { label: "Finance Gap", value: "₹3 Trillion", color: "yellow" }
+  ],
+  highlights: [
+    "Largest employment after agriculture",
+    "4x labor intensity than large enterprises",
+    "55 million micro enterprises affected",
+    "Innovative cash flow analysis approach"
+  ],
+  keyPoints: [
+    { icon: "Building2", value: "2.6 Cr", label: "Enterprises", color: "blue" },
+    { icon: "Users", value: "6 Cr+", label: "Employment", color: "green" },
+    { icon: "Target", value: "45%", label: "Manufacturing", color: "purple" },
+    { icon: "IndianRupee", value: "40%", label: "Exports", color: "orange" }
+  ],
+  whyItMatters: [
+    {
+      icon: "TrendingUp",
+      title: "Economic Impact",
+      desc: "MSMEs contribute 8% to GDP, 45% to manufacturing output, and 40% to exports, making them the backbone of Indian economy.",
+      color: "blue"
+    },
+    {
+      icon: "Users",
+      title: "Employment Generator",
+      desc: "With 6 crore employees across 2.6 crore enterprises, MSMEs are the largest job creators after agriculture.",
+      color: "green"
+    },
+    {
+      icon: "Award",
+      title: "Innovation Hub",
+      desc: "Serving as nurseries for entrepreneurship, MSMEs drive innovation and support India's youth population.",
+      color: "purple"
+    }
+  ],
+  challengePoints: [
+    "₹3 trillion unmet finance gap affecting 55 million micro enterprises",
+    "Informal and undocumented income structure",
+    'The "missing middle" underserved by traditional lenders',
+    "Difficulty in assessing income of unorganized sector"
+  ],
+  solutionPoints: [
+    "Innovative cash flow analysis at customer's doorstep",
+    "Seasoned professionals with deep industry expertise",
+    "Tailored financial solutions for MSMEs",
+    "Bridging the finance gap with innovative approach"
+  ]
+};
+
+
+export const contactData = {
+  companyName: "Mascot Projects Private Limited",
+  hero: {
+    title: "Get In Touch",
+    subtitle: "We are here to help. Reach out to our offices or the dedicated support desk. Our team typically responds within 24 hours.",
+    icon: "Headset"
+  },
+  whyContact: [
+    {
+      icon: "Clock",
+      title: "Quick Response",
+      desc: "We respond to all enquiries within 24 hours on business days",
+      color: "blue"
+    },
+    {
+      icon: "Shield",
+      title: "Expert Support",
+      desc: "Get assistance from our experienced loan advisors",
+      color: "green"
+    },
+    {
+      icon: "Users",
+      title: "Personalized Service",
+      desc: "Tailored solutions for your specific financial needs",
+      color: "purple"
+    }
+  ],
+  office: {
+    registeredAddress: "302-303, Third Floor, Goyal Tower, Transport Nagar, Jaipur, Rajasthan 302003",
+    phone: "+91 8094932111",
+    email: "care@mascotfin.in",
+    hours: {
+      weekdays: "9:30 AM - 6:30 PM",
+      saturday: "9:30 AM - 6:30 PM",
+      sunday: "Closed"
+    },
+    mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3558.481233526663!2d75.7853246!3d26.8912595!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396db6f8b1d5c8a5%3A0x3f5c5f5c5f5c5f5c!2sGoyal%20Tower%2C%20Transport%20Nagar%2C%20Jaipur%2C%20Rajasthan%20302003!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+  },
+  loanTypes: [
+    { value: "personal", label: "Personal Loan" },
+    { value: "business", label: "Business Loan" },
+    { value: "home", label: "Home Loan" },
+    { value: "education", label: "Education Loan" },
+    { value: "loan-against-property", label: "Loan Against Property" },
+    { value: "secured-business", label: "Secured Business Loan" }
+  ],
+  trustBadges: [
+    { text: "RBI Registered NBFC", color: "green" },
+    { text: "100% Data Protection", color: "green" },
+    { text: "No Spam Guarantee", color: "green" }
+  ],
+  supportDesk: [
+    {
+      icon: "Mail",
+      title: "Email Support",
+      value: "care@mascotfin.in",
+      desc: "Response within 24 hours",
+      link: "mailto:care@mascotfin.in",
+      linkText: "Send Email →",
+      color: "blue"
+    },
+    {
+      icon: "Phone",
+      title: "Phone Support",
+      value: "+91 8094932111",
+      desc: "Mon-Sat, 9:30 AM - 6:30 PM",
+      link: "tel:8094932111",
+      linkText: "Call Now →",
+      color: "green"
+    },
+    {
+      icon: "Clock",
+      title: "Office Hours",
+      value: "9:30 AM - 6:30 PM",
+      desc: "Monday - Saturday (Sunday Closed)",
+      extra: "24/7 Online Support",
+      color: "purple"
+    }
+  ],
+  quickContact: [
+    { icon: "Phone", text: "Toll Free: +91 8094932111" },
+    { icon: "Mail", text: "care@mascotfin.in" },
+    { icon: "Clock", text: "Mon-Sat: 9:30 AM - 6:30 PM" }
+  ]
 };
