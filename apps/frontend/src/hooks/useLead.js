@@ -1,8 +1,7 @@
-import {useQuery,useMutation,useQueryClient} from '@tanstack/react-query';
-
-
-import { useDispatch, useSelector } from 'react-redux';
-import { showSuccess, showError } from '../lib/utils/toastService';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useDispatch, useSelector } from "react-redux";
+import { apiGet, apiPost, apiPatch } from "../lib/api/apiClient";
+import { showSuccess, showError } from "../lib/utils/toastService";
 import {
     setLeads,
     setLoading,
@@ -11,63 +10,56 @@ import {
     updateLeadInList,
     removeLeadFromList,
     clearError,
-} from '../store/slices/leadSlice';
-
-import{
-    getLeads,
-    createLead,
-    updateLeadStatus,
-    assignLead,
-    convertLeadToLoan
-} from '../lib/api/lead.api';
+} from "../store/slices/leadSlice";
 
 
 
-export const useLead = (params)=>{
-const dispatch = useDispatch();
-const leads = useSelector(state => state.lead.leads);
-const loading = useSelector(state => state.lead.loading);
-const error = useSelector(state => state.lead.error);
+export const useLead = (params) => {
+    const dispatch = useDispatch();
+    const leads = useSelector((state) => state.lead.leads);
+    const loading = useSelector((state) => state.lead.loading);
+    const error = useSelector((state) => state.lead.error);
 
+    const query = useQuery(["leads", params], () => apiGet("/leads", { params }), {
+        onSuccess: (data) => {
+            dispatch(setLeads(data));
+            dispatch(clearError());
+        },
+        onError: (queryError) => {
+            const message = queryError?.message || "Failed to fetch leads";
+            dispatch(setError(message));
+            showError(message);
+        },
+        staleTime: 1000 * 60 * 5,
+    });
 
-const query = useQuery(['leads', params], () => getLeads(params), {
-    onSuccess: (data) => {
-        dispatch(setLeads(data));
-        dispatch(clearError());
-    },
-    onError: (queryError) => {
-        const message = queryError?.message || 'Failed to fetch leads';
-        dispatch(setError(message));
-        showError(message);
-    },
-    staleTime: 1000 * 60 * 5,
-});
-return {
-    leads,
-    loading: query.isLoading || loading,
-    error: error || query.error,
-    isFetching: query.isFetching,
-    refetch: query.refetch,
+    return {
+        leads,
+        loading: query.isLoading || loading,
+        error: error || query.error,
+        isFetching: query.isFetching,
+        refetch: query.refetch,
+    };
 };
-}
 
 
 export const useCreateLead = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
-    return useMutation(createLead, {
+
+    return useMutation((payload) => apiPost("/leads", payload), {
         onMutate: () => {
             dispatch(setLoading(true));
         },
         onSuccess: (data) => {
             dispatch(addLead(data));
-            queryClient.invalidateQueries(['leads']);
+            queryClient.invalidateQueries(["leads"]);
             dispatch(setLoading(false));
             dispatch(clearError());
-            showSuccess('Lead created successfully!');
+            showSuccess("Lead created successfully!");
         },
-        onError: (error) => {
-            const message = error?.message || 'Failed to create lead';
+        onError: (queryError) => {
+            const message = queryError?.message || "Failed to create lead";
             dispatch(setLoading(false));
             dispatch(setError(message));
             showError(message);
@@ -78,72 +70,79 @@ export const useCreateLead = () => {
 export const useUpdateLeadStatus = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
-    return useMutation(updateLeadStatus, {
-        onMutate: () => {
-            dispatch(setLoading(true));
+
+    return useMutation(
+        ({ id, status }) => apiPatch(`/leads/${id}/status`, { status }),
+        {
+            onMutate: () => {
+                dispatch(setLoading(true));
+            },
+            onSuccess: (data) => {
+                dispatch(updateLeadInList(data));
+                queryClient.invalidateQueries(["leads"]);
+                dispatch(setLoading(false));
+                dispatch(clearError());
+                showSuccess("Lead status updated successfully!");
+            },
+            onError: (queryError) => {
+                const message = queryError?.message || "Failed to update lead status";
+                dispatch(setLoading(false));
+                dispatch(setError(message));
+                showError(message);
+            },
         },
-        onSuccess: (data) => {
-            dispatch(updateLeadInList(data));
-            queryClient.invalidateQueries(['leads']);
-            dispatch(setLoading(false));
-            dispatch(clearError());
-            showSuccess('Lead status updated successfully!');
-        },
-        onError: (error) => {
-            const message = error?.message || 'Failed to update lead status';
-            dispatch(setLoading(false));
-            dispatch(setError(message));
-            showError(message);
-        },
-    });
+    );
 };
 
 
 export const useAssignLead = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
-    return useMutation(assignLead, {
-        onMutate: () => {
-            dispatch(setLoading(true));
-        },
-        onSuccess: (data) => {
-            dispatch(updateLeadInList(data));
-            queryClient.invalidateQueries(['leads']);
-            dispatch(setLoading(false));
-            dispatch(clearError());
-            showSuccess('Lead assigned successfully!');
-        },
-        onError: (error) => {
-            const message = error?.message || 'Failed to assign lead';
-            dispatch(setLoading(false));
-            dispatch(setError(message));
-            showError(message);
-        }
 
-    });
+    return useMutation(
+        ({ id, assignedTo }) => apiPatch(`/leads/${id}/assign`, { assignedTo }),
+        {
+            onMutate: () => {
+                dispatch(setLoading(true));
+            },
+            onSuccess: (data) => {
+                dispatch(updateLeadInList(data));
+                queryClient.invalidateQueries(["leads"]);
+                dispatch(setLoading(false));
+                dispatch(clearError());
+                showSuccess("Lead assigned successfully!");
+            },
+            onError: (queryError) => {
+                const message = queryError?.message || "Failed to assign lead";
+                dispatch(setLoading(false));
+                dispatch(setError(message));
+                showError(message);
+            },
+        },
+    );
 };
 
 export const useConvertLeadToLoan = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
-    return useMutation(convertLeadToLoan, {
+
+    return useMutation((id) => apiPost(`/leads/${id}/convert`), {
         onMutate: () => {
             dispatch(setLoading(true));
         },
-
         onSuccess: (data) => {
-            dispatch(removeLeadFromList(data.id));
-            queryClient.invalidateQueries(['leads']);
+            dispatch(removeLeadFromList(data?.id));
+            queryClient.invalidateQueries(["leads"]);
             dispatch(setLoading(false));
             dispatch(clearError());
-            showSuccess('Lead converted to loan successfully!');
+            showSuccess("Lead converted to loan successfully!");
         },
-        onError: (error) => {
-            const message = error?.message || 'Failed to convert lead to loan';
+        onError: (queryError) => {
+            const message = queryError?.message || "Failed to convert lead to loan";
             dispatch(setLoading(false));
             dispatch(setError(message));
             showError(message);
-        }
+        },
     });
 };
 
