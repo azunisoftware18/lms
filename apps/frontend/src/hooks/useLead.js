@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { apiGet, apiPost, apiPatch } from "../lib/api/apiClient";
 import { showSuccess, showError } from "../lib/utils/toastService";
+import { normalizeParams } from "../lib/utils/paramHelper";
 import {
     setLeads,
     setLoading,
@@ -14,13 +15,18 @@ import {
 
 
 
-export const useLead = (params) => {
+export const useLead = (params = {}) => {
     const dispatch = useDispatch();
     const leads = useSelector((state) => state.lead.leads);
     const loading = useSelector((state) => state.lead.loading);
     const error = useSelector((state) => state.lead.error);
 
-    const query = useQuery(["leads", params], () => apiGet("/leads", { params }), {
+    const normalizedParams = {
+        ...normalizeParams(params),
+        status: params?.status,
+    };
+
+    const query = useQuery(["leads", normalizedParams], () => apiGet("/leads", { params: normalizedParams }), {
         onSuccess: (data) => {
             dispatch(setLeads(data));
             dispatch(clearError());
@@ -34,13 +40,12 @@ export const useLead = (params) => {
     });
 
     return {
-        leads,
+        leads: query.data ?? leads,
         loading: query.isLoading || loading,
         error: error || query.error,
         isFetching: query.isFetching,
         refetch: query.refetch,
-    };
-};
+    };};
 
 
 export const useCreateLead = () => {
@@ -131,9 +136,10 @@ export const useConvertLeadToLoan = () => {
             dispatch(setLoading(true));
         },
         onSuccess: (data) => {
-            dispatch(removeLeadFromList(data?.id));
-            queryClient.invalidateQueries(["leads"]);
-            dispatch(setLoading(false));
+            if (data?.id) {
+                dispatch(removeLeadFromList(data.id));
+            }
+            queryClient.invalidateQueries(["leads"]);            dispatch(setLoading(false));
             dispatch(clearError());
             showSuccess("Lead converted to loan successfully!");
         },

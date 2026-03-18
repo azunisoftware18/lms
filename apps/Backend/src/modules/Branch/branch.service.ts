@@ -270,28 +270,74 @@ type ScopedUser = {
   branchId?: string | null;
 };
 
-export const getAllBranchesService = async (user: ScopedUser) => {
-  const scope = await getBranchScopeFilter(user);
+type PaginationParams = {
+  page: number;
+  limit: number;
+  search?: string;
+};
 
-  return prisma.branch.findMany({
-    where: { ...scope },
-    select: {
-      id: true,
-      name: true,
-      code: true,
-      type: true,
-      isActive: true,
-      createdAt: true,
-      updatedAt: true,
-      parentBranch: {
-        select: { id: true, name: true, code: true, type: true, isActive: true },
+export const getAllBranchesService = async (
+  user: ScopedUser,
+  pagination?: PaginationParams,
+) => {
+  const scope = await getBranchScopeFilter(user);
+  const page = pagination?.page || 1;
+  const limit = pagination?.limit || 10;
+  const search = pagination?.search || "";
+
+  const skip = (page - 1) * limit;
+
+  const whereClause = {
+    AND: [
+      scope,
+      ...(search
+        ? [
+            {
+              OR: [
+                { name: { contains: search, mode: "insensitive" as const } },
+                { code: { contains: search, mode: "insensitive" as const } },
+              ],
+            },
+          ]
+        : []),
+    ],
+  };
+  const [branches, total] = await Promise.all([
+    prisma.branch.findMany({
+      where: whereClause,
+      select: {
+        id: true,
+        name: true,
+        code: true,
+        type: true,
+        isActive: true,
+        createdAt: true,
+        updatedAt: true,
+        parentBranch: {
+          select: { id: true, name: true, code: true, type: true, isActive: true },
+        },
+        subBranches: {
+          select: { id: true, name: true, code: true, type: true, isActive: true },
+        },
       },
-      subBranches: {
-        select: { id: true, name: true, code: true, type: true, isActive: true },
-      },
+      orderBy: { createdAt: "desc" },
+      skip,
+      take: limit,
+    }),
+    prisma.branch.count({ where: whereClause }),
+  ]);
+
+  return {
+    data: branches,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+      hasNextPage: page < Math.ceil(total / limit),
+      hasPrevPage: page > 1,
     },
-    orderBy: { createdAt: "desc" },
-  });
+  };
 };
 
 export const deleteBranchService = async (id: string, userId: string) => {
@@ -321,10 +367,61 @@ export const deleteBranchService = async (id: string, userId: string) => {
   });
 };
 
-export const getAllMainBranchesService = async () => {
-  return prisma.branch.findMany({
-    where: { type: "BRANCH" },
-  });
+export const getAllMainBranchesService = async (
+  pagination?: PaginationParams,
+) => {
+  const page = pagination?.page || 1;
+  const limit = pagination?.limit || 10;
+  const search = pagination?.search || "";
+
+  const skip = (page - 1) * limit;
+
+  const whereClause = {
+    type: "BRANCH" as const,
+    ...(search && {
+      OR: [
+        { name: { contains: search, mode: "insensitive" as const } },
+        { code: { contains: search, mode: "insensitive" as const } },
+      ],
+    }),
+  };
+
+  const [mainBranches, total] = await Promise.all([
+    prisma.branch.findMany({
+      where: whereClause,
+      select: {
+        id: true,
+        name: true,
+        code: true,
+        type: true,
+        isActive: true,
+        createdAt: true,
+        updatedAt: true,
+        parentBranch: {
+          select: { id: true, name: true, code: true, type: true, isActive: true },
+        },
+        subBranches: {
+          select: { id: true, name: true, code: true, type: true, isActive: true },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+      skip,
+      take: limit,
+    }),
+    prisma.branch.count({ where: whereClause }),
+  ]);
+
+  return {
+    data: mainBranches,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+      hasNextPage: page < Math.ceil(total / limit),
+      hasPrevPage: page > 1,
+    },
+  };
 };
 
 export const createBulkBranchesService = async (

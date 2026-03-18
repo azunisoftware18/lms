@@ -1,21 +1,35 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 import {
   assignLoanService,
-  unassignloanService,
+  unassignLoanService,
   getAssignedLoansForEmployeeService,
 } from "./loanAssignment.service.js";
+import { AppError } from "../../common/utils/apiError.js";
+import { assignedLoansQuerySchema } from "./loanAssignment.schema.js";
 
-export const assignLoanController = async (req: Request, res: Response) => {
+export const assignLoanController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    const { loanApplicationId } = req.params;
+    if (!req.user) {
+      throw AppError.unauthorized("Unauthorized");
+    }
+
+    const loanApplicationId =
+      typeof req.params.loanApplicationId === "string"
+        ? req.params.loanApplicationId
+        : req.params.loanApplicationId[0];
     const { employeeId, role } = req.body;
 
     const assigned = await assignLoanService(
       loanApplicationId,
       employeeId,
       role,
-      req.user!.id,
+      req.user.id,
+      { id: req.user.id, role: req.user.role, branchId: req.user.branchId },
     );
 
     return res.status(200).json({
@@ -23,71 +37,65 @@ export const assignLoanController = async (req: Request, res: Response) => {
       message: "Loan assigned successfully",
       data: assigned,
     });
-  } catch (error: any) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+  } catch (error) {
+    next(error);
   }
 };
 
-export const unassignLoanController = async (req: Request, res: Response) => {
+export const unassignLoanController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    const { assignmentId } = req.params;
-
-    if (!assignmentId) {
-      return res.status(400).json({
-        success: false,
-        message: "assignmentId is required",
-      });
+    if (!req.user) {
+      throw AppError.unauthorized("Unauthorized");
     }
 
-    if (!req.user?.id) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized",
-      });
-    }
+    const assignmentId =
+      typeof req.params.assignmentId === "string"
+        ? req.params.assignmentId
+        : req.params.assignmentId[0];
 
-    const unassigned = await unassignloanService(assignmentId, req.user.id);
+    const unassigned = await unassignLoanService(assignmentId, req.user.id, {
+      id: req.user.id,
+      role: req.user.role,
+      branchId: req.user.branchId,
+    });
 
     return res.status(200).json({
       success: true,
       message: "Loan unassigned successfully",
       data: unassigned,
     });
-  } catch (error: any) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+  } catch (error) {
+    next(error);
   }
 };
 
 export const getMyAssignedLoansController = async (
   req: Request,
   res: Response,
+  next: NextFunction,
 ) => {
   try {
     if (!req.user?.id) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized",
-      });
+      throw AppError.unauthorized("Unauthorized");
     }
 
-    const userId = req.user.id;
-    const loans = await getAssignedLoansForEmployeeService(userId);
+    const parsedQuery = assignedLoansQuerySchema.parse(req.query);
+    const loans = await getAssignedLoansForEmployeeService(
+      { id: req.user.id, role: req.user.role, branchId: req.user.branchId },
+      parsedQuery,
+    );
 
     return res.status(200).json({
       success: true,
       message: "Assigned loans fetched successfully",
-      data: loans,
+      data: loans.data,
+      meta: loans.meta,
     });
-  } catch (error: any) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+  } catch (error) {
+    next(error);
   }
 };

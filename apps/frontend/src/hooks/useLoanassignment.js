@@ -1,11 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
+import { apiGet, apiPost } from "../lib/api/apiClient";
 import { showSuccess, showError } from "../lib/utils/toastService";
-import {
-  assignLoan,
-  unassignLoan,
-  getMyAssignedLoans
-} from "../lib/api/loanAssignment.api";
+import { normalizeParams } from "../lib/utils/paramHelper";
 import {
   setLoading,
   setError,
@@ -15,12 +12,16 @@ import {
   removeAssignedLoan,
 } from "../store/slices/loanAssignmentSlice";
 
-export const useMyAssignedLoans = () => {
+export const useMyAssignedLoans = (params = {}) => {
   const dispatch = useDispatch();
+  const normalizedParams = normalizeParams(params);
 
   return useQuery({
-    queryKey: ["assignedLoans"],
-    queryFn: getMyAssignedLoans,
+    queryKey: ["assignedLoans", normalizedParams],
+    queryFn: () =>
+      apiGet("/loan-assignment/my-assigned-loans", {
+        params: normalizedParams,
+      }),
     onSuccess: (data) => {
       dispatch(setAssignedLoans(data));
     },
@@ -37,7 +38,11 @@ export const useAssignLoan = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: assignLoan,
+    mutationFn: ({ loanApplicationId, employeeId, role }) =>
+      apiPost(`/loan-assignment/loans/${loanApplicationId}/assign`, {
+        employeeId,
+        role,
+      }),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -62,7 +67,8 @@ export const useUnassignLoan = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: unassignLoan,
+    mutationFn: (assignmentId) =>
+      apiPost(`/loan-assignment/loans/unassign/${assignmentId}`),
     onMutate: () => {
       dispatch(setLoading(true));
     },

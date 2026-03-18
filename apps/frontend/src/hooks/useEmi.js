@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
-import { showSuccess, showError } from '../lib/utils/toastService';
-import {
+import { apiGet, apiPost } from '../lib/api/apiClient';
+import { showSuccess, showError } from '../lib/utils/toastService';import { normalizeParams } from '../lib/utils/paramHelper';import {
     setEmis,
     setEmiSchedule,
     setPayableAmount,
@@ -11,27 +11,20 @@ import {
     updateEmiInList,
     clearError,
 } from '../store/slices/emiSlice';
-import {
-    getAllEmis,
-    generateEmiSchedule,
-    getLoanEmis,
-    payEmi,
-    getEmiPayableAmount,
-    calculateEmi,
-    forecloseLoan,
-    applyMoratorium
-} from '../lib/api/emi.api';
-
-export const useAllEmis = (params) => {
+export const useAllEmis = (params = {}) => {
     const dispatch = useDispatch();
     const emis = useSelector(state => state.emi.emis);
     const meta = useSelector(state => state.emi.meta);
     const loading = useSelector(state => state.emi.loading);
     const error = useSelector(state => state.emi.error);
 
+    const normalizedParams = normalizeParams(params);
+
     const { isFetching, refetch } = useQuery({
-        queryKey: ['allEmis', params],
-        queryFn: () => getAllEmis(params),
+        queryKey: ['allEmis', normalizedParams],
+        queryFn: () => apiGet('/emi', {
+            params: normalizedParams,
+        }),
         keepPreviousData: true,
         onSuccess: (data) => {
             dispatch(setEmis(data));
@@ -55,7 +48,7 @@ export const useLoanEmis = (loanId) => {
 
     const query = useQuery(
         ['emis', loanId],
-        () => getLoanEmis(loanId),
+        () => apiGet(`/emi/loan-application/${loanId}/emis`),
         {
             enabled: !!loanId,
             onSuccess: (data) => {
@@ -84,7 +77,7 @@ export const useGenerateSchedule = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation(generateEmiSchedule, {
+    return useMutation((loanId) => apiPost(`/emi/loan-application/${loanId}/emis`), {
         onMutate: () => {
             dispatch(setLoading(true));
         },
@@ -108,7 +101,8 @@ export const usePayEmi = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation(payEmi, {
+    return useMutation(({ emiId, amountPaid, paymentMode }) =>
+        apiPost(`/emi/${emiId}/pay`, { amountPaid, paymentMode }), {
         onMutate: () => {
             dispatch(setLoading(true));
         },
@@ -131,7 +125,7 @@ export const usePayEmi = () => {
 export const useCalculateEmi = () => {
     const dispatch = useDispatch();
 
-    return useMutation(calculateEmi, {
+    return useMutation((payload) => apiPost('/emis/get-emi-amount', payload), {
         onMutate: () => {
             dispatch(setLoading(true));
         },
@@ -154,7 +148,7 @@ export const useEmiPayableAmount = (emiId) => {
 
     return useQuery(
         ['emiPayable', emiId],
-        () => getEmiPayableAmount(emiId),
+        () => apiGet(`/emi/${emiId}/payable-amount`),
         {
             enabled: !!emiId,
             onSuccess: (data) => {
@@ -175,7 +169,7 @@ export const useApplyMoratorium = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation(applyMoratorium, {
+    return useMutation(({ loanId, data }) => apiPost(`/emis/loans/${loanId}/moratorium`, data), {
         onMutate: () => {
             dispatch(setLoading(true));
         },
@@ -198,7 +192,7 @@ export const useForecloseLoan = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation(forecloseLoan, {
+    return useMutation((loanId) => apiGet(`/emis/loans/${loanId}/foreclose`), {
         onMutate: () => {
             dispatch(setLoading(true));
         },

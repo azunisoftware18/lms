@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
+import { apiGet, apiPost, apiDelete } from "../lib/api/apiClient";
 import { showSuccess, showError } from "../lib/utils/toastService";
 import {
   setCreditReports,
@@ -11,20 +12,12 @@ import {
   removeCreditReportFromList,
   clearError,
 } from "../store/slices/creditReportSlice";
-import {
-  refreshCreditReport,
-  getCreditReports,
-  getCreditReportById,
-  createCreditReport,
-  deleteCreditReport,
-} from "../lib/api/creditReport.api";
-
 export const useRefreshCreditReport = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: refreshCreditReport,
+    mutationFn: (payload) => apiPost("/credit-report/refresh", payload),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -44,7 +37,7 @@ export const useRefreshCreditReport = () => {
   });
 };
 
-export const useCreditReports = (applicantId) => {
+export const useCreditReports = (applicantId, params = {}) => {
   const dispatch = useDispatch();
   const creditReports = useSelector(
     (state) => state.creditReport.creditReports,
@@ -52,9 +45,14 @@ export const useCreditReports = (applicantId) => {
   const loading = useSelector((state) => state.creditReport.loading);
   const error = useSelector((state) => state.creditReport.error);
 
+  const normalizedParams = normalizeParams(params);
+
   const query = useQuery({
-    queryKey: ["creditReports", applicantId],
-    queryFn: () => getCreditReports(applicantId),
+    queryKey: ["creditReports", applicantId, normalizedParams],
+    queryFn: () =>
+      apiGet(`/credit-report/${applicantId}`, {
+        params: normalizedParams,
+      }),
     enabled: !!applicantId,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
@@ -88,7 +86,7 @@ export const useCreditReportById = (id) => {
 
   const query = useQuery({
     queryKey: ["creditReport", id],
-    queryFn: () => getCreditReportById(id),
+    queryFn: () => apiGet(`/credit-report/detail/${id}`),
     enabled: !!id,
     staleTime: 1000 * 60 * 5,
   });
@@ -116,7 +114,7 @@ export const useCreateCreditReport = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: createCreditReport,
+    mutationFn: (payload) => apiPost('/credit-report', payload),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -141,7 +139,7 @@ export const useDeleteCreditReport = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: deleteCreditReport,
+    mutationFn: (id) => apiDelete(`/credit-report/${id}`),
     onMutate: () => {
       dispatch(setLoading(true));
     },

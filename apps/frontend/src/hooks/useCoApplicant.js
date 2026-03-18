@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
-import { showSuccess, showError } from '../lib/utils/toastService';
-import {
+import { apiGet, apiPost, apiPut, apiDelete } from '../lib/api/apiClient';
+import { showSuccess, showError } from '../lib/utils/toastService';import { normalizeParams } from '../lib/utils/paramHelper';import {
     setCoApplicants,
     setLoading,
     setError,
@@ -10,25 +10,20 @@ import {
     removeCoApplicantFromList,
     clearError,
 } from '../store/slices/coApplicationSlice';
-import {
-    uploadCoApplicantDocument,
-    reuploadCoApplicantDocument,
-    getCoApplicants,
-    getCoApplicantById,
-    createCoApplicant,
-    updateCoApplicant,
-    deleteCoApplicant
-} from '../lib/api/coApplicant.api';
 
-export const useCoApplicants = (loanApplicationId) => {
+export const useCoApplicants = (loanApplicationId, params = {}) => {
     const dispatch = useDispatch();
     const coApplicants = useSelector(state => state.coApplication.coApplicants);
     const loading = useSelector(state => state.coApplication.loading);
     const error = useSelector(state => state.coApplication.error);
 
+    const normalizedParams = normalizeParams(params);
+
     const query = useQuery(
-        ['coApplicants', loanApplicationId],
-        () => getCoApplicants(loanApplicationId),
+        ['coApplicants', loanApplicationId, normalizedParams],
+        () => apiGet(`/co-applicant/${loanApplicationId}`, {
+            params: normalizedParams,
+        }),
         {
             enabled: !!loanApplicationId,
             onSuccess: (data) => {
@@ -58,7 +53,7 @@ export const useCoApplicantById = (id) => {
 
     return useQuery(
         ['coApplicant', id],
-        () => getCoApplicantById(id),
+        () => apiGet(`/co-applicant/detail/${id}`),
         {
             enabled: !!id,
             onSuccess: (data) => {
@@ -78,7 +73,7 @@ export const useCreateCoApplicant = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation(createCoApplicant, {
+    return useMutation((payload) => apiPost('/co-applicant', payload), {
         onMutate: () => {
             dispatch(setLoading(true));
         },
@@ -103,7 +98,7 @@ export const useUpdateCoApplicant = () => {
     const dispatch = useDispatch();
 
     return useMutation(
-        ({ id, data }) => updateCoApplicant(id, data),
+        ({ id, data }) => apiPut(`/co-applicant/${id}`, data),
         {
             onMutate: () => {
                 dispatch(setLoading(true));
@@ -129,7 +124,7 @@ export const useDeleteCoApplicant = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation(deleteCoApplicant, {
+    return useMutation((id) => apiDelete(`/co-applicant/${id}`), {
         onMutate: () => {
             dispatch(setLoading(true));
         },
@@ -153,7 +148,13 @@ export const useUploadCoApplicantDocument = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation(uploadCoApplicantDocument, {
+    return useMutation(({ coApplicantId, files }) => {
+        const formData = new FormData();
+        files.forEach((file) => {
+            formData.append('files', file);
+        });
+        return apiPost(`/co-applicant/documents/${coApplicantId}/upload`, formData);
+    }, {
         onMutate: () => {
             dispatch(setLoading(true));
         },
@@ -176,7 +177,14 @@ export const useReuploadCoApplicantDocument = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation(reuploadCoApplicantDocument, {
+    return useMutation(({ coApplicantId, documentType, file }) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        return apiPost(
+            `/co-applicant/documents/${coApplicantId}/${documentType}/reupload`,
+            formData,
+        );
+    }, {
         onMutate: () => {
             dispatch(setLoading(true));
         },

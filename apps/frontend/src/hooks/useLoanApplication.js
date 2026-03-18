@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { showSuccess, showError } from "../lib/utils/toastService";
 import {
   getLoanApplications,
@@ -10,7 +10,7 @@ import {
   rejectLoanApplication,
   uploadLoanApplicationDocument,
   verifyDocument,
-  rejectDocument,
+  rejectDocument
 } from "../lib/api/loanApplication.api";
 import {
   setLoading,
@@ -22,13 +22,15 @@ import {
   updateLoanApplicationInList,
 } from "../store/slices/loanApplicationSlice";
 
-export const useLoanApplications = (params) => {
+export const useLoanApplications = (params = {}) => {
   const dispatch = useDispatch();
+  const loading = useSelector(state => state.loanApplication?.loading);
+  const error = useSelector(state => state.loanApplication?.error);
 
   return useQuery({
     queryKey: ["loanApplications", params],
     queryFn: () => getLoanApplications(params),
-    keepPreviousData: true,
+    keepPreviousData: true, 
     onSuccess: (data) => {
       dispatch(setLoanApplications(data));
     },
@@ -45,7 +47,7 @@ export const useLoanApplication = (id) => {
 
   return useQuery({
     queryKey: ["loanApplication", id],
-    queryFn: () => getLoanApplicationById(id),
+    queryFn: () => apiGet(`/loan-applications/${id}`),
     enabled: !!id,
     onSuccess: (data) => {
       dispatch(setLoanApplication(data));
@@ -63,7 +65,7 @@ export const useCreateLoanApplication = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: createLoanApplication,
+    mutationFn: (payload) => apiPost('/loan-applications', payload),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -88,7 +90,7 @@ export const useUpdateLoanStatus = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: updateLoanApplicationStatus,
+    mutationFn: ({ id, status }) => apiPatch(`/loan-applications/${id}/status`, { status }),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -113,7 +115,7 @@ export const useApproveLoan = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: approveLoanApplication,
+    mutationFn: (id) => apiPost(`/loan-applications/${id}/approve`),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -138,7 +140,7 @@ export const useRejectLoan = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: rejectLoanApplication,
+    mutationFn: ({ id, reason }) => apiPost(`/loan-applications/${id}/reject`, { reason }),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -163,7 +165,13 @@ export const useUploadDocuments = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: uploadLoanApplicationDocument,
+    mutationFn: ({ id, file }) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      return apiPost(`/loan-applications/${id}/documents`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+    },
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -187,7 +195,8 @@ export const useVerifyDocument = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: verifyDocument,
+    mutationFn: (documentId) =>
+      apiPost(`/loan-applications/documents/${documentId}/verify`),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -211,7 +220,10 @@ export const useRejectDocument = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: rejectDocument,
+    mutationFn: ({ applicationId, documentId, reason }) =>
+      apiPost(`/loan-applications/${applicationId}/documents/${documentId}/reject`, {
+        reason,
+      }),
     onMutate: () => {
       dispatch(setLoading(true));
     },
