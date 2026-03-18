@@ -58,7 +58,18 @@ export const getAllBranchesController = async (
   next: NextFunction,
 ) => {
   try {
-    const branches = await getAllBranchesService((req as any).user);
+    if (!req.user) {
+      throw AppError.unauthorized("Unauthorized");
+    }
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const search = (req.query.search || req.query.q) as string;
+    
+    const branches = await getAllBranchesService(req.user, {
+      page,
+      limit,
+      search,
+    });
     res.status(200).json({
       success: true,
       message: "Branches retrieved successfully",
@@ -114,7 +125,15 @@ export const getAllMainBranchesController = async (
   next: NextFunction,
 ) => {
   try {
-    const mainBranches = await getAllMainBranchesService();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const search = (req.query.search || req.query.q) as string;
+    
+    const mainBranches = await getAllMainBranchesService({
+      page,
+      limit,
+      search,
+    });
     res.status(200).json({
       success: true,
       message: "Main branches retrieved successfully",

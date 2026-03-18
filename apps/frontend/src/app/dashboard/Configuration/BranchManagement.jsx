@@ -1,22 +1,29 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Building2, CheckCircle, XCircle, Plus } from "lucide-react";
 import StatusCard from "../../../components/common/StatusCard";
-import BranchTable from "../../../components/tables/BranchTable";
+import BranchManagementTable from "../../../components/tables/BranchManagementTable";
 import { dummyBranches } from "../../../lib/dumyData";
 import Button from "../../../components/ui/Button";
 import AddBranchFormModal from "../../../components/modals/AddBranchFormModal";
 import { toast } from "react-hot-toast";
+import {
+  createbranch,
+  updateBranch,
+  getBranches,
+} from "../../../lib/api/branch.api";
 
 export default function BranchManagement() {
+  const isTopLevelType = (type) => type === "HEAD_OFFICE" || type === "MAIN";
+
   const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openBranchModal, setOpenBranchModal] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState(null);
 
   // Memoized main branches for better performance
-  const mainBranches = useMemo(() => 
-    branches.filter((b) => b.type === "MAIN" && b.isActive),
-    [branches]
+  const mainBranches = useMemo(
+    () => branches.filter((b) => isTopLevelType(b.type) && b.isActive),
+    [branches],
   );
 
   // Memoized flattened branches for stats
@@ -34,27 +41,77 @@ export default function BranchManagement() {
   }, [branches]);
 
   // Memoized stats
-  const stats = useMemo(() => ({
-    total: allBranchesFlat.length,
-    main: allBranchesFlat.filter((b) => b.type === "MAIN").length,
-    active: allBranchesFlat.filter((b) => b.isActive).length,
-    inactive: allBranchesFlat.filter((b) => !b.isActive).length,
-  }), [allBranchesFlat]);
+  const stats = useMemo(
+    () => ({
+      total: allBranchesFlat.length,
+      main: allBranchesFlat.filter((b) => isTopLevelType(b.type)).length,
+      active: allBranchesFlat.filter((b) => b.isActive).length,
+      inactive: allBranchesFlat.filter((b) => !b.isActive).length,
+    }),
+    [allBranchesFlat],
+  );
 
   const handleSaveBranch = async (data) => {
-    console.log("Saved Branch:", data);
-    toast.success("Branch saved successfully");
-    setOpenBranchModal(false);
-    // Add logic to update branches state with new data
+    try {
+      setLoading(true);
+      let result;
+
+      if (selectedBranch?.id) {
+        // Update existing branch
+        result = await updateBranch(selectedBranch.id, data);
+        setBranches((prevBranches) =>
+          prevBranches.map((b) => (b.id === result.id ? result : b)),
+        );
+        toast.success("Branch updated successfully");
+      } else {
+        // Create new branch
+        result = await createbranch(data);
+        setBranches((prevBranches) => [result, ...prevBranches]);
+        toast.success("Branch created successfully");
+      }
+
+      setOpenBranchModal(false);
+      setSelectedBranch(null);
+    } catch (error) {
+      toast.error(error.message || "Failed to save branch");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEditBranch = (branch) => {
+    setSelectedBranch(branch);
+    setOpenBranchModal(true);
+  };
+
+  const handleRefreshBranches = async () => {
+    try {
+      setLoading(true);
+      const data = await getBranches();
+      setBranches(Array.isArray(data) ? data : data.data || dummyBranches);
+      toast.success("Branch data refreshed");
+    } catch {
+      // Fallback to dummy data if API fails
+      setBranches(dummyBranches);
+      toast.error("Using local data - API not available");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Load dummy data
   useEffect(() => {
     const loadData = async () => {
-      setLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      setBranches(dummyBranches);
-      setLoading(false);
+      try {
+        setLoading(true);
+        const data = await getBranches();
+        setBranches(Array.isArray(data) ? data : data.data || dummyBranches);
+      } catch {
+        // Fallback to dummy data if API fails
+        setBranches(dummyBranches);
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadData();
@@ -63,8 +120,8 @@ export default function BranchManagement() {
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8">
       {/* ===== HEADER SECTION ===== */}
-      <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
+      <div className="mb-8 flex w-full flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="min-w-0">
           <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
             Branch Master
           </h1>
@@ -72,14 +129,14 @@ export default function BranchManagement() {
             Manage all your company locations and branch details with hierarchy.
           </p>
         </div>
-        
+
         {/* Create Button - full width on mobile, auto on desktop */}
-        <Button 
+        <Button
           onClick={() => {
             setSelectedBranch(null);
             setOpenBranchModal(true);
-          }} 
-          className="w-full sm:w-auto bg-blue-600 text-white hover:bg-blue-700 
+          }}
+          className="w-full sm:w-auto shrink-0 whitespace-nowrap bg-blue-600 text-white hover:bg-blue-700 
             px-4 py-2 rounded-lg transition-colors text-sm font-medium
             flex items-center justify-center gap-2"
         >
@@ -124,15 +181,12 @@ export default function BranchManagement() {
       </div>
 
       {/* ===== BRANCH TABLE SECTION ===== */}
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-
-        <div className="overflow-x-auto">
-          <BranchTable
-            branches={branches}
-            loading={loading}
-          />
-        </div>
-      </div>
+      <BranchManagementTable
+        branches={branches}
+        loading={loading}
+        onEdit={handleEditBranch}
+        onRefresh={handleRefreshBranches}
+      />
 
       {/* ===== ADD BRANCH MODAL ===== */}
       <AddBranchFormModal

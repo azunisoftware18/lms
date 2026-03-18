@@ -1,15 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
+import { apiGet, apiPost, apiPut } from "../lib/api/apiClient";
 import { showSuccess, showError } from "../lib/utils/toastService";
-import {
-  getAllRecoveries,
-  getRecoveryDetails,
-  payRecovery,
-  assignRecoveryAgent,
-  updateRecoveryStage,
-  getRecoveryDashboard,
-  getAgentRecoveries,
-} from "../lib/api/recovery.api";
+import { normalizeParams } from "../lib/utils/paramHelper";
 import {
   setLoading,
   setError,
@@ -18,12 +11,16 @@ import {
   setRecoveryDetails,
 } from "../store/slices/recoverySlice";
 
-export const useRecoveries = (params) => {
+export const useRecoveries = (params = {}) => {
   const dispatch = useDispatch();
+  const normalizedParams = {
+    ...normalizeParams(params),
+    stage: params?.stage,
+  };
 
   return useQuery({
-    queryKey: ["recoveries", params],
-    queryFn: () => getAllRecoveries(params),
+    queryKey: ["recoveries", normalizedParams],
+    queryFn: () => apiGet("/recoveries", { params: normalizedParams }),
     onSuccess: (data) => {
       dispatch(setRecoveries(data));
       dispatch(clearError());
@@ -41,7 +38,7 @@ export const useRecoveryDetails = (recoveryId) => {
 
   return useQuery({
     queryKey: ["recoveryDetails", recoveryId],
-    queryFn: () => getRecoveryDetails(recoveryId),
+    queryFn: () => apiGet(`/recoveries/${recoveryId}`),
     enabled: !!recoveryId,
     onSuccess: (data) => {
       dispatch(setRecoveryDetails(data));
@@ -60,7 +57,7 @@ export const usePayRecovery = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: payRecovery,
+    mutationFn: ({ recoveryId, data }) => apiPost(`/recoveries/${recoveryId}/pay`, data),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -84,7 +81,8 @@ export const useAssignRecoveryAgent = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: assignRecoveryAgent,
+    mutationFn: ({ recoveryId, data }) =>
+      apiPost(`/recoveries/${recoveryId}/assign`, data),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -109,7 +107,8 @@ export const useUpdateRecoveryStage = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: updateRecoveryStage,
+    mutationFn: ({ recoveryId, data }) =>
+      apiPut(`/recoveries/${recoveryId}/stage`, data),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -133,7 +132,7 @@ export const useRecoveryDashboard = () => {
 
   return useQuery({
     queryKey: ["recoveryDashboard"],
-    queryFn: getRecoveryDashboard,
+    queryFn: () => apiGet("/dashboard"),
     onError: (err) => {
       const message = err?.message || "Failed to fetch recovery dashboard";
       dispatch(setError(message));

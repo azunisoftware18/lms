@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { showSuccess, showError } from "../lib/utils/toastService";
-import {
+import { apiGet, apiPost, apiPut, apiDelete } from "../lib/api/apiClient";
+import { showSuccess, showError } from "../lib/utils/toastService";import { normalizeParams } from '../lib/utils/paramHelper';import {
   setLoanTypes,
   setLoading,
   setError,
@@ -10,22 +10,17 @@ import {
   updateLoanTypeInList,
   removeLoanTypeFromList,
 } from "../store/slices/loanTypeSlice";
-import {
-  createLoanType,
-  getLoanTypes,
-  updateLoanType,
-  deleteLoanType,
-} from "../lib/api/loanType.api";
-
-export const useLoanTypes = (param) => {
+export const useLoanTypes = (params = {}) => {
   const dispatch = useDispatch();
   const loanTypes = useSelector((state) => state.loanTypes.loanTypes);
   const loading = useSelector((state) => state.loanTypes.loading);
   const error = useSelector((state) => state.loanTypes.error);
 
+  const normalizedParams = normalizeParams(params);
+
   const query = useQuery({
-    queryKey: ["loanTypes", param],
-    queryFn: () => getLoanTypes(param),
+    queryKey: ["loanTypes", normalizedParams],
+    queryFn: () => apiGet("/loantypes", { params: normalizedParams }),
     onSuccess: (data) => {
       const normalizedLoanTypes = Array.isArray(data) ? data : data?.data || [];
       dispatch(setLoanTypes(normalizedLoanTypes));
@@ -53,7 +48,7 @@ export const useCreateLoanType = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: createLoanType,
+    mutationFn: (payload) => apiPost("/loantypes", payload),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -78,7 +73,7 @@ export const useUpdateLoanType = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: updateLoanType,
+    mutationFn: ({ id, data }) => apiPut(`/loantypes/${id}`, data),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -103,7 +98,7 @@ export const useDeleteLoanType = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: deleteLoanType,
+    mutationFn: (id) => apiDelete(`/loantypes/${id}`),
     onMutate: () => {
       dispatch(setLoading(true));
     },

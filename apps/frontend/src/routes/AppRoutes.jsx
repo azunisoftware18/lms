@@ -6,7 +6,6 @@ import PublicRoute from "./publicRoute";
 import DashboardPage from "../app/dashboard/DashboardPage";
 import ApplicationPage from "../app/dashboard/LOS/ApplicationPage.jsx";
 import DocumentPage from "../app/dashboard/LOS/DocumentPage.jsx";
-import BranchManagement from "../app/dashboard/Configuration/BranchManagement.jsx";
 import BorrowerPage from "../app/dashboard/BorrowerPage.jsx";
 import CreditCheckPage from "../app/dashboard/LOS/CreditCheckPage.jsx";
 import TechnicalReviewPage from "../app/dashboard/LOS/TechnicalReviewPage.jsx";
@@ -14,63 +13,72 @@ import LegalCompliancePage from "../app/dashboard/LOS/LegalCompilancePage.jsx";
 import EMIManagementPage from "../app/dashboard/LOS/EMIManagementPage.jsx";
 import SanctionPage from "../app/dashboard/LOS/SanctionPage.jsx";
 import DisbursementManagementPage from "../app/dashboard/LOS/DisbursementManagementPage.jsx";
-import BranchAdmin from "../app/dashboard/Configuration/BranchAdmin.jsx";
 
 // Public Pages
-import Layout from '../layout/Layout.jsx';
-import LoginForm from '../components/forms/LoginForm.jsx';
-import AdminLayout from '../layout/AdminLayout.jsx';
-import HomePage from '../app/public/HomePage.jsx';
-import AboutUsPage from '../app/public/AboutUsPage.jsx';
-import AnnualReportPage from '../app/public/AnnualReportPage.jsx';
-import BoardOfDirectorsPage from '../app/public/BoardOfDirectorsPage.jsx';
-import CommitteesPage from '../app/public/CommitteesPage.jsx';
-import ContactUsPage from '../app/public/ContactUsPage.jsx';
-import CorporateGovernancePage from '../app/public/CorporateGovernancePage.jsx';
-import CsrPage from '../app/public/CsrPage.jsx';
-import EmployeesBenefitPage from '../app/public/EmployeesBenefitPage.jsx';
-import CreditRatingPage from '../app/public/CreditRatingPage.jsx';
-import FinancialInformationPage from '../app/public/FinancialInformationPage.jsx';
-import FinovaHrPage from '../app/public/FinovaHrPage.jsx';
-import JointheFinovaFaimilyPage from '../app/public/JointheFinovaFaimilyPage.jsx';
-import KMP from '../app/public/KeyManagerialPersonnelPage.jsx';
-import NewsAndMediaPage from '../app/public/NewsAndMediaPage.jsx';
-import NoticeOfBallotPage from '../app/public/NoticeOfBallotPage.jsx';
-import OpportunityPage from '../app/public/OpportunityPage.jsx';
-import OtherDisclosuresPage from '../app/public/OtherDisclosuresPage.jsx';
-import OurInvestorsPage from '../app/public/OurInvestorsPage.jsx';
-import OurMethodPage from '../app/public/OurMethodPage.jsx';
-import PoliciesAndCodesPage from '../app/public/PoliciesAndCodesPage.jsx';
-import PoliciesPage from '../app/public/PoliciesPage.jsx';
-import ProductsPage from '../app/public/ProductsPage.jsx';
-import PublicDisclosureUnderLiquidityRiskPage from '../app/public/PublicDisclosureUnderLiquidityRiskPage.jsx';
-import SarfaesiAuctionNoticesPage from '../app/public/SarfaesiAuctionNoticesPage.jsx';
-import ShareholderInformationPage from '../app/public/ShareholderInformationPage.jsx';
-import VisionAndMissionPage from '../app/public/VisionAndMissionPage.jsx';
-import WelcometoFinovaPage from '../app/public/WelcometoFinovaPage.jsx';
-import UnderRegulationPage from '../app/public/UnderRegulationPage.jsx';
-import LoanAccountCreation from '../app/dashboard/LMS/LoanAccountCreation.jsx';
-import EMISchedule from '../app/dashboard/LMS/EMISchedule.jsx';
-import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
-import { setUser } from '../store/slices/authSlice.js';
-import RepaymentManagement from '../app/dashboard/LMS/RepaymentManagement.jsx';
-import NachAutoDebit from '../app/dashboard/LMS/NachAutoDebit.jsx';
-import DpdTracking from '../app/dashboard/LMS/DpdTracking.jsx';
-import RecoveryManagement from '../app/dashboard/LMS/RecoveryManagement.jsx';
-import Foreclosure from '../app/dashboard/LMS/Foreclosure.jsx';
-import LoanClosure from '../app/dashboard/LMS/LoanClosure.jsx';
-import LoanAccountView from '../app/dashboard/ViewDetail/LoanAccountView.jsx';
-import KycVerificationPage from '../app/dashboard/LOS/KycVerificationPage.jsx';
+import Layout from "../layout/Layout.jsx";
+import LoginForm from "../components/forms/LoginForm.jsx";
+import AdminLayout from "../layout/AdminLayout.jsx";
+import HomePage from "../app/public/HomePage.jsx";
+import AboutUsPage from "../app/public/AboutUsPage.jsx";
+import AnnualReportPage from "../app/public/AnnualReportPage.jsx";
+import BoardOfDirectorsPage from "../app/public/BoardOfDirectorsPage.jsx";
+import CommitteesPage from "../app/public/CommitteesPage.jsx";
+import ContactUsPage from "../app/public/ContactUsPage.jsx";
+import CorporateGovernancePage from "../app/public/CorporateGovernancePage.jsx";
+import CsrPage from "../app/public/CsrPage.jsx";
+import EmployeesBenefitPage from "../app/public/EmployeesBenefitPage.jsx";
+import CreditRatingPage from "../app/public/CreditRatingPage.jsx";
+import FinancialInformationPage from "../app/public/FinancialInformationPage.jsx";
+import FinovaHrPage from "../app/public/FinovaHrPage.jsx";
+import JointheFinovaFaimilyPage from "../app/public/JointheFinovaFaimilyPage.jsx";
+import KMP from "../app/public/KeyManagerialPersonnelPage.jsx";
+import NewsAndMediaPage from "../app/public/NewsAndMediaPage.jsx";
+import NoticeOfBallotPage from "../app/public/NoticeOfBallotPage.jsx";
+import OpportunityPage from "../app/public/OpportunityPage.jsx";
+import OtherDisclosuresPage from "../app/public/OtherDisclosuresPage.jsx";
+import OurInvestorsPage from "../app/public/OurInvestorsPage.jsx";
+import OurMethodPage from "../app/public/OurMethodPage.jsx";
+import PoliciesAndCodesPage from "../app/public/PoliciesAndCodesPage.jsx";
+import PoliciesPage from "../app/public/PoliciesPage.jsx";
+import ProductsPage from "../app/public/ProductsPage.jsx";
+import PublicDisclosureUnderLiquidityRiskPage from "../app/public/PublicDisclosureUnderLiquidityRiskPage.jsx";
+import SarfaesiAuctionNoticesPage from "../app/public/SarfaesiAuctionNoticesPage.jsx";
+import ShareholderInformationPage from "../app/public/ShareholderInformationPage.jsx";
+import VisionAndMissionPage from "../app/public/VisionAndMissionPage.jsx";
+import WelcometoFinovaPage from "../app/public/WelcometoFinovaPage.jsx";
+import UnderRegulationPage from "../app/public/UnderRegulationPage.jsx";
+import LoanAccountCreation from "../app/dashboard/LMS/LoanAccountCreation.jsx";
+import EMISchedule from "../app/dashboard/LMS/EMISchedule.jsx";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { setUser } from "../store/slices/authSlice.js";
+import RepaymentManagement from "../app/dashboard/LMS/RepaymentManagement.jsx";
+import NachAutoDebit from "../app/dashboard/LMS/NachAutoDebit.jsx";
+import DpdTracking from "../app/dashboard/LMS/DpdTracking.jsx";
+import RecoveryManagement from "../app/dashboard/LMS/RecoveryManagement.jsx";
+import Foreclosure from "../app/dashboard/LMS/Foreclosure.jsx";
+import LoanClosure from "../app/dashboard/LMS/LoanClosure.jsx";
+import LoanAccountView from "../app/dashboard/ViewDetail/LoanAccountView.jsx";
+import KycVerificationPage from "../app/dashboard/LOS/KycVerificationPage.jsx";
 
 // Security Setting Pages
 import CompanyDetailsPage from "../app/dashboard/systemSetting/CompanyDetailsPage.jsx";
 import LoanConfigurationPage from "../app/dashboard/systemSetting/LoanConfigrationPage.jsx";
 import SecuritySettingPage from "../app/dashboard/systemSetting/SecuritySettingPage.jsx";
 import PaymentSettingPage from "../app/dashboard/systemSetting/PaymentSettingPage.jsx";
+<<<<<<< HEAD
 // import Leads from "../app/dashboard/LOS/Leads.jsx";
 import LoanProduct from "../app/dashboard/Configuration/LoanProduct.jsx";
 import LeadsPage from "../app/dashboard/LOS/LeadsPage.jsx";
+=======
+import Leads from "../app/dashboard/LOS/Leads.jsx";
+// LoanType
+import LoanProduct from "../app/dashboard/Configuration/LoanProduct.jsx";
+//  Brach Management
+import BranchManagement from "../app/dashboard/Configuration/BranchManagement.jsx";
+// Branch Admin
+import BranchAdmin from "../app/dashboard/Configuration/BranchAdmin.jsx";
+>>>>>>> 4e7633575ba7370c7157a5440875bf08ec32e0d0
 
 export default function AppRoutes() {
   const dispatch = useDispatch();
@@ -149,6 +157,7 @@ export default function AppRoutes() {
         <Route path="login" element={<LoginForm />} />
       </Route>
 
+<<<<<<< HEAD
 
 			{/* Private Dashboard */}
 			<Route
@@ -158,12 +167,42 @@ export default function AppRoutes() {
 						<AdminLayout />
 					</PrivateRoute>
 				}>
+=======
+      {/* Private Dashboard */}
+      <Route
+        path="/admin"
+        element={
+          <PrivateRoute>
+            <AdminLayout />
+          </PrivateRoute>
+        }
+      >
+        {/* Dashboard page */}
+        <Route index element={<DashboardPage />} />
+        <Route path="borrowers" element={<BorrowerPage />} />
+>>>>>>> 4e7633575ba7370c7157a5440875bf08ec32e0d0
 
-				{/* Dashboard page */}
-				<Route index element={<DashboardPage />} />
-				<Route path='borrowers' element={< BorrowerPage />} />
-        
+        {/* LMS Pages */}
+        <Route
+          path="lms/loan-account-creation"
+          element={<LoanAccountCreation />}
+        />
+        <Route path="lms/emi-schedule" element={<EMISchedule />} />
+        <Route
+          path="lms/repayment-management"
+          element={<RepaymentManagement />}
+        />
+        <Route path="lms/nach-auto-debit" element={<NachAutoDebit />} />
+        <Route path="lms/dpd-tracking" element={<DpdTracking />} />
+        <Route
+          path="lms/recovery-management"
+          element={<RecoveryManagement />}
+        />
+        <Route path="lms/foreclosure" element={<Foreclosure />} />
+        <Route path="lms/loan-closure" element={<LoanClosure />} />
+        <Route path="lms/branch-admin" element={<BranchAdmin />} />
 
+<<<<<<< HEAD
 				{/* LMS Pages */}
 				<Route path="lms/loan-account-creation" element={<LoanAccountCreation />} />
 				<Route path="lms/emi-schedule" element={<EMISchedule />} />
@@ -190,20 +229,50 @@ export default function AppRoutes() {
         <Route path='los/leads' element={< LeadsPage />} />
 				
 				
+=======
+        {/* LOS pages */}
+        <Route path="los/applications" element={<ApplicationPage />} />
+        <Route path="los/documents" element={<DocumentPage />} />
+        <Route path="los/kyc-verification" element={<KycVerificationPage />} />
+        <Route path="los/credit-check" element={<CreditCheckPage />} />
+        <Route path="los/technical-review" element={<TechnicalReviewPage />} />
+        <Route path="los/legal-compliance" element={<LegalCompliancePage />} />
+        <Route path="los/emi-management" element={<EMIManagementPage />} />
+        <Route path="los/sanction" element={<SanctionPage />} />
+        <Route
+          path="los/disbursement"
+          element={<DisbursementManagementPage />}
+        />
+        <Route path="los/leads" element={<Leads />} />
+>>>>>>> 4e7633575ba7370c7157a5440875bf08ec32e0d0
 
         {/* View Detail Pages */}
         <Route path="loan-account-view/:loanId" element={<LoanAccountView />} />
 
         {/* System Setting Page  */}
-        <Route path="system-setting/company-details" element={<CompanyDetailsPage />} />
-        <Route path="system-setting/loan-configuration" element={<LoanConfigurationPage />} />
-        <Route path="system-setting/security-settings" element={<SecuritySettingPage />} />
-        <Route path="system-setting/payment-settings" element={<PaymentSettingPage />} />
-
-        
+        <Route
+          path="system-setting/company-details"
+          element={<CompanyDetailsPage />}
+        />
+        <Route
+          path="system-setting/loan-configuration"
+          element={<LoanConfigurationPage />}
+        />
+        <Route
+          path="system-setting/security-settings"
+          element={<SecuritySettingPage />}
+        />
+        <Route
+          path="system-setting/payment-settings"
+          element={<PaymentSettingPage />}
+        />
 
         {/* Loan Product  */}
-        <Route path="loan-product" element={< LoanProduct />} />
+        <Route path="loan-product" element={<LoanProduct />} />
+        {/* Branch Management  */}
+        <Route path="branch-management" element={<BranchManagement />} />
+        {/* Branch Admin  */}
+        <Route path="branch-admin" element={<BranchAdmin />} />
       </Route>
     </Routes>
   );

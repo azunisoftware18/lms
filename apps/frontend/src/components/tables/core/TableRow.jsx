@@ -6,6 +6,7 @@ export default function TableRow({
   row,
   actions = [],
   isLast = false,
+  wrapCells = false,
 }) {
   const safeActions = Array.isArray(actions) ? actions : [];
 
@@ -14,7 +15,7 @@ export default function TableRow({
       {columns.map((col) => (
         <td
           key={col.accessor}
-          className={`px-3 sm:px-4 md:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm 
+          className={`px-3 sm:px-4 md:px-6 py-3 sm:py-4 ${wrapCells ? "whitespace-normal wrap-break-word" : "whitespace-nowrap"} text-xs sm:text-sm 
             ${!isLast ? "border-b border-slate-400" : ""} 
             font-medium text-slate-700 group-hover:text-slate-900`}
         >

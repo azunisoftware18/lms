@@ -1,13 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
-import { showSuccess, showError } from "../lib/utils/toastService";
-import {
-  getAllPermissions,
-  getUserPermissions,
-  createPermission,
-  assignPermissions,
-} from "../lib/api/permission.api";
-import {
+import { apiGet, apiPost } from "../lib/api/apiClient";
+import { showSuccess, showError } from "../lib/utils/toastService";import { normalizeParams } from '../lib/utils/paramHelper';import {
   setLoading,
   setError,
   clearError,
@@ -16,12 +10,16 @@ import {
   addPermission,
 } from "../store/slices/permissionSlice";
 
-export const usePermissions = () => {
+export const usePermissions = (params = {}) => {
   const dispatch = useDispatch();
+  const normalizedParams = normalizeParams(params);
 
   return useQuery({
-    queryKey: ["permissions"],
-    queryFn: getAllPermissions,
+    queryKey: ["permissions", normalizedParams],
+    queryFn: () =>
+      apiGet("/permissions/all-permissions", {
+        params: normalizedParams,
+      }),
     onSuccess: (data) => {
       dispatch(setPermissions(data));
       dispatch(clearError());
@@ -40,7 +38,7 @@ export const useUserPermissions = (userId) => {
 
   return useQuery({
     queryKey: ["userPermissions", userId],
-    queryFn: () => getUserPermissions(userId),
+    queryFn: () => apiGet(`/permissions/user/${userId}`),
     enabled: !!userId,
     onSuccess: (data) => {
       dispatch(setUserPermissions(data));
@@ -59,7 +57,7 @@ export const useCreatePermission = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: createPermission,
+    mutationFn: (payload) => apiPost("/permissions/create-permissions", payload),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -84,7 +82,7 @@ export const useAssignPermissions = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: assignPermissions,
+    mutationFn: (payload) => apiPost("/permissions/assign", payload),
     onMutate: () => {
       dispatch(setLoading(true));
     },

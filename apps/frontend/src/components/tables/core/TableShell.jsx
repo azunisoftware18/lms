@@ -1,9 +1,9 @@
 // TableShell.jsx - Updated with responsive wrapper
 export default function TableShell({ children }) {
   return (
-    <div className="bg-white border border-slate-300 rounded-xl sm:rounded-2xl shadow-sm overflow-hidden transition-all duration-300">
-      <div className="overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
-        <table className="min-w-full text-xs sm:text-sm text-left text-slate-600 border-collapse">
+    <div className="w-full max-w-full min-w-0 bg-white border border-slate-300 rounded-xl sm:rounded-2xl shadow-sm overflow-hidden transition-all duration-300">
+      <div className="w-full max-w-full overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
+        <table className="w-full text-xs sm:text-sm text-left text-slate-600 border-collapse">
           {children[0]}
           {children[1]}
         </table>
@@ -15,7 +15,7 @@ export default function TableShell({ children }) {
       )}
 
       {/* Add custom scrollbar styles */}
-      <style jsx>{`
+      <style>{`
         .scrollbar-thin::-webkit-scrollbar {
           height: 6px;
         }

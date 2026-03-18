@@ -1,26 +1,21 @@
 import { useState, useMemo } from "react";
-import {
-  TableShell,
-  TableHead,
-  TableBody,
-  TableLoader,
-} from "../tables/core";
+import { TableShell, TableHead, TableBody, TableLoader } from "../tables/core";
 
 import { Building2, ChevronRight, ChevronDown } from "lucide-react";
 import Pagination from "../common/Pagination";
 
-export default function BranchTable({
+export default function BranchManagementTable({
   branches = [],
   loading = false,
   onEdit,
   onDelete,
+  onRefresh,
 }) {
-
   const [expandedBranches, setExpandedBranches] = useState({});
   const [search, setSearch] = useState("");
   const [filterValue, setFilterValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-const itemsPerPage = 10;
+  const itemsPerPage = 10;
 
   const toggleBranch = (id) => {
     setExpandedBranches((prev) => ({
@@ -29,8 +24,6 @@ const itemsPerPage = 10;
     }));
   };
 
-  /* ----------- flatten branches ----------- */
-
   const flattenBranches = (list, level = 0) => {
     let result = [];
 
@@ -38,9 +31,7 @@ const itemsPerPage = 10;
       result.push({ ...branch, level });
 
       if (branch.subBranches?.length && expandedBranches[branch.id]) {
-        result = result.concat(
-          flattenBranches(branch.subBranches, level + 1)
-        );
+        result = result.concat(flattenBranches(branch.subBranches, level + 1));
       }
     });
 
@@ -49,43 +40,36 @@ const itemsPerPage = 10;
 
   const flatBranches = flattenBranches(branches);
 
-  /* ----------- Search + Filter ----------- */
-
   const filteredBranches = useMemo(() => {
     return flatBranches.filter((b) => {
-
       const matchSearch =
         b.name?.toLowerCase().includes(search.toLowerCase()) ||
-        b.code?.toLowerCase().includes(search.toLowerCase()) ||
-        b.city?.toLowerCase().includes(search.toLowerCase());
+        b.code?.toLowerCase().includes(search.toLowerCase());
 
-      const matchFilter =
-        !filterValue || b.type === filterValue;
+      const matchFilter = !filterValue || b.type === filterValue;
 
       return matchSearch && matchFilter;
     });
   }, [flatBranches, search, filterValue]);
+
   const totalPages = Math.ceil(filteredBranches.length / itemsPerPage);
   const paginatedBranches = filteredBranches.slice(
-  (currentPage - 1) * itemsPerPage,
-  currentPage * itemsPerPage
-);
-
-  /* ----------- Columns ----------- */
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
 
   const columns = [
     {
       header: "Branch Name",
       accessor: "name",
       render: (value, row) => {
-
         const hasChildren = row.subBranches?.length > 0;
         const isExpanded = expandedBranches[row.id];
 
         return (
           <div
-            className="flex items-center gap-2"
-            style={{ paddingLeft: `${row.level * 20}px` }}
+            className="flex items-center gap-2 min-w-0"
+            style={{ paddingLeft: `${Math.min(row.level * 12, 72)}px` }}
           >
             {hasChildren ? (
               <button
@@ -104,7 +88,7 @@ const itemsPerPage = 10;
 
             <Building2 size={16} className="text-blue-500" />
 
-            <span className="font-semibold text-slate-700">
+            <span className="font-semibold text-slate-700 truncate">
               {value}
             </span>
           </div>
@@ -116,28 +100,7 @@ const itemsPerPage = 10;
       header: "Code",
       accessor: "code",
       render: (value) => (
-        <span className="font-mono text-xs text-blue-600">
-          {value}
-        </span>
-      ),
-    },
-
-    { header: "City", accessor: "city" },
-
-    {
-      header: "Type",
-      accessor: "type",
-      render: (value) => (
-        <span
-          className={`px-3 py-1 rounded-full text-xs font-semibold border
-          ${
-            value === "MAIN"
-              ? "bg-purple-50 text-purple-700 border-purple-200"
-              : "bg-blue-50 text-blue-700 border-blue-200"
-          }`}
-        >
-          {value === "MAIN" ? "Main Branch" : "Subsidiary"}
-        </span>
+        <span className="font-mono text-xs text-blue-600">{value}</span>
       ),
     },
 
@@ -181,8 +144,6 @@ const itemsPerPage = 10;
     },
   ];
 
-  /* ----------- Actions ----------- */
-
   const actions = [
     {
       label: "Edit",
@@ -196,7 +157,6 @@ const itemsPerPage = 10;
 
   return (
     <TableShell>
-
       <TableHead
         title="Branch Management"
         columns={columns}
@@ -204,10 +164,17 @@ const itemsPerPage = 10;
         setSearch={setSearch}
         filterValue={filterValue}
         setFilterValue={setFilterValue}
+        wrapHeaders={true}
+        onRefresh={onRefresh}
+        refreshing={loading}
         filterOptions={[
           { label: "All Types", value: "" },
-          { label: "Main Branch", value: "MAIN" },
-          { label: "Subsidiary", value: "SUB" },
+          { label: "Head Office", value: "HEAD_OFFICE" },
+          { label: "Zonal", value: "ZONAL" },
+          { label: "Regional", value: "REGIONAL" },
+          { label: "Branch", value: "BRANCH" },
+          { label: "Main Branch (Legacy)", value: "MAIN" },
+          { label: "Subsidiary (Legacy)", value: "SUB" },
         ]}
       />
 
@@ -218,13 +185,14 @@ const itemsPerPage = 10;
           columns={columns}
           data={paginatedBranches}
           actions={actions}
+          wrapCells={true}
         />
       )}
-    <Pagination
-  currentPage={currentPage}
-  totalPages={totalPages}
-  onPageChange={setCurrentPage}
-/>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </TableShell>
   );
 }

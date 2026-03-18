@@ -1,8 +1,7 @@
-import {useQuery,useMutation,useQueryClient} from '@tanstack/react-query';
-
-
-import { useDispatch, useSelector } from 'react-redux';
-import { showSuccess, showError } from '../lib/utils/toastService';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useDispatch, useSelector } from "react-redux";
+import { apiGet, apiPost, apiPatch } from "../lib/api/apiClient";
+import { showSuccess, showError } from "../lib/utils/toastService";
 import {
     setLeads,
     setLoading,
@@ -23,33 +22,33 @@ import{
 
 
 
-export const useLead = (params)=>{
-const dispatch = useDispatch();
-const leads = useSelector(state => state.lead.leads);
-const loading = useSelector(state => state.lead.loading);
-const error = useSelector(state => state.lead.error);
+export const useLead = (params) => {
+    const dispatch = useDispatch();
+    const leads = useSelector((state) => state.lead.leads);
+    const loading = useSelector((state) => state.lead.loading);
+    const error = useSelector((state) => state.lead.error);
 
+    const query = useQuery(["leads", params], () => apiGet("/leads", { params }), {
+        onSuccess: (data) => {
+            dispatch(setLeads(data));
+            dispatch(clearError());
+        },
+        onError: (queryError) => {
+            const message = queryError?.message || "Failed to fetch leads";
+            dispatch(setError(message));
+            showError(message);
+        },
+        staleTime: 1000 * 60 * 5,
+    });
 
-const query = useQuery(['leads', params], () => getLeads(params), { 
-    onSuccess: (data) => {
-        dispatch(setLeads(data));
-        dispatch(clearError());
-    },
-    onError: (queryError) => {
-        const message = queryError?.message || 'Failed to fetch leads';
-        dispatch(setError(message));
-        showError(message);
-    },
-    staleTime: 1000 * 60 * 5,
-});
-return {
-    leads,
-    loading: query.isLoading || loading,
-    error: error || query.error,
-    isFetching: query.isFetching,
-    refetch: query.refetch,
+    return {
+        leads,
+        loading: query.isLoading || loading,
+        error: error || query.error,
+        isFetching: query.isFetching,
+        refetch: query.refetch,
+    };
 };
-}
 
 
 export const useCreateLead = () => {
@@ -132,8 +131,8 @@ export const useConvertLeadToLoan = () => {
         },
 
         onSuccess: (data) => {
-            dispatch(removeLeadFromList(data.id));
-            queryClient.invalidateQueries(['leads']);
+            dispatch(removeLeadFromList(data?.id));
+            queryClient.invalidateQueries(["leads"]);
             dispatch(setLoading(false));
             dispatch(clearError());
             showSuccess('Lead converted to loan successfully!');

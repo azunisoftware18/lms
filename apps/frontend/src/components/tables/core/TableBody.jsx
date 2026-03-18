@@ -2,7 +2,12 @@
 import TableEmpty from "./TableEmpty";
 import TableRow from "./TableRow";
 
-export default function TableBody({ columns = [], data = [], actions = [] }) {
+export default function TableBody({
+  columns = [],
+  data = [],
+  actions = [],
+  wrapCells = false,
+}) {
   if (!data.length) {
     return <TableEmpty colSpan={columns.length + 1} />;
   }
@@ -20,6 +25,7 @@ export default function TableBody({ columns = [], data = [], actions = [] }) {
             row={row}
             actions={rowActions}
             isLast={index === data.length - 1}
+            wrapCells={wrapCells}
           />
         );
       })}
