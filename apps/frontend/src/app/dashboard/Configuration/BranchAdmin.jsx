@@ -1,50 +1,51 @@
-import { useState, useEffect } from 'react';
-import {
-  Plus,
-  Edit,
-  AlertCircle,
-  User,
-  Wallet,
-  Users
-} from 'lucide-react';
-import { dummyBranchAdmins, dummyBranches } from '../../../lib/dumyData';
-import StatusCard from '../../../components/common/StatusCard';
-import BranchAdminTable from '../../../components/tables/BranchAdminTable';
-import Button from '../../../components/ui/Button';
-import BranchAdminFormModal from '../../../components/modals/BranchAdminFormModal';
-
+import React, { useState, useEffect, useMemo } from "react";
+import { Plus, Users, CheckCircle, XCircle } from "lucide-react";
+import { toast } from "react-hot-toast";
+import { dummyBranchAdmins, dummyBranches } from "../../../lib/dumyData";
+import StatusCard from "../../../components/common/StatusCard";
+import BranchAdminTable from "../../../components/tables/BranchAdminTable";
+import Button from "../../../components/ui/Button";
+import BranchAdminFormModal from "../../../components/modals/BranchAdminFormModal";
 
 export default function BranchAdmin() {
-
   const [branchAdmins, setBranchAdmins] = useState([]);
   const [branches, setBranches] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState(null);
-  const [localError, setLocalError] = useState('');
-  const getAdminActions = (admin) => [
-    {
-      label: "Edit",
-      icon: <Edit size={16} />,
-      onClick: () => openEditModal(admin),
-    },
-  ];
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  const stats = useMemo(
+    () => ({
+      totalAdmins: branchAdmins.length,
+      activeAdmins: branchAdmins.filter((admin) => admin?.isActive).length,
+      inactiveAdmins: branchAdmins.filter((admin) => !admin?.isActive).length,
+      totalBranches: branches.length,
+    }),
+    [branchAdmins, branches],
+  );
 
   const loadData = async () => {
     setLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    setBranchAdmins(dummyBranchAdmins);
+    setBranches(dummyBranches);
+    setLoading(false);
+  };
 
-    setTimeout(() => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
       setBranchAdmins(dummyBranchAdmins);
       setBranches(dummyBranches);
       setLoading(false);
-    }, 500);
-  };
+    }, 800);
 
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleRefreshAdmins = async () => {
+    await loadData();
+    toast.success("Branch admins refreshed");
+  };
 
   const openAddModal = () => {
     setSelectedAdmin(null);
@@ -55,75 +56,44 @@ export default function BranchAdmin() {
     setSelectedAdmin(admin);
     setIsModalOpen(true);
   };
+
   const handleSaveAdmin = (formData) => {
     if (selectedAdmin) {
-
-      // Update Admin
-      const updated = branchAdmins.map((a) =>
-        a.id === selectedAdmin.id ? { ...a, ...formData } : a
+      const updated = branchAdmins.map((admin) =>
+        admin.id === selectedAdmin.id ? { ...admin, ...formData } : admin,
       );
-
       setBranchAdmins(updated);
-
     } else {
-
-      // Create Admin
       const newAdmin = {
         id: Date.now().toString(),
         ...formData,
         isActive: true,
-        branch: branches.find((b) => b.id === formData.branchId)
+        branch: branches.find((branch) => branch.id === formData.branchId),
       };
-
       setBranchAdmins([...branchAdmins, newAdmin]);
     }
 
+    toast.success("Branch admin saved successfully");
     setIsModalOpen(false);
     setSelectedAdmin(null);
   };
 
-  // Safely filter branch admins based on search
-  const filteredAdmins = Array.isArray(branchAdmins)
-    ? branchAdmins.filter(admin => {
-      if (!admin) return false;
-
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        (admin.fullName?.toLowerCase() || '').includes(searchLower) ||
-        (admin.email?.toLowerCase() || '').includes(searchLower) ||
-        (admin.userName?.toLowerCase() || '').includes(searchLower) ||
-        (admin.contactNumber || '').includes(searchTerm) ||
-        (admin.branch?.name?.toLowerCase() || '').includes(searchLower)
-      );
-    })
-    : [];
-
-  // Status Badge Component
-
-
-  // Calculate stats safely
-  const totalAdmins = Array.isArray(branchAdmins) ? branchAdmins.length : 0;
-  const activeAdmins = Array.isArray(branchAdmins)
-    ? branchAdmins.filter(a => a?.isActive).length
-    : 0;
-  const inactiveAdmins = Array.isArray(branchAdmins)
-    ? branchAdmins.filter(a => a && !a.isActive).length
-    : 0;
-  const totalBranches = Array.isArray(branches) ? branches.length : 0;
-
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8">
-
-      {/* Header */}
-      <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Branch Admin Management</h1>
-          <p className="text-gray-500 mt-1">Manage administrators for all branches</p>
+      {/* ===== HEADER SECTION ===== */}
+      <div className="mb-8 flex w-full flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="min-w-0">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+            Branch Admin Management
+          </h1>
+          <p className="text-gray-500 mt-1">
+            Manage administrators for all branches
+          </p>
         </div>
 
         <Button
           onClick={openAddModal}
-          className="w-full sm:w-auto bg-blue-600 text-white hover:bg-blue-700 
+          className="w-full sm:w-auto shrink-0 whitespace-nowrap bg-blue-600 text-white hover:bg-blue-700 
             px-4 py-2 rounded-lg transition-colors text-sm font-medium
             flex items-center justify-center gap-2"
         >
@@ -132,33 +102,50 @@ export default function BranchAdmin() {
         </Button>
       </div>
 
-      {/* Error Message */}
-      {localError && (
-        <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded">
-          <div className="flex items-center">
-            <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
-            <p className="text-red-700">{localError}</p>
-          </div>
-        </div>
-      )}
-
-      {/* Stats Cards */}
+      {/* ===== STATUS CARDS ===== */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <StatusCard title="Total Admins" value={totalAdmins} icon={Wallet} colorClass="text-green-500" bgClass="bg-green-50" />
+        <StatusCard
+          title="Total Admins"
+          value={stats.totalAdmins}
+          icon={Users}
+          colorClass="text-blue-600"
+          bgClass="bg-blue-50"
+        />
 
-        <StatusCard title="Active Admins" value={activeAdmins} icon={User} colorClass="text-green-500" bgClass="bg-green-50" />
+        <StatusCard
+          title="Active Admins"
+          value={stats.activeAdmins}
+          icon={CheckCircle}
+          colorClass="text-green-600"
+          bgClass="bg-green-50"
+        />
 
-        <StatusCard title="Inactive Admins" value={inactiveAdmins} icon={AlertCircle} colorClass="text-red-500" bgClass="bg-red-50" />
+        <StatusCard
+          title="Inactive Admins"
+          value={stats.inactiveAdmins}
+          icon={XCircle}
+          colorClass="text-red-600"
+          bgClass="bg-red-50"
+        />
 
-        <StatusCard title="Total Branches" value={totalBranches} icon={Users} colorClass="text-green-500" bgClass="bg-green-50" />
+        <StatusCard
+          title="Total Branches"
+          value={stats.totalBranches}
+          icon={Users}
+          colorClass="text-purple-600"
+          bgClass="bg-purple-50"
+        />
       </div>
 
-      {/* Main Content Card */}
+      {/* ===== BRANCH ADMIN TABLE SECTION ===== */}
       <BranchAdminTable
-        admins={filteredAdmins}
+        admins={branchAdmins}
         loading={loading}
         onEdit={openEditModal}
+        onRefresh={handleRefreshAdmins}
       />
+
+      {/* ===== ADD / EDIT ADMIN MODAL ===== */}
       <BranchAdminFormModal
         isOpen={isModalOpen}
         onClose={() => {
@@ -170,8 +157,6 @@ export default function BranchAdmin() {
         onSave={handleSaveAdmin}
         loading={loading}
       />
-
     </div>
   );
-};
-
+}

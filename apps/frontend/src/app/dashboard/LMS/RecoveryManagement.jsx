@@ -742,7 +742,7 @@ const RecoveryManagement = () => {
           {/* Filters */}
           <div className="bg-white rounded-xl shadow-sm p-4 border border-slate-100">
             <div className="flex flex-wrap gap-4">
-              <div className="flex-1 min-w-[200px]">
+              <div className="flex-1 min-w-50">
                 <input
                   type="text"
                   placeholder="Search by loan number or customer..."

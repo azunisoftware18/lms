@@ -1,10 +1,5 @@
 import { useState, useMemo } from "react";
-import {
-  TableShell,
-  TableHead,
-  TableBody,
-  TableLoader,
-} from "../tables/core";
+import { TableShell, TableHead, TableBody, TableLoader } from "../tables/core";
 
 import Pagination from "../common/Pagination";
 
@@ -22,9 +17,10 @@ export default function BranchAdminTable({
   admins = [],
   loading = false,
   onEdit,
+  onRefresh,
 }) {
-
   const [search, setSearch] = useState("");
+  const [filterValue, setFilterValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
   const itemsPerPage = 8;
@@ -35,14 +31,20 @@ export default function BranchAdminTable({
     const s = search.toLowerCase();
 
     return admins.filter((a) => {
+      const matchFilter =
+        !filterValue ||
+        (filterValue === "active" && a.isActive) ||
+        (filterValue === "inactive" && !a.isActive);
+
       return (
-        a.fullName?.toLowerCase().includes(s) ||
-        a.email?.toLowerCase().includes(s) ||
-        a.userName?.toLowerCase().includes(s) ||
-        a.branch?.name?.toLowerCase().includes(s)
+        matchFilter &&
+        (a.fullName?.toLowerCase().includes(s) ||
+          a.email?.toLowerCase().includes(s) ||
+          a.userName?.toLowerCase().includes(s) ||
+          a.branch?.name?.toLowerCase().includes(s))
       );
     });
-  }, [admins, search]);
+  }, [admins, search, filterValue]);
 
   /* ---------------- Pagination ---------------- */
 
@@ -50,7 +52,7 @@ export default function BranchAdminTable({
 
   const paginatedAdmins = filteredAdmins.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   /* ---------------- Columns ---------------- */
@@ -64,9 +66,7 @@ export default function BranchAdminTable({
           <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
             <User size={14} className="text-blue-600" />
           </div>
-          <span className="font-medium text-slate-800">
-            {value || "N/A"}
-          </span>
+          <span className="font-medium text-slate-800">{value || "N/A"}</span>
         </div>
       ),
     },
@@ -83,22 +83,17 @@ export default function BranchAdminTable({
     },
 
     {
-      header: "Username",
+      header: "Username / Contact",
       accessor: "userName",
-      render: (value) => (
-        <span className="font-mono text-xs text-slate-600">
-          {value || "N/A"}
-        </span>
-      ),
-    },
-
-    {
-      header: "Contact",
-      accessor: "contactNumber",
-      render: (value) => (
-        <div className="flex items-center gap-1 text-slate-600">
-          <Phone size={14} />
-          {value || "N/A"}
+      render: (_, row) => (
+        <div className="space-y-1">
+          <div className="font-mono text-xs text-slate-600">
+            {row.userName || "N/A"}
+          </div>
+          <div className="flex items-center gap-1 text-slate-600 text-xs">
+            <Phone size={12} />
+            {row.contactNumber || "N/A"}
+          </div>
         </div>
       ),
     },
@@ -146,12 +141,21 @@ export default function BranchAdminTable({
 
   return (
     <TableShell>
-
       <TableHead
         title="Branch Admins"
         columns={columns}
         search={search}
         setSearch={setSearch}
+        filterValue={filterValue}
+        setFilterValue={setFilterValue}
+        wrapHeaders={true}
+        onRefresh={onRefresh}
+        refreshing={loading}
+        filterOptions={[
+          { label: "All Status", value: "" },
+          { label: "Active", value: "active" },
+          { label: "Inactive", value: "inactive" },
+        ]}
       />
 
       {loading ? (
@@ -171,7 +175,6 @@ export default function BranchAdminTable({
           />
         </>
       )}
-
     </TableShell>
   );
 }

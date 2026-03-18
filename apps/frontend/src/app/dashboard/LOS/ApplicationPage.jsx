@@ -11,14 +11,117 @@ import LoanApplicationForm from "../../../components/forms/LoanApplicationForm";
 
 export default function ProfessionalNBFCPortal() {
   const [showForm, setShowForm] = useState(false);
-  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedApp, setSelectedApp] = useState(null);
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showApproveDialog, setShowApproveDialog] = useState(false);
 
-  // Define Columns based on the Mascot Projects Form
-  const nbfcColumns = [
+  const { data: applicationsResponse, isLoading } = useLoanApplications();
+  const { mutate: updateStatus } = useUpdateLoanStatus();
+
+  const applications = useMemo(() => {
+    const raw =
+      applicationsResponse?.data ??
+      applicationsResponse?.loanApplications ??
+      applicationsResponse;
+    const apiData = Array.isArray(raw) ? raw : [];
+    // Use dummy data if no real data is available
+    return apiData.length > 0 ? apiData : SAMPLE_LOAN_APPLICATIONS;
+  }, [applicationsResponse]);
+
+  const shouldShowLoadingOnly =
+    isLoading && !applicationsResponse && SAMPLE_LOAN_APPLICATIONS.length === 0;
+
+  const PAGE_SIZE = 10;
+
+  const handleViewDetails = (app) => {
+    setSelectedApp(app);
+    setViewModalOpen(true);
+  };
+
+  const handleApproveApplication = () => {
+    if (!selectedApp?.id) return;
+    updateStatus({
+      id: selectedApp.id,
+      status: "approved",
+    });
+    setShowApproveDialog(false);
+    setViewModalOpen(false);
+  };
+
+  // Filter applications based on search term
+  const filteredApplications = applications.filter(
+    (app) =>
+      `${app.customer?.firstName || ""} ${app.customer?.lastName || ""}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      app.customer?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      app.customer?.panNumber?.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredApplications.length / PAGE_SIZE),
+  );
+  const paginatedApplications = filteredApplications.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  );
+
+  const stats = {
+    total: applications.length,
+    approved: applications.filter((a) => a.status?.toLowerCase() === "approved")
+      .length,
+    rejected: applications.filter((a) => a.status?.toLowerCase() === "rejected")
+      .length,
+    pending: applications.filter(
+      (a) =>
+        a.status?.toLowerCase() === "pending" ||
+        a.status?.toLowerCase() === "kyc_pending",
+    ).length,
+  };
+
+  // Get status color
+  const getStatusColor = (status) => {
+    switch (status?.toLowerCase()) {
+      case "approved":
+        return "bg-green-100 text-green-700 border-green-200";
+      case "rejected":
+        return "bg-red-100 text-red-700 border-red-200";
+      case "pending":
+      case "kyc_pending":
+        return "bg-yellow-100 text-yellow-700 border-yellow-200";
+      default:
+        return "bg-gray-100 text-gray-700 border-gray-200";
+    }
+  };
+
+  // Format date helper
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
+  // Format currency helper
+  const formatCurrency = (amount) => {
+    if (!amount && amount !== 0) return "N/A";
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  const tableColumns = [
     {
-      header: "Applicant Details",
-      accessor: "applicant",
+      header: "Applicant",
+      accessor: "customer",
       render: (_, app) => (
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-blue-700 font-bold border border-slate-200">
@@ -67,21 +170,20 @@ export default function ProfessionalNBFCPortal() {
     {
       header: "Risk Grade (CIBIL)",
       accessor: "cibilScore",
-      render: (score) => {
-        const safeScore = Math.max(0, Math.min(900, score || 0));
-        const pct = (safeScore / 900) * 100;
-
-        return (
-          <div className="flex flex-col">
-            <span className={`text-sm font-bold ${safeScore >= 750 ? "text-green-600" : "text-orange-500"}`}>
-              {score || "---"}
-            </span>
-            <div className="w-16 h-1 bg-slate-100 rounded-full overflow-hidden">
-              <div className="h-full bg-blue-500" style={{ width: `${pct}%` }}></div>
-            </div>
-          </div>
-        );
-      },
+      render: (value) => (
+        <span
+          className={`px-3 py-1.5 rounded-lg font-medium text-sm ${value >= 750
+              ? "bg-green-100 text-green-700"
+              : value >= 650
+                ? "bg-yellow-100 text-yellow-700"
+                : value
+                  ? "bg-red-100 text-red-700"
+                  : "bg-slate-100 text-slate-700"
+            }`}
+        >
+          {value ?? "N/A"}
+        </span>
+      ),
     },
     {
       header: "Status",
@@ -95,6 +197,26 @@ export default function ProfessionalNBFCPortal() {
       ),
     }
   ];
+
+  useEffect(() => {
+    if (showForm) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [showForm]);
+
+  if (showForm) {
+    return (
+      <LoanApplicationForm
+        onClose={() => setShowForm(false)}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f8fafc] p-6">
@@ -113,13 +235,17 @@ export default function ProfessionalNBFCPortal() {
           </Button>
         </div>
 
-        {/* Financial Overview Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <StatusCard title="Active Files" value="124" icon={FileText} variant="blue" />
-          <StatusCard title="Awaiting KYC" value="12" icon={AlertCircle} variant="orange" />
-          <StatusCard title="Disbursed" value="84" icon={Check} variant="green" />
-          <StatusCard title="Rejected" value="08" icon={Ban} variant="red" />
-        </div>
+
+        <Button
+          onClick={() => setShowForm(true)}
+          className="w-full sm:w-auto bg-blue-600 text-white hover:bg-blue-700 
+            px-4 py-2 rounded-lg transition-colors text-sm font-medium
+            flex items-center justify-center gap-2"
+        >
+          <Plus size={20} />
+          <span className="font-semibold">New Application</span>
+        </Button>
+      </div>
 
         {/* Application Data Grid */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
@@ -143,6 +269,20 @@ export default function ProfessionalNBFCPortal() {
           onClose={() => setViewModalOpen(false)} 
         />
       )}
+      {/* // Loan Application Form */}
+
+
+      <ConfirmationDialog
+        open={showApproveDialog}
+        title="Approve Loan Application"
+        description="Are you sure you want to approve this loan application?"
+        confirmText="Approve"
+        cancelText="Cancel"
+        onConfirm={handleApproveApplication}
+        onCancel={() => setShowApproveDialog(false)}
+        variant="info"
+        isPopup={true}
+      />
     </div>
   );
 }

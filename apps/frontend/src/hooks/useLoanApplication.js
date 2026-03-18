@@ -1,7 +1,18 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { apiGet, apiPost, apiPatch } from "../lib/api/apiClient";
-import { showSuccess, showError } from "../lib/utils/toastService";import { normalizeParams } from '../lib/utils/paramHelper';import {
+import { showSuccess, showError } from "../lib/utils/toastService";
+import {
+  getLoanApplications,
+  getLoanApplicationById,
+  createLoanApplication,
+  updateLoanApplicationStatus,
+  approveLoanApplication,
+  rejectLoanApplication,
+  uploadLoanApplicationDocument,
+  verifyDocument,
+  rejectDocument
+} from "../lib/api/loanApplication.api";
+import {
   setLoading,
   setError,
   clearError,
@@ -16,14 +27,9 @@ export const useLoanApplications = (params = {}) => {
   const loading = useSelector(state => state.loanApplication?.loading);
   const error = useSelector(state => state.loanApplication?.error);
 
-  const normalizedParams = normalizeParams(params);
-
   return useQuery({
-    queryKey: ["loanApplications", normalizedParams],
-    queryFn: () =>
-      apiGet('/loan-applications', {
-        params: normalizedParams,
-      }),
+    queryKey: ["loanApplications", params],
+    queryFn: () => getLoanApplications(params),
     keepPreviousData: true, 
     onSuccess: (data) => {
       dispatch(setLoanApplications(data));
@@ -169,7 +175,7 @@ export const useUploadDocuments = () => {
     onMutate: () => {
       dispatch(setLoading(true));
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       qc.invalidateQueries(["loanApplication"]);
       dispatch(setLoading(false));
       dispatch(clearError());
@@ -194,7 +200,7 @@ export const useVerifyDocument = () => {
     onMutate: () => {
       dispatch(setLoading(true));
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       qc.invalidateQueries(["loanApplication"]);
       dispatch(setLoading(false));
       dispatch(clearError());
@@ -221,7 +227,7 @@ export const useRejectDocument = () => {
     onMutate: () => {
       dispatch(setLoading(true));
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       qc.invalidateQueries(["loanApplication"]);
       dispatch(setLoading(false));
       dispatch(clearError());
