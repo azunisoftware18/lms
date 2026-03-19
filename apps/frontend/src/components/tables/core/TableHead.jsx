@@ -223,7 +223,7 @@ export default function TableHead({
           {columns.map((col) => (
             <th
               key={col.accessor}
-              className={`px-4 py-3 font-semibold text-slate-600 text-[10px] uppercase tracking-wider ${wrapHeaders ? "whitespace-normal wrap-break-word" : "whitespace-nowrap"}`}
+              className={`px-4 py-3 font-semibold text-slate-600 text-[10px] uppercase tracking-wider ${wrapHeaders ? "whitespace-normal wrap-break-word" : "whitespace-nowrap"} ${col.headerClassName || ""}`}
             >
               {col.header}
             </th>
@@ -308,7 +308,7 @@ export default function TableHead({
         {columns.map((col) => (
           <th
             key={col.accessor}
-            className={`px-4 sm:px-6 py-3 sm:py-4 font-semibold text-slate-500 uppercase tracking-wider text-[10px] sm:text-[11px] ${wrapHeaders ? "whitespace-normal wrap-break-word" : "whitespace-nowrap"}`}
+            className={`px-4 sm:px-6 py-3 sm:py-4 font-semibold text-slate-500 uppercase tracking-wider text-[10px] sm:text-[11px] ${wrapHeaders ? "whitespace-normal wrap-break-word" : "whitespace-nowrap"} ${col.headerClassName || ""}`}
           >
             {col.header}
           </th>

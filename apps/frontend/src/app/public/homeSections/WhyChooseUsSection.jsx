@@ -1,10 +1,7 @@
 import { whyChooseUsData } from '../../../lib/dumyData';
-import { colorVariables } from '../../../lib/index';
 import { colorClassMap } from '../../../lib/index';
 
-// Log imports to debug
-console.log('whyChooseUsData:', whyChooseUsData);
-console.log('colorVariables:', colorVariables);
+
 
 export default function WhyChooseUsSection() {
   // Use the local colorClassMap directly instead of relying on imports
@@ -55,7 +52,7 @@ export default function WhyChooseUsSection() {
         </div>
 
         {/* Summary Banner */}
-        <div className="mt-12 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8 rounded-xl text-center max-w-4xl mx-auto shadow-lg">
+        <div className="mt-12 bg-linear-to-r from-blue-600 to-indigo-600 text-white p-8 rounded-xl text-center max-w-4xl mx-auto shadow-lg">
           <p className="text-xl font-medium tracking-wide">
             RBI Registered • Customer-Centric • Quick Processing • Transparent • Flexible • Compliant
           </p>

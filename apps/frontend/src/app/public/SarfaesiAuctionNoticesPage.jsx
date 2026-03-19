@@ -11,7 +11,7 @@ export default function SarfaesiAuctionNoticesPage() {
         {/* ===== Header Section ===== */}
         <div className="text-center lg:text-left mb-8 sm:mb-10 lg:mb-12">
           <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 lg:gap-6">
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <Hammer className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 mx-auto lg:mx-0 mb-3 lg:mb-0 ${colorVariables.PRIMARY_COLOR}`} />
             </div>
             <div className="flex-1">

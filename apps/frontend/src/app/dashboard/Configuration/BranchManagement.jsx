@@ -2,25 +2,63 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Building2, CheckCircle, XCircle, Plus } from "lucide-react";
 import StatusCard from "../../../components/common/StatusCard";
 import BranchManagementTable from "../../../components/tables/BranchManagementTable";
-import { dummyBranches } from "../../../lib/dumyData";
 import Button from "../../../components/ui/Button";
 import AddBranchFormModal from "../../../components/modals/AddBranchFormModal";
 import { toast } from "react-hot-toast";
-import { apiGet, apiPost, apiPut } from "../../../lib/api/apiClient";
+import {
+  useBranches,
+  useCreateBranch,
+  useUpdateBranch,
+  useDeleteBranch,
+} from "../../../hooks/useBranches";
 
 export default function BranchManagement() {
   const isTopLevelType = (type) => type === "HEAD_OFFICE" || type === "MAIN";
+  const buildBranchTree = (records) => {
+    const list = Array.isArray(records) ? records : [];
+    const nodeMap = new Map();
 
-  const [branches, setBranches] = useState([]);
-  const [loading, setLoading] = useState(true);
+    list.forEach((item) => {
+      nodeMap.set(item.id, {
+        ...(nodeMap.get(item.id) || {}),
+        ...item,
+        subBranches: [],
+      });
+    });
+
+    list.forEach((item) => {
+      const parentId = item?.parentBranch?.id;
+      if (parentId && nodeMap.has(parentId) && nodeMap.has(item.id)) {
+        const parent = nodeMap.get(parentId);
+        const child = nodeMap.get(item.id);
+        if (!parent.subBranches.some((branch) => branch.id === child.id)) {
+          parent.subBranches.push(child);
+        }
+      }
+    });
+
+    const roots = [];
+    nodeMap.forEach((node) => {
+      const hasParentInList = Boolean(
+        node?.parentBranch?.id && nodeMap.has(node.parentBranch.id),
+      );
+      if (!hasParentInList) {
+        roots.push(node);
+      }
+    });
+
+    return roots;
+  };
+
   const [openBranchModal, setOpenBranchModal] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState(null);
 
-  // Memoized main branches for better performance
-  const mainBranches = useMemo(
-    () => branches.filter((b) => isTopLevelType(b.type) && b.isActive),
-    [branches],
-  );
+  const { branches: branchList = [], loading, refetch } = useBranches();
+  const createBranchMutation = useCreateBranch();
+  const updateBranchMutation = useUpdateBranch();
+  const deleteBranchMutation = useDeleteBranch();
+
+  const branches = useMemo(() => buildBranchTree(branchList), [branchList]);
 
   // Memoized flattened branches for stats
   const allBranchesFlat = useMemo(() => {
@@ -33,7 +71,7 @@ export default function BranchManagement() {
         return acc;
       }, []);
     };
-    return flatten(branches);
+    return flatten(Array.isArray(branches) ? branches : []);
   }, [branches]);
 
   // Memoized stats
@@ -47,31 +85,58 @@ export default function BranchManagement() {
     [allBranchesFlat],
   );
 
+  const statusCards = [
+    {
+      key: "total",
+      title: "Total Branches",
+      value: stats.total,
+      icon: Building2,
+      colorClass: "text-blue-600",
+      bgClass: "bg-blue-50",
+    },
+    {
+      key: "main",
+      title: "Main Branches",
+      value: stats.main,
+      icon: Building2,
+      colorClass: "text-purple-600",
+      bgClass: "bg-purple-50",
+    },
+    {
+      key: "active",
+      title: "Active",
+      value: stats.active,
+      icon: CheckCircle,
+      colorClass: "text-green-600",
+      bgClass: "bg-green-50",
+    },
+    {
+      key: "inactive",
+      title: "Inactive",
+      value: stats.inactive,
+      icon: XCircle,
+      colorClass: "text-red-600",
+      bgClass: "bg-red-50",
+    },
+  ];
+
   const handleSaveBranch = async (data) => {
     try {
-      setLoading(true);
-      let result;
-
       if (selectedBranch?.id) {
-        // Update existing branch
-        result = await apiPut(`/branch/${selectedBranch.id}`, data);
-        setBranches((prevBranches) =>
-          prevBranches.map((b) => (b.id === result.id ? result : b)),
-        );
-        toast.success("Branch updated successfully");
+        await updateBranchMutation.mutateAsync({
+          id: selectedBranch.id,
+          branchData: data,
+        });
       } else {
-        // Create new branch
-        result = await apiPost("/branch", data);
-        setBranches((prevBranches) => [result, ...prevBranches]);
-        toast.success("Branch created successfully");
+        await createBranchMutation.mutateAsync(data);
       }
+
+      await refetch();
 
       setOpenBranchModal(false);
       setSelectedBranch(null);
     } catch (error) {
       toast.error(error.message || "Failed to save branch");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -82,36 +147,28 @@ export default function BranchManagement() {
 
   const handleRefreshBranches = async () => {
     try {
-      setLoading(true);
-      const data = await apiGet("/branch");
-      setBranches(Array.isArray(data) ? data : data.data || dummyBranches);
+      await refetch();
       toast.success("Branch data refreshed");
-    } catch {
-      // Fallback to dummy data if API fails
-      setBranches(dummyBranches);
-      toast.error("Using local data - API not available");
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      toast.error(error.message || "Failed to refresh branch data");
     }
   };
 
-  // Load dummy data
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true);
-        const data = await apiGet("/branch");
-        setBranches(Array.isArray(data) ? data : data.data || dummyBranches);
-      } catch {
-        // Fallback to dummy data if API fails
-        setBranches(dummyBranches);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleDeleteBranch = async (branch) => {
+    if (!branch?.id) return;
 
-    loadData();
-  }, []);
+    try {
+      await deleteBranchMutation.mutateAsync(branch.id);
+      await refetch();
+    } catch (error) {
+      toast.error(error.message || "Failed to delete branch");
+    }
+  };
+
+  // Initial fetch
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8">
@@ -143,44 +200,25 @@ export default function BranchManagement() {
 
       {/* ===== STATUS CARDS ===== */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <StatusCard
-          title="Total Branches"
-          value={stats.total}
-          icon={Building2}
-          colorClass="text-blue-600"
-          bgClass="bg-blue-50"
-        />
-
-        <StatusCard
-          title="Main Branches"
-          value={stats.main}
-          icon={Building2}
-          colorClass="text-purple-600"
-          bgClass="bg-purple-50"
-        />
-
-        <StatusCard
-          title="Active"
-          value={stats.active}
-          icon={CheckCircle}
-          colorClass="text-green-600"
-          bgClass="bg-green-50"
-        />
-
-        <StatusCard
-          title="Inactive"
-          value={stats.inactive}
-          icon={XCircle}
-          colorClass="text-red-600"
-          bgClass="bg-red-50"
-        />
+        {statusCards.map((card) => (
+          <StatusCard
+            key={card.key}
+            title={card.title}
+            value={card.value}
+            icon={card.icon}
+            colorClass={card.colorClass}
+            bgClass={card.bgClass}
+          />
+        ))}
       </div>
 
       {/* ===== BRANCH TABLE SECTION ===== */}
       <BranchManagementTable
+        key={allBranchesFlat.length}
         branches={branches}
         loading={loading}
         onEdit={handleEditBranch}
+        onDelete={handleDeleteBranch}
         onRefresh={handleRefreshBranches}
       />
 
@@ -189,7 +227,7 @@ export default function BranchManagement() {
         isOpen={openBranchModal}
         onClose={() => setOpenBranchModal(false)}
         branch={selectedBranch}
-        mainBranches={mainBranches}
+        mainBranches={allBranchesFlat}
         onSave={handleSaveBranch}
       />
     </div>
