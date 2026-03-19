@@ -21,12 +21,14 @@ export const useCreateLoanDraft = () => {
       dispatch(setLoading(true));
     },
     onSuccess: (data) => {
+      dispatch(setLoading(false));
       dispatch(setDraft(data?.data ?? data));
       dispatch(clearError());
       queryClient.invalidateQueries({ queryKey: ["loanDrafts"] });
       showSuccess("Loan draft created successfully");
     },
     onError: (error) => {
+      dispatch(setLoading(false));
       const message = error?.message || "Failed to create loan draft";
       dispatch(setError(message));
       showError(message);
@@ -78,12 +80,14 @@ export const useUpdateLoanDraft = () => {
       dispatch(setLoading(true));
     },
     onSuccess: (data, variables) => {
+      dispatch(setLoading(false));
       dispatch(setDraft(data?.data ?? data));
       dispatch(clearError());
       queryClient.invalidateQueries({ queryKey: ["loanDraft", variables?.id] });
       showSuccess("Loan draft updated successfully");
     },
     onError: (error) => {
+      dispatch(setLoading(false));
       const message = error?.message || "Failed to update loan draft";
       dispatch(setError(message));
       showError(message);
@@ -101,6 +105,7 @@ export const useSubmitLoanDraft = () => {
       dispatch(setLoading(true));
     },
     onSuccess: (data, draftId) => {
+      dispatch(setLoading(false));
       dispatch(setSubmittedResult(data?.data ?? data));
       dispatch(clearError());
       dispatch(clearDraft());
@@ -109,6 +114,7 @@ export const useSubmitLoanDraft = () => {
       showSuccess("Loan draft submitted successfully");
     },
     onError: (error) => {
+      dispatch(setLoading(false));
       const message = error?.message || "Failed to submit loan draft";
       dispatch(setError(message));
       showError(message);

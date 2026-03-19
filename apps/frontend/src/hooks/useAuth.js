@@ -28,7 +28,11 @@ export const useLogin = () => {
 
       dispatch(setUser(userData));
       localStorage.setItem("user", JSON.stringify(userData));
-      localStorage.setItem("token", userData?.token || "");
+      if (userData?.token) {
+        localStorage.setItem("token", userData.token);
+      } else {
+        localStorage.removeItem("token");
+      }
       toast.success("Login successful");
     },
     onError: (error) => {
