@@ -2,13 +2,18 @@ import React from "react";
 import { X } from "lucide-react";
 import AddEmployeeForm from "../forms/AddEmployeeForm";
 
-export default function EmployeeFormModal ({ isOpen, onClose, isEditing, editId }) {
-
+export default function EmployeeFormModal({
+  isOpen,
+  onClose,
+  isEditing,
+  editId,
+  initialFormState,
+  onSuccess,
+}) {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
-
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"
@@ -17,7 +22,6 @@ export default function EmployeeFormModal ({ isOpen, onClose, isEditing, editId 
 
       {/* Modal Container */}
       <div className="relative w-full max-w-6xl bg-white rounded-2xl shadow-2xl z-10 my-8">
-
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-slate-50 rounded-t-2xl">
           <div>
@@ -40,16 +44,14 @@ export default function EmployeeFormModal ({ isOpen, onClose, isEditing, editId 
 
         {/* Form */}
         <div className="p-6 md:p-8 max-h-[85vh] overflow-y-auto">
-
           <AddEmployeeForm
+            initialFormState={isEditing ? initialFormState : undefined}
             isEditing={isEditing}
             editId={editId}
             onCancel={onClose}
-            onSuccess={onClose}
+            onSuccess={onSuccess || onClose}
           />
-
         </div>
-
       </div>
     </div>
   );

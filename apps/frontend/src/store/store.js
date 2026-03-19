@@ -9,6 +9,7 @@ import emiReducer from "./slices/emiSlice";
 import loanApplicationReducer from "./slices/loanApplicationSlice";
 import loanDraftReducer from "./slices/loanDraftSlice";
 import leadReducer from "./slices/leadSlice";
+import employeeReducer from "./slices/employeeSlice";
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     loanApplication: loanApplicationReducer,
     loanDraft: loanDraftReducer,
     lead: leadReducer,
+    employee: employeeReducer,
   },
 });
 
