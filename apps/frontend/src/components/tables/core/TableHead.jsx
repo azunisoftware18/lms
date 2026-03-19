@@ -262,7 +262,7 @@ export default function TableHead({
             </h2>
 
             {/* Controls */}
-            <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2 sm:gap-3 min-w-0 lg:ml-auto lg:justify-end">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 min-w-0 lg:ml-auto lg:justify-end">
               {/* Search */}
               <div className="w-full sm:flex-1 lg:flex-none lg:w-72 min-w-0">
                 <SearchField

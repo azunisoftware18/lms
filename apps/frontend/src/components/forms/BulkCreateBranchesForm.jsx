@@ -115,6 +115,9 @@ export default function BulkCreateBranchesForm({
         })),
       });
       onClose();
+    } catch (error) {
+      const errorMessage = error?.message || "Failed to create bulk branches";
+      setFormError(errorMessage);
     } finally {
       setSubmitting(false);
     }

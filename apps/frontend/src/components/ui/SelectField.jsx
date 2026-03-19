@@ -29,7 +29,11 @@ const SelectField = forwardRef(
   ) => {
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const [focusedIndex, setFocusedIndex] = useState(-1);
     const containerRef = useRef(null);
+    const dropdownRef = useRef(null);
+    const triggerRef = useRef(null);
+    const dropdownId = `dropdown-${Math.random().toString(36).substr(2, 9)}`;
 
     // 1. Click Outside Logic
     useEffect(() => {
@@ -37,20 +41,91 @@ const SelectField = forwardRef(
         if (containerRef.current && !containerRef.current.contains(e.target)) {
           setIsOpen(false);
           setSearchTerm("");
+          setFocusedIndex(-1);
         }
       };
       document.addEventListener("mousedown", handler);
       return () => document.removeEventListener("mousedown", handler);
     }, []);
 
-    // 2. Filtering Logic (Performance Optimized)
+    // 2. Keyboard Handler for Trigger
+    const handleTriggerKeyDown = (e) => {
+      if (isDisabled) return;
+
+      switch (e.key) {
+        case "Enter":
+        case " ":
+          e.preventDefault();
+          setIsOpen(!isOpen);
+          if (!isOpen) setFocusedIndex(0);
+          break;
+        case "Escape":
+          e.preventDefault();
+          setIsOpen(false);
+          setFocusedIndex(-1);
+          break;
+        case "ArrowDown":
+          e.preventDefault();
+          setIsOpen(true);
+          setFocusedIndex(0);
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          setIsOpen(true);
+          setFocusedIndex(Math.max(0, filteredOptions.length - 1));
+          break;
+        default:
+          break;
+      }
+    };
+
+    // 3. Keyboard Handler for Dropdown Navigation
+    const handleDropdownKeyDown = (e) => {
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault();
+          setFocusedIndex((prev) =>
+            prev < filteredOptions.length - 1 ? prev + 1 : prev
+          );
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          setFocusedIndex((prev) => (prev > 0 ? prev - 1 : 0));
+          break;
+        case "Enter":
+          e.preventDefault();
+          if (focusedIndex >= 0 && focusedIndex < filteredOptions.length) {
+            handleSelect(filteredOptions[focusedIndex]);
+            setFocusedIndex(-1);
+          }
+          break;
+        case "Escape":
+          e.preventDefault();
+          setIsOpen(false);
+          setFocusedIndex(-1);
+          triggerRef.current?.focus();
+          break;
+        default:
+          break;
+      }
+    };
+
+    // 4. Filtering Logic (Performance Optimized)
     const filteredOptions = useMemo(() => {
-      return options.filter((opt) =>
-        opt.label.toLowerCase().includes(searchTerm.toLowerCase()),
-      );
+      return options.filter((opt) => {
+        const label = opt.label ?? '';
+        return label.toLowerCase().includes(searchTerm.toLowerCase());
+      });
     }, [options, searchTerm]);
 
-    // 3. Selection Logic
+    // 5. Reset focused index when filtered options change or menu closes
+    useEffect(() => {
+      if (!isOpen) {
+        setFocusedIndex(-1);
+      }
+    }, [isOpen]);
+
+    // 6. Selection Logic
     const handleSelect = (option) => {
       if (isDisabled || isLoading) return;
 
@@ -64,8 +139,16 @@ const SelectField = forwardRef(
         onChange?.(option.value);
         setIsOpen(false);
         setSearchTerm("");
+        setFocusedIndex(-1);
       }
     };
+
+    // 7. Option ID generator
+    const getOptionId = (index) => `${dropdownId}-option-${index}`;
+    const activedescendant =
+      isOpen && focusedIndex >= 0
+        ? getOptionId(focusedIndex)
+        : undefined;
 
     const removeValue = (e, val) => {
       e.stopPropagation();
@@ -94,9 +177,17 @@ const SelectField = forwardRef(
         <div className="relative">
           {/* Trigger / Input Container */}
           <div
+            ref={triggerRef}
+            role="combobox"
+            aria-expanded={isOpen}
+            aria-haspopup="listbox"
+            aria-controls={dropdownId}
+            aria-activedescendant={activedescendant}
+            tabIndex={isDisabled ? -1 : 0}
             onClick={() => !isDisabled && setIsOpen(!isOpen)}
+            onKeyDown={handleTriggerKeyDown}
             className={`
-            min-h-10.5 w-full flex items-center justify-between px-3 py-1.5 rounded-lg border transition-all cursor-pointer
+            min-h-10.5 w-full flex items-center justify-between px-3 py-1.5 rounded-lg border transition-all cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1
             ${isOpen ? "border-blue-500 ring-2 ring-blue-100" : "border-slate-300"}
             ${error ? "border-red-500 bg-red-50" : "bg-white"}
             ${isDisabled ? "opacity-60 cursor-not-allowed bg-slate-50" : "hover:border-slate-400"}
@@ -156,18 +247,32 @@ const SelectField = forwardRef(
           {/* Dropdown Menu */}
           {isOpen && (
             <div
+              ref={dropdownRef}
+              id={dropdownId}
+              role="listbox"
+              onKeyDown={handleDropdownKeyDown}
               className={`${inlineMenu ? "relative z-10" : "absolute z-50"} w-full mt-2 bg-white border border-slate-200 rounded-lg shadow-xl max-h-60 overflow-y-auto animate-in fade-in zoom-in duration-150`}
             >
               {filteredOptions.length > 0 ? (
-                filteredOptions.map((opt) => {
+                filteredOptions.map((opt, index) => {
                   const isSelected = isMulti
                     ? value?.includes(opt.value)
                     : value === opt.value;
+                  const isFocused = index === focusedIndex;
                   return (
                     <div
                       key={opt.value}
-                      onClick={() => handleSelect(opt)}
-                      className={`px-4 py-2.5 text-sm cursor-pointer flex items-center justify-between hover:bg-slate-50 ${isSelected ? "bg-blue-50 text-blue-700 font-medium" : "text-slate-700"}`}
+                      id={getOptionId(index)}
+                      role="option"
+                      aria-selected={isSelected}
+                      onClick={() => {
+                        handleSelect(opt);
+                        setFocusedIndex(-1);
+                      }}
+                      onMouseEnter={() => setFocusedIndex(index)}
+                      className={`px-4 py-2.5 text-sm cursor-pointer flex items-center justify-between outline-none ${
+                        isFocused ? "bg-slate-100" : "hover:bg-slate-50"
+                      } ${isSelected ? "bg-blue-50 text-blue-700 font-medium" : "text-slate-700"}`}
                     >
                       {opt.label}
                       {isSelected && <Check size={16} />}
