@@ -93,6 +93,9 @@ export default function BulkReassignBranchesForm({
     try {
       await onSave({ newParentBranchId, branchIds });
       onClose();
+    } catch (error) {
+      const errorMessage = error?.message || "Failed to reassign branches";
+      setFormError(errorMessage);
     } finally {
       setSubmitting(false);
     }

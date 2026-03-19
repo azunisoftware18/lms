@@ -376,19 +376,59 @@ export const deleteBranchService = async (id: string, userId: string) => {
     throw AppError.notFound("Branch not found");
   }
 
-  const branch = await prisma.branch.update({
-    where: { id },
-    data: { isActive: false },
+  // Find all descendant branches to cascade deactivation
+  const descendantBranches = await prisma.branch.findMany({
+    where: {
+      parentBranchId: { not: null },
+    },
+    select: { id: true, name: true, code: true, isActive: true, parentBranchId: true },
   });
 
-  await logAction({
-    entityType: "BRANCH",
-    entityId: branch.id,
-    action: "DELETE_BRANCH",
-    performedBy: userId,
-    branchId: branch.id,
-    oldValue: { isActive: existingBranch.isActive },
-    newValue: { isActive: false },
+  // Recursively collect all descendants of the given branch
+  const getDescendants = (branchId: string): typeof descendantBranches => {
+    const direct = descendantBranches.filter((b) => b.parentBranchId === branchId);
+    const allDescendants: typeof descendantBranches = [...direct];
+    direct.forEach((b) => {
+      allDescendants.push(...getDescendants(b.id));
+    });
+    return allDescendants;
+  };
+
+  const allDescendants = getDescendants(id);
+
+  // Perform the deactivation and log in a transaction
+  await prisma.$transaction(async (tx) => {
+    // Deactivate the parent branch
+    const updatedParent = await tx.branch.update({
+      where: { id },
+      data: { isActive: false },
+    });
+
+    // Deactivate all descendant branches
+    if (allDescendants.length > 0) {
+      const descendantIds = allDescendants.map((b) => b.id);
+      await tx.branch.updateMany({
+        where: {
+          id: { in: descendantIds },
+          isActive: true,
+        },
+        data: { isActive: false },
+      });
+    }
+
+    // Log the parent branch deactivation
+    await logAction({
+      entityType: "BRANCH",
+      entityId: updatedParent.id,
+      action: "DELETE_BRANCH",
+      performedBy: userId,
+      branchId: updatedParent.id,
+      oldValue: { isActive: existingBranch.isActive, descendantCount: allDescendants.length },
+      newValue: { isActive: false, descendantCount: allDescendants.length },
+      remarks: allDescendants.length > 0
+        ? `Deactivated ${allDescendants.length} descendant branch(es)`
+        : undefined,
+    });
   });
 };
 

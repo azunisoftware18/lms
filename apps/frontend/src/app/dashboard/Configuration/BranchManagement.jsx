@@ -259,7 +259,7 @@ export default function BranchManagement() {
 
           <Button
             onClick={() => setOpenBulkCreateModal(true)}
-            className="w-full sm:w-auto shrink-0 whitespace-nowrap bg-white hover:bg-slate-100 text-slate-700! border border-slate-200
+            className="w-full sm:w-auto shrink-0 whitespace-nowrap bg-white hover:bg-slate-100 !text-slate-700 border border-slate-200
               px-4 py-2 rounded-lg transition-colors text-sm font-medium
               flex items-center justify-center gap-2"
           >
@@ -269,7 +269,7 @@ export default function BranchManagement() {
 
           <Button
             onClick={() => setOpenBulkReassignModal(true)}
-            className="w-full sm:w-auto shrink-0 whitespace-nowrap bg-white hover:bg-slate-100 text-slate-700! border border-slate-200
+            className="w-full sm:w-auto shrink-0 whitespace-nowrap bg-white hover:bg-slate-100 !text-slate-700 border border-slate-200
               px-4 py-2 rounded-lg transition-colors text-sm font-medium
               flex items-center justify-center gap-2"
           >
