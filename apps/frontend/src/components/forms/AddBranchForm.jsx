@@ -1,9 +1,8 @@
 import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { MapPin, Building2 } from "lucide-react";
+import { Building2 } from "lucide-react";
 import InputField from "../ui/InputField";
 import SelectField from "../ui/SelectField";
-import TextAreaField from "../ui/TextAreaField";
 import Button from "../ui/Button";
 import ToggleSwitch from "../ui/ToggleSwitch";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +28,7 @@ export default function AddBranchForm({
     handleSubmit,
     getValues,
     setValue,
+    reset,
     control,
     formState: { errors, isSubmitting },
   } = useForm({
@@ -36,15 +36,21 @@ export default function AddBranchForm({
     defaultValues: {
       name: branch?.name || "",
       code: branch?.code || "",
-      type: branch?.type || "HEAD_OFFICE",
-      parentBranchId: branch?.parentBranchId || "",
-      city: branch?.city || "",
-      state: branch?.state || "",
-      address: branch?.address || "",
-      head: branch?.head || "",
+      type: branch?.type || "BRANCH",
+      parentBranchId: branch?.parentBranchId || branch?.parentBranch?.id || "",
       isActive: branch?.isActive !== undefined ? branch.isActive : true,
     },
   });
+
+  useEffect(() => {
+    reset({
+      name: branch?.name || "",
+      code: branch?.code || "",
+      type: branch?.type || "BRANCH",
+      parentBranchId: branch?.parentBranchId || branch?.parentBranch?.id || "",
+      isActive: branch?.isActive !== undefined ? branch.isActive : true,
+    });
+  }, [branch, reset]);
 
   // Get current values without using watch() to avoid React Compiler issues
   const currentValues = getValues();
@@ -65,8 +71,11 @@ export default function AddBranchForm({
 
   const onSubmit = async (data) => {
     const payload = {
-      ...data,
+      name: data.name,
+      code: data.code,
+      type: data.type,
       parentBranchId: isTopLevelType(data.type) ? null : data.parentBranchId,
+      isActive: data.isActive,
     };
     await onSave(payload);
   };
@@ -141,6 +150,9 @@ export default function AddBranchForm({
                         { value: "", label: "Select Parent Branch" },
                         ...mainBranches
                           .filter((b) => b.id !== branch?.id)
+                          .filter(
+                            (b) => b.type !== "BRANCH" && b.type !== "SUB",
+                          )
                           .map((b) => ({
                             value: b.id,
                             label: `${b.name} (${b.code})`,
@@ -154,25 +166,6 @@ export default function AddBranchForm({
                 />
               </div>
             )}
-          </div>
-
-          <hr className="border-slate-100" />
-
-          {/* Section 2: Location & Management */}
-          <div className="space-y-4">
-            <h4 className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest">
-              Location & Management
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-              <InputField label="City" icon={MapPin} {...register("city")} />
-              <InputField label="State" {...register("state")} />
-            </div>
-            <TextAreaField
-              label="Full Address"
-              rows={3}
-              {...register("address")}
-            />
-            <InputField label="Branch Manager / Head" {...register("head")} />
           </div>
 
           {/* Status Toggle - Compact on mobile, spread on desktop */}

@@ -25,12 +25,15 @@ export default function BranchManagementTable({
   };
 
   const flattenBranches = (list, level = 0) => {
+    const safeList = Array.isArray(list) ? list : [];
     let result = [];
 
-    list.forEach((branch) => {
+    safeList.forEach((branch) => {
       result.push({ ...branch, level });
 
-      if (branch.subBranches?.length && expandedBranches[branch.id]) {
+      const isExpanded = expandedBranches[branch.id] ?? true;
+
+      if (branch.subBranches?.length && isExpanded) {
         result = result.concat(flattenBranches(branch.subBranches, level + 1));
       }
     });
@@ -52,11 +55,30 @@ export default function BranchManagementTable({
     });
   }, [flatBranches, search, filterValue]);
 
-  const totalPages = Math.ceil(filteredBranches.length / itemsPerPage);
-  const paginatedBranches = filteredBranches.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredBranches.length / itemsPerPage),
   );
+  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
+
+  const paginatedBranches = filteredBranches.slice(
+    (safeCurrentPage - 1) * itemsPerPage,
+    safeCurrentPage * itemsPerPage,
+  );
+
+  const handleSearchChange = (valueOrEvent) => {
+    const value =
+      typeof valueOrEvent === "string"
+        ? valueOrEvent
+        : valueOrEvent?.target?.value || "";
+    setCurrentPage(1);
+    setSearch(value);
+  };
+
+  const handleFilterChange = (value) => {
+    setCurrentPage(1);
+    setFilterValue(value);
+  };
 
   const columns = [
     {
@@ -64,7 +86,7 @@ export default function BranchManagementTable({
       accessor: "name",
       render: (value, row) => {
         const hasChildren = row.subBranches?.length > 0;
-        const isExpanded = expandedBranches[row.id];
+        const isExpanded = expandedBranches[row.id] ?? true;
 
         return (
           <div
@@ -88,9 +110,23 @@ export default function BranchManagementTable({
 
             <Building2 size={16} className="text-blue-500" />
 
-            <span className="font-semibold text-slate-700 truncate">
-              {value}
-            </span>
+            <div className="min-w-0">
+              <span className="font-semibold text-slate-700 truncate block">
+                {value}
+              </span>
+
+              <div className="md:hidden mt-1 text-[11px] text-slate-500 space-y-0.5">
+                <div>Code: {row.code || "—"}</div>
+                <div>
+                  Parent:{" "}
+                  {row.parentBranch?.name || row.parentBranchName || "—"}
+                </div>
+                <div>
+                  Status: {row.isActive ? "Active" : "Inactive"} • Sub:{" "}
+                  {row?._count?.subBranches ?? row?.subBranches?.length ?? 0}
+                </div>
+              </div>
+            </div>
           </div>
         );
       },
@@ -99,6 +135,8 @@ export default function BranchManagementTable({
     {
       header: "Code",
       accessor: "code",
+      headerClassName: "hidden md:table-cell",
+      cellClassName: "hidden md:table-cell",
       render: (value) => (
         <span className="font-mono text-xs text-blue-600">{value}</span>
       ),
@@ -107,21 +145,19 @@ export default function BranchManagementTable({
     {
       header: "Parent",
       accessor: "parentBranch",
-      render: (value) => value?.name || "—",
-    },
-
-    {
-      header: "Manager",
-      accessor: "head",
-      render: (value) => value || "—",
+      headerClassName: "hidden md:table-cell",
+      cellClassName: "hidden md:table-cell",
+      render: (value, row) => value?.name || row?.parentBranchName || "—",
     },
 
     {
       header: "Sub",
       accessor: "_count",
-      render: (value) => (
+      headerClassName: "hidden md:table-cell",
+      cellClassName: "hidden md:table-cell",
+      render: (value, row) => (
         <span className="bg-slate-100 px-2 py-1 rounded text-xs font-bold">
-          {value?.subBranches || 0}
+          {value?.subBranches ?? row?.subBranches?.length ?? 0}
         </span>
       ),
     },
@@ -129,6 +165,8 @@ export default function BranchManagementTable({
     {
       header: "Status",
       accessor: "isActive",
+      headerClassName: "hidden md:table-cell",
+      cellClassName: "hidden md:table-cell",
       render: (value) => (
         <span
           className={`px-3 py-1 rounded-full text-xs font-semibold border
@@ -161,9 +199,9 @@ export default function BranchManagementTable({
         title="Branch Management"
         columns={columns}
         search={search}
-        setSearch={setSearch}
+        setSearch={handleSearchChange}
         filterValue={filterValue}
-        setFilterValue={setFilterValue}
+        setFilterValue={handleFilterChange}
         wrapHeaders={true}
         onRefresh={onRefresh}
         refreshing={loading}
@@ -189,9 +227,11 @@ export default function BranchManagementTable({
         />
       )}
       <Pagination
-        currentPage={currentPage}
+        currentPage={safeCurrentPage}
         totalPages={totalPages}
-        onPageChange={setCurrentPage}
+        onPageChange={(page) =>
+          setCurrentPage(Math.min(Math.max(1, page), totalPages))
+        }
       />
     </TableShell>
   );
