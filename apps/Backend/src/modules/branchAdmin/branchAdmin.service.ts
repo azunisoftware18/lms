@@ -7,6 +7,7 @@ import { getAccessibleBranchIds } from "../../common/utils/branchAccess.js";
 import { buildBranchFilter } from "../../common/utils/branchFilter.js";
 import { buildPaginationMeta, getPagination } from "../../common/utils/pagination.js";
 import { buildBranchAdminSearch } from "../../common/utils/search.js";
+import { Prisma } from "../../../generated/prisma-client/client.js";
 import {
   CreateBranchAdminInput,
   UpdateBranchAdminInput,
@@ -19,10 +20,11 @@ type ScopedUser = {
 };
 
 const ensureSingleActiveAdminPerBranch = async (
+  db: Pick<typeof prisma, "user">,
   branchId: string,
   excludeUserId?: string,
 ) => {
-  const existingAdmin = await prisma.user.findFirst({
+  const existingAdmin = await db.user.findFirst({
     where: {
       role: "ADMIN",
       branchId,
@@ -54,6 +56,9 @@ const mapPrismaError = (error: any): never => {
     const fields = Array.isArray(error?.meta?.target) ? error.meta.target.join(", ") : "unique field";
     throw AppError.conflict(`Duplicate value for ${fields}`);
   }
+  if (error?.code === "P2034") {
+    throw AppError.conflict("Concurrent update conflict. Please retry.");
+  }
   if (error?.code === "P2003") {
     throw AppError.badRequest("Invalid foreign key reference");
   }
@@ -70,8 +75,6 @@ export const createBranchAdminService = async (
       throw AppError.badRequest("Branch not found or inactive");
     }
 
-    await ensureSingleActiveAdminPerBranch(data.branchId);
-
     const existingUser = await prisma.user.findUnique({ where: { email: data.email } });
     if (existingUser) throw AppError.conflict("User with this email already exists");
 
@@ -80,18 +83,25 @@ export const createBranchAdminService = async (
 
     const hashedPassword = await hashPassword(data.password);
 
-    const user = await prisma.user.create({
-      data: {
-        fullName: data.fullName,
-        email: data.email,
-        userName: data.userName,
-        contactNumber: data.contactNumber,
-        password: hashedPassword,
-        role: "ADMIN",
-        branchId: data.branchId,
-        isActive: true,
+    const user = await prisma.$transaction(
+      async (tx) => {
+        await ensureSingleActiveAdminPerBranch(tx, data.branchId);
+
+        return tx.user.create({
+          data: {
+            fullName: data.fullName,
+            email: data.email,
+            userName: data.userName,
+            contactNumber: data.contactNumber,
+            password: hashedPassword,
+            role: "ADMIN",
+            branchId: data.branchId,
+            isActive: true,
+          },
+        });
       },
-    });
+      { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
+    );
 
     await logAction({
       entityType: "BRANCH_ADMIN",
@@ -146,7 +156,6 @@ export const updateBranchAdminService = async (
         throw AppError.badRequest("Branch not found or inactive");
       }
 
-      await ensureSingleActiveAdminPerBranch(data.branchId, id);
       updatedBranchName = branch.name;
     }
 
@@ -179,10 +188,22 @@ export const updateBranchAdminService = async (
     }
 
     // Update user
-    const updatedUser = await prisma.user.update({
-      where: { id },
-      data: updateData,
-    });
+    const targetBranchId = data.branchId ?? existingUser.branchId;
+    const nextIsActive = existingUser.isActive;
+
+    const updatedUser = await prisma.$transaction(
+      async (tx) => {
+        if (nextIsActive) {
+          await ensureSingleActiveAdminPerBranch(tx, targetBranchId, id);
+        }
+
+        return tx.user.update({
+          where: { id },
+          data: updateData,
+        });
+      },
+      { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
+    );
 
     // Log audit trail
     const auditBranchId = data.branchId ?? existingUser.branchId;
@@ -246,10 +267,14 @@ export const getAllBranchAdminsService = async (
     const accessibleBranches = await getAccessibleBranchIds(user);
     const search = params.q?.trim() || "";
 
-    const where: any = {
+    const baseWhere: any = {
       role: "ADMIN",
       ...buildBranchFilter(accessibleBranches),
       ...buildBranchAdminSearch(search),
+    };
+
+    const where: any = {
+      ...baseWhere,
     };
 
     if (params.status === "active") {
@@ -260,7 +285,7 @@ export const getAllBranchAdminsService = async (
       where.isActive = false;
     }
 
-    const [data, total] = await Promise.all([
+    const [data, total, activeCount, inactiveCount] = await Promise.all([
       prisma.user.findMany({
         where,
         select: {
@@ -289,11 +314,25 @@ export const getAllBranchAdminsService = async (
         take: limit,
       }),
       prisma.user.count({ where }),
+      prisma.user.count({
+        where: {
+          ...baseWhere,
+          isActive: true,
+        },
+      }),
+      prisma.user.count({
+        where: {
+          ...baseWhere,
+          isActive: false,
+        },
+      }),
     ]);
 
     return {
       data,
       pagination: buildPaginationMeta(total, page, limit),
+      activeCount,
+      inactiveCount,
     };
   } catch (error: any) {
     logger.error("Error fetching branch admins:", {

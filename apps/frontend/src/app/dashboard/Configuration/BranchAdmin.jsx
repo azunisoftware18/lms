@@ -26,6 +26,8 @@ export default function BranchAdmin() {
     loading: adminsLoading,
     isFetching: adminsFetching,
     total,
+    activeCount,
+    inactiveCount,
     totalPages,
     refetch: refetchAdmins,
   } = useBranchAdmins({
@@ -53,13 +55,20 @@ export default function BranchAdmin() {
   }, [refetchBranches]);
 
   const stats = useMemo(
-    () => ({
-      totalAdmins: total || 0,
-      activeAdmins: branchAdmins.filter((admin) => admin?.isActive).length,
-      inactiveAdmins: branchAdmins.filter((admin) => !admin?.isActive).length,
-      totalBranches: branches.length,
-    }),
-    [branchAdmins, branches, total],
+    () => {
+      const pageActiveCount = branchAdmins.filter((admin) => admin?.isActive).length;
+      const pageInactiveCount = branchAdmins.filter((admin) => !admin?.isActive).length;
+
+      return {
+        totalAdmins: total || 0,
+        activeAdmins:
+          typeof activeCount === "number" ? activeCount : pageActiveCount,
+        inactiveAdmins:
+          typeof inactiveCount === "number" ? inactiveCount : pageInactiveCount,
+        totalBranches: branches.length,
+      };
+    },
+    [branchAdmins, branches, total, activeCount, inactiveCount],
   );
 
   const openAddModal = () => {

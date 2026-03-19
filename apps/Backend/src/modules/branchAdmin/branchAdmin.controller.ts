@@ -93,8 +93,17 @@ export const getAllBranchAdminsController = async (
 
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
-    const search = (req.query.search || req.query.q) as string;
-    const status = req.query.status as "active" | "inactive" | undefined;
+    const searchQuery = req.query.search || req.query.q;
+    const search = typeof searchQuery === "string"
+      ? searchQuery
+      : Array.isArray(searchQuery)
+        ? searchQuery.filter((value): value is string => typeof value === "string").join(" ") || undefined
+        : undefined;
+
+    const status = typeof req.query.status === "string"
+      && ["active", "inactive"].includes(req.query.status)
+      ? req.query.status as "active" | "inactive"
+      : undefined;
 
     const branchAdmins = await getAllBranchAdminsService(
       { page, limit, q: search, status },

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { apiGet, apiPost, apiPut, apiDelete } from "../lib/api/apiClient";
@@ -51,6 +51,19 @@ const extractPagination = (response, normalizedParams, fallbackTotal = 0) => {
     totalPages,
     hasNextPage: pagination?.hasNextPage ?? pagination?.hasNext ?? page < totalPages,
     hasPrevPage: pagination?.hasPrevPage ?? pagination?.hasPrev ?? page > 1,
+  };
+};
+
+const extractAdminCounts = (response) => {
+  const payload = response?.data?.data || response?.data || response || {};
+
+  return {
+    activeCount:
+      typeof payload?.activeCount === "number" ? payload.activeCount : undefined,
+    inactiveCount:
+      typeof payload?.inactiveCount === "number"
+        ? payload.inactiveCount
+        : undefined,
   };
 };
 
@@ -131,6 +144,7 @@ export const useDeleteBranchAdmin = () => {
 
 export const useBranchAdmins = (params = {}) => {
   const dispatch = useDispatch();
+  const lastShownErrorRef = useRef();
   const branchAdmins = useSelector((state) => state.branchAdmin.branchAdmins);
   const loading = useSelector((state) => state.branchAdmin.loading);
   const error = useSelector((state) => state.branchAdmin.error);
@@ -155,23 +169,31 @@ export const useBranchAdmins = (params = {}) => {
   }, [query.data, dispatch]);
 
   useEffect(() => {
-    if (query.error) {
-      const message = query.error?.message || "Failed to fetch branch admins";
-      dispatch(setError(message));
-      showError(message);
+    const message = query.error?.message ||
+      (query.error ? "Failed to fetch branch admins" : undefined);
+
+    if (!message || lastShownErrorRef.current === message) {
+      return;
     }
-  }, [query.error, dispatch]);
+
+    dispatch(setError(message));
+    showError(message);
+    lastShownErrorRef.current = message;
+  }, [query.error, query.error?.message, dispatch]);
 
   const pagination = extractPagination(
     query.data,
     normalizedParams,
     branchAdmins.length,
   );
+  const { activeCount, inactiveCount } = extractAdminCounts(query.data);
 
   return {
     branchAdmins,
     pagination,
     total: pagination.total,
+    activeCount,
+    inactiveCount,
     page: pagination.page,
     limit: pagination.limit,
     totalPages: pagination.totalPages,
