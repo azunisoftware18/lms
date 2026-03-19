@@ -1,8 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { TableShell, TableHead, TableBody, TableLoader } from "../tables/core";
-
 import Pagination from "../common/Pagination";
-
 import {
   User,
   Mail,
@@ -18,44 +16,32 @@ export default function BranchAdminTable({
   loading = false,
   onEdit,
   onRefresh,
+  search: controlledSearch,
+  setSearch: controlledSetSearch,
+  filterValue: controlledFilterValue,
+  setFilterValue: controlledSetFilterValue,
+  currentPage: controlledCurrentPage,
+  onPageChange,
+  totalPages = 1,
 }) {
-  const [search, setSearch] = useState("");
-  const [filterValue, setFilterValue] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [localSearch, setLocalSearch] = useState("");
+  const [localFilterValue, setLocalFilterValue] = useState("");
+  const [localCurrentPage, setLocalCurrentPage] = useState(1);
 
-  const itemsPerPage = 8;
+  const search =
+    typeof controlledSearch === "string" ? controlledSearch : localSearch;
+  const filterValue =
+    typeof controlledFilterValue === "string"
+      ? controlledFilterValue
+      : localFilterValue;
+  const currentPage =
+    typeof controlledCurrentPage === "number"
+      ? controlledCurrentPage
+      : localCurrentPage;
 
-  /* ---------------- Search ---------------- */
-
-  const filteredAdmins = useMemo(() => {
-    const s = search.toLowerCase();
-
-    return admins.filter((a) => {
-      const matchFilter =
-        !filterValue ||
-        (filterValue === "active" && a.isActive) ||
-        (filterValue === "inactive" && !a.isActive);
-
-      return (
-        matchFilter &&
-        (a.fullName?.toLowerCase().includes(s) ||
-          a.email?.toLowerCase().includes(s) ||
-          a.userName?.toLowerCase().includes(s) ||
-          a.branch?.name?.toLowerCase().includes(s))
-      );
-    });
-  }, [admins, search, filterValue]);
-
-  /* ---------------- Pagination ---------------- */
-
-  const totalPages = Math.ceil(filteredAdmins.length / itemsPerPage);
-
-  const paginatedAdmins = filteredAdmins.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  );
-
-  /* ---------------- Columns ---------------- */
+  const setSearch = controlledSetSearch || setLocalSearch;
+  const setFilterValue = controlledSetFilterValue || setLocalFilterValue;
+  const setCurrentPage = onPageChange || setLocalCurrentPage;
 
   const columns = [
     {
@@ -63,14 +49,13 @@ export default function BranchAdminTable({
       accessor: "fullName",
       render: (value) => (
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100">
             <User size={14} className="text-blue-600" />
           </div>
           <span className="font-medium text-slate-800">{value || "N/A"}</span>
         </div>
       ),
     },
-
     {
       header: "Email",
       accessor: "email",
@@ -81,7 +66,6 @@ export default function BranchAdminTable({
         </div>
       ),
     },
-
     {
       header: "Username / Contact",
       accessor: "userName",
@@ -90,14 +74,13 @@ export default function BranchAdminTable({
           <div className="font-mono text-xs text-slate-600">
             {row.userName || "N/A"}
           </div>
-          <div className="flex items-center gap-1 text-slate-600 text-xs">
+          <div className="flex items-center gap-1 text-xs text-slate-600">
             <Phone size={12} />
             {row.contactNumber || "N/A"}
           </div>
         </div>
       ),
     },
-
     {
       header: "Branch",
       accessor: "branch",
@@ -108,18 +91,17 @@ export default function BranchAdminTable({
         </div>
       ),
     },
-
     {
       header: "Status",
       accessor: "isActive",
       render: (value) =>
         value ? (
-          <span className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-green-50 text-green-700 border border-green-200">
+          <span className="inline-flex items-center gap-1 rounded-full border border-green-200 bg-green-50 px-2 py-1 text-xs text-green-700">
             <CheckCircle size={12} />
             Active
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-red-50 text-red-700 border border-red-200">
+          <span className="inline-flex items-center gap-1 rounded-full border border-red-200 bg-red-50 px-2 py-1 text-xs text-red-700">
             <AlertCircle size={12} />
             Inactive
           </span>
@@ -127,17 +109,13 @@ export default function BranchAdminTable({
     },
   ];
 
-  /* ---------------- Actions ---------------- */
-
   const actions = [
     {
       label: "Edit",
-      icon: <Edit size={14} />,
+      icon: Edit,
       onClick: (row) => onEdit?.(row),
     },
   ];
-
-  /* ---------------- Render ---------------- */
 
   return (
     <TableShell>
@@ -162,15 +140,11 @@ export default function BranchAdminTable({
         <TableLoader colSpan={columns.length + 1} />
       ) : (
         <>
-          <TableBody
-            columns={columns}
-            data={paginatedAdmins}
-            actions={actions}
-          />
+          <TableBody columns={columns} data={admins} actions={actions} />
 
           <Pagination
             currentPage={currentPage}
-            totalPages={totalPages}
+            totalPages={Math.max(1, totalPages)}
             onPageChange={setCurrentPage}
           />
         </>

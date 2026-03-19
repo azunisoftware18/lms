@@ -2,7 +2,7 @@ import React from 'react';
 import { X, ShieldCheck } from 'lucide-react';
 import BranchAdminForm from '../forms/BranchAdminForm';
 
-export default function BranchAdminFormModal({ isOpen, onClose, admin, branches, onSave, loading }) {
+export default function BranchAdminFormModal({ isOpen, onClose, admin, branches, onSave, loading, branchesLoading }) {
   if (!isOpen) return null;
 
   return (
@@ -41,6 +41,7 @@ export default function BranchAdminFormModal({ isOpen, onClose, admin, branches,
             onSave={onSave} 
             onClose={onClose}
             loading={loading}
+            branchesLoading={branchesLoading}
           />
         </div>
         

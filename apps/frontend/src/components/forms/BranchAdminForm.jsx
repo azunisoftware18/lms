@@ -1,5 +1,5 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+import { useMemo } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { Loader, AlertCircle, User, Mail, Phone, Lock, Building2 } from "lucide-react";
 import InputField from "../ui/InputField"; 
 import SelectField from "../ui/SelectField"; 
@@ -7,11 +7,12 @@ import Button from "../ui/Button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { branchAdminSchema } from "../../validations/BranchAdminValidation";
 
-export default function BranchAdminForm ({ admin = null, branches = [], onSave, onClose, loading = false }) {
+export default function BranchAdminForm ({ admin = null, branches = [], onSave, onClose, loading = false, branchesLoading = false }) {
   const isEditMode = !!admin;
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(branchAdminSchema(isEditMode)),
@@ -24,6 +25,15 @@ export default function BranchAdminForm ({ admin = null, branches = [], onSave, 
       branchId: admin?.branchId || admin?.branch?.id || "",
     },
   });
+
+  const branchOptions = useMemo(() => {
+    return Array.isArray(branches)
+      ? branches.map((branch) => ({
+          label: branch.name ? `${branch.name}${branch.code ? ` (${branch.code})` : ""}` : "Unknown",
+          value: branch.id,
+        }))
+      : [];
+  }, [branches]);
 
   const onSubmit = async (data) => {
     // Edit mode mein agar password khali hai toh usey delete kar do taaki purana password na badle
@@ -80,20 +90,22 @@ export default function BranchAdminForm ({ admin = null, branches = [], onSave, 
             error={errors.contactNumber?.message}
           />
 
-          <SelectField
-            label="Assign Branch"
-            icon={Building2}
-            required
-            {...register("branchId")}
-            error={errors.branchId?.message}
-          >
-            <option value="">Select a branch</option>
-            {branches.map((branch) => (
-              <option key={branch.id} value={branch.id}>
-                {branch.name} {branch.code ? `(${branch.code})` : ""}
-              </option>
-            ))}
-          </SelectField>
+          <Controller
+            name="branchId"
+            control={control}
+            render={({ field }) => (
+              <SelectField
+                label="Assign Branch"
+                placeholder="Select a branch"
+                options={branchOptions}
+                value={field.value}
+                onChange={field.onChange}
+                isRequired={true}
+                isLoading={branchesLoading}
+                error={errors.branchId?.message}
+              />
+            )}
+          />
 
           <div className="md:col-span-2">
             <InputField

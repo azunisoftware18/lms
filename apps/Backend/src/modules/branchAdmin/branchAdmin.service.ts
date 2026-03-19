@@ -3,10 +3,51 @@ import { hashPassword } from "../../common/utils/utils.js";
 import { logAction } from "../../audit/audit.helper.js";
 import logger from "../../common/logger.js";
 import { AppError } from "../../common/utils/apiError.js";
+import { getAccessibleBranchIds } from "../../common/utils/branchAccess.js";
+import { buildBranchFilter } from "../../common/utils/branchFilter.js";
+import { buildPaginationMeta, getPagination } from "../../common/utils/pagination.js";
+import { buildBranchAdminSearch } from "../../common/utils/search.js";
 import {
   CreateBranchAdminInput,
   UpdateBranchAdminInput,
 } from "./branchAdmin.types.js";
+
+type ScopedUser = {
+  id: string;
+  role: string;
+  branchId?: string;
+};
+
+const ensureSingleActiveAdminPerBranch = async (
+  branchId: string,
+  excludeUserId?: string,
+) => {
+  const existingAdmin = await prisma.user.findFirst({
+    where: {
+      role: "ADMIN",
+      branchId,
+      isActive: true,
+      ...(excludeUserId
+        ? {
+            id: {
+              not: excludeUserId,
+            },
+          }
+        : {}),
+    },
+    select: {
+      id: true,
+      fullName: true,
+      email: true,
+    },
+  });
+
+  if (existingAdmin) {
+    throw AppError.conflict(
+      `This branch already has an active admin (${existingAdmin.fullName || existingAdmin.email}).`,
+    );
+  }
+};
 
 const mapPrismaError = (error: any): never => {
   if (error?.code === "P2002") {
@@ -28,6 +69,8 @@ export const createBranchAdminService = async (
     if (!branch || !branch.isActive) {
       throw AppError.badRequest("Branch not found or inactive");
     }
+
+    await ensureSingleActiveAdminPerBranch(data.branchId);
 
     const existingUser = await prisma.user.findUnique({ where: { email: data.email } });
     if (existingUser) throw AppError.conflict("User with this email already exists");
@@ -102,7 +145,9 @@ export const updateBranchAdminService = async (
       if (!branch || !branch.isActive) {
         throw AppError.badRequest("Branch not found or inactive");
       }
-       updatedBranchName = branch.name;
+
+      await ensureSingleActiveAdminPerBranch(data.branchId, id);
+      updatedBranchName = branch.name;
     }
 
     // Validate email uniqueness
@@ -185,4 +230,120 @@ export const updateBranchAdminService = async (
     }
     throw err;
   }
+};
+
+export const getAllBranchAdminsService = async (
+  params: {
+    page?: number;
+    limit?: number;
+    q?: string;
+    status?: "active" | "inactive";
+  },
+  user: ScopedUser,
+) => {
+  try {
+    const { page, limit, skip } = getPagination(params.page, params.limit);
+    const accessibleBranches = await getAccessibleBranchIds(user);
+    const search = params.q?.trim() || "";
+
+    const where: any = {
+      role: "ADMIN",
+      ...buildBranchFilter(accessibleBranches),
+      ...buildBranchAdminSearch(search),
+    };
+
+    if (params.status === "active") {
+      where.isActive = true;
+    }
+
+    if (params.status === "inactive") {
+      where.isActive = false;
+    }
+
+    const [data, total] = await Promise.all([
+      prisma.user.findMany({
+        where,
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+          userName: true,
+          contactNumber: true,
+          role: true,
+          branchId: true,
+          isActive: true,
+          createdAt: true,
+          updatedAt: true,
+          branch: {
+            select: {
+              id: true,
+              name: true,
+              code: true,
+              type: true,
+              isActive: true,
+            },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.user.count({ where }),
+    ]);
+
+    return {
+      data,
+      pagination: buildPaginationMeta(total, page, limit),
+    };
+  } catch (error: any) {
+    logger.error("Error fetching branch admins:", {
+      message: error.message,
+      stack: error.stack,
+      code: error.code,
+    });
+    if (error?.code) mapPrismaError(error);
+    if (!error?.statusCode) {
+      throw AppError.internal("Failed to fetch branch admins");
+    }
+    throw error;
+  }
+};
+
+export const getBranchAdminByIdService = async (id: string, user: ScopedUser) => {
+  const accessibleBranches = await getAccessibleBranchIds(user);
+
+  const branchAdmin = await prisma.user.findFirst({
+    where: {
+      id,
+      role: "ADMIN",
+      ...buildBranchFilter(accessibleBranches),
+    },
+    select: {
+      id: true,
+      fullName: true,
+      email: true,
+      userName: true,
+      contactNumber: true,
+      role: true,
+      branchId: true,
+      isActive: true,
+      createdAt: true,
+      updatedAt: true,
+      branch: {
+        select: {
+          id: true,
+          name: true,
+          code: true,
+          type: true,
+          isActive: true,
+        },
+      },
+    },
+  });
+
+  if (!branchAdmin) {
+    throw AppError.notFound("Branch admin not found");
+  }
+
+  return branchAdmin;
 };

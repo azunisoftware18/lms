@@ -21,3 +21,11 @@ export const updateBranchAdminSchema = z.object({
 export const branchAdminIdParamSchema = z.object({
   id: z.string().cuid(),
 });
+
+export const getBranchAdminsQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).optional(),
+  limit: z.coerce.number().int().min(1).max(100).optional(),
+  search: z.string().optional(),
+  q: z.string().optional(),
+  status: z.enum(["active", "inactive"]).optional(),
+});

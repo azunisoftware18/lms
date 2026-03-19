@@ -457,6 +457,53 @@ export const buildKycSearch = (q?: string) => {
   };
 };
 
+export const buildBranchAdminSearch = (q?: string) => {
+  if (!q) return {};
+
+  return {
+    OR: [
+      {
+        fullName: {
+          contains: q,
+        },
+      },
+      {
+        email: {
+          contains: q,
+        },
+      },
+      {
+        userName: {
+          contains: q,
+        },
+      },
+      {
+        contactNumber: {
+          contains: q,
+        },
+      },
+      {
+        branch: {
+          is: {
+            name: {
+              contains: q,
+            },
+          },
+        },
+      },
+      {
+        branch: {
+          is: {
+            code: {
+              contains: q,
+            },
+          },
+        },
+      },
+    ],
+  };
+};
+
 
 export const buildCreditReportSearch = (q?: string) => {
   if (!q) return {};

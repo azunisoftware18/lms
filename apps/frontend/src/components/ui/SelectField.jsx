@@ -118,7 +118,12 @@ const SelectField = forwardRef(({
         {/* Dropdown Menu */}
         {isOpen && (
           <div className="absolute z-50 w-full mt-2 bg-white border border-slate-200 rounded-lg shadow-xl max-h-60 overflow-y-auto animate-in fade-in zoom-in duration-150">
-            {filteredOptions.length > 0 ? (
+            {isLoading ? (
+              <div className="p-4 text-center text-slate-500 text-sm flex items-center justify-center gap-2">
+                <Loader2 size={16} className="animate-spin" />
+                Loading options...
+              </div>
+            ) : filteredOptions.length > 0 ? (
               filteredOptions.map((opt) => {
                 const isSelected = isMulti ? value?.includes(opt.value) : value === opt.value;
                 return (

@@ -60,6 +60,29 @@ export default function ActionMenu({
   // alignment class adjustment
   const alignmentClass = align === "right" ? "-translate-x-full" : "";
 
+  const renderActionIcon = (icon, isDanger) => {
+    if (!icon) return null;
+
+    const baseClass = isDanger
+      ? "text-red-500"
+      : "text-gray-400 group-hover:text-blue-500";
+
+    if (React.isValidElement(icon)) {
+      return (
+        <span className={`mr-3 transition-colors ${baseClass}`}>
+          {icon}
+        </span>
+      );
+    }
+
+    const IconComponent = icon;
+    return (
+      <span className={`mr-3 transition-colors ${baseClass}`}>
+        <IconComponent size={16} />
+      </span>
+    );
+  };
+
   return (
     <div className={`relative inline-block ${containerClassName}`}>
       {/* Trigger Button */}
@@ -106,11 +129,7 @@ export default function ActionMenu({
                     }`}
                   role="menuitem"
                 >
-                  {action.icon && (
-                    <span className={`mr-3 transition-colors ${action.isDanger ? "text-red-500" : "text-gray-400 group-hover:text-blue-500"}`}>
-                      <action.icon size={16} />
-                    </span>
-                  )}
+                  {renderActionIcon(action.icon, action.isDanger)}
                   <span className="flex-1 text-left font-medium">{action.label}</span>
                 </button>
               </React.Fragment>

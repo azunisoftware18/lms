@@ -225,6 +225,26 @@ export const updateBranchService = async (
     },
   });
 
+  let affectedBranchCount = 1;
+  if (oldBranch.isActive && branch.isActive === false) {
+    const descendantIds = await getDescendantBranchIds(id);
+
+    if (descendantIds.length > 0) {
+      await prisma.branch.updateMany({
+        where: {
+          id: {
+            in: descendantIds,
+          },
+        },
+        data: {
+          isActive: false,
+        },
+      });
+    }
+
+    affectedBranchCount = descendantIds.length + 1;
+  }
+
   await logAction({
     entityType: "BRANCH",
     entityId: branch.id,
@@ -242,6 +262,8 @@ export const updateBranchService = async (
       code: branch.code,
       type: branch.type,
       parentBranchId: branch.parentBranchId,
+      isActive: branch.isActive,
+      affectedBranchCount,
     },
   });
 
@@ -340,6 +362,34 @@ export const getAllBranchesService = async (
   };
 };
 
+const getDescendantBranchIds = async (rootBranchId: string) => {
+  const descendantIds: string[] = [];
+  let parentIds: string[] = [rootBranchId];
+
+  while (parentIds.length > 0) {
+    const children = await prisma.branch.findMany({
+      where: {
+        parentBranchId: {
+          in: parentIds,
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (children.length === 0) {
+      break;
+    }
+
+    const childIds = children.map((child) => child.id);
+    descendantIds.push(...childIds);
+    parentIds = childIds;
+  }
+
+  return descendantIds;
+};
+
 export const deleteBranchService = async (id: string, userId: string) => {
   if (!userId) {
     throw AppError.unauthorized("Unauthorized");
@@ -351,19 +401,31 @@ export const deleteBranchService = async (id: string, userId: string) => {
     throw AppError.notFound("Branch not found");
   }
 
-  const branch = await prisma.branch.update({
-    where: { id },
-    data: { isActive: false },
+  const descendantIds = await getDescendantBranchIds(id);
+  const affectedBranchIds = [id, ...descendantIds];
+
+  await prisma.branch.updateMany({
+    where: {
+      id: {
+        in: affectedBranchIds,
+      },
+    },
+    data: {
+      isActive: false,
+    },
   });
 
   await logAction({
     entityType: "BRANCH",
-    entityId: branch.id,
+    entityId: id,
     action: "DELETE_BRANCH",
     performedBy: userId,
-    branchId: branch.id,
+    branchId: id,
     oldValue: { isActive: existingBranch.isActive },
-    newValue: { isActive: false },
+    newValue: {
+      isActive: false,
+      affectedBranchCount: affectedBranchIds.length,
+    },
   });
 };
 

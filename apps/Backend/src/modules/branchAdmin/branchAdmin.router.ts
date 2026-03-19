@@ -2,6 +2,8 @@ import { Router } from "express";
 import {
   createBranchAdminController,
   updateBranchAdminController,
+  getAllBranchAdminsController,
+  getBranchAdminByIdController,
 } from "./branchAdmin.controller.js";
 import { authMiddleware } from "../../common/middlewares/auth.middleware.js";
 import { validate } from "../../common/middlewares/zod.middleware.js";
@@ -16,6 +18,17 @@ const branchAdminRouter = Router();
 
 branchAdminRouter.use(authMiddleware);
 branchAdminRouter.use(rateLimit(20, 60_000));
+
+branchAdminRouter.get("/",
+ 
+
+   getAllBranchAdminsController);
+
+branchAdminRouter.get(
+  "/:id",
+  validate(branchAdminIdParamSchema, "params"),
+  getBranchAdminByIdController,
+);
 
 branchAdminRouter.post(
   "/create-admin",
