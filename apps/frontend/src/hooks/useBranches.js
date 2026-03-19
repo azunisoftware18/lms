@@ -125,6 +125,56 @@ export const useDeleteBranch = () => {
   });
 };
 
+export const useCreateBulkBranches = () => {
+  const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+
+  return useMutation({
+    mutationFn: (payload) => apiPost("/branches/bulk", payload),
+    onMutate: () => {
+      dispatch(setLoading(true));
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["branches"] });
+      queryClient.invalidateQueries({ queryKey: ["mainBranches"] });
+      dispatch(setLoading(false));
+      dispatch(clearError());
+      showSuccess(data?.message || "Bulk branches created successfully!");
+    },
+    onError: (error) => {
+      const message = error?.message || "Failed to create bulk branches";
+      dispatch(setError(message));
+      dispatch(setLoading(false));
+      showError(message);
+    },
+  });
+};
+
+export const useReassignBulkBranches = () => {
+  const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+
+  return useMutation({
+    mutationFn: (payload) => apiPut("/branches/bulk/reassign", payload),
+    onMutate: () => {
+      dispatch(setLoading(true));
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["branches"] });
+      queryClient.invalidateQueries({ queryKey: ["mainBranches"] });
+      dispatch(setLoading(false));
+      dispatch(clearError());
+      showSuccess(data?.message || "Bulk branches reassigned successfully!");
+    },
+    onError: (error) => {
+      const message = error?.message || "Failed to reassign bulk branches";
+      dispatch(setError(message));
+      dispatch(setLoading(false));
+      showError(message);
+    },
+  });
+};
+
 export const useBranches = (params = {}) => {
   const dispatch = useDispatch();
   const branches = useSelector((state) => state.branch.branches);

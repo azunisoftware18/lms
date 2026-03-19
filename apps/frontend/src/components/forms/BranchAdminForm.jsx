@@ -1,13 +1,28 @@
 import { useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { Loader, AlertCircle, User, Mail, Phone, Lock, Building2 } from "lucide-react";
-import InputField from "../ui/InputField"; 
-import SelectField from "../ui/SelectField"; 
-import Button from "../ui/Button"; 
+import {
+  Loader,
+  AlertCircle,
+  User,
+  Mail,
+  Phone,
+  Lock,
+  Building2,
+} from "lucide-react";
+import InputField from "../ui/InputField";
+import SelectField from "../ui/SelectField";
+import Button from "../ui/Button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { branchAdminSchema } from "../../validations/BranchAdminValidation";
 
-export default function BranchAdminForm ({ admin = null, branches = [], onSave, onClose, loading = false, branchesLoading = false }) {
+export default function BranchAdminForm({
+  admin = null,
+  branches = [],
+  onSave,
+  onClose,
+  loading = false,
+  branchesLoading = false,
+}) {
   const isEditMode = !!admin;
   const {
     register,
@@ -29,7 +44,9 @@ export default function BranchAdminForm ({ admin = null, branches = [], onSave, 
   const branchOptions = useMemo(() => {
     return Array.isArray(branches)
       ? branches.map((branch) => ({
-          label: branch.name ? `${branch.name}${branch.code ? ` (${branch.code})` : ""}` : "Unknown",
+          label: branch.name
+            ? `${branch.name}${branch.code ? ` (${branch.code})` : ""}`
+            : "Unknown",
           value: branch.id,
         }))
       : [];
@@ -45,9 +62,12 @@ export default function BranchAdminForm ({ admin = null, branches = [], onSave, 
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="divide-y divide-slate-100">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      autoComplete="off"
+      className="divide-y divide-slate-100"
+    >
       <div className="p-8 space-y-6">
-
         {/* Basic Info Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="md:col-span-2">
@@ -76,6 +96,7 @@ export default function BranchAdminForm ({ admin = null, branches = [], onSave, 
             icon={User}
             placeholder="rahul_admin"
             required
+            autoComplete="off"
             {...register("userName")}
             error={errors.userName?.message}
           />
@@ -109,11 +130,18 @@ export default function BranchAdminForm ({ admin = null, branches = [], onSave, 
 
           <div className="md:col-span-2">
             <InputField
-              label={isEditMode ? "New Password (Optional)" : "Account Password"}
+              label={
+                isEditMode ? "New Password (Optional)" : "Account Password"
+              }
               type="password"
               icon={Lock}
-              placeholder={isEditMode ? "Leave blank to keep current" : "Minimum 6 characters"}
+              placeholder={
+                isEditMode
+                  ? "Leave blank to keep current"
+                  : "Minimum 6 characters"
+              }
               required={!isEditMode}
+              autoComplete="new-password"
               {...register("password")}
               error={errors.password?.message}
             />
@@ -132,11 +160,7 @@ export default function BranchAdminForm ({ admin = null, branches = [], onSave, 
         >
           Cancel
         </Button>
-        <Button
-          type="submit"
-          loading={loading}
-          className="px-8"
-        >
+        <Button type="submit" loading={loading} className="px-8">
           {isEditMode ? "Update Admin" : "Create Admin Account"}
         </Button>
       </div>

@@ -11,6 +11,16 @@ export default function BranchManagementTable({
   onDelete,
   onRefresh,
 }) {
+  const formatTypeLabel = (type) => {
+    if (type === "HEAD_OFFICE") return "Head Office";
+    if (type === "ZONAL") return "Zonal";
+    if (type === "REGIONAL") return "Regional";
+    if (type === "BRANCH") return "Branch";
+    if (type === "MAIN") return "Main";
+    if (type === "SUB") return "Sub";
+    return type || "—";
+  };
+
   const [expandedBranches, setExpandedBranches] = useState({});
   const [search, setSearch] = useState("");
   const [filterValue, setFilterValue] = useState("");
@@ -90,7 +100,7 @@ export default function BranchManagementTable({
 
         return (
           <div
-            className="flex items-center gap-2 min-w-0"
+            className="flex items-center gap-2 min-w-0 "
             style={{ paddingLeft: `${Math.min(row.level * 12, 72)}px` }}
           >
             {hasChildren ? (
@@ -117,10 +127,7 @@ export default function BranchManagementTable({
 
               <div className="md:hidden mt-1 text-[11px] text-slate-500 space-y-0.5">
                 <div>Code: {row.code || "—"}</div>
-                <div>
-                  Parent:{" "}
-                  {row.parentBranch?.name || row.parentBranchName || "—"}
-                </div>
+                <div>Type: {formatTypeLabel(row.type)}</div>
                 <div>
                   Status: {row.isActive ? "Active" : "Inactive"} • Sub:{" "}
                   {row?._count?.subBranches ?? row?.subBranches?.length ?? 0}
@@ -143,11 +150,11 @@ export default function BranchManagementTable({
     },
 
     {
-      header: "Parent",
-      accessor: "parentBranch",
+      header: "Type",
+      accessor: "type",
       headerClassName: "hidden md:table-cell",
       cellClassName: "hidden md:table-cell",
-      render: (value, row) => value?.name || row?.parentBranchName || "—",
+      render: (value) => formatTypeLabel(value),
     },
 
     {

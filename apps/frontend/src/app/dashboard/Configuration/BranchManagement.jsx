@@ -1,15 +1,26 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Building2, CheckCircle, XCircle, Plus } from "lucide-react";
+import {
+  Building2,
+  CheckCircle,
+  XCircle,
+  Plus,
+  Layers,
+  Shuffle,
+} from "lucide-react";
 import StatusCard from "../../../components/common/StatusCard";
 import BranchManagementTable from "../../../components/tables/BranchManagementTable";
 import Button from "../../../components/ui/Button";
 import AddBranchFormModal from "../../../components/modals/AddBranchFormModal";
+import BulkCreateBranchesModal from "../../../components/modals/BulkCreateBranchesModal";
+import BulkReassignBranchesModal from "../../../components/modals/BulkReassignBranchesModal";
 import { toast } from "react-hot-toast";
 import {
   useBranches,
   useCreateBranch,
   useUpdateBranch,
   useDeleteBranch,
+  useCreateBulkBranches,
+  useReassignBulkBranches,
 } from "../../../hooks/useBranches";
 
 export default function BranchManagement() {
@@ -27,7 +38,7 @@ export default function BranchManagement() {
     });
 
     list.forEach((item) => {
-      const parentId = item?.parentBranch?.id;
+      const parentId = item?.parentBranch?.id || item?.parentBranchId;
       if (parentId && nodeMap.has(parentId) && nodeMap.has(item.id)) {
         const parent = nodeMap.get(parentId);
         const child = nodeMap.get(item.id);
@@ -39,9 +50,8 @@ export default function BranchManagement() {
 
     const roots = [];
     nodeMap.forEach((node) => {
-      const hasParentInList = Boolean(
-        node?.parentBranch?.id && nodeMap.has(node.parentBranch.id),
-      );
+      const parentId = node?.parentBranch?.id || node?.parentBranchId;
+      const hasParentInList = Boolean(parentId && nodeMap.has(parentId));
       if (!hasParentInList) {
         roots.push(node);
       }
@@ -51,12 +61,23 @@ export default function BranchManagement() {
   };
 
   const [openBranchModal, setOpenBranchModal] = useState(false);
+  const [openBulkCreateModal, setOpenBulkCreateModal] = useState(false);
+  const [openBulkReassignModal, setOpenBulkReassignModal] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState(null);
 
-  const { branches: branchList = [], loading, refetch } = useBranches();
+  const {
+    branches: branchList = [],
+    loading,
+    refetch,
+  } = useBranches({
+    page: 1,
+    limit: 1000,
+  });
   const createBranchMutation = useCreateBranch();
   const updateBranchMutation = useUpdateBranch();
   const deleteBranchMutation = useDeleteBranch();
+  const createBulkBranchesMutation = useCreateBulkBranches();
+  const reassignBulkBranchesMutation = useReassignBulkBranches();
 
   const branches = useMemo(() => buildBranchTree(branchList), [branchList]);
 
@@ -79,6 +100,8 @@ export default function BranchManagement() {
     () => ({
       total: allBranchesFlat.length,
       main: allBranchesFlat.filter((b) => isTopLevelType(b.type)).length,
+      zonal: allBranchesFlat.filter((b) => b.type === "ZONAL").length,
+      regional: allBranchesFlat.filter((b) => b.type === "REGIONAL").length,
       active: allBranchesFlat.filter((b) => b.isActive).length,
       inactive: allBranchesFlat.filter((b) => !b.isActive).length,
     }),
@@ -101,6 +124,22 @@ export default function BranchManagement() {
       icon: Building2,
       colorClass: "text-purple-600",
       bgClass: "bg-purple-50",
+    },
+    {
+      key: "zonal",
+      title: "Total Zonal",
+      value: stats.zonal,
+      icon: Layers,
+      colorClass: "text-indigo-600",
+      bgClass: "bg-indigo-50",
+    },
+    {
+      key: "regional",
+      title: "Total Regional",
+      value: stats.regional,
+      icon: Shuffle,
+      colorClass: "text-cyan-600",
+      bgClass: "bg-cyan-50",
     },
     {
       key: "active",
@@ -165,6 +204,26 @@ export default function BranchManagement() {
     }
   };
 
+  const handleBulkCreateBranches = async (payload) => {
+    try {
+      await createBulkBranchesMutation.mutateAsync(payload);
+      await refetch();
+      setOpenBulkCreateModal(false);
+    } catch (error) {
+      toast.error(error.message || "Failed to create bulk branches");
+    }
+  };
+
+  const handleBulkReassignBranches = async (payload) => {
+    try {
+      await reassignBulkBranchesMutation.mutateAsync(payload);
+      await refetch();
+      setOpenBulkReassignModal(false);
+    } catch (error) {
+      toast.error(error.message || "Failed to reassign bulk branches");
+    }
+  };
+
   // Initial fetch
   useEffect(() => {
     refetch();
@@ -184,22 +243,44 @@ export default function BranchManagement() {
         </div>
 
         {/* Create Button - full width on mobile, auto on desktop */}
-        <Button
-          onClick={() => {
-            setSelectedBranch(null);
-            setOpenBranchModal(true);
-          }}
-          className="w-full sm:w-auto shrink-0 whitespace-nowrap bg-blue-600 text-white hover:bg-blue-700 
-            px-4 py-2 rounded-lg transition-colors text-sm font-medium
-            flex items-center justify-center gap-2"
-        >
-          <Plus size={18} />
-          Create New Branch
-        </Button>
+        <div className="w-full md:w-auto grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <Button
+            onClick={() => {
+              setSelectedBranch(null);
+              setOpenBranchModal(true);
+            }}
+            className="w-full sm:w-auto shrink-0 whitespace-nowrap bg-blue-600 text-white hover:bg-blue-700 
+              px-4 py-2 rounded-lg transition-colors text-sm font-medium
+              flex items-center justify-center gap-2"
+          >
+            <Plus size={18} />
+            Create New Branch
+          </Button>
+
+          <Button
+            onClick={() => setOpenBulkCreateModal(true)}
+            className="w-full sm:w-auto shrink-0 whitespace-nowrap bg-white hover:bg-slate-100 text-slate-700! border border-slate-200
+              px-4 py-2 rounded-lg transition-colors text-sm font-medium
+              flex items-center justify-center gap-2"
+          >
+            <Layers size={18} />
+            Create Bulk Branches
+          </Button>
+
+          <Button
+            onClick={() => setOpenBulkReassignModal(true)}
+            className="w-full sm:w-auto shrink-0 whitespace-nowrap bg-white hover:bg-slate-100 text-slate-700! border border-slate-200
+              px-4 py-2 rounded-lg transition-colors text-sm font-medium
+              flex items-center justify-center gap-2"
+          >
+            <Shuffle size={18} />
+            Reassign Bulk Branches
+          </Button>
+        </div>
       </div>
 
       {/* ===== STATUS CARDS ===== */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-6 mb-6">
         {statusCards.map((card) => (
           <StatusCard
             key={card.key}
@@ -227,8 +308,22 @@ export default function BranchManagement() {
         isOpen={openBranchModal}
         onClose={() => setOpenBranchModal(false)}
         branch={selectedBranch}
-        mainBranches={allBranchesFlat}
+        mainBranches={branchList}
         onSave={handleSaveBranch}
+      />
+
+      <BulkCreateBranchesModal
+        isOpen={openBulkCreateModal}
+        onClose={() => setOpenBulkCreateModal(false)}
+        branches={branchList}
+        onSave={handleBulkCreateBranches}
+      />
+
+      <BulkReassignBranchesModal
+        isOpen={openBulkReassignModal}
+        onClose={() => setOpenBulkReassignModal(false)}
+        branches={branchList}
+        onSave={handleBulkReassignBranches}
       />
     </div>
   );

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { Building2 } from "lucide-react";
 import InputField from "../ui/InputField";
 import SelectField from "../ui/SelectField";
@@ -23,10 +23,16 @@ export default function AddBranchForm({
 
   const isTopLevelType = (type) => type === "HEAD_OFFICE" || type === "MAIN";
 
+  const getExpectedParentType = (type) => {
+    if (type === "ZONAL") return "HEAD_OFFICE";
+    if (type === "REGIONAL") return "ZONAL";
+    if (type === "BRANCH") return "REGIONAL";
+    return null;
+  };
+
   const {
     register,
     handleSubmit,
-    getValues,
     setValue,
     reset,
     control,
@@ -42,6 +48,30 @@ export default function AddBranchForm({
     },
   });
 
+  const branchType = useWatch({
+    control,
+    name: "type",
+    defaultValue: branch?.type || "BRANCH",
+  });
+
+  const branchName = useWatch({
+    control,
+    name: "name",
+    defaultValue: branch?.name || "",
+  });
+
+  const isActiveValue = useWatch({
+    control,
+    name: "isActive",
+    defaultValue: branch?.isActive !== undefined ? branch.isActive : true,
+  });
+
+  const selectedParentId = useWatch({
+    control,
+    name: "parentBranchId",
+    defaultValue: branch?.parentBranchId || branch?.parentBranch?.id || "",
+  });
+
   useEffect(() => {
     reset({
       name: branch?.name || "",
@@ -52,10 +82,21 @@ export default function AddBranchForm({
     });
   }, [branch, reset]);
 
-  // Get current values without using watch() to avoid React Compiler issues
-  const currentValues = getValues();
-  const branchType = currentValues.type;
-  const branchName = currentValues.name;
+  const expectedParentType = getExpectedParentType(branchType);
+
+  const parentBranchOptions = [
+    { value: "", label: "Select Parent Branch" },
+    ...mainBranches
+      .filter((b) => b.id !== branch?.id)
+      .filter((b) => {
+        if (!expectedParentType) return false;
+        return b.type === expectedParentType;
+      })
+      .map((b) => ({
+        value: b.id,
+        label: `${b.name} (${b.code})`,
+      })),
+  ];
 
   // Generate code from branch name
   useEffect(() => {
@@ -68,6 +109,28 @@ export default function AddBranchForm({
       setValue("code", generatedCode);
     }
   }, [branchName, setValue, branch]);
+
+  useEffect(() => {
+    if (isTopLevelType(branchType)) {
+      if (selectedParentId) {
+        setValue("parentBranchId", "", { shouldValidate: true });
+      }
+      return;
+    }
+
+    if (!selectedParentId) return;
+
+    const selectedParent = mainBranches.find((b) => b.id === selectedParentId);
+    if (!selectedParent || selectedParent.type !== expectedParentType) {
+      setValue("parentBranchId", "", { shouldValidate: true });
+    }
+  }, [
+    branchType,
+    expectedParentType,
+    mainBranches,
+    selectedParentId,
+    setValue,
+  ]);
 
   const onSubmit = async (data) => {
     const payload = {
@@ -146,20 +209,11 @@ export default function AddBranchForm({
                     <SelectField
                       label="Parent Branch"
                       required
-                      options={[
-                        { value: "", label: "Select Parent Branch" },
-                        ...mainBranches
-                          .filter((b) => b.id !== branch?.id)
-                          .filter(
-                            (b) => b.type !== "BRANCH" && b.type !== "SUB",
-                          )
-                          .map((b) => ({
-                            value: b.id,
-                            label: `${b.name} (${b.code})`,
-                          })),
-                      ]}
+                      options={parentBranchOptions}
                       value={field.value}
                       onChange={field.onChange}
+                      isSearchable
+                      inlineMenu
                       error={errors.parentBranchId?.message}
                     />
                   )}
@@ -172,10 +226,10 @@ export default function AddBranchForm({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
             <div className="flex gap-3 items-start sm:items-center">
               <div
-                className={`mt-1 sm:mt-0 p-2 rounded-lg shrink-0 ${getValues("isActive") ? "bg-green-100" : "bg-slate-200"}`}
+                className={`mt-1 sm:mt-0 p-2 rounded-lg shrink-0 ${isActiveValue ? "bg-green-100" : "bg-slate-200"}`}
               >
                 <div
-                  className={`w-2.5 h-2.5 rounded-full ${getValues("isActive") ? "bg-green-600" : "bg-slate-400"}`}
+                  className={`w-2.5 h-2.5 rounded-full ${isActiveValue ? "bg-green-600" : "bg-slate-400"}`}
                 />
               </div>
               <div>
@@ -183,7 +237,7 @@ export default function AddBranchForm({
                   Branch Status
                 </p>
                 <p className="text-[11px] sm:text-xs text-slate-500 max-w-50 sm:max-w-none">
-                  {getValues("isActive")
+                  {isActiveValue
                     ? "Active and visible in reports."
                     : "Inactive and hidden from operations."}
                 </p>

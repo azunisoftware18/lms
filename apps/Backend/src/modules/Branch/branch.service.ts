@@ -27,6 +27,15 @@ const getExpectedParentType = (
   return "REGIONAL";
 };
 
+const getExpectedChildType = (
+  parentType: BranchTypeValue,
+): BranchTypeValue | null => {
+  if (parentType === "HEAD_OFFICE") return "ZONAL";
+  if (parentType === "ZONAL") return "REGIONAL";
+  if (parentType === "REGIONAL") return "BRANCH";
+  return null;
+};
+
 export const createBranchService = async (
   data: CreateBranchInput,
   userId: string,
@@ -63,7 +72,9 @@ export const createBranchService = async (
       throw AppError.notFound("Parent branch not found");
     }
 
-    const expectedParentType = getExpectedParentType(data.type as BranchTypeValue);
+    const expectedParentType = getExpectedParentType(
+      data.type as BranchTypeValue,
+    );
     if (expectedParentType && parentBranch.type !== expectedParentType) {
       throw AppError.badRequest(
         `${BRANCH_TYPE_LABEL[data.type as BranchTypeValue]} must be under ${BRANCH_TYPE_LABEL[expectedParentType]}`,
@@ -194,7 +205,9 @@ export const updateBranchService = async (
     });
 
     if (nextType === "BRANCH" && childBranches.length > 0) {
-      throw AppError.badRequest(`${BRANCH_TYPE_LABEL.BRANCH} cannot have child branches`);
+      throw AppError.badRequest(
+        `${BRANCH_TYPE_LABEL.BRANCH} cannot have child branches`,
+      );
     }
 
     if (nextType !== "BRANCH") {
@@ -225,26 +238,6 @@ export const updateBranchService = async (
     },
   });
 
-  let affectedBranchCount = 1;
-  if (oldBranch.isActive && branch.isActive === false) {
-    const descendantIds = await getDescendantBranchIds(id);
-
-    if (descendantIds.length > 0) {
-      await prisma.branch.updateMany({
-        where: {
-          id: {
-            in: descendantIds,
-          },
-        },
-        data: {
-          isActive: false,
-        },
-      });
-    }
-
-    affectedBranchCount = descendantIds.length + 1;
-  }
-
   await logAction({
     entityType: "BRANCH",
     entityId: branch.id,
@@ -262,8 +255,6 @@ export const updateBranchService = async (
       code: branch.code,
       type: branch.type,
       parentBranchId: branch.parentBranchId,
-      isActive: branch.isActive,
-      affectedBranchCount,
     },
   });
 
@@ -336,10 +327,22 @@ export const getAllBranchesService = async (
         createdAt: true,
         updatedAt: true,
         parentBranch: {
-          select: { id: true, name: true, code: true, type: true, isActive: true },
+          select: {
+            id: true,
+            name: true,
+            code: true,
+            type: true,
+            isActive: true,
+          },
         },
         subBranches: {
-          select: { id: true, name: true, code: true, type: true, isActive: true },
+          select: {
+            id: true,
+            name: true,
+            code: true,
+            type: true,
+            isActive: true,
+          },
         },
       },
       orderBy: { createdAt: "desc" },
@@ -362,34 +365,6 @@ export const getAllBranchesService = async (
   };
 };
 
-const getDescendantBranchIds = async (rootBranchId: string) => {
-  const descendantIds: string[] = [];
-  let parentIds: string[] = [rootBranchId];
-
-  while (parentIds.length > 0) {
-    const children = await prisma.branch.findMany({
-      where: {
-        parentBranchId: {
-          in: parentIds,
-        },
-      },
-      select: {
-        id: true,
-      },
-    });
-
-    if (children.length === 0) {
-      break;
-    }
-
-    const childIds = children.map((child) => child.id);
-    descendantIds.push(...childIds);
-    parentIds = childIds;
-  }
-
-  return descendantIds;
-};
-
 export const deleteBranchService = async (id: string, userId: string) => {
   if (!userId) {
     throw AppError.unauthorized("Unauthorized");
@@ -401,31 +376,19 @@ export const deleteBranchService = async (id: string, userId: string) => {
     throw AppError.notFound("Branch not found");
   }
 
-  const descendantIds = await getDescendantBranchIds(id);
-  const affectedBranchIds = [id, ...descendantIds];
-
-  await prisma.branch.updateMany({
-    where: {
-      id: {
-        in: affectedBranchIds,
-      },
-    },
-    data: {
-      isActive: false,
-    },
+  const branch = await prisma.branch.update({
+    where: { id },
+    data: { isActive: false },
   });
 
   await logAction({
     entityType: "BRANCH",
-    entityId: id,
+    entityId: branch.id,
     action: "DELETE_BRANCH",
     performedBy: userId,
-    branchId: id,
+    branchId: branch.id,
     oldValue: { isActive: existingBranch.isActive },
-    newValue: {
-      isActive: false,
-      affectedBranchCount: affectedBranchIds.length,
-    },
+    newValue: { isActive: false },
   });
 };
 
@@ -460,10 +423,22 @@ export const getAllMainBranchesService = async (
         createdAt: true,
         updatedAt: true,
         parentBranch: {
-          select: { id: true, name: true, code: true, type: true, isActive: true },
+          select: {
+            id: true,
+            name: true,
+            code: true,
+            type: true,
+            isActive: true,
+          },
         },
         subBranches: {
-          select: { id: true, name: true, code: true, type: true, isActive: true },
+          select: {
+            id: true,
+            name: true,
+            code: true,
+            type: true,
+            isActive: true,
+          },
         },
       },
       orderBy: { createdAt: "desc" },
@@ -490,9 +465,7 @@ export const createBulkBranchesService = async (
   data: CreateBulkBranchesInput,
   userId: string,
 ) => {
-  const branchType = data.type as BranchTypeValue;
-
-  // Validate parent exists and has the correct type
+  // Validate parent exists
   const parentBranch = await prisma.branch.findUnique({
     where: { id: data.parentBranchId },
     select: { id: true, type: true, name: true },
@@ -502,12 +475,22 @@ export const createBulkBranchesService = async (
     throw AppError.notFound("Parent branch not found");
   }
 
-  const expectedParentType = getExpectedParentType(branchType);
-  if (!expectedParentType || parentBranch.type !== expectedParentType) {
+  const expectedChildType = getExpectedChildType(
+    parentBranch.type as BranchTypeValue,
+  );
+  if (!expectedChildType) {
     throw AppError.badRequest(
-      `${BRANCH_TYPE_LABEL[branchType]} must be under a ${BRANCH_TYPE_LABEL[expectedParentType as BranchTypeValue]}`,
+      `${BRANCH_TYPE_LABEL.BRANCH} cannot have child branches`,
     );
   }
+
+  if (data.type && data.type !== expectedChildType) {
+    throw AppError.badRequest(
+      `${BRANCH_TYPE_LABEL[data.type as BranchTypeValue]} cannot be created under ${BRANCH_TYPE_LABEL[parentBranch.type as BranchTypeValue]}. Expected child type: ${BRANCH_TYPE_LABEL[expectedChildType]}`,
+    );
+  }
+
+  const branchType = (data.type ?? expectedChildType) as BranchTypeValue;
 
   // Check for duplicate codes in the incoming payload
   const incomingCodes = data.branches.map((b) => b.code);
@@ -537,7 +520,7 @@ export const createBulkBranchesService = async (
         data: {
           name: b.name,
           code: b.code,
-          type: data.type,
+          type: branchType,
           parentBranchId: data.parentBranchId,
         },
       }),
@@ -583,16 +566,26 @@ export const reassignBulkBranchesService = async (
 
   const branches = await prisma.branch.findMany({
     where: { id: { in: uniqueBranchIds } },
-    select: { id: true, code: true, name: true, type: true, parentBranchId: true },
+    select: {
+      id: true,
+      code: true,
+      name: true,
+      type: true,
+      parentBranchId: true,
+    },
   });
 
   if (branches.length !== uniqueBranchIds.length) {
     const foundIds = new Set(branches.map((b) => b.id));
     const missingIds = uniqueBranchIds.filter((id) => !foundIds.has(id));
-    throw AppError.notFound(`Branch not found for id(s): ${missingIds.join(", ")}`);
+    throw AppError.notFound(
+      `Branch not found for id(s): ${missingIds.join(", ")}`,
+    );
   }
 
-  const invalidSelfParent = branches.find((b) => b.id === data.newParentBranchId);
+  const invalidSelfParent = branches.find(
+    (b) => b.id === data.newParentBranchId,
+  );
   if (invalidSelfParent) {
     throw AppError.badRequest("A branch cannot be moved under itself");
   }

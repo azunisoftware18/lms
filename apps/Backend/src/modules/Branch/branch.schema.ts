@@ -38,21 +38,22 @@ export const branchIdParamSchema = z.object({
   id: z.string().cuid(),
 });
 
-export const createBulkBranchesSchema = z
-  .object({
-    parentBranchId: z.string().min(1),
-    type: z.enum(["ZONAL", "REGIONAL", "BRANCH"]),
-    branches: z
-      .array(
-        z.object({
-          name: z.string().min(1),
-          code: z.string().min(1),
-        }),
-      )
-      .min(1, "At least one branch is required"),
-  });
+export const createBulkBranchesSchema = z.object({
+  parentBranchId: z.string().min(1),
+  type: z.enum(["ZONAL", "REGIONAL", "BRANCH"]).optional(),
+  branches: z
+    .array(
+      z.object({
+        name: z.string().min(1),
+        code: z.string().min(1),
+      }),
+    )
+    .min(1, "At least one branch is required"),
+});
 
 export const reassignBulkBranchesSchema = z.object({
   newParentBranchId: z.string().min(1),
-  branchIds: z.array(z.string().min(1)).min(1, "At least one branch is required"),
+  branchIds: z
+    .array(z.string().min(1))
+    .min(1, "At least one branch is required"),
 });
