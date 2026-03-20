@@ -77,6 +77,7 @@ import VisionAndMissionPage from "../app/public/VisionAndMissionPage.jsx";
 import WelcometoFinovaPage from "../app/public/WelcometoFinovaPage.jsx";
 import UnderRegulationPage from "../app/public/UnderRegulationPage.jsx";
 import EmployeeAddPage from "../app/dashboard/Configuration/EmployeeAddPage.jsx";
+import PartnerAddPage from "../app/dashboard/Configuration/PartnerAddPage.jsx";
 
 export default function AppRoutes() {
   const dispatch = useDispatch();
@@ -220,6 +221,7 @@ export default function AppRoutes() {
         <Route path="branch-management" element={<BranchManagement />} />
         <Route path="branch-admin" element={<BranchAdmin />} />
         <Route path="employee" element={<EmployeeAddPage />} />
+        <Route path="partner" element={< PartnerAddPage />} />
       </Route>
     </Routes>
   );
