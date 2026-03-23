@@ -117,6 +117,7 @@ export default function TableHead({
   wrapHeaders = false,
   onRefresh,
   refreshing = false,
+  headerAction,
 }) {
   const [isMobile, setIsMobile] = useState(false);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
@@ -145,6 +146,7 @@ export default function TableHead({
                   {title}
                 </h2>
                 <div className="flex items-center gap-2">
+                  {headerAction}
                   {onRefresh && (
                     <button
                       onClick={onRefresh}
@@ -262,7 +264,7 @@ export default function TableHead({
             </h2>
 
             {/* Controls */}
-            <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 min-w-0 lg:ml-auto lg:justify-end">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 min-w-0 lg:ml-auto lg:justify-end">
               {/* Search */}
               <div className="w-full sm:flex-1 lg:flex-none lg:w-72 min-w-0">
                 <SearchField
@@ -274,30 +276,40 @@ export default function TableHead({
                 />
               </div>
 
-              {/* Filter */}
-              <FilterDropdown
-                value={filterValue}
-                onChange={setFilterValue}
-                options={filterOptions}
-                placeholder="Filter by status"
-                className="w-full sm:w-36"
-              />
-
-              {onRefresh && (
-                <button
-                  type="button"
-                  onClick={onRefresh}
-                  disabled={refreshing}
-                  className="inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-60 disabled:cursor-not-allowed sm:shrink-0"
-                  aria-label="Refresh table"
-                >
-                  <RefreshCw
-                    size={16}
-                    className={refreshing ? "animate-spin" : ""}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-3 sm:flex-nowrap sm:shrink-0">
+                {/* Filter */}
+                <div className="w-full sm:w-44 sm:shrink-0">
+                  <FilterDropdown
+                    value={filterValue}
+                    onChange={setFilterValue}
+                    options={filterOptions}
+                    placeholder="Filter by status"
+                    className="w-full"
                   />
-                  <span className="hidden xl:inline">Refresh</span>
-                </button>
-              )}
+                </div>
+
+                {onRefresh && (
+                  <button
+                    type="button"
+                    onClick={onRefresh}
+                    disabled={refreshing}
+                    className="inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-60 disabled:cursor-not-allowed sm:shrink-0"
+                    aria-label="Refresh table"
+                  >
+                    <RefreshCw
+                      size={16}
+                      className={refreshing ? "animate-spin" : ""}
+                    />
+                    <span className="hidden xl:inline">Refresh</span>
+                  </button>
+                )}
+
+                {headerAction && (
+                  <div className="w-full sm:w-auto sm:shrink-0">
+                    {headerAction}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </th>

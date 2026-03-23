@@ -1,6 +1,14 @@
 import React from "react";
-import { useForm } from "react-hook-form";
-import { User, Mail, Phone, MapPin, Calendar, CreditCard, Send } from "lucide-react";
+import { useForm, useWatch } from "react-hook-form";
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  CreditCard,
+  Send,
+} from "lucide-react";
 import Button from "../ui/Button";
 import SelectField from "../ui/SelectField";
 import InputField from "../ui/InputField";
@@ -8,16 +16,17 @@ import TextAreaField from "../ui/TextAreaField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { leadSchema } from "../../validations/LeadValidation";
 import { useCreateLead } from "../../hooks/useLead";
+import { toast } from "react-hot-toast";
 
 export default function LeadForm({ onSuccess }) {
-    const createLeadMutation = useCreateLead();
-  
+  const createLeadMutation = useCreateLead();
+
   // 1. Initialize useForm
   const {
     register,
     handleSubmit,
     setValue,
-    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(leadSchema),
@@ -33,8 +42,14 @@ export default function LeadForm({ onSuccess }) {
       address: "",
       loanTypeId: "",
       loanAmount: "",
-    }
+    },
   });
+
+  // Use useWatch for React Compiler compatibility
+  const genderValue = useWatch({ control, name: "gender" });
+  const stateValue = useWatch({ control, name: "state" });
+  const cityValue = useWatch({ control, name: "city" });
+  const loanTypeIdValue = useWatch({ control, name: "loanTypeId" });
 
   // 2. Submit Handler
   const onSubmit = async (data) => {
@@ -52,6 +67,7 @@ export default function LeadForm({ onSuccess }) {
       if (onSuccess) onSuccess();
     } catch (err) {
       alert("Something went wrong");
+      toast.error(err?.response?.data?.message || "Failed to create lead");
     }
   };
 
@@ -59,36 +75,35 @@ export default function LeadForm({ onSuccess }) {
   const genderOptions = [
     { value: "MALE", label: "Male" },
     { value: "FEMALE", label: "Female" },
-    { value: "OTHER", label: "Other" }
+    { value: "OTHER", label: "Other" },
   ];
 
   const stateOptions = [
     { value: "Rajasthan", label: "Rajasthan" },
     { value: "Maharashtra", label: "Maharashtra" },
     { value: "Delhi", label: "Delhi" },
-    { value: "Gujarat", label: "Gujarat" }
+    { value: "Gujarat", label: "Gujarat" },
   ];
 
   const cityOptions = [
     { value: "Jaipur", label: "Jaipur" },
     { value: "Mumbai", label: "Mumbai" },
     { value: "Delhi", label: "Delhi" },
-    { value: "Ahmedabad", label: "Ahmedabad" }
+    { value: "Ahmedabad", label: "Ahmedabad" },
   ];
 
   const loanOptions = [
     { value: "1", label: "Personal Loan" },
     { value: "2", label: "Business Loan" },
-    { value: "3", label: "Home Loan" }
+    { value: "3", label: "Home Loan" },
   ];
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-
         {/* Full Name */}
         <InputField
-          label="Full Name *"
+          label="Full Name "
           placeholder="John Doe"
           icon={User}
           error={errors.fullName?.message}
@@ -107,7 +122,7 @@ export default function LeadForm({ onSuccess }) {
 
         {/* Contact */}
         <InputField
-          label="Mobile Number *"
+          label="Mobile Number "
           type="tel"
           placeholder="9876543210"
           icon={Phone}
@@ -117,7 +132,7 @@ export default function LeadForm({ onSuccess }) {
 
         {/* Date of Birth */}
         <InputField
-          label="Date of Birth *"
+          label="Date of Birth "
           type="date"
           icon={Calendar}
           error={errors.dob?.message}
@@ -126,40 +141,46 @@ export default function LeadForm({ onSuccess }) {
 
         {/* Gender Select - FIXED */}
         <SelectField
-          label="Gender *"
+          label="Gender "
           placeholder="Select Gender"
           error={errors.gender?.message}
-          value={watch("gender")}
-          onChange={(value) => setValue("gender", value, { shouldValidate: true })}
+          value={genderValue}
+          onChange={(value) =>
+            setValue("gender", value, { shouldValidate: true })
+          }
           options={genderOptions}
           isRequired
         />
 
         {/* State Select */}
         <SelectField
-          label="State *"
+          label="State "
           placeholder="Select State"
           error={errors.state?.message}
-          value={watch("state")}
-          onChange={(value) => setValue("state", value, { shouldValidate: true })}
+          value={stateValue}
+          onChange={(value) =>
+            setValue("state", value, { shouldValidate: true })
+          }
           options={stateOptions}
           isRequired
         />
 
         {/* City Select */}
         <SelectField
-          label="City *"
+          label="City "
           placeholder="Select City"
           error={errors.city?.message}
-          value={watch("city")}
-          onChange={(value) => setValue("city", value, { shouldValidate: true })}
+          value={cityValue}
+          onChange={(value) =>
+            setValue("city", value, { shouldValidate: true })
+          }
           options={cityOptions}
           isRequired
         />
 
         {/* Pincode */}
         <InputField
-          label="Pincode *"
+          label="Pincode "
           placeholder="302001"
           error={errors.pinCode?.message}
           {...register("pinCode")}
@@ -167,18 +188,20 @@ export default function LeadForm({ onSuccess }) {
 
         {/* Loan Type - FIXED: No icon in SelectField */}
         <SelectField
-          label="Loan Type *"
+          label="Loan Type "
           placeholder="Select Loan Type"
           error={errors.loanTypeId?.message}
-          value={watch("loanTypeId")}
-          onChange={(value) => setValue("loanTypeId", value, { shouldValidate: true })}
+          value={loanTypeIdValue}
+          onChange={(value) =>
+            setValue("loanTypeId", value, { shouldValidate: true })
+          }
           options={loanOptions}
           isRequired
         />
 
         {/* Loan Amount */}
         <InputField
-          label="Required Amount (₹) *"
+          label="Required Amount (₹) "
           type="number"
           placeholder="e.g. 50000"
           icon={CreditCard}
@@ -189,7 +212,7 @@ export default function LeadForm({ onSuccess }) {
         {/* Address */}
         <div className="md:col-span-2">
           <TextAreaField
-            label="Full Address *"
+            label="Full Address "
             rows={3}
             placeholder="House No, Street, Landmark..."
             error={errors.address?.message}

@@ -1,12 +1,7 @@
 import { useState, useMemo } from "react";
 import { Eye } from "lucide-react";
 
-import {
-  TableShell,
-  TableHead,
-  TableBody,
-  TableLoader,
-} from "./core";
+import { TableShell, TableHead, TableBody, TableLoader } from "./core";
 
 import Pagination from "../common/Pagination";
 
@@ -15,8 +10,10 @@ export default function ApplicationPageTable({
   tableColumns = [],
   loading = false,
   onViewDetails,
+  headerAction,
+  onRefresh,
+  refreshing = false,
 }) {
-
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -29,8 +26,8 @@ export default function ApplicationPageTable({
       tableColumns.some((col) =>
         String(app[col.accessor] || "")
           .toLowerCase()
-          .includes(search.toLowerCase())
-      )
+          .includes(search.toLowerCase()),
+      ),
     );
   }, [applications, search, tableColumns]);
 
@@ -40,7 +37,7 @@ export default function ApplicationPageTable({
 
   const paginatedApplications = filteredApplications.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   /* ---------------- Columns ---------------- */
@@ -51,12 +48,14 @@ export default function ApplicationPageTable({
 
   return (
     <TableShell>
-
       <TableHead
         title="Loan Applications"
         columns={columns}
         search={search}
         setSearch={setSearch}
+        headerAction={headerAction}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
       />
 
       {loading ? (
@@ -82,7 +81,6 @@ export default function ApplicationPageTable({
           />
         </>
       )}
-
     </TableShell>
   );
 }

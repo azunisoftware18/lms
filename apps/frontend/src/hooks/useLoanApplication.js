@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { apiGet, apiPost, apiPatch } from "../lib/api/apiClient";
 import { showSuccess, showError } from "../lib/utils/toastService";
 import { normalizeParams } from "../lib/utils/paramHelper";
@@ -15,15 +15,14 @@ import {
 
 export const useLoanApplications = (params = {}) => {
   const dispatch = useDispatch();
-  const loading = useSelector(state => state.loanApplication?.loading);
-  const error = useSelector(state => state.loanApplication?.error);
 
   const normalizedParams = normalizeParams(params);
 
+  // GET all loans: /loan-applications/?page=1&q=LN-2026-000001
   return useQuery({
     queryKey: ["loanApplications", normalizedParams],
-    queryFn: () => apiGet('/loan-applications', { params: normalizedParams }),
-    keepPreviousData: true, 
+    queryFn: () => apiGet(`/loan-applications`, { params: normalizedParams }),
+    keepPreviousData: true,
     onSuccess: (data) => {
       dispatch(setLoanApplications(data));
       dispatch(clearError());
@@ -39,6 +38,7 @@ export const useLoanApplications = (params = {}) => {
 export const useLoanApplication = (id) => {
   const dispatch = useDispatch();
 
+  // GET loan by id: /loan-applications/:id
   return useQuery({
     queryKey: ["loanApplication", id],
     queryFn: () => apiGet(`/loan-applications/${id}`),
@@ -59,8 +59,9 @@ export const useCreateLoanApplication = () => {
   const qc = useQueryClient();
   const dispatch = useDispatch();
 
+  // POST create loan: /loan-applications/loan/create
   return useMutation({
-    mutationFn: (payload) => apiPost('/loan-applications', payload),
+    mutationFn: (payload) => apiPost("/loan-applications/loan/create", payload),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -84,8 +85,10 @@ export const useUpdateLoanStatus = () => {
   const qc = useQueryClient();
   const dispatch = useDispatch();
 
+  // PUT update status: /loan-applications/:id/status
   return useMutation({
-    mutationFn: ({ id, status }) => apiPatch(`/loan-applications/${id}/status`, { status }),
+    mutationFn: ({ id, status }) =>
+      apiPatch(`/loan-applications/${id}/status`, { status }),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -102,6 +105,14 @@ export const useUpdateLoanStatus = () => {
       dispatch(setLoading(false));
       showError(message);
     },
+  });
+};
+// GET all documents for a loan application: /loan-applications/:id/documents
+export const useLoanDocuments = (id) => {
+  return useQuery({
+    queryKey: ["loanDocuments", id],
+    queryFn: () => apiGet(`/loan-applications/${id}/documents`),
+    enabled: !!id,
   });
 };
 
@@ -135,7 +146,8 @@ export const useRejectLoan = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: ({ id, reason }) => apiPost(`/loan-applications/${id}/reject`, { reason }),
+    mutationFn: ({ id, reason }) =>
+      apiPost(`/loan-applications/${id}/reject`, { reason }),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -162,9 +174,9 @@ export const useUploadDocuments = () => {
   return useMutation({
     mutationFn: ({ id, file }) => {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append("file", file);
       return apiPost(`/loan-applications/${id}/documents`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { "Content-Type": "multipart/form-data" },
       });
     },
     onMutate: () => {
@@ -216,9 +228,12 @@ export const useRejectDocument = () => {
 
   return useMutation({
     mutationFn: ({ applicationId, documentId, reason }) =>
-      apiPost(`/loan-applications/${applicationId}/documents/${documentId}/reject`, {
-        reason,
-      }),
+      apiPost(
+        `/loan-applications/${applicationId}/documents/${documentId}/reject`,
+        {
+          reason,
+        },
+      ),
     onMutate: () => {
       dispatch(setLoading(true));
     },

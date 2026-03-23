@@ -1,18 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  Plus,
-  FileText,
-  Check,
-  Ban,
-  AlertCircle,
-  Hash,
-  IndianRupee,
-  Users,
-  ShieldCheck,
-  Briefcase,
-} from "lucide-react";
+import { Plus, Hash, IndianRupee, ShieldCheck, Briefcase } from "lucide-react";
 import Button from "../../../components/ui/Button";
 import StatusCard from "../../../components/common/StatusCard";
+import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
 import ApplicationPageTable from "../../../components/tables/ApplicationPageTable";
 import LoanApplicationView from "../ViewDetail/LoanApplicationView";
 import LoanApplicationForm from "../../../components/forms/LoanApplicationForm";
@@ -21,6 +11,7 @@ import {
   useUpdateLoanStatus,
 } from "../../../hooks/useLoanApplication";
 import { SAMPLE_LOAN_APPLICATIONS } from "../../../lib/LOSDummyData";
+import { showError, showInfo } from "../../../lib/utils/toastService";
 
 export default function ProfessionalNBFCPortal() {
   const [showForm, setShowForm] = useState(false);
@@ -30,7 +21,11 @@ export default function ProfessionalNBFCPortal() {
   const [currentPage] = useState(1);
   const [showApproveDialog, setShowApproveDialog] = useState(false);
 
-  const { data: applicationsResponse } = useLoanApplications();
+  const {
+    data: applicationsResponse,
+    refetch: refetchApplications,
+    isFetching: refreshingApplications,
+  } = useLoanApplications();
   const { mutate: updateStatus } = useUpdateLoanStatus();
 
   const applications = useMemo(() => {
@@ -45,8 +40,16 @@ export default function ProfessionalNBFCPortal() {
 
   const PAGE_SIZE = 10;
 
+  const handleRefreshApplications = async () => {
+    showInfo("Refreshing applications...");
+    await refetchApplications();
+  };
+
   const handleApproveApplication = () => {
-    if (!selectedApp?.id) return;
+    if (!selectedApp?.id) {
+      showError("No application selected for approval");
+      return;
+    }
     updateStatus({
       id: selectedApp.id,
       status: "approved",
@@ -193,31 +196,17 @@ export default function ProfessionalNBFCPortal() {
             onClick={() => setShowForm(true)}
             className="bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200"
           >
-            <Plus size={18} className="mr-2" /> Start New Underwriting
+            <Plus size={18} className="mr-2" /> New Application
           </Button>
         </div>
 
-        <Button
-          onClick={() => setShowForm(true)}
-          className="w-full sm:w-auto bg-blue-600 text-white hover:bg-blue-700 
-            px-4 py-2 rounded-lg transition-colors text-sm font-medium
-            flex items-center justify-center gap-2"
-        >
-          <Plus size={20} />
-          <span className="font-semibold">New Application</span>
-        </Button>
-
         {/* Application Data Grid */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-          <div className="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-            <h3 className="font-bold text-slate-700">Recent Applications</h3>
-            <div className="text-xs font-medium text-slate-400 italic font-mono">
-              Real-time NBFC Sync Enabled
-            </div>
-          </div>
           <ApplicationPageTable
             applications={paginatedApplications}
             tableColumns={tableColumns}
+            onRefresh={handleRefreshApplications}
+            refreshing={refreshingApplications}
             onViewDetails={(app) => {
               setSelectedApp(app);
               setViewModalOpen(true);

@@ -40,10 +40,13 @@ import InputField from "../ui/InputField";
 import TextAreaField from "../ui/TextAreaField";
 import SelectField from "../ui/SelectField";
 import createLoanApplicationSchema from "../../validations/LoanApplicationValidation";
+
+
 import {
   leadDummyData,
   loanTypeDummyData,
 } from "../../lib/LoanApplicationDummyData";
+import { showError, showInfo, showSuccess } from "../../lib/utils/toastService";
 
 // ─────────────────────────────────────────────
 // CONSTANTS
@@ -218,9 +221,33 @@ const INDIAN_STATES = [
 const STEPS = [
   {
     id: "applicant",
-    label: "Applicant Details",
-    shortLabel: "Applicant",
+    label: "Personal Information",
+    shortLabel: "Personal",
     icon: User,
+  },
+  {
+    id: "applicantContact",
+    label: "Contact Details",
+    shortLabel: "Contact",
+    icon: Phone,
+  },
+  {
+    id: "accommodation",
+    label: "Present Accommodation",
+    shortLabel: "Accommodation",
+    icon: Home,
+  },
+  {
+    id: "occupational",
+    label: "Occupational Details",
+    shortLabel: "Occupational",
+    icon: Briefcase,
+  },
+  {
+    id: "financial",
+    label: "Financial Status",
+    shortLabel: "Financial",
+    icon: IndianRupee,
   },
   {
     id: "loanType",
@@ -274,11 +301,15 @@ const STEP_FIELDS = {
     "applicant.maritalStatus",
     "applicant.nationality",
     "applicant.category",
+  ],
+  applicantContact: [
     "applicant.contactNumber",
     "applicant.panNumber",
     "applicant.aadhaarNumber",
-    "applicant.employmentType",
   ],
+  accommodation: ["applicant.presentAccommodation"],
+  occupational: ["applicant.employmentType"],
+  financial: [],
   loanType: [
     "loanTypeId",
     "loanRequirement.interestOption",
@@ -338,8 +369,9 @@ const personDefaults = () => ({
     phoneWithStd: "",
   },
   dob: "",
-  category: undefined,
+  gender: undefined,
   maritalStatus: undefined,
+  category: undefined,
   noOfFamilyDependentsChildren: "",
   noOfFamilyDependentsOther: "",
   correspondenceAddress: undefined,
@@ -627,37 +659,19 @@ const DEFAULT_VALUES = {
 // ─────────────────────────────────────────────
 // LAYOUT HELPERS
 // ─────────────────────────────────────────────
-const SectionCard = React.memo(
-  ({ title, icon: Icon, children, accentColor = "blue" }) => {
-    const gradients = {
-      blue: "from-blue-600 to-blue-700",
-      indigo: "from-indigo-600 to-indigo-700",
-      slate: "from-slate-600 to-slate-700",
-      amber: "from-amber-500 to-amber-600",
-      emerald: "from-emerald-600 to-emerald-700",
-      rose: "from-rose-600 to-rose-700",
-      violet: "from-violet-600 to-violet-700",
-      teal: "from-teal-600 to-teal-700",
-    };
-    return (
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-visible mb-6">
-        <div
-          className={`flex items-center gap-3 px-6 py-4 bg-linear-to-r ${gradients[accentColor] || gradients.blue}`}
-        >
-          {Icon && (
-            <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
-              <Icon size={16} className="text-white" />
-            </div>
-          )}
-          <h3 className="font-bold text-base text-white tracking-wide">
-            {title}
-          </h3>
-        </div>
-        <div className="p-6">{children}</div>
+const SectionCard = React.memo(({ title, icon: Icon, children }) => {
+  return (
+    <div className="bg-white rounded-lg border border-slate-200 mb-6">
+      <div className="flex items-center gap-3 px-5 py-3 border-b border-slate-200">
+        {Icon && <Icon size={18} className="text-slate-600 shrink-0" />}
+        <h3 className="font-semibold text-sm text-slate-700 tracking-normal">
+          {title}
+        </h3>
       </div>
-    );
-  },
-);
+      <div className="p-5">{children}</div>
+    </div>
+  );
+});
 
 const Grid = React.memo(({ cols = 2, children }) => (
   <div
@@ -678,27 +692,6 @@ const Divider = React.memo(({ label }) => (
     <div className="flex-1 h-px bg-slate-100" />
   </div>
 ));
-
-const Toast = ({ message, type, onClose }) => {
-  const styles = {
-    success: { bg: "bg-emerald-600", icon: <BadgeCheck size={16} /> },
-    draft: { bg: "bg-amber-500", icon: <Save size={16} /> },
-    error: { bg: "bg-red-500", icon: <AlertCircle size={16} /> },
-    info: { bg: "bg-blue-600", icon: <Info size={16} /> },
-  };
-  const s = styles[type] || styles.info;
-  return (
-    <div
-      className={`fixed bottom-6 right-6 z-99 flex items-center gap-3 px-5 py-3 rounded-2xl shadow-2xl text-white text-sm font-semibold ${s.bg}`}
-    >
-      {s.icon}
-      <span>{message}</span>
-      <button onClick={onClose} className="ml-1 opacity-75 hover:opacity-100">
-        <X size={14} />
-      </button>
-    </div>
-  );
-};
 
 // Radio Group
 const RadioGroup = React.memo(
@@ -1754,350 +1747,325 @@ const PersonFinancialFields = ({ control, watch, setValue, prefix }) => {
 // ─────────────────────────────────────────────
 // SECTION: APPLICANT
 // ─────────────────────────────────────────────
-const ApplicantSection = ({ control, errors, watch, setValue, showToast }) => (
+const ApplicantSection = ({
+  control,
+  errors,
+  setValue,
+  showToast,
+  mode = "all",
+}) => (
   <div>
-    <LeadFetch setValue={setValue} showToast={showToast} />
-    <SectionCard title="Personal Information" icon={User}>
-      <div className="space-y-4">
-        <Grid cols={3}>
-          <Controller
-            name="applicant.title"
-            control={control}
-            render={({ field }) => (
-              <SelectField
-                label="Title"
-                isRequired
-                options={TITLE_OPTIONS}
-                value={field.value}
-                onChange={field.onChange}
-                error={errors.applicant?.title?.message}
+    {(mode === "personal" || mode === "all") && (
+      <>
+        <LeadFetch setValue={setValue} showToast={showToast} />
+        <SectionCard title="Personal Information" icon={User}>
+          <div className="space-y-4">
+            <Grid cols={3}>
+              <Controller
+                name="applicant.title"
+                control={control}
+                render={({ field }) => (
+                  <SelectField
+                    label="Title"
+                    isRequired
+                    options={TITLE_OPTIONS}
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.applicant?.title?.message}
+                  />
+                )}
               />
-            )}
-          />
-          <Controller
-            name="applicant.firstName"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="First Name"
-                isRequired
-                {...field}
-                error={errors.applicant?.firstName?.message}
+              <Controller
+                name="applicant.firstName"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="First Name"
+                    isRequired
+                    {...field}
+                    error={errors.applicant?.firstName?.message}
+                  />
+                )}
               />
-            )}
-          />
-          <Controller
-            name="applicant.middleName"
-            control={control}
-            render={({ field }) => (
-              <InputField label="Middle Name" {...field} />
-            )}
-          />
-        </Grid>
-        <Grid cols={3}>
-          <Controller
-            name="applicant.lastName"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Last Name"
-                isRequired
-                {...field}
-                error={errors.applicant?.lastName?.message}
+              <Controller
+                name="applicant.middleName"
+                control={control}
+                render={({ field }) => (
+                  <InputField label="Middle Name" {...field} />
+                )}
               />
-            )}
-          />
-          <Controller
-            name="applicant.fatherName"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Father's Name"
-                isRequired
-                {...field}
-                error={errors.applicant?.fatherName?.message}
+            </Grid>
+            <Grid cols={3}>
+              <Controller
+                name="applicant.lastName"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Last Name"
+                    isRequired
+                    {...field}
+                    error={errors.applicant?.lastName?.message}
+                  />
+                )}
               />
-            )}
-          />
-          <Controller
-            name="applicant.motherName"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Mother's Name"
-                isRequired
-                {...field}
-                error={errors.applicant?.motherName?.message}
+              <Controller
+                name="applicant.fatherName"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Father's Name"
+                    isRequired
+                    {...field}
+                    error={errors.applicant?.fatherName?.message}
+                  />
+                )}
               />
-            )}
-          />
-        </Grid>
-        <Controller
-          name="applicant.woname"
-          control={control}
-          render={({ field }) => <InputField label="W/o" {...field} />}
-        />
-        <Grid>
-          <Controller
-            name="applicant.dob"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Date of Birth"
-                type="date"
-                isRequired
-                {...field}
-                error={errors.applicant?.dob?.message}
+              <Controller
+                name="applicant.motherName"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Mother's Name"
+                    isRequired
+                    {...field}
+                    error={errors.applicant?.motherName?.message}
+                  />
+                )}
               />
-            )}
-          />
-          <Controller
-            name="applicant.nationality"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Nationality"
-                isRequired
-                {...field}
-                error={errors.applicant?.nationality?.message}
-              />
-            )}
-          />
-        </Grid>
-        <Controller
-          name="applicant.category"
-          control={control}
-          render={({ field }) => (
-            <RadioGroup
-              label="Category"
-              isRequired
-              options={CATEGORY_OPTIONS}
-              value={field.value}
-              onChange={field.onChange}
-            />
-          )}
-        />
-        <Controller
-          name="applicant.maritalStatus"
-          control={control}
-          render={({ field }) => (
-            <RadioGroup
-              label="Marital Status"
-              isRequired
-              options={MARITAL_OPTIONS}
-              value={field.value}
-              onChange={field.onChange}
-            />
-          )}
-        />
-        <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
-            No. of Family Dependents
-          </p>
-          <Grid>
+            </Grid>
             <Controller
-              name="applicant.noOfFamilyDependentsChildren"
+              name="applicant.woname"
+              control={control}
+              render={({ field }) => <InputField label="W/o" {...field} />}
+            />
+            <Grid cols={3}>
+              <Controller
+                name="applicant.dob"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Date of Birth"
+                    type="date"
+                    isRequired
+                    {...field}
+                    error={errors.applicant?.dob?.message}
+                  />
+                )}
+              />
+              <Controller
+                name="applicant.gender"
+                control={control}
+                render={({ field }) => (
+                  <SelectField
+                    label="Gender"
+                    isRequired
+                    options={GENDER_OPTIONS}
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.applicant?.gender?.message}
+                  />
+                )}
+              />
+              <Controller
+                name="applicant.nationality"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Nationality"
+                    isRequired
+                    {...field}
+                    error={errors.applicant?.nationality?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Controller
+              name="applicant.category"
               control={control}
               render={({ field }) => (
-                <InputField
-                  label="Children"
-                  type="number"
-                  placeholder="0"
-                  {...field}
+                <RadioGroup
+                  label="Category"
+                  isRequired
+                  options={CATEGORY_OPTIONS}
+                  value={field.value}
+                  onChange={field.onChange}
                 />
               )}
             />
             <Controller
-              name="applicant.noOfFamilyDependentsOther"
+              name="applicant.maritalStatus"
               control={control}
               render={({ field }) => (
-                <InputField
-                  label="Others"
-                  type="number"
-                  placeholder="0"
-                  {...field}
+                <RadioGroup
+                  label="Marital Status"
+                  isRequired
+                  options={MARITAL_OPTIONS}
+                  value={field.value}
+                  onChange={field.onChange}
                 />
               )}
             />
-          </Grid>
-        </div>
-        <Controller
-          name="applicant.correspondenceAddress"
-          control={control}
-          render={({ field }) => (
-            <RadioGroup
-              label="Correspondence Address"
-              options={CORRESPONDENCE_OPTIONS}
-              value={field.value}
-              onChange={field.onChange}
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
+                No. of Family Dependents
+              </p>
+              <Grid>
+                <Controller
+                  name="applicant.noOfFamilyDependentsChildren"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Children"
+                      type="number"
+                      placeholder="0"
+                      {...field}
+                    />
+                  )}
+                />
+                <Controller
+                  name="applicant.noOfFamilyDependentsOther"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Others"
+                      type="number"
+                      placeholder="0"
+                      {...field}
+                    />
+                  )}
+                />
+              </Grid>
+            </div>
+            <Controller
+              name="applicant.correspondenceAddress"
+              control={control}
+              render={({ field }) => (
+                <RadioGroup
+                  label="Correspondence Address"
+                  options={CORRESPONDENCE_OPTIONS}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
             />
-          )}
-        />
-        <Controller
-          name="applicant.qualification"
-          control={control}
-          render={({ field }) => (
-            <InputField label="Qualification" {...field} />
-          )}
-        />
-      </div>
-    </SectionCard>
-
-    <SectionCard title="Contact & Identity" icon={Phone}>
-      <div className="space-y-4">
-        <Grid>
-          <Controller
-            name="applicant.contactNumber"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Mobile Number"
-                type="tel"
-                isRequired
-                icon={Phone}
-                hint="10-digit"
-                {...field}
-                onChange={(e) =>
-                  field.onChange(e.target.value.replace(/\D/g, "").slice(0, 10))
-                }
-                error={errors.applicant?.contactNumber?.message}
-              />
-            )}
-          />
-          <Controller
-            name="applicant.alternateNumber"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Alternate Number"
-                type="tel"
-                {...field}
-                onChange={(e) =>
-                  field.onChange(e.target.value.replace(/\D/g, "").slice(0, 10))
-                }
-              />
-            )}
-          />
-        </Grid>
-        <Controller
-          name="applicant.email"
-          control={control}
-          render={({ field }) => (
-            <InputField
-              label="Email Address"
-              type="email"
-              {...field}
-              error={errors.applicant?.email?.message}
+            <Controller
+              name="applicant.qualification"
+              control={control}
+              render={({ field }) => (
+                <InputField label="Qualification" {...field} />
+              )}
             />
-          )}
-        />
-        <Grid cols={3}>
-          <Controller
-            name="applicant.passportNumber"
-            control={control}
-            render={({ field }) => (
-              <InputField label="Passport No." {...field} />
-            )}
-          />
-          <Controller
-            name="applicant.panNumber"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="PAN No."
-                isRequired
-                {...field}
-                onChange={(e) =>
-                  field.onChange(e.target.value.toUpperCase().slice(0, 10))
-                }
-                error={errors.applicant?.panNumber?.message}
+          </div>
+        </SectionCard>
+      </>
+    )}
+
+    {(mode === "contact" || mode === "all") && (
+      <>
+        <SectionCard title="Contact Details" icon={Phone}>
+          <div className="space-y-4">
+            <Grid>
+              <Controller
+                name="applicant.contactNumber"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Mobile Number"
+                    type="tel"
+                    isRequired
+                    icon={Phone}
+                    hint="10-digit"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value.replace(/\D/g, "").slice(0, 10),
+                      )
+                    }
+                    error={errors.applicant?.contactNumber?.message}
+                  />
+                )}
               />
-            )}
-          />
-          <Controller
-            name="applicant.drivingLicenceNo"
-            control={control}
-            render={({ field }) => (
-              <InputField label="Driving Licence No." {...field} />
-            )}
-          />
-        </Grid>
-        <Controller
-          name="applicant.aadhaarNumber"
-          control={control}
-          render={({ field }) => (
-            <InputField
-              label="Voter ID / Aadhaar Card No."
-              isRequired
-              {...field}
-              onChange={(e) =>
-                field.onChange(e.target.value.replace(/\D/g, "").slice(0, 12))
-              }
-              error={errors.applicant?.aadhaarNumber?.message}
-            />
-          )}
-        />
-      </div>
-    </SectionCard>
-
-    <SectionCard title="Present Accommodation" icon={Home}>
-      <div className="space-y-4">
-        <Controller
-          name="applicant.presentAccommodation"
-          control={control}
-          render={({ field }) => (
-            <RadioGroup
-              label="Accommodation Type"
-              options={ACCOMMODATION_OPTIONS}
-              value={field.value}
-              onChange={field.onChange}
-            />
-          )}
-        />
-        <Grid>
-          <Controller
-            name="applicant.periodOfStay"
-            control={control}
-            render={({ field }) => (
-              <InputField label="Period of Stay" {...field} />
-            )}
-          />
-          <Controller
-            name="applicant.rentPerMonth"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="If Rented Rent p.m. (₹)"
-                type="number"
-                {...field}
-                onChange={(e) => field.onChange(Number(e.target.value))}
+              <Controller
+                name="applicant.alternateNumber"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Alternate Number"
+                    type="tel"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value.replace(/\D/g, "").slice(0, 10),
+                      )
+                    }
+                  />
+                )}
               />
-            )}
-          />
-        </Grid>
-      </div>
-    </SectionCard>
-
-    <SectionCard title="Applicant's Occupational Details" icon={Briefcase}>
-      <PersonEmploymentFields
-        control={control}
-        watch={watch}
-        prefix="applicant"
-      />
-    </SectionCard>
-
-    <SectionCard
-      title="Applicant's Financial Status — Income"
-      icon={IndianRupee}
-      accentColor="indigo"
-    >
-      <PersonFinancialFields
-        control={control}
-        watch={watch}
-        setValue={setValue}
-        prefix="applicant"
-      />
-    </SectionCard>
+            </Grid>
+            <Controller
+              name="applicant.email"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  label="Email Address"
+                  type="email"
+                  {...field}
+                  error={errors.applicant?.email?.message}
+                />
+              )}
+            />
+            <Grid cols={3}>
+              <Controller
+                name="applicant.passportNumber"
+                control={control}
+                render={({ field }) => (
+                  <InputField label="Passport No." {...field} />
+                )}
+              />
+              <Controller
+                name="applicant.panNumber"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="PAN No."
+                    isRequired
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(e.target.value.toUpperCase().slice(0, 10))
+                    }
+                    error={errors.applicant?.panNumber?.message}
+                  />
+                )}
+              />
+              <Controller
+                name="applicant.drivingLicenceNo"
+                control={control}
+                render={({ field }) => (
+                  <InputField label="Driving Licence No." {...field} />
+                )}
+              />
+            </Grid>
+            <Controller
+              name="applicant.aadhaarNumber"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  label="Voter ID / Aadhaar Card No."
+                  isRequired
+                  {...field}
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value.replace(/\D/g, "").slice(0, 12),
+                    )
+                  }
+                  error={errors.applicant?.aadhaarNumber?.message}
+                />
+              )}
+            />
+          </div>
+        </SectionCard>
+      </>
+    )}
   </div>
 );
 
@@ -3810,7 +3778,7 @@ const ConsentSection = ({ control }) => (
       </div>
     </SectionCard>
 
-    {/* Full PDC / Rollover PDC Table */}
+    {/* Full PDC / Rollover PDC / Security Cheque Details */}
     <SectionCard
       title="Full PDC / Rollover PDC / Security Cheque Details"
       icon={CreditCard}
@@ -4272,7 +4240,6 @@ const SuccessScreen = ({ onReset, leadNumber }) => {
 export default function LoanApplicationForm({ onClose }) {
   const [currentStep, setCurrentStep] = useState("applicant");
   const [completedSteps, setCompletedSteps] = useState([]);
-  const [toast, setToast] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -4323,8 +4290,15 @@ export default function LoanApplicationForm({ onClose }) {
   }, []);
 
   const showToast = useCallback((message, type = "success") => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 4000);
+    if (type === "error") {
+      showError(message);
+      return;
+    }
+    if (type === "info" || type === "draft") {
+      showInfo(message);
+      return;
+    }
+    showSuccess(message);
   }, []);
 
   const handleClose = () => {
@@ -4361,7 +4335,22 @@ export default function LoanApplicationForm({ onClose }) {
     const fields = STEP_FIELDS[currentStep] || [];
     const valid = fields.length ? await trigger(fields) : true;
     if (!valid) {
-      showToast("Please fix the errors before continuing", "error");
+      // Check which fields in STEP_FIELDS have errors
+      const fieldErrors = fields.filter((fieldPath) => {
+        // Navigate through nested object
+        const keys = fieldPath.split(".");
+        let error = errors;
+        for (const key of keys) {
+          error = error?.[key];
+        }
+        return error?.message !== undefined;
+      });
+      const errorCount = fieldErrors.length;
+      const errorMsg =
+        errorCount === 1
+          ? "Please complete the required field"
+          : `Please complete ${errorCount} required fields`;
+      showError(errorMsg);
       return;
     }
     if (!completedSteps.includes(currentStep)) {
@@ -4371,7 +4360,7 @@ export default function LoanApplicationForm({ onClose }) {
       setCurrentStep(STEPS[currentIdx + 1].id);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [currentStep, completedSteps, currentIdx, trigger, showToast]);
+  }, [currentStep, completedSteps, currentIdx, trigger, errors]);
 
   const goPrev = useCallback(() => {
     if (currentIdx > 0) {
@@ -4423,7 +4412,88 @@ export default function LoanApplicationForm({ onClose }) {
             watch={watch}
             setValue={setValue}
             showToast={showToast}
+            mode="personal"
           />
+        );
+      case "applicantContact":
+        return (
+          <ApplicantSection
+            control={control}
+            errors={errors}
+            watch={watch}
+            setValue={setValue}
+            showToast={showToast}
+            mode="contact"
+          />
+        );
+      case "accommodation":
+        return (
+          <SectionCard title="Present Accommodation" icon={Home}>
+            <div className="space-y-4">
+              <Controller
+                name="applicant.presentAccommodation"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup
+                    label="Accommodation Type"
+                    options={ACCOMMODATION_OPTIONS}
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+              <Grid>
+                <Controller
+                  name="applicant.periodOfStay"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField label="Period of Stay" {...field} />
+                  )}
+                />
+                <Controller
+                  name="applicant.rentPerMonth"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="If Rented Rent p.m. (₹)"
+                      type="number"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  )}
+                />
+              </Grid>
+            </div>
+          </SectionCard>
+        );
+      case "occupational":
+        return (
+          <SectionCard title="Occupational Details" icon={Briefcase}>
+            <Controller
+              name="applicant.employmentType"
+              control={control}
+              render={({ field }) => (
+                <RadioGroup
+                  label="Occupational Category"
+                  isRequired
+                  options={EMPLOYMENT_OPTIONS}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+          </SectionCard>
+        );
+      case "financial":
+        return (
+          <SectionCard title="Financial Status — Income" icon={IndianRupee}>
+            <PersonFinancialFields
+              control={control}
+              watch={watch}
+              setValue={setValue}
+              prefix="applicant"
+            />
+          </SectionCard>
         );
       case "loanType":
         return <LoanTypeSection control={control} errors={errors} />;
@@ -4523,14 +4593,6 @@ export default function LoanApplicationForm({ onClose }) {
           </div>
         )}
       </main>
-
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
-      )}
     </div>
   );
 }
