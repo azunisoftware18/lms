@@ -38,11 +38,6 @@ import LoanConfigurationPage from "../app/dashboard/systemSetting/LoanConfigrati
 import SecuritySettingPage from "../app/dashboard/systemSetting/SecuritySettingPage.jsx";
 import PaymentSettingPage from "../app/dashboard/systemSetting/PaymentSettingPage.jsx";
 
-// Configuration pages
-import LoanProduct from "../app/dashboard/Configuration/LoanProduct.jsx";
-import BranchManagement from "../app/dashboard/Configuration/BranchManagement.jsx";
-import BranchAdmin from "../app/dashboard/Configuration/BranchAdmin.jsx";
-
 // Public pages
 import Layout from "../layout/Layout.jsx";
 import LoginForm from "../components/forms/LoginForm.jsx";
@@ -76,8 +71,23 @@ import ShareholderInformationPage from "../app/public/ShareholderInformationPage
 import VisionAndMissionPage from "../app/public/VisionAndMissionPage.jsx";
 import WelcometoFinovaPage from "../app/public/WelcometoFinovaPage.jsx";
 import UnderRegulationPage from "../app/public/UnderRegulationPage.jsx";
+// Configuration pages
+import LoanProduct from "../app/dashboard/Configuration/LoanProduct.jsx";
+import BranchManagement from "../app/dashboard/Configuration/BranchManagement.jsx";
+import BranchAdmin from "../app/dashboard/Configuration/BranchAdmin.jsx";
 import EmployeeAddPage from "../app/dashboard/Configuration/EmployeeAddPage.jsx";
 import PartnerAddPage from "../app/dashboard/Configuration/PartnerAddPage.jsx";
+
+// Reports pages
+import DueListPage from "../app/dashboard/reports/DueListPage.jsx";
+import NPAReportsPage from "../app/dashboard/reports/NPAReportsPage.jsx";
+import CRCReportPage from "../app/dashboard/reports/CRCReportPage.jsx";
+import CustomerAndBookingListPage from "../app/dashboard/reports/CustomerAndBookingListPage.jsx";
+import SalesTargetAndAchievementPage from "../app/dashboard/reports/SalesTargetAndAchievementPage.jsx";
+import DisbursCollectionPage from "../app/dashboard/reports/DisbursCollectionPage.jsx";
+import PermissionManagementPage from "../app/dashboard/PermissionManagementPage.jsx";
+
+// Role Management
 
 export default function AppRoutes() {
   const dispatch = useDispatch();
@@ -216,12 +226,35 @@ export default function AppRoutes() {
           path="system-setting/payment-settings"
           element={<PaymentSettingPage />}
         />
-
+        {/* configuration routes  */}
         <Route path="loan-product" element={<LoanProduct />} />
         <Route path="branch-management" element={<BranchManagement />} />
         <Route path="branch-admin" element={<BranchAdmin />} />
         <Route path="employee" element={<EmployeeAddPage />} />
-        <Route path="partner" element={< PartnerAddPage />} />
+        <Route path="partner" element={<PartnerAddPage />} />
+
+        {/* reports routes */}
+        <Route path="due-list" element={<DueListPage />} />
+        <Route path="reports/npa-reports" element={<NPAReportsPage />} />
+        <Route path="reports/crc-report" element={<CRCReportPage />} />
+        <Route
+          path="reports/disburs-collection"
+          element={<DisbursCollectionPage />}
+        />
+        <Route
+          path="reports/customer-and-booking-list"
+          element={<CustomerAndBookingListPage />}
+        />
+        <Route
+          path="reports/sales-target-and-achievement"
+          element={<SalesTargetAndAchievementPage />}
+        />
+
+        {/* Permission managemnet route  */}
+        <Route
+          path="permission-management"
+          element={<PermissionManagementPage />}
+        />
       </Route>
     </Routes>
   );
