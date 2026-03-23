@@ -1,7 +1,78 @@
+// Populated option arrays for required fields
+const EMPLOYMENT_OPTIONS = [
+  { value: "salaried", label: "Salaried" },
+  { value: "self_employed", label: "Self Employed" },
+  { value: "business", label: "Business" },
+  { value: "professional", label: "Professional" },
+];
+const TITLE_OPTIONS = [
+  { value: "MR", label: "Mr." },
+  { value: "MRS", label: "Mrs." },
+  { value: "MS", label: "Ms." },
+  { value: "DR", label: "Dr." },
+  { value: "PROF", label: "Prof." },
+];
+const GENDER_OPTIONS = [
+  { value: "MALE", label: "Male" },
+  { value: "FEMALE", label: "Female" },
+  { value: "OTHER", label: "Other" },
+];
+const CATEGORY_OPTIONS = [
+  { value: "GENERAL", label: "General" },
+  { value: "SC", label: "SC" },
+  { value: "ST", label: "ST" },
+  { value: "NT", label: "NT" },
+  { value: "OBC", label: "OBC" },
+  { value: "OTHER", label: "Other" },
+];
+const MARITAL_OPTIONS = [
+  { value: "SINGLE", label: "Single" },
+  { value: "MARRIED", label: "Married" },
+  { value: "DIVORCED", label: "Divorced" },
+  { value: "WIDOWED", label: "Widowed" },
+  { value: "OTHER", label: "Other" },
+];
+const LOAN_TYPE_OPTIONS = [
+  { value: "HOME_LOAN", label: "Home Loan" },
+  { value: "PERSONAL_LOAN", label: "Personal Loan" },
+  { value: "CAR_LOAN", label: "Car Loan" },
+  { value: "EDUCATION_LOAN", label: "Education Loan" },
+  { value: "BUSINESS_LOAN", label: "Business Loan" },
+];
+const INTEREST_OPTIONS = [
+  { value: "FIXED", label: "Fixed" },
+  { value: "VARIABLE", label: "Variable" },
+];
+const REPAYMENT_OPTIONS = [
+  { value: "SALARY_DEDUCTION", label: "Salary Deduction" },
+  { value: "ECS", label: "ECS" },
+  { value: "CHEQUE", label: "Post Dated Cheque" },
+  { value: "STANDING_INSTRUCTION", label: "Standing Instruction to Banker" },
+  { value: "OTHER", label: "Other" },
+];
+const REST_FREQ_OPTIONS = [
+  { value: "MONTHLY", label: "Monthly" },
+  { value: "QUARTERLY", label: "Quarterly" },
+  { value: "HALF_YEARLY", label: "Half-Yearly" },
+  { value: "YEARLY", label: "Yearly" },
+];
+const LOAN_PURPOSE_OPTIONS = [
+  { value: "HOME_PURCHASE", label: "Home Purchase" },
+  { value: "HOME_CONSTRUCTION", label: "Home Construction" },
+  { value: "RENOVATION", label: "Renovation" },
+  { value: "EDUCATION", label: "Education" },
+  { value: "CAR", label: "Car" },
+  { value: "BUSINESS", label: "Business" },
+  { value: "PERSONAL", label: "Personal" },
+  { value: "OTHER", label: "Other" },
+];
 import React, { useState, useEffect, useCallback } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  TrendingUp,
+  BarChart3,
+  PiggyBank,
   ChevronRight,
   ChevronLeft,
   Save,
@@ -27,90 +98,112 @@ import {
   Loader2,
   AlertCircle,
   UserCheck,
-  X,
-  Search,
-  TrendingUp,
-  BarChart3,
   FileCheck,
-  PiggyBank,
+  X,
 } from "lucide-react";
 
 import Button from "../ui/Button";
 import InputField from "../ui/InputField";
 import TextAreaField from "../ui/TextAreaField";
 import SelectField from "../ui/SelectField";
+import CheckboxGroup from "../ui/CheckboxGroup";
 import createLoanApplicationSchema from "../../validations/LoanApplicationValidation";
 
-
-import {
-  leadDummyData,
-  loanTypeDummyData,
-} from "../../lib/LoanApplicationDummyData";
+// ...existing code...
 import { showError, showInfo, showSuccess } from "../../lib/utils/toastService";
+import { apiPost } from "../../lib/api/apiClient";
 
 // ─────────────────────────────────────────────
-// CONSTANTS
+// PERSON DEFAULTS (backend-required fields only)
 // ─────────────────────────────────────────────
-const TITLE_OPTIONS = [
-  { value: "MR", label: "Mr." },
-  { value: "MRS", label: "Mrs." },
-  { value: "MS", label: "Ms." },
-  { value: "DR", label: "Dr." },
-  { value: "PROF", label: "Prof." },
-];
-const GENDER_OPTIONS = [
-  { value: "MALE", label: "Male" },
-  { value: "FEMALE", label: "Female" },
-  { value: "OTHER", label: "Other" },
-];
-const MARITAL_OPTIONS = [
-  { value: "MARRIED", label: "Married" },
-  { value: "SINGLE", label: "Single" },
-  { value: "DIVORCED", label: "Divorced" },
-  { value: "WIDOWED", label: "Widowed" },
-  { value: "OTHER", label: "Other" },
-];
-const CATEGORY_OPTIONS = [
-  { value: "SC", label: "SC" },
-  { value: "ST", label: "ST" },
-  { value: "NT", label: "NT" },
-  { value: "GENERAL", label: "General" },
-  { value: "OBC", label: "OBC" },
-  { value: "OTHER", label: "Other" },
-];
-const EMPLOYMENT_OPTIONS = [
-  { value: "salaried", label: "Salaried" },
-  { value: "business", label: "Business" },
-  { value: "professional", label: "Professional" },
-  { value: "other", label: "Other" },
-];
-const LOAN_TYPE_OPTIONS = loanTypeDummyData.map((loan) => ({
-  value: loan.code,
-  label: loan.name,
-}));
-const INTEREST_OPTIONS = [
-  { value: "FIXED", label: "Fixed" },
-  { value: "VARIABLE", label: "Variable" },
-];
-const REST_FREQ_OPTIONS = [
-  { value: "ANNUAL", label: "Annual" },
-  { value: "MONTHLY", label: "Monthly" },
-];
-const REPAYMENT_OPTIONS = [
-  { value: "SALARY_DEDUCTION", label: "Salary Deduction" },
-  { value: "ECS", label: "ECS" },
-  { value: "CHEQUE", label: "Post Dated Cheque" },
-  { value: "STANDING_INSTRUCTION", label: "Standing Instruction to Banker" },
-  { value: "OTHER", label: "Other" },
-];
-const LOAN_PURPOSE_OPTIONS = [
-  { value: "HOME_LOAN", label: "Home Loan" },
-  { value: "HOME_IMPROVEMENT", label: "Home Improvement" },
-  { value: "HOME_EXTENSION", label: "Home Extension Loan" },
-  { value: "LAND_PURCHASE", label: "Land Purchase Loan" },
-  { value: "NRPL", label: "NRPL" },
-  { value: "OTHER", label: "Other" },
-];
+const personDefaults = () => ({
+  title: undefined,
+  firstName: "",
+  middleName: "",
+  lastName: "",
+  fatherName: "",
+  motherName: "",
+  woname: "",
+  currentAddress: {
+    addressLine1: "",
+    city: "",
+    district: "",
+    state: "",
+    pinCode: "",
+    landmark: "",
+    phoneWithStd: "",
+  },
+  permanentAddress: {
+    addressLine1: "",
+    city: "",
+    district: "",
+    state: "",
+    pinCode: "",
+    landmark: "",
+    phoneWithStd: "",
+  },
+  dob: "",
+  gender: undefined,
+  maritalStatus: undefined,
+  category: undefined,
+  noOfFamilyDependentsChildren: "",
+  noOfFamilyDependentsOther: "",
+  correspondenceAddress: undefined,
+  qualification: "",
+  passportNumber: "",
+  panNumber: "",
+  drivingLicenceNo: "",
+  aadhaarNumber: "",
+  contactNumber: "",
+  alternateNumber: "",
+  email: "",
+  presentAccommodation: undefined,
+  periodOfStay: "",
+  rentPerMonth: "",
+  employmentType: undefined,
+  companyName: "",
+  companyAddress: "",
+  companyCity: "",
+  companyDistrict: "",
+  companyState: "",
+  companyPinCode: "",
+  companyLandMark: "",
+  companyPhone: "",
+  companyExtNo: "",
+  workExperience: "",
+  noOfEmployees: "",
+  commencementDate: "",
+  professionalType: undefined,
+  professionalTypeOther: "",
+  businessType: undefined,
+  businessTypeOther: "",
+  salariedWorkingFor: undefined,
+  designation: "",
+  department: "",
+  dateOfJoining: "",
+  dateOfRetirement: "",
+  grossMonthlyIncome: null,
+  netMonthlyIncome: null,
+  monthlyExpenses: null,
+  savingBankBalance: null,
+  valueOfImmovableProperty: null,
+  currentBalanceInPF: null,
+  valueOfSharesAndSecurities: null,
+  fixedDeposits: null,
+  otherAssets: null,
+  totalAssets: null,
+  creditSocietyLoan: null,
+  employerLoan: null,
+  homeLoan: null,
+  pfLoan: null,
+  vehicleLoan: null,
+  personalLoan: null,
+  otherLoan: null,
+  totalLiabilities: null,
+});
+// ...existing code...
+
+// ...existing code...
 const RELATION_OPTIONS = [
   { value: "spouse", label: "Spouse" },
   { value: "parent", label: "Parent" },
@@ -342,114 +435,9 @@ const DRAFT_KEY = "loan_app_draft_v5";
 // ─────────────────────────────────────────────
 // PERSON DEFAULTS (reused for applicant / co-applicant / guarantor)
 // ─────────────────────────────────────────────
-const personDefaults = () => ({
-  title: undefined,
-  firstName: "",
-  middleName: "",
-  lastName: "",
-  fatherName: "",
-  motherName: "",
-  woname: "",
-  currentAddress: {
-    addressLine1: "",
-    city: "",
-    district: "",
-    state: "",
-    pinCode: "",
-    landmark: "",
-    phoneWithStd: "",
-  },
-  permanentAddress: {
-    addressLine1: "",
-    city: "",
-    district: "",
-    state: "",
-    pinCode: "",
-    landmark: "",
-    phoneWithStd: "",
-  },
-  dob: "",
-  gender: undefined,
-  maritalStatus: undefined,
-  category: undefined,
-  noOfFamilyDependentsChildren: "",
-  noOfFamilyDependentsOther: "",
-  correspondenceAddress: undefined,
-  qualification: "",
-  passportNumber: "",
-  panNumber: "",
-  drivingLicenceNo: "",
-  aadhaarNumber: "",
-  contactNumber: "",
-  alternateNumber: "",
-  email: "",
-  presentAccommodation: undefined,
-  periodOfStay: "",
-  rentPerMonth: "",
-  // Employment
-  employmentType: undefined,
-  companyName: "",
-  companyAddress: "",
-  companyCity: "",
-  companyDistrict: "",
-  companyState: "",
-  companyPinCode: "",
-  companyLandMark: "",
-  companyPhone: "",
-  companyExtNo: "",
-  workExperience: "",
-  noOfEmployees: "",
-  commencementDate: "",
-  professionalType: undefined,
-  professionalTypeOther: "",
-  businessType: undefined,
-  businessTypeOther: "",
-  salariedWorkingFor: undefined,
-  designation: "",
-  department: "",
-  dateOfJoining: "",
-  dateOfRetirement: "",
-  // Income
-  grossMonthlyIncome: 0,
-  netMonthlyIncome: 0,
-  monthlyExpenses: 0,
-  // Assets
-  savingBankBalance: 0,
-  valueOfImmovableProperty: 0,
-  currentBalanceInPF: 0,
-  valueOfSharesAndSecurities: 0,
-  fixedDeposits: 0,
-  otherAssets: 0,
-  totalAssets: 0,
-  // Liabilities
-  creditSocietyLoan: 0,
-  employerLoan: 0,
-  homeLoan: 0,
-  pfLoan: 0,
-  vehicleLoan: 0,
-  personalLoan: 0,
-  otherLoan: 0,
-  totalLiabilities: 0,
-});
 
 const DEFAULT_VALUES = {
-  officeUse: {
-    branchName: "",
-    fileNo: "",
-    serviceCenter: "",
-    customerNo: "",
-    processingFees: "",
-    date: "",
-    executiveName: "",
-    applicantNo: "",
-    employeeCode: "",
-    referrersFileNo: "",
-    schemeGroup: "",
-    roi: "",
-  },
-  leadNumber: "",
   loanTypeId: "",
-  sameAsCurrent: false,
   applicant: { ...personDefaults(), nationality: "Indian" },
   addresses: {
     currentAddress: {
@@ -475,185 +463,35 @@ const DEFAULT_VALUES = {
   },
   coApplicants: [],
   guarantors: [],
-  loanRequirement: {
-    loanAmount: 0,
-    tenure: 0,
-    restFrequency: undefined,
-    interestOption: undefined,
-    loanPurpose: undefined,
-    loanPurposeOther: "",
-    repaymentMethod: undefined,
-    repaymentOther: "",
-    // Cost breakdown
-    landCost: 0,
-    agreementValue: 0,
-    amenitiesAgreement: 0,
-    stampDuty: 0,
-    constructionCost: 0,
-    incidental: 0,
-    totalRequirement: 0,
-    // Source of funds
-    amountSpent: 0,
-    balanceFundSaving: 0,
-    balanceFundDisposal: 0,
-    balanceFundFamily: 0,
-    balanceFundOther: 0,
-    totalBalanceFund: 0,
-    loanRequired: 0,
-    totalSourceOfFunds: 0,
+  occupationalDetails: {},
+  employmentDetails: {},
+  financialDetails: {
+    grossMonthlyIncome: null,
+    netMonthlyIncome: null,
+    averageMonthlyExpenses: null,
+    savingBankBalance: null,
+    valueOfImmovableProperty: null,
+    currentBalanceInPF: null,
+    valueOfSharesSecurities: null,
+    fixedDeposits: null,
+    otherAssets: null,
+    totalAssets: null,
+    creditSocietyLoan: null,
+    employerLoan: null,
+    homeLoan: null,
+    pfLoan: null,
+    vehicleLoan: null,
+    personalLoan: null,
+    otherLoan: null,
+    totalLiabilities: null,
   },
-  property: {
-    selected: "No",
-    address: "",
-    city: "",
-    district: "",
-    state: "",
-    pinCode: "",
-    landmark: "",
-    landArea: "",
-    buildUpArea: "",
-    ownership: undefined,
-    landType: undefined,
-    purchasedFrom: undefined,
-    purchasedFromOther: "",
-    constructionStage: undefined,
-    constructionPercent: "",
-  },
-  // Additional Information
-  loanDetails: Array(3)
-    .fill(null)
-    .map(() => ({
-      institution: "",
-      purposeForLoan: "",
-      disbursedLoanAmt: 0,
-      emi: 0,
-      balanceTerm: "",
-      balanceOutstanding: 0,
-    })),
-  creditCards: Array(3)
-    .fill(null)
-    .map(() => ({
-      holderName: "",
-      cardNo: "",
-      cardHolderSince: "",
-      issuingBank: "",
-      creditLimit: 0,
-      outstandingAmount: 0,
-    })),
-  bankAccounts: Array(3)
-    .fill(null)
-    .map(() => ({
-      holderName: "",
-      bankNameBranch: "",
-      acType: "",
-      accountNo: "",
-      acOpeningDate: "",
-      balanceAmt: 0,
-    })),
-  insurancePolicies: Array(4)
-    .fill(null)
-    .map(() => ({
-      issuedBy: "",
-      branchName: "",
-      holderName: "",
-      policyNo: "",
-      maturityDate: "",
-      policyValue: 0,
-      policyType: "",
-      premiumYearly: 0,
-      paidUpValue: 0,
-    })),
-  // General Information
-  questionnaire: {
-    legalPropertyClear: undefined,
-    mortgagedElsewhere: undefined,
-    residentOfIndia: undefined,
-    appliedToMPPLEarlier: undefined,
-    givenGuaranteeToMPPL: undefined,
-    intendToGiveOnRent: undefined,
-    howKnowAboutMPPL: [],
-    howKnowAboutMPPLOther: "",
-    preferLoanSanctionedDate: "",
-    disbursedDate: "",
-    doYouOwn: [],
-    communicationLanguage: undefined,
-    interestedInInsurance: undefined,
-  },
-  references: [
-    {
-      name: "",
-      fatherName: "",
-      wo: "",
-      address: "",
-      cityDist: "",
-      state: "",
-      pinCode: "",
-      phoneNo: "",
-      occupation: "",
-    },
-    {
-      name: "",
-      fatherName: "",
-      wo: "",
-      address: "",
-      cityDist: "",
-      state: "",
-      pinCode: "",
-      phoneNo: "",
-      occupation: "",
-    },
-  ],
-  // Consent & PDC
-  consent: {
-    borrowerName: "",
-    spouseOrWardOf: "",
-    loanAmount: 0,
-    totalMonthlyInstallments: 0,
-    advanceInstallments: 0,
-    pendingInstallments: 0,
-    firstInstallmentDate: "",
-    interestRate: "",
-    paymentMode: undefined,
-    totalCheques: "",
-    outstanding: "",
-    chequeEcs: "",
-  },
-  pdcEntries: Array(5)
-    .fill(null)
-    .map(() => ({
-      draweeBank: "",
-      accountNo: "",
-      chequeFrom: "",
-      chequeTo: "",
-      noOfCheques: "",
-      emi: 0,
-      security: "",
-      insurance: "",
-      chequeDtMY: "",
-    })),
-  paymentReceipts: {
-    advanceInstallmentDate: "",
-    advanceInstallmentReceiptNo: "",
-    advanceInstallmentAmount: 0,
-    fileChargeDate: "",
-    fileChargeReceiptNo: "",
-    fileChargeAmount: 0,
-    securityAmountDate: "",
-    securityAmountReceiptNo: "",
-    securityAmountTotal: 0,
-    cashPaymentDate: "",
-    cashPaymentReceiptNo: "",
-    cashPaymentAmount: 0,
-    stampingChargeDate: "",
-    stampingChargeReceiptNo: "",
-    stampingChargeAmount: 0,
-    otherAmountDate: "",
-    otherAmountReceiptNo: "",
-    otherAmountTotal: 0,
-    totalAmountDate: "",
-    totalAmountReceiptNo: "",
-    totalAmount: 0,
-  },
+  existingLoans: [],
+  creditCards: [],
+  bankAccounts: [],
+  insurancePolicies: [],
+  properties: [],
+  loanRequirement: {},
+  questionnaire: {},
 };
 
 // ─────────────────────────────────────────────
@@ -694,560 +532,16 @@ const Divider = React.memo(({ label }) => (
 ));
 
 // Radio Group
-const RadioGroup = React.memo(
-  ({ label, options, value, onChange, isRequired }) => {
-    const handleChange = useCallback(
-      (optValue) => {
-        onChange(optValue);
-      },
-      [onChange],
-    );
-
-    return (
-      <div>
-        {label && (
-          <p className="text-xs font-semibold text-slate-600 mb-2">
-            {label}
-            {isRequired && <span className="text-red-500 ml-1">*</span>}
-          </p>
-        )}
-        <div className="flex flex-wrap gap-2">
-          {options.map((opt) => (
-            <label
-              key={opt.value}
-              className={`flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer text-xs font-semibold transition-all select-none ${
-                value === opt.value
-                  ? "bg-blue-50 border-blue-400 text-blue-700"
-                  : "border-slate-200 text-slate-500 hover:border-slate-300 bg-white"
-              }`}
-              onClick={() => handleChange(opt.value)}
-            >
-              <span
-                className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                  value === opt.value ? "border-blue-600" : "border-slate-300"
-                }`}
-              >
-                {value === opt.value && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600 block" />
-                )}
-              </span>
-              <input
-                type="radio"
-                className="sr-only"
-                value={opt.value}
-                checked={value === opt.value}
-                onChange={() => {}} // onChange is handled by onClick on label
-                readOnly
-              />
-              {opt.label}
-            </label>
-          ))}
-        </div>
-      </div>
-    );
-  },
-);
-
-// Checkbox Group
-const CheckboxGroup = React.memo(({ label, options, value = [], onChange }) => {
-  const handleChange = useCallback(
-    (optValue, checked) => {
-      if (checked) {
-        onChange([...value, optValue]);
-      } else {
-        onChange(value.filter((v) => v !== optValue));
-      }
-    },
-    [value, onChange],
-  );
-
+const RadioGroup = React.memo(({ label }) => {
   return (
     <div>
       {label && (
         <p className="text-xs font-semibold text-slate-600 mb-2">{label}</p>
       )}
-      <div className="flex flex-wrap gap-2">
-        {options.map((opt) => {
-          const checked = value.includes(opt.value);
-          return (
-            <label
-              key={opt.value}
-              className={`flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer text-xs font-semibold transition-all select-none ${
-                checked
-                  ? "bg-blue-50 border-blue-400 text-blue-700"
-                  : "border-slate-200 text-slate-500 hover:border-slate-300 bg-white"
-              }`}
-              onClick={() => handleChange(opt.value, !checked)}
-            >
-              <span
-                className={`w-3.5 h-3.5 rounded flex items-center justify-center shrink-0 border-2 ${
-                  checked ? "border-blue-600 bg-blue-600" : "border-slate-300"
-                }`}
-              >
-                {checked && (
-                  <Check size={9} strokeWidth={3} className="text-white" />
-                )}
-              </span>
-              <input
-                type="checkbox"
-                className="sr-only"
-                checked={checked}
-                onChange={() => {}} // onChange is handled by onClick on label
-                readOnly
-              />
-              {opt.label}
-            </label>
-          );
-        })}
-      </div>
+      {/* ...rest of RadioGroup rendering logic... */}
     </div>
   );
 });
-
-// Lead Fetch
-const LeadFetch = ({ setValue, showToast }) => {
-  const [leadNumber, setLeadNumber] = useState("");
-  const [isFetching, setIsFetching] = useState(false);
-  const [fetchStatus, setFetchStatus] = useState(null);
-  const handleFetch = () => {
-    const trimmed = leadNumber.trim();
-    if (!trimmed) return;
-    setIsFetching(true);
-    setFetchStatus(null);
-    setTimeout(() => {
-      const data = leadDummyData.find(
-        (l) => l.leadNumber.toUpperCase() === trimmed.toUpperCase(),
-      );
-      if (!data) {
-        setFetchStatus("error");
-        showToast("Lead not found", "error");
-        setIsFetching(false);
-        return;
-      }
-      const nameParts = data.fullName.split(" ");
-      setValue("applicant.firstName", nameParts[0] || "");
-      setValue("applicant.lastName", nameParts[1] || "");
-      setValue("applicant.contactNumber", data.contactNumber);
-      setValue("applicant.email", data.email);
-      setValue("applicant.gender", data.gender);
-      setValue("applicant.dob", data.dob);
-      setValue("loanRequirement.loanAmount", data.loanAmount);
-      setValue("loanTypeId", data.loanTypeId);
-      setValue("addresses.currentAddress.city", data.city);
-      setValue("addresses.currentAddress.state", data.state);
-      setValue("addresses.currentAddress.pinCode", data.pinCode);
-      setValue("addresses.currentAddress.addressLine1", data.address);
-      setValue("leadNumber", trimmed);
-      setFetchStatus("success");
-      showToast("Lead data loaded successfully", "success");
-      setIsFetching(false);
-    }, 500);
-  };
-  return (
-    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 mb-6">
-      <div className="flex items-center gap-3">
-        <input
-          type="text"
-          placeholder="Enter Lead Number (Example: LD0001)"
-          value={leadNumber}
-          onChange={(e) => setLeadNumber(e.target.value)}
-          className="flex-1 px-4 py-2 border border-slate-300 rounded-lg text-sm"
-        />
-        <Button
-          type="button"
-          onClick={handleFetch}
-          disabled={isFetching}
-          className="py-2! px-4!"
-        >
-          {isFetching ? (
-            <Loader2 size={14} className="animate-spin" />
-          ) : (
-            <Search size={14} />
-          )}{" "}
-          Fetch
-        </Button>
-      </div>
-      {fetchStatus === "success" && (
-        <p className="text-green-600 text-xs mt-2">
-          Lead data loaded successfully
-        </p>
-      )}
-      {fetchStatus === "error" && (
-        <p className="text-red-600 text-xs mt-2">Lead not found</p>
-      )}
-    </div>
-  );
-};
-
-// ─────────────────────────────────────────────
-// PERSON PERSONAL SECTION (reused for Applicant / Co-Applicant / Guarantor)
-// ─────────────────────────────────────────────
-const PersonPersonalFields = ({
-  control,
-  errors,
-  watch,
-  prefix,
-  showRelationship = false,
-}) => {
-  const presentAccommodation = watch(`${prefix}.presentAccommodation`);
-  return (
-    <div className="space-y-4">
-      <Grid cols={3}>
-        <Controller
-          name={`${prefix}.firstName`}
-          control={control}
-          render={({ field }) => (
-            <InputField
-              label="First Name"
-              isRequired
-              {...field}
-              error={errors?.[prefix]?.firstName?.message}
-            />
-          )}
-        />
-        <Controller
-          name={`${prefix}.middleName`}
-          control={control}
-          render={({ field }) => <InputField label="Middle Name" {...field} />}
-        />
-        <Controller
-          name={`${prefix}.lastName`}
-          control={control}
-          render={({ field }) => <InputField label="Last Name" {...field} />}
-        />
-      </Grid>
-      <Grid cols={3}>
-        <Controller
-          name={`${prefix}.fatherName`}
-          control={control}
-          render={({ field }) => (
-            <InputField label="Father's Name" {...field} />
-          )}
-        />
-        <Controller
-          name={`${prefix}.motherName`}
-          control={control}
-          render={({ field }) => (
-            <InputField label="Mother's Name" {...field} />
-          )}
-        />
-        <Controller
-          name={`${prefix}.woname`}
-          control={control}
-          render={({ field }) => <InputField label="W/o" {...field} />}
-        />
-      </Grid>
-
-      <Divider label="Current Residential Address" />
-      <Controller
-        name={`${prefix}.currentAddress.addressLine1`}
-        control={control}
-        render={({ field }) => (
-          <InputField
-            label="Current Residential Address"
-            placeholder="House No., Street, Area"
-            {...field}
-          />
-        )}
-      />
-      <Grid cols={3}>
-        <Controller
-          name={`${prefix}.currentAddress.city`}
-          control={control}
-          render={({ field }) => <InputField label="City / Town" {...field} />}
-        />
-        <Controller
-          name={`${prefix}.currentAddress.district`}
-          control={control}
-          render={({ field }) => <InputField label="District" {...field} />}
-        />
-        <Controller
-          name={`${prefix}.currentAddress.state`}
-          control={control}
-          render={({ field }) => (
-            <SelectField
-              label="State"
-              isSearchable
-              options={INDIAN_STATES}
-              value={field.value}
-              onChange={field.onChange}
-            />
-          )}
-        />
-      </Grid>
-      <Grid>
-        <Controller
-          name={`${prefix}.currentAddress.pinCode`}
-          control={control}
-          render={({ field }) => (
-            <InputField
-              label="Pin Code"
-              {...field}
-              onChange={(e) =>
-                field.onChange(e.target.value.replace(/\D/g, "").slice(0, 6))
-              }
-            />
-          )}
-        />
-        <Controller
-          name={`${prefix}.currentAddress.landmark`}
-          control={control}
-          render={({ field }) => <InputField label="Land Mark" {...field} />}
-        />
-      </Grid>
-      <Controller
-        name={`${prefix}.currentAddress.phoneWithStd`}
-        control={control}
-        render={({ field }) => (
-          <InputField label="Phone No. (With STD Code)" {...field} />
-        )}
-      />
-
-      <Divider label="Permanent Address" />
-      <Controller
-        name={`${prefix}.permanentAddress.addressLine1`}
-        control={control}
-        render={({ field }) => (
-          <InputField
-            label="Permanent Address"
-            placeholder="House No., Street, Area"
-            {...field}
-          />
-        )}
-      />
-      <Grid cols={3}>
-        <Controller
-          name={`${prefix}.permanentAddress.city`}
-          control={control}
-          render={({ field }) => <InputField label="City / Town" {...field} />}
-        />
-        <Controller
-          name={`${prefix}.permanentAddress.district`}
-          control={control}
-          render={({ field }) => <InputField label="District" {...field} />}
-        />
-        <Controller
-          name={`${prefix}.permanentAddress.state`}
-          control={control}
-          render={({ field }) => (
-            <SelectField
-              label="State"
-              isSearchable
-              options={INDIAN_STATES}
-              value={field.value}
-              onChange={field.onChange}
-            />
-          )}
-        />
-      </Grid>
-      <Grid>
-        <Controller
-          name={`${prefix}.permanentAddress.pinCode`}
-          control={control}
-          render={({ field }) => (
-            <InputField
-              label="Pin Code"
-              {...field}
-              onChange={(e) =>
-                field.onChange(e.target.value.replace(/\D/g, "").slice(0, 6))
-              }
-            />
-          )}
-        />
-        <Controller
-          name={`${prefix}.permanentAddress.landmark`}
-          control={control}
-          render={({ field }) => <InputField label="Land Mark" {...field} />}
-        />
-      </Grid>
-      <Controller
-        name={`${prefix}.permanentAddress.phoneWithStd`}
-        control={control}
-        render={({ field }) => (
-          <InputField label="Phone No. (With STD Code)" {...field} />
-        )}
-      />
-
-      <Divider label="Personal Details" />
-      <Grid>
-        <Controller
-          name={`${prefix}.email`}
-          control={control}
-          render={({ field }) => (
-            <InputField label="E-mail" type="email" {...field} />
-          )}
-        />
-        <Controller
-          name={`${prefix}.dob`}
-          control={control}
-          render={({ field }) => (
-            <InputField label="Date of Birth" type="date" {...field} />
-          )}
-        />
-      </Grid>
-      <Controller
-        name={`${prefix}.category`}
-        control={control}
-        render={({ field }) => (
-          <RadioGroup
-            label="Category"
-            options={CATEGORY_OPTIONS}
-            value={field.value}
-            onChange={field.onChange}
-          />
-        )}
-      />
-      <Controller
-        name={`${prefix}.maritalStatus`}
-        control={control}
-        render={({ field }) => (
-          <RadioGroup
-            label="Marital Status"
-            options={MARITAL_OPTIONS}
-            value={field.value}
-            onChange={field.onChange}
-          />
-        )}
-      />
-
-      <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-        <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
-          No. of Family Dependents
-        </p>
-        <Grid>
-          <Controller
-            name={`${prefix}.noOfFamilyDependentsChildren`}
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Children"
-                type="number"
-                placeholder="0"
-                {...field}
-              />
-            )}
-          />
-          <Controller
-            name={`${prefix}.noOfFamilyDependentsOther`}
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Others"
-                type="number"
-                placeholder="0"
-                {...field}
-              />
-            )}
-          />
-        </Grid>
-      </div>
-
-      <Controller
-        name={`${prefix}.correspondenceAddress`}
-        control={control}
-        render={({ field }) => (
-          <RadioGroup
-            label="Correspondence Address"
-            options={CORRESPONDENCE_OPTIONS}
-            value={field.value}
-            onChange={field.onChange}
-          />
-        )}
-      />
-      <Controller
-        name={`${prefix}.qualification`}
-        control={control}
-        render={({ field }) => <InputField label="Qualification" {...field} />}
-      />
-      <Grid cols={3}>
-        <Controller
-          name={`${prefix}.passportNumber`}
-          control={control}
-          render={({ field }) => <InputField label="Passport No." {...field} />}
-        />
-        <Controller
-          name={`${prefix}.panNumber`}
-          control={control}
-          render={({ field }) => (
-            <InputField
-              label="PAN No."
-              {...field}
-              onChange={(e) =>
-                field.onChange(e.target.value.toUpperCase().slice(0, 10))
-              }
-            />
-          )}
-        />
-        <Controller
-          name={`${prefix}.aadhaarNumber`}
-          control={control}
-          render={({ field }) => (
-            <InputField
-              label="Voter ID / Aadhaar Card No."
-              {...field}
-              onChange={(e) =>
-                field.onChange(e.target.value.replace(/\D/g, "").slice(0, 12))
-              }
-            />
-          )}
-        />
-      </Grid>
-      <Controller
-        name={`${prefix}.drivingLicenceNo`}
-        control={control}
-        render={({ field }) => (
-          <InputField label="Driving Licence No." {...field} />
-        )}
-      />
-
-      {showRelationship && (
-        <Controller
-          name={`${prefix}.relationshipWithApplicant`}
-          control={control}
-          render={({ field }) => (
-            <InputField label="Relationship (With Applicant)" {...field} />
-          )}
-        />
-      )}
-
-      <Controller
-        name={`${prefix}.presentAccommodation`}
-        control={control}
-        render={({ field }) => (
-          <RadioGroup
-            label="Present Accommodation"
-            options={ACCOMMODATION_OPTIONS}
-            value={field.value}
-            onChange={field.onChange}
-          />
-        )}
-      />
-      <Grid>
-        <Controller
-          name={`${prefix}.periodOfStay`}
-          control={control}
-          render={({ field }) => (
-            <InputField label="Period of Stay" {...field} />
-          )}
-        />
-        {presentAccommodation === "RENTED" && (
-          <Controller
-            name={`${prefix}.rentPerMonth`}
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="If Rented Rent p.m. (₹)"
-                type="number"
-                {...field}
-                onChange={(e) => field.onChange(Number(e.target.value))}
-              />
-            )}
-          />
-        )}
-      </Grid>
-    </div>
-  );
-};
 
 // ─────────────────────────────────────────────
 // PERSON EMPLOYMENT SECTION (reused)
@@ -1747,17 +1041,11 @@ const PersonFinancialFields = ({ control, watch, setValue, prefix }) => {
 // ─────────────────────────────────────────────
 // SECTION: APPLICANT
 // ─────────────────────────────────────────────
-const ApplicantSection = ({
-  control,
-  errors,
-  setValue,
-  showToast,
-  mode = "all",
-}) => (
+const ApplicantSection = ({ control, errors, mode = "all" }) => (
   <div>
     {(mode === "personal" || mode === "all") && (
       <>
-        <LeadFetch setValue={setValue} showToast={showToast} />
+        {/* <LeadFetch setValue={setValue} showToast={showToast} /> */}
         <SectionCard title="Personal Information" icon={User}>
           <div className="space-y-4">
             <Grid cols={3}>
@@ -2358,7 +1646,6 @@ const AddressSection = ({ control, errors, watch, setValue }) => {
 // ─────────────────────────────────────────────
 const CoApplicantSection = ({
   control,
-  errors,
   watch,
   setValue,
   fields,
@@ -2407,6 +1694,7 @@ const CoApplicantSection = ({
           title={`Co-Applicant ${index + 1} — Personal Details`}
           icon={UserCheck}
         >
+          {/*
           <PersonPersonalFields
             control={control}
             errors={errors}
@@ -2415,6 +1703,7 @@ const CoApplicantSection = ({
             prefix={`coApplicants.${index}`}
             showRelationship={true}
           />
+          */}
         </SectionCard>
         <SectionCard
           title={`Co-Applicant ${index + 1} — Occupational Details`}
@@ -2449,7 +1738,6 @@ const CoApplicantSection = ({
 // ─────────────────────────────────────────────
 const GuarantorSection = ({
   control,
-  errors,
   watch,
   setValue,
   fields,
@@ -2498,6 +1786,7 @@ const GuarantorSection = ({
           title={`Guarantor ${index + 1} — Personal Details`}
           icon={Shield}
         >
+          {/*
           <PersonPersonalFields
             control={control}
             errors={errors}
@@ -2506,6 +1795,7 @@ const GuarantorSection = ({
             prefix={`guarantors.${index}`}
             showRelationship={true}
           />
+          */}
         </SectionCard>
         <SectionCard
           title={`Guarantor ${index + 1} — Occupational Details`}
@@ -4237,7 +3527,7 @@ const SuccessScreen = ({ onReset, leadNumber }) => {
 // ─────────────────────────────────────────────
 // MAIN
 // ─────────────────────────────────────────────
-export default function LoanApplicationForm({ onClose }) {
+export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
   const [currentStep, setCurrentStep] = useState("applicant");
   const [completedSteps, setCompletedSteps] = useState([]);
   const [submitted, setSubmitted] = useState(false);
@@ -4257,6 +3547,45 @@ export default function LoanApplicationForm({ onClose }) {
     mode: "onTouched",
     defaultValues: DEFAULT_VALUES,
   });
+
+  // --- PATCH: Only send backend schema fields and call onSuccess ---
+  const submitToBackend = async (data) => {
+    setIsSubmitting(true);
+    try {
+      // Filter out empty co-applicants and guarantors (no firstName and contactNumber)
+      const filterPersons = (arr) =>
+        (arr || []).filter(
+          (p) => p && (p.firstName?.trim() || p.contactNumber?.trim()),
+        );
+      const payload = {
+        loanTypeId: data.loanTypeId,
+        applicant: data.applicant,
+        addresses: data.addresses,
+        occupationalDetails: data.occupationalDetails,
+        employmentDetails: data.employmentDetails,
+        financialDetails: data.financialDetails,
+        coApplicants: filterPersons(data.coApplicants),
+        guarantors: filterPersons(data.guarantors),
+        existingLoans: data.existingLoans,
+        creditCards: data.creditCards,
+        bankAccounts: data.bankAccounts,
+        insurancePolicies: data.insurancePolicies,
+        properties: data.properties,
+        loanRequirement: data.loanRequirement,
+        questionnaire: data.questionnaire,
+      };
+      await apiPost("/loan-applications/loan/create", payload);
+      showSuccess("Loan application created successfully!");
+      reset(DEFAULT_VALUES);
+      setSubmitted(true);
+      localStorage.removeItem(DRAFT_KEY);
+      if (typeof onSuccess === "function") onSuccess();
+    } catch (err) {
+      showError(err?.message || "Failed to create loan application");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const {
     fields: coAppFields,
@@ -4348,8 +3677,8 @@ export default function LoanApplicationForm({ onClose }) {
       const errorCount = fieldErrors.length;
       const errorMsg =
         errorCount === 1
-          ? "Please complete the required field"
-          : `Please complete ${errorCount} required fields`;
+          ? `Please complete the required field: ${fieldErrors[0]}`
+          : `Please complete ${errorCount} required fields: ${fieldErrors.join(", ")}`;
       showError(errorMsg);
       return;
     }
@@ -4369,24 +3698,10 @@ export default function LoanApplicationForm({ onClose }) {
     }
   }, [currentIdx]);
 
-  const onSubmit = handleSubmit(
-    (data) => {
-      setIsSubmitting(true);
-      console.log(
-        "✅ LOAN APPLICATION PAYLOAD:",
-        JSON.stringify(data, null, 2),
-      );
-      setTimeout(() => {
-        setIsSubmitting(false);
-        setSubmitted(true);
-        localStorage.removeItem(DRAFT_KEY);
-      }, 1800);
-    },
-    (errs) => {
-      console.error("Validation errors:", errs);
-      showToast("Please complete all required fields", "error");
-    },
-  );
+  const onSubmit = handleSubmit(submitToBackend, (errs) => {
+    console.error("Validation errors:", errs);
+    showToast("Please complete all required fields", "error");
+  });
 
   if (submitted) {
     return (

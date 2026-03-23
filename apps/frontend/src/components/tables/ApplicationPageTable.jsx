@@ -61,26 +61,25 @@ export default function ApplicationPageTable({
       {loading ? (
         <TableLoader colSpan={columns.length} />
       ) : (
-        <>
-          <TableBody
-            columns={columns}
-            data={paginatedApplications}
-            actions={[
-              {
-                label: "View",
-                icon: Eye,
-                onClick: (row) => onViewDetails?.(row),
-              },
-            ]}
-          />
-
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </>
+        <TableBody
+          columns={columns}
+          data={paginatedApplications}
+          actions={[
+            {
+              label: "View",
+              icon: Eye,
+              onClick: (row) => onViewDetails?.(row),
+            },
+          ]}
+        />
       )}
+
+      {/* Pagination is passed as the third child, outside <table> */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </TableShell>
   );
 }

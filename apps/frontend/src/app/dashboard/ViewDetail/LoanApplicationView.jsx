@@ -72,17 +72,20 @@ export default function LoanApplicationView({
 
   if (!application) return null;
 
+  // Fallback: use applicant if customer is missing
+  const customer = application.customer || application.applicant || {};
+
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-60 p-2 sm:p-4">
       <div className="bg-white rounded-2xl w-full max-w-2xl sm:max-w-4xl lg:max-w-6xl shadow-2xl relative max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
         {/* Modal Header with Gradient */}
-        <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-indigo-600 px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 z-10">
+        <div className="sticky top-0 bg-linear-to-r from-blue-600 to-indigo-600 px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 z-10">
           <div className="flex items-start sm:items-center gap-3 sm:gap-4 flex-1">
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center shrink-0">
               <FileText className="text-white" size={20} />
             </div>
             <div className="min-w-0">
-              <h2 className="text-lg sm:text-xl font-bold text-white break-words">
+              <h2 className="text-lg sm:text-xl font-bold text-white wrap-break-words">
                 Loan Application Details
               </h2>
               <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 mt-1">
@@ -123,7 +126,7 @@ export default function LoanApplicationView({
         {/* Modal Content */}
         <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
           {/* Status Banner with Timeline */}
-          <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl p-3 sm:p-5 border border-blue-100">
+          <div className="bg-linear-to-r from-slate-50 to-blue-50 rounded-xl p-3 sm:p-5 border border-blue-100">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3 sm:gap-4">
                 <div
@@ -131,8 +134,8 @@ export default function LoanApplicationView({
                     application.status?.toLowerCase() === "approved"
                       ? "bg-green-100"
                       : application.status?.toLowerCase() === "rejected"
-                      ? "bg-red-100"
-                      : "bg-yellow-100"
+                        ? "bg-red-100"
+                        : "bg-yellow-100"
                   }`}
                 >
                   {application.status?.toLowerCase() === "approved" && (
@@ -155,7 +158,7 @@ export default function LoanApplicationView({
                     </h3>
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(
-                        application.status
+                        application.status,
                       )}`}
                     >
                       {application.status || "Pending"}
@@ -205,7 +208,7 @@ export default function LoanApplicationView({
 
           {/* Personal Information Section */}
           <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-            <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200">
+            <div className="bg-linear-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200">
               <h3 className="font-semibold text-slate-800 flex items-center gap-2">
                 <User size={18} className="text-blue-600" />
                 Personal Information
@@ -217,72 +220,64 @@ export default function LoanApplicationView({
                   icon={<User size={16} className="text-blue-500" />}
                   label="Full Name"
                   value={
-                    application.customer
-                      ? `${application.customer.title || ""} ${
-                          application.customer.firstName || ""
-                        } ${application.customer.middleName || ""} ${
-                          application.customer.lastName || ""
-                        }`.trim()
-                      : null
+                    `$ {customer.title || ""} $ {customer.firstName || ""} $ {customer.middleName || ""} $ {customer.lastName || ""}`
+                      .replace(/\s+/g, " ")
+                      .trim() || null
                   }
                   fallback="Not provided"
                 />
                 <InfoCard
                   icon={<Mail size={16} className="text-blue-500" />}
                   label="Email"
-                  value={application.customer?.email}
+                  value={customer.email}
                   fallback="Not provided"
                 />
                 <InfoCard
                   icon={<Phone size={16} className="text-blue-500" />}
                   label="Phone"
-                  value={application.customer?.contactNumber}
+                  value={customer.contactNumber}
                   fallback="Not provided"
                 />
                 <InfoCard
                   icon={<Phone size={16} className="text-blue-500" />}
                   label="Alternate Phone"
-                  value={application.customer?.alternateNumber}
+                  value={customer.alternateNumber}
                   fallback="Not provided"
                 />
                 <InfoCard
                   icon={<Calendar size={16} className="text-blue-500" />}
                   label="Date of Birth"
-                  value={
-                    application.customer?.dob
-                      ? formatDate(application.customer.dob)
-                      : null
-                  }
+                  value={customer.dob ? formatDate(customer.dob) : null}
                   fallback="Not provided"
                 />
                 <InfoCard
                   icon={<Hash size={16} className="text-blue-500" />}
                   label="Gender"
-                  value={application.customer?.gender}
+                  value={customer.gender}
                   fallback="Not provided"
                 />
                 <InfoCard
                   icon={<Hash size={16} className="text-blue-500" />}
                   label="Marital Status"
-                  value={application.customer?.maritalStatus}
+                  value={customer.maritalStatus}
                   fallback="Not provided"
                 />
                 <InfoCard
                   icon={<Hash size={16} className="text-blue-500" />}
                   label="Nationality"
-                  value={application.customer?.nationality}
+                  value={customer.nationality}
                   fallback="Not provided"
                 />
                 <InfoCard
                   icon={<Hash size={16} className="text-blue-500" />}
                   label="Category"
-                  value={application.customer?.category}
+                  value={customer.category}
                   fallback="Not provided"
                 />
                 <InfoCard
                   icon={<User size={16} className="text-blue-500" />}
                   label="Spouse Name"
-                  value={application.customer?.spouseName}
+                  value={customer.spouseName}
                   fallback="Not provided"
                 />
               </div>
@@ -293,12 +288,11 @@ export default function LoanApplicationView({
                   icon={<MapPin size={16} className="text-blue-500" />}
                   label="Residential Address"
                   value={
-                    application.customer
-                      ? `${application.customer.address || ""}, ${
-                          application.customer.city || ""
-                        }, ${application.customer.state || ""} - ${
-                          application.customer.pinCode || ""
-                        }`.trim()
+                    customer.address
+                      ? `${customer.address}, ${customer.city || ""}, ${customer.state || ""} - ${customer.pinCode || ""}`
+                          .replace(/\s+,/g, ",")
+                          .replace(/,\s*-/, "-")
+                          .trim()
                       : null
                   }
                   fallback="Not provided"
@@ -310,7 +304,7 @@ export default function LoanApplicationView({
 
           {/* KYC & Identity Section */}
           <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-            <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200">
+            <div className="bg-linear-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200">
               <h3 className="font-semibold text-slate-800 flex items-center gap-2">
                 <Shield size={18} className="text-blue-600" />
                 KYC & Identity Details
@@ -321,25 +315,25 @@ export default function LoanApplicationView({
                 <InfoCard
                   icon={<CreditCard size={16} className="text-blue-500" />}
                   label="Aadhaar Number"
-                  value={application.customer?.aadhaarNumber}
+                  value={customer.aadhaarNumber}
                   fallback="Not provided"
                 />
                 <InfoCard
                   icon={<FileText size={16} className="text-blue-500" />}
                   label="PAN Number"
-                  value={application.customer?.panNumber}
+                  value={customer.panNumber}
                   fallback="Not provided"
                 />
                 <InfoCard
                   icon={<FileText size={16} className="text-blue-500" />}
                   label="Voter ID"
-                  value={application.customer?.voterId}
+                  value={customer.voterId}
                   fallback="Not provided"
                 />
                 <InfoCard
                   icon={<FileText size={16} className="text-blue-500" />}
                   label="Passport Number"
-                  value={application.customer?.passportNumber}
+                  value={customer.passportNumber}
                   fallback="Not provided"
                 />
               </div>
@@ -357,8 +351,8 @@ export default function LoanApplicationView({
                           application.kyc.status === "VERIFIED"
                             ? "bg-green-100 text-green-700"
                             : application.kyc.status === "PENDING"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : "bg-red-100 text-red-700"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-red-100 text-red-700"
                         }`}
                       >
                         {application.kyc.status}
@@ -394,8 +388,8 @@ export default function LoanApplicationView({
                                   doc.verificationStatus === "verified"
                                     ? "bg-green-500"
                                     : doc.verificationStatus === "pending"
-                                    ? "bg-yellow-500"
-                                    : "bg-red-500"
+                                      ? "bg-yellow-500"
+                                      : "bg-red-500"
                                 }`}
                               ></span>
                             </div>
@@ -410,7 +404,7 @@ export default function LoanApplicationView({
 
           {/* Employment & Financial Section */}
           <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-            <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200">
+            <div className="bg-linear-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200">
               <h3 className="font-semibold text-slate-800 flex items-center gap-2">
                 <Briefcase size={18} className="text-blue-600" />
                 Employment & Financial Details
@@ -423,7 +417,7 @@ export default function LoanApplicationView({
                   label="Employment Type"
                   value={application.customer?.employmentType?.replace(
                     "_",
-                    " "
+                    " ",
                   )}
                   fallback="Not provided"
                 />
@@ -463,7 +457,7 @@ export default function LoanApplicationView({
 
           {/* Bank Details Section */}
           <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-            <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200">
+            <div className="bg-linear-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200">
               <h3 className="font-semibold text-slate-800 flex items-center gap-2">
                 <Landmark size={18} className="text-blue-600" />
                 Bank Account Details
@@ -501,7 +495,7 @@ export default function LoanApplicationView({
 
           {/* Loan Details Section */}
           <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-            <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200">
+            <div className="bg-linear-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200">
               <h3 className="font-semibold text-slate-800 flex items-center gap-2">
                 <TrendingUp size={18} className="text-blue-600" />
                 Loan Details
@@ -605,10 +599,10 @@ export default function LoanApplicationView({
                         application.cibilScore >= 750
                           ? "bg-green-100 text-green-700"
                           : application.cibilScore >= 650
-                          ? "bg-yellow-100 text-yellow-700"
-                          : application.cibilScore
-                          ? "bg-red-100 text-red-700"
-                          : "bg-slate-100 text-slate-700"
+                            ? "bg-yellow-100 text-yellow-700"
+                            : application.cibilScore
+                              ? "bg-red-100 text-red-700"
+                              : "bg-slate-100 text-slate-700"
                       }`}
                     >
                       {application.cibilScore || "N/A"}
@@ -622,10 +616,10 @@ export default function LoanApplicationView({
                       {application.cibilScore >= 750
                         ? "Excellent credit history"
                         : application.cibilScore >= 650
-                        ? "Good credit history"
-                        : application.cibilScore
-                        ? "Fair credit history - May require additional verification"
-                        : "Credit score not available"}
+                          ? "Good credit history"
+                          : application.cibilScore
+                            ? "Fair credit history - May require additional verification"
+                            : "Credit score not available"}
                     </p>
                   </div>
                 </div>
@@ -636,7 +630,7 @@ export default function LoanApplicationView({
           {/* Co-applicants Section */}
           {application.coapplicants && application.coapplicants.length > 0 && (
             <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200">
+              <div className="bg-linear-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200">
                 <h3 className="font-semibold text-slate-800 flex items-center gap-2">
                   <Users size={18} className="text-blue-600" />
                   Co-Applicants ({application.coapplicants.length})
@@ -678,7 +672,7 @@ export default function LoanApplicationView({
 
           {/* Additional Loan Settings */}
           <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-            <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200">
+            <div className="bg-linear-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200">
               <h3 className="font-semibold text-slate-800 flex items-center gap-2">
                 <Settings size={18} className="text-blue-600" />
                 Additional Loan Settings
@@ -748,7 +742,7 @@ export default function LoanApplicationView({
             {application.status?.toLowerCase() !== "approved" && (
               <Button
                 onClick={() => onApprove(application.id)}
-                className="px-4 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-medium text-xs sm:text-sm hover:from-green-600 hover:to-green-700 transition-colors shadow-lg shadow-green-200 flex items-center justify-center sm:gap-2 w-full sm:w-auto"
+                className="px-4 sm:px-6 py-2 sm:py-2.5 bg-linear-to-r from-green-500 to-green-600 text-white rounded-xl font-medium text-xs sm:text-sm hover:from-green-600 hover:to-green-700 transition-colors shadow-lg shadow-green-200 flex items-center justify-center sm:gap-2 w-full sm:w-auto"
               >
                 <CheckCircle size={16} className="sm:hidden" />
                 <CheckCircle size={18} className="hidden sm:block" />

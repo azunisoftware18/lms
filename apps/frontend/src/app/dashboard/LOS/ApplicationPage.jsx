@@ -173,7 +173,15 @@ export default function ProfessionalNBFCPortal() {
   }, [showForm]);
 
   if (showForm) {
-    return <LoanApplicationForm onClose={() => setShowForm(false)} />;
+    return (
+      <LoanApplicationForm
+        onClose={() => setShowForm(false)}
+        onSuccess={() => {
+          setShowForm(false);
+          refetchApplications();
+        }}
+      />
+    );
   }
 
   return (
