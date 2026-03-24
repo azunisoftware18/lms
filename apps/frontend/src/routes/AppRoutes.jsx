@@ -87,7 +87,6 @@ import SalesTargetAndAchievementPage from "../app/dashboard/reports/SalesTargetA
 import DisbursCollectionPage from "../app/dashboard/reports/DisbursCollectionPage.jsx";
 import PermissionManagementPage from "../app/dashboard/PermissionManagementPage.jsx";
 
-// Role Management
 
 export default function AppRoutes() {
   const dispatch = useDispatch();

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import RoleForm from '../../components/forms/RoleForm';
 import StatusCard from '../../components/common/StatusCard';
+import { adminRoles } from '../../lib/dashboardDummyData';
 import RoleManagementTable from '../../components/tables/RoleManagementTable';
 import RoleFormModal from '../../components/modals/RoleFormModal';
 import { initialRoles, modules } from '../../lib/dumyData';
