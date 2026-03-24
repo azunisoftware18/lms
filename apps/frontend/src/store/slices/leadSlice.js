@@ -1,6 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { clearSelectedBranchAdmin } from "./branchAdminSlice";
-
 
 const leadSlice = createSlice({
     name: "lead",
@@ -9,12 +7,28 @@ const leadSlice = createSlice({
         selectedLead: null,
         loading: false,
         error: null,
+        pagination: {
+            page: 1,
+            limit: 10,
+            total: 0,
+            totalPages: 1,
+        },
+        search: "",
     },
     reducers: {
         setLeads:(state, action)=> {
             state.leads = action.payload;
             state.loading = false;
             state.error = null;
+        },
+        setLeadPagination: (state, action) => {
+            state.pagination = {
+                ...state.pagination,
+                ...action.payload,
+            };
+        },
+        setLeadSearch: (state, action) => {
+            state.search = action.payload;
         },
         setLoading:(state, action) => {
             state.loading = action.payload;
@@ -48,10 +62,17 @@ const leadSlice = createSlice({
             state.selectedLead = null;
             state.loading = false;
             state.error = null;
+            state.pagination = {
+                page: 1,
+                limit: 10,
+                total: 0,
+                totalPages: 1,
+            };
+            state.search = "";
         },
     },
 });
 
-export const { setLeads, setLoading, setError, clearError, setSelectedLead, clearSelectedLead, addLead, updateLeadInList, removeLeadFromList, resetLeads } = leadSlice.actions;
+export const { setLeads, setLeadPagination, setLeadSearch, setLoading, setError, clearError, setSelectedLead, clearSelectedLead, addLead, updateLeadInList, removeLeadFromList, resetLeads } = leadSlice.actions;
 
 export default leadSlice.reducer;

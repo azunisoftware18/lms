@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { Edit, Trash2, User, Plus } from "lucide-react";
 import SearchField from "../../../components/ui/SearchField";
 import LeadsTable from "../../../components/tables/LeadsTable";
@@ -25,32 +25,8 @@ export default function LeadsPage() {
     search: searchTerm
   });
 
-  console.log("📊 Leads data:", leads); // Debug
-
-  // Filter data based on search (client-side filtering)
-  const filteredData = useMemo(() => {
-    if (!searchTerm || !leads?.data) return leads?.data || [];
-    
-    const lower = searchTerm.toLowerCase();
-    return leads.data.filter((item) => {
-      const fullName = item?.fullName || "";
-      const email = item?.email || "";
-      const contactNumber = item?.contactNumber || "";
-      const city = item?.city || "";
-      const loanTypeName = item?.loanType?.name || "";
-
-      return (
-        fullName.toLowerCase().includes(lower) ||
-        email.toLowerCase().includes(lower) ||
-        contactNumber.includes(searchTerm) ||
-        city.toLowerCase().includes(lower) ||
-        loanTypeName.toLowerCase().includes(lower)
-      );
-    });
-  }, [leads, searchTerm]);
-
-  const totalItems = leads?.total || filteredData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalItems = leads?.total || 0;
+  const totalPages = leads?.totalPages || 1;
 
   const getActions = (item) => {
     const iconMap = {
@@ -123,7 +99,7 @@ export default function LeadsPage() {
                 </span>
                 {searchTerm && (
                   <span className="text-sm text-gray-500">
-                    Found {filteredData.length} matching records
+                    Showing page {currentPage} of {totalPages}
                   </span>
                 )}
               </div>
@@ -149,7 +125,7 @@ export default function LeadsPage() {
 
         {/* Table Container */}
         <LeadsTable
-          items={filteredData}
+          items={leads?.data || []}
           loading={loading}
           getActions={getActions}
           currentPage={currentPage}

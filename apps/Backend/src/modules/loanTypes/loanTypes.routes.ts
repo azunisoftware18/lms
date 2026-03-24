@@ -7,6 +7,12 @@ import { createLoanTypeSchema } from "./loanTypes.schema.js";
 
 
 const LoanTypesRouter = Router();
+
+// Public endpoint - allow unauthenticated access for fetching public loan types
+LoanTypesRouter.get("/",
+  getAllLoanTypesController);
+
+// Protected endpoints - require authentication
 LoanTypesRouter.use(authMiddleware);
 
 LoanTypesRouter.post(
@@ -15,25 +21,16 @@ LoanTypesRouter.post(
   checkPermissionMiddleware("CREATE_LOAN_TYPE")
   , createLoanTypeController);
 
-LoanTypesRouter.get("/",
-  checkPermissionMiddleware("VIEW_LOAN_TYPES")
-  , getAllLoanTypesController);
-
-
-  LoanTypesRouter.get("/:id",
+LoanTypesRouter.get("/:id",
   checkPermissionMiddleware("VIEW_LOAN_TYPE")
   , getLoanTypeByIdController);
 
 LoanTypesRouter.put("/:id",
-
   checkPermissionMiddleware("UPDATE_LOAN_TYPE")
   , updateLoanTypeController);
-
 
 LoanTypesRouter.delete("/:id",
   checkPermissionMiddleware("DELETE_LOAN_TYPE"),
   deleteLoanTypeController);
-
-
 
 export default LoanTypesRouter;

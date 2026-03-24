@@ -1,9 +1,13 @@
+import { useEffect, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { apiGet, apiPost, apiPatch } from "../lib/api/apiClient";
 import { showSuccess, showError } from "../lib/utils/toastService";
+import { normalizeParams } from "../lib/utils/paramHelper";
 import {
   setLeads,
+  setLeadPagination,
+  setLeadSearch,
   setLoading,
   setError,
   addLead,
@@ -20,47 +24,99 @@ const assignLead = ({ id, payload }) =>
   apiPatch(`/lead/assign/${id}`, payload);
 const convertLeadToLoan = (id) => apiGet(`/lead/convert-to-loan/${id}`);
 
+const extractLeadsList = (response) => {
+  if (Array.isArray(response?.data?.data)) return response.data.data;
+  if (Array.isArray(response?.data)) return response.data;
+  if (Array.isArray(response)) return response;
+  if (Array.isArray(response?.items)) return response.items;
+  return [];
+};
+
+const extractLeadsMeta = (response, normalizedParams) => {
+  const meta = response?.data?.meta || response?.meta || {};
+  const page = meta.page ?? normalizedParams.page ?? 1;
+  const limit = meta.limit ?? normalizedParams.limit ?? 10;
+  const total = meta.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil((total || 0) / (limit || 10)));
+
+  return {
+    page,
+    limit,
+    total,
+    totalPages,
+  };
+};
+
+const extractLeadEntity = (response) => {
+  if (response?.data && !Array.isArray(response.data)) {
+    return response.data;
+  }
+  return response;
+};
+
 export const useLead = (params) => {
   const dispatch = useDispatch();
   const leadsFromStore = useSelector((state) => state?.lead?.leads || []);
+  const paginationFromStore = useSelector((state) => state?.lead?.pagination || {});
   const loading = useSelector((state) => state?.lead?.loading || false);
   const error = useSelector((state) => state?.lead?.error || null);
+  const normalizedParams = useMemo(
+    () => normalizeParams(params || {}),
+    [
+      params?.page,
+      params?.limit,
+      params?.search,
+      params?.q,
+      params?.isActive,
+      params?.isPublic,
+      params?.publicOnly,
+    ],
+  );
 
   const query = useQuery({
-    queryKey: ["leads", params],
-    queryFn: () => getLeads(params),
-    onSuccess: (data) => {
-      const list = Array.isArray(data)
-        ? data
-        : Array.isArray(data?.data)
-          ? data.data
-          : Array.isArray(data?.items)
-            ? data.items
-            : [];
-
-      dispatch(setLeads(list));
-      dispatch(clearError());
-    },
-    onError: (queryError) => {
-      const message = queryError?.message || "Failed to fetch leads";
-      dispatch(setError(message));
-      showError(message);
-    },
+    queryKey: ["leads", normalizedParams],
+    queryFn: () => getLeads(normalizedParams),
     staleTime: 1000 * 60 * 5,
   });
 
+  useEffect(() => {
+    if (!query.data) return;
+
+    const list = extractLeadsList(query.data);
+    const meta = extractLeadsMeta(query.data, normalizedParams);
+
+    dispatch(setLeads(list));
+    dispatch(setLeadPagination(meta));
+    dispatch(setLeadSearch(normalizedParams.search || ""));
+    dispatch(clearError());
+  }, [
+    query.data,
+    dispatch,
+    normalizedParams.page,
+    normalizedParams.limit,
+    normalizedParams.search,
+  ]);
+
+  useEffect(() => {
+    if (!query.error) return;
+    const message = query.error?.message || "Failed to fetch leads";
+    dispatch(setError(message));
+    showError(message);
+  }, [query.error, dispatch]);
+
+  const meta = extractLeadsMeta(query.data, normalizedParams);
+
   const normalizedLeads = {
     data: leadsFromStore,
-    total:
-      query.data?.total ||
-      query.data?.meta?.total ||
-      query.data?.pagination?.total ||
-      leadsFromStore.length,
+    total: paginationFromStore?.total ?? meta.total ?? leadsFromStore.length,
+    page: paginationFromStore?.page ?? meta.page,
+    limit: paginationFromStore?.limit ?? meta.limit,
+    totalPages: paginationFromStore?.totalPages ?? meta.totalPages,
   };
 
   return {
     leads: normalizedLeads,
-    loading: query.isLoading || loading,
+    loading: query.isPending || loading,
     error: error || query.error,
     isFetching: query.isFetching,
     refetch: query.refetch,
@@ -76,7 +132,7 @@ export const useCreateLead = () => {
       dispatch(setLoading(true));
     },
     onSuccess: (data) => {
-      dispatch(addLead(data));
+      dispatch(addLead(extractLeadEntity(data)));
       queryClient.invalidateQueries({ queryKey: ["leads"] });
       dispatch(setLoading(false));
       dispatch(clearError());
@@ -100,7 +156,7 @@ export const useUpdateLeadStatus = () => {
       dispatch(setLoading(true));
     },
     onSuccess: (data) => {
-      dispatch(updateLeadInList(data));
+      dispatch(updateLeadInList(extractLeadEntity(data)));
       queryClient.invalidateQueries({ queryKey: ["leads"] });
       dispatch(setLoading(false));
       dispatch(clearError());
@@ -124,7 +180,7 @@ export const useAssignLead = () => {
       dispatch(setLoading(true));
     },
     onSuccess: (data) => {
-      dispatch(updateLeadInList(data));
+      dispatch(updateLeadInList(extractLeadEntity(data)));
       queryClient.invalidateQueries({ queryKey: ["leads"] });
       dispatch(setLoading(false));
       dispatch(clearError());
@@ -148,8 +204,8 @@ export const useConvertLeadToLoan = () => {
       dispatch(setLoading(true));
     },
 
-    onSuccess: (data) => {
-      dispatch(removeLeadFromList(data?.id));
+    onSuccess: (_data, leadId) => {
+      dispatch(removeLeadFromList(leadId));
       queryClient.invalidateQueries({ queryKey: ["leads"] });
       dispatch(setLoading(false));
       dispatch(clearError());

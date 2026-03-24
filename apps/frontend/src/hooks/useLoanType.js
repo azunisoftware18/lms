@@ -1,7 +1,10 @@
+import { useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { apiGet, apiPost, apiPut, apiDelete } from "../lib/api/apiClient";
-import { showSuccess, showError } from "../lib/utils/toastService";import { normalizeParams } from '../lib/utils/paramHelper';import {
+import { showSuccess, showError } from "../lib/utils/toastService";
+import { normalizeParams } from '../lib/utils/paramHelper';
+import {
   setLoanTypes,
   setLoading,
   setError,
@@ -10,9 +13,40 @@ import { showSuccess, showError } from "../lib/utils/toastService";import { norm
   updateLoanTypeInList,
   removeLoanTypeFromList,
 } from "../store/slices/loanTypeSlice";
+
+// Helper to extract loan types from API response
+// Backend response format: { success: true, data: { data: [...], meta: {...} } }
+const extractLoanTypes = (response) => {
+  // Handle different response formats
+  if (!response) return [];
+  
+  // Format: { success: true, data: { data: [...], meta: {...} } }
+  if (response?.data && typeof response.data === 'object' && Array.isArray(response.data.data)) {
+    return response.data.data;
+  }
+  
+  // Format: { data: [...] }
+  if (Array.isArray(response?.data)) {
+    return response.data;
+  }
+  
+  // Format: [...]
+  if (Array.isArray(response)) {
+    return response;
+  }
+  
+  // Format: { items: [...] }
+  if (Array.isArray(response?.items)) {
+    return response.items;
+  }
+  
+  console.warn('Unexpected API response format:', response);
+  return [];
+};
+
 export const useLoanTypes = (params = {}) => {
   const dispatch = useDispatch();
-  const loanTypes = useSelector((state) => state.loanTypes.loanTypes);
+  const loanTypesFromStore = useSelector((state) => state.loanTypes.loanTypes);
   const loading = useSelector((state) => state.loanTypes.loading);
   const error = useSelector((state) => state.loanTypes.error);
 
@@ -21,22 +55,32 @@ export const useLoanTypes = (params = {}) => {
   const query = useQuery({
     queryKey: ["loanTypes", normalizedParams],
     queryFn: () => apiGet("/loantypes", { params: normalizedParams }),
-    onSuccess: (data) => {
-      const normalizedLoanTypes = Array.isArray(data) ? data : data?.data || [];
-      dispatch(setLoanTypes(normalizedLoanTypes));
-      dispatch(clearError());
-    },
-    onError: (queryError) => {
-      const message = queryError?.message || "Failed to fetch loan types";
-      dispatch(setError(message));
-      showError(message);
-    },
     staleTime: 1000 * 60 * 5,
   });
 
+  useEffect(() => {
+    if (!query.data) return;
+    const normalizedLoanTypes = extractLoanTypes(query.data);
+    dispatch(setLoanTypes(normalizedLoanTypes));
+    dispatch(clearError());
+  }, [query.data, dispatch]);
+
+  useEffect(() => {
+    if (!query.error) return;
+    const message = query.error?.message || "Failed to fetch loan types";
+    dispatch(setError(message));
+    showError(message);
+  }, [query.error, dispatch]);
+
+  const fallbackLoanTypes = extractLoanTypes(query.data);
+  const normalizedLoanTypes =
+    Array.isArray(loanTypesFromStore) && loanTypesFromStore.length > 0
+      ? loanTypesFromStore
+      : fallbackLoanTypes;
+
   return {
-    loanTypes,
-    loading: query.isLoading || loading,
+    loanTypes: normalizedLoanTypes,
+    loading: query.isPending || loading,
     error: error || query.error,
     isFetching: query.isFetching,
     refetch: query.refetch,
