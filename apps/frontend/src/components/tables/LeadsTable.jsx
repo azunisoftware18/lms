@@ -1,8 +1,24 @@
+
 import { Mail, MapPin, Phone } from "lucide-react";
 import Pagination from "../common/Pagination";
 import { TableShell, TableHead, TableBody, TableLoader } from "../tables/core";
 import { getLeadLoanTypeColor } from "../../lib/LOSDummyData";
 import { colorVariables } from "../../lib";
+
+const statusColors = {
+  CONTACTED: "bg-blue-50 text-blue-700 border-blue-200",
+  INTERESTED: "bg-cyan-50 text-cyan-700 border-cyan-200",
+  APPLICATION_IN_PROGRESS: "bg-yellow-50 text-yellow-800 border-yellow-200",
+  APPLICATION_SUBMITTED: "bg-indigo-50 text-indigo-700 border-indigo-200",
+  UNDER_REVIEW: "bg-blue-100 text-blue-700 border-blue-300",
+  APPROVED: "bg-green-100 text-green-700 border-green-300",
+  REJECTED: "bg-red-100 text-red-700 border-red-300",
+  FUNDED: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  CLOSED: "bg-gray-200 text-gray-700 border-gray-300",
+  DROPPED: "bg-orange-50 text-orange-700 border-orange-200",
+  PENDING: "bg-yellow-100 text-yellow-800 border-yellow-300",
+  default: "bg-slate-100 text-slate-700 border-slate-300",
+};
 
 export default function LeadsTable({
   items = [],
@@ -18,6 +34,18 @@ export default function LeadsTable({
   const setFilterValue = () => {};
 
   const columns = [
+        {
+          header: "Status",
+          accessor: "status",
+          render: (value) => (
+            <span
+              className={`inline-block px-3 py-1.5 rounded-2xl text-xs font-semibold border transition-colors duration-200 whitespace-nowrap
+                ${statusColors[value] || statusColors.default}`}
+            >
+              {value ? value.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()) : "Unknown"}
+            </span>
+          ),
+        },
     {
       header: "Customer",
       accessor: "fullName",

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import EditLeadDialog from "../reports/EditLeadDialog";
 import { Edit, Trash2, User, Plus } from "lucide-react";
 import SearchField from "../../../components/ui/SearchField";
 import LeadsTable from "../../../components/tables/LeadsTable";
@@ -8,12 +9,16 @@ import {
   LEAD_ACTION_DEFINITIONS,
 } from "../../../lib/LOSDummyData";
 import { colorVariables } from "../../../lib";
-import { useLead } from "../../../hooks/useLead";
+import { useLead, useUpdateLeadStatus } from "../../../hooks/useLead";
 
 export default function LeadsPage() {
+  const updateLeadStatus = useUpdateLeadStatus();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [selectedLead, setSelectedLead] = useState(null);
+
   // const getLeads = getLeads();
   
   const itemsPerPage = 10;
@@ -39,8 +44,8 @@ export default function LeadsPage() {
       icon: iconMap[action.icon],
       onClick: () => {
         if (action.key === "edit") {
-          console.log("Edit clicked", item.id);
-          // TODO: Open edit modal
+          setSelectedLead(item);
+          setEditDialogOpen(true);
         }
         if (action.key === "delete") {
           console.log("Delete clicked", item.id);
@@ -58,7 +63,26 @@ export default function LeadsPage() {
         onClose={() => {
           setIsModalOpen(false);
           refetch(); // Refresh data after closing
-        }} 
+        }}
+      />
+
+      {/* Edit Lead Dialog */}
+      <EditLeadDialog
+        open={editDialogOpen}
+        lead={selectedLead}
+        onClose={() => setEditDialogOpen(false)}
+        onSave={({ id, status }) => {
+          updateLeadStatus.mutate(
+            { id, status },
+            {
+              onSuccess: () => {
+                setEditDialogOpen(false);
+                setSelectedLead(null);
+                refetch();
+              },
+            }
+          );
+        }}
       />
 
       <div className="max-w-7xl mx-auto">
@@ -140,4 +164,5 @@ export default function LeadsPage() {
       </div>
     </div>
   );
+
 }
