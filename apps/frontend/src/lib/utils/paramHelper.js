@@ -14,8 +14,6 @@ export const normalizeParams = (params = {}) => {
     ...(params?.isActive !== undefined && { isActive: params.isActive }),
     ...(params?.isPublic !== undefined && { isPublic: params.isPublic }),
     ...(params?.publicOnly !== undefined && { publicOnly: params.publicOnly }),
-    ...(params?.search !== undefined && { search: params.search }),
-    ...(params?.q !== undefined && { q: params.q }),
   };
 };
 
