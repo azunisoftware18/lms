@@ -42,9 +42,8 @@ export default function LeadsTable({
               className={`inline-block px-3 py-1.5 rounded-2xl text-xs font-semibold border transition-colors duration-200 whitespace-nowrap
                 ${statusColors[value] || statusColors.default}`}
             >
-              {value ? value.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()) : "Unknown"}
-            </span>
-          ),
+              {value ? value.replace(/_/g, " ").toLowerCase().replace(/\b\w/g, (l) => l.toUpperCase()) : "Unknown"}
+            </span>          ),
         },
     {
       header: "Customer",

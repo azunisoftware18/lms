@@ -10,6 +10,7 @@ import {
 } from "../../../lib/LOSDummyData";
 import { colorVariables } from "../../../lib";
 import { useLead, useUpdateLeadStatus } from "../../../hooks/useLead";
+import toast from "react-hot-toast";
 
 export default function LeadsPage() {
   const updateLeadStatus = useUpdateLeadStatus();
@@ -80,10 +81,14 @@ export default function LeadsPage() {
                 setSelectedLead(null);
                 refetch();
               },
+              onError: (error) => {
+                // Consider using a toast notification or error state
+                toast.error(error?.response?.data?.message || "Failed to update lead status");
+                // TODO: Show user-friendly error message
+              },
             }
           );
-        }}
-      />
+        }}      />
 
       <div className="max-w-7xl mx-auto">
         {/* Header */}
