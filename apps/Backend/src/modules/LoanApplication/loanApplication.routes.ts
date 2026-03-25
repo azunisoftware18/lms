@@ -13,6 +13,7 @@ import {
   reuploadLoanDocumentController,
   getAlldoumentsforLoanApplicationController,
   createFullLoanApplicationController,
+  listofalldocumentsForLoanApplicationController,
 } from "./loanApplication.controller.js";
 import { validate } from "../../common/middlewares/zod.middleware.js";
 import {
@@ -187,4 +188,17 @@ loanApplicationRouter.post(
   createLoanApplicationLimiter,
   validate(createFullLoanApplicationSchema, "body"),
   createFullLoanApplicationController
-);export default loanApplicationRouter;
+);
+
+loanApplicationRouter.get(
+  "/:id/documents/list",
+  authMiddleware,
+  branchMiddleware,
+  validate(loanApplicationIdParamSchema, "params"),
+  checkPermissionMiddleware("VIEW_LOAN_APPLICATION"),
+  listofalldocumentsForLoanApplicationController
+);
+
+export default loanApplicationRouter;
+
+

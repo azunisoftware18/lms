@@ -8,6 +8,7 @@ const loanApplicationSlice = createSlice({
         selectedLoanApplication: null,
         loading: false,
         error: null,
+        loanDocumentList: [],
     },
     reducers: {
         setLoading: (state, action) => {
@@ -55,6 +56,14 @@ const loanApplicationSlice = createSlice({
             state.loading = false;
             state.error = null;
         },
+        setLoanDocumentList: (state, action) => {
+            state.loanDocumentList = action.payload;
+            state.loading = false;
+            state.error = null;
+        },
+        clearLoanDocumentList: (state) => {
+            state.loanDocumentList = [];
+        },
     }
 });
 
@@ -68,6 +77,8 @@ export const {
     setLoanApplication,
     addLoanApplication,
     updateLoanApplicationInList,
+    setLoanDocumentList,
+    clearLoanDocumentList,
 } = loanApplicationSlice.actions;
 
 export default loanApplicationSlice.reducer;

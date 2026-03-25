@@ -10,215 +10,435 @@ import {
   UserPlus,
 } from "lucide-react";
 import toast from "react-hot-toast";
+
 import Button from "../../../components/ui/Button";
 import SearchField from "../../../components/ui/SearchField";
 import StatusCard from "../../../components/common/StatusCard";
 import DocumentPageTable from "../../../components/tables/DocumentPageTable";
-import {
-  DOCUMENT_APPLICATIONS,
-  DOCUMENT_REPOSITORY,
-} from "../../../lib/LOSDummyData";
 import { colorVariables } from "../../../lib";
 
+
+import { useLoanApplications, useLoanDocuments, useUploadDocuments, useVerifyDocument, useRejectDocument, useLoanApplication } from "../../../hooks/useLoanApplication";
+import { useLoanTypes } from "../../../hooks/useLoanType";
+import { useLoanDocumentList } from "../../../hooks/useLoanDocumentList";
+
+
 export default function DocumentPage() {
-  // Use dummy data instead of hooks
-  const [applications] = useState(DOCUMENT_APPLICATIONS);
-  const [documents, setDocuments] = useState(DOCUMENT_REPOSITORY);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  // uploadFiles: { applicant: {docType: File}, coApplicant: {docType: File}, guarantor: {docType: File} }
+  const [uploadFiles, setUploadFiles] = useState({ applicant: {}, coApplicant: {}, guarantor: {} });
 
-  // Selected application state - null means no application selected
   const [selectedApplication, setSelectedApplication] = useState(null);
-
-  // Search state
   const [searchTerm, setSearchTerm] = useState("");
+  const { data, isLoading: isLoadingApplications } = useLoanApplications();
+  const applications = data?.data || [];
+
+
+
+  // Fetch full application to get loanTypeId
+ const { data: selectedAppFull } = useLoanApplication(selectedApplication?.id);
+
+const loanTypeId = selectedAppFull?.data?.loanTypeId || selectedApplication?.loanTypeId;
+  const { loanTypes, loading: isLoadingLoanTypes } = useLoanTypes();
+  const loanType = loanTypes?.find((lt) => lt.id === loanTypeId);
+
+  
 
   // Filter applications based on search
   const filteredApplications = useMemo(() => {
     if (!searchTerm.trim()) return applications;
-
     const term = searchTerm.toLowerCase();
-
     return applications.filter(
       (app) =>
         app.loanNumber?.toLowerCase().includes(term) ||
-        app.applicationNumber?.toLowerCase().includes(term) ||
-        app.applicantName?.toLowerCase().includes(term) ||
-        (app.coApplicantName &&
-          app.coApplicantName.toLowerCase().includes(term)),
+        app.id?.toLowerCase().includes(term) ||
+        app.customer?.firstName?.toLowerCase().includes(term) ||
+        app.customer?.lastName?.toLowerCase().includes(term)
     );
   }, [applications, searchTerm]);
 
-  // Get current application documents
-  const currentDocuments = useMemo(() => {
-    if (!selectedApplication) return [];
+  // Fetch documents for selected application
+  const {
+    data: documentsData,
+    isLoading: isLoadingDocuments,
+    refetch: refetchDocuments,
+  } = useLoanDocuments(selectedApplication?.id);
+  // Ensure documents is always an array
+  const documents = Array.isArray(documentsData)
+    ? documentsData
+    : (documentsData?.data || []);
 
-    const docs = documents[selectedApplication.id] || [];
-    return docs;
-  }, [documents, selectedApplication]);
-
-  // Handle document verification
-  const handleVerify = (docId) => {
-    if (!selectedApplication) return;
-
-    setDocuments((prev) => ({
-      ...prev,
-      [selectedApplication.id]: prev[selectedApplication.id].map((doc) =>
-        doc.id === docId ? { ...doc, status: "VERIFIED" } : doc,
-      ),
-    }));
-
-    toast.success("Document verified successfully");
+  // Document stats
+  const documentStats = {
+    total: documents.length,
+    verified: documents.filter((d) => d.verificationStatus === "VERIFIED").length,
+    pending: documents.filter((d) => d.verificationStatus === "PENDING").length,
+    rejected: documents.filter((d) => d.verificationStatus === "REJECTED").length,
   };
 
-  // Handle document rejection
-  const handleReject = (docId) => {
+  // Handlers for document verification/rejection
+  const verifyDocumentMutation = useVerifyDocument();
+  const rejectDocumentMutation = useRejectDocument();
+  const uploadDocumentsMutation = useUploadDocuments();
+
+  const handleVerify = async (docId) => {
+    if (!docId) return;
+    await verifyDocumentMutation.mutateAsync(docId);
+    toast.success("Document verified successfully");
+    refetchDocuments();
+  };
+
+
+  const handleReject = async (docId) => {
     const reason = prompt("Enter rejection reason");
     if (!reason) return;
-
     if (!selectedApplication) return;
-
-    setDocuments((prev) => ({
-      ...prev,
-      [selectedApplication.id]: prev[selectedApplication.id].map((doc) =>
-        doc.id === docId ? { ...doc, status: "REJECTED" } : doc,
-      ),
-    }));
-
+    await rejectDocumentMutation.mutateAsync({
+      applicationId: selectedApplication.id,
+      documentId: docId,
+      reason,
+    });
     toast.success("Document rejected");
+    refetchDocuments();
   };
 
-  // Clear selected application
   const handleBackToApplications = () => {
     setSelectedApplication(null);
     setSearchTerm("");
   };
 
-  // Document stats
-  const documentStats = {
-    total: currentDocuments.length,
-    verified: currentDocuments.filter((d) => d.status === "VERIFIED").length,
-    pending: currentDocuments.filter((d) => d.status === "PENDING").length,
-    rejected: currentDocuments.filter((d) => d.status === "REJECTED").length,
+
+  // Helper to get doc arrays from loanType (CSV or array)
+  const parseDocs = (docs) => {
+    if (!docs) return [];
+    if (Array.isArray(docs)) return docs;
+    if (typeof docs === "string") return docs.split(",").map((d) => d.trim()).filter(Boolean);
+    return [];
   };
+
+
+
+
+  // Defensive: fallback to empty array and log warnings if fields are missing
+  const applicantRequiredDocs = loanType?.applicantDocumentsRequired !== undefined
+    ? parseDocs(loanType.applicantDocumentsRequired)
+    : (toast.warning("Missing applicantDocumentsRequired in loanType"), []);
+  const applicantOptionalDocs = loanType?.applicantDocumentsOptional !== undefined
+    ? parseDocs(loanType.applicantDocumentsOptional)
+    : (toast.warning("Missing applicantDocumentsOptional in loanType"), []);
+  const coApplicantRequiredDocs = loanType?.coApplicantDocumentsRequired !== undefined
+    ? parseDocs(loanType.coApplicantDocumentsRequired)
+    : (toast.warning("Missing coApplicantDocumentsRequired in loanType"), []);
+  const coApplicantOptionalDocs = loanType?.coApplicantDocumentsOptional !== undefined
+    ? parseDocs(loanType.coApplicantDocumentsOptional)
+    : (toast.warning("Missing coApplicantDocumentsOptional in loanType"), []);
+  const guarantorRequiredDocs = loanType?.guarantorDocumentsRequired !== undefined
+    ? parseDocs(loanType.guarantorDocumentsRequired)
+    : (toast.warning("Missing guarantorDocumentsRequired in loanType"), []);
+  const guarantorOptionalDocs = loanType?.guarantorDocumentsOptional !== undefined
+    ? parseDocs(loanType.guarantorDocumentsOptional)
+    : (toast.warning("Missing guarantorDocumentsOptional in loanType"), []);
+
+  // Show a warning in the UI if loanType or required doc fields are missing
+  const missingDocsWarning = !loanType
+    ? "Loan type not found for this application. Document requirements unavailable."
+    : [
+        'applicantDocumentsRequired',
+        'applicantDocumentsOptional',
+        'coApplicantDocumentsRequired',
+        'coApplicantDocumentsOptional',
+        'guarantorDocumentsRequired',
+        'guarantorDocumentsOptional',
+      ].some((field) => loanType[field] === undefined)
+    ? "Some document requirement fields are missing for this loan type. Please check loan type configuration."
+    : null;
 
   // If application selected, show document management view
   if (selectedApplication) {
     return (
-      <div className="min-h-screen bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Header with Back Button */}
-          <div className="mb-6">
-            <Button
-              onClick={handleBackToApplications}
-              className="mb-4 bg-transparent shadow-none px-0 py-0 text-blue-700 hover:text-blue-800 hover:bg-transparent"
-            >
-              <span className="text-blue-900">← Back to Applications</span>
-            </Button>
+      <>
+        {/* New Document List Section */}
+       
 
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-              <div>
-                <div className="flex items-center gap-3 mb-3">
-                  <h1 className="text-2xl font-bold text-gray-900">
-                    {selectedApplication.loanNumber}
-                  </h1>
-                  <span
-                    className={`px-3 py-1 ${colorVariables.LIGHT_BG} text-blue-700 text-sm font-medium rounded-full`}
-                  >
-                    {selectedApplication.currentStage}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div className="flex items-center gap-2">
-                    <User className="w-5 h-5 text-gray-500" />
-                    <div>
-                      <p className="text-sm text-gray-500">Applicant</p>
-                      <p className="font-semibold">
-                        {selectedApplication.applicantName}
-                      </p>
-                    </div>
+        <div className="min-h-screen bg-slate-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {missingDocsWarning && (
+              <div className="mb-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 rounded">
+                {missingDocsWarning}
+              </div>
+            )}
+            <div className="mb-6">
+              <Button
+                onClick={handleBackToApplications}
+                className="mb-4 bg-transparent shadow-none px-0 py-0 text-blue-700 hover:text-blue-800 hover:bg-transparent"
+              >
+                <span className="text-blue-900">← Back to Applications</span>
+              </Button>
+              <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                <div>
+                  <div className="flex items-center gap-3 mb-3">
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      {selectedApplication.loanNumber}
+                    </h1>
+                    <span
+                      className={`px-3 py-1 ${colorVariables.LIGHT_BG} text-blue-700 text-sm font-medium rounded-full`}
+                    >
+                      Document Verification
+                    </span>
                   </div>
-
-                  {selectedApplication.coApplicantName && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div className="flex items-center gap-2">
-                      <UserPlus className="w-5 h-5 text-gray-500" />
+                      <span className="font-semibold">Applicant</span>
+                      <span>
+                        {selectedApplication.customer?.firstName} {selectedApplication.customer?.lastName}
+                      </span>
+                    </div>
+                    {/* Add co-applicant info if available */}
+                    {selectedApplication.coApplicantName && (
+                      <div className="flex items-center gap-2">
+                        <UserPlus className="w-5 h-5 text-gray-500" />
+                        <div>
+                          <p className="text-sm text-gray-500">Co-applicant</p>
+                          <p className="font-semibold">
+                            {selectedApplication.coApplicantName}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2">
+                      <Banknote className="w-5 h-5 text-gray-500" />
                       <div>
-                        <p className="text-sm text-gray-500">Co-applicant</p>
+                        <p className="text-sm text-gray-500">Loan Amount</p>
                         <p className="font-semibold">
-                          {selectedApplication.coApplicantName}
+                          ₹
+                          {selectedApplication.loanAmount
+                            ? selectedApplication.loanAmount.toLocaleString("en-IN")
+                            : "0"}
                         </p>
                       </div>
                     </div>
-                  )}
-
-                  <div className="flex items-center gap-2">
-                    <Banknote className="w-5 h-5 text-gray-500" />
-                    <div>
-                      <p className="text-sm text-gray-500">Loan Amount</p>
-                      <p className="font-semibold">
-                        ₹
-                        {selectedApplication.loanAmount
-                          ? selectedApplication.loanAmount.toLocaleString(
-                              "en-IN",
-                            )
-                          : "0"}
-                      </p>
-                    </div>
                   </div>
                 </div>
+                <div>
+                  <button
+                    type="button"
+                    className={`px-4 py-2 ${colorVariables.PRIMARY_BUTTON_COLOR} text-white rounded-lg flex items-center gap-2`}
+                    onClick={() => setShowUploadModal(true)}
+                  >
+                    <Upload size={18} />
+                    Upload Document
+                  </button>
+                </div>
+                    {/* Upload Modal */}
+                    {showUploadModal && (
+                      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+                        <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl relative max-h-[90vh] overflow-y-auto">
+                          <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={() => setShowUploadModal(false)}>&times;</button>
+                          <h2 className="text-lg font-bold mb-4">Upload Documents</h2>
+                          {isLoadingLoanTypes ? (
+                            <div>Loading document requirements...</div>
+                          ) : (
+                            <form
+                              onSubmit={async (e) => {
+                                e.preventDefault();
+                                if (!selectedApplication) return;
+                                // Validation: Ensure all required docs are uploaded
+                                const missingRequired = [];
+                                [
+                                  { party: "applicant", docs: applicantRequiredDocs },
+                                  { party: "coApplicant", docs: coApplicantRequiredDocs },
+                                  { party: "guarantor", docs: guarantorRequiredDocs },
+                                ].forEach(({ party, docs }) => {
+                                  docs.forEach((docType) => {
+                                    if (!uploadFiles[party][docType]) {
+                                      missingRequired.push(`${party} - ${docType}`);
+                                    }
+                                  });
+                                });
+                                if (missingRequired.length > 0) {
+                                  toast.error(`Please upload all required documents: ${missingRequired.join(", ")}`);
+                                  return;
+                                }
+                                // Collect all files for all parties
+                                const allEntries = [];
+                                ["applicant", "coApplicant", "guarantor"].forEach((party) => {
+                                  Object.entries(uploadFiles[party] || {}).forEach(([docType, file]) => {
+                                    if (file) allEntries.push({ party, docType, file });
+                                  });
+                                });
+                                if (allEntries.length === 0) {
+                                  toast.error("Please select at least one document to upload.");
+                                  return;
+                                }
+                                // Always normalize documentType to match backend expectations
+                                const normalizeDocType = (type) => type.trim().toUpperCase().replace(/\s+/g, '_');
+                                const filesPayload = allEntries.map(entry => ({
+                                  file: entry.file,
+                                  documentType: normalizeDocType(entry.docType)
+                                }));
+                                await uploadDocumentsMutation.mutateAsync({
+                                  id: selectedApplication.id,
+                                  files: filesPayload,
+                                  // Optionally, party can be sent if needed for all
+                                });
+                                toast.success("Documents uploaded successfully");
+                                setShowUploadModal(false);
+                                setUploadFiles({ applicant: {}, coApplicant: {}, guarantor: {} });
+                                refetchDocuments();
+                              }}
+                            >
+                              <div className="w-full overflow-x-auto max-h-[65vh] overflow-y-auto pr-2">
+                                {/* Applicant */}
+                                <h3 className="font-semibold mb-4 text-left">Applicant</h3>
+                                <div className="flex flex-col gap-3 mb-8">
+                                  {[...applicantRequiredDocs.map(d => ({ type: d, required: true })),
+                                    ...applicantOptionalDocs.map(d => ({ type: d, required: false }))
+                                  ].length === 0 && <div className="text-xs text-gray-500">No documents</div>}
+                                  {[...applicantRequiredDocs.map(d => ({ type: d, required: true })),
+                                    ...applicantOptionalDocs.map(d => ({ type: d, required: false }))
+                                  ].map(({ type, required }) => (
+                                    <div key={type} className="flex flex-col gap-2 border-2 border-blue-200 rounded-xl p-4 bg-white shadow-sm min-w-0 transition-all w-full" style={{ minHeight: 90 }}>
+                                      <span className="block text-base font-semibold text-gray-900 break-words max-w-full" title={type}>{type}</span>
+                                      <span className={`block text-xs mt-1 ${required ? "text-red-500" : "text-gray-400"}`}>{required ? "Required" : "Optional"}</span>
+                                      <input
+                                        type="file"
+                                        accept="application/pdf,image/*"
+                                        className="w-full file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-base file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                        onChange={(e) => {
+                                          setUploadFiles(f => ({
+                                            ...f,
+                                            applicant: {
+                                              ...f.applicant,
+                                              [type]: e.target.files[0]
+                                            }
+                                          }));
+                                        }}
+                                      />
+                                      {uploadFiles.applicant[type] && (
+                                        <span className="text-green-700 text-sm font-medium truncate max-w-full" title={uploadFiles.applicant[type].name}>{uploadFiles.applicant[type].name}</span>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                                {/* Co-Applicant */}
+                                <h3 className="font-semibold mb-4 text-left">Co-Applicant</h3>
+                                <div className="flex flex-col gap-3 mb-8">
+                                  {[...coApplicantRequiredDocs.map(d => ({ type: d, required: true })),
+                                    ...coApplicantOptionalDocs.map(d => ({ type: d, required: false }))
+                                  ].length === 0 && <div className="text-xs text-gray-500">No documents</div>}
+                                  {[...coApplicantRequiredDocs.map(d => ({ type: d, required: true })),
+                                    ...coApplicantOptionalDocs.map(d => ({ type: d, required: false }))
+                                  ].map(({ type, required }) => (
+                                    <div key={type} className="flex flex-col gap-2 border-2 border-blue-200 rounded-xl p-4 bg-white shadow-sm min-w-0 transition-all w-full" style={{ minHeight: 90 }}>
+                                      <span className="block text-base font-semibold text-gray-900 break-words max-w-full" title={type}>{type}</span>
+                                      <span className={`block text-xs mt-1 ${required ? "text-red-500" : "text-gray-400"}`}>{required ? "Required" : "Optional"}</span>
+                                      <input
+                                        type="file"
+                                        accept="application/pdf,image/*"
+                                        className="w-full file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-base file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                        onChange={(e) => {
+                                          setUploadFiles(f => ({
+                                            ...f,
+                                            coApplicant: {
+                                              ...f.coApplicant,
+                                              [type]: e.target.files[0]
+                                            }
+                                          }));
+                                        }}
+                                      />
+                                      {uploadFiles.coApplicant[type] && (
+                                        <span className="text-green-700 text-sm font-medium truncate max-w-full" title={uploadFiles.coApplicant[type].name}>{uploadFiles.coApplicant[type].name}</span>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                                {/* Guarantor */}
+                                <h3 className="font-semibold mb-4 text-left">Guarantor</h3>
+                                <div className="flex flex-col gap-3">
+                                  {[...guarantorRequiredDocs.map(d => ({ type: d, required: true })),
+                                    ...guarantorOptionalDocs.map(d => ({ type: d, required: false }))
+                                  ].length === 0 && <div className="text-xs text-gray-500">No documents</div>}
+                                  {[...guarantorRequiredDocs.map(d => ({ type: d, required: true })),
+                                    ...guarantorOptionalDocs.map(d => ({ type: d, required: false }))
+                                  ].map(({ type, required }) => (
+                                    <div key={type} className="flex flex-col gap-2 border-2 border-blue-200 rounded-xl p-4 bg-white shadow-sm min-w-0 transition-all w-full" style={{ minHeight: 90 }}>
+                                      <span className="block text-base font-semibold text-gray-900 break-words max-w-full" title={type}>{type}</span>
+                                      <span className={`block text-xs mt-1 ${required ? "text-red-500" : "text-gray-400"}`}>{required ? "Required" : "Optional"}</span>
+                                      <input
+                                        type="file"
+                                        accept="application/pdf,image/*"
+                                        className="w-full file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-base file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                        onChange={(e) => {
+                                          setUploadFiles(f => ({
+                                            ...f,
+                                            guarantor: {
+                                              ...f.guarantor,
+                                              [type]: e.target.files[0]
+                                            }
+                                          }));
+                                        }}
+                                      />
+                                      {uploadFiles.guarantor[type] && (
+                                        <span className="text-green-700 text-sm font-medium truncate max-w-full" title={uploadFiles.guarantor[type].name}>{uploadFiles.guarantor[type].name}</span>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                              <div className="mt-6 flex justify-end gap-2">
+                                <button type="button" className="px-4 py-2 bg-gray-200 rounded" onClick={() => setShowUploadModal(false)}>Cancel</button>
+                                <button type="submit" className={`px-4 py-2 ${colorVariables.PRIMARY_BUTTON_COLOR} text-white rounded`}>Submit All</button>
+                              </div>
+                            </form>
+                          )}
+                        </div>
+                      </div>
+                    )}
               </div>
-
-              <Button
-                onClick={() => toast("Upload flow is disabled in dummy mode")}
-                className={`px-4 py-2 ${colorVariables.PRIMARY_BUTTON_COLOR} text-white rounded-lg`}
-              >
-                <Upload size={18} />
-                Upload Document
-              </Button>
             </div>
-          </div>
-
-          {/* Document Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <StatusCard
-              title="Total Documents"
-              value={documentStats.total}
-              icon={FileText}
-              variant="blue"
-            />
-            <StatusCard
-              title="Verified"
-              value={documentStats.verified}
-              icon={CheckCircle}
-              variant="green"
-            />
-            <StatusCard
-              title="Pending"
-              value={documentStats.pending}
-              icon={Clock}
-              variant="orange"
-            />
-            <StatusCard
-              title="Rejected"
-              value={documentStats.rejected}
-              icon={XCircle}
-              variant="red"
-            />
-          </div>
-
-          {/* Documents Table */}
-          <div>
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">Documents</h2>
+            {/* Document Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <StatusCard
+                title="Total Documents"
+                value={documentStats.total}
+                icon={FileText}
+                variant="blue"
+              />
+              <StatusCard
+                title="Verified"
+                value={documentStats.verified}
+                icon={CheckCircle}
+                variant="green"
+              />
+              <StatusCard
+                title="Pending"
+                value={documentStats.pending}
+                icon={Clock}
+                variant="orange"
+              />
+              <StatusCard
+                title="Rejected"
+                value={documentStats.rejected}
+                icon={XCircle}
+                variant="red"
+              />
             </div>
-            <DocumentPageTable
-              documents={currentDocuments}
-              onViewDocument={(doc) => window.open(doc.url, "_blank")}
-              onVerify={handleVerify}
-              onReject={handleReject}
-            />
+            {/* Documents Table */}
+            <div>
+              <div className="p-6 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">Documents</h2>
+              </div>
+              <DocumentPageTable
+                documents={documents}
+                loading={isLoadingDocuments}
+                onViewDocument={(doc) => window.open(doc.documentPath, "_blank")}
+                onVerify={handleVerify}
+                onReject={handleReject}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 
@@ -226,17 +446,10 @@ export default function DocumentPage() {
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">
-            Document Verification
-          </h1>
-          <p className="text-gray-600 mt-1">
-            Select a loan application to manage documents
-          </p>
+          <h1 className="text-2xl font-bold text-gray-900">Document Verification</h1>
+          <p className="text-gray-600 mt-1">Select a loan application to manage documents</p>
         </div>
-
-        {/* Search Bar */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 mb-6">
           <SearchField
             value={searchTerm}
@@ -246,129 +459,45 @@ export default function DocumentPage() {
             showResults={false}
           />
         </div>
-
-        {/* Applications Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredApplications.map((app) => {
-            const appDocs = documents[app.id] || [];
-            const verifiedCount = appDocs.filter(
-              (d) => d.status === "VERIFIED",
-            ).length;
-            const pendingCount = appDocs.filter(
-              (d) => d.status === "PENDING",
-            ).length;
-            const rejectedCount = appDocs.filter(
-              (d) => d.status === "REJECTED",
-            ).length;
-            const progress = Math.round(
-              (appDocs.length / app.totalDocuments) * 100,
-            );
-
-            return (
-              <div
-                key={app.id}
-                onClick={() => {
-                  setSelectedApplication(app);
-                }}
-                className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-lg hover:border-blue-300 transition-all cursor-pointer"
-              >
-                {/* Loan Header */}
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {app.loanNumber}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      App: {app.applicationNumber}
-                    </p>
-                  </div>
-                  <span
-                    className={`px-2.5 py-1 ${colorVariables.LIGHT_BG} text-blue-700 text-xs font-medium rounded-full`}
-                  >
-                    {app.currentStage}
-                  </span>
-                </div>
-
-                {/* Applicant Info */}
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center text-sm">
-                    <User className="w-4 h-4 text-gray-500 mr-2" />
-                    <span className="text-gray-700">{app.applicantName}</span>
-                  </div>
-                  {app.coApplicantName && (
-                    <div className="flex items-center text-sm">
-                      <UserPlus className="w-4 h-4 text-gray-500 mr-2" />
-                      <span className="text-gray-600">
-                        {app.coApplicantName}
-                      </span>
+          {isLoadingApplications ? (
+            <div className="col-span-3 text-center py-12">Loading...</div>
+          ) : (
+            filteredApplications.map((app) => {
+              return (
+                <div
+                  key={app.id}
+                  onClick={() => setSelectedApplication(app)}
+                  className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-lg hover:border-blue-300 transition-all cursor-pointer"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">{app.loanNumber}</h3>
+                      <p className="text-sm text-gray-500">App: {app.customer?.name}</p>
                     </div>
-                  )}
-                  <div className="flex items-center text-sm">
-                    <Banknote className="w-4 h-4 text-gray-500 mr-2" />
-                    <span className="text-gray-700">
-                      ₹{app.loanAmount?.toLocaleString("en-IN") || "0"}
+                    <span className={`px-2.5 py-1 ${colorVariables.LIGHT_BG} text-blue-700 text-xs font-medium rounded-full`}>
+                      Document Verification
+                    </span>
+                  </div>
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center text-sm">
+                      <span className="text-gray-700">{app.customer?.firstName} {app.customer?.lastName}</span>
+                    </div>
+                  </div>
+                  {/* Click Indicator */}
+                  <div className="mt-4 pt-3 border-t border-gray-100 text-right">
+                    <span className={`text-xs ${colorVariables.PRIMARY_COLOR} font-medium`}>
+                      Click to manage documents →
                     </span>
                   </div>
                 </div>
-
-                {/* Document Progress */}
-                <div className="mb-4">
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-600">Document Progress</span>
-                    <span className="font-semibold text-gray-900">
-                      {appDocs.length}/{app.totalDocuments}
-                    </span>
-                  </div>
-                  <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full ${colorVariables.ACCENT_COLOR_BG} rounded-full transition-all`}
-                      style={{ width: `${progress}%` }}
-                    />
-                  </div>
-                </div>
-
-                {/* Status Summary */}
-                <div className="flex gap-3 text-xs">
-                  {verifiedCount > 0 && (
-                    <span className="flex items-center text-green-600">
-                      <CheckCircle className="w-3 h-3 mr-1" />
-                      {verifiedCount} Verified
-                    </span>
-                  )}
-                  {pendingCount > 0 && (
-                    <span className="flex items-center text-yellow-600">
-                      <Clock className="w-3 h-3 mr-1" />
-                      {pendingCount} Pending
-                      {rejectedCount > 0 && (
-                        <span className="flex items-center text-red-600">
-                          <XCircle className="w-3 h-3 mr-1" />
-                          {rejectedCount} Rejected
-                        </span>
-                      )}
-                    </span>
-                  )}
-                </div>
-
-                {/* Click Indicator */}
-                <div className="mt-4 pt-3 border-t border-gray-100 text-right">
-                  <span
-                    className={`text-xs ${colorVariables.PRIMARY_COLOR} font-medium`}
-                  >
-                    Click to manage documents →
-                  </span>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
-
-        {/* No Results */}
-        {filteredApplications.length === 0 && (
+        {filteredApplications.length === 0 && !isLoadingApplications && (
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center">
-            <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No applications found
-            </h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No applications found</h3>
             <p className="text-gray-500">Try adjusting your search criteria</p>
           </div>
         )}
@@ -376,3 +505,108 @@ export default function DocumentPage() {
     </div>
   );
 }
+
+// Component to display all document names and upload buttons
+function DocumentListWithUpload({ applicationId, onUploadSuccess }) {
+  const { data, isLoading, error, refetch } = useLoanDocumentList(applicationId);
+  const [uploading, setUploading] = React.useState({});
+
+  if (isLoading) return <div>Loading document list...</div>;
+  if (error) return <div className="text-red-500">Failed to load document list.</div>;
+
+  // Defensive: handle non-array docs
+  let docList = [];
+  if (Array.isArray(data?.data)) {
+    docList = data.data;
+  } else if (Array.isArray(data)) {
+    docList = data;
+  } else if (data && typeof data === 'object') {
+    if (Array.isArray(data.documents)) {
+      docList = data.documents;
+    } else if (Array.isArray(data.result)) {
+      docList = data.result;
+    }
+  }
+
+  // docs is expected to be an array of { documentType, documentName, party, required }
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead>
+          <tr>
+            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Document Name</th>
+            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Party</th>
+            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Required</th>
+            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Upload</th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-100">
+          {docList.map((doc) => (
+            <tr key={doc.party + '-' + doc.documentType}>
+              <td className="px-4 py-2 whitespace-nowrap">{doc.documentName || doc.documentType}</td>
+              <td className="px-4 py-2 whitespace-nowrap capitalize">{doc.party}</td>
+              <td className="px-4 py-2 whitespace-nowrap">
+                {doc.required ? (
+                  <span className="text-red-500 font-semibold">Required</span>
+                ) : (
+                  <span className="text-gray-400">Optional</span>
+                )}
+              </td>
+              <td className="px-4 py-2 whitespace-nowrap">
+                <UploadCell
+                  applicationId={applicationId}
+                  documentType={doc.documentType}
+                  party={doc.party}
+                  onUploadSuccess={() => {
+                    refetch();
+                    if (onUploadSuccess) onUploadSuccess();
+                  }}
+                  uploading={!!uploading[doc.party + '-' + doc.documentType]}
+                  setUploading={setUploading}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {docList.length === 0 && <div className="text-gray-500 p-4">No documents found.</div>}
+    </div>
+  );
+}
+
+// Cell for uploading a document
+function UploadCell({ applicationId, documentType, party, onUploadSuccess, uploading, setUploading }) {
+  const uploadDocumentsMutation = useUploadDocuments();
+  const inputRef = React.useRef();
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploading((u) => ({ ...u, [party + '-' + documentType]: true }));
+    try {
+      await uploadDocumentsMutation.mutateAsync({ id: applicationId, file, documentType, party });
+      toast.success("Document uploaded successfully");
+      if (onUploadSuccess) onUploadSuccess();
+    } catch (err) {
+      toast.error("Upload failed");
+    } finally {
+      setUploading((u) => ({ ...u, [party + '-' + documentType]: false }));
+      if (inputRef.current) inputRef.current.value = "";
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-2">
+      <input
+        type="file"
+        accept="application/pdf,image/*"
+        ref={inputRef}
+        disabled={uploading}
+        onChange={handleFileChange}
+        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+      />
+      {uploading && <span className="text-blue-500 text-xs">Uploading...</span>}
+    </div>
+  );
+}
+

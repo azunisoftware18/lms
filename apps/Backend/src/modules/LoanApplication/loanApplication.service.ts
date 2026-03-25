@@ -36,10 +36,12 @@ import {
   attachKycToLoan,
   createCoApplicants,
 } from "./loanApplicationService/kyc.service.js";
+
 import {
   sanitizeDocumentList,
   sanitizeDocumentResponse,
 } from "./loanApplicationService/document.service.js";
+import { parseLoanDocumentCsv } from "../../common/constants/loanDocumentTypes.js";
 
 export async function uploadLoanDocumentsService(
   loanApplicationId: string,
@@ -519,6 +521,11 @@ export const getAllLoanApplicationsService = async (params: {
             lastName: true,
           },
         },
+        loanType: {
+          select: {
+            id: true,
+          },
+        },
         kyc: {
           select: {
             status: true,
@@ -552,6 +559,7 @@ export const getAllLoanApplicationsService = async (params: {
       id: loan.customer.id,
       name: `${loan.customer.firstName} ${loan.customer.lastName}`,
     },
+    loanTypeId: loan.loanType?.id || null,
     kycStatus: loan.kyc?.status,
     documentCount: loan.kyc?.documents?.length || 0,
     coApplicantCount: loan.coapplicants?.length || 0,
@@ -1096,3 +1104,85 @@ export const createFullLoanApplicationService = async (
   }
 };
 
+
+export const listofalldocumentsForLoanService = async (loanId: string) => {
+  const loan = await prisma.loanApplication.findUnique({
+    where: { id: loanId },
+  });
+  
+  if (!loan) {
+    throw AppError.notFound("Loan application not found");
+  }
+  if (loan.loanTypeId) {
+   const loanType = await prisma.loanType.findUnique({
+    where: { id: loan.loanTypeId },
+    select: { applicantDocumentsRequired: true,
+      coApplicantDocumentsRequired: true,
+      guarantorDocumentsRequired: true,
+    applicantDocumentsOptional: true,
+    coApplicantDocumentsOptional: true,
+    guarantorDocumentsOptional: true, },
+   });
+    if (!loanType) {
+      throw AppError.notFound("Loan type not found");
+    }
+    const applicantRequiredDocuments = loanType.applicantDocumentsRequired
+      ? parseLoanDocumentCsv(loanType.applicantDocumentsRequired)
+      : [];
+    const coApplicantRequiredDocuments = loanType.coApplicantDocumentsRequired
+      ? parseLoanDocumentCsv(loanType.coApplicantDocumentsRequired)
+      : [];
+    const guarantorRequiredDocuments = loanType.guarantorDocumentsRequired
+      ? parseLoanDocumentCsv(loanType.guarantorDocumentsRequired)
+      : [];
+
+    const applicantOptionalDocuments = loanType.applicantDocumentsOptional
+      ? parseLoanDocumentCsv(loanType.applicantDocumentsOptional)
+      : [];
+    const coApplicantOptionalDocuments = loanType.coApplicantDocumentsOptional
+      ? parseLoanDocumentCsv(loanType.coApplicantDocumentsOptional)
+      : [];
+    const guarantorOptionalDocuments = loanType.guarantorDocumentsOptional
+      ? parseLoanDocumentCsv(loanType.guarantorDocumentsOptional)
+      : [];
+
+    const requiredDocuments = [
+      ...applicantRequiredDocuments.map((doc) => ({
+        documentType: doc,
+        ownerType: "APPLICANT",
+      })),
+      ...coApplicantRequiredDocuments.map((doc) => ({
+        documentType: doc,
+        ownerType: "CO_APPLICANT",
+      })),
+      ...guarantorRequiredDocuments.map((doc) => ({
+        documentType: doc,
+        ownerType: "GUARANTOR",
+      })),
+    ];
+
+    const optionalDocuments = [
+      ...applicantOptionalDocuments.map((doc) => ({
+        documentType: doc,
+        ownerType: "APPLICANT",
+      })),
+      ...coApplicantOptionalDocuments.map((doc) => ({
+        documentType: doc,
+        ownerType: "CO_APPLICANT",
+      })),
+      ...guarantorOptionalDocuments.map((doc) => ({
+        documentType: doc,
+        ownerType: "GUARANTOR",
+      })),
+    ];  
+    return {
+      requiredDocuments,
+      optionalDocuments,
+    };
+  }
+  return {
+    requiredDocuments: [],
+    optionalDocuments: [],
+  };
+
+};
