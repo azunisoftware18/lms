@@ -1,4 +1,16 @@
+// Placeholder ConsentSection to prevent crash if not implemented
+const ConsentSection = () => (
+  <div className="p-6 text-center text-slate-500 border border-dashed border-slate-300 rounded-lg my-8">
+    <h3 className="font-bold text-lg mb-2">Consent & PDC Section</h3>
+    <p>
+      This section is under construction. Please implement the ConsentSection
+      component.
+    </p>
+  </div>
+);
 // ─────────────────────────────────────────────
+import ErrorBoundary from "../common/ErrorBoundary";
+
 // PERSON PERSONAL FIELDS (Reusable for Applicant/Co-Applicant)
 // ─────────────────────────────────────────────
 const PersonPersonalFields = ({ control, prefix }) => {
@@ -2252,7 +2264,7 @@ const GuarantorSection = ({
         >
           <PersonPersonalFields
             control={control}
-            prefix={`Guarantors.${index}`}
+            prefix={`guarantors.${index}`}
           />
         </SectionCard>
         <SectionCard
@@ -2312,7 +2324,6 @@ const LoanRequirementSection = ({ control, errors, watch, setValue }) => {
     const t = funds.reduce((s, v) => s + (Number(v) || 0), 0);
     setValue("loanRequirement.totalBalanceFund", t);
   }, [funds, setValue]);
-  const propertySelected = watch("property.selected");
 
   return (
     <div>
@@ -2682,165 +2693,6 @@ const LoanRequirementSection = ({ control, errors, watch, setValue }) => {
           />
         </div>
       </SectionCard>
-
-      <SectionCard
-        title="Mortgage Property Details"
-        icon={Home}
-        accentColor="violet"
-      >
-        <div className="space-y-4">
-          <Controller
-            name="property.selected"
-            control={control}
-            render={({ field }) => (
-              <RadioGroup
-                label="Property Selected"
-                options={[
-                  { value: "Yes", label: "Yes" },
-                  { value: "No", label: "No" },
-                ]}
-                value={field.value}
-                onChange={field.onChange}
-              />
-            )}
-          />
-          {propertySelected === "Yes" && (
-            <>
-              <Controller
-                name="property.address"
-                control={control}
-                render={({ field }) => (
-                  <TextAreaField label="Property Address" rows={2} {...field} />
-                )}
-              />
-              <Grid cols={4}>
-                <Controller
-                  name="property.city"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField label="City / Town" {...field} />
-                  )}
-                />
-                <Controller
-                  name="property.district"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField label="District" {...field} />
-                  )}
-                />
-                <Controller
-                  name="property.state"
-                  control={control}
-                  render={({ field }) => (
-                    <SelectField
-                      label="State"
-                      isSearchable
-                      options={INDIAN_STATES}
-                      value={field.value}
-                      onChange={field.onChange}
-                    />
-                  )}
-                />
-                <Controller
-                  name="property.pinCode"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField
-                      label="Pin Code"
-                      {...field}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value.replace(/\D/g, "").slice(0, 6),
-                        )
-                      }
-                    />
-                  )}
-                />
-              </Grid>
-              <Controller
-                name="property.landmark"
-                control={control}
-                render={({ field }) => (
-                  <InputField label="Land Mark" {...field} />
-                )}
-              />
-              <Grid>
-                <Controller
-                  name="property.landArea"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField label="Land Area (Sq. Mtr.)" {...field} />
-                  )}
-                />
-                <Controller
-                  name="property.buildUpArea"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField label="Build up Area (Sq. Mtr.)" {...field} />
-                  )}
-                />
-              </Grid>
-              <Controller
-                name="property.ownership"
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    label="Ownership"
-                    options={OWNERSHIP_OPTIONS}
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                )}
-              />
-              <Controller
-                name="property.landType"
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    label="Land Type"
-                    options={LAND_TYPE_OPTIONS}
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                )}
-              />
-              <Controller
-                name="property.purchasedFrom"
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    label="Purchased From"
-                    options={PURCHASED_FROM_OPTIONS}
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                )}
-              />
-              <Grid>
-                <Controller
-                  name="property.constructionStage"
-                  control={control}
-                  render={({ field }) => (
-                    <RadioGroup
-                      label="Construction Stage"
-                      options={CONSTRUCTION_STAGE_OPTIONS}
-                      value={field.value}
-                      onChange={field.onChange}
-                    />
-                  )}
-                />
-                <Controller
-                  name="property.constructionPercent"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField label="Stage of Construction %" {...field} />
-                  )}
-                />
-              </Grid>
-            </>
-          )}
-        </div>
-      </SectionCard>
     </div>
   );
 };
@@ -2848,7 +2700,7 @@ const LoanRequirementSection = ({ control, errors, watch, setValue }) => {
 // ─────────────────────────────────────────────
 // SECTION: ADDITIONAL INFO (Image 5 + 8)
 // ─────────────────────────────────────────────
-const AdditionalSection = ({ control }) => {
+const AdditionalSection = ({ control, watch, setValue }) => {
   const HOW_KNOW = [
     { value: "PAPER_INSERT", label: "Paper Insert" },
     { value: "TV_ADVT", label: "TV Advt." },
@@ -2881,23 +2733,24 @@ const AdditionalSection = ({ control }) => {
       label: "Is/Are Applicant(s) resident(s) of India?",
     },
     {
+      key: "questionnaire.otherLoanOutstanding",
+      label: "Do you have any other loan outstanding?",
+    },
+    {
       key: "questionnaire.appliedToMPPLEarlier",
       label: "Has/Have applicant(s) applied to MPPL earlier?",
     },
-    {
-      key: "questionnaire.givenGuaranteeToMPPL",
-      label: "Has/Have applicant(s) given Guarantee to any loan with MPPL?",
-    },
-    {
-      key: "questionnaire.intendToGiveOnRent",
-      label: "Do you intend to give the dwelling unit on rent?",
-    },
+
     {
       key: "questionnaire.interestedInInsurance",
       label: "Would you be interested in insuring yourself?",
     },
   ];
-
+  const cards = watch("creditCards") ?? [];
+  const banks = watch("bankAccounts") ?? [];
+  const policies = watch("insurancePolicies") ?? [];
+  const properties = watch("properties") ?? [];
+  const refs = watch("references") ?? [];
   return (
     <div>
       {/* Loan Details Table */}
@@ -2905,64 +2758,135 @@ const AdditionalSection = ({ control }) => {
         <p className="text-xs text-slate-400 mb-4">
           Applicable only if applicant/co-applicant has a loan outstanding
         </p>
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs border-collapse">
-            <thead>
-              <tr className="bg-slate-100">
-                {[
-                  "Name of Institution",
-                  "Purpose for Loan",
-                  "Disbursed Loan Amt (₹)",
-                  "EMI (₹)",
-                  "Balance Term",
-                  "Balance Outstanding (₹)",
-                ].map((h) => (
-                  <th
-                    key={h}
-                    className="border border-slate-200 px-2 py-2 text-left font-bold text-slate-600 whitespace-nowrap"
-                  >
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {[0, 1, 2].map((i) => (
-                <tr key={i}>
-                  {[
-                    ["institution", "text"],
-                    ["purposeForLoan", "text"],
-                    ["disbursedLoanAmt", "number"],
-                    ["emi", "number"],
-                    ["balanceTerm", "text"],
-                    ["balanceOutstanding", "number"],
-                  ].map(([field, type]) => (
-                    <td key={field} className="border border-slate-200 p-1">
-                      <Controller
-                        name={`loanDetails.${i}.${field}`}
-                        control={control}
-                        render={({ field: f }) => (
-                          <input
-                            type={type}
-                            className="w-full px-2 py-1 text-xs border-0 outline-none bg-transparent"
-                            placeholder="—"
-                            {...f}
-                            onChange={(e) =>
-                              f.onChange(
-                                type === "number"
-                                  ? Number(e.target.value)
-                                  : e.target.value,
-                              )
-                            }
-                          />
-                        )}
+        <div className="space-y-6">
+          {((watch("existingLoans") ?? []).length
+            ? watch("existingLoans")
+            : [{}]
+          ).map((_, i) => (
+            <div key={i} className="p-4 border border-slate-200 rounded-md ">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Institution */}
+                <div>
+                  <label className="block text-xs text-slate-600 mb-1">
+                    Name of Institution
+                  </label>
+                  <Controller
+                    name={`existingLoans.${i}.institutionName`}
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        type="text"
+                        className="w-full px-2 py-1 text-xs border border-slate-200 rounded"
+                        placeholder="Institution Name"
+                        {...field}
+                        value={field.value || ""}
                       />
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    )}
+                  />
+                </div>
+
+                {/* Purpose */}
+                <div>
+                  <label className="block text-xs text-slate-600 mb-1">
+                    Purpose for Loan
+                  </label>
+                  <Controller
+                    name={`existingLoans.${i}.purpose`}
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        type="text"
+                        className="w-full px-2 py-1 text-xs border border-slate-200 rounded"
+                        placeholder="Purpose"
+                        {...field}
+                        value={field.value || ""}
+                      />
+                    )}
+                  />
+                </div>
+
+                {/* Disbursed */}
+                <div>
+                  <label className="block text-xs text-slate-600 mb-1">
+                    Disbursed Loan Amt (₹)
+                  </label>
+                  <Controller
+                    name={`existingLoans.${i}.disbursedAmount`}
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        type="number"
+                        className="w-full px-2 py-1 text-xs border border-slate-200 rounded"
+                        placeholder="Amount"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    )}
+                  />
+                </div>
+
+                {/* EMI */}
+                <div>
+                  <label className="block text-xs text-slate-600 mb-1">
+                    EMI (₹)
+                  </label>
+                  <Controller
+                    name={`existingLoans.${i}.emi`}
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        type="number"
+                        className="w-full px-2 py-1 text-xs border border-slate-200 rounded"
+                        placeholder="EMI"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    )}
+                  />
+                </div>
+
+                {/* Balance Term */}
+                <div>
+                  <label className="block text-xs text-slate-600 mb-1">
+                    Balance Term
+                  </label>
+                  <Controller
+                    name={`existingLoans.${i}.balanceTerm`}
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        type="number"
+                        className="w-full px-2 py-1 text-xs border border-slate-200 rounded"
+                        placeholder="Term"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    )}
+                  />
+                </div>
+
+                {/* Outstanding */}
+                <div>
+                  <label className="block text-xs text-slate-600 mb-1">
+                    Balance Outstanding (₹)
+                  </label>
+                  <Controller
+                    name={`existingLoans.${i}.balanceOutstanding`}
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        type="number"
+                        className="w-full px-2 py-1 text-xs border border-slate-200 rounded"
+                        placeholder="Outstanding"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </SectionCard>
 
@@ -2972,128 +2896,285 @@ const AdditionalSection = ({ control }) => {
         icon={CreditCard}
         accentColor="indigo"
       >
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs border-collapse">
-            <thead>
-              <tr className="bg-slate-100">
-                {[
-                  "Holder Name",
-                  "Credit Card No.",
-                  "Card Holder Since",
-                  "Issuing Bank",
-                  "Credit Limit (₹)",
-                  "Outstanding Amount (₹)",
-                ].map((h) => (
-                  <th
-                    key={h}
-                    className="border border-slate-200 px-2 py-2 text-left font-bold text-slate-600 whitespace-nowrap"
-                  >
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {[0, 1, 2].map((i) => (
-                <tr key={i}>
-                  {[
-                    ["holderName", "text"],
-                    ["cardNo", "text"],
-                    ["cardHolderSince", "text"],
-                    ["issuingBank", "text"],
-                    ["creditLimit", "number"],
-                    ["outstandingAmount", "number"],
-                  ].map(([field, type]) => (
-                    <td key={field} className="border border-slate-200 p-1">
-                      <Controller
-                        name={`creditCards.${i}.${field}`}
-                        control={control}
-                        render={({ field: f }) => (
-                          <input
-                            type={type}
-                            className="w-full px-2 py-1 text-xs border-0 outline-none bg-transparent"
-                            placeholder="—"
-                            {...f}
-                            onChange={(e) =>
-                              f.onChange(
-                                type === "number"
-                                  ? Number(e.target.value)
-                                  : e.target.value,
-                              )
-                            }
-                          />
-                        )}
+        <div className="space-y-6">
+          {(cards.length ? cards : [{}]).map((_, i) => (
+            <div key={i} className="p-4 border border-slate-200 rounded-md ">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Holder Name */}
+                <Controller
+                  name={`creditCards.${i}.holderName`}
+                  control={control}
+                  render={({ field }) => (
+                    <div>
+                      <label className="block text-xs text-slate-600 mb-1">
+                        Holder Name
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-2 py-1 text-xs border border-slate-200 rounded"
+                        placeholder="Holder Name"
+                        {...field}
+                        value={field.value || ""}
                       />
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </SectionCard>
+                    </div>
+                  )}
+                />
 
-      {/* Bank A/c Details */}
-      <SectionCard title="Bank A/c Details" icon={Landmark} accentColor="teal">
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs border-collapse">
-            <thead>
-              <tr className="bg-slate-100">
-                {[
-                  "Holder Name",
-                  "Bank Name/Branch",
-                  "A/c Type",
-                  "Account No.",
-                  "A/c Opening Date",
-                  "Balance Amt (₹)",
-                ].map((h) => (
-                  <th
-                    key={h}
-                    className="border border-slate-200 px-2 py-2 text-left font-bold text-slate-600 whitespace-nowrap"
-                  >
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {[0, 1, 2].map((i) => (
-                <tr key={i}>
-                  {[
-                    ["holderName", "text"],
-                    ["bankNameBranch", "text"],
-                    ["acType", "text"],
-                    ["accountNo", "text"],
-                    ["acOpeningDate", "text"],
-                    ["balanceAmt", "number"],
-                  ].map(([field, type]) => (
-                    <td key={field} className="border border-slate-200 p-1">
-                      <Controller
-                        name={`bankAccounts.${i}.${field}`}
-                        control={control}
-                        render={({ field: f }) => (
-                          <input
-                            type={type}
-                            className="w-full px-2 py-1 text-xs border-0 outline-none bg-transparent"
-                            placeholder="—"
-                            {...f}
-                            onChange={(e) =>
-                              f.onChange(
-                                type === "number"
-                                  ? Number(e.target.value)
-                                  : e.target.value,
-                              )
-                            }
-                          />
-                        )}
+                {/* Card Number */}
+                <Controller
+                  name={`creditCards.${i}.cardNo`}
+                  control={control}
+                  render={({ field }) => (
+                    <div>
+                      <label className="block text-xs text-slate-600 mb-1">
+                        Credit Card No.
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-2 py-1 text-xs border border-slate-200 rounded"
+                        placeholder="Card Number"
+                        {...field}
+                        value={field.value || ""}
                       />
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    </div>
+                  )}
+                />
+
+                {/* Holder Since */}
+                <Controller
+                  name={`creditCards.${i}.cardHolderSince`}
+                  control={control}
+                  render={({ field }) => (
+                    <div>
+                      <label className="block text-xs text-slate-600 mb-1">
+                        Card Holder Since
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-2 py-1 text-xs border border-slate-200 rounded"
+                        placeholder="Since"
+                        {...field}
+                        value={field.value || ""}
+                      />
+                    </div>
+                  )}
+                />
+
+                {/* Bank */}
+                <Controller
+                  name={`creditCards.${i}.issuingBank`}
+                  control={control}
+                  render={({ field }) => (
+                    <div>
+                      <label className="block text-xs text-slate-600 mb-1">
+                        Issuing Bank
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-2 py-1 text-xs border border-slate-200 rounded"
+                        placeholder="Bank"
+                        {...field}
+                        value={field.value || ""}
+                      />
+                    </div>
+                  )}
+                />
+
+                {/* Credit Limit */}
+                <Controller
+                  name={`creditCards.${i}.creditLimit`}
+                  control={control}
+                  render={({ field }) => (
+                    <div>
+                      <label className="block text-xs text-slate-600 mb-1">
+                        Credit Limit (₹)
+                      </label>
+                      <input
+                        type="number"
+                        className="w-full px-2 py-1 text-xs border border-slate-200 rounded"
+                        placeholder="Limit"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </div>
+                  )}
+                />
+
+                {/* Outstanding */}
+                <Controller
+                  name={`creditCards.${i}.outstandingAmount`}
+                  control={control}
+                  render={({ field }) => (
+                    <div>
+                      <label className="block text-xs text-slate-600 mb-1">
+                        Outstanding Amount (₹)
+                      </label>
+                      <input
+                        type="number"
+                        className="w-full px-2 py-1 text-xs border border-slate-200 rounded"
+                        placeholder="Outstanding"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </div>
+                  )}
+                />
+              </div>
+
+              {/* Remove */}
+              {cards.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const updated = cards.filter((_, index) => index !== i);
+                    setValue("creditCards", updated);
+                  }}
+                  className="mt-3 text-xs text-red-500"
+                >
+                  Remove Card
+                </button>
+              )}
+            </div>
+          ))}
         </div>
+
+        {/* Add */}
+        <button
+          type="button"
+          onClick={() => {
+            setValue("creditCards", [
+              ...cards,
+              {
+                holderName: "",
+                cardNo: "",
+                cardHolderSince: "",
+                issuingBank: "",
+                creditLimit: "",
+                outstandingAmount: "",
+              },
+            ]);
+          }}
+          className="mt-4 px-3 py-1 text-xs bg-indigo-200 rounded"
+        >
+          + Add Another Credit Card Details
+        </button>
+      </SectionCard>
+      {/* Bank A/C Details */}
+      <SectionCard title="Bank A/c Details" icon={Landmark} accentColor="teal">
+        <div className="space-y-6">
+          {(banks.length ? banks : [{}]).map((_, i) => (
+            <div key={i} className="p-4 border border-slate-200 rounded-md ">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Holder Name */}
+                <Controller
+                  name={`bankAccounts.${i}.holderName`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField label="Holder Name" {...field} />
+                  )}
+                />
+
+                {/* Bank Name */}
+                <Controller
+                  name={`bankAccounts.${i}.bankName`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField label="Bank Name" {...field} />
+                  )}
+                />
+
+                {/* Branch Name */}
+                <Controller
+                  name={`bankAccounts.${i}.branchName`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField label="Branch Name" {...field} />
+                  )}
+                />
+
+                {/* Account Type */}
+                <Controller
+                  name={`bankAccounts.${i}.accountType`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Account Type (SAVINGS/CURRENT)"
+                      {...field}
+                    />
+                  )}
+                />
+
+                {/* Account Number */}
+                <Controller
+                  name={`bankAccounts.${i}.accountNumber`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField label="Account Number" {...field} />
+                  )}
+                />
+
+                {/* Opening Date */}
+                <Controller
+                  name={`bankAccounts.${i}.openingDate`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField type="date" label="Opening Date" {...field} />
+                  )}
+                />
+
+                {/* Balance */}
+                <Controller
+                  name={`bankAccounts.${i}.balanceAmount`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      type="number"
+                      label="Balance Amount (₹)"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  )}
+                />
+              </div>
+
+              {/* Remove Button */}
+              {banks.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const updated = banks.filter((_, index) => index !== i);
+                    setValue("bankAccounts", updated);
+                  }}
+                  className="mt-3 text-xs text-red-500"
+                >
+                  Remove Account
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Add Button */}
+        <button
+          type="button"
+          onClick={() => {
+            setValue("bankAccounts", [
+              ...banks,
+              {
+                holderName: "",
+                bankName: "",
+                branchName: "",
+                accountType: "",
+                accountNumber: "",
+                openingDate: "",
+                balanceAmount: "",
+              },
+            ]);
+          }}
+          className="mt-4 px-3 py-2 text-xs bg-teal-200 rounded"
+        >
+          + Add Another Bank A/C
+        </button>
       </SectionCard>
 
       {/* Insurance Details */}
@@ -3102,73 +3183,405 @@ const AdditionalSection = ({ control }) => {
         icon={Shield}
         accentColor="violet"
       >
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs border-collapse">
-            <thead>
-              <tr className="bg-slate-100">
-                <th className="border border-slate-200 px-2 py-2 text-left font-bold text-slate-600 w-32">
-                  Field
-                </th>
-                {["Policy 1", "Policy 2", "Policy 3", "Policy 4"].map((p) => (
-                  <th
-                    key={p}
-                    className="border border-slate-200 px-2 py-2 text-left font-bold text-slate-600"
-                  >
-                    {p}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ["issuedBy", "Issued by", "text"],
-                ["branchName", "Branch Name", "text"],
-                ["holderName", "Holder Name", "text"],
-                ["policyNo", "Policy No.", "text"],
-                ["maturityDate", "Maturity Date", "text"],
-                ["policyValue", "Policy Value (₹)", "number"],
-                ["policyType", "Policy Type", "text"],
-                ["premiumYearly", "Premium (Yearly) (₹)", "number"],
-                ["paidUpValue", "Paid-up Value (₹)", "number"],
-              ].map(([field, rowLabel, type]) => (
-                <tr key={field}>
-                  <td className="border border-slate-200 px-2 py-1.5 font-semibold text-slate-600 bg-slate-50">
-                    {rowLabel}
-                  </td>
-                  {[0, 1, 2, 3].map((i) => (
-                    <td key={i} className="border border-slate-200 p-1">
+        <div className="space-y-6">
+          {(policies.length ? policies : [{}]).map((_, i) => (
+            <div key={i} className="p-4 border border-slate-200 rounded-md ">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Issued By */}
+                <Controller
+                  name={`insurancePolicies.${i}.issuedBy`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField label="Issued By" {...field} />
+                  )}
+                />
+
+                {/* Branch */}
+                <Controller
+                  name={`insurancePolicies.${i}.branchName`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField label="Branch Name" {...field} />
+                  )}
+                />
+
+                {/* Holder */}
+                <Controller
+                  name={`insurancePolicies.${i}.holderName`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField label="Holder Name" {...field} />
+                  )}
+                />
+
+                {/* Policy Number */}
+                <Controller
+                  name={`insurancePolicies.${i}.policyNumber`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField label="Policy Number" {...field} />
+                  )}
+                />
+
+                {/* Maturity Date */}
+                <Controller
+                  name={`insurancePolicies.${i}.maturityDate`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField type="date" label="Maturity Date" {...field} />
+                  )}
+                />
+
+                {/* Policy Value */}
+                <Controller
+                  name={`insurancePolicies.${i}.policyValue`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      type="number"
+                      label="Policy Value (₹)"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  )}
+                />
+
+                {/* Policy Type */}
+                <Controller
+                  name={`insurancePolicies.${i}.policyType`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField label="Policy Type" {...field} />
+                  )}
+                />
+
+                {/* Yearly Premium */}
+                <Controller
+                  name={`insurancePolicies.${i}.yearlyPremium`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      type="number"
+                      label="Yearly Premium (₹)"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  )}
+                />
+
+                {/* Paid Up Value */}
+                <Controller
+                  name={`insurancePolicies.${i}.paidUpValue`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      type="number"
+                      label="Paid-up Value (₹)"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  )}
+                />
+              </div>
+
+              {/* Remove Button */}
+              {policies.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const updated = policies.filter((_, index) => index !== i);
+                    setValue("insurancePolicies", updated);
+                  }}
+                  className="mt-3 text-xs text-red-500"
+                >
+                  Remove Policy
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Add Button */}
+        <button
+          type="button"
+          onClick={() => {
+            setValue("insurancePolicies", [
+              ...policies,
+              {
+                issuedBy: "",
+                branchName: "",
+                holderName: "",
+                policyNumber: "",
+                maturityDate: "",
+                policyValue: "",
+                policyType: "",
+                yearlyPremium: "",
+                paidUpValue: "",
+              },
+            ]);
+          }}
+          className="mt-4 px-3 py-2 text-sm bg-blue-600 rounded "
+        >
+          + Add Another Policy
+        </button>
+      </SectionCard>
+
+      {/* Mortgage Property Details */}
+      <SectionCard
+        title="Mortgage Property Details"
+        icon={Home}
+        accentColor="violet"
+      >
+        <div className="space-y-6">
+          {(properties.length ? properties : [{}]).map((_, i) => {
+            const isSelected = watch(`properties.${i}.propertySelected`);
+
+            return (
+              <div
+                key={i}
+                className="p-5 border border-slate-200 rounded-xl bg-white shadow-sm"
+              >
+                <div className="space-y-4">
+                  {/* Header */}
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-sm font-semibold text-slate-700">
+                      Property {i + 1}
+                    </h3>
+
+                    {properties.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = properties.filter(
+                            (_, idx) => idx !== i,
+                          );
+                          setValue("properties", updated);
+                        }}
+                        className="text-xs text-red-500"
+                      >
+                        Remove Property
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Property Selected Dropdown */}
+                  <Controller
+                    name={`properties.${i}.propertySelected`}
+                    control={control}
+                    render={({ field }) => (
+                      <InputField
+                        label="Property Selected"
+                        as="select"
+                        {...field}
+                        value={field.value ?? "YES"}
+                        onChange={(e) => field.onChange(e.target.value)}
+                      >
+                        <option value="YES">Yes</option>
+                        <option value="NO">No</option>
+                      </InputField>
+                    )}
+                  />
+
+                  {/* LandMark Input */}
+                  <Controller
+                    name={`properties.${i}.landMark`}
+                    control={control}
+                    render={({ field }) => (
+                      <InputField
+                        label="LandMark"
+                        {...field}
+                        value={field.value ?? ""}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+
+                  {/* Show only if selected Yes */}
+                  {isSelected === "YES" && (
+                    <>
+                      {/* Land Area (Sq. mtr) */}
                       <Controller
-                        name={`insurancePolicies.${i}.${field}`}
+                        name={`properties.${i}.landArea`}
                         control={control}
-                        render={({ field: f }) => (
-                          <input
-                            type={type}
-                            className="w-full px-2 py-1 text-xs border-0 outline-none bg-transparent"
-                            placeholder="—"
-                            {...f}
+                        render={({ field }) => (
+                          <InputField
+                            label="Land Area (Sq. mtr)"
+                            {...field}
+                            value={field.value ?? ""}
                             onChange={(e) =>
-                              f.onChange(
-                                type === "number"
-                                  ? Number(e.target.value)
-                                  : e.target.value,
+                              field.onChange(
+                                e.target.value ? Number(e.target.value) : "",
                               )
                             }
                           />
                         )}
                       />
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+                      {/* Ownership Dropdown: Sole, Joint */}
+                      <Controller
+                        name={`properties.${i}.ownershipType`}
+                        control={control}
+                        render={({ field }) => (
+                          <InputField
+                            label="Ownership"
+                            as="select"
+                            {...field}
+                            value={field.value ?? ""}
+                            onChange={field.onChange}
+                          >
+                            <option value="">Select</option>
+                            <option value="SOLE">Sole</option>
+                            <option value="JOINT">Joint</option>
+                          </InputField>
+                        )}
+                      />
+
+                      {/* Loan Type Dropdown: Freehold, Leasehold */}
+                      <Controller
+                        name={`properties.${i}.loanType`}
+                        control={control}
+                        render={({ field }) => (
+                          <InputField
+                            label="Loan Type"
+                            as="select"
+                            {...field}
+                            value={field.value ?? ""}
+                            onChange={field.onChange}
+                          >
+                            <option value="">Select</option>
+                            <option value="FREEHOLD">Freehold</option>
+                            <option value="LEASEHOLD">Leasehold</option>
+                          </InputField>
+                        )}
+                      />
+
+                      {/* Purchased From Dropdown */}
+                      <Controller
+                        name={`properties.${i}.purchaseFrom`}
+                        control={control}
+                        render={({ field }) => (
+                          <InputField
+                            label="Purchased From"
+                            as="select"
+                            {...field}
+                            value={field.value ?? ""}
+                            onChange={field.onChange}
+                          >
+                            <option value="">Select</option>
+                            <option value="BUILDER">Builder</option>
+                            <option value="SOCIETY">Society</option>
+                            <option value="DEVELOPMENT_AUTHORITY">
+                              Development Authority
+                            </option>
+                            <option value="HOUSING_BOARD">Housing Board</option>
+                            <option value="RESALE">Resale</option>
+                            <option value="SELF_CONSTRUCTION">
+                              Self Construction
+                            </option>
+                            <option value="OTHER">Other</option>
+                          </InputField>
+                        )}
+                      />
+
+                      {/* Construction Stage Dropdown: Ready, Under Construction */}
+                      <Controller
+                        name={`properties.${i}.constructionStage`}
+                        control={control}
+                        render={({ field }) => (
+                          <InputField
+                            label="Construction Stage"
+                            as="select"
+                            {...field}
+                            value={field.value ?? ""}
+                            onChange={field.onChange}
+                          >
+                            <option value="">Select</option>
+                            <option value="READY">Ready</option>
+                            <option value="UNDER_CONSTRUCTION">
+                              Under Construction
+                            </option>
+                          </InputField>
+                        )}
+                      />
+
+                      {/* Stage of Construction in % */}
+                      <Controller
+                        name={`properties.${i}.constructionPercent`}
+                        control={control}
+                        render={({ field }) => (
+                          <InputField
+                            label="Stage of Construction (%)"
+                            {...field}
+                            value={field.value ?? ""}
+                            onChange={(e) =>
+                              field.onChange(
+                                e.target.value ? Number(e.target.value) : "",
+                              )
+                            }
+                          />
+                        )}
+                      />
+                    </>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
+
+        {/* Add Property */}
+        <button
+          type="button"
+          onClick={() => {
+            setValue("properties", [
+              ...properties,
+              {
+                propertySelected: "YES",
+                landMark: "",
+                landArea: "",
+                ownershipType: "",
+                loanType: "",
+                purchaseFrom: "",
+                constructionStage: "",
+                constructionPercent: "",
+              },
+            ]);
+          }}
+          className="mt-4 px-4 py-2 text-sm bg-violet-200 rounded-md"
+        >
+          + Add Another Property
+        </button>
       </SectionCard>
 
       {/* General Information */}
       <SectionCard title="General Information" icon={Info} accentColor="amber">
         <div className="space-y-4">
-          {BOOL_QS.map((q) => (
+          {[
+            {
+              key: "questionnaire.legalPropertyClear",
+              label: "Is the property legally clear?",
+            },
+            {
+              key: "questionnaire.mortgagedElsewhere",
+              label: "Is the property mortgaged elsewhere?",
+            },
+            {
+              key: "questionnaire.residentOfIndia",
+              label: "Are you a resident of India?",
+            },
+            {
+              key: "questionnaire.otherLoans",
+              label: "Do you have other loans?",
+            },
+            {
+              key: "questionnaire.guarantorAnywhere",
+              label: "Are you a guarantor anywhere?",
+            },
+            {
+              key: "questionnaire.mppLifeInsurance",
+              label: "Do you have MPPL life insurance?",
+            },
+          ].map((q) => (
             <div
               key={q.key}
               className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0 gap-4"
@@ -3199,133 +3612,141 @@ const AdditionalSection = ({ control }) => {
               />
             </div>
           ))}
-
-          <Controller
-            name="questionnaire.howKnowAboutMPPL"
-            control={control}
-            render={({ field }) => (
-              <CheckboxGroup
-                label="Did you get to know about MPPL from"
-                options={HOW_KNOW}
-                value={field.value}
-                onChange={field.onChange}
-              />
-            )}
-          />
-          <Controller
-            name="questionnaire.howKnowAboutMPPLOther"
-            control={control}
-            render={({ field }) => (
-              <InputField label="Others (specify)" {...field} />
-            )}
-          />
-          <Grid>
-            <Controller
-              name="questionnaire.preferLoanSanctionedDate"
-              control={control}
-              render={({ field }) => (
-                <InputField
-                  label="When do you prefer the Loan to be Sanctioned (Date)"
-                  type="date"
-                  {...field}
-                />
-              )}
-            />
-            <Controller
-              name="questionnaire.disbursedDate"
-              control={control}
-              render={({ field }) => (
-                <InputField label="Disbursed (Date)" type="date" {...field} />
-              )}
-            />
-          </Grid>
-          <Controller
-            name="questionnaire.doYouOwn"
-            control={control}
-            render={({ field }) => (
-              <CheckboxGroup
-                label="Do you own"
-                options={OWN_OPTIONS}
-                value={field.value}
-                onChange={field.onChange}
-              />
-            )}
-          />
-          <Controller
-            name="questionnaire.communicationLanguage"
-            control={control}
-            render={({ field }) => (
-              <RadioGroup
-                label="In which language would you like to receive any future communication?"
-                options={[
-                  { value: "HINDI", label: "Hindi" },
-                  { value: "ENGLISH", label: "English" },
-                ]}
-                value={field.value}
-                onChange={field.onChange}
-              />
-            )}
-          />
         </div>
       </SectionCard>
 
       {/* References */}
       <SectionCard title="References" icon={UserCheck}>
         <div className="space-y-6">
-          {[0, 1].map((n) => (
-            <div key={n}>
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
-                Reference {n + 1}
-              </p>
+          {(refs.length ? refs : [{}]).map((_, i) => (
+            <div
+              key={i}
+              className="p-4 border border-slate-200 rounded-md bg-slate-50"
+            >
+              <div className="flex justify-between items-center mb-3">
+                <p className="text-xs font-bold text-slate-500 uppercase">
+                  Reference {i + 1}
+                </p>
+                {refs.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const updated = refs.filter((_, idx) => idx !== i);
+                      setValue("references", updated);
+                    }}
+                    className="text-xs text-red-500"
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
               <Grid>
                 <Controller
-                  name={`references.${n}.name`}
-                  control={control}
-                  render={({ field }) => <InputField label="Name" {...field} />}
-                />
-                <Controller
-                  name={`references.${n}.fatherName`}
+                  name={`references.${i}.name`}
                   control={control}
                   render={({ field }) => (
-                    <InputField label="Father's Name" {...field} />
+                    <InputField
+                      label="Name"
+                      {...field}
+                      value={field.value || ""}
+                    />
+                  )}
+                />
+                <Controller
+                  name={`references.${i}.fatherName`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Father's Name"
+                      {...field}
+                      value={field.value || ""}
+                    />
+                  )}
+                />
+                <Controller
+                  name={`references.${i}.relationship`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Relationship"
+                      {...field}
+                      value={field.value || ""}
+                    />
                   )}
                 />
               </Grid>
               <div className="mt-3 space-y-3">
                 <Controller
-                  name={`references.${n}.wo`}
-                  control={control}
-                  render={({ field }) => <InputField label="W/o" {...field} />}
-                />
-                <Controller
-                  name={`references.${n}.address`}
+                  name={`references.${i}.phone`}
                   control={control}
                   render={({ field }) => (
-                    <InputField label="Address" {...field} />
+                    <InputField
+                      label="Phone"
+                      type="tel"
+                      {...field}
+                      value={field.value || ""}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value.replace(/\D/g, "").slice(0, 10),
+                        )
+                      }
+                    />
+                  )}
+                />
+                <Controller
+                  name={`references.${i}.email`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Email"
+                      type="email"
+                      {...field}
+                      value={field.value || ""}
+                    />
+                  )}
+                />
+                <Controller
+                  name={`references.${i}.address`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Address"
+                      {...field}
+                      value={field.value || ""}
+                    />
                   )}
                 />
                 <Grid cols={3}>
                   <Controller
-                    name={`references.${n}.cityDist`}
+                    name={`references.${i}.city`}
                     control={control}
                     render={({ field }) => (
-                      <InputField label="City / Dist" {...field} />
+                      <InputField
+                        label="City"
+                        {...field}
+                        value={field.value || ""}
+                      />
                     )}
                   />
                   <Controller
-                    name={`references.${n}.state`}
+                    name={`references.${i}.state`}
                     control={control}
                     render={({ field }) => (
-                      <InputField label="State" {...field} />
+                      <InputField
+                        label="State"
+                        {...field}
+                        value={field.value || ""}
+                      />
                     )}
                   />
                   <Controller
-                    name={`references.${n}.pinCode`}
+                    name={`references.${i}.pinCode`}
                     control={control}
                     render={({ field }) => (
                       <InputField
                         label="Pin Code"
                         {...field}
+                        value={field.value || ""}
                         onChange={(e) =>
                           field.onChange(
                             e.target.value.replace(/\D/g, "").slice(0, 6),
@@ -3335,367 +3756,49 @@ const AdditionalSection = ({ control }) => {
                     )}
                   />
                 </Grid>
-                <Grid>
-                  <Controller
-                    name={`references.${n}.phoneNo`}
-                    control={control}
-                    render={({ field }) => (
-                      <InputField
-                        label="Phone No."
-                        type="tel"
-                        {...field}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value.replace(/\D/g, "").slice(0, 10),
-                          )
-                        }
-                      />
-                    )}
-                  />
-                  <Controller
-                    name={`references.${n}.occupation`}
-                    control={control}
-                    render={({ field }) => (
-                      <InputField label="Occupation" {...field} />
-                    )}
-                  />
-                </Grid>
+                <Controller
+                  name={`references.${i}.occupation`}
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Occupation"
+                      {...field}
+                      value={field.value || ""}
+                    />
+                  )}
+                />
               </div>
-              {n === 0 && <Divider />}
             </div>
           ))}
         </div>
+        {/* ADD BUTTON */}
+        <button
+          type="button"
+          onClick={() => {
+            setValue("references", [
+              ...refs,
+              {
+                name: "",
+                fatherName: "",
+                relationship: "",
+                phone: "",
+                email: "",
+                address: "",
+                city: "",
+                state: "",
+                pinCode: "",
+                occupation: "",
+              },
+            ]);
+          }}
+          className="mt-4 px-3 py-2 text-sm bg-blue-600 rounded"
+        >
+          + Add Another Reference
+        </button>
       </SectionCard>
     </div>
   );
 };
-
-// ─────────────────────────────────────────────
-// SECTION: CONSENT & PDC (Images 9 + 10)
-// ─────────────────────────────────────────────
-const ConsentSection = ({ control }) => (
-  <div>
-    <SectionCard
-      title="Consent Letter (सहमति पत्र)"
-      icon={FileCheck}
-      accentColor="indigo"
-    >
-      <div className="space-y-4">
-        <div className="p-4 bg-indigo-50 rounded-xl border border-indigo-100 text-xs text-slate-700 leading-relaxed space-y-2">
-          <p>
-            Shriман Prabhandak, Mascot Projects Pvt. Ltd., Jaipur — Mahoday,
-          </p>
-          <p>
-            Namra nivedan hai ki main <strong>[Borrower Name]</strong>,
-            Putra/Patni/Putri/Shri <strong>[Spouse/Ward of]</strong> ne aapki
-            company se <strong>[Loan Amount]</strong> Rupaye ka rin liya hai.
-          </p>
-        </div>
-        <Grid>
-          <Controller
-            name="consent.borrowerName"
-            control={control}
-            render={({ field }) => (
-              <InputField label="Borrower Name (Naam)" {...field} />
-            )}
-          />
-          <Controller
-            name="consent.spouseOrWardOf"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Putra/Patni/Putri/Shri (S/o, W/o)"
-                {...field}
-              />
-            )}
-          />
-        </Grid>
-        <Grid>
-          <Controller
-            name="consent.loanAmount"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Loan Amount (Rin Rashi) (₹)"
-                type="number"
-                {...field}
-                onChange={(e) => field.onChange(Number(e.target.value))}
-              />
-            )}
-          />
-          <Controller
-            name="consent.totalMonthlyInstallments"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Total Monthly Installments (Kul Masik Kisten)"
-                type="number"
-                {...field}
-                onChange={(e) => field.onChange(Number(e.target.value))}
-              />
-            )}
-          />
-        </Grid>
-        <Grid>
-          <Controller
-            name="consent.advanceInstallments"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Advance Installments (Kisht Agrim)"
-                type="number"
-                {...field}
-                onChange={(e) => field.onChange(Number(e.target.value))}
-              />
-            )}
-          />
-          <Controller
-            name="consent.pendingInstallments"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Pending Installments (Bakaya Kisten)"
-                type="number"
-                {...field}
-                onChange={(e) => field.onChange(Number(e.target.value))}
-              />
-            )}
-          />
-        </Grid>
-        <Grid>
-          <Controller
-            name="consent.firstInstallmentDate"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="First Installment Date (Pratham Kisht Dinank)"
-                type="date"
-                {...field}
-              />
-            )}
-          />
-          <Controller
-            name="consent.interestRate"
-            control={control}
-            render={({ field }) => (
-              <InputField
-                label="Interest Rate % (Byaj ki Dar — Pratishat Per Annum)"
-                {...field}
-              />
-            )}
-          />
-        </Grid>
-        <Controller
-          name="consent.paymentMode"
-          control={control}
-          render={({ field }) => (
-            <RadioGroup
-              label="Kishton ka Bhugtan (Payment Mode)"
-              options={PAYMENT_MODE_OPTIONS}
-              value={field.value}
-              onChange={field.onChange}
-            />
-          )}
-        />
-        <Grid>
-          <Controller
-            name="consent.totalCheques"
-            control={control}
-            render={({ field }) => (
-              <InputField label="Kul Cheque (Total Cheques)" {...field} />
-            )}
-          />
-          <Controller
-            name="consent.outstanding"
-            control={control}
-            render={({ field }) => (
-              <InputField label="Bakaya (Outstanding)" {...field} />
-            )}
-          />
-        </Grid>
-        <Controller
-          name="consent.chequeEcs"
-          control={control}
-          render={({ field }) => (
-            <InputField
-              label="Cheque/ECS (Borrower/Co-Borrower/Guarantor) diye ja rahe hain"
-              {...field}
-            />
-          )}
-        />
-      </div>
-    </SectionCard>
-
-    {/* Full PDC / Rollover PDC / Security Cheque Details */}
-    <SectionCard
-      title="Full PDC / Rollover PDC / Security Cheque Details"
-      icon={CreditCard}
-      accentColor="slate"
-    >
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs border-collapse">
-          <thead>
-            <tr className="bg-slate-100">
-              {[
-                "Drawee Bank",
-                "Account No.",
-                "Cheque No. From",
-                "Cheque No. To",
-                "No. of Chq.",
-                "EMI (₹)",
-                "Security",
-                "Insurance",
-                "Chq. Dt. M/Y",
-              ].map((h) => (
-                <th
-                  key={h}
-                  className="border border-slate-200 px-2 py-2 text-left font-bold text-slate-600 whitespace-nowrap"
-                >
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {[0, 1, 2, 3, 4].map((i) => (
-              <tr key={i}>
-                {[
-                  ["draweeBank", "text"],
-                  ["accountNo", "text"],
-                  ["chequeFrom", "text"],
-                  ["chequeTo", "text"],
-                  ["noOfCheques", "text"],
-                  ["emi", "number"],
-                  ["security", "text"],
-                  ["insurance", "text"],
-                  ["chequeDtMY", "text"],
-                ].map(([field, type]) => (
-                  <td key={field} className="border border-slate-200 p-1">
-                    <Controller
-                      name={`pdcEntries.${i}.${field}`}
-                      control={control}
-                      render={({ field: f }) => (
-                        <input
-                          type={type}
-                          className="w-full px-2 py-1 text-xs border-0 outline-none bg-transparent"
-                          placeholder="—"
-                          {...f}
-                          onChange={(e) =>
-                            f.onChange(
-                              type === "number"
-                                ? Number(e.target.value)
-                                : e.target.value,
-                            )
-                          }
-                        />
-                      )}
-                    />
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p className="text-xs text-slate-400 mt-3">
-        Note: Rollover PDC ke case mein bakaya cheque 6+ maah ki bheetar jama
-        karane honge athwa jama ki gayi pratibhuti bina kisi soochna ke jabt kar
-        li jaegi.
-      </p>
-    </SectionCard>
-
-    {/* Payment Receipts */}
-    <SectionCard
-      title="Payment Receipts (Neeche Rashi Jama Karai Hai)"
-      icon={FileCheck}
-      accentColor="emerald"
-    >
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs border-collapse">
-          <thead>
-            <tr className="bg-slate-100">
-              {[
-                "Vivaran (Description)",
-                "Dinank (Date)",
-                "Receipt No.",
-                "Rashi (Amount ₹)",
-              ].map((h) => (
-                <th
-                  key={h}
-                  className="border border-slate-200 px-2 py-2 text-left font-bold text-slate-600"
-                >
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              ["Advance Installment (Advance Kisht)", "advanceInstallment"],
-              ["File Charge", "fileCharge"],
-              ["Security Amount (Pratibhuti Rashi)", "securityAmount"],
-              ["Cash Payment Charge (Nakad Bhugtan Charge)", "cashPayment"],
-              ["Stamping Charge (Stamping Charge)", "stampingCharge"],
-              ["Other Amount (Anya Rashi)", "otherAmount"],
-              ["Total Amount (Kul Rashi)", "totalAmount"],
-            ].map(([label, key]) => (
-              <tr key={key}>
-                <td className="border border-slate-200 px-2 py-1.5 font-semibold text-slate-700 bg-slate-50">
-                  {label}
-                </td>
-                {[
-                  ["Date", "Date", "date"],
-                  ["ReceiptNo", "Receipt No.", "text"],
-                  ["Amount", "Amount (₹)", "number"],
-                ].map(([suffix, , type]) => (
-                  <td key={suffix} className="border border-slate-200 p-1">
-                    <Controller
-                      name={`paymentReceipts.${key}${suffix}`}
-                      control={control}
-                      render={({ field: f }) => (
-                        <input
-                          type={type}
-                          className="w-full px-2 py-1 text-xs border-0 outline-none bg-transparent"
-                          placeholder="—"
-                          {...f}
-                          onChange={(e) =>
-                            f.onChange(
-                              type === "number"
-                                ? Number(e.target.value)
-                                : e.target.value,
-                            )
-                          }
-                        />
-                      )}
-                    />
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="mt-6 grid grid-cols-3 gap-8 pt-4 border-t border-slate-100">
-        <div className="text-center">
-          <div className="h-10 border-b-2 border-slate-400 mb-2"></div>
-          <p className="text-xs text-slate-500 font-semibold">
-            Hastakshar Prarthi (Applicant Signature)
-          </p>
-        </div>
-        <div className="text-center">
-          <div className="h-10 border-b-2 border-slate-400 mb-2"></div>
-          <p className="text-xs text-slate-500 font-semibold">Dinank (Date)</p>
-        </div>
-        <div className="text-center">
-          <div className="h-10 border-b-2 border-slate-400 mb-2"></div>
-          <p className="text-xs text-slate-500 font-semibold">
-            Hastakshar Marketing Head
-          </p>
-        </div>
-      </div>
-    </SectionCard>
-  </div>
-);
 
 // ─────────────────────────────────────────────
 // SECTION: REVIEW & SUBMIT
@@ -3777,7 +3880,6 @@ const ReviewSection = ({ getValues, onSubmit, isSubmitting }) => {
           </div>
         )}
       </div>
-
       <ReviewBlock
         title="Applicant Details"
         icon={User}
@@ -3814,7 +3916,6 @@ const ReviewSection = ({ getValues, onSubmit, isSubmitting }) => {
           ],
         ]}
       />
-
       <ReviewBlock
         title="Current Address"
         icon={MapPin}
@@ -3826,7 +3927,6 @@ const ReviewSection = ({ getValues, onSubmit, isSubmitting }) => {
           ["Pin Code", addr.pinCode],
         ]}
       />
-
       <ReviewBlock
         title="Loan Requirement"
         icon={IndianRupee}
@@ -3848,7 +3948,6 @@ const ReviewSection = ({ getValues, onSubmit, isSubmitting }) => {
           ],
         ]}
       />
-
       {(data.coApplicants || []).length > 0 && (
         <ReviewBlock
           title={`Co-Applicants (${data.coApplicants.length})`}
@@ -3869,7 +3968,77 @@ const ReviewSection = ({ getValues, onSubmit, isSubmitting }) => {
           ])}
         />
       )}
-
+      {(data.existingLoans || []).length > 0 && (
+        <ReviewBlock
+          title="Existing Loans"
+          icon={CreditCard}
+          rows={data.existingLoans.map((l, i) => [
+            `Loan ${i + 1}`,
+            `${l.institutionName} - ₹${l.disbursedAmount}`,
+          ])}
+        />
+      )}
+      {(data.creditCards || []).length > 0 && (
+        <ReviewBlock
+          title="Credit Cards"
+          icon={CreditCard}
+          rows={data.creditCards.map((c, i) => [
+            `Card ${i + 1}`,
+            `${c.issuingBank} - Limit ₹${c.creditLimit}`,
+          ])}
+        />
+      )}
+      {(data.bankAccounts || []).length > 0 && (
+        <ReviewBlock
+          title="Bank Accounts"
+          icon={Landmark}
+          rows={data.bankAccounts.map((b, i) => [
+            `Account ${i + 1}`,
+            `${b.bankName} - ₹${b.balanceAmount}`,
+          ])}
+        />
+      )}
+      {(data.insurancePolicies || []).length > 0 && (
+        <ReviewBlock
+          title="Insurance Policies"
+          icon={Shield}
+          rows={data.insurancePolicies.map((p, i) => [
+            `Policy ${i + 1}`,
+            `${p.issuedBy} - ₹${p.policyValue}`,
+          ])}
+        />
+      )}
+      {(data.insurancePolicies || []).length > 0 && (
+        <ReviewBlock
+          title="Insurance Policies"
+          icon={Shield}
+          rows={data.insurancePolicies.map((p, i) => [
+            `Policy ${i + 1}`,
+            `${p.issuedBy} - ₹${p.policyValue}`,
+          ])}
+        />
+      )}
+      {(data.properties || []).length > 0 && (
+        <ReviewBlock
+          title="Properties"
+          icon={Home}
+          rows={data.properties.map((p, i) => [
+            `Property ${i + 1}`,
+            `${p.landArea} sqft - ${p.ownershipType}`,
+          ])}
+        />
+      )}
+      {(data.references || data.reference || []).length > 0 && (
+        <ReviewBlock
+          title="References"
+          icon={UserCheck}
+          rows={(data.references || data.reference).map((r, i) => [
+            `Reference ${i + 1}`,
+            `${r.name} - ${r.phoneNo || r.phone}`,
+          ])}
+        />
+      )}
+      
       <div className="p-5 bg-amber-50 rounded-2xl border border-amber-200">
         <div className="flex items-start gap-3">
           <Info size={16} className="text-amber-600 mt-0.5 shrink-0" />
@@ -3905,22 +4074,6 @@ const ReviewSection = ({ getValues, onSubmit, isSubmitting }) => {
           </div>
         </div>
       </div>
-
-      <div className="grid grid-cols-3 gap-6 p-5 bg-slate-50 rounded-2xl border border-slate-200">
-        {[
-          ["Applicant's Signature", "✓"],
-          ["Co-Applicant's Signature", "🖊"],
-          ["Guarantor's Signature", "✗"],
-        ].map(([label, symbol]) => (
-          <div key={label} className="text-center">
-            <div className="h-12 border-b-2 border-slate-400 mb-2 flex items-end justify-center pb-1">
-              <span className="text-2xl text-slate-300">{symbol}</span>
-            </div>
-            <p className="text-xs text-slate-500 font-semibold">{label}</p>
-          </div>
-        ))}
-      </div>
-
       <Button
         type="button"
         onClick={onSubmit}
@@ -4633,9 +4786,17 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
           />
         );
       case "additional":
-        return <AdditionalSection control={control} watch={watch} />;
+        return (
+          <ErrorBoundary>
+            <AdditionalSection
+              control={control}
+              watch={watch}
+              setValue={setValue}
+            />
+          </ErrorBoundary>
+        );
       case "consent":
-        return <ConsentSection control={control} />;
+        return <ConsentSection />;
       case "review":
         return (
           <ReviewSection
