@@ -105,17 +105,19 @@ const PersonPersonalFields = ({ control, prefix }) => {
         />
       </Grid>
       <Controller
-        name={`${prefix}.relationshipWithApplicant`}
+        name={`${prefix}.relation`}
         control={control}
         render={({ field }) => (
           <SelectField
             label="Relationship with Applicant"
             options={[
-              { value: "spouse", label: "Spouse" },
-              { value: "parent", label: "Parent" },
-              { value: "child", label: "Child" },
-              { value: "sibling", label: "Sibling" },
-              { value: "other", label: "Other" },
+              { value: "SPOUSE", label: "Spouse" },
+              { value: "FATHER", label: "Father" },
+              { value: "MOTHER", label: "Mother" },
+              { value: "SIBLING", label: "Sibling" },
+              { value: "OTHER", label: "Other" },
+              { value: "PARTNER", label: "Partner" },
+              { value: "FRIEND", label: "Friend" },
             ]}
             value={field.value}
             onChange={field.onChange}
@@ -379,10 +381,10 @@ const PersonPersonalFields = ({ control, prefix }) => {
 };
 // Populated option arrays for required fields
 const EMPLOYMENT_OPTIONS = [
-  { value: "salaried", label: "Salaried" },
-  { value: "self_employed", label: "Self Employed" },
-  { value: "business", label: "Business" },
-  { value: "professional", label: "Professional" },
+  { value: "SALARIED", label: "Salaried" },
+  { value: "BUSINESS", label: "Business" },
+  { value: "PROFESSIONAL", label: "Professional" },
+  { value: "OTHER", label: "Other" },
 ];
 const TITLE_OPTIONS = [
   { value: "MR", label: "Mr." },
@@ -437,12 +439,11 @@ const REST_FREQ_OPTIONS = [
 ];
 const LOAN_PURPOSE_OPTIONS = [
   { value: "HOME", label: "Home Purchase" },
-  { value: "RENOVATION", label: "Renovation" },
-  { value: "EDUCATION", label: "Education" },
-  { value: "CAR", label: "Car" },
-  { value: "BUSINESS", label: "Business" },
-  { value: "PERSONAL", label: "Personal" },
-  { value: "OTHER", label: "Other" },
+  { value: "HOME_IMPROVEMENT", label: "Home Improvement" },
+  { value: "PLOT_PURCHASE", label: "Plot Purchase" },
+  { value: "NRPL", label: "NRPL" },
+  { value: "POST_DATED_CHEQUE", label: "Post Dated Cheque" },
+  { value: "STANDING_INSTRUCTION", label: "Standing Instruction" },
 ];
 import React, { useState, useEffect, useCallback } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
@@ -583,11 +584,13 @@ const personDefaults = () => ({
 
 // ...existing code...
 const RELATION_OPTIONS = [
-  { value: "spouse", label: "Spouse" },
-  { value: "parent", label: "Parent" },
-  { value: "child", label: "Child" },
-  { value: "sibling", label: "Sibling" },
-  { value: "other", label: "Other" },
+  { value: "SPOUSE", label: "Spouse" },
+  { value: "PARTNER", label: "Partner" },
+  { value: "FATHER", label: "Father" },
+  { value: "MOTHER", label: "Mother" },
+  { value: "SIBLING", label: "Sibling" },
+  { value: "FRIEND", label: "Friend" },
+  { value: "OTHER", label: "Other" },
 ];
 const ACCOMMODATION_OPTIONS = [
   { value: "OWN", label: "Own" },
@@ -872,11 +875,13 @@ const DEFAULT_VALUES = {
   insurancePolicies: [],
   properties: [
     {
-      propertySelected: "YES",
+      propertySelected: true,
+      landType: "",
       landMark: "",
       landArea: "",
       ownershipType: "",
       loanType: "",
+      loanTypeId: "",
       purchaseFrom: "",
       constructionStage: "",
       constructionPercent: "",
@@ -891,7 +896,14 @@ const DEFAULT_VALUES = {
     loanPurposeOther: "",
     repaymentMethod: "",
   },
-  questionnaire: {},
+  questionnaire: {
+    legalPropertyClear: undefined,
+    mortgagedElsewhere: undefined,
+    residentOfIndia: undefined,
+    otherLoans: undefined,
+    guarantorAnywhere: undefined,
+    mppLifeInsurance: undefined,
+  },
 };
 
 // ─────────────────────────────────────────────
@@ -960,33 +972,28 @@ const PersonEmploymentFields = ({ control, watch, prefix }) => {
           <SelectField
             label="Occupational Category"
             isRequired
-            options={[
-              { value: "salaried", label: "Salaried" },
-              { value: "business", label: "Business" },
-              { value: "professional", label: "Professional" },
-              { value: "other", label: "Other" },
-            ]}
+            options={EMPLOYMENT_OPTIONS}
             value={field.value}
             onChange={field.onChange}
           />
         )}
       />
-      {(employmentType === "salaried" ||
-        employmentType === "business" ||
-        employmentType === "professional" ||
-        employmentType === "other") && (
+      {(employmentType === "SALARIED" ||
+        employmentType === "BUSINESS" ||
+        employmentType === "PROFESSIONAL" ||
+        employmentType === "OTHER") && (
         <div className="p-4 bg-blue-50/40 rounded-xl border border-blue-100 space-y-4">
           <p className="text-xs font-bold text-blue-700 uppercase tracking-wider">
-            {employmentType === "salaried"
+            {employmentType === "SALARIED"
               ? "Company Details"
-              : employmentType === "business"
+              : employmentType === "BUSINESS"
                 ? "Business Details"
-                : employmentType === "professional"
+                : employmentType === "PROFESSIONAL"
                   ? "Professional Details"
                   : "Other Occupation Details"}
           </p>
           {/* Working For  */}
-          {employmentType === "professional" && (
+          {employmentType === "PROFESSIONAL" && (
             <>
               <Controller
                 name={`${prefix}.professionalType`}
@@ -1011,7 +1018,7 @@ const PersonEmploymentFields = ({ control, watch, prefix }) => {
               )}
             </>
           )}
-          {employmentType === "business" && (
+          {employmentType === "BUSINESS" && (
             <>
               <Controller
                 name={`${prefix}.businessType`}
@@ -1036,7 +1043,7 @@ const PersonEmploymentFields = ({ control, watch, prefix }) => {
               )}
             </>
           )}
-          {employmentType === "salaried" && (
+          {employmentType === "SALARIED" && (
             <>
               <Controller
                 name={`${prefix}.salariedWorkingFor`}
@@ -2375,7 +2382,7 @@ const LoanRequirementSection = ({ control, errors, watch, setValue }) => {
             )}
           /> */}
 
-          {/* <Controller
+          <Controller
             name="loanRequirement.loanPurpose"
             control={control}
             render={({ field }) => (
@@ -2387,7 +2394,7 @@ const LoanRequirementSection = ({ control, errors, watch, setValue }) => {
                 onChange={(val) => field.onChange(val)} // ✅ important
               />
             )}
-          /> */}
+          />
           <Controller
             name="loanTypeId"
             control={control}
@@ -2399,6 +2406,8 @@ const LoanRequirementSection = ({ control, errors, watch, setValue }) => {
                   { value: "HOME", label: "Home Loan" },
                   { value: "PERSONAL", label: "Personal Loan" },
                   { value: "CAR", label: "Car Loan" },
+                  { value: "HOME_IMPROVEMENT", label: "Home Improvement Loan" },
+                  { value: "PLOT_PURCHASE", label: "Plot Purchase Loan" },
                 ]}
                 value={field.value || ""} // ✅ MUST
                 onChange={(val) => field.onChange(val)} // ✅ MUST
@@ -3307,7 +3316,7 @@ const AdditionalSection = ({ control, watch, setValue }) => {
                       />
 
                       <Controller
-                        name={`properties.${i}.loanType`}
+                        name={`properties.${i}.loanTypeId`}
                         control={control}
                         render={({ field }) => (
                           <InputField label="Loan Type" as="select" {...field}>
@@ -3317,7 +3326,30 @@ const AdditionalSection = ({ control, watch, setValue }) => {
                           </InputField>
                         )}
                       />
-
+                      <Controller
+                        name={`properties.${i}.landType`}
+                        control={control}
+                        render={({ field }) => (
+                          <SelectField
+                            label="Land Type"
+                            options={LAND_TYPE_OPTIONS}
+                            value={field.value || ""}
+                            onChange={field.onChange}
+                          />
+                        )}
+                      />
+                      <Controller
+                        name={`properties.${i}.landType`}
+                        control={control}
+                        render={({ field }) => (
+                          <InputField label="Land Type" as="select" {...field}>
+                            <option value="">Select</option>
+                            <option value="RESIDENTIAL">Residential</option>
+                            <option value="COMMERCIAL">Commercial</option>
+                            <option value="AGRICULTURAL">Agricultural</option>
+                          </InputField>
+                        )}
+                      />
                       <Controller
                         name={`properties.${i}.purchaseFrom`}
                         control={control}
@@ -3391,11 +3423,13 @@ const AdditionalSection = ({ control, watch, setValue }) => {
             setValue("properties", [
               ...properties,
               {
-                propertySelected: "YES",
+                propertySelected: true,
                 landMark: "",
                 landArea: "",
+                landType: "",
+                loanTypeId: "",
                 ownershipType: "",
-                loanType: "",
+                // loanType: "",
                 purchaseFrom: "",
                 constructionStage: "",
                 constructionPercent: "",
@@ -3408,7 +3442,7 @@ const AdditionalSection = ({ control, watch, setValue }) => {
         </button>
       </SectionCard>
 
-      {/* General Information */}
+      {/* questionnaire / General Information */}
       <SectionCard title="General Information" icon={Info} accentColor="amber">
         <div className="space-y-4">
           {[
@@ -3450,12 +3484,11 @@ const AdditionalSection = ({ control, watch, setValue }) => {
                     {[true, false].map((v) => (
                       <label
                         key={String(v)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border cursor-pointer text-xs font-semibold transition-all ${field.value === v ? "bg-blue-50 border-blue-400 text-blue-700" : "border-slate-200 text-slate-500 hover:border-slate-300"}`}
+                        className={`... ${field.value === v ? "bg-blue-50 border-blue-400 text-blue-700" : ""}`}
                       >
                         <input
                           type="radio"
                           className="sr-only"
-                          value={String(v)}
                           checked={field.value === v}
                           onChange={() => field.onChange(v)}
                         />
@@ -4037,12 +4070,32 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
             ? false
             : undefined;
 
+    const mapEmploymentType = (type) => {
+      switch (type) {
+        case "salaried":
+          return "SALARIED";
+        case "business":
+          return "BUSINESS";
+        case "professional":
+          return "PROFESSIONAL";
+        default:
+          return "OTHER";
+      }
+    };
+    const mapEmployerType = (val) => {
+      if (val === "CENTRAL_STATE_GOVT") return "GOVT";
+      return val;
+    };
     return {
       loanTypeId: data.loanTypeId,
       applicant: data.applicant,
       addresses: data.addresses,
-      occupationalDetails: data.occupationalDetails,
-      employmentDetails: data.employmentDetails,
+      occupationalDetails: {
+        occupationalCategory: mapEmploymentType(data.applicant?.employmentType),
+      },
+      employmentDetails: {
+        employerType: mapEmployerType(data.applicant?.salariedWorkingFor),
+      },
       financialDetails: data.financialDetails,
 
       coApplicants: cleanArray(data.coApplicants),
@@ -4091,8 +4144,11 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
     try {
       // ✅ USE NORMALIZER HERE
       const payload = normalizePayload(data);
-
-      console.log("FINAL CLEAN PAYLOAD:", payload);
+      ((payload.occupationalDetails = {
+        ...payload.occupationalDetails,
+        occupationalCategory: payload.applicant?.employmentType, // ✅ FIX
+      }),
+        console.log("FINAL CLEAN PAYLOAD:", payload));
 
       await apiPost("/loan-applications/loan/create", payload);
 
@@ -4293,10 +4349,10 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
                       label="Occupational Category"
                       isRequired
                       options={[
-                        { label: "Salaried", value: "salaried" },
-                        { label: "Business", value: "business" },
-                        { label: "Professional", value: "professional" },
-                        { label: "Other", value: "other" },
+                        { label: "Salaried", value: "SALARIED" },
+                        { label: "Business", value: "BUSINESS" },
+                        { label: "Professional", value: "PROFESSIONAL" },
+                        { label: "Other", value: "OTHER" },
                       ]}
                       value={field.value}
                       onChange={(val) => {
@@ -4306,7 +4362,7 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
                         setValue("applicant.professionalTypeOther", "");
                         setValue("applicant.businessType", undefined);
                         setValue("applicant.businessTypeOther", "");
-                        setValue("applicant.salariedType", undefined);
+                        setValue("applicant.salariedWorkingFor", undefined);
                         setValue("applicant.salariedTypeOther", "");
                       }}
                       error={errors?.applicant?.employmentType?.message}
@@ -4314,10 +4370,10 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
                   )}
                 />
                 {/* Working For Dropdown (conditionally rendered) */}
-                {watch("applicant.employmentType") === "salaried" && (
+                {watch("applicant.employmentType") === "SALARIED" && (
                   <div>
                     <Controller
-                      name="applicant.salariedType"
+                      name="applicant.salariedWorkingFor"
                       control={control}
                       render={({ field }) => (
                         <SelectField
@@ -4347,7 +4403,7 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
                             if (val !== "other")
                               setValue("applicant.salariedTypeOther", "");
                           }}
-                          error={errors?.applicant?.salariedType?.message}
+                          error={errors?.applicant?.salariedWorkingFor?.message}
                         />
                       )}
                     />
@@ -4406,7 +4462,7 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
                 </>
               )}
               {/* Conditional Salaried Subcategory */}
-              {watch("applicant.employmentType") === "salaried" && (
+              {watch("applicant.employmentType") === "SALARIED" && (
                 <>
                   <div className="grid grid-cols-2 gap-4 items-center">
                     <div>

@@ -24,10 +24,10 @@ export const categoryEnum = z.enum([
 ]);
 
 export const employmentTypeEnum = z.enum([
-  "salaried",
-  "self_employed",
-  "business",
-  "professional",
+  "SALARIED",
+  "BUSINESS",
+  "PROFESSIONAL",
+  "OTHER",
 ]);
 
 /* ─── ADDRESS ───────────────────────────────────────────────────── */
@@ -46,24 +46,42 @@ export const addressSchema = z.object({
 
 /* ─── OCCUPATIONAL DETAILS ──────────────────────────────────────── */
 
+export const occupationalCategoryEnum = z.enum([
+  "SALARIED",
+  "BUSINESS",
+  "PROFESSIONAL",
+  "OTHER",
+]);
+
 export const occupationalDetailsSchema = z.object({
-  occupationalCategory: z.string().optional(),
-  companyBusinessName: z.string().optional(),
+  occupationalCategory: occupationalCategoryEnum.optional(),
+  companyBusinessName: z.string().min(1).optional(),
   address: addressSchema.optional(),
-  phoneNumber: z.string().optional(),
-  extensionNumber: z.string().optional(),
+  phoneNumber: z.string().min(1).optional(),
+  extensionNumber: z.string().min(1).optional(),
   totalWorkExperience: z.coerce.number().optional(),
   noOfEmployees: z.coerce.number().optional(),
   commencementDate: z.coerce.date().optional(),
-  businessType: z.string().optional(),
+  businessType: z.string().min(1).optional(),
 });
 
 /* ─── EMPLOYMENT DETAILS ────────────────────────────────────────── */
 
+export const employerTypeEnum = z.enum([
+  "PUBLIC_LTD",
+  "MNC",
+  "EDUCATIONAL_INST",
+  "CENTRAL_STATE_GOVT",
+  "PUBLIC_SECTOR_UNIT",
+  "PROPRIETOR_PARTNERSHIP",
+  "PRIVATE_LTD",
+  "OTHER",
+]);
+
 export const employmentDetailsSchema = z.object({
-  employerType: z.string().optional(),
-  designation: z.string().optional(),
-  department: z.string().optional(),
+  employerType: employerTypeEnum.optional(),
+  designation: z.string().min(1).optional(),
+  department: z.string().min(1).optional(),
   dateOfJoining: z.coerce.date().optional(),
   dateOfRetirement: z.coerce.date().optional(),
 });
@@ -128,16 +146,26 @@ export const applicantSchema = z.object({
 
 /* ─── CO‑APPLICANT ──────────────────────────────────────────────── */
 
+export const relationEnum = z.enum([
+  "SPOUSE",
+  "PARTNER",
+  "FATHER",
+  "MOTHER",
+  "SIBLING",
+  "FRIEND",
+  "OTHER",
+]);
+
 export const coApplicantSchema = z.object({
   firstName: z.string().min(1),
-  middleName: z.string().optional(),
-  lastName: z.string().optional(),
-  fatherName: z.string().optional(),
-  motherName: z.string().optional(),
-  woname: z.string().optional(),
-  relation: z.string().optional(),
+  middleName: z.string().min(1).optional(),
+  lastName: z.string().min(1).optional(),
+  fatherName: z.string().min(1).optional(),
+  motherName: z.string().min(1).optional(),
+  woname: z.string().min(1).optional(),
+  relation: relationEnum.optional(),
   contactNumber: z.string().min(10),
-  phoneNumber: z.string().optional(),
+  phoneNumber: z.string().min(1).optional(),
   email: z.string().email().optional(),
   dob: z.coerce.date().optional(),
   gender: genderEnum.optional(),
@@ -145,15 +173,15 @@ export const coApplicantSchema = z.object({
   maritalStatus: maritalStatusEnum.optional(),
   noOfDependents: z.coerce.number().optional(),
   noOfChildren: z.coerce.number().optional(),
-  qualification: z.string().optional(),
-  correspondenceAddressType: z.string().optional(),
-  panNumber: z.string().optional(),
-  aadhaarNumber: z.string().optional(),
-  voterId: z.string().optional(),
-  drivingLicenceNo: z.string().optional(),
-  passportNumber: z.string().optional(),
-  presentAccommodation: z.string().optional(),
-  periodOfStay: z.string().optional(),
+  qualification: z.string().min(1).optional(),
+  correspondenceAddressType: z.string().min(1).optional(),
+  panNumber: z.string().min(1).optional(),
+  aadhaarNumber: z.string().min(1).optional(),
+  voterId: z.string().min(1).optional(),
+  drivingLicenceNo: z.string().min(1).optional(),
+  passportNumber: z.string().min(1).optional(),
+  presentAccommodation: z.string().min(1).optional(),
+  periodOfStay: z.string().min(1).optional(),
   rentPerMonth: z.coerce.number().optional(),
   employmentType: employmentTypeEnum.optional(),
   monthlyIncome: z.coerce.number().optional(),
@@ -165,34 +193,44 @@ export const coApplicantSchema = z.object({
 
 /* ─── GUARANTOR ─────────────────────────────────────────────────── */
 
+export const relationshipWithApplicantEnum = z.enum([
+  "SPOUSE",
+  "PARTNER",
+  "FATHER",
+  "MOTHER",
+  "SIBLING",
+  "FRIEND",
+  "OTHER",
+]);
+
 export const guarantorSchema = z.object({
   firstName: z.string().min(1),
-  middleName: z.string().optional(),
-  lastName: z.string().optional(),
-  fatherName: z.string().optional(),
-  motherName: z.string().optional(),
-  woname: z.string().optional(),
+  middleName: z.string().min(1).optional(),
+  lastName: z.string().min(1).optional(),
+  fatherName: z.string().min(1).optional(),
+  motherName: z.string().min(1).optional(),
+  woname: z.string().min(1).optional(),
   dob: z.coerce.date().optional(),
   gender: genderEnum.optional(),
   contactNumber: z.string().min(10),
-  phoneNumber: z.string().optional(),
+  phoneNumber: z.string().min(1).optional(),
   email: z.string().email().optional(),
-  panNumber: z.string().optional(),
-  aadhaarNumber: z.string().optional(),
-  voterId: z.string().optional(),
-  drivingLicence: z.string().optional(),
-  drivingLicenceNo: z.string().optional(),
-  passportNumber: z.string().optional(),
+  panNumber: z.string().min(1).optional(),
+  aadhaarNumber: z.string().min(1).optional(),
+  voterId: z.string().min(1).optional(),
+  drivingLicence: z.string().min(1).optional(),
+  drivingLicenceNo: z.string().min(1).optional(),
+  passportNumber: z.string().min(1).optional(),
   category: categoryEnum.optional(),
   maritalStatus: maritalStatusEnum.optional(),
   noOfDependents: z.coerce.number().optional(),
   noOfChildren: z.coerce.number().optional(),
-  qualification: z.string().optional(),
-  correspondenceAddressType: z.string().optional(),
-  relationshipWithApplicant: z.string().optional(),
-  accommodationType: z.string().optional(),
-  presentAccommodation: z.string().optional(),
-  periodOfStay: z.string().optional(),
+  qualification: z.string().min(1).optional(),
+  correspondenceAddressType: z.string().min(1).optional(),
+  relationshipWithApplicant: relationshipWithApplicantEnum,
+  accommodationType: z.string().min(1).optional(),
+  presentAccommodation: z.string().min(1).optional(),
+  periodOfStay: z.string().min(1).optional(),
   rentPerMonth: z.coerce.number().optional(),
   employmentType: employmentTypeEnum.optional(),
   addresses: z.array(addressSchema).optional(),
@@ -203,25 +241,45 @@ export const guarantorSchema = z.object({
 
 /* ─── LOAN REQUIREMENT ──────────────────────────────────────────── */
 
+export const loanPurposeEnum = z.enum([
+  "HOME",
+  "HOME_IMPROVEMENT",
+  "PLOT_PURCHASE",
+  "NRPL",
+  "POST_DATED_CHEQUE",
+  "STANDING_INSTRUCTION",
+]);
+
+export const repaymentMethodEnum = z.enum([
+  "SALARY_DEDUCTION",
+  "ECS",
+  "CHEQUE",
+  "STANDING_INSTRUCTION",
+  "OTHER",
+]);
+
 export const loanRequirementSchema = z.object({
   loanAmount: z.number().positive("Loan amount required"),
   tenure: z.number().int().positive(),
   interestOption: z.enum(["FIXED", "VARIABLE"]),
-  loanPurpose: z.string().min(1, "Loan purpose required"),
-  repaymentMethod: z.enum([
-    "SALARY_DEDUCTION",
-    "ECS",
-    "CHEQUE",
-    "STANDING_INSTRUCTION",
-    "OTHER",
-  ]),
+  loanPurpose: loanPurposeEnum,
+  repaymentMethod: repaymentMethodEnum,
+});
+/* ─── PROPERTY SCHEMA ──────────────────────────────────────────── */
+
+export const propertySchema = z.object({
+  ownershipType: z.string().min(1),
+  landType: z.string().min(1).optional(),
+  purchaseFrom: z.string().min(1),
+  constructionStage: z.string().min(1),
+  // Add other property fields as needed
 });
 
 /* ─── FULL LOAN APPLICATION ─────────────────────────────────────── */
 
 export const createLoanApplicationSchema = z.object({
   loanTypeId: z.string().min(1, "Loan type required"),
-  leadNumber: z.string().optional(),
+  leadNumber: z.string().min(1).optional(),
 
   applicant: applicantSchema,
 
@@ -241,7 +299,7 @@ export const createLoanApplicationSchema = z.object({
   creditCards: z.array(z.any()).optional(),
   bankAccounts: z.array(z.any()).optional(),
   insurancePolicies: z.array(z.any()).optional(),
-  properties: z.array(z.any()).optional(),
+  properties: z.array(propertySchema).optional(),
   references: z.array(z.any()).optional(),
 
   loanRequirement: loanRequirementSchema,
@@ -259,11 +317,11 @@ export const createLoanApplicationSchema = z.object({
       guarantorAnywhere: z.boolean().optional(),
       mppLifeInsurance: z.boolean().optional(),
       howKnowAboutMPPL: z.array(z.string()).optional(),
-      howKnowAboutMPPLOther: z.string().optional(),
+      howKnowAboutMPPLOther: z.string().min(1).optional(),
       preferLoanSanctionedDate: z.coerce.date().optional(),
       disbursedDate: z.coerce.date().optional(),
       doYouOwn: z.array(z.string()).optional(),
-      communicationLanguage: z.string().optional(),
+      communicationLanguage: z.string().min(1).optional(),
     })
     .optional(),
 });

@@ -8,10 +8,10 @@ import { LOAN_DOCUMENT_TYPES } from "../../common/constants/loanDocumentTypes.js
 export const titleEnum = z.enum(["MR", "MRS", "MS", "DR", "PROF"]);
 export const genderEnum = z.enum(["MALE", "FEMALE", "OTHER"]);
 export const employmentTypeEnum = z.enum([
-  "salaried",
-  "self_employed",
-  "business",
-  "professional",
+  "SALARIED",
+  "BUSINESS",
+  "PROFESSIONAL",
+  "OTHER",
 ]);
 
 export const maritalStatusEnum = z.enum([
