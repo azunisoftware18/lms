@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import {
   FileText,
   CheckCircle,
@@ -119,25 +119,40 @@ const loanTypeId = selectedAppFull?.data?.loanTypeId || selectedApplication?.loa
 
 
 
+
   // Defensive: fallback to empty array and log warnings if fields are missing
+  const missingFields = [];
   const applicantRequiredDocs = loanType?.applicantDocumentsRequired !== undefined
     ? parseDocs(loanType.applicantDocumentsRequired)
-    : (toast.warning("Missing applicantDocumentsRequired in loanType"), []);
+    : (missingFields.push("applicantDocumentsRequired"), []);
   const applicantOptionalDocs = loanType?.applicantDocumentsOptional !== undefined
     ? parseDocs(loanType.applicantDocumentsOptional)
-    : (toast.warning("Missing applicantDocumentsOptional in loanType"), []);
+    : (missingFields.push("applicantDocumentsOptional"), []);
   const coApplicantRequiredDocs = loanType?.coApplicantDocumentsRequired !== undefined
     ? parseDocs(loanType.coApplicantDocumentsRequired)
-    : (toast.warning("Missing coApplicantDocumentsRequired in loanType"), []);
+    : (missingFields.push("coApplicantDocumentsRequired"), []);
   const coApplicantOptionalDocs = loanType?.coApplicantDocumentsOptional !== undefined
     ? parseDocs(loanType.coApplicantDocumentsOptional)
-    : (toast.warning("Missing coApplicantDocumentsOptional in loanType"), []);
+    : (missingFields.push("coApplicantDocumentsOptional"), []);
   const guarantorRequiredDocs = loanType?.guarantorDocumentsRequired !== undefined
     ? parseDocs(loanType.guarantorDocumentsRequired)
-    : (toast.warning("Missing guarantorDocumentsRequired in loanType"), []);
+    : (missingFields.push("guarantorDocumentsRequired"), []);
   const guarantorOptionalDocs = loanType?.guarantorDocumentsOptional !== undefined
     ? parseDocs(loanType.guarantorDocumentsOptional)
-    : (toast.warning("Missing guarantorDocumentsOptional in loanType"), []);
+    : (missingFields.push("guarantorDocumentsOptional"), []);
+
+  // Only show toast once per loanType change
+  const hasShownToastRef = useRef({});
+  useEffect(() => {
+    if (loanType && missingFields.length > 0) {
+      const key = loanType.id || JSON.stringify(loanType);
+      if (!hasShownToastRef.current[key]) {
+        toast.error(`Missing fields in loanType: ${missingFields.join(", ")}`);
+        hasShownToastRef.current[key] = true;
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loanType && loanType.id]);
 
   // Show a warning in the UI if loanType or required doc fields are missing
   const missingDocsWarning = !loanType
@@ -429,7 +444,16 @@ const loanTypeId = selectedAppFull?.data?.loanTypeId || selectedApplication?.loa
                 <h2 className="text-lg font-semibold text-gray-900">Documents</h2>
               </div>
               <DocumentPageTable
-                documents={documents}
+                documents={documents.map(doc => ({
+                  id: doc.id,
+                  name: doc.documentType || doc.documentName || "-",
+                  category: doc.category || "-",
+                  applicantType: doc.ownerType || (doc.party ? doc.party.toUpperCase() : "APPLICANT"),
+                  uploadDate: doc.createdAt ? new Date(doc.createdAt).toLocaleDateString() : "-",
+                  status: doc.verificationStatus ? doc.verificationStatus.toUpperCase() : "-",
+                  documentPath: doc.documentPath,
+                  // Add any other fields needed for actions
+                }))}
                 loading={isLoadingDocuments}
                 onViewDocument={(doc) => window.open(doc.documentPath, "_blank")}
                 onVerify={handleVerify}
