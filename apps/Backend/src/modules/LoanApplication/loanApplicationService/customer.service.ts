@@ -2,6 +2,29 @@ import * as Enums from "../../../../generated/prisma-client/enums.js";
 import { AppError } from "../../../common/utils/apiError.js";
 import type { FullLoanApplicationInput } from "../loanApplication.types.js";
 
+export function toPrismaEmploymentType(
+  value?: string | null,
+): Enums.EmploymentType | undefined {
+  if (!value) return undefined;
+  const normalized = String(value).trim().toUpperCase();
+
+  switch (normalized) {
+    case "SALARIED":
+      return Enums.EmploymentType.salaried;
+    case "BUSINESS":
+      return Enums.EmploymentType.business;
+    case "PROFESSIONAL":
+      return Enums.EmploymentType.professional;
+    case "SELF_EMPLOYED":
+      return Enums.EmploymentType.self_employed;
+    case "OTHER":
+      // Prisma enum does not have OTHER; use self_employed as closest bucket.
+      return Enums.EmploymentType.self_employed;
+    default:
+      throw AppError.badRequest(`Invalid employmentType: ${value}`);
+  }
+}
+
 export async function createCustomer(
   tx: any,
   data: FullLoanApplicationInput,
@@ -60,7 +83,7 @@ export async function createCustomer(
         relationshipWithCoApplicant: data.coApplicants?.length
           ? data.coApplicants[0].relation
           : Enums.CoApplicantRelation.OTHER,
-        employmentType: data.applicant.employmentType,
+        employmentType: toPrismaEmploymentType(data.applicant.employmentType),
       },
     });
   }

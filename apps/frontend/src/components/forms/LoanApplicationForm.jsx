@@ -413,13 +413,7 @@ const MARITAL_OPTIONS = [
   { value: "WIDOWED", label: "Widowed" },
   { value: "OTHER", label: "Other" },
 ];
-const LOAN_TYPE_OPTIONS = [
-  { value: "HOME_LOAN", label: "Home Loan" },
-  { value: "PERSONAL_LOAN", label: "Personal Loan" },
-  { value: "CAR_LOAN", label: "Car Loan" },
-  { value: "EDUCATION_LOAN", label: "Education Loan" },
-  { value: "BUSINESS_LOAN", label: "Business Loan" },
-];
+// Loan type options will be fetched from backend
 const INTEREST_OPTIONS = [
   { value: "FIXED", label: "Fixed" },
   { value: "VARIABLE", label: "Variable" },
@@ -446,6 +440,7 @@ const LOAN_PURPOSE_OPTIONS = [
   { value: "STANDING_INSTRUCTION", label: "Standing Instruction" },
 ];
 import React, { useState, useEffect, useCallback } from "react";
+import apiGet from "../../lib/api/apiGet";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -607,7 +602,7 @@ const SALARIED_WORKING_FOR = [
   { value: "MNC", label: "MNC" },
   { value: "EDUCATIONAL_INST", label: "Educational Inst." },
   { value: "CENTRAL_STATE_GOVT", label: "Central/State Govt" },
-  { value: "PUBLIC_SECTOR", label: "Public Sector Unit" },
+  { value: "PUBLIC_SECTOR_UNIT", label: "Public Sector Unit" },
   { value: "PROPRIETOR_PARTNERSHIP", label: "Proprietor/Partnership" },
   { value: "PRIVATE_LTD", label: "Private Ltd." },
   { value: "OTHER", label: "Other" },
@@ -829,8 +824,33 @@ const DEFAULT_VALUES = {
   },
   coApplicants: [],
   guarantors: [],
-  occupationalDetails: {},
-  employmentDetails: {},
+  occupationalDetails: {
+    occupationalCategory: undefined,
+    companyBusinessName: "",
+    address: {
+      addressLine1: "",
+      addressLine2: "",
+      city: "",
+      district: "",
+      state: "",
+      pinCode: "",
+      landmark: "",
+      phoneNumber: "",
+    },
+    phoneNumber: "",
+    extensionNumber: "",
+    totalWorkExperience: null,
+    noOfEmployees: null,
+    commencementDate: "",
+    businessType: "",
+  },
+  employmentDetails: {
+    employerType: undefined,
+    designation: "",
+    department: "",
+    dateOfJoining: "",
+    dateOfRetirement: "",
+  },
   financialDetails: {
     grossMonthlyIncome: null,
     netMonthlyIncome: null,
@@ -963,6 +983,7 @@ const PersonEmploymentFields = ({ control, watch, prefix }) => {
   const professionalType = watch(`${prefix}.professionalType`);
   const businessType = watch(`${prefix}.businessType`);
   const salariedWorkingFor = watch(`${prefix}.salariedWorkingFor`);
+
   return (
     <div className="space-y-4">
       <Controller
@@ -2281,7 +2302,13 @@ const GuarantorSection = ({
 // ─────────────────────────────────────────────
 // SECTION: LOAN REQUIREMENT (Image 8)
 // ─────────────────────────────────────────────
-const LoanRequirementSection = ({ control, errors, watch, setValue }) => {
+const LoanRequirementSection = ({
+  control,
+  errors,
+  watch,
+  setValue,
+  loanTypeOptions = [],
+}) => {
   const costs = watch([
     "loanRequirement.landCost",
     "loanRequirement.agreementValue",
@@ -2402,15 +2429,9 @@ const LoanRequirementSection = ({ control, errors, watch, setValue }) => {
               <SelectField
                 label="Loan Type"
                 isRequired
-                options={[
-                  { value: "HOME", label: "Home Loan" },
-                  { value: "PERSONAL", label: "Personal Loan" },
-                  { value: "CAR", label: "Car Loan" },
-                  { value: "HOME_IMPROVEMENT", label: "Home Improvement Loan" },
-                  { value: "PLOT_PURCHASE", label: "Plot Purchase Loan" },
-                ]}
-                value={field.value || ""} // ✅ MUST
-                onChange={(val) => field.onChange(val)} // ✅ MUST
+                options={loanTypeOptions}
+                value={field.value || ""}
+                onChange={(val) => field.onChange(val)}
               />
             )}
           />
@@ -3264,13 +3285,13 @@ const AdditionalSection = ({ control, watch, setValue }) => {
                       <InputField
                         label="Property Selected"
                         as="select"
-                        value={field.value ? "YES" : "NO"} // ✅ convert boolean → UI
+                        value={field.value ? true : false} // ✅ convert boolean → UI
                         onChange={
-                          (e) => field.onChange(e.target.value === "YES") // ✅ convert UI → boolean
+                          (e) => field.onChange(e.target.value === true) // ✅ convert UI → boolean
                         }
                       >
-                        <option value="YES">Yes</option>
-                        <option value="NO">No</option>
+                        <option value={true}>Yes</option>
+                        <option value={false}>No</option>
                       </InputField>
                     )}
                   />
@@ -3338,7 +3359,7 @@ const AdditionalSection = ({ control, watch, setValue }) => {
                           />
                         )}
                       />
-                      <Controller
+                      {/* <Controller
                         name={`properties.${i}.landType`}
                         control={control}
                         render={({ field }) => (
@@ -3349,7 +3370,7 @@ const AdditionalSection = ({ control, watch, setValue }) => {
                             <option value="AGRICULTURAL">Agricultural</option>
                           </InputField>
                         )}
-                      />
+                      /> */}
                       <Controller
                         name={`properties.${i}.purchaseFrom`}
                         control={control}
@@ -4033,6 +4054,51 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
   const [completedSteps, setCompletedSteps] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loanTypeOptions, setLoanTypeOptions] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const extractLoanTypes = (payload) => {
+      if (Array.isArray(payload)) return payload;
+      if (Array.isArray(payload?.data?.data)) return payload.data.data;
+      if (Array.isArray(payload?.data)) return payload.data;
+      return [];
+    };
+
+    async function fetchLoanTypes() {
+      try {
+        // NOTE: Some environments have isPublic=false values; avoid over-filtering.
+        const res = await apiGet("/loantypes?isActive=true");
+        let items = extractLoanTypes(res);
+
+        // Fallback: fetch without filters if the filtered endpoint returns no rows.
+        if (!items.length) {
+          const fallbackRes = await apiGet("/loantypes");
+          items = extractLoanTypes(fallbackRes);
+        }
+
+        if (!isMounted) return;
+        if (Array.isArray(items) && items.length) {
+          setLoanTypeOptions(
+            items
+              .filter((lt) => lt?.id)
+              .map((lt) => ({
+                value: lt.id,
+                label: lt.name || lt.code || lt.id,
+              })),
+          );
+        } else {
+          setLoanTypeOptions([]);
+        }
+      } catch {
+        if (isMounted) setLoanTypeOptions([]);
+      }
+    }
+    fetchLoanTypes();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const {
     control,
@@ -4048,6 +4114,16 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
     mode: "onTouched",
     defaultValues: DEFAULT_VALUES,
   });
+
+  useEffect(() => {
+    const current = getValues("loanTypeId");
+    if (!current) return;
+    const isValid = loanTypeOptions.some((o) => o.value === current);
+    if (!isValid) {
+      setValue("loanTypeId", "");
+    }
+    // we intentionally re-check when options load/change
+  }, [loanTypeOptions, getValues, setValue]);
   const normalizePayload = (data) => {
     const cleanArray = (arr) =>
       (arr || []).filter(
@@ -4061,14 +4137,15 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
     const toNumber = (val) =>
       val === "" || val === null || val === undefined ? undefined : Number(val);
 
-    const toBoolean = (val) =>
-      typeof val === "boolean"
-        ? val
-        : val === "YES"
-          ? true
-          : val === "NO"
-            ? false
-            : undefined;
+    // Utility to normalize boolean-like values
+    const toBoolean = (val) => {
+      if (typeof val === "boolean") return val;
+      if (typeof val === "string") {
+        if (val.toLowerCase() === "yes" || val === "true") return true;
+        if (val.toLowerCase() === "no" || val === "false") return false;
+      }
+      return Boolean(val);
+    };
 
     const mapEmploymentType = (type) => {
       switch (type) {
@@ -4082,10 +4159,7 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
           return "OTHER";
       }
     };
-    const mapEmployerType = (val) => {
-      if (val === "CENTRAL_STATE_GOVT") return "GOVT";
-      return val;
-    };
+
     return {
       loanTypeId: data.loanTypeId,
       applicant: data.applicant,
@@ -4094,7 +4168,8 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
         occupationalCategory: mapEmploymentType(data.applicant?.employmentType),
       },
       employmentDetails: {
-        employerType: mapEmployerType(data.applicant?.salariedWorkingFor),
+        ...data.employmentDetails,
+        employerType: data.applicant?.salariedWorkingFor,
       },
       financialDetails: data.financialDetails,
 
@@ -4144,11 +4219,7 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
     try {
       // ✅ USE NORMALIZER HERE
       const payload = normalizePayload(data);
-      ((payload.occupationalDetails = {
-        ...payload.occupationalDetails,
-        occupationalCategory: payload.applicant?.employmentType, // ✅ FIX
-      }),
-        console.log("FINAL CLEAN PAYLOAD:", payload));
+      console.log("FINAL CLEAN PAYLOAD:", payload);
 
       await apiPost("/loan-applications/loan/create", payload);
 
@@ -4378,25 +4449,7 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
                       render={({ field }) => (
                         <SelectField
                           label="Working For"
-                          options={[
-                            { label: "Public Ltd", value: "public_ltd" },
-                            { label: "MNC", value: "mnc" },
-                            {
-                              label: "Educational Institution",
-                              value: "educational_institution",
-                            },
-                            { label: "Central/Govt", value: "central_govt" },
-                            {
-                              label: "Public Sector Unit",
-                              value: "public_sector_unit",
-                            },
-                            {
-                              label: "Proprietor/Partnership",
-                              value: "proprietor_partnership",
-                            },
-                            { label: "Private Ltd", value: "private_ltd" },
-                            { label: "Other", value: "other" },
-                          ]}
+                          options={SALARIED_WORKING_FOR}
                           value={field.value}
                           onChange={(val) => {
                             field.onChange(val);
@@ -4505,6 +4558,8 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
                           label="Date of Joining"
                           type="date"
                           {...field}
+                          value={field.value ? field.value.split("T")[0] : ""}
+                          onChange={field.onChange}
                         />
                       )}
                     />
@@ -4729,6 +4784,7 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
             errors={errors}
             watch={watch}
             setValue={setValue}
+            loanTypeOptions={loanTypeOptions}
             showToast={showToast}
           />
         );

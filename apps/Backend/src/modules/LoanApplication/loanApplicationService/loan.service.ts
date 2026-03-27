@@ -6,6 +6,7 @@ import type {
   EmploymentInput,
   GuarantorInput,
 } from "../loanApplication.types.js";
+import { toPrismaEmploymentType } from "./customer.service.js";
 
 export async function ensureNoActiveLoan(tx: any, customerId: string) {
   const existingLoan = await tx.loanApplication.findFirst({
@@ -200,7 +201,7 @@ export async function createEmploymentDetailsForEntity(
   entity: EntityIds,
   input: EmploymentInput | undefined,
 ) {
-  if (!input) return;
+  if (!input?.employerType) return;
   await tx.employmentDetails.create({
     data: { ...entity, ...input },
   });
@@ -243,7 +244,7 @@ export async function createGuarantors(
         accommodationType: g.accommodationType,
         periodOfStay: g.periodOfStay,
         rentPerMonth: g.rentPerMonth,
-        employmentType: g.employmentType,
+        employmentType: toPrismaEmploymentType(g.employmentType),
       },
     });
 

@@ -269,7 +269,7 @@ const occupationalDetailsSchema = z.object({
 });
 
 const employmentDetailsSchema = z.object({
-  employerType: employerTypeEnum,
+  employerType: employerTypeEnum.optional(),
   employerTypeOther: z.string().trim().min(1).optional(),
   designation: z.string().trim().min(1).optional(),
   department: z.string().trim().min(1).optional(),

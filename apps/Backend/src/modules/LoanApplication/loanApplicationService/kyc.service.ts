@@ -4,6 +4,7 @@ import {
   createOccupationalDetailsForEntity,
   createEmploymentDetailsForEntity,
 } from "./loan.service.js";
+import { toPrismaEmploymentType } from "./customer.service.js";
 
 export async function createKYC(tx: any, userId: string) {
   return tx.kyc.create({
@@ -64,7 +65,7 @@ export async function createCoApplicants(
         presentAccommodation: co.presentAccommodation,
         periodOfStay: co.periodOfStay,
         rentPerMonth: co.rentPerMonth,
-        employmentType: co.employmentType as Enums.EmploymentType,
+        employmentType: toPrismaEmploymentType(co.employmentType),
       },
     });
 
