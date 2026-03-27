@@ -11,7 +11,8 @@ import {
   rejectDocumentService,
   reuploadLoanDocumentService,
   getAllDocumentsForLoanApplicationService,
-  createFullLoanApplicationService
+  createFullLoanApplicationService,
+  listofalldocumentsForLoanService
 } from "./loanApplication.service.js";
 import { prisma } from "../../db/prismaService.js";
 
@@ -600,3 +601,21 @@ export const createFullLoanApplicationController = async (
   }
 
 }
+
+export const listofalldocumentsForLoanApplicationController = async (req: Request, res: Response) => {
+  try {
+    const loanId = typeof req.params.id === 'string' ? req.params.id : (Array.isArray(req.params.id) ? req.params.id[0] : '');
+    const documents = await listofalldocumentsForLoanService(loanId)
+    res.status(200).json({
+      success: true,
+      message: "Documents retrieved successfully",
+      data: documents,
+    });
+  }
+    catch (error: any) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Failed to retrieve documents",
+    });
+  }
+};

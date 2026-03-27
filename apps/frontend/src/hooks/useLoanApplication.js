@@ -172,9 +172,20 @@ export const useUploadDocuments = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: ({ id, file }) => {
+    // Accepts: { id, files: [{ file, documentType }], party }
+    mutationFn: ({ id, files, party }) => {
       const formData = new FormData();
-      formData.append("file", file);
+      if (Array.isArray(files)) {
+        files.forEach(({ file, documentType }) => {
+          if (file && documentType) {
+            formData.append(documentType, file);
+          }
+        });
+      } else if (files?.file && files?.documentType) {
+        // fallback for single file
+        formData.append(files.documentType, files.file);
+      }
+      if (party) formData.append("party", party);
       return apiPost(`/loan-applications/${id}/documents`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
