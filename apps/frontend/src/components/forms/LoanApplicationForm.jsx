@@ -110,17 +110,9 @@ const PersonPersonalFields = ({ control, prefix }) => {
         render={({ field }) => (
           <SelectField
             label="Relationship with Applicant"
-            options={[
-              { value: "SPOUSE", label: "Spouse" },
-              { value: "FATHER", label: "Father" },
-              { value: "MOTHER", label: "Mother" },
-              { value: "SIBLING", label: "Sibling" },
-              { value: "OTHER", label: "Other" },
-              { value: "PARTNER", label: "Partner" },
-              { value: "FRIEND", label: "Friend" },
-            ]}
+            options={RELATION_OPTIONS}
             value={field.value}
-            onChange={field.onChange}
+            onChange={(val) => field.onChange(val)}
           />
         )}
       />
@@ -301,8 +293,16 @@ const PersonPersonalFields = ({ control, prefix }) => {
             <InputField
               label="Date of Birth"
               type="date"
-              isRequired
-              {...field}
+              value={
+                        field.value
+                          ? new Date(field.value).toISOString().split("T")[0]
+                          : ""
+                      }
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value ? new Date(e.target.value) : undefined,
+                        )
+                      }
             />
           )}
         />
@@ -497,7 +497,7 @@ const personDefaults = () => ({
   lastName: "",
   fatherName: "",
   motherName: "",
-  woname: "",
+  woname: undefined,
   currentAddress: {
     addressLine1: "",
     city: "",
@@ -546,16 +546,16 @@ const personDefaults = () => ({
   companyExtNo: "",
   workExperience: "",
   noOfEmployees: "",
-  commencementDate: "",
+  commencementDate: undefined,
   professionalType: undefined,
   professionalTypeOther: "",
   businessType: undefined,
   businessTypeOther: "",
   salariedWorkingFor: undefined,
   designation: "",
-  department: "",
-  dateOfJoining: "",
-  dateOfRetirement: "",
+  department: undefined,
+  dateOfJoining: undefined,
+  dateOfRetirement: undefined,
   grossMonthlyIncome: null,
   netMonthlyIncome: null,
   monthlyExpenses: null,
@@ -792,7 +792,7 @@ const STEP_FIELDS = {
 };
 
 const DRAFT_KEY = "loan_app_draft_v5";
-
+// localStorage.removeItem("loan_app_draft_v5");
 // ─────────────────────────────────────────────
 // PERSON DEFAULTS (reused for applicant / co-applicant / guarantor)
 // ─────────────────────────────────────────────
@@ -826,9 +826,10 @@ const DEFAULT_VALUES = {
   guarantors: [],
   occupationalDetails: {
     occupationalCategory: undefined,
-    companyBusinessName: "",
+    occupationalCategoryOther: "",
+    companyBusinessName: undefined,
     address: {
-      addressLine1: "",
+      addressLine1: undefined,
       addressLine2: "",
       city: "",
       district: "",
@@ -841,15 +842,19 @@ const DEFAULT_VALUES = {
     extensionNumber: "",
     totalWorkExperience: null,
     noOfEmployees: null,
-    commencementDate: "",
+    commencementDate: undefined,
+    professionalType: "",
+    professionalSpecify: "",
     businessType: "",
+    businessSpecify: "",
   },
   employmentDetails: {
     employerType: undefined,
+    employerTypeOther: "",
     designation: "",
-    department: "",
-    dateOfJoining: "",
-    dateOfRetirement: "",
+    department: undefined,
+    dateOfJoining: undefined,
+    dateOfRetirement: undefined,
   },
   financialDetails: {
     grossMonthlyIncome: null,
@@ -1105,24 +1110,42 @@ const PersonEmploymentFields = ({ control, watch, prefix }) => {
               </Grid>
               <Grid>
                 <Controller
-                  name={`${prefix}.dateOfJoining`}
+                  name='applicant.dateOfJoining'
                   control={control}
                   render={({ field }) => (
                     <InputField
                       label="Date of Joining"
                       type="date"
-                      {...field}
+                      value={
+                        field.value
+                          ? new Date(field.value).toISOString().split("T")[0]
+                          : ""
+                      }
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value ? new Date(e.target.value) : undefined,
+                        )
+                      }
                     />
                   )}
                 />
                 <Controller
-                  name={`${prefix}.dateOfRetirement`}
+                  name='applicant.dateOfRetirement'
                   control={control}
                   render={({ field }) => (
                     <InputField
                       label="Date of Retirement"
                       type="date"
-                      {...field}
+                      value={
+                        field.value
+                          ? new Date(field.value).toISOString().split("T")[0]
+                          : ""
+                      }
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value ? new Date(e.target.value) : undefined,
+                        )
+                      }
                     />
                   )}
                 />
@@ -1221,17 +1244,18 @@ const PersonEmploymentFields = ({ control, watch, prefix }) => {
                 <InputField label="No. of Employees" type="number" {...field} />
               )}
             />
-            <Controller
+            {/* <Controller
               name={`${prefix}.commencementDate`}
               control={control}
               render={({ field }) => (
                 <InputField
                   label="Date of Commencement of Business/Profession"
                   type="date"
-                  {...field}
+                  value={field.value || ""}
+                  onChange={(e) => field.onChange(e.target.value || undefined)}
                 />
               )}
-            />
+            /> */}
           </Grid>
         </div>
       )}
@@ -3246,9 +3270,7 @@ const AdditionalSection = ({ control, watch, setValue }) => {
         accentColor="violet"
       >
         <div className="space-y-6">
-          {properties.map((_, i) => {
-            const isSelected = watch(`properties.${i}.propertySelected`);
-
+          {(properties.length ? properties : [{}]).map((_, i) => {
             return (
               <div
                 key={i}
@@ -3304,62 +3326,58 @@ const AdditionalSection = ({ control, watch, setValue }) => {
                       <InputField label="Landmark" {...field} />
                     )}
                   />
+                  <Controller
+                    name={`properties.${i}.landArea`}
+                    control={control}
+                    render={({ field }) => (
+                      <InputField
+                        label="Land Area (Sq. mtr)"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? Number(e.target.value) : "",
+                          )
+                        }
+                      />
+                    )}
+                  />
 
-                  {/* Conditional fields */}
-                  {isSelected === "YES" && (
-                    <>
-                      <Controller
-                        name={`properties.${i}.landArea`}
-                        control={control}
-                        render={({ field }) => (
-                          <InputField
-                            label="Land Area (Sq. mtr)"
-                            {...field}
-                            onChange={(e) =>
-                              field.onChange(
-                                e.target.value ? Number(e.target.value) : "",
-                              )
-                            }
-                          />
-                        )}
-                      />
+                  <Controller
+                    name={`properties.${i}.ownershipType`}
+                    control={control}
+                    render={({ field }) => (
+                      <InputField label="Ownership" as="select" {...field}>
+                        <option value="">Select</option>
+                        <option value="SOLE">Sole</option>
+                        <option value="JOINT">Joint</option>
+                      </InputField>
+                    )}
+                  />
 
-                      <Controller
-                        name={`properties.${i}.ownershipType`}
-                        control={control}
-                        render={({ field }) => (
-                          <InputField label="Ownership" as="select" {...field}>
-                            <option value="">Select</option>
-                            <option value="SOLE">Sole</option>
-                            <option value="JOINT">Joint</option>
-                          </InputField>
-                        )}
+                  <Controller
+                    name={`properties.${i}.loanTypeId`}
+                    control={control}
+                    render={({ field }) => (
+                      <InputField label="Loan Type" as="select" {...field}>
+                        <option value="">Select</option>
+                        <option value="FREEHOLD">Freehold</option>
+                        <option value="LEASEHOLD">Leasehold</option>
+                      </InputField>
+                    )}
+                  />
+                  <Controller
+                    name={`properties.${i}.landType`}
+                    control={control}
+                    render={({ field }) => (
+                      <SelectField
+                        label="Land Type"
+                        options={LAND_TYPE_OPTIONS}
+                        value={field.value || ""}
+                        onChange={field.onChange}
                       />
-
-                      <Controller
-                        name={`properties.${i}.loanTypeId`}
-                        control={control}
-                        render={({ field }) => (
-                          <InputField label="Loan Type" as="select" {...field}>
-                            <option value="">Select</option>
-                            <option value="FREEHOLD">Freehold</option>
-                            <option value="LEASEHOLD">Leasehold</option>
-                          </InputField>
-                        )}
-                      />
-                      <Controller
-                        name={`properties.${i}.landType`}
-                        control={control}
-                        render={({ field }) => (
-                          <SelectField
-                            label="Land Type"
-                            options={LAND_TYPE_OPTIONS}
-                            value={field.value || ""}
-                            onChange={field.onChange}
-                          />
-                        )}
-                      />
-                      {/* <Controller
+                    )}
+                  />
+                  {/* <Controller
                         name={`properties.${i}.landType`}
                         control={control}
                         render={({ field }) => (
@@ -3371,66 +3389,60 @@ const AdditionalSection = ({ control, watch, setValue }) => {
                           </InputField>
                         )}
                       /> */}
-                      <Controller
-                        name={`properties.${i}.purchaseFrom`}
-                        control={control}
-                        render={({ field }) => (
-                          <InputField
-                            label="Purchased From"
-                            as="select"
-                            {...field}
-                          >
-                            <option value="">Select</option>
-                            <option value="BUILDER">Builder</option>
-                            <option value="SOCIETY">Society</option>
-                            <option value="DEVELOPMENT_AUTHORITY">
-                              Development Authority
-                            </option>
-                            <option value="HOUSING_BOARD">Housing Board</option>
-                            <option value="RESALE">Resale</option>
-                            <option value="SELF_CONSTRUCTION">
-                              Self Construction
-                            </option>
-                            <option value="OTHER">Other</option>
-                          </InputField>
-                        )}
-                      />
+                  <Controller
+                    name={`properties.${i}.purchaseFrom`}
+                    control={control}
+                    render={({ field }) => (
+                      <InputField label="Purchased From" as="select" {...field}>
+                        <option value="">Select</option>
+                        <option value="BUILDER">Builder</option>
+                        <option value="SOCIETY">Society</option>
+                        <option value="DEVELOPMENT_AUTHORITY">
+                          Development Authority
+                        </option>
+                        <option value="HOUSING_BOARD">Housing Board</option>
+                        <option value="RESALE">Resale</option>
+                        <option value="SELF_CONSTRUCTION">
+                          Self Construction
+                        </option>
+                        <option value="OTHER">Other</option>
+                      </InputField>
+                    )}
+                  />
 
-                      <Controller
-                        name={`properties.${i}.constructionStage`}
-                        control={control}
-                        render={({ field }) => (
-                          <InputField
-                            label="Construction Stage"
-                            as="select"
-                            {...field}
-                          >
-                            <option value="">Select</option>
-                            <option value="READY">Ready</option>
-                            <option value="UNDER_CONSTRUCTION">
-                              Under Construction
-                            </option>
-                          </InputField>
-                        )}
-                      />
+                  <Controller
+                    name={`properties.${i}.constructionStage`}
+                    control={control}
+                    render={({ field }) => (
+                      <InputField
+                        label="Construction Stage"
+                        as="select"
+                        {...field}
+                      >
+                        <option value="">Select</option>
+                        <option value="READY">Ready</option>
+                        <option value="UNDER_CONSTRUCTION">
+                          Under Construction
+                        </option>
+                      </InputField>
+                    )}
+                  />
 
-                      <Controller
-                        name={`properties.${i}.constructionPercent`}
-                        control={control}
-                        render={({ field }) => (
-                          <InputField
-                            label="Stage of Construction (%)"
-                            {...field}
-                            onChange={(e) =>
-                              field.onChange(
-                                e.target.value ? Number(e.target.value) : "",
-                              )
-                            }
-                          />
-                        )}
+                  <Controller
+                    name={`properties.${i}.constructionPercent`}
+                    control={control}
+                    render={({ field }) => (
+                      <InputField
+                        label="Stage of Construction (%)"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? Number(e.target.value) : "",
+                          )
+                        }
                       />
-                    </>
-                  )}
+                    )}
+                  />
                 </div>
               </div>
             );
@@ -4557,9 +4569,20 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
                         <InputField
                           label="Date of Joining"
                           type="date"
-                          {...field}
-                          value={field.value ? field.value.split("T")[0] : ""}
-                          onChange={field.onChange}
+                          value={
+                            field.value
+                              ? new Date(field.value)
+                                  .toISOString()
+                                  .split("T")[0]
+                              : ""
+                          }
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value
+                                ? new Date(e.target.value)
+                                : undefined,
+                            )
+                          }
                         />
                       )}
                     />
@@ -4570,7 +4593,20 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
                         <InputField
                           label="Date of Retirement"
                           type="date"
-                          {...field}
+                          value={
+                            field.value
+                              ? new Date(field.value)
+                                  .toISOString()
+                                  .split("T")[0]
+                              : ""
+                          }
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value
+                                ? new Date(e.target.value)
+                                : undefined,
+                            )
+                          }
                         />
                       )}
                     />
@@ -4720,7 +4756,16 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
                   <InputField
                     label="Date of Commencement of Business/Profession"
                     type="date"
-                    {...field}
+                    value={
+                        field.value
+                          ? new Date(field.value).toISOString().split("T")[0]
+                          : ""
+                      }
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value ? new Date(e.target.value) : undefined,
+                        )
+                      }
                   />
                 )}
               />

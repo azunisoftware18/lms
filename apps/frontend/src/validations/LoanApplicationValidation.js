@@ -34,12 +34,12 @@ export const employmentTypeEnum = z.enum([
 
 export const addressSchema = z.object({
   addressType: z.string().optional(),
-  addressLine1: z.string().min(1, "Address line 1 is required"),
+  addressLine1: z.string().optional(),
   addressLine2: z.string().optional(),
-  city: z.string().min(1, "City is required"),
-  district: z.string().min(1, "District is required"),
-  state: z.string().min(1, "State is required"),
-  pinCode: z.string().min(6, "Pin code is required"),
+  city: z.string().optional(),
+  district: z.string().optional(),
+  state: z.string().optional(),
+  pinCode: z.string().optional(),
   landmark: z.string().optional(),
   phoneNumber: z.string().optional(),
 });
@@ -55,14 +55,18 @@ export const occupationalCategoryEnum = z.enum([
 
 export const occupationalDetailsSchema = z.object({
   occupationalCategory: occupationalCategoryEnum.optional(),
-  companyBusinessName: z.string().min(1).optional(),
+  occupationalCategoryOther: z.string().optional(),
+  companyBusinessName: z.string().optional(),
   address: addressSchema.optional(),
-  phoneNumber: z.string().min(1).optional(),
-  extensionNumber: z.string().min(1).optional(),
+  phoneNumber: z.string().optional(),
+  extensionNumber: z.string().optional(),
   totalWorkExperience: z.coerce.number().optional(),
   noOfEmployees: z.coerce.number().optional(),
-  commencementDate: z.coerce.date().optional(),
-  businessType: z.string().min(1).optional(),
+  // commencementDate: z.coerce.date().optional(),
+  professionalType: z.string().optional(),
+  professionalSpecify: z.string().optional(),
+  businessType: z.string().optional(),
+  businessSpecify: z.string().optional(),
 });
 
 /* ─── EMPLOYMENT DETAILS ────────────────────────────────────────── */
@@ -80,10 +84,25 @@ export const employerTypeEnum = z.enum([
 
 export const employmentDetailsSchema = z.object({
   employerType: employerTypeEnum.optional(),
-  designation: z.string().min(1).optional(),
-  department: z.string().min(1).optional(),
-  dateOfJoining: z.coerce.date().optional(),
-  dateOfRetirement: z.coerce.date().optional(),
+  employerTypeOther: z.string().optional(),
+  designation: z.string().optional(),
+  department: z.string().optional(),
+  dateOfJoining: z.preprocess((arg) => {
+    if (arg === null || arg === undefined || arg === "") return undefined;
+    if (typeof arg === "string" || arg instanceof Date) {
+      const d = new Date(arg);
+      return isNaN(d.getTime()) ? undefined : d;
+    }
+    return undefined;
+  }, z.date().optional().nullable()),
+  dateOfRetirement: z.preprocess((arg) => {
+    if (arg === null || arg === undefined || arg === "") return undefined;
+    if (typeof arg === "string" || arg instanceof Date) {
+      const d = new Date(arg);
+      return isNaN(d.getTime()) ? undefined : d;
+    }
+    return undefined;
+  }, z.date().optional().nullable()),
 });
 
 /* ─── FINANCIAL DETAILS ─────────────────────────────────────────── */
@@ -178,7 +197,7 @@ export const coApplicantSchema = z.object({
   panNumber: z.string().min(1).optional(),
   aadhaarNumber: z.string().min(1).optional(),
   voterId: z.string().min(1).optional(),
-  drivingLicenceNo: z.string().min(1).optional(),
+  drivingLicenceNo: z.string().optional(),
   passportNumber: z.string().min(1).optional(),
   presentAccommodation: z.string().min(1).optional(),
   periodOfStay: z.string().min(1).optional(),
@@ -219,7 +238,7 @@ export const guarantorSchema = z.object({
   aadhaarNumber: z.string().min(1).optional(),
   voterId: z.string().min(1).optional(),
   drivingLicence: z.string().min(1).optional(),
-  drivingLicenceNo: z.string().min(1).optional(),
+  drivingLicenceNo: z.string().optional(),
   passportNumber: z.string().min(1).optional(),
   category: categoryEnum.optional(),
   maritalStatus: maritalStatusEnum.optional(),
@@ -227,7 +246,7 @@ export const guarantorSchema = z.object({
   noOfChildren: z.coerce.number().optional(),
   qualification: z.string().min(1).optional(),
   correspondenceAddressType: z.string().min(1).optional(),
-  relationshipWithApplicant: relationshipWithApplicantEnum,
+  relationshipWithApplicant: relationshipWithApplicantEnum.optional(),
   accommodationType: z.string().min(1).optional(),
   presentAccommodation: z.string().min(1).optional(),
   periodOfStay: z.string().min(1).optional(),
@@ -275,7 +294,16 @@ export const propertySchema = z.object({
   // Add other property fields as needed
 });
 
-/* ─── FULL LOAN APPLICATION ─────────────────────────────────────── */
+/* ─── CREDIT CARD SCHEMA ────────────────────────────────────────── */
+
+export const creditCardSchema = z.object({
+  holderName: z.string().optional(),
+  cardNo: z.string().optional(),
+  cardHolderSince: z.coerce.date().optional(),
+  issuingBank: z.string().optional(),
+  creditLimit: z.coerce.number().optional(),
+  outstandingAmount: z.coerce.number().optional(),
+});
 
 export const createLoanApplicationSchema = z.object({
   loanTypeId: z.string().min(1, "Loan type required"),
@@ -296,7 +324,7 @@ export const createLoanApplicationSchema = z.object({
   guarantors: z.array(guarantorSchema).optional(),
 
   existingLoans: z.array(z.any()).optional(),
-  creditCards: z.array(z.any()).optional(),
+  creditCards: z.array(creditCardSchema).optional(),
   bankAccounts: z.array(z.any()).optional(),
   insurancePolicies: z.array(z.any()).optional(),
   properties: z.array(propertySchema).optional(),

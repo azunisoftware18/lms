@@ -208,7 +208,7 @@ export default function LoanApplicationView({
 
           {/* Personal Information Section */}
           <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-            <div className="bg-linear-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200">
+            <div className="bg-linear-to-r from-slate-50 to-blue-50 px-5 py-3 border-b border-slate-200 text-amber-950">
               <h3 className="font-semibold text-slate-800 flex items-center gap-2">
                 <User size={18} className="text-blue-600" />
                 Personal Information
@@ -220,7 +220,7 @@ export default function LoanApplicationView({
                   icon={<User size={16} className="text-blue-500" />}
                   label="Full Name"
                   value={
-                    `$ {customer.title || ""} $ {customer.firstName || ""} $ {customer.middleName || ""} $ {customer.lastName || ""}`
+                    `$ {customer.title} $ {customer.firstName || ""} $ {customer.middleName || ""} $ {customer.lastName || ""}`
                       .replace(/\s+/g, " ")
                       .trim() || null
                   }
@@ -737,7 +737,7 @@ export default function LoanApplicationView({
               onClick={onClose}
               className="px-4 sm:px-6 py-2 sm:py-2.5 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-600 bg-white hover:bg-slate-50 transition-colors w-full sm:w-auto"
             >
-              Close
+              <span className="text-red-600">Close</span>
             </Button>
             {application.status?.toLowerCase() !== "approved" && (
               <Button
