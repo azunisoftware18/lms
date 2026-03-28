@@ -11,54 +11,41 @@ export const refreshCreditReportController = async (
   res: Response,
 ) => {
   try {
+    // Auth check
     if (!req.user) {
       throw AppError.unauthorized("Unauthorized");
     }
 
-    const q =
-      req.query.q?.toString() ||
-      (typeof req.body?.q === "string" ? req.body.q : undefined);
+    // Params & body
+    const { id } = req.params as { id: string };
+    const { reason } = req.body as { reason: string };
 
-    const { reason } = req.body;
-
-    if (!q) {
-      throw AppError.badRequest("Search query (q) is required");
+    // Validations
+    if (!id || typeof id !== "string") {
+      throw AppError.badRequest("Customer ID is required");
     }
 
-    if (!reason) {
+    if (!reason || typeof reason !== "string") {
       throw AppError.badRequest("Reason for refreshing credit report is required");
     }
 
-    // ✅ Search CUSTOMER by customer fields OR via loan application
-    let customer = await prisma.customer.findFirst({
-      where: {
-        OR: [
-          { panNumber: q },
-          { aadhaarNumber: q },
-          { contactNumber: q },
-        ],
-      },
+    // =====================================================
+    // Find customer
+    // =====================================================
+    const customer = await prisma.customer.findUnique({
+      where: { id },
       select: { id: true },
     });
 
-    // If not found by customer fields, search by loan number
     if (!customer) {
-      const loanApplication = await prisma.loanApplication.findFirst({
-        where: { loanNumber: q },
-        select: { customerId: true },
-      });
-
-      if (loanApplication) {
-        customer = { id: loanApplication.customerId };
-      }
+      throw AppError.notFound("Customer not found");
     }
 
-    if (!customer) {
-      throw AppError.notFound("Customer not found for the search query (PAN, Aadhaar, Contact, or Loan Number)");
-    }
-
+    // =====================================================
+    // Call service
+    // =====================================================
     const report = await refreshCreditReportService(
-      { customerId: customer.id }, // only customerId
+      { customerId: customer.id },
       creditProvider,
       {
         requestedBy: req.user.id,
@@ -67,6 +54,9 @@ export const refreshCreditReportController = async (
       },
     );
 
+    // =====================================================
+    // Success response
+    // =====================================================
     return res.status(200).json({
       success: true,
       message: "Credit report refreshed successfully",
@@ -74,6 +64,8 @@ export const refreshCreditReportController = async (
     });
 
   } catch (error: any) {
+    console.error("❌ Refresh Credit Error:", error);
+
     return res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || "Internal Server Error",
