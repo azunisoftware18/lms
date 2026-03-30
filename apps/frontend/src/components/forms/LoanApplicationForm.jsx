@@ -1,3 +1,4 @@
+import { useCreateLoanApplication } from "../../hooks/useLoanApplication";
 import ErrorBoundary from "../common/ErrorBoundary";
 
 // PERSON PERSONAL FIELDS (Reusable for Applicant/Co-Applicant)
@@ -294,15 +295,15 @@ const PersonPersonalFields = ({ control, prefix }) => {
               label="Date of Birth"
               type="date"
               value={
-                        field.value
-                          ? new Date(field.value).toISOString().split("T")[0]
-                          : ""
-                      }
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value ? new Date(e.target.value) : undefined,
-                        )
-                      }
+                field.value
+                  ? new Date(field.value).toISOString().split("T")[0]
+                  : ""
+              }
+              onChange={(e) =>
+                field.onChange(
+                  e.target.value ? new Date(e.target.value) : undefined,
+                )
+              }
             />
           )}
         />
@@ -470,9 +471,7 @@ import {
   BadgeCheck,
   Info,
   Loader2,
-  AlertCircle,
   UserCheck,
-  FileCheck,
   X,
 } from "lucide-react";
 
@@ -485,7 +484,7 @@ import createLoanApplicationSchema from "../../validations/LoanApplicationValida
 
 // ...existing code...
 import { showError, showInfo, showSuccess } from "../../lib/utils/toastService";
-import { apiPost } from "../../lib/api/apiClient";
+// import { apiPost } from "../../lib/api/apiClient";
 
 // ─────────────────────────────────────────────
 // PERSON DEFAULTS (backend-required fields only)
@@ -1110,7 +1109,7 @@ const PersonEmploymentFields = ({ control, watch, prefix }) => {
               </Grid>
               <Grid>
                 <Controller
-                  name='applicant.dateOfJoining'
+                  name="applicant.dateOfJoining"
                   control={control}
                   render={({ field }) => (
                     <InputField
@@ -1130,7 +1129,7 @@ const PersonEmploymentFields = ({ control, watch, prefix }) => {
                   )}
                 />
                 <Controller
-                  name='applicant.dateOfRetirement'
+                  name="applicant.dateOfRetirement"
                   control={control}
                   render={({ field }) => (
                     <InputField
@@ -4225,38 +4224,28 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
       questionnaire: data.questionnaire,
     };
   };
-  // --- PATCH: Only send backend schema fields and call onSuccess ---
-  const submitToBackend = async (data) => {
-    setIsSubmitting(true);
-    try {
-      // ✅ USE NORMALIZER HERE
-      const payload = normalizePayload(data);
-      console.log("FINAL CLEAN PAYLOAD:", payload);
-
-      await apiPost("/loan-applications/loan/create", payload);
-
+  // Use the custom hook for loan application creation
+  const { mutate: createLoanApplication } = useCreateLoanApplication({
+    onSuccess: () => {
       showSuccess("Loan application created successfully!");
       reset(DEFAULT_VALUES);
       setSubmitted(true);
       localStorage.removeItem(DRAFT_KEY);
       if (typeof onSuccess === "function") onSuccess();
-    } catch (err) {
-      console.log("FULL ERROR OBJECT:", err);
+    },
+    onError: () => {
+      // Optionally log error details here if needed
+    },
+  });
 
-      if (err?.response) {
-        console.log("STATUS:", err.response.status);
-        console.log("DATA:", err.response.data);
-        console.log("ERRORS ARRAY:", err.response.data?.errors);
-      } else {
-        console.log("NO RESPONSE (network issue)");
-      }
-
-      showError(
-        err?.response?.data?.message || "Failed to create loan application",
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
+  // Handler for form submit
+  const submitToBackend = (data) => {
+    setIsSubmitting(true);
+    const payload = normalizePayload(data);
+    // console.log("FINAL CLEAN PAYLOAD:", payload);
+    createLoanApplication(payload, {
+      onSettled: () => setIsSubmitting(false),
+    });
   };
 
   const {
@@ -4757,15 +4746,15 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
                     label="Date of Commencement of Business/Profession"
                     type="date"
                     value={
-                        field.value
-                          ? new Date(field.value).toISOString().split("T")[0]
-                          : ""
-                      }
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value ? new Date(e.target.value) : undefined,
-                        )
-                      }
+                      field.value
+                        ? new Date(field.value).toISOString().split("T")[0]
+                        : ""
+                    }
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value ? new Date(e.target.value) : undefined,
+                      )
+                    }
                   />
                 )}
               />
