@@ -34,7 +34,30 @@ export const useLoanApplications = (params = {}) => {
     },
   });
 };
-
+export const useLoanTypes = () => {
+  // Fetch loan types from API
+  const { data } = useQuery({
+    queryKey: ["loanTypes"],
+    queryFn: async () => {
+      // Try with isActive=true first
+      let res = await apiGet("/loantypes?isActive=true");
+      let items = Array.isArray(res) ? res : res?.data?.data || res?.data || [];
+      if (!items.length) {
+        // Fallback: fetch all if none returned
+        res = await apiGet("/loantypes");
+        items = Array.isArray(res) ? res : res?.data?.data || res?.data || [];
+      }
+      return items
+        .filter((lt) => lt?.id)
+        .map((lt) => ({
+          value: lt.id,
+          label: lt.name || lt.code || lt.id,
+        }));
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+  return data || [];
+};
 export const useLoanApplication = (id) => {
   const dispatch = useDispatch();
 

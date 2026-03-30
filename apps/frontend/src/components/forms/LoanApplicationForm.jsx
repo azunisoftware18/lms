@@ -1,3 +1,4 @@
+import { useLoanTypes } from "../../hooks/useLoanApplication";
 import { useCreateLoanApplication } from "../../hooks/useLoanApplication";
 import ErrorBoundary from "../common/ErrorBoundary";
 
@@ -38,6 +39,7 @@ const PersonPersonalFields = ({ control, prefix }) => {
             <InputField label="Father's Name" isRequired {...field} />
           )}
         />
+        // Use the useLoanTypes hook for fetching loan types
         <Controller
           name={`${prefix}.motherName`}
           control={control}
@@ -441,7 +443,7 @@ const LOAN_PURPOSE_OPTIONS = [
   { value: "STANDING_INSTRUCTION", label: "Standing Instruction" },
 ];
 import React, { useState, useEffect, useCallback } from "react";
-import apiGet from "../../lib/api/apiGet";
+
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -4065,51 +4067,10 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
   const [completedSteps, setCompletedSteps] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [loanTypeOptions, setLoanTypeOptions] = useState([]);
+  // Use a custom hook for loanTypeOptions
+  const loanTypeOptions = useLoanTypes();
 
-  useEffect(() => {
-    let isMounted = true;
-    const extractLoanTypes = (payload) => {
-      if (Array.isArray(payload)) return payload;
-      if (Array.isArray(payload?.data?.data)) return payload.data.data;
-      if (Array.isArray(payload?.data)) return payload.data;
-      return [];
-    };
-
-    async function fetchLoanTypes() {
-      try {
-        // NOTE: Some environments have isPublic=false values; avoid over-filtering.
-        const res = await apiGet("/loantypes?isActive=true");
-        let items = extractLoanTypes(res);
-
-        // Fallback: fetch without filters if the filtered endpoint returns no rows.
-        if (!items.length) {
-          const fallbackRes = await apiGet("/loantypes");
-          items = extractLoanTypes(fallbackRes);
-        }
-
-        if (!isMounted) return;
-        if (Array.isArray(items) && items.length) {
-          setLoanTypeOptions(
-            items
-              .filter((lt) => lt?.id)
-              .map((lt) => ({
-                value: lt.id,
-                label: lt.name || lt.code || lt.id,
-              })),
-          );
-        } else {
-          setLoanTypeOptions([]);
-        }
-      } catch {
-        if (isMounted) setLoanTypeOptions([]);
-      }
-    }
-    fetchLoanTypes();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  // Use a custom hook for fetching loan types instead of direct apiGet
 
   const {
     control,
