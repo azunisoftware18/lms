@@ -33,7 +33,7 @@ export default function LoanApplicationView({
   application,
   onClose,
   onApprove,
-}) {
+}) { 
   // Format date helper
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
@@ -74,6 +74,8 @@ export default function LoanApplicationView({
 
   // Fallback: use applicant if customer is missing
   const customer = application.customer || application.applicant || {};
+  console.log("APPLICATION DATA:", application);
+  console.log("CUSTOMER DATA:", application.customer);
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-60 p-2 sm:p-4">
@@ -215,27 +217,23 @@ export default function LoanApplicationView({
               </h3>
             </div>
             <div className="p-5">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-blue-700">
                 <InfoCard
                   icon={<User size={16} className="text-blue-500" />}
                   label="Full Name"
-                  value={
-                    `$ {customer.title} $ {customer.firstName || ""} $ {customer.middleName || ""} $ {customer.lastName || ""}`
-                      .replace(/\s+/g, " ")
-                      .trim() || null
-                  }
+                  value={customer.name || null}
                   fallback="Not provided"
                 />
                 <InfoCard
                   icon={<Mail size={16} className="text-blue-500" />}
                   label="Email"
-                  value={customer.email}
+                  value={customer.email || "Not provided"}
                   fallback="Not provided"
                 />
                 <InfoCard
                   icon={<Phone size={16} className="text-blue-500" />}
                   label="Phone"
-                  value={customer.contactNumber}
+                  value={customer.contactNumber || "Not provided"}
                   fallback="Not provided"
                 />
                 <InfoCard

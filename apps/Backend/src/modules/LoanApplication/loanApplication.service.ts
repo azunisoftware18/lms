@@ -130,7 +130,10 @@ export async function uploadLoanDocumentsService(
   });
 }
 
-export async function verifyDocumentService(documentId: string, verifierId: string) {
+export async function verifyDocumentService(
+  documentId: string,
+  verifierId: string,
+) {
   return prisma.$transaction(async (tx) => {
     const existingDocument = await tx.document.findUnique({
       where: { id: documentId },
@@ -285,6 +288,15 @@ export async function getAllDocumentsForLoanApplicationService(
         select: {
           firstName: true,
           lastName: true,
+          dob: true,
+          contactNumber: true,
+          email: true,
+          gender: true,
+          maritalStatus: true,
+          nationality: true,
+          category: true,
+          alternateNumber: true,
+          spouseName: true,
         },
       },
       coapplicants: {
@@ -343,7 +355,9 @@ export async function getAllDocumentsForLoanApplicationService(
   const coApplicantMap = new Map(
     loanApplication.coapplicants.map((c) => [c.id, c]),
   );
-  const guarantorMap = new Map(loanApplication.guarantors.map((g) => [g.id, g]));
+  const guarantorMap = new Map(
+    loanApplication.guarantors.map((g) => [g.id, g]),
+  );
 
   return documents.map((doc) => {
     if (doc.coApplicantId) {
@@ -377,7 +391,8 @@ export async function getAllDocumentsForLoanApplicationService(
       documentPath: doc.documentPath,
       ownerType: "APPLICANT",
       ownerId: loanApplication.id,
-      ownerName: `${loanApplication.customer.firstName} ${loanApplication.customer.lastName ?? ""}`.trim(),
+      ownerName:
+        `${loanApplication.customer.firstName} ${loanApplication.customer.lastName ?? ""}`.trim(),
     };
   });
 }
@@ -400,7 +415,9 @@ export const reuploadLoanDocumentService = async (
     });
 
     if (!existingDoc) {
-      throw AppError.notFound(`Document ${documentType} not found. Upload first.`);
+      throw AppError.notFound(
+        `Document ${documentType} not found. Upload first.`,
+      );
     }
 
     if (existingDoc.documentPath) {
@@ -519,6 +536,15 @@ export const getAllLoanApplicationsService = async (params: {
             id: true,
             firstName: true,
             lastName: true,
+            dob: true,
+            contactNumber: true,
+            email: true,
+            gender: true,
+            maritalStatus: true,
+            nationality: true,
+            category: true,
+            alternateNumber: true,
+            spouseName: true,
           },
         },
         loanType: {
@@ -557,7 +583,18 @@ export const getAllLoanApplicationsService = async (params: {
     updatedAt: loan.updatedAt,
     customer: {
       id: loan.customer.id,
+      firstName: loan.customer.firstName,
+      lastName: loan.customer.lastName,
       name: `${loan.customer.firstName} ${loan.customer.lastName}`,
+      email: loan.customer.email,
+      contactNumber: loan.customer.contactNumber,
+      dob: loan.customer.dob,
+      gender: loan.customer.gender,
+      maritalStatus: loan.customer.maritalStatus,
+      nationality: loan.customer.nationality,
+      category: loan.customer.category,
+      alternateNumber: loan.customer.alternateNumber,
+      spouseName: loan.customer.spouseName,
     },
     loanTypeId: loan.loanType?.id || null,
     kycStatus: loan.kyc?.status,
@@ -591,6 +628,13 @@ export const getLoanApplicationByIdService = async (
           lastName: true,
           contactNumber: true,
           email: true,
+          dob: true,
+          gender: true,
+          maritalStatus: true,
+          nationality: true,
+          category: true,
+          alternateNumber: true,
+          spouseName: true,
         },
       },
       loanType: {
@@ -690,9 +734,18 @@ export const getLoanApplicationByIdService = async (
     tenureMonths: loanApplication.tenureMonths,
     loanPurpose: loanApplication.loanPurpose,
     customer: {
+      firstName: loanApplication.customer.firstName,
+      lastName: loanApplication.customer.lastName,
       name: `${loanApplication.customer.firstName} ${loanApplication.customer.lastName}`,
       contactNumber: loanApplication.customer.contactNumber,
       email: loanApplication.customer.email,
+      dob: loanApplication.customer.dob,
+      gender: loanApplication.customer.gender,
+      maritalStatus: loanApplication.customer.maritalStatus,
+      nationality: loanApplication.customer.nationality,
+      category: loanApplication.customer.category,
+      alternateNumber: loanApplication.customer.alternateNumber,
+      spouseName: loanApplication.customer.spouseName,
     },
     loanType: loanApplication.loanType
       ? {
@@ -858,7 +911,8 @@ export const approveLoanService = async (
         emiStartDateNormalized = new Date(data.emiStartDate + "T00:00:00.000Z");
       } else {
         const parsed = new Date(data.emiStartDate);
-        if (isNaN(parsed.getTime())) throw AppError.badRequest("Invalid emiStartDate");
+        if (isNaN(parsed.getTime()))
+          throw AppError.badRequest("Invalid emiStartDate");
         emiStartDateNormalized = parsed;
       }
     } else {
@@ -1048,7 +1102,13 @@ export const createFullLoanApplicationService = async (
 
       const kyc = await createKYC(tx, userId);
       await attachKycToLoan(tx, loan.id, kyc.id);
-      await createCoApplicants(tx, loan.id, userId, customer.id, data.coApplicants);
+      await createCoApplicants(
+        tx,
+        loan.id,
+        userId,
+        customer.id,
+        data.coApplicants,
+      );
 
       await createOccupationalDetailsForEntity(
         tx,
@@ -1104,25 +1164,26 @@ export const createFullLoanApplicationService = async (
   }
 };
 
-
 export const listofalldocumentsForLoanService = async (loanId: string) => {
   const loan = await prisma.loanApplication.findUnique({
     where: { id: loanId },
   });
-  
+
   if (!loan) {
     throw AppError.notFound("Loan application not found");
   }
   if (loan.loanTypeId) {
-   const loanType = await prisma.loanType.findUnique({
-    where: { id: loan.loanTypeId },
-    select: { applicantDocumentsRequired: true,
-      coApplicantDocumentsRequired: true,
-      guarantorDocumentsRequired: true,
-    applicantDocumentsOptional: true,
-    coApplicantDocumentsOptional: true,
-    guarantorDocumentsOptional: true, },
-   });
+    const loanType = await prisma.loanType.findUnique({
+      where: { id: loan.loanTypeId },
+      select: {
+        applicantDocumentsRequired: true,
+        coApplicantDocumentsRequired: true,
+        guarantorDocumentsRequired: true,
+        applicantDocumentsOptional: true,
+        coApplicantDocumentsOptional: true,
+        guarantorDocumentsOptional: true,
+      },
+    });
     if (!loanType) {
       throw AppError.notFound("Loan type not found");
     }
@@ -1174,7 +1235,7 @@ export const listofalldocumentsForLoanService = async (loanId: string) => {
         documentType: doc,
         ownerType: "GUARANTOR",
       })),
-    ];  
+    ];
     return {
       requiredDocuments,
       optionalDocuments,
@@ -1184,5 +1245,4 @@ export const listofalldocumentsForLoanService = async (loanId: string) => {
     requiredDocuments: [],
     optionalDocuments: [],
   };
-
 };
