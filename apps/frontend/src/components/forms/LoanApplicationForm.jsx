@@ -1,9 +1,106 @@
 import { useLoanTypes } from "../../hooks/useLoanApplication";
 import { useCreateLoanApplication } from "../../hooks/useLoanApplication";
 import ErrorBoundary from "../common/ErrorBoundary";
+import React, { useState, useEffect, useCallback } from "react";
+
+import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  TrendingUp,
+  BarChart3,
+  ChevronRight,
+  ChevronLeft,
+  Save,
+  Send,
+  Check,
+  User,
+  MapPin,
+  Users,
+  IndianRupee,
+  FileText,
+  Eye,
+  Plus,
+  Trash2,
+  Shield,
+  Landmark,
+  CreditCard,
+  Home,
+  Briefcase,
+  Phone,
+  BadgeCheck,
+  Info,
+  Loader2,
+  UserCheck,
+  X,
+} from "lucide-react";
+
+import Button from "../ui/Button";
+import InputField from "../ui/InputField";
+import SelectField from "../ui/SelectField";
+import createLoanApplicationSchema from "../../validations/LoanApplicationValidation";
+import { showError, showInfo, showSuccess } from "../../lib/utils/toastService";
+// Populated option arrays for required fields
+const EMPLOYMENT_OPTIONS = [
+  { value: "SALARIED", label: "Salaried" },
+  { value: "BUSINESS", label: "Business" },
+  { value: "PROFESSIONAL", label: "Professional" },
+  { value: "OTHER", label: "Other" },
+];
+const TITLE_OPTIONS = [
+  { value: "MR", label: "Mr." },
+  { value: "MRS", label: "Mrs." },
+  { value: "MS", label: "Ms." },
+  { value: "DR", label: "Dr." },
+  { value: "PROF", label: "Prof." },
+];
+const GENDER_OPTIONS = [
+  { value: "MALE", label: "Male" },
+  { value: "FEMALE", label: "Female" },
+  { value: "OTHER", label: "Other" },
+];
+const CATEGORY_OPTIONS = [
+  { value: "GENERAL", label: "General" },
+  { value: "SC", label: "SC" },
+  { value: "ST", label: "ST" },
+  { value: "NT", label: "NT" },
+  { value: "OBC", label: "OBC" },
+  { value: "OTHER", label: "Other" },
+];
+const MARITAL_OPTIONS = [
+  { value: "SINGLE", label: "Single" },
+  { value: "MARRIED", label: "Married" },
+  { value: "DIVORCED", label: "Divorced" },
+  { value: "WIDOWED", label: "Widowed" },
+  { value: "OTHER", label: "Other" },
+];
+// Loan type options will be fetched from backend
+const INTEREST_OPTIONS = [
+  { value: "FIXED", label: "Fixed" },
+  { value: "VARIABLE", label: "Variable" },
+];
+const REPAYMENT_OPTIONS = [
+  { value: "SALARY_DEDUCTION", label: "Salary Deduction" },
+  { value: "ECS", label: "ECS" },
+  { value: "CHEQUE", label: "Post Dated Cheque" },
+  { value: "STANDING_INSTRUCTION", label: "Standing Instruction to Banker" },
+  { value: "OTHER", label: "Other" },
+];
+const REST_FREQ_OPTIONS = [
+  { value: "MONTHLY", label: "Monthly" },
+  { value: "QUARTERLY", label: "Quarterly" },
+  { value: "HALF_YEARLY", label: "Half-Yearly" },
+  { value: "YEARLY", label: "Yearly" },
+];
+const LOAN_PURPOSE_OPTIONS = [
+  { value: "HOME", label: "Home Purchase" },
+  { value: "HOME_IMPROVEMENT", label: "Home Improvement" },
+  { value: "PLOT_PURCHASE", label: "Plot Purchase" },
+  { value: "NRPL", label: "NRPL" },
+  { value: "POST_DATED_CHEQUE", label: "Post Dated Cheque" },
+  { value: "STANDING_INSTRUCTION", label: "Standing Instruction" },
+];
 
 // PERSON PERSONAL FIELDS (Reusable for Applicant/Co-Applicant)
-// ─────────────────────────────────────────────
 const PersonPersonalFields = ({ control, prefix }) => {
   // Watch present accommodation for conditional rent field
   const presentAccommodation =
@@ -382,115 +479,8 @@ const PersonPersonalFields = ({ control, prefix }) => {
     </div>
   );
 };
-// Populated option arrays for required fields
-const EMPLOYMENT_OPTIONS = [
-  { value: "SALARIED", label: "Salaried" },
-  { value: "BUSINESS", label: "Business" },
-  { value: "PROFESSIONAL", label: "Professional" },
-  { value: "OTHER", label: "Other" },
-];
-const TITLE_OPTIONS = [
-  { value: "MR", label: "Mr." },
-  { value: "MRS", label: "Mrs." },
-  { value: "MS", label: "Ms." },
-  { value: "DR", label: "Dr." },
-  { value: "PROF", label: "Prof." },
-];
-const GENDER_OPTIONS = [
-  { value: "MALE", label: "Male" },
-  { value: "FEMALE", label: "Female" },
-  { value: "OTHER", label: "Other" },
-];
-const CATEGORY_OPTIONS = [
-  { value: "GENERAL", label: "General" },
-  { value: "SC", label: "SC" },
-  { value: "ST", label: "ST" },
-  { value: "NT", label: "NT" },
-  { value: "OBC", label: "OBC" },
-  { value: "OTHER", label: "Other" },
-];
-const MARITAL_OPTIONS = [
-  { value: "SINGLE", label: "Single" },
-  { value: "MARRIED", label: "Married" },
-  { value: "DIVORCED", label: "Divorced" },
-  { value: "WIDOWED", label: "Widowed" },
-  { value: "OTHER", label: "Other" },
-];
-// Loan type options will be fetched from backend
-const INTEREST_OPTIONS = [
-  { value: "FIXED", label: "Fixed" },
-  { value: "VARIABLE", label: "Variable" },
-];
-const REPAYMENT_OPTIONS = [
-  { value: "SALARY_DEDUCTION", label: "Salary Deduction" },
-  { value: "ECS", label: "ECS" },
-  { value: "CHEQUE", label: "Post Dated Cheque" },
-  { value: "STANDING_INSTRUCTION", label: "Standing Instruction to Banker" },
-  { value: "OTHER", label: "Other" },
-];
-const REST_FREQ_OPTIONS = [
-  { value: "MONTHLY", label: "Monthly" },
-  { value: "QUARTERLY", label: "Quarterly" },
-  { value: "HALF_YEARLY", label: "Half-Yearly" },
-  { value: "YEARLY", label: "Yearly" },
-];
-const LOAN_PURPOSE_OPTIONS = [
-  { value: "HOME", label: "Home Purchase" },
-  { value: "HOME_IMPROVEMENT", label: "Home Improvement" },
-  { value: "PLOT_PURCHASE", label: "Plot Purchase" },
-  { value: "NRPL", label: "NRPL" },
-  { value: "POST_DATED_CHEQUE", label: "Post Dated Cheque" },
-  { value: "STANDING_INSTRUCTION", label: "Standing Instruction" },
-];
-import React, { useState, useEffect, useCallback } from "react";
 
-import { useForm, Controller, useFieldArray } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  TrendingUp,
-  BarChart3,
-  PiggyBank,
-  ChevronRight,
-  ChevronLeft,
-  Save,
-  Send,
-  Check,
-  User,
-  MapPin,
-  Users,
-  IndianRupee,
-  FileText,
-  Eye,
-  Plus,
-  Trash2,
-  Shield,
-  Landmark,
-  CreditCard,
-  Home,
-  Briefcase,
-  Phone,
-  ClipboardList,
-  BadgeCheck,
-  Info,
-  Loader2,
-  UserCheck,
-  X,
-} from "lucide-react";
-
-import Button from "../ui/Button";
-import InputField from "../ui/InputField";
-import TextAreaField from "../ui/TextAreaField";
-import SelectField from "../ui/SelectField";
-import CheckboxGroup from "../ui/CheckboxGroup";
-import createLoanApplicationSchema from "../../validations/LoanApplicationValidation";
-
-// ...existing code...
-import { showError, showInfo, showSuccess } from "../../lib/utils/toastService";
-// import { apiPost } from "../../lib/api/apiClient";
-
-// ─────────────────────────────────────────────
 // PERSON DEFAULTS (backend-required fields only)
-// ─────────────────────────────────────────────
 const personDefaults = () => ({
   title: undefined,
   firstName: "",
@@ -685,9 +675,7 @@ const INDIAN_STATES = [
   "Puducherry",
 ].map((s) => ({ value: s, label: s }));
 
-// ─────────────────────────────────────────────
 // STEPS
-// ─────────────────────────────────────────────
 const STEPS = [
   {
     id: "applicant",
@@ -794,9 +782,8 @@ const STEP_FIELDS = {
 
 const DRAFT_KEY = "loan_app_draft_v5";
 // localStorage.removeItem("loan_app_draft_v5");
-// ─────────────────────────────────────────────
+
 // PERSON DEFAULTS (reused for applicant / co-applicant / guarantor)
-// ─────────────────────────────────────────────
 
 const DEFAULT_VALUES = {
   loanTypeId: "",
@@ -932,9 +919,8 @@ const DEFAULT_VALUES = {
   },
 };
 
-// ─────────────────────────────────────────────
 // LAYOUT HELPERS
-// ─────────────────────────────────────────────
+
 const SectionCard = React.memo(({ title, icon: Icon, children }) => {
   return (
     <div className="bg-white rounded-lg border border-slate-200 mb-6">
@@ -981,9 +967,7 @@ const RadioGroup = React.memo(({ label }) => {
   );
 });
 
-// ─────────────────────────────────────────────
 // PERSON EMPLOYMENT SECTION (reused)
-// ─────────────────────────────────────────────
 const PersonEmploymentFields = ({ control, watch, prefix }) => {
   const employmentType = watch(`${prefix}.employmentType`);
   const professionalType = watch(`${prefix}.professionalType`);
@@ -1264,9 +1248,7 @@ const PersonEmploymentFields = ({ control, watch, prefix }) => {
   );
 };
 
-// ─────────────────────────────────────────────
 // PERSON FINANCIAL SECTION (reused)
-// ─────────────────────────────────────────────
 const PersonFinancialFields = ({ control, watch, setValue, prefix }) => {
   const assets = watch([
     `${prefix}.savingBankBalance`,
@@ -1541,9 +1523,7 @@ const PersonFinancialFields = ({ control, watch, setValue, prefix }) => {
   );
 };
 
-// ─────────────────────────────────────────────
 // SECTION: APPLICANT
-// ─────────────────────────────────────────────
 const ApplicantSection = ({ control, errors, mode = "all" }) => (
   <div>
     {(mode === "personal" || mode === "all") && (
@@ -1939,9 +1919,7 @@ const ApplicantSection = ({ control, errors, mode = "all" }) => (
   </div>
 );
 
-// ─────────────────────────────────────────────
 // SECTION: ADDRESS (standalone applicant address)
-// ─────────────────────────────────────────────
 const AddressSection = ({ control, errors, watch, setValue }) => {
   const sameAddress = watch("sameAsCurrent");
   const copyCurrent = useCallback(() => {
@@ -2152,9 +2130,7 @@ const AddressSection = ({ control, errors, watch, setValue }) => {
   );
 };
 
-// ─────────────────────────────────────────────
-// SECTION: CO-APPLICANTS (Images 3 + 4)
-// ─────────────────────────────────────────────
+// SECTION: CO-APPLICANTS
 const CoApplicantSection = ({
   control,
   watch,
@@ -2238,9 +2214,7 @@ const CoApplicantSection = ({
   </div>
 );
 
-// ─────────────────────────────────────────────
-// SECTION: GUARANTOR (Images 6 + 7)
-// ─────────────────────────────────────────────
+// SECTION: GUARANTOR
 const GuarantorSection = ({
   control,
   watch,
@@ -2324,9 +2298,7 @@ const GuarantorSection = ({
   </div>
 );
 
-// ─────────────────────────────────────────────
 // SECTION: LOAN REQUIREMENT (Image 8)
-// ─────────────────────────────────────────────
 const LoanRequirementSection = ({
   control,
   errors,
@@ -2708,9 +2680,7 @@ const LoanRequirementSection = ({
   );
 };
 
-// ─────────────────────────────────────────────
-// SECTION: ADDITIONAL INFO (Image 5 + 8)
-// ─────────────────────────────────────────────
+// SECTION: ADDITIONAL INFO
 const AdditionalSection = ({ control, watch, setValue }) => {
   const HOW_KNOW = [
     { value: "PAPER_INSERT", label: "Paper Insert" },
@@ -3722,9 +3692,7 @@ const AdditionalSection = ({ control, watch, setValue }) => {
   );
 };
 
-// ─────────────────────────────────────────────
 // SECTION: REVIEW & SUBMIT
-// ─────────────────────────────────────────────
 const ReviewBlock = ({ title, icon: Icon, rows }) => {
   const valid = rows.filter(
     ([, v]) => v !== undefined && v !== null && v !== "",
@@ -3750,6 +3718,7 @@ const ReviewBlock = ({ title, icon: Icon, rows }) => {
   );
 };
 
+// Review Section
 const ReviewSection = ({ getValues, onSubmit, isSubmitting }) => {
   const [agreed, setAgreed] = useState(false);
   const data = getValues();
@@ -3760,7 +3729,6 @@ const ReviewSection = ({ getValues, onSubmit, isSubmitting }) => {
   return (
     <div className="space-y-4">
       {/* Top Navbar for Steps */}
-
       <div className="p-5 bg-linear-to-r from-blue-600 to-indigo-600 rounded-2xl text-white">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -4018,9 +3986,7 @@ const ReviewSection = ({ getValues, onSubmit, isSubmitting }) => {
   );
 };
 
-// ─────────────────────────────────────────────
 // SUCCESS SCREEN
-// ─────────────────────────────────────────────
 const SuccessScreen = ({ onReset, leadNumber }) => {
   const [refNum] = useState(() => Date.now().toString().slice(-8));
   return (
@@ -4059,9 +4025,7 @@ const SuccessScreen = ({ onReset, leadNumber }) => {
   );
 };
 
-// ─────────────────────────────────────────────
 // MAIN
-// ─────────────────────────────────────────────
 export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
   const [currentStep, setCurrentStep] = useState("applicant");
   const [completedSteps, setCompletedSteps] = useState([]);
@@ -4069,8 +4033,6 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Use a custom hook for loanTypeOptions
   const loanTypeOptions = useLoanTypes();
-
-  // Use a custom hook for fetching loan types instead of direct apiGet
 
   const {
     control,
@@ -4190,9 +4152,9 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
     onSuccess: () => {
       showSuccess("Loan application created successfully!");
       reset(DEFAULT_VALUES);
-      setSubmitted(true);
       localStorage.removeItem(DRAFT_KEY);
       if (typeof onSuccess === "function") onSuccess();
+      setSubmitted(true);
     },
     onError: () => {
       // Optionally log error details here if needed
