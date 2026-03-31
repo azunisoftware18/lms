@@ -37,7 +37,6 @@ export const useRefreshCreditReport = () => {
       return apiPost(
         `/credit/credit-report/refresh${queryString}`,
         {
-          // ✅ FIX: reason add kiya
           reason: payload.reason || "manual refresh",
         }
       );

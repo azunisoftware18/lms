@@ -41,12 +41,11 @@ import { colorVariables } from "../../../lib";
 export default function CreditCheckPage() {
   const { mutateAsync: refreshCreditReport } = useRefreshCreditReport();
 
-  // Fixed: The API expects { q: loanNumber } in the payload
   const fetchCredit = async (loanNumber) => {
   try {
     const response = await refreshCreditReport({
       q: loanNumber,
-      reason: "User requested refresh", // ✅ ADD THIS LINE
+      reason: "User requested refresh", 
     });
     return response;
   } catch (error) {
