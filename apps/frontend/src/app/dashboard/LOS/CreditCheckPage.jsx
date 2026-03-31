@@ -41,10 +41,20 @@ import { colorVariables } from "../../../lib";
 export default function CreditCheckPage() {
   const { mutateAsync: refreshCreditReport } = useRefreshCreditReport();
 
+  // Fixed: The API expects { q: loanNumber } in the payload
   const fetchCredit = async (loanNumber) => {
-    // Align page API with existing hook contract.
-    return refreshCreditReport({ loanNumber });
-  };
+  try {
+    const response = await refreshCreditReport({
+      q: loanNumber,
+      reason: "User requested refresh", // ✅ ADD THIS LINE
+    });
+    return response;
+  } catch (error) {
+    console.error("Error fetching credit report:", error);
+    throw error;
+  }
+};
+
   const getScoreMeta = (score) => {
     if (score >= 750)
       return { status: "Excellent", color: "emerald", riskGrade: "A" };
@@ -130,6 +140,7 @@ export default function CreditCheckPage() {
       },
     };
   };
+  
   // Loan applications database
   const [loanApplications] = useState(CREDIT_CHECK_LOAN_APPLICATIONS);
 
@@ -167,9 +178,14 @@ export default function CreditCheckPage() {
     let fetchedCredit = null;
 
     try {
+      // Fixed: Pass the loan number correctly
       fetchedCredit = await fetchCredit(normalizedQuery);
+      console.log("API Response:", fetchedCredit); // Debug log
     } catch (err) {
+      console.error("Error in fetchCredit:", err);
       setSearchError(err.message || "Failed to fetch credit report");
+      setIsSearching(false);
+      return;
     }
 
     const foundApplication = loanApplications.find(
@@ -179,7 +195,7 @@ export default function CreditCheckPage() {
     );
 
     const loanKey = normalizedQuery.toUpperCase();
-    const normalizedCredit = fetchedCredit
+    const normalizedCredit = fetchedCredit && fetchedCredit.data
       ? normalizeCreditReport(
           fetchedCredit,
           loanKey,
@@ -196,35 +212,28 @@ export default function CreditCheckPage() {
 
     if (foundApplication) {
       setSelectedApplication(foundApplication);
-    } else if (fetchedCredit) {
-      const applicant = fetchedCredit.applicant || {};
-      const loanNumber =
-        fetchedCredit.loanNumber || normalizedQuery.toUpperCase();
+    } else if (fetchedCredit && fetchedCredit.data) {
+      const reportData = fetchedCredit.data;
+      const applicant = reportData.applicant || {};
+      const loanNumber = reportData.loanNumber || normalizedQuery.toUpperCase();
       setSelectedApplication({
-        id: fetchedCredit.id || loanNumber,
-        applicationNumber: fetchedCredit.applicationNumber || loanNumber,
+        id: reportData.id || loanNumber,
+        applicationNumber: reportData.applicationNumber || loanNumber,
         loanNumber,
-        applicantName:
-          fetchedCredit.applicantName || applicant.name || "Unknown Applicant",
-        coApplicantName:
-          fetchedCredit.coApplicantName ||
-          fetchedCredit.coApplicant?.name ||
-          null,
-        loanType: fetchedCredit.loanType || "Loan",
-        loanAmount: fetchedCredit.loanAmount || 0,
-        branchName: fetchedCredit.branchName || "Unknown Branch",
-        currentStage: fetchedCredit.currentStage || "Credit Check",
-        monthlyIncome:
-          fetchedCredit.monthlyIncome || applicant.monthlyIncome || 0,
-        panNumber: fetchedCredit.panNumber || applicant.panNumber || "N/A",
-        dob: fetchedCredit.dob || applicant.dob || "N/A",
-        mobile: fetchedCredit.mobile || applicant.mobile || "N/A",
-        employmentType:
-          fetchedCredit.employmentType || applicant.employmentType || "N/A",
-        companyName:
-          fetchedCredit.companyName || applicant.companyName || "N/A",
-        tenure: fetchedCredit.tenure || 0,
-        interestRate: fetchedCredit.interestRate || 0,
+        applicantName: reportData.applicantName || applicant.name || "Unknown Applicant",
+        coApplicantName: reportData.coApplicantName || reportData.coApplicant?.name || null,
+        loanType: reportData.loanType || "Loan",
+        loanAmount: reportData.loanAmount || 0,
+        branchName: reportData.branchName || "Unknown Branch",
+        currentStage: reportData.currentStage || "Credit Check",
+        monthlyIncome: reportData.monthlyIncome || applicant.monthlyIncome || 0,
+        panNumber: reportData.panNumber || applicant.panNumber || "N/A",
+        dob: reportData.dob || applicant.dob || "N/A",
+        mobile: reportData.mobile || applicant.mobile || "N/A",
+        employmentType: reportData.employmentType || applicant.employmentType || "N/A",
+        companyName: reportData.companyName || applicant.companyName || "N/A",
+        tenure: reportData.tenure || 0,
+        interestRate: reportData.interestRate || 0,
       });
     } else {
       setSearchError(`No loan found with number: ${normalizedQuery}`);
