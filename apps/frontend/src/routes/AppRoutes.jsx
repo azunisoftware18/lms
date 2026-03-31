@@ -86,6 +86,7 @@ import CustomerAndBookingListPage from "../app/dashboard/reports/CustomerAndBook
 import SalesTargetAndAchievementPage from "../app/dashboard/reports/SalesTargetAndAchievementPage.jsx";
 import DisbursCollectionPage from "../app/dashboard/reports/DisbursCollectionPage.jsx";
 import PermissionManagementPage from "../app/dashboard/PermissionManagementPage.jsx";
+import EligibilityPage from "../app/dashboard/LOS/EligibilityPage.jsx";
 
 
 export default function AppRoutes() {
@@ -101,6 +102,7 @@ export default function AppRoutes() {
 
   return (
     <Routes>
+      // Public routes
       <Route
         path="/"
         element={
@@ -162,6 +164,8 @@ export default function AppRoutes() {
         <Route path="login" element={<LoginForm />} />
       </Route>
 
+
+      // Admin routes
       <Route
         path="/admin"
         element={
@@ -193,6 +197,7 @@ export default function AppRoutes() {
         <Route path="lms/branch-management" element={<BranchManagement />} />
         <Route path="lms/branch-admin" element={<BranchAdmin />} />
 
+        // LOS routes
         <Route path="los/applications" element={<ApplicationPage />} />
         <Route path="los/documents" element={<DocumentPage />} />
         <Route path="los/kyc-verification" element={<KycVerificationPage />} />
@@ -206,6 +211,7 @@ export default function AppRoutes() {
           element={<DisbursementManagementPage />}
         />
         <Route path="los/leads" element={<LeadsPage />} />
+        <Route path="los/eligibility" element={<EligibilityPage />} />
 
         <Route path="loan-account-view/:loanId" element={<LoanAccountView />} />
 
