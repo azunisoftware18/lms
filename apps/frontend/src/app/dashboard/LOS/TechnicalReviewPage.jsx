@@ -43,17 +43,53 @@ const TECHNICAL_REVIEW_ICON_MAP = {
   XCircle,
 };
 
+import { useCreateTechnicalReport } from "../../../hooks/useTechnicalReport";
+import TechnicalReportForm from "../../../components/forms/TechnicalReportForm";
+
 function TechnicalReportModal({ isOpen, onClose }) {
+  const [error, setError] = useState(null);
+  const createReport = useCreateTechnicalReport();
+  const [formFieldErrors, setFormFieldErrors] = useState(null);
+
   if (!isOpen) return null;
+
+  const handleSubmit = async (form, resetForm) => {
+    setError(null);
+    try {
+      await createReport.mutateAsync({
+        loanNumber: form.loanNumber,
+        data: {
+          ...form,
+          marketValue: Number(form.marketValue),
+          discussionValue: Number(form.discussionValue),
+          recommendedLtv: Number(form.recommendedLtv),
+          loanApplicationId: form.loanNumber,
+        },
+      });
+      resetForm();
+      onClose();
+    } catch (err) {
+      // If the hook rethrew an enhanced error with fieldErrors, capture them
+      const fieldErrors = err?.fieldErrors || err?.original?.response?.data?.errors || null;
+      if (fieldErrors) {
+        // Pass field-level errors to the form via local state so they render near inputs
+        setError(null);
+        setFormFieldErrors(fieldErrors);
+      } else {
+        setError(err?.message || "Failed to create report");
+      }
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative w-full max-w-xl rounded-2xl border border-slate-200 bg-white shadow-2xl">
+      <div
+        className="relative w-full max-w-2xl md:w-[700px] rounded-2xl border border-slate-200 bg-white shadow-2xl flex flex-col max-h-[90vh]"
+        style={{ minWidth: 320 }}
+      >
         <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
-          <h2 className="text-lg font-semibold text-slate-800">
-            Create Technical Report
-          </h2>
+          <h2 className="text-lg font-semibold text-slate-800">Create Technical Report</h2>
           <button
             type="button"
             onClick={onClose}
@@ -62,16 +98,13 @@ function TechnicalReportModal({ isOpen, onClose }) {
             <X className="h-5 w-5" />
           </button>
         </div>
-        <div className="px-6 py-8 text-sm text-slate-600">
-          Technical report creation form is not configured yet.
-        </div>
-        <div className="flex justify-end border-t border-slate-200 px-6 py-4">
-          <Button
-            onClick={onClose}
-            className="border border-slate-300 bg-white! text-slate-700!"
-          >
-            Close
-          </Button>
+        <div className="overflow-y-auto px-4 sm:px-6 py-6 text-sm text-slate-600 flex-1">
+          <TechnicalReportForm
+            onSubmit={handleSubmit}
+            loading={createReport.isLoading}
+            error={error}
+            serverFieldErrors={formFieldErrors}
+          />
         </div>
       </div>
     </div>

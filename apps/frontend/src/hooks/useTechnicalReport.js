@@ -36,8 +36,8 @@ export const useCreateTechnicalReport = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: ({ loanId, data }) =>
-      apiPost(`/loan-applications/${loanId}/technical-reports`, data),
+    mutationFn: ({ loanNumber, data }) =>
+      apiPost(`/reports/technical/loan-applications/${loanNumber}/technical-reports`, data),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -49,10 +49,23 @@ export const useCreateTechnicalReport = () => {
       showSuccess("Technical report created successfully!");
     },
     onError: (error) => {
-      const message = error?.message || "Failed to create technical report";
+      // Prefer structured server validation error payload when available
+      const serverData = error?.response?.data || error?.data || null;
+      const message =
+        serverData?.message || error?.message || "Failed to create technical report";
+      // If server returned field-level errors, attach them to the error object
+      const fieldErrors = serverData?.errors || serverData?.fieldErrors || null;
+
+      // Attach parsed info to the thrown error so callers can use it
+      const enhancedError = new Error(message);
+      enhancedError.original = error;
+      if (fieldErrors) enhancedError.fieldErrors = fieldErrors;
+
       dispatch(setError(message));
       dispatch(setLoading(false));
       showError(message);
+      // rethrow enhanced error so the component can inspect fieldErrors
+      throw enhancedError;
     },
   });
 };
