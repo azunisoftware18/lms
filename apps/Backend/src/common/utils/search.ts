@@ -1,3 +1,5 @@
+import { stat } from "node:fs";
+
 export const buildLoanApplicationSearch = (q?: string) => {
   if (!q) return {};
 
@@ -172,26 +174,31 @@ export const buildEmployeeSearch = (q?: string) => {
 export const buildLeadSearch = (q?: string) => {
   if (!q) return {};
 
-  return {
-    OR: [
-      {
-        leadNumber: {
-          contains: q,
-        },
-      },
-      {
-        fullName: {
-          contains: q,
-        },
-      },
+  // List of valid LeadStatus enums (keep in sync with schema)
+  const validStatuses = [
+    "CONTACTED",
+    "INTERESTED",
+    "APPLICATION_IN_PROGRESS",
+    "APPLICATION_SUBMITTED",
+    "UNDER_REVIEW",
+    "APPROVED",
+    "REJECTED",
+    "FUNDED",
+    "CLOSED",
+    "DROPPED",
+    "PENDING",
+  ];
 
-      {
-        contactNumber: {
-          contains: q,
-        },
-      },
-    ],
-  };
+  const or: any[] = [
+    { leadNumber: { contains: q } },
+    { fullName: { contains: q } },
+    { contactNumber: { contains: q } },
+  ];
+  if (validStatuses.includes(q.toUpperCase())) {
+    // Cast to enum type for Prisma
+    or.push({ status: q.toUpperCase() as any });
+  }
+  return { OR: or };
 };
 
 export const buildEmiSearch = (q?: string) => {
