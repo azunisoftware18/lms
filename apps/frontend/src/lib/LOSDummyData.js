@@ -1844,12 +1844,6 @@ export const LEAD_ACTION_DEFINITIONS = [
     label: "Edit",
     icon: "Edit",
   },
-  {
-    key: "delete",
-    label: "Delete",
-    icon: "Trash2",
-    isDanger: true,
-  },
 ];
 
 export const LEADS_DUMMY_DATA = [
