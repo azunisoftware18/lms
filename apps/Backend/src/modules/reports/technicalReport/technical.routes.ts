@@ -13,9 +13,9 @@ const technicalReportRouter = Router();
 
 technicalReportRouter.post(
   "/loan-applications/:loanId/technical-reports",
-    authMiddleware,
-    checkPermissionMiddleware("CREATE_TECHNICAL_REPORT"),
-  createTechnicalReportController,
+  authMiddleware,
+  checkPermissionMiddleware("CREATE_TECHNICAL_REPORT"),
+  createTechnicalReportController
 );
 
 technicalReportRouter.post(

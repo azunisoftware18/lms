@@ -7,23 +7,44 @@ import {
 import { buildTechnicalReportSearch } from "../../../common/utils/search.js";
 import { prisma } from "../../../db/prismaService.js";
 
+
+class AppError extends Error {
+  statusCode: number;
+  constructor(message: string, statusCode = 500) {
+    super(message);
+    this.statusCode = statusCode;
+  }
+}
+
 export const createTechnicalReportService = async (
   loanApplicationId: string,
   data: any,
-  userId: string,
+  userId: string
 ) => {
-  //TODO : add upload images logic here
   return prisma.$transaction(async (tx) => {
-    // Fetch loan application to get branchId
+    // ✅ Check loan exists
     const loanApplication = await tx.loanApplication.findUnique({
       where: { id: loanApplicationId },
-      select: { branchId: true },
+      select: { id: true, branchId: true },
     });
 
     if (!loanApplication) {
-      throw new Error("Loan application not found");
+      throw new AppError("Loan application not found", 404);
     }
 
+    // ✅ Prevent duplicate report
+    const existingReport = await tx.technicalReport.findFirst({
+      where: { loanApplicationId },
+    });
+
+    if (existingReport) {
+      throw new AppError(
+        "Technical report already exists for this loan",
+        409
+      );
+    }
+
+    // ✅ Create report
     const report = await tx.technicalReport.create({
       data: {
         ...data,
@@ -34,11 +55,13 @@ export const createTechnicalReportService = async (
       },
     });
 
+    // ✅ Update loan status
     await tx.loanApplication.update({
       where: { id: loanApplicationId },
       data: { status: "TECHNICAL_PENDING" },
     });
 
+    // ✅ Audit log
     await tx.auditLog.create({
       data: {
         entityType: "TECHNICAL_REPORT",

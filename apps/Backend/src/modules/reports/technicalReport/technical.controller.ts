@@ -6,45 +6,54 @@ import {
   getAllTechnicalReportsService,
 } from "./technical.service.js";
 import logger from "../../../common/logger.js";
+import { createTechnicalReportSchema } from "./technical.schema.js";
 
 export const createTechnicalReportController = async (
   req: Request,
-  res: Response,
+  res: Response
 ) => {
   try {
     const { loanId } = req.params;
+
+    // ✅ Validate request body
+    const validatedData = createTechnicalReportSchema.parse(req.body);
+
     const report = await createTechnicalReportService(
       loanId,
-      req.body,
-      req.user!.id,
+      validatedData,
+      req.user!.id
     );
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Technical report created successfully",
       data: report,
     });
   } catch (error: any) {
-    // Log full error internally (stack, details)
     logger.error("createTechnicalReport error: %o", error);
 
-    // Map known error shapes to HTTP status codes
-    const status =
-      error?.statusCode ||
-      (error?.name === "ZodError"
-        ? 400
-        : error?.name === "NotFoundError"
-          ? 404
-          : 500);
+    // ✅ Zod validation error
+    if (error.name === "ZodError") {
+      return res.status(400).json({
+        success: false,
+        message: "Validation failed",
+        errors: error.errors,
+      });
+    }
 
-    const clientMessage =
-      status === 400
-        ? "Invalid request data"
-        : status === 404
-          ? "Related resource not found"
-          : "Failed to create technical report";
+    // ✅ Custom errors
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({
+        success: false,
+        message: error.message,
+      });
+    }
 
-    return res.status(status).json({ success: false, message: clientMessage });
+    // ✅ Fallback
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
 
