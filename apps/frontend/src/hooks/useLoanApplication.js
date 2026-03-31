@@ -66,8 +66,12 @@ export const useLoanApplication = (id) => {
     queryKey: ["loanApplication", id],
     queryFn: () => apiGet(`/loan-applications/${id}`),
     enabled: !!id,
-    onSuccess: (data) => {
-      dispatch(setLoanApplication(data));
+    select: (data) => {
+      // Extract the application object from possible response shapes
+      return data?.data?.data || data?.data || data?.application || data;
+    },
+    onSuccess: (application) => {
+      dispatch(setLoanApplication(application));
       dispatch(clearError());
     },
     onError: (err) => {

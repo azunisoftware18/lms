@@ -33,7 +33,7 @@ export default function LoanApplicationView({
   application,
   onClose,
   onApprove,
-}) { 
+}) {
   // Format date helper
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
@@ -70,12 +70,17 @@ export default function LoanApplicationView({
     }
   };
 
-  if (!application) return null;
+  if (!application) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black/50">
+        <div className="bg-white p-6 rounded-lg">Loading...</div>
+      </div>
+    );
+  }
 
   // Fallback: use applicant if customer is missing
   const customer = application.customer || application.applicant || {};
-  console.log("APPLICATION DATA:", application);
-  console.log("CUSTOMER DATA:", application.customer);
+  
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-60 p-2 sm:p-4">
@@ -270,12 +275,6 @@ export default function LoanApplicationView({
                   icon={<Hash size={16} className="text-blue-500" />}
                   label="Category"
                   value={customer.category}
-                  fallback="Not provided"
-                />
-                <InfoCard
-                  icon={<User size={16} className="text-blue-500" />}
-                  label="Spouse Name"
-                  value={customer.spouseName}
                   fallback="Not provided"
                 />
               </div>

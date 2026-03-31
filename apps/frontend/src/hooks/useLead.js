@@ -70,6 +70,7 @@ export const useLead = (params) => {
       params?.isActive,
       params?.isPublic,
       params?.publicOnly,
+      params?.status, // Ensure status triggers refetch
     ],
   );
 

@@ -6,6 +6,8 @@ import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
 import ApplicationPageTable from "../../../components/tables/ApplicationPageTable";
 import LoanApplicationView from "../ViewDetail/LoanApplicationView";
 import LoanApplicationForm from "../../../components/forms/LoanApplicationForm";
+import { useLoanApplication } from "../../../hooks/useLoanApplication";
+
 import {
   useLoanApplications,
   useUpdateLoanStatus,
@@ -16,11 +18,13 @@ import { showError, showInfo } from "../../../lib/utils/toastService";
 export default function ProfessionalNBFCPortal() {
   const [showForm, setShowForm] = useState(false);
   const [searchTerm] = useState("");
-  const [selectedApp, setSelectedApp] = useState(null);
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [currentPage] = useState(1);
   const [showApproveDialog, setShowApproveDialog] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
 
+  // Correct usage: call the hook inside the component, after selectedId is defined
+  const { data: selectedApp, isLoading } = useLoanApplication(selectedId);
   const {
     data: applicationsResponse,
     refetch: refetchApplications,
@@ -50,6 +54,8 @@ export default function ProfessionalNBFCPortal() {
       showError("No application selected for approval");
       return;
     }
+
+    // Correct usage: call the hook inside the component, after selectedId is defined
     updateStatus({
       id: selectedApp.id,
       status: "approved",
@@ -216,7 +222,7 @@ export default function ProfessionalNBFCPortal() {
             onRefresh={handleRefreshApplications}
             refreshing={refreshingApplications}
             onViewDetails={(app) => {
-              setSelectedApp(app);
+              setSelectedId(app.id);
               setViewModalOpen(true);
             }}
           />
@@ -228,7 +234,11 @@ export default function ProfessionalNBFCPortal() {
       {viewModalOpen && (
         <LoanApplicationView
           application={selectedApp}
-          onClose={() => setViewModalOpen(false)}
+          isLoading={isLoading}
+          onClose={() => {
+            setViewModalOpen(false);
+            setSelectedId(null);
+          }}
         />
       )}
       {/* // Loan Application Form */}

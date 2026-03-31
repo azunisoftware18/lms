@@ -1,4 +1,18 @@
 import React, { useState } from "react";
+// Lead status options for filter dropdown
+const leadStatusOptions = [
+  { label: "Contacted", value: "CONTACTED" },
+  { label: "Interested", value: "INTERESTED" },
+  { label: "Application In Progress", value: "APPLICATION_IN_PROGRESS" },
+  { label: "Application Submitted", value: "APPLICATION_SUBMITTED" },
+  { label: "Under Review", value: "UNDER_REVIEW" },
+  { label: "Approved", value: "APPROVED" },
+  { label: "Rejected", value: "REJECTED" },
+  { label: "Funded", value: "FUNDED" },
+  { label: "Closed", value: "CLOSED" },
+  { label: "Dropped", value: "DROPPED" },
+  { label: "Pending", value: "PENDING" },
+];
 import EditLeadDialog from "../reports/EditLeadDialog";
 import { Edit, Trash2, User, Plus } from "lucide-react";
 import SearchField from "../../../components/ui/SearchField";
@@ -20,6 +34,9 @@ export default function LeadsPage() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedLead, setSelectedLead] = useState(null);
 
+  // Status filter state
+  const [statusFilter, setStatusFilter] = useState("");
+
   // const getLeads = getLeads();
   
   const itemsPerPage = 10;
@@ -28,7 +45,8 @@ export default function LeadsPage() {
   const { leads = [], loading, refetch } = useLead({
     page: currentPage,
     limit: itemsPerPage,
-    search: searchTerm
+    search: searchTerm,
+    status: statusFilter,
   });
 
   const totalItems = leads?.total || 0;
@@ -165,6 +183,12 @@ export default function LeadsPage() {
             setSearchTerm(value);
             setCurrentPage(1);
           }}
+          filterValue={statusFilter}
+          setFilterValue={(value) => {
+            setStatusFilter(value);
+            setCurrentPage(1);
+          }}
+          filterOptions={leadStatusOptions}
         />
       </div>
     </div>

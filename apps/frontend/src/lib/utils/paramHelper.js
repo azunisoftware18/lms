@@ -11,6 +11,7 @@ export const normalizeParams = (params = {}) => {
     q: params?.search ?? params?.q ?? "",
     search: params?.search ?? params?.q ?? "",
     // Preserve additional filter parameters
+    ...(params?.status !== undefined && params.status !== "" && { status: params.status }),
     ...(params?.isActive !== undefined && { isActive: params.isActive }),
     ...(params?.isPublic !== undefined && { isPublic: params.isPublic }),
     ...(params?.publicOnly !== undefined && { publicOnly: params.publicOnly }),

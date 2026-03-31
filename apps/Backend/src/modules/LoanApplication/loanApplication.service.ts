@@ -609,85 +609,29 @@ export const getLoanApplicationByIdService = async (
   id: string,
   user?: { id: string; role: Enums.Role },
 ) => {
-  const loanApplication = await prisma.loanApplication.findUnique({
-    where: { id },
-    select: {
-      id: true,
-      branchId: true,
-      loanNumber: true,
-      status: true,
-      requestedAmount: true,
-      tenureMonths: true,
-      loanPurpose: true,
-      customer: {
-        select: {
-          firstName: true,
-          lastName: true,
-          contactNumber: true,
-          email: true,
-          dob: true,
-          gender: true,
-          maritalStatus: true,
-          nationality: true,
-          category: true,
-          alternateNumber: true,
-        },
-      },
-      loanType: {
-        select: {
-          name: true,
-          defaultInterestRate: true,
-          maxTenureMonths: true,
-        },
-      },
-      kyc: {
-        select: {
-          documents: {
-            select: {
-              documentType: true,
-              verificationStatus: true,
-              verified: true,
-            },
-            orderBy: { createdAt: "asc" },
-          },
-        },
-      },
-      coapplicants: {
-        select: {
-          firstName: true,
-          lastName: true,
-          relation: true,
-          contactNumber: true,
-          documents: {
-            select: {
-              id: true,
-              documentType: true,
-              verificationStatus: true,
-              verified: true,
-            },
-            orderBy: { createdAt: "asc" },
-          },
-        },
-      },
-      guarantors: {
-        select: {
-          firstName: true,
-          lastName: true,
-          relationshipWithApplicant: true,
-          contactNumber: true,
-          documents: {
-            select: {
-              id: true,
-              documentType: true,
-              verificationStatus: true,
-              verified: true,
-            },
-            orderBy: { createdAt: "asc" },
-          },
-        },
+ const loanApplication = await prisma.loanApplication.findUnique({
+  where: { id },
+  include: {
+    customer: true,
+    loanType: true,
+    kyc: {
+      include: {
+        documents: true,
       },
     },
-  });
+    coapplicants: {
+      include: {
+        documents: true,
+      },
+    },
+    guarantors: {
+      include: {
+        documents: true,
+      },
+    },
+
+  },
+});
 
   if (!loanApplication) {
     throw AppError.notFound("Loan application not found");
@@ -722,61 +666,8 @@ export const getLoanApplicationByIdService = async (
     }
   }
 
-  return {
-    id: loanApplication.id,
-    loanNumber: loanApplication.loanNumber,
-    status: loanApplication.status,
-    requestedAmount: loanApplication.requestedAmount,
-    tenureMonths: loanApplication.tenureMonths,
-    loanPurpose: loanApplication.loanPurpose,
-    customer: {
-      firstName: loanApplication.customer.firstName,
-      lastName: loanApplication.customer.lastName,
-      name: `${loanApplication.customer.firstName} ${loanApplication.customer.lastName}`,
-      contactNumber: loanApplication.customer.contactNumber,
-      email: loanApplication.customer.email,
-      dob: loanApplication.customer.dob,
-      gender: loanApplication.customer.gender,
-      maritalStatus: loanApplication.customer.maritalStatus,
-      nationality: loanApplication.customer.nationality,
-      category: loanApplication.customer.category,
-      alternateNumber: loanApplication.customer.alternateNumber,
-    },
-    loanType: loanApplication.loanType
-      ? {
-          name: loanApplication.loanType.name,
-          interestRate: loanApplication.loanType.defaultInterestRate,
-          tenureMax: loanApplication.loanType.maxTenureMonths,
-        }
-      : null,
-    documents: loanApplication.kyc?.documents.map((doc) => ({
-      type: doc.documentType,
-      status: doc.verificationStatus,
-      verified: doc.verified,
-    })),
-    coApplicants: loanApplication.coapplicants.map((c) => ({
-      name: `${c.firstName} ${c.lastName}`,
-      relation: c.relation,
-      contactNumber: c.contactNumber,
-      documents: c.documents.map((doc) => ({
-        id: doc.id,
-        type: doc.documentType,
-        status: doc.verificationStatus,
-        verified: doc.verified,
-      })),
-    })),
-    guarantors: loanApplication.guarantors.map((g) => ({
-      name: `${g.firstName} ${g.lastName}`,
-      relation: g.relationshipWithApplicant,
-      contactNumber: g.contactNumber,
-      documents: g.documents.map((doc) => ({
-        id: doc.id,
-        type: doc.documentType,
-        status: doc.verificationStatus,
-        verified: doc.verified,
-      })),
-    })),
-  };
+  return loanApplication;
+ 
 };
 
 type StatusUpdate = {
