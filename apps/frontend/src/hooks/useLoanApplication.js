@@ -34,7 +34,30 @@ export const useLoanApplications = (params = {}) => {
     },
   });
 };
-
+export const useLoanTypes = () => {
+  // Fetch loan types from API
+  const { data } = useQuery({
+    queryKey: ["loanTypes"],
+    queryFn: async () => {
+      // Try with isActive=true first
+      let res = await apiGet("/loantypes?isActive=true");
+      let items = Array.isArray(res) ? res : res?.data?.data || res?.data || [];
+      if (!items.length) {
+        // Fallback: fetch all if none returned
+        res = await apiGet("/loantypes");
+        items = Array.isArray(res) ? res : res?.data?.data || res?.data || [];
+      }
+      return items
+        .filter((lt) => lt?.id)
+        .map((lt) => ({
+          value: lt.id,
+          label: lt.name || lt.code || lt.id,
+        }));
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+  return data || [];
+};
 export const useLoanApplication = (id) => {
   const dispatch = useDispatch();
 
@@ -55,28 +78,44 @@ export const useLoanApplication = (id) => {
   });
 };
 
-export const useCreateLoanApplication = () => {
+// POST create loan: /loan-applications/loan/create
+// Accepts callbacks for onSuccess, onError, and onSettled for full control from the form
+export const useCreateLoanApplication = ({
+  onSuccess: onSuccessCallback,
+  onError: onErrorCallback,
+  onSettled: onSettledCallback,
+} = {}) => {
   const qc = useQueryClient();
   const dispatch = useDispatch();
 
-  // POST create loan: /loan-applications/loan/create
   return useMutation({
     mutationFn: (payload) => apiPost("/loan-applications/loan/create", payload),
     onMutate: () => {
       dispatch(setLoading(true));
     },
-    onSuccess: (data) => {
+    onSuccess: (data, variables, context) => {
       dispatch(addLoanApplication(data));
       qc.invalidateQueries({ queryKey: ["loanApplications"] });
       dispatch(setLoading(false));
       dispatch(clearError());
       showSuccess("Loan application created successfully!");
+      if (typeof onSuccessCallback === "function") {
+        onSuccessCallback(data, variables, context);
+      }
     },
-    onError: (error) => {
+    onError: (error, variables, context) => {
       const message = error?.message || "Failed to create loan application";
       dispatch(setError(message));
       dispatch(setLoading(false));
       showError(message);
+      if (typeof onErrorCallback === "function") {
+        onErrorCallback(error, variables, context);
+      }
+    },
+    onSettled: (data, error, variables, context) => {
+      if (typeof onSettledCallback === "function") {
+        onSettledCallback(data, error, variables, context);
+      }
     },
   });
 };
