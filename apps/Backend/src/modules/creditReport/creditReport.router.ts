@@ -9,7 +9,7 @@ import { checkPermissionMiddleware } from "../../common/middlewares/permission.m
 const creditReportRouter = Router();
 
 creditReportRouter.post(
-  "/credit-report/:id/refresh",
+  "/credit-report/refresh",
   authMiddleware,
   checkPermissionMiddleware("REFRESH_CREDIT_REPORT"),
   validate(refreshCreditReportSchema),

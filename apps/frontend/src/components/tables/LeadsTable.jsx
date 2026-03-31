@@ -29,9 +29,10 @@ export default function LeadsTable({
   onPageChange,
   search = "",
   setSearch = () => {},
+  filterValue = "",
+  setFilterValue = () => {},
+  filterOptions = [],
 }) {
-  const filterValue = "";
-  const setFilterValue = () => {};
 
   const columns = [
         {
@@ -131,7 +132,7 @@ export default function LeadsTable({
         setSearch={setSearch}
         filterValue={filterValue}
         setFilterValue={setFilterValue}
-        filterOptions={[]}
+        filterOptions={filterOptions}
       />
 
       {/* BODY */}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import {
   User,
@@ -16,10 +16,26 @@ import TextAreaField from "../ui/TextAreaField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { leadSchema } from "../../validations/LeadValidation";
 import { useCreateLead } from "../../hooks/useLead";
+import { useLoanTypes } from "../../hooks/useLoanType"; // Import the loan types hook
 import { toast } from "react-hot-toast";
 
 export default function LeadForm({ onSuccess }) {
   const createLeadMutation = useCreateLead();
+  
+  // Fetch loan types from database
+  const { loanTypes, loading: loanTypesLoading } = useLoanTypes();
+
+  // Transform loan types to options format
+  const loanOptions = useMemo(() => {
+    if (!loanTypes || !Array.isArray(loanTypes)) return [];
+    
+    return loanTypes
+      .filter(loan => loan.isActive === true) // Only show active loan types
+      .map(loan => ({
+        value: String(loan.id), // Use loan ID as value
+        label: loan.name, // Use loan name as label
+      }));
+  }, [loanTypes]);
 
   // 1. Initialize useForm
   const {
@@ -61,17 +77,14 @@ export default function LeadForm({ onSuccess }) {
 
     try {
       await createLeadMutation.mutateAsync(payload);
-      console.log("Saving locally:", payload);
-      await new Promise((res) => setTimeout(res, 1500));
-      alert("Lead created successfully!");
+      toast.success("Lead created successfully!");
       if (onSuccess) onSuccess();
     } catch (err) {
-      alert("Something went wrong");
       toast.error(err?.response?.data?.message || "Failed to create lead");
     }
   };
 
-  // Options for selects
+  // Options for selects (static ones remain)
   const genderOptions = [
     { value: "MALE", label: "Male" },
     { value: "FEMALE", label: "Female" },
@@ -90,12 +103,6 @@ export default function LeadForm({ onSuccess }) {
     { value: "Mumbai", label: "Mumbai" },
     { value: "Delhi", label: "Delhi" },
     { value: "Ahmedabad", label: "Ahmedabad" },
-  ];
-
-  const loanOptions = [
-    { value: "1", label: "Personal Loan" },
-    { value: "2", label: "Business Loan" },
-    { value: "3", label: "Home Loan" },
   ];
 
   return (
@@ -139,7 +146,7 @@ export default function LeadForm({ onSuccess }) {
           {...register("dob")}
         />
 
-        {/* Gender Select - FIXED */}
+        {/* Gender Select */}
         <SelectField
           label="Gender "
           placeholder="Select Gender"
@@ -186,10 +193,10 @@ export default function LeadForm({ onSuccess }) {
           {...register("pinCode")}
         />
 
-        {/* Loan Type - FIXED: No icon in SelectField */}
+        {/* Loan Type - Dynamic from Database */}
         <SelectField
           label="Loan Type "
-          placeholder="Select Loan Type"
+          placeholder={loanTypesLoading ? "Loading loan types..." : "Select Loan Type"}
           error={errors.loanTypeId?.message}
           value={loanTypeIdValue}
           onChange={(value) =>
@@ -197,7 +204,15 @@ export default function LeadForm({ onSuccess }) {
           }
           options={loanOptions}
           isRequired
+          disabled={loanTypesLoading || loanOptions.length === 0}
         />
+
+        {/* Show message if no loan types available */}
+        {!loanTypesLoading && loanOptions.length === 0 && (
+          <div className="text-amber-600 text-sm mt-1">
+            No active loan types available. Please contact administrator.
+          </div>
+        )}
 
         {/* Loan Amount */}
         <InputField
@@ -225,7 +240,7 @@ export default function LeadForm({ onSuccess }) {
       <div className="pt-2">
         <Button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || loanTypesLoading}
           className="w-full py-4 flex items-center justify-center gap-2"
         >
           {isSubmitting ? (

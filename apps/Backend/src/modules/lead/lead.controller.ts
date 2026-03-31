@@ -124,6 +124,7 @@ export const getAllLeadsController = async (req: Request, res: Response) => {
       page: Number(req.query.page),
       limit: Number(req.query.limit),
       q: req.query.q?.toString(),
+      status: req.query.status?.toString(),
     });
 
     const sanitizedLeads = {

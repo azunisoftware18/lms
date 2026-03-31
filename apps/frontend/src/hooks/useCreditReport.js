@@ -13,15 +13,40 @@ import {
   clearError,
 } from "../store/slices/creditReportSlice";
 
+// Helper function to normalize params
+const normalizeParams = (params) => {
+  const normalized = {};
+  Object.keys(params).forEach(key => {
+    if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
+      normalized[key] = params[key];
+    }
+  });
+  return normalized;
+};
+
 export const useRefreshCreditReport = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: (payload) => apiPost("/credit-report/refresh", payload),
+    mutationFn: (payload) => {
+      const queryString = payload.q
+        ? `?q=${encodeURIComponent(payload.q)}`
+        : "";
+
+      return apiPost(
+        `/credit/credit-report/refresh${queryString}`,
+        {
+          // ✅ FIX: reason add kiya
+          reason: payload.reason || "manual refresh",
+        }
+      );
+    },
+
     onMutate: () => {
       dispatch(setLoading(true));
     },
+
     onSuccess: (data) => {
       dispatch(setReportData(data));
       queryClient.invalidateQueries({ queryKey: ["creditReports"] });
@@ -29,8 +54,13 @@ export const useRefreshCreditReport = () => {
       dispatch(clearError());
       showSuccess("Credit report refreshed successfully!");
     },
+
     onError: (error) => {
-      const message = error?.message || "Failed to refresh credit report";
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to refresh credit report";
+
       dispatch(setError(message));
       dispatch(setLoading(false));
       showError(message);

@@ -93,9 +93,13 @@ export const getAllLeadsService = async (params: {
   page?: number;
   limit?: number;
   q?: string;
+  status?: string;
 }) => {
   const { page, limit, skip } = getPagination(params.page, params.limit);
-  const where = { ...buildLeadSearch(params.q) };
+  let where: any = { ...buildLeadSearch(params.q) };
+  if (params.status && typeof params.status === "string" && params.status.trim() !== "") {
+    where = { ...where, status: params.status };
+  }
 
   const [data, total] = await Promise.all([
     prisma.leads.findMany({
