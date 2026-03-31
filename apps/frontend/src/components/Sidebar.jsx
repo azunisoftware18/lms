@@ -186,14 +186,14 @@ export default function Sidebar() {
             : "/admin/borrowers",
           permission: "VIEW_BORROWERS"
         },
-        {
-          name: "Leads",
-          icon: <User size={20} />,
-          path: currentUser?.role === "EMPLOYEE"
-            ? "/employee/reports/leads"
-            : "/admin/reports/leads",
-          permission: "VIEW_LEADS"
-        },
+        // {
+        //   name: "Leads",
+        //   icon: <User size={20} />,
+        //   path: currentUser?.role === "EMPLOYEE"
+        //     ? "/employee/reports/leads"
+        //     : "/admin/reports/leads",
+        //   permission: "VIEW_LEADS"
+        // },
 
       ]
     },
