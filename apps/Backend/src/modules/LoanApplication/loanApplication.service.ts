@@ -296,7 +296,6 @@ export async function getAllDocumentsForLoanApplicationService(
           nationality: true,
           category: true,
           alternateNumber: true,
-          spouseName: true,
         },
       },
       coapplicants: {
@@ -544,7 +543,6 @@ export const getAllLoanApplicationsService = async (params: {
             nationality: true,
             category: true,
             alternateNumber: true,
-            spouseName: true,
           },
         },
         loanType: {
@@ -594,7 +592,6 @@ export const getAllLoanApplicationsService = async (params: {
       nationality: loan.customer.nationality,
       category: loan.customer.category,
       alternateNumber: loan.customer.alternateNumber,
-      spouseName: loan.customer.spouseName,
     },
     loanTypeId: loan.loanType?.id || null,
     kycStatus: loan.kyc?.status,
@@ -634,7 +631,6 @@ export const getLoanApplicationByIdService = async (
           nationality: true,
           category: true,
           alternateNumber: true,
-          spouseName: true,
         },
       },
       loanType: {
@@ -745,7 +741,6 @@ export const getLoanApplicationByIdService = async (
       nationality: loanApplication.customer.nationality,
       category: loanApplication.customer.category,
       alternateNumber: loanApplication.customer.alternateNumber,
-      spouseName: loanApplication.customer.spouseName,
     },
     loanType: loanApplication.loanType
       ? {

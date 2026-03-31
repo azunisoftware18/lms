@@ -101,10 +101,9 @@ const LOAN_PURPOSE_OPTIONS = [
 ];
 
 // PERSON PERSONAL FIELDS (Reusable for Applicant/Co-Applicant)
-const PersonPersonalFields = ({ control, prefix }) => {
+const PersonPersonalFields = ({ control, prefix, watch }) => {
   // Watch present accommodation for conditional rent field
-  const presentAccommodation =
-    control._formValues?.[prefix]?.presentAccommodation;
+  const presentAccommodation = watch(`${prefix}.presentAccommodation`);
   return (
     <div className="space-y-4">
       <Grid cols={3}>
@@ -136,7 +135,7 @@ const PersonPersonalFields = ({ control, prefix }) => {
             <InputField label="Father's Name" isRequired {...field} />
           )}
         />
-        // Use the useLoanTypes hook for fetching loan types
+        {/* Use the useLoanTypes hook for fetching loan types */}
         <Controller
           name={`${prefix}.motherName`}
           control={control}
@@ -2184,6 +2183,7 @@ const CoApplicantSection = ({
           <PersonPersonalFields
             control={control}
             prefix={`coApplicants.${index}`}
+            watch={watch}
           />
         </SectionCard>
         <SectionCard
@@ -2268,6 +2268,7 @@ const GuarantorSection = ({
           <PersonPersonalFields
             control={control}
             prefix={`guarantors.${index}`}
+            watch={watch}
           />
         </SectionCard>
         <SectionCard
