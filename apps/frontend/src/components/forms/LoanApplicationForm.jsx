@@ -170,6 +170,13 @@ const PersonPersonalFields = ({ control, prefix, watch }) => {
           )}
         />
         <Controller
+          name={`${prefix}.email`}
+          control={control}
+          render={({ field }) => (
+            <InputField label="Email Address" type="email" {...field} />
+          )}
+        />
+        <Controller
           name={`${prefix}.passportNumber`}
           control={control}
           render={({ field }) => (
@@ -180,6 +187,99 @@ const PersonPersonalFields = ({ control, prefix, watch }) => {
           name={`${prefix}.panNumber`}
           control={control}
           render={({ field }) => <InputField label="PAN No." {...field} />}
+        />
+      </Grid>
+      <Grid cols={3}>
+        <Controller
+          name={`${prefix}.dob`}
+          control={control}
+          render={({ field }) => (
+            <InputField
+              label="Date of Birth"
+              type="date"
+              value={
+                field.value
+                  ? new Date(field.value).toISOString().split("T")[0]
+                  : ""
+              }
+              onChange={(e) =>
+                field.onChange(
+                  e.target.value ? new Date(e.target.value) : undefined,
+                )
+              }
+            />
+          )}
+        />
+        <Controller
+          name={`${prefix}.category`}
+          control={control}
+          render={({ field }) => (
+            <SelectField
+              label="Category"
+              isRequired
+              options={CATEGORY_OPTIONS}
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        />
+        <Controller
+          name={`${prefix}.maritalStatus`}
+          control={control}
+          render={({ field }) => (
+            <SelectField
+              label="Marital Status"
+              isRequired
+              options={MARITAL_OPTIONS}
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        />
+        <Controller
+          name={`${prefix}.contactNumber`}
+          control={control}
+          render={({ field }) => (
+            <InputField
+              label="Mobile Number"
+              type="tel"
+              isRequired
+              {...field}
+              onChange={(e) =>
+                field.onChange(e.target.value.replace(/\D/g, "").slice(0, 10))
+              }
+            />
+          )}
+        />
+      </Grid>
+
+      <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
+        No. of Family Dependents
+      </p>
+      <Grid>
+        <Controller
+          name={`${prefix}.noOfFamilyDependentsChildren`}
+          control={control}
+          render={({ field }) => (
+            <InputField
+              label="Children"
+              type="number"
+              placeholder="0"
+              {...field}
+            />
+          )}
+        />
+        <Controller
+          name={`${prefix}.noOfFamilyDependentsOther`}
+          control={control}
+          render={({ field }) => (
+            <InputField
+              label="Others"
+              type="number"
+              placeholder="0"
+              {...field}
+            />
+          )}
         />
       </Grid>
       <Grid cols={3}>
@@ -203,49 +303,53 @@ const PersonPersonalFields = ({ control, prefix, watch }) => {
           )}
         />
       </Grid>
-      <Controller
-        name={`${prefix}.relation`}
-        control={control}
-        render={({ field }) => (
-          <SelectField
-            label="Relationship with Applicant"
-            options={RELATION_OPTIONS}
-            value={field.value}
-            onChange={(val) => field.onChange(val)}
-          />
-        )}
-      />
-      <Controller
-        name={`${prefix}.presentAccommodation`}
-        control={control}
-        render={({ field }) => (
-          <SelectField
-            label="Present Accommodation"
-            options={[
-              { value: "OWN", label: "Own" },
-              { value: "FAMILY", label: "Family" },
-              { value: "RENTED", label: "Rented" },
-              { value: "EMPLOYER", label: "Employer" },
-            ]}
-            value={field.value}
-            onChange={field.onChange}
-          />
-        )}
-      />
-      <Controller
-        name={`${prefix}.periodOfStay`}
-        control={control}
-        render={({ field }) => <InputField label="Period of Stay" {...field} />}
-      />
-      {presentAccommodation === "RENTED" && (
+      <Grid cols={3}>
         <Controller
-          name={`${prefix}.rentPerMonth`}
+          name={`${prefix}.relation`}
           control={control}
           render={({ field }) => (
-            <InputField label="Rent per Month" type="number" {...field} />
+            <SelectField
+              label="Relationship with Applicant"
+              options={RELATION_OPTIONS}
+              value={field.value}
+              onChange={(val) => field.onChange(val)}
+            />
           )}
         />
-      )}
+        <Controller
+          name={`${prefix}.presentAccommodation`}
+          control={control}
+          render={({ field }) => (
+            <SelectField
+              label="Present Accommodation"
+              options={[
+                { value: "OWN", label: "Own" },
+                { value: "FAMILY", label: "Family" },
+                { value: "RENTED", label: "Rented" },
+                { value: "EMPLOYER", label: "Employer" },
+              ]}
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        />
+        <Controller
+          name={`${prefix}.periodOfStay`}
+          control={control}
+          render={({ field }) => (
+            <InputField label="Period of Stay" {...field} />
+          )}
+        />
+        {presentAccommodation === "RENTED" && (
+          <Controller
+            name={`${prefix}.rentPerMonth`}
+            control={control}
+            render={({ field }) => (
+              <InputField label="Rent per Month" type="number" {...field} />
+            )}
+          />
+        )}
+      </Grid>
       <Controller
         name={`${prefix}.currentAddress.addressLine1`}
         control={control}
@@ -311,21 +415,7 @@ const PersonPersonalFields = ({ control, prefix, watch }) => {
           )}
         />
       </Grid>
-      <Controller
-        name={`${prefix}.contactNumber`}
-        control={control}
-        render={({ field }) => (
-          <InputField
-            label="Mobile Number"
-            type="tel"
-            isRequired
-            {...field}
-            onChange={(e) =>
-              field.onChange(e.target.value.replace(/\D/g, "").slice(0, 10))
-            }
-          />
-        )}
-      />
+
       <Divider label="Permanent Address" />
       <Controller
         name={`${prefix}.permanentAddress.addressLine1`}
@@ -376,92 +466,8 @@ const PersonPersonalFields = ({ control, prefix, watch }) => {
           control={control}
           render={({ field }) => <InputField label="Land Mark" {...field} />}
         />
-        <Controller
-          name={`${prefix}.email`}
-          control={control}
-          render={({ field }) => (
-            <InputField label="Email Address" type="email" {...field} />
-          )}
-        />
       </Grid>
-      <Grid cols={3}>
-        <Controller
-          name={`${prefix}.dob`}
-          control={control}
-          render={({ field }) => (
-            <InputField
-              label="Date of Birth"
-              type="date"
-              value={
-                field.value
-                  ? new Date(field.value).toISOString().split("T")[0]
-                  : ""
-              }
-              onChange={(e) =>
-                field.onChange(
-                  e.target.value ? new Date(e.target.value) : undefined,
-                )
-              }
-            />
-          )}
-        />
-        <Controller
-          name={`${prefix}.category`}
-          control={control}
-          render={({ field }) => (
-            <SelectField
-              label="Category"
-              isRequired
-              options={CATEGORY_OPTIONS}
-              value={field.value}
-              onChange={field.onChange}
-            />
-          )}
-        />
-        <Controller
-          name={`${prefix}.maritalStatus`}
-          control={control}
-          render={({ field }) => (
-            <SelectField
-              label="Marital Status"
-              isRequired
-              options={MARITAL_OPTIONS}
-              value={field.value}
-              onChange={field.onChange}
-            />
-          )}
-        />
-      </Grid>
-
-      <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
-        No. of Family Dependents
-      </p>
-      <Grid>
-        <Controller
-          name={`${prefix}.noOfFamilyDependentsChildren`}
-          control={control}
-          render={({ field }) => (
-            <InputField
-              label="Children"
-              type="number"
-              placeholder="0"
-              {...field}
-            />
-          )}
-        />
-        <Controller
-          name={`${prefix}.noOfFamilyDependentsOther`}
-          control={control}
-          render={({ field }) => (
-            <InputField
-              label="Others"
-              type="number"
-              placeholder="0"
-              {...field}
-            />
-          )}
-        />
-      </Grid>
+      
 
       <Controller
         name={`${prefix}.correspondenceAddress`}
@@ -676,41 +682,10 @@ const INDIAN_STATES = [
 
 // STEPS
 const STEPS = [
-  {
-    id: "applicant",
-    label: "Personal Information",
-    shortLabel: "Personal",
-    icon: User,
-  },
-  {
-    id: "applicantContact",
-    label: "Contact Details",
-    shortLabel: "Contact",
-    icon: Phone,
-  },
-  {
-    id: "occupational",
-    label: "Occupational Details",
-    shortLabel: "Occupational",
-    icon: Briefcase,
-  },
-  { id: "address", label: "Address", shortLabel: "Address", icon: MapPin },
-  {
-    id: "loanReq",
-    label: "Loan Requirement",
-    shortLabel: "Loan Req.",
-    icon: IndianRupee,
-  },
-  {
-    id: "financial",
-    label: "Financial Status",
-    shortLabel: "Financial",
-    icon: IndianRupee,
-  },
-
+  { id: "personal", label: "Personal", shortLabel: "Personal", icon: User },
   {
     id: "coApplicant",
-    label: "Co-Applicants",
+    label: "Co-Applicant",
     shortLabel: "Co-App",
     icon: Users,
   },
@@ -720,15 +695,12 @@ const STEPS = [
     shortLabel: "Guarantor",
     icon: Shield,
   },
-
   {
     id: "additional",
-    label: "Additional Info",
+    label: "Additional",
     shortLabel: "Additional",
     icon: FileText,
   },
-
-  { id: "review", label: "Review & Submit", shortLabel: "Review", icon: Eye },
 ];
 
 const STEP_FIELDS = {
@@ -1747,11 +1719,7 @@ const ApplicantSection = ({ control, errors, mode = "all" }) => (
             </Grid>
           </div>
         </SectionCard>
-      </>
-    )}
 
-    {(mode === "contact" || mode === "all") && (
-      <>
         <SectionCard title="Contact Details" icon={Phone}>
           <div className="space-y-4">
             <Grid>
@@ -1918,7 +1886,7 @@ const ApplicantSection = ({ control, errors, mode = "all" }) => (
   </div>
 );
 
-// SECTION: ADDRESS (standalone applicant address)
+// // SECTION: ADDRESS (standalone applicant address)
 const AddressSection = ({ control, errors, watch, setValue }) => {
   const sameAddress = watch("sameAsCurrent");
   const copyCurrent = useCallback(() => {
