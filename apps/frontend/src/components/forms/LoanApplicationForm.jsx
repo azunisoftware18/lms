@@ -83,8 +83,6 @@ const REPAYMENT_OPTIONS = [
   { value: "SALARY_DEDUCTION", label: "Salary Deduction" },
   { value: "ECS", label: "ECS" },
   { value: "CHEQUE", label: "Post Dated Cheque" },
-  { value: "STANDING_INSTRUCTION", label: "Standing Instruction to Banker" },
-  { value: "OTHER", label: "Other" },
 ];
 const REST_FREQ_OPTIONS = [
   { value: "MONTHLY", label: "Monthly" },
@@ -3648,7 +3646,6 @@ const AdditionalSection = ({ control, watch, setValue }) => {
                         <option value="DEVELOPMENT_AUTHORITY">
                           Development Authority
                         </option>
-                        <option value="HOUSING_BOARD">Housing Board</option>
                         <option value="RESALE">Resale</option>
                         <option value="SELF_CONSTRUCTION">
                           Self Construction
