@@ -70,6 +70,7 @@ export type TechnicalReportMinAggregateOutputType = {
   sitePhotographs: string | null
   submittedAt: Date | null
   approvedBy: string | null
+  rejectedBy: string | null
   approvedAt: Date | null
   branchId: string | null
   createdAt: Date | null
@@ -102,6 +103,7 @@ export type TechnicalReportMaxAggregateOutputType = {
   sitePhotographs: string | null
   submittedAt: Date | null
   approvedBy: string | null
+  rejectedBy: string | null
   approvedAt: Date | null
   branchId: string | null
   createdAt: Date | null
@@ -134,6 +136,7 @@ export type TechnicalReportCountAggregateOutputType = {
   sitePhotographs: number
   submittedAt: number
   approvedBy: number
+  rejectedBy: number
   approvedAt: number
   branchId: number
   createdAt: number
@@ -186,6 +189,7 @@ export type TechnicalReportMinAggregateInputType = {
   sitePhotographs?: true
   submittedAt?: true
   approvedBy?: true
+  rejectedBy?: true
   approvedAt?: true
   branchId?: true
   createdAt?: true
@@ -218,6 +222,7 @@ export type TechnicalReportMaxAggregateInputType = {
   sitePhotographs?: true
   submittedAt?: true
   approvedBy?: true
+  rejectedBy?: true
   approvedAt?: true
   branchId?: true
   createdAt?: true
@@ -250,6 +255,7 @@ export type TechnicalReportCountAggregateInputType = {
   sitePhotographs?: true
   submittedAt?: true
   approvedBy?: true
+  rejectedBy?: true
   approvedAt?: true
   branchId?: true
   createdAt?: true
@@ -369,6 +375,7 @@ export type TechnicalReportGroupByOutputType = {
   sitePhotographs: string | null
   submittedAt: Date | null
   approvedBy: string | null
+  rejectedBy: string | null
   approvedAt: Date | null
   branchId: string
   createdAt: Date
@@ -424,6 +431,7 @@ export type TechnicalReportWhereInput = {
   sitePhotographs?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
   submittedAt?: Prisma.DateTimeNullableFilter<"TechnicalReport"> | Date | string | null
   approvedBy?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
+  rejectedBy?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"TechnicalReport"> | Date | string | null
   branchId?: Prisma.StringFilter<"TechnicalReport"> | string
   createdAt?: Prisma.DateTimeFilter<"TechnicalReport"> | Date | string
@@ -459,6 +467,7 @@ export type TechnicalReportOrderByWithRelationInput = {
   sitePhotographs?: Prisma.SortOrderInput | Prisma.SortOrder
   submittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   branchId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -498,6 +507,7 @@ export type TechnicalReportWhereUniqueInput = Prisma.AtLeast<{
   sitePhotographs?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
   submittedAt?: Prisma.DateTimeNullableFilter<"TechnicalReport"> | Date | string | null
   approvedBy?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
+  rejectedBy?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"TechnicalReport"> | Date | string | null
   branchId?: Prisma.StringFilter<"TechnicalReport"> | string
   createdAt?: Prisma.DateTimeFilter<"TechnicalReport"> | Date | string
@@ -533,6 +543,7 @@ export type TechnicalReportOrderByWithAggregationInput = {
   sitePhotographs?: Prisma.SortOrderInput | Prisma.SortOrder
   submittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   branchId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -573,6 +584,7 @@ export type TechnicalReportScalarWhereWithAggregatesInput = {
   sitePhotographs?: Prisma.StringNullableWithAggregatesFilter<"TechnicalReport"> | string | null
   submittedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TechnicalReport"> | Date | string | null
   approvedBy?: Prisma.StringNullableWithAggregatesFilter<"TechnicalReport"> | string | null
+  rejectedBy?: Prisma.StringNullableWithAggregatesFilter<"TechnicalReport"> | string | null
   approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TechnicalReport"> | Date | string | null
   branchId?: Prisma.StringWithAggregatesFilter<"TechnicalReport"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TechnicalReport"> | Date | string
@@ -603,6 +615,7 @@ export type TechnicalReportCreateInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -637,6 +650,7 @@ export type TechnicalReportUncheckedCreateInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   branchId: string
   createdAt?: Date | string
@@ -667,6 +681,7 @@ export type TechnicalReportUpdateInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -701,6 +716,7 @@ export type TechnicalReportUncheckedUpdateInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -733,6 +749,7 @@ export type TechnicalReportCreateManyInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   branchId: string
   createdAt?: Date | string
@@ -763,6 +780,7 @@ export type TechnicalReportUpdateManyMutationInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -794,6 +812,7 @@ export type TechnicalReportUncheckedUpdateManyInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -847,6 +866,7 @@ export type TechnicalReportCountOrderByAggregateInput = {
   sitePhotographs?: Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
   approvedBy?: Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
   branchId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -888,6 +908,7 @@ export type TechnicalReportMaxOrderByAggregateInput = {
   sitePhotographs?: Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
   approvedBy?: Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
   branchId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -920,6 +941,7 @@ export type TechnicalReportMinOrderByAggregateInput = {
   sitePhotographs?: Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
   approvedBy?: Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
   branchId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -1079,6 +1101,7 @@ export type TechnicalReportCreateWithoutAddressInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1111,6 +1134,7 @@ export type TechnicalReportUncheckedCreateWithoutAddressInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   branchId: string
   createdAt?: Date | string
@@ -1157,6 +1181,7 @@ export type TechnicalReportUpdateWithoutAddressInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1189,6 +1214,7 @@ export type TechnicalReportUncheckedUpdateWithoutAddressInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1219,6 +1245,7 @@ export type TechnicalReportCreateWithoutBranchInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1252,6 +1279,7 @@ export type TechnicalReportUncheckedCreateWithoutBranchInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1312,6 +1340,7 @@ export type TechnicalReportScalarWhereInput = {
   sitePhotographs?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
   submittedAt?: Prisma.DateTimeNullableFilter<"TechnicalReport"> | Date | string | null
   approvedBy?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
+  rejectedBy?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"TechnicalReport"> | Date | string | null
   branchId?: Prisma.StringFilter<"TechnicalReport"> | string
   createdAt?: Prisma.DateTimeFilter<"TechnicalReport"> | Date | string
@@ -1342,6 +1371,7 @@ export type TechnicalReportCreateWithoutLoanApplicationInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1374,6 +1404,7 @@ export type TechnicalReportUncheckedCreateWithoutLoanApplicationInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   branchId: string
   createdAt?: Date | string
@@ -1432,6 +1463,7 @@ export type TechnicalReportCreateManyBranchInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1461,6 +1493,7 @@ export type TechnicalReportUpdateWithoutBranchInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1494,6 +1527,7 @@ export type TechnicalReportUncheckedUpdateWithoutBranchInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1525,6 +1559,7 @@ export type TechnicalReportUncheckedUpdateManyWithoutBranchInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1555,6 +1590,7 @@ export type TechnicalReportCreateManyLoanApplicationInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   branchId: string
   createdAt?: Date | string
@@ -1585,6 +1621,7 @@ export type TechnicalReportUpdateWithoutLoanApplicationInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1617,6 +1654,7 @@ export type TechnicalReportUncheckedUpdateWithoutLoanApplicationInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1648,6 +1686,7 @@ export type TechnicalReportUncheckedUpdateManyWithoutLoanApplicationInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1682,6 +1721,7 @@ export type TechnicalReportSelect<ExtArgs extends runtime.Types.Extensions.Inter
   sitePhotographs?: boolean
   submittedAt?: boolean
   approvedBy?: boolean
+  rejectedBy?: boolean
   approvedAt?: boolean
   branchId?: boolean
   createdAt?: boolean
@@ -1719,13 +1759,14 @@ export type TechnicalReportSelectScalar = {
   sitePhotographs?: boolean
   submittedAt?: boolean
   approvedBy?: boolean
+  rejectedBy?: boolean
   approvedAt?: boolean
   branchId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TechnicalReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "engineerId" | "engineerName" | "agencyName" | "propertyType" | "propertyAddress" | "city" | "state" | "pincode" | "addressId" | "marketValue" | "discussionValue" | "forcesdSaleValue" | "recommendedLtv" | "constructionStatus" | "propertyAge" | "residualLife" | "qualityOfConstruction" | "status" | "remarks" | "reportUrl" | "sitePhotographs" | "submittedAt" | "approvedBy" | "approvedAt" | "branchId" | "createdAt" | "updatedAt", ExtArgs["result"]["technicalReport"]>
+export type TechnicalReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "engineerId" | "engineerName" | "agencyName" | "propertyType" | "propertyAddress" | "city" | "state" | "pincode" | "addressId" | "marketValue" | "discussionValue" | "forcesdSaleValue" | "recommendedLtv" | "constructionStatus" | "propertyAge" | "residualLife" | "qualityOfConstruction" | "status" | "remarks" | "reportUrl" | "sitePhotographs" | "submittedAt" | "approvedBy" | "rejectedBy" | "approvedAt" | "branchId" | "createdAt" | "updatedAt", ExtArgs["result"]["technicalReport"]>
 export type TechnicalReportInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   loanApplication?: boolean | Prisma.LoanApplicationDefaultArgs<ExtArgs>
   address?: boolean | Prisma.TechnicalReport$addressArgs<ExtArgs>
@@ -1765,6 +1806,7 @@ export type $TechnicalReportPayload<ExtArgs extends runtime.Types.Extensions.Int
     sitePhotographs: string | null
     submittedAt: Date | null
     approvedBy: string | null
+    rejectedBy: string | null
     approvedAt: Date | null
     branchId: string
     createdAt: Date
@@ -2166,6 +2208,7 @@ export interface TechnicalReportFieldRefs {
   readonly sitePhotographs: Prisma.FieldRef<"TechnicalReport", 'String'>
   readonly submittedAt: Prisma.FieldRef<"TechnicalReport", 'DateTime'>
   readonly approvedBy: Prisma.FieldRef<"TechnicalReport", 'String'>
+  readonly rejectedBy: Prisma.FieldRef<"TechnicalReport", 'String'>
   readonly approvedAt: Prisma.FieldRef<"TechnicalReport", 'DateTime'>
   readonly branchId: Prisma.FieldRef<"TechnicalReport", 'String'>
   readonly createdAt: Prisma.FieldRef<"TechnicalReport", 'DateTime'>
