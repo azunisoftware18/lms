@@ -13,7 +13,6 @@ import BorrowerPage from "../app/dashboard/BorrowerPage.jsx";
 import CreditCheckPage from "../app/dashboard/LOS/CreditCheckPage.jsx";
 import TechnicalReviewPage from "../app/dashboard/LOS/TechnicalReviewPage.jsx";
 import LegalCompliancePage from "../app/dashboard/LOS/LegalCompilancePage.jsx";
-import EMIManagementPage from "../app/dashboard/LOS/EMIManagementPage.jsx";
 import SanctionPage from "../app/dashboard/LOS/SanctionPage.jsx";
 import DisbursementManagementPage from "../app/dashboard/LOS/DisbursementManagementPage.jsx";
 import KycVerificationPage from "../app/dashboard/LOS/KycVerificationPage.jsx";
@@ -21,6 +20,7 @@ import LeadsPage from "../app/dashboard/LOS/LeadsPage.jsx";
 
 // LMS pages
 import LoanAccountCreation from "../app/dashboard/LMS/LoanAccountCreation.jsx";
+import EMIManagementPage from "../app/dashboard/LMS/EMIManagementPage.jsx";
 import EMISchedule from "../app/dashboard/LMS/EMISchedule.jsx";
 import RepaymentManagement from "../app/dashboard/LMS/RepaymentManagement.jsx";
 import NachAutoDebit from "../app/dashboard/LMS/NachAutoDebit.jsx";
@@ -87,7 +87,6 @@ import SalesTargetAndAchievementPage from "../app/dashboard/reports/SalesTargetA
 import DisbursCollectionPage from "../app/dashboard/reports/DisbursCollectionPage.jsx";
 import PermissionManagementPage from "../app/dashboard/PermissionManagementPage.jsx";
 import EligibilityPage from "../app/dashboard/LOS/EligibilityPage.jsx";
-
 
 export default function AppRoutes() {
   const dispatch = useDispatch();
@@ -163,8 +162,6 @@ export default function AppRoutes() {
         <Route path="welcome-to-finova" element={<WelcometoFinovaPage />} />
         <Route path="login" element={<LoginForm />} />
       </Route>
-
-
       // Admin routes
       <Route
         path="/admin"
@@ -176,11 +173,11 @@ export default function AppRoutes() {
       >
         <Route index element={<DashboardPage />} />
         <Route path="borrowers" element={<BorrowerPage />} />
-
         <Route
           path="lms/loan-account-creation"
           element={<LoanAccountCreation />}
         />
+        <Route path="lms/emi-management" element={<EMIManagementPage />} />
         <Route path="lms/emi-schedule" element={<EMISchedule />} />
         <Route
           path="lms/repayment-management"
@@ -196,7 +193,6 @@ export default function AppRoutes() {
         <Route path="lms/loan-closure" element={<LoanClosure />} />
         <Route path="lms/branch-management" element={<BranchManagement />} />
         <Route path="lms/branch-admin" element={<BranchAdmin />} />
-
         // LOS routes
         <Route path="los/applications" element={<ApplicationPage />} />
         <Route path="los/documents" element={<DocumentPage />} />
@@ -204,7 +200,6 @@ export default function AppRoutes() {
         <Route path="los/credit-check" element={<CreditCheckPage />} />
         <Route path="los/technical-review" element={<TechnicalReviewPage />} />
         <Route path="los/legal-compliance" element={<LegalCompliancePage />} />
-        <Route path="los/emi-management" element={<EMIManagementPage />} />
         <Route path="los/sanction" element={<SanctionPage />} />
         <Route
           path="los/disbursement"
@@ -212,9 +207,7 @@ export default function AppRoutes() {
         />
         <Route path="los/leads" element={<LeadsPage />} />
         <Route path="los/eligibility" element={<EligibilityPage />} />
-
         <Route path="loan-account-view/:loanId" element={<LoanAccountView />} />
-
         <Route
           path="system-setting/company-details"
           element={<CompanyDetailsPage />}
@@ -237,7 +230,6 @@ export default function AppRoutes() {
         <Route path="branch-admin" element={<BranchAdmin />} />
         <Route path="employee" element={<EmployeeAddPage />} />
         <Route path="partner" element={<PartnerAddPage />} />
-
         {/* reports routes */}
         <Route path="due-list" element={<DueListPage />} />
         <Route path="reports/npa-reports" element={<NPAReportsPage />} />
@@ -254,7 +246,6 @@ export default function AppRoutes() {
           path="reports/sales-target-and-achievement"
           element={<SalesTargetAndAchievementPage />}
         />
-
         {/* Permission managemnet route  */}
         <Route
           path="permission-management"

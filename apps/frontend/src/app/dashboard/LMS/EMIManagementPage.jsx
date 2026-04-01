@@ -5,6 +5,12 @@ import EMIManagementTable from "../../../components/tables/EMIManagementTable";
 import * as Icons from "lucide-react";
 
 import { EMI_APPROVED_LOANS, EMI_VOUCHERS } from "../../../lib/LOSDummyData";
+import { useLoanApplications } from "../../../hooks/useLoanApplication";
+import {
+  useAllEmis,
+  useGenerateSchedule,
+  usePayEmi,
+} from "../../../hooks/useEmi";
 import { colorVariables } from "../../../lib/index";
 
 export default function EMIManagementPage() {
@@ -17,9 +23,18 @@ export default function EMIManagementPage() {
 
   const itemsPerPage = 5;
 
-  // ---------- DUMMY DATA ----------------
-  const loanList = EMI_APPROVED_LOANS;
-  const emiVouchers = EMI_VOUCHERS;
+  // ---------- DATA (from API) ----------------
+  const loanQuery = useLoanApplications({ status: "APPROVED", limit: 1000 });
+  const { emis: emiVouchers, refetch: emisRefetch } = useAllEmis({
+    page: currentPage,
+    limit: itemsPerPage,
+    q: searchTerm,
+    status: filterStatus,
+  });
+
+  const loanList = useMemo(() => {
+    return loanQuery?.data?.data || loanQuery?.data || [];
+  }, [loanQuery?.data]);
 
   // ---------- APPROVED FILTER ----------
   const approvedApplications = useMemo(() => {
@@ -33,7 +48,7 @@ export default function EMIManagementPage() {
   // ---------- TAB DATA ----------
   const filteredByTab = useMemo(() => {
     if (activeTab === "approved") return approvedApplications;
-    return emiVouchers;
+    return emiVouchers || [];
   }, [activeTab, approvedApplications, emiVouchers]);
 
   // ---------- SEARCH + FILTER ----------
@@ -67,18 +82,47 @@ export default function EMIManagementPage() {
   );
 
   // ---------- HANDLE ACTION ----------
+  const generateSchedule = useGenerateSchedule();
+  const payEmi = usePayEmi();
+
   const handleActionClick = (action, item) => {
     setConfirmAction({ type: action, item });
     setIsConfirmOpen(true);
   };
 
   const handleConfirmAction = () => {
+    const item = confirmAction?.item;
     if (confirmAction?.type === "generate") {
-      console.log("Generating EMI for:", confirmAction.item);
+      // item is expected to be a loan application
+      if (item?.id) {
+        generateSchedule.mutate(item.id, {
+          onSuccess: () => {
+            // refresh lists
+            if (loanQuery?.refetch) loanQuery.refetch();
+            if (emisRefetch) emisRefetch();
+          },
+        });
+      }
     } else if (confirmAction?.type === "download") {
-      console.log("Downloading EMI for:", confirmAction.item);
+      // TODO: implement export/download (placeholder)
     } else if (confirmAction?.type === "print") {
-      console.log("Printing EMI for:", confirmAction.item);
+      // TODO: implement print (placeholder)
+    } else if (confirmAction?.type === "pay") {
+      // item is expected to be an EMI schedule entry
+      if (item?.id) {
+        const amount = Number(item.emiAmount || item.totalPayable || 0);
+        if (amount > 0) {
+          payEmi.mutate(
+            { emiId: item.id, amountPaid: amount, paymentMode: "CASH" },
+            {
+              onSuccess: () => {
+                if (loanQuery?.refetch) loanQuery.refetch();
+                if (emisRefetch) emisRefetch();
+              },
+            },
+          );
+        }
+      }
     }
     setIsConfirmOpen(false);
     setConfirmAction(null);
@@ -254,6 +298,11 @@ export default function EMIManagementPage() {
 
   const voucherActions = [
     {
+      label: "Pay",
+      icon: Icons.CreditCard,
+      onClick: (row) => handleActionClick("pay", row),
+    },
+    {
       label: "Download",
       icon: Icons.Download,
       onClick: (row) => handleActionClick("download", row),
@@ -273,7 +322,7 @@ export default function EMIManagementPage() {
       value: "approved",
       label: `Approved Applications (${approvedApplications.length})`,
     },
-    { value: "all", label: `EMI Vouchers (${emiVouchers.length})` },
+    { value: "all", label: `EMI Vouchers (${(emiVouchers || []).length})` },
   ];
 
   // ---------- UI ----------
