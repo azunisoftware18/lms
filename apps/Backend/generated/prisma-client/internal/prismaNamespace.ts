@@ -4912,6 +4912,8 @@ export const LegalReportScalarFieldEnum = {
   reportUrl: 'reportUrl',
   submittedAt: 'submittedAt',
   approvedBy: 'approvedBy',
+  rejectedBy: 'rejectedBy',
+  rejectedAt: 'rejectedAt',
   approvedAt: 'approvedAt',
   branchId: 'branchId',
   createdAt: 'createdAt',
@@ -5664,6 +5666,7 @@ export const LegalReportOrderByRelevanceFieldEnum = {
   remarks: 'remarks',
   reportUrl: 'reportUrl',
   approvedBy: 'approvedBy',
+  rejectedBy: 'rejectedBy',
   branchId: 'branchId'
 } as const
 
