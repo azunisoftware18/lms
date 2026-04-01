@@ -73,6 +73,7 @@ export default function Sidebar() {
 
             { name: "Leads", path: "/admin/los/leads" },
             { name: "Applications", path: "/admin/los/applications" },
+            { name: "Eligibility", path: "/admin/los/eligibility" },
             { name: "Documents", path: "/admin/los/documents" },
             // { name: "Kyc Verification", path: "/admin/los/kyc-verification" },
             { name: "Credit Check", path: "/admin/los/credit-check" },

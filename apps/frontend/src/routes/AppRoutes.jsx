@@ -162,6 +162,8 @@ export default function AppRoutes() {
         <Route path="welcome-to-finova" element={<WelcometoFinovaPage />} />
         <Route path="login" element={<LoginForm />} />
       </Route>
+
+      
       // Admin routes
       <Route
         path="/admin"

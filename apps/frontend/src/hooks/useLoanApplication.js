@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
-import { apiGet, apiPost, apiPatch } from "../lib/api/apiClient";
+import { apiGet, apiPost, apiPatch, apiPut } from "../lib/api/apiClient";
 import { showSuccess, showError } from "../lib/utils/toastService";
 import { normalizeParams } from "../lib/utils/paramHelper";
 import {
@@ -171,7 +171,7 @@ export const useUpdateLoanStatus = () => {
   // PUT update status: /loan-applications/:id/status
   return useMutation({
     mutationFn: ({ id, status }) =>
-      apiPatch(`/loan-applications/${id}/status`, { status }),
+      apiPut(`/loan-applications/${id}/status`, { status }),
     onMutate: () => {
       dispatch(setLoading(true));
     },
