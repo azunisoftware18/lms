@@ -1,35 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { emiData } from '../../../lib/dashboardDummyData';
-import EMIManagementTableView from '../../../components/tables/EMIManagementTable'; // Import with new name
+import React, { useState, useMemo } from 'react';
+import EMIManagementTableView from '../../../components/tables/EMIManagementTable';
+import { useAllEmis } from '../../../hooks/useEmi';
 import StatusCard from '../../../components/common/StatusCard';
 import { Wallet, CheckCircle, Clock, AlertCircle, Download, Bell } from 'lucide-react';
 
 export default function EMIManagementPage() {
   const [filterStatus, setFilterStatus] = useState('');
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  // Load data
-  useEffect(() => {
-    try {
-      if (emiData && Array.isArray(emiData)) {
-        const enhancedData = emiData.map((item, index) => ({
-          ...item,
-          id: item.id || index + 1,
-          emiNumber: `EMI${String(index + 1).padStart(3, '0')}`,
-          isToday: item.dueDate === new Date().toISOString().split('T')[0]
-        }));
-        setData(enhancedData);
-      } else {
-        setData([]);
-      }
-    } catch (error) {
-      console.error('Error loading data:', error);
-      setData([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  // Fetch EMIs from API / store
+  const { emis: rawEmis = [], meta, loading, isFetching, refetch } = useAllEmis({ page: 1, limit: 100 });
+
+  // Map backend EMI shape to table-friendly shape
+  const data = useMemo(() => {
+    if (!Array.isArray(rawEmis)) return [];
+    return rawEmis.map((e, idx) => {
+      const due = e.dueDate || e.due_date || e.due || null;
+      const emiNo = e.emiNo ?? e.emi_no ?? e.emiNo;
+      const emiNumber = `EMI${String(emiNo ?? idx + 1).padStart(3, '0')}`;
+      const principal = e.principalAmount ?? e.openingBalance ?? 0;
+      const interest = e.interestAmount ?? 0;
+      const emiAmount = e.emiAmount ?? e.emi_amount ?? 0;
+      const status = (e.status || '').toString().toLowerCase();
+      const isToday = due ? new Date(due).toISOString().split('T')[0] === new Date().toISOString().split('T')[0] : false;
+      return {
+        ...e,
+        id: e.id || `${emiNumber}-${idx}`,
+        emiNumber,
+        dueDate: due,
+        principal,
+        interest,
+        emiAmount,
+        status,
+        isToday,
+      };
+    }).filter(Boolean);
+  }, [rawEmis]);
 
   // Format currency
   const formatCurrency = (amount) => {
@@ -55,8 +60,8 @@ export default function EMIManagementPage() {
     }
   };
 
-  // Calculate totals
-  const totals = {
+  // Calculate totals from fetched data
+  const totals = useMemo(() => ({
     totalPrincipal: data.reduce((sum, item) => sum + (item?.principal || 0), 0),
     totalInterest: data.reduce((sum, item) => sum + (item?.interest || 0), 0),
     totalEMI: data.reduce((sum, item) => sum + (item?.emiAmount || 0), 0),
@@ -66,7 +71,7 @@ export default function EMIManagementPage() {
     paidAmount: data.filter(item => item?.status === 'paid').reduce((s, i) => s + (i?.emiAmount || 0), 0),
     pendingAmount: data.filter(item => item?.status === 'pending').reduce((s, i) => s + (i?.emiAmount || 0), 0),
     overdueAmount: data.filter(item => item?.status === 'overdue').reduce((s, i) => s + (i?.emiAmount || 0), 0)
-  };
+  }), [data]);
 
   // Handlers
   const handleView = (row) => {
@@ -99,7 +104,7 @@ export default function EMIManagementPage() {
     setFilterStatus(status);
   };
 
-  if (loading) {
+  if (loading || isFetching) {
     return (
       <div className="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
