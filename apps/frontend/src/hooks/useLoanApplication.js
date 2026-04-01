@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
-import { apiGet, apiPost, apiPatch } from "../lib/api/apiClient";
+import { apiGet, apiPost, apiPatch, apiPut } from "../lib/api/apiClient";
 import { showSuccess, showError } from "../lib/utils/toastService";
 import { normalizeParams } from "../lib/utils/paramHelper";
 import {
@@ -12,6 +12,7 @@ import {
   addLoanApplication,
   updateLoanApplicationInList,
 } from "../store/slices/loanApplicationSlice";
+import toast from "react-hot-toast";
 
 export const useLoanApplications = (params = {}) => {
   const dispatch = useDispatch();
@@ -108,10 +109,49 @@ export const useCreateLoanApplication = ({
       }
     },
     onError: (error, variables, context) => {
-      const message = error?.message || "Failed to create loan application";
-      dispatch(setError(message));
+      // Try to extract a useful message from the server response (which
+      // apiClient rethrows as response.data). Fall back to generic message.
+      let serverMsg = "Failed to create loan application";
+      try {
+        if (!error) {
+          serverMsg = "Unknown server error";
+        } else if (typeof error === "string") {
+          serverMsg = error;
+        } else if (error?.message) {
+          serverMsg = error.message;
+        } else if (error?.error) {
+          serverMsg = error.error;
+        } else if (error?.errors) {
+          // If validation errors array, format as "path: message"
+          if (Array.isArray(error.errors)) {
+            const list = error.errors
+              .map((e) => {
+                try {
+                  if (e?.path && e?.message) return `${e.path}: ${e.message}`;
+                  if (typeof e === "string") return e;
+                  return JSON.stringify(e);
+                } catch {
+                  return String(e);
+                }
+              })
+              .filter(Boolean);
+            serverMsg = list.length
+              ? list.slice(0, 6).join(" • ")
+              : JSON.stringify(error.errors);
+          } else {
+            serverMsg = JSON.stringify(error.errors);
+          }
+        } else {
+          serverMsg = JSON.stringify(error);
+        }
+      } catch (e) {
+        serverMsg = "Failed to parse server error";
+        toast.error(e instanceof Error ? e.message : String(e));
+      }
+
+      dispatch(setError(serverMsg));
       dispatch(setLoading(false));
-      showError(message);
+      showError(serverMsg);
       if (typeof onErrorCallback === "function") {
         onErrorCallback(error, variables, context);
       }
@@ -131,7 +171,7 @@ export const useUpdateLoanStatus = () => {
   // PUT update status: /loan-applications/:id/status
   return useMutation({
     mutationFn: ({ id, status }) =>
-      apiPatch(`/loan-applications/${id}/status`, { status }),
+      apiPut(`/loan-applications/${id}/status`, { status }),
     onMutate: () => {
       dispatch(setLoading(true));
     },

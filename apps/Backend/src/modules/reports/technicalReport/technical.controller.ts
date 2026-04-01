@@ -4,6 +4,8 @@ import {
   createTechnicalReportService,
   approveTechnicalReportService,
   getAllTechnicalReportsService,
+  editTechnicalReportService,
+  rejectTechnicalReportService
 } from "./technical.service.js";
 import logger from "../../../common/logger.js";
 import { createTechnicalReportSchema } from "./technical.schema.js";
@@ -15,7 +17,6 @@ export const createTechnicalReportController = async (
   try {
     const { loanNumber } = req.params;
 
-    // ✅ Validate request body
     const validatedData = createTechnicalReportSchema.parse(req.body);
 
     const report = await createTechnicalReportService(
@@ -32,7 +33,6 @@ export const createTechnicalReportController = async (
   } catch (error: any) {
     logger.error("createTechnicalReport error: %o", error);
 
-    // ✅ Zod validation error
     if (error.name === "ZodError") {
       return res.status(400).json({
         success: false,
@@ -41,7 +41,6 @@ export const createTechnicalReportController = async (
       });
     }
 
-    // ✅ Custom errors
     if (error.statusCode) {
       return res.status(error.statusCode).json({
         success: false,
@@ -49,7 +48,6 @@ export const createTechnicalReportController = async (
       });
     }
 
-    // ✅ Fallback
     return res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -73,7 +71,7 @@ export const approveTechnicalReportController = async (
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: "Failed to approve technical report",
+      message:  error.message || "Failed to approve technical report",
       error: error.message || "INTERNAL_SERVER_ERROR",
     });
   }
@@ -88,6 +86,9 @@ export const getAllTechnicalReportsController = async (
       page: Number(req.query.page),
       limit: Number(req.query.limit),
       q: req.query.q?.toString(),
+      propertyType: req.query.propertyType?.toString(),
+      constructionStatus: req.query.constructionStatus?.toString(),
+      city: req.query.city?.toString(),
     }, {
       id: req.user!.id,
       role: (req.user as any).role,
@@ -107,3 +108,63 @@ export const getAllTechnicalReportsController = async (
     });
   }
 };
+
+
+export const editTechnicalReportController = async (
+  req: Request,
+  res: Response,
+) => {
+ 
+    const { reportId } = req.params;
+    const validatedData = createTechnicalReportSchema.parse(req.body);
+    const report = await editTechnicalReportService(
+      reportId,
+      validatedData,
+      req.user!.id
+    );
+    if (!report) {
+      return res.status(404).json({
+        success: false,
+        message: "Technical report not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Technical report updated successfully",
+      data: report,
+    });
+    
+  }
+
+
+  export const rejectTechnicalReportController = async (
+    req: Request,
+    res: Response,
+  ) => {
+    const { reportId } = req.params;
+    try {
+      const report = await rejectTechnicalReportService(
+        reportId,
+        req.user!.id
+      );
+      if (!report) {
+        return res.status(404).json({
+          success: false,
+          message: "Technical report not found",
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        message: "Technical report rejected successfully",
+        data: report,
+      });
+    }
+      catch (error: any) {
+        return res.status(500).json({
+          success: false,        
+          message: error.message ||"Failed to reject technical report",
+          error: error.message || "INTERNAL_SERVER_ERROR",
+        });
+      }
+    }

@@ -16,8 +16,8 @@ export const createLegalReportService = async (
   return prisma.$transaction(async (tx) => {
     // Fetch loan application to get branchId
     const loanApplication = await tx.loanApplication.findUnique({
-      where: { id: loanApplicationId },
-      select: { branchId: true },
+      where: { loanNumber: loanApplicationId },
+      select: { branchId: true, id: true },
     });
 
     if (!loanApplication) {
@@ -26,7 +26,7 @@ export const createLegalReportService = async (
 
     const report = await tx.legalReport.create({
       data: {
-        loanApplicationId,
+        loanApplicationId: loanApplication.id,
         branchId: loanApplication.branchId,
         ...data,
         status: "SUBMITTED",
@@ -34,7 +34,7 @@ export const createLegalReportService = async (
       },
     });
     await tx.loanApplication.update({
-      where: { id: loanApplicationId },
+      where: { id: loanApplication.id },
       data: { status: "LEGAL_PENDING" },
     });
 
@@ -107,8 +107,45 @@ export const getAllLegalReportsService = async (
       skip,
       take: limit,
       orderBy: { createdAt: "desc" },
+      include: {
+        loanApplication: {
+          select: { loanNumber: true },
+        },
+      },
     }),
     prisma.legalReport.count({ where }),
   ]);
-  return { data, meta: buildPaginationMeta(total, page, limit) };
+
+  // Attach loanNumber to each report for client convenience
+  const dataWithLoanNumber = data.map((r) => ({
+    ...r,
+    loanNumber: r.loanApplication?.loanNumber ?? null,
+  }));
+
+  return { data: dataWithLoanNumber, meta: buildPaginationMeta(total, page, limit) };
+};
+
+
+export const rejectLegalReportService = async (
+    reportId: string,
+    rejectedBy: string,
+) => {
+    return prisma.$transaction(async (tx) => {
+        const report = await tx.legalReport.update({
+            where: { id: reportId },
+            data: {
+                status: "REJECTED",
+                rejectedBy,
+                rejectedAt: new Date(),
+            },
+        });
+
+        if (report.loanApplicationId) {
+            await tx.loanApplication.update({
+                where: { id: report.loanApplicationId },
+                data: { status: "LEGAL_REJECTED" },
+            });
+        }
+        return report;
+    });
 };

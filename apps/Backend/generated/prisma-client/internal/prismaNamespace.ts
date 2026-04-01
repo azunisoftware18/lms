@@ -4882,6 +4882,7 @@ export const TechnicalReportScalarFieldEnum = {
   sitePhotographs: 'sitePhotographs',
   submittedAt: 'submittedAt',
   approvedBy: 'approvedBy',
+  rejectedBy: 'rejectedBy',
   approvedAt: 'approvedAt',
   branchId: 'branchId',
   createdAt: 'createdAt',
@@ -4911,6 +4912,8 @@ export const LegalReportScalarFieldEnum = {
   reportUrl: 'reportUrl',
   submittedAt: 'submittedAt',
   approvedBy: 'approvedBy',
+  rejectedBy: 'rejectedBy',
+  rejectedAt: 'rejectedAt',
   approvedAt: 'approvedAt',
   branchId: 'branchId',
   createdAt: 'createdAt',
@@ -5644,6 +5647,7 @@ export const TechnicalReportOrderByRelevanceFieldEnum = {
   reportUrl: 'reportUrl',
   sitePhotographs: 'sitePhotographs',
   approvedBy: 'approvedBy',
+  rejectedBy: 'rejectedBy',
   branchId: 'branchId'
 } as const
 
@@ -5662,6 +5666,7 @@ export const LegalReportOrderByRelevanceFieldEnum = {
   remarks: 'remarks',
   reportUrl: 'reportUrl',
   approvedBy: 'approvedBy',
+  rejectedBy: 'rejectedBy',
   branchId: 'branchId'
 } as const
 

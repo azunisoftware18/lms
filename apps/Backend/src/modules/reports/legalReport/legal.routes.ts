@@ -4,6 +4,7 @@ import {
   createLegalReportController,
   approveLegalReportController,
   getAllLegalReportsController,
+  rejectLegalReportController
 } from "./legal.controller.js";
 
 import { authMiddleware } from "../../../common/middlewares/auth.middleware.js";
@@ -13,7 +14,7 @@ import { checkPermissionMiddleware } from "../../../common/middlewares/permissio
 const legalReportRouter = Router();
 
 legalReportRouter.post(
-  "/loan/:loanId/legal-report",
+  "/loan/:loannumber/legal-report",
   authMiddleware,
   checkPermissionMiddleware("CREATE_LEGAL_REPORT"),
   validate(createLegalReportSchema),
@@ -33,8 +34,16 @@ legalReportRouter.post(
 legalReportRouter.get(
   "/legal-reports",
   authMiddleware,
-  //checkPermissionMiddleware("VIEW_LEGAL_REPORTS"),
+  checkPermissionMiddleware("VIEW_LEGAL_REPORTS"),
   getAllLegalReportsController,
+);
+
+
+legalReportRouter.patch(
+  "/legal-report/:reportId/reject",
+  authMiddleware,
+  checkPermissionMiddleware("REJECT_LEGAL_REPORT"),
+  rejectLegalReportController, // Reusing the same controller for approve/reject since logic is similar
 );
 
 

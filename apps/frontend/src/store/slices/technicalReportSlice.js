@@ -5,7 +5,7 @@ const technicalReportSlice = createSlice({
 
   initialState: {
     selectedReportId: null,
-    technicalReports: [],
+    technicalReports: { data: [], meta: {} },
     loading: false,
     error: null,
   },
@@ -32,21 +32,37 @@ const technicalReportSlice = createSlice({
     },
 
     setTechnicalReports: (state, action) => {
-      state.technicalReports = action.payload;
+      // action.payload expected to be API response: { data: [], meta: {} } or an array
+      const payload = action.payload;
+      if (payload && payload.data) {
+        state.technicalReports = {
+          data: Array.isArray(payload.data) ? payload.data : [],
+          meta: payload.meta || {},
+        };
+      } else if (Array.isArray(payload)) {
+        state.technicalReports = { data: payload, meta: {} };
+      } else {
+        // fallback: empty
+        state.technicalReports = { data: [], meta: {} };
+      }
       state.loading = false;
       state.error = null;
     },
 
     addTechnicalReport: (state, action) => {
-      state.technicalReports.push(action.payload);
+      if (!state.technicalReports || !Array.isArray(state.technicalReports.data)) {
+        state.technicalReports = { data: [], meta: {} };
+      }
+      state.technicalReports.data.unshift(action.payload);
       state.loading = false;
       state.error = null;
     },
 
     updateTechnicalReportInList: (state, action) => {
-      const index = state.technicalReports.findIndex(r => r.id === action.payload.id);
+      if (!state.technicalReports || !Array.isArray(state.technicalReports.data)) return;
+      const index = state.technicalReports.data.findIndex((r) => r.id === action.payload.id);
       if (index !== -1) {
-        state.technicalReports[index] = action.payload;
+        state.technicalReports.data[index] = action.payload;
       }
       state.loading = false;
       state.error = null;

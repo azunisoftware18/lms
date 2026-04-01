@@ -407,6 +407,8 @@ export const getEmisPayableAmountbyId = async (emiId: string) => {
   }
 };
 
+
+// not use
 export const getEmiAmountService = async ({
   principal,
   annualInterestRate,

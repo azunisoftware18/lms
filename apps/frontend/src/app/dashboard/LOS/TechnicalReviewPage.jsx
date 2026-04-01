@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Plus,
   Filter,
@@ -31,10 +32,9 @@ import SelectField from "../../../components/ui/SelectField";
 import Pagination from "../../../components/common/Pagination";
 import TechnicalReviewTable from "../../../components/tables/TechnicalReviewTable";
 import { colorVariables } from "../../../lib";
-import {
-  TECHNICAL_REVIEW_REPORTS,
-  TECHNICAL_REVIEW_STATISTICS,
-} from "../../../lib/LOSDummyData";
+import { apiGet, apiPost, apiPut, apiDelete } from "../../../lib/api/apiClient";
+
+
 
 const TECHNICAL_REVIEW_ICON_MAP = {
   FileText,
@@ -43,8 +43,13 @@ const TECHNICAL_REVIEW_ICON_MAP = {
   XCircle,
 };
 
+import { useSelector } from "react-redux";
+import { useTechnicalReports, useApproveTechnicalReport, useEditTechnicalReport, useRejectTechnicalReport } from "../../../hooks/useTechnicalReport";
+
+
 import { useCreateTechnicalReport } from "../../../hooks/useTechnicalReport";
 import TechnicalReportForm from "../../../components/forms/TechnicalReportForm";
+import { showError, showSuccess } from "../../../lib/utils/toastService";
 
 function TechnicalReportModal({ isOpen, onClose }) {
   const [error, setError] = useState(null);
@@ -55,30 +60,52 @@ function TechnicalReportModal({ isOpen, onClose }) {
 
   const handleSubmit = async (form, resetForm) => {
     setError(null);
+    setFormFieldErrors(null);
     try {
+      // Prepare payload for backend schema
+      const payload = {
+        loanApplicationId: form.loanNumber, // backend expects this
+        engineerId: form.engineerId || undefined,
+        engineerName: form.engineerName,
+        agencyName: form.agencyName || undefined,
+        propertyType: form.propertyType,
+        propertyAddress: form.propertyAddress,
+        city: form.city,
+        state: form.state,
+        pincode: form.pincode,
+        marketValue: Number(form.marketValue),
+        discussionValue: Number(form.discussionValue),
+        forcesdSaleValue: form.forcesdSaleValue ? Number(form.forcesdSaleValue) : undefined,
+        recommendedLtv: Number(form.recommendedLtv),
+        constructionStatus: form.constructionStatus,
+        propertyAge: form.propertyAge ? Number(form.propertyAge) : undefined,
+        residualLife: form.residualLife ? Number(form.residualLife) : undefined,
+        qualityOfConstruction: form.qualityOfConstruction || undefined,
+        status: form.status || undefined,
+        remarks: form.remarks || undefined,
+        reportUrl: form.reportUrl || undefined,
+        sitePhotographs: form.sitePhotographs || undefined,
+      };
+
       await createReport.mutateAsync({
         loanNumber: form.loanNumber,
-        data: {
-          ...form,
-          marketValue: Number(form.marketValue),
-          discussionValue: Number(form.discussionValue),
-          recommendedLtv: Number(form.recommendedLtv),
-          loanApplicationId: form.loanNumber,
-        },
+        data: payload,
       });
       resetForm();
       onClose();
     } catch (err) {
-      // If the hook rethrew an enhanced error with fieldErrors, capture them
       const fieldErrors = err?.fieldErrors || err?.original?.response?.data?.errors || null;
+      const mainMessage = err?.message || "Failed to create report";
+      showError(mainMessage);
       if (fieldErrors) {
-        // Pass field-level errors to the form via local state so they render near inputs
         setError(null);
         setFormFieldErrors(fieldErrors);
       } else {
-        setError(err?.message || "Failed to create report");
+        setError(mainMessage);
       }
     }
+
+    
   };
 
   return (
@@ -179,14 +206,14 @@ function TechnicalReportDetailsModal({ isOpen, onClose, report }) {
   );
 }
 
+
 export default function TechnicalReviewPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedReport, setSelectedReport] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [propertyTypeFilter, setPropertyTypeFilter] = useState("all");
-  const [constructionStatusFilter, setConstructionStatusFilter] =
-    useState("all");
+  const [constructionStatusFilter, setConstructionStatusFilter] = useState("all");
   const [cityFilter, setCityFilter] = useState("all");
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -195,6 +222,31 @@ export default function TechnicalReviewPage() {
   const [viewMode, setViewMode] = useState("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  // Fetch technical reports from API and redux
+  const { data: apiData, isLoading, error } = useTechnicalReports({
+    page: currentPage,
+    limit: itemsPerPage,
+    q: searchTerm,
+    propertyType: propertyTypeFilter !== "all" ? propertyTypeFilter : undefined,
+    constructionStatus: constructionStatusFilter !== "all" ? constructionStatusFilter : undefined,
+    city: cityFilter !== "all" ? cityFilter : undefined,
+  });
+  const technicalReportsState = useSelector((state) => state.technicalReport.technicalReports ?? {});
+  const reports = technicalReportsState.data ?? [];
+  const meta = technicalReportsState.meta ?? {};
+
+  // Statistics placeholder (will be computed from server data later)
+  let statistics = [
+    {
+      id: 1,
+      title: "Total Reports",
+      value: 0,
+      subtext: "All technical reports",
+      icon: FileText,
+      iconColor: "primary",
+    },
+  ];
 
   // Device detection with proper cleanup
   useEffect(() => {
@@ -228,56 +280,61 @@ export default function TechnicalReviewPage() {
     {
       label: "Edit Report",
       icon: <Edit2 className="w-4 h-4" />,
-      onClick: () => console.log("Edit", report),
+      onClick: () => handleEditReport(report),
     },
     {
       label: "Download PDF",
       icon: <Download className="w-4 h-4" />,
-      onClick: () => console.log("Download", report),
+      onClick: () => handleDownloadReport(report),
     },
     {
-      label: "Share",
-      icon: <Share2 className="w-4 h-4" />,
-      onClick: () => console.log("Share", report),
+      label: "Approve Report",
+      icon: <CheckCircle className="w-4 h-4" />,
+      onClick: () => handleApproveReport(report),
     },
     {
-      label: "Delete",
+      label: "Reject Report",
       icon: <Trash2 className="w-4 h-4" />,
-      onClick: () => console.log("Delete", report),
+      onClick: () => handleRejectReport(report),
       isDanger: true,
     },
   ];
-
-  const statistics = TECHNICAL_REVIEW_STATISTICS.map((item) => ({
-    ...item,
-    icon: TECHNICAL_REVIEW_ICON_MAP[item.iconName] || FileText,
-  }));
-  const reports = TECHNICAL_REVIEW_REPORTS;
 
   // Get unique cities for filter
   const cities = ["all", ...new Set(reports.map((r) => r.city))];
   const propertyTypeOptions = [
     { value: "all", label: "All Properties" },
-    { value: "residential", label: "Residential" },
-    { value: "commercial", label: "Commercial" },
-    { value: "industrial", label: "Industrial" },
-    { value: "land", label: "Land" },
+    { value: "RESIDENTIAL", label: "Residential" },
+    { value: "COMMERCIAL", label: "Commercial" },
+    { value: "INDUSTRIAL", label: "Industrial" },
+    { value: "LAND", label: "Land" },
+    { value: "FLAT", label: "Flat" },
+    { value: "VILLA", label: "Villa" },
+    { value: "PLOT", label: "Plot" },
   ];
   const constructionStatusOptions = [
     { value: "all", label: "All Construction" },
     { value: "COMPLETED", label: "Completed" },
     { value: "UNDER_CONSTRUCTION", label: "Under Construction" },
+    { value: "NEW_PROJECT", label: "New Project" },
   ];
-  const cityOptions = cities.map((city) => ({
-    value: city,
-    label: city === "all" ? "All Cities" : city,
-  }));
+  // const cityOptions = cities.map((city) => ({
+  //   value: city,
+  //   label: city === "all" ? "All Cities" : city,
+  // }));
   const itemsPerPageOptions = [10, 20, 50].map((item) => ({
     value: item,
     label: `${item} per page`,
   }));
 
   const getStatusBadge = (status) => {
+    // Normalize status string to handle different casing and variants
+    const key = (status || "").toString().toLowerCase();
+    let normalized = "pending";
+    if (key.includes("approv")) normalized = "approved";
+    else if (key.includes("reject")) normalized = "rejected";
+    else if (key.includes("pending")) normalized = "pending";
+
     const statusConfig = {
       approved: {
         bg: "bg-green-100",
@@ -299,7 +356,7 @@ export default function TechnicalReviewPage() {
       },
     };
 
-    const config = statusConfig[status] || statusConfig.pending;
+    const config = statusConfig[normalized] || statusConfig.pending;
     const Icon = config.icon;
 
     return (
@@ -334,6 +391,76 @@ export default function TechnicalReviewPage() {
     setIsDetailsModalOpen(true);
   };
 
+  const approveMutation = useApproveTechnicalReport();
+  const editMutation = useEditTechnicalReport();
+  const rejectMutation = useRejectTechnicalReport();
+  const queryClient = useQueryClient();
+
+  const handleEditReport = async (report) => {
+    try {
+      const id = report.id || report._id || report.reportId;
+      if (!id) return showError("Missing report id");
+      // Prompt for new remarks to update the report (minimal edit flow)
+      // eslint-disable-next-line no-alert
+      const remarks = window.prompt("Enter new remarks (leave empty to cancel)", report.remarks || "");
+      if (remarks === null) return; // cancelled
+      await editMutation.mutateAsync({ reportId: id, data: { remarks } });
+      queryClient.invalidateQueries(["technicalReports"]);
+      showSuccess("Report updated");
+    } catch (err) {
+  
+  
+  
+      showError(err.message || "Update failed");
+    }
+  };
+
+  const handleDownloadReport = async (report) => {
+    try {
+      const id = report.id || report._id || report.reportId;
+      if (!id) throw new Error("Missing report id");
+      const blob = await apiGet(`/reports/technical/technical-reports/${id}/download`, { responseType: "blob" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `technical-report-${id}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      showError(err.message || "Download failed");
+    }
+  };
+
+  // alias for any references to handleReportDownload
+  const handleReportDownload = (report) => handleDownloadReport(report);
+
+  const handleApproveReport = async (report) => {
+    try {
+      const id = report.id || report._id || report.reportId;
+      if (!id) throw new Error("Missing report id");
+      await approveMutation.mutateAsync(id);
+      queryClient.invalidateQueries(["technicalReports"]);
+      showSuccess("Technical report approved successfully");
+    } catch (err) {
+      showError(err.message || "Approve failed");
+    }
+  };
+
+  const handleRejectReport = async (report) => {
+    try {
+      const id = report.id || report._id || report.reportId;
+      if (!id) throw new Error("Missing report id");
+      await rejectMutation.mutateAsync({ reportId: id });
+      queryClient.invalidateQueries(["technicalReports"]);
+      showSuccess("Report rejected");
+     
+    } catch (err) {
+      showError(err.message || "Reject failed");
+    }
+  };
+
   const tableActions = [
     {
       label: "View Details",
@@ -343,22 +470,22 @@ export default function TechnicalReviewPage() {
     {
       label: "Edit Report",
       icon: <Edit2 className="w-4 h-4" />,
-      onClick: (report) => console.log("Edit", report),
+      onClick: (report) => handleEditReport(report),
     },
     {
       label: "Download PDF",
       icon: <Download className="w-4 h-4" />,
-      onClick: (report) => console.log("Download", report),
+      onClick: (report) => handleReportDownload(report),
     },
     {
-      label: "Share",
-      icon: <Share2 className="w-4 h-4" />,
-      onClick: (report) => console.log("Share", report),
+      label: "Approve Report",
+      icon: <CheckCircle className="w-4 h-4" />,
+      onClick: (report) => handleApproveReport(report),
     },
     {
-      label: "Delete",
-      icon: <Trash2 className="w-4 h-4" />,
-      onClick: (report) => console.log("Delete", report),
+      label: "Reject Report",
+      icon: <XCircle className="w-4 h-4" />,
+      onClick: (report) => handleRejectReport(report),
       isDanger: true,
     },
   ];
@@ -370,7 +497,7 @@ export default function TechnicalReviewPage() {
       render: (value, row) => (
         <div>
           <div className="text-sm font-medium text-slate-800">{value}</div>
-          <div className="text-xs text-slate-500">ID: {row.id}</div>
+          {/* <div className="text-xs text-slate-500">ID: {row.id}</div> */}
         </div>
       ),
     },
@@ -415,40 +542,52 @@ export default function TechnicalReviewPage() {
     setIsFilterMenuOpen(false);
   };
 
-  // Filter reports
-  const filteredReports = reports.filter((report) => {
-    const matchesSearch =
-      searchTerm === "" ||
-      report.engineerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.agencyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.city.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesPropertyType =
-      propertyTypeFilter === "all" ||
-      report.propertyType.toLowerCase() === propertyTypeFilter.toLowerCase();
+  // Prefer server response when available, fallback to redux state
+  const sourceReports = apiData?.data ?? reports;
+  const sourceMeta = apiData?.meta ?? meta;
 
-    const matchesConstructionStatus =
-      constructionStatusFilter === "all" ||
-      report.constructionStatus.replace(" ", "_").toUpperCase() ===
-        constructionStatusFilter;
+  // Compute statistics from the active source (server-preferred)
+  const totalCount = sourceMeta?.total ?? sourceReports.length;
+  const approvedCount = (sourceReports || []).filter((r) => (r.status || "").toUpperCase() === "APPROVED").length;
+  const rejectedCount = (sourceReports || []).filter((r) => (r.status || "").toUpperCase() === "REJECTED").length;
 
-    const matchesCity = cityFilter === "all" || report.city === cityFilter;
+  statistics = [
+    {
+      id: 1,
+      title: "Total Reports",
+      value: totalCount,
+      subtext: "All technical reports",
+      icon: FileText,
+      iconColor: "primary",
+    },
+    {
+      id: 2,
+      title: "Approved",
+      value: approvedCount,
+      subtext: "Approved reports",
+      icon: CheckCircle,
+      iconColor: "success",
+    },
+    {
+      id: 3,
+      title: "Rejected",
+      value: rejectedCount,
+      subtext: "Rejected reports",
+      icon: XCircle,
+      iconColor: "danger",
+    },
+  ];
 
-    return (
-      matchesSearch &&
-      matchesPropertyType &&
-      matchesConstructionStatus &&
-      matchesCity
-    );
-  });
+  const filteredReports = sourceReports;
 
-  // Pagination
-  const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
+  // Pagination (if not using server meta)
+  const totalPages = sourceMeta.totalPages || Math.ceil(filteredReports.length / itemsPerPage);
   const paginatedReports = filteredReports.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
+  
 
   // Mobile card view
   const MobileReportCard = ({ report }) => (
@@ -753,12 +892,12 @@ export default function TechnicalReviewPage() {
                   className="w-full sm:w-56"
                 />
 
-                <SelectField
+                {/* <SelectField
                   value={cityFilter}
                   onChange={(value) => setCityFilter(value)}
                   options={cityOptions}
                   className="w-full sm:w-48"
-                />
+                /> */}
 
                 <Button
                   onClick={resetFilters}

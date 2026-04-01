@@ -1295,6 +1295,7 @@ model TechnicalReport {
   // Audit
   submittedAt DateTime?
   approvedBy  String?
+  rejectedBy  String?
   approvedAt  DateTime?
 
   branchId String
@@ -1303,6 +1304,7 @@ model TechnicalReport {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
 
 model LegalReport {
   id                String           @id @default(cuid())
@@ -1339,6 +1341,10 @@ model LegalReport {
   // Audit
   submittedAt DateTime?
   approvedBy  String?
+  rejectedBy String?
+  rejectedAt DateTime?
+
+
   approvedAt  DateTime?
 
   branchId String
@@ -1834,10 +1840,12 @@ enum LoanStatus {
   kyc_pending
   credit_check
   under_review
-  LEGAL_PENDING
   TECHNICAL_PENDING
-  LEGAL_APPROVED
   TECHNICAL_APPROVED
+  TECHNICAL_REJECTED
+  LEGAL_PENDING
+  LEGAL_APPROVED
+  LEGAL_REJECTED
   approved
   rejected
   disbursed

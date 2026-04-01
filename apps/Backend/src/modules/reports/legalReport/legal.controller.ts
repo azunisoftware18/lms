@@ -5,7 +5,8 @@ import {
 import {
   approveLegalReportService,
     createLegalReportService,
-  getAllLegalReportsService
+  getAllLegalReportsService,
+  rejectLegalReportService
 } from "./legal.service.js";
 
 
@@ -16,9 +17,9 @@ export const createLegalReportController = async(
     res: Response
 ) => {
     try {
-        const { loanId } = req.params;
+        const { loannumber } = req.params;
         const report = await createLegalReportService(
-            loanId,
+            loannumber,
             req.body,
             req.user!.id
         );
@@ -89,6 +90,36 @@ export const getAllLegalReportsController = async (req: Request, res: Response) 
 
         });
 
+    }
+}
+
+
+export const rejectLegalReportController = async (req: Request, res: Response) => {
+    try {
+        const { reportId } = req.params;
+        const rejectedby  = req.user!.id;
+        const report = await rejectLegalReportService(
+            reportId,
+            rejectedby,
+        );
+        if (!report) {
+            return res.status(404).json({
+                success: false,
+                message: "Legal report not found",
+                error: "LEGAL_REPORT_NOT_FOUND",
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Legal report rejected successfully",
+            data: report,
+        });
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message:error.message || "Failed to reject legal report",
+            error: error.message || "INTERNAL_SERVER_ERROR",
+        });
     }
 }
 

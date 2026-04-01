@@ -15,14 +15,52 @@ import {
   removeLeadFromList,
   clearError,
 } from "../store/slices/leadSlice";
+import toast from "react-hot-toast";
 
 const getLeads = (params = {}) => apiGet("/lead/all", { params });
 const createLead = (payload) => apiPost("/lead", payload);
 const updateLeadStatus = ({ id, status }) =>
   apiPatch(`/lead/update-status/${id}`, { status });
-const assignLead = ({ id, payload }) =>
-  apiPatch(`/lead/assign/${id}`, payload);
+const assignLead = ({ id, payload }) => apiPatch(`/lead/assign/${id}`, payload);
 const convertLeadToLoan = (id) => apiGet(`/lead/convert-to-loan/${id}`);
+
+// Get single lead by id (primary) or by leadNumber fallback
+export const getLeadByIdOrNumber = async (idOrNumber) => {
+  if (!idOrNumber) return null;
+  try {
+    const res = await apiGet(`/lead/${idOrNumber}`);
+    // controller returns { success, message, data } where data is lead object
+    if (res?.data && !Array.isArray(res.data)) return res.data;
+    return res;
+  } catch (err) {
+    // Avoid throwing here so consumers can handle nulls safely
+    const message = err instanceof Error ? err.message : String(err);
+    toast.error(`Failed to fetch lead by id: ${message}`);
+    // fallback to list endpoint with leadNumber param
+    try {
+      const listRes = await apiGet(`/lead/all`, {
+        params: { leadNumber: idOrNumber },
+      });
+      const list = extractLeadsList(listRes);
+      return list.length ? list[0] : null;
+    } catch (e) {
+      const msg2 = e instanceof Error ? e.message : String(e);
+      toast.error(`Failed to fetch lead by leadNumber: ${msg2}`);
+      return null;
+    }
+  }
+};
+
+export const useGetLead = (idOrNumber, options = {}) => {
+  const queryKey = ["lead", idOrNumber];
+  return useQuery({
+    queryKey,
+    queryFn: () => getLeadByIdOrNumber(idOrNumber),
+    enabled: Boolean(idOrNumber) && options.enabled !== false,
+    staleTime: options.staleTime ?? 1000 * 60 * 5,
+    ...options,
+  });
+};
 
 const extractLeadsList = (response) => {
   if (Array.isArray(response?.data?.data)) return response.data.data;
@@ -54,24 +92,18 @@ const extractLeadEntity = (response) => {
   return response;
 };
 
-export const useLead = (params) => {
+export const useLead = (params = {}) => {
   const dispatch = useDispatch();
   const leadsFromStore = useSelector((state) => state?.lead?.leads || []);
-  const paginationFromStore = useSelector((state) => state?.lead?.pagination || {});
+  const paginationFromStore = useSelector(
+    (state) => state?.lead?.pagination || {},
+  );
   const loading = useSelector((state) => state?.lead?.loading || false);
   const error = useSelector((state) => state?.lead?.error || null);
+  // keep memoization stable by depending on the whole `params` object
   const normalizedParams = useMemo(
     () => normalizeParams(params || {}),
-    [
-      params?.page,
-      params?.limit,
-      params?.search,
-      params?.q,
-      params?.isActive,
-      params?.isPublic,
-      params?.publicOnly,
-      params?.status, // Ensure status triggers refetch
-    ],
+    [params],
   );
 
   const query = useQuery({
@@ -85,17 +117,33 @@ export const useLead = (params) => {
 
     const list = extractLeadsList(query.data);
     const meta = extractLeadsMeta(query.data, normalizedParams);
+    // Only update the store when data actually changed to avoid render loops
+    try {
+      const leadsChanged =
+        JSON.stringify(list) !== JSON.stringify(leadsFromStore);
+      const metaChanged =
+        JSON.stringify(meta) !== JSON.stringify(paginationFromStore);
+      const searchChanged =
+        (normalizedParams.search || "") !== (paginationFromStore?.search || "");
 
-    dispatch(setLeads(list));
-    dispatch(setLeadPagination(meta));
-    dispatch(setLeadSearch(normalizedParams.search || ""));
-    dispatch(clearError());
+      if (leadsChanged) dispatch(setLeads(list));
+      if (metaChanged) dispatch(setLeadPagination(meta));
+      if (searchChanged) dispatch(setLeadSearch(normalizedParams.search || ""));
+      dispatch(clearError());
+    } catch (e) {
+      // Fallback: if serialization fails, still dispatch to keep state consistent
+      toast.error(e instanceof Error ? e.message : String(e));
+      dispatch(setLeads(list));
+      dispatch(setLeadPagination(meta));
+      dispatch(setLeadSearch(normalizedParams.search || ""));
+      dispatch(clearError());
+    }
   }, [
     query.data,
     dispatch,
-    normalizedParams.page,
-    normalizedParams.limit,
-    normalizedParams.search,
+    normalizedParams,
+    leadsFromStore,
+    paginationFromStore,
   ]);
 
   useEffect(() => {
@@ -117,7 +165,7 @@ export const useLead = (params) => {
 
   return {
     leads: normalizedLeads,
-    loading: query.isPending || loading,
+    loading: query.isLoading || loading,
     error: error || query.error,
     isFetching: query.isFetching,
     refetch: query.refetch,
