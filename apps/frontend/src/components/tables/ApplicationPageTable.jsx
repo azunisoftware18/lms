@@ -13,6 +13,9 @@ export default function ApplicationPageTable({
   headerAction,
   onRefresh,
   refreshing = false,
+  filterOptions = [],
+  filterValue = "",
+  setFilterValue = () => {},
 }) {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -56,6 +59,9 @@ export default function ApplicationPageTable({
         headerAction={headerAction}
         onRefresh={onRefresh}
         refreshing={refreshing}
+        filterOptions={filterOptions}
+        filterValue={filterValue}
+        setFilterValue={setFilterValue}
       />
 
       {loading ? (

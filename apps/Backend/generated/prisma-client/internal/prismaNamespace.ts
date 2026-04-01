@@ -4863,6 +4863,10 @@ export const TechnicalReportScalarFieldEnum = {
   engineerName: 'engineerName',
   agencyName: 'agencyName',
   propertyType: 'propertyType',
+  propertyAddress: 'propertyAddress',
+  city: 'city',
+  state: 'state',
+  pincode: 'pincode',
   addressId: 'addressId',
   marketValue: 'marketValue',
   discussionValue: 'discussionValue',
@@ -4878,6 +4882,7 @@ export const TechnicalReportScalarFieldEnum = {
   sitePhotographs: 'sitePhotographs',
   submittedAt: 'submittedAt',
   approvedBy: 'approvedBy',
+  rejectedBy: 'rejectedBy',
   approvedAt: 'approvedAt',
   branchId: 'branchId',
   createdAt: 'createdAt',
@@ -5629,6 +5634,10 @@ export const TechnicalReportOrderByRelevanceFieldEnum = {
   engineerName: 'engineerName',
   agencyName: 'agencyName',
   propertyType: 'propertyType',
+  propertyAddress: 'propertyAddress',
+  city: 'city',
+  state: 'state',
+  pincode: 'pincode',
   addressId: 'addressId',
   constructionStatus: 'constructionStatus',
   qualityOfConstruction: 'qualityOfConstruction',
@@ -5636,6 +5645,7 @@ export const TechnicalReportOrderByRelevanceFieldEnum = {
   reportUrl: 'reportUrl',
   sitePhotographs: 'sitePhotographs',
   approvedBy: 'approvedBy',
+  rejectedBy: 'rejectedBy',
   branchId: 'branchId'
 } as const
 

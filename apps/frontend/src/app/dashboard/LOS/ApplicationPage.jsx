@@ -22,6 +22,7 @@ export default function ProfessionalNBFCPortal() {
   const [currentPage] = useState(1);
   const [showApproveDialog, setShowApproveDialog] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("");
 
   // Correct usage: call the hook inside the component, after selectedId is defined
   const { data: selectedApp, isLoading } = useLoanApplication(selectedId);
@@ -65,19 +66,32 @@ export default function ProfessionalNBFCPortal() {
   };
 
   // Filter applications based on search term
-  const filteredApplications = applications.filter(
-    (app) =>
+  const filteredApplications = applications.filter((app) => {
+    const matchesStatus =
+      !statusFilter ||
+      (app.status && app.status.toLowerCase() === statusFilter.toLowerCase());
+    const matchesSearch =
       `${app.customer?.firstName || ""} ${app.customer?.lastName || ""}`
         .toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
       app.customer?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.customer?.panNumber?.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+      app.customer?.panNumber?.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesStatus && matchesSearch;
+  });
 
   const paginatedApplications = filteredApplications.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE,
   );
+
+  // Status filter options for dropdown
+  const filterOptions = [
+    { label: "All", value: "" },
+    { label: "Pending", value: "pending" },
+    { label: "Approved", value: "approved" },
+    { label: "Rejected", value: "rejected" },
+    // Add more statuses as needed
+  ];
 
   const tableColumns = [
     {
@@ -225,6 +239,9 @@ export default function ProfessionalNBFCPortal() {
               setSelectedId(app.id);
               setViewModalOpen(true);
             }}
+            filterOptions={filterOptions}
+            filterValue={statusFilter}
+            setFilterValue={setStatusFilter}
           />
         </div>
       </div>

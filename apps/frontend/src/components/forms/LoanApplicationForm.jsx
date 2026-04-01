@@ -39,6 +39,7 @@ import InputField from "../ui/InputField";
 import SelectField from "../ui/SelectField";
 import createLoanApplicationSchema from "../../validations/LoanApplicationValidation";
 import { showError, showInfo, showSuccess } from "../../lib/utils/toastService";
+import { useGetLead } from "../../hooks/useLead";
 // Populated option arrays for required fields
 const EMPLOYMENT_OPTIONS = [
   { value: "SALARIED", label: "Salaried" },
@@ -101,9 +102,27 @@ const LOAN_PURPOSE_OPTIONS = [
 ];
 
 // PERSON PERSONAL FIELDS (Reusable for Applicant/Co-Applicant)
-const PersonPersonalFields = ({ control, prefix, watch }) => {
+const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
   // Watch present accommodation for conditional rent field
   const presentAccommodation = watch(`${prefix}.presentAccommodation`);
+  const sameAddress = watch(`${prefix}.sameAsCurrent`) ?? false;
+  const copyCurrentAddress = useCallback(() => {
+    [
+      "addressLine1",
+      "addressLine2",
+      "city",
+      "district",
+      "state",
+      "pinCode",
+      "landmark",
+      "phoneWithStd",
+    ].forEach((fieldName) => {
+      setValue(
+        `${prefix}.permanentAddress.${fieldName}`,
+        watch(`${prefix}.currentAddress.${fieldName}`) || "",
+      );
+    });
+  }, [prefix, setValue, watch]);
   return (
     <div className="space-y-4">
       <Grid cols={3}>
@@ -170,6 +189,13 @@ const PersonPersonalFields = ({ control, prefix, watch }) => {
           )}
         />
         <Controller
+          name={`${prefix}.email`}
+          control={control}
+          render={({ field }) => (
+            <InputField label="Email Address" type="email" {...field} />
+          )}
+        />
+        <Controller
           name={`${prefix}.passportNumber`}
           control={control}
           render={({ field }) => (
@@ -180,6 +206,99 @@ const PersonPersonalFields = ({ control, prefix, watch }) => {
           name={`${prefix}.panNumber`}
           control={control}
           render={({ field }) => <InputField label="PAN No." {...field} />}
+        />
+      </Grid>
+      <Grid cols={3}>
+        <Controller
+          name={`${prefix}.dob`}
+          control={control}
+          render={({ field }) => (
+            <InputField
+              label="Date of Birth"
+              type="date"
+              value={
+                field.value
+                  ? new Date(field.value).toISOString().split("T")[0]
+                  : ""
+              }
+              onChange={(e) =>
+                field.onChange(
+                  e.target.value ? new Date(e.target.value) : undefined,
+                )
+              }
+            />
+          )}
+        />
+        <Controller
+          name={`${prefix}.category`}
+          control={control}
+          render={({ field }) => (
+            <SelectField
+              label="Category"
+              isRequired
+              options={CATEGORY_OPTIONS}
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        />
+        <Controller
+          name={`${prefix}.maritalStatus`}
+          control={control}
+          render={({ field }) => (
+            <SelectField
+              label="Marital Status"
+              isRequired
+              options={MARITAL_OPTIONS}
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        />
+        <Controller
+          name={`${prefix}.contactNumber`}
+          control={control}
+          render={({ field }) => (
+            <InputField
+              label="Mobile Number"
+              type="tel"
+              isRequired
+              {...field}
+              onChange={(e) =>
+                field.onChange(e.target.value.replace(/\D/g, "").slice(0, 10))
+              }
+            />
+          )}
+        />
+      </Grid>
+
+      <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
+        No. of Family Dependents
+      </p>
+      <Grid>
+        <Controller
+          name={`${prefix}.noOfFamilyDependentsChildren`}
+          control={control}
+          render={({ field }) => (
+            <InputField
+              label="Children"
+              type="number"
+              placeholder="0"
+              {...field}
+            />
+          )}
+        />
+        <Controller
+          name={`${prefix}.noOfFamilyDependentsOther`}
+          control={control}
+          render={({ field }) => (
+            <InputField
+              label="Others"
+              type="number"
+              placeholder="0"
+              {...field}
+            />
+          )}
         />
       </Grid>
       <Grid cols={3}>
@@ -203,49 +322,53 @@ const PersonPersonalFields = ({ control, prefix, watch }) => {
           )}
         />
       </Grid>
-      <Controller
-        name={`${prefix}.relation`}
-        control={control}
-        render={({ field }) => (
-          <SelectField
-            label="Relationship with Applicant"
-            options={RELATION_OPTIONS}
-            value={field.value}
-            onChange={(val) => field.onChange(val)}
-          />
-        )}
-      />
-      <Controller
-        name={`${prefix}.presentAccommodation`}
-        control={control}
-        render={({ field }) => (
-          <SelectField
-            label="Present Accommodation"
-            options={[
-              { value: "OWN", label: "Own" },
-              { value: "FAMILY", label: "Family" },
-              { value: "RENTED", label: "Rented" },
-              { value: "EMPLOYER", label: "Employer" },
-            ]}
-            value={field.value}
-            onChange={field.onChange}
-          />
-        )}
-      />
-      <Controller
-        name={`${prefix}.periodOfStay`}
-        control={control}
-        render={({ field }) => <InputField label="Period of Stay" {...field} />}
-      />
-      {presentAccommodation === "RENTED" && (
+      <Grid cols={3}>
         <Controller
-          name={`${prefix}.rentPerMonth`}
+          name={`${prefix}.relation`}
           control={control}
           render={({ field }) => (
-            <InputField label="Rent per Month" type="number" {...field} />
+            <SelectField
+              label="Relationship with Applicant"
+              options={RELATION_OPTIONS}
+              value={field.value}
+              onChange={(val) => field.onChange(val)}
+            />
           )}
         />
-      )}
+        <Controller
+          name={`${prefix}.presentAccommodation`}
+          control={control}
+          render={({ field }) => (
+            <SelectField
+              label="Present Accommodation"
+              options={[
+                { value: "OWN", label: "Own" },
+                { value: "FAMILY", label: "Family" },
+                { value: "RENTED", label: "Rented" },
+                { value: "EMPLOYER", label: "Employer" },
+              ]}
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        />
+        <Controller
+          name={`${prefix}.periodOfStay`}
+          control={control}
+          render={({ field }) => (
+            <InputField label="Period of Stay" {...field} />
+          )}
+        />
+        {presentAccommodation === "RENTED" && (
+          <Controller
+            name={`${prefix}.rentPerMonth`}
+            control={control}
+            render={({ field }) => (
+              <InputField label="Rent per Month" type="number" {...field} />
+            )}
+          />
+        )}
+      </Grid>
       <Controller
         name={`${prefix}.currentAddress.addressLine1`}
         control={control}
@@ -311,21 +434,27 @@ const PersonPersonalFields = ({ control, prefix, watch }) => {
           )}
         />
       </Grid>
-      <Controller
-        name={`${prefix}.contactNumber`}
-        control={control}
-        render={({ field }) => (
-          <InputField
-            label="Mobile Number"
-            type="tel"
-            isRequired
-            {...field}
-            onChange={(e) =>
-              field.onChange(e.target.value.replace(/\D/g, "").slice(0, 10))
-            }
-          />
-        )}
-      />
+
+      <div
+        className="flex items-center gap-3 px-5 py-3.5 bg-blue-50 rounded-2xl border border-blue-100 cursor-pointer"
+        onClick={() => {
+          const next = !sameAddress;
+          setValue(`${prefix}.sameAsCurrent`, next);
+          if (next) copyCurrentAddress();
+        }}
+      >
+        <div
+          className={`w-5 h-5 rounded flex items-center justify-center border-2 transition-all shrink-0 ${sameAddress ? "bg-blue-600 border-blue-600" : "border-slate-300 bg-white"}`}
+        >
+          {sameAddress && (
+            <Check size={11} strokeWidth={3} className="text-white" />
+          )}
+        </div>
+        <label className="text-sm font-semibold text-blue-700 cursor-pointer select-none flex-1">
+          Permanent address same as current address
+        </label>
+      </div>
+
       <Divider label="Permanent Address" />
       <Controller
         name={`${prefix}.permanentAddress.addressLine1`}
@@ -376,91 +505,6 @@ const PersonPersonalFields = ({ control, prefix, watch }) => {
           control={control}
           render={({ field }) => <InputField label="Land Mark" {...field} />}
         />
-        <Controller
-          name={`${prefix}.email`}
-          control={control}
-          render={({ field }) => (
-            <InputField label="Email Address" type="email" {...field} />
-          )}
-        />
-      </Grid>
-      <Grid cols={3}>
-        <Controller
-          name={`${prefix}.dob`}
-          control={control}
-          render={({ field }) => (
-            <InputField
-              label="Date of Birth"
-              type="date"
-              value={
-                field.value
-                  ? new Date(field.value).toISOString().split("T")[0]
-                  : ""
-              }
-              onChange={(e) =>
-                field.onChange(
-                  e.target.value ? new Date(e.target.value) : undefined,
-                )
-              }
-            />
-          )}
-        />
-        <Controller
-          name={`${prefix}.category`}
-          control={control}
-          render={({ field }) => (
-            <SelectField
-              label="Category"
-              isRequired
-              options={CATEGORY_OPTIONS}
-              value={field.value}
-              onChange={field.onChange}
-            />
-          )}
-        />
-        <Controller
-          name={`${prefix}.maritalStatus`}
-          control={control}
-          render={({ field }) => (
-            <SelectField
-              label="Marital Status"
-              isRequired
-              options={MARITAL_OPTIONS}
-              value={field.value}
-              onChange={field.onChange}
-            />
-          )}
-        />
-      </Grid>
-
-      <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
-        No. of Family Dependents
-      </p>
-      <Grid>
-        <Controller
-          name={`${prefix}.noOfFamilyDependentsChildren`}
-          control={control}
-          render={({ field }) => (
-            <InputField
-              label="Children"
-              type="number"
-              placeholder="0"
-              {...field}
-            />
-          )}
-        />
-        <Controller
-          name={`${prefix}.noOfFamilyDependentsOther`}
-          control={control}
-          render={({ field }) => (
-            <InputField
-              label="Others"
-              type="number"
-              placeholder="0"
-              {...field}
-            />
-          )}
-        />
       </Grid>
 
       <Controller
@@ -488,6 +532,7 @@ const personDefaults = () => ({
   fatherName: "",
   motherName: "",
   woname: undefined,
+  sameAsCurrent: false,
   currentAddress: {
     addressLine1: "",
     city: "",
@@ -525,6 +570,7 @@ const personDefaults = () => ({
   periodOfStay: "",
   rentPerMonth: "",
   employmentType: undefined,
+  additionalOccupationalDetails: [],
   companyName: "",
   companyAddress: "",
   companyCity: "",
@@ -676,41 +722,10 @@ const INDIAN_STATES = [
 
 // STEPS
 const STEPS = [
-  {
-    id: "applicant",
-    label: "Personal Information",
-    shortLabel: "Personal",
-    icon: User,
-  },
-  {
-    id: "applicantContact",
-    label: "Contact Details",
-    shortLabel: "Contact",
-    icon: Phone,
-  },
-  {
-    id: "occupational",
-    label: "Occupational Details",
-    shortLabel: "Occupational",
-    icon: Briefcase,
-  },
-  { id: "address", label: "Address", shortLabel: "Address", icon: MapPin },
-  {
-    id: "loanReq",
-    label: "Loan Requirement",
-    shortLabel: "Loan Req.",
-    icon: IndianRupee,
-  },
-  {
-    id: "financial",
-    label: "Financial Status",
-    shortLabel: "Financial",
-    icon: IndianRupee,
-  },
-
+  { id: "applicant", label: "Applicant", shortLabel: "Applicant", icon: User },
   {
     id: "coApplicant",
-    label: "Co-Applicants",
+    label: "Co-Applicant",
     shortLabel: "Co-App",
     icon: Users,
   },
@@ -720,15 +735,13 @@ const STEPS = [
     shortLabel: "Guarantor",
     icon: Shield,
   },
-
   {
     id: "additional",
-    label: "Additional Info",
+    label: "Additional",
     shortLabel: "Additional",
     icon: FileText,
   },
-
-  { id: "review", label: "Review & Submit", shortLabel: "Review", icon: Eye },
+  { id: "review", label: "Review", shortLabel: "Review", icon: Eye },
 ];
 
 const STEP_FIELDS = {
@@ -738,32 +751,27 @@ const STEP_FIELDS = {
     "applicant.lastName",
     "applicant.fatherName",
     "applicant.motherName",
+    "applicant.contactNumber",
+    "applicant.panNumber",
+    "applicant.aadhaarNumber",
     "applicant.dob",
     "applicant.gender",
     "applicant.maritalStatus",
     "applicant.nationality",
     "applicant.category",
-  ],
-  applicantContact: [
-    "applicant.contactNumber",
-    "applicant.panNumber",
-    "applicant.aadhaarNumber",
-  ],
-  accommodation: ["applicant.presentAccommodation"],
-  occupational: ["applicant.employmentType"],
-  financial: [],
-  loanType: [
-    "loanTypeId",
-    "loanRequirement.interestOption",
-    "loanRequirement.tenure",
-    "loanRequirement.repaymentMethod",
-  ],
-  address: [
+    "applicant.employmentType",
+    "applicant.presentAccommodation",
     "addresses.currentAddress.addressLine1",
     "addresses.currentAddress.city",
     "addresses.currentAddress.district",
     "addresses.currentAddress.state",
     "addresses.currentAddress.pinCode",
+    "loanTypeId",
+    "loanRequirement.interestOption",
+    "loanRequirement.tenure",
+    "loanRequirement.repaymentMethod",
+    "loanRequirement.loanAmount",
+    "loanRequirement.loanPurpose",
   ],
   coApplicant: [],
   guarantor: [],
@@ -966,8 +974,7 @@ const RadioGroup = React.memo(({ label }) => {
   );
 });
 
-// PERSON EMPLOYMENT SECTION (reused)
-const PersonEmploymentFields = ({ control, watch, prefix }) => {
+const OccupationalDetailFields = ({ control, watch, prefix }) => {
   const employmentType = watch(`${prefix}.employmentType`);
   const professionalType = watch(`${prefix}.professionalType`);
   const businessType = watch(`${prefix}.businessType`);
@@ -992,8 +999,8 @@ const PersonEmploymentFields = ({ control, watch, prefix }) => {
         employmentType === "BUSINESS" ||
         employmentType === "PROFESSIONAL" ||
         employmentType === "OTHER") && (
-        <div className="p-4 bg-blue-50/40 rounded-xl border border-blue-100 space-y-4">
-          <p className="text-xs font-bold text-blue-700 uppercase tracking-wider">
+        <div className="space-y-4 border border-slate-200 rounded-xl p-4">
+          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">
             {employmentType === "SALARIED"
               ? "Company Details"
               : employmentType === "BUSINESS"
@@ -1002,7 +1009,6 @@ const PersonEmploymentFields = ({ control, watch, prefix }) => {
                   ? "Professional Details"
                   : "Other Occupation Details"}
           </p>
-          {/* Working For  */}
           {employmentType === "PROFESSIONAL" && (
             <>
               <Controller
@@ -1094,7 +1100,7 @@ const PersonEmploymentFields = ({ control, watch, prefix }) => {
               </Grid>
               <Grid>
                 <Controller
-                  name="applicant.dateOfJoining"
+                  name={`${prefix}.dateOfJoining`}
                   control={control}
                   render={({ field }) => (
                     <InputField
@@ -1114,7 +1120,7 @@ const PersonEmploymentFields = ({ control, watch, prefix }) => {
                   )}
                 />
                 <Controller
-                  name="applicant.dateOfRetirement"
+                  name={`${prefix}.dateOfRetirement`}
                   control={control}
                   render={({ field }) => (
                     <InputField
@@ -1228,22 +1234,103 @@ const PersonEmploymentFields = ({ control, watch, prefix }) => {
                 <InputField label="No. of Employees" type="number" {...field} />
               )}
             />
-            {/* <Controller
-              name={`${prefix}.commencementDate`}
-              control={control}
-              render={({ field }) => (
-                <InputField
-                  label="Date of Commencement of Business/Profession"
-                  type="date"
-                  value={field.value || ""}
-                  onChange={(e) => field.onChange(e.target.value || undefined)}
-                />
-              )}
-            /> */}
           </Grid>
         </div>
       )}
     </div>
+  );
+};
+
+const occupationDefaults = () => ({
+  employmentType: undefined,
+  professionalType: undefined,
+  professionalTypeOther: "",
+  businessType: undefined,
+  businessTypeOther: "",
+  salariedWorkingFor: undefined,
+  salariedWorkingForOther: "",
+  designation: "",
+  department: "",
+  dateOfJoining: undefined,
+  dateOfRetirement: undefined,
+  companyName: "",
+  companyAddress: "",
+  companyCity: "",
+  companyDistrict: "",
+  companyState: "",
+  companyPinCode: "",
+  companyLandMark: "",
+  companyPhone: "",
+  companyExtNo: "",
+  workExperience: "",
+  noOfEmployees: "",
+});
+
+// PERSON EMPLOYMENT SECTION (reused)
+const PersonEmploymentFields = ({ control, watch, prefix }) => {
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: `${prefix}.additionalOccupationalDetails`,
+  });
+
+  return (
+    <SectionCard title="Occupational Details" icon={Briefcase}>
+      <div className="space-y-6">
+        <p className="text-xs text-slate-400 mb-1">
+          Add additional occupational details if the applicant, co-applicant, or
+          guarantor has more than one occupation.
+        </p>
+
+        <div className="p-4 border border-slate-200 rounded-xl bg-white">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="font-semibold text-slate-700 text-sm">
+              Occupational Detail 1
+            </h4>
+          </div>
+          <OccupationalDetailFields
+            control={control}
+            watch={watch}
+            prefix={prefix}
+          />
+        </div>
+
+        {fields.map((field, index) => {
+          const itemPrefix = `${prefix}.additionalOccupationalDetails.${index}`;
+          return (
+            <div
+              key={field.id}
+              className="p-4 border border-slate-200 rounded-xl bg-white"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="font-semibold text-slate-700 text-sm">
+                  Occupational Detail {index + 2}
+                </h4>
+                <Button
+                  type="button"
+                  onClick={() => remove(index)}
+                  className="bg-red-50! text-red-600! border border-red-200 shadow-none! py-1.5! px-3! text-xs!"
+                >
+                  <Trash2 size={13} /> Remove
+                </Button>
+              </div>
+              <OccupationalDetailFields
+                control={control}
+                watch={watch}
+                prefix={itemPrefix}
+              />
+            </div>
+          );
+        })}
+
+        <Button
+          type="button"
+          onClick={() => append(occupationDefaults())}
+          className="mt-4 px-3 py-2 text-sm bg-blue-600 rounded"
+        >
+          <Plus size={13} /> Add Another Occupational Details
+        </Button>
+      </div>
+    </SectionCard>
   );
 };
 
@@ -1523,402 +1610,611 @@ const PersonFinancialFields = ({ control, watch, setValue, prefix }) => {
 };
 
 // SECTION: APPLICANT
-const ApplicantSection = ({ control, errors, mode = "all" }) => (
-  <div>
-    {(mode === "personal" || mode === "all") && (
-      <>
-        {/* <LeadFetch setValue={setValue} showToast={showToast} /> */}
-        <SectionCard title="Personal Information" icon={User}>
-          <div className="space-y-4">
-            <Grid cols={3}>
-              <Controller
-                name="applicant.title"
-                control={control}
-                render={({ field }) => (
-                  <SelectField
-                    label="Title"
-                    isRequired
-                    options={TITLE_OPTIONS}
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={errors.applicant?.title?.message}
-                  />
-                )}
-              />
-              <Controller
-                name="applicant.firstName"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="First Name"
-                    isRequired
-                    {...field}
-                    error={errors.applicant?.firstName?.message}
-                  />
-                )}
-              />
-              <Controller
-                name="applicant.middleName"
-                control={control}
-                render={({ field }) => (
-                  <InputField label="Middle Name" {...field} />
-                )}
-              />
-            </Grid>
-            <Grid cols={3}>
-              <Controller
-                name="applicant.lastName"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Last Name"
-                    isRequired
-                    {...field}
-                    error={errors.applicant?.lastName?.message}
-                  />
-                )}
-              />
-              <Controller
-                name="applicant.fatherName"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Father's Name"
-                    isRequired
-                    {...field}
-                    error={errors.applicant?.fatherName?.message}
-                  />
-                )}
-              />
-              <Controller
-                name="applicant.motherName"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Mother's Name"
-                    isRequired
-                    {...field}
-                    error={errors.applicant?.motherName?.message}
-                  />
-                )}
-              />
-            </Grid>
-            <Controller
-              name="applicant.woname"
-              control={control}
-              render={({ field }) => <InputField label="W/o" {...field} />}
-            />
-            <Grid cols={3}>
-              <Controller
-                name="applicant.dob"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Date of Birth"
-                    type="date"
-                    isRequired
-                    {...field}
-                    error={errors.applicant?.dob?.message}
-                  />
-                )}
-              />
-              <Controller
-                name="applicant.gender"
-                control={control}
-                render={({ field }) => (
-                  <SelectField
-                    label="Gender"
-                    isRequired
-                    options={GENDER_OPTIONS}
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={errors.applicant?.gender?.message}
-                  />
-                )}
-              />
-              <Controller
-                name="applicant.nationality"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Nationality"
-                    isRequired
-                    {...field}
-                    error={errors.applicant?.nationality?.message}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid cols={2}>
-              <Controller
-                name="applicant.category"
-                control={control}
-                render={({ field }) => (
-                  <SelectField
-                    label="Category"
-                    isRequired
-                    options={CATEGORY_OPTIONS}
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={errors.applicant?.category?.message}
-                  />
-                )}
-              />
-              <Controller
-                name="applicant.maritalStatus"
-                control={control}
-                render={({ field }) => (
-                  <SelectField
-                    label="Marital Status"
-                    isRequired
-                    options={MARITAL_OPTIONS}
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={errors.applicant?.maritalStatus?.message}
-                  />
-                )}
-              />
-            </Grid>
+const ApplicantSection = ({
+  control,
+  errors,
+  watch,
+  setValue,
+  loanTypeOptions,
+  mode = "all",
+}) => {
+  const [leadQuery, setLeadQuery] = useState("");
+  const [aadhaarQuery, setAadhaarQuery] = useState("");
+  const [searching, setSearching] = useState(false);
+  const leadQueryHook = useGetLead(leadQuery, { enabled: false });
 
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
-              No. of Family Dependents
-            </p>
-            <Grid>
-              <Controller
-                name="applicant.noOfFamilyDependentsChildren"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Children"
-                    type="number"
-                    placeholder="0"
-                    {...field}
-                  />
-                )}
-              />
-              <Controller
-                name="applicant.noOfFamilyDependentsOther"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Others"
-                    type="number"
-                    placeholder="0"
-                    {...field}
-                  />
-                )}
-              />
-            </Grid>
+  const fillApplicant = (data) => {
+    if (!data) return;
+    // map common fields if present
+    const m = (path, val) => setValue(path, val);
+    // name: prefer parsed fullName from lead, else individual fields
+    const fullName = data.fullName || data.name || "";
+    if (fullName) {
+      const parts = String(fullName).trim().split(/\s+/);
+      m("applicant.firstName", parts.shift() || "");
+      m(
+        "applicant.middleName",
+        parts.length > 1 ? parts.slice(0, -1).join(" ") : "",
+      );
+      m("applicant.lastName", parts.length ? parts.slice(-1).join(" ") : "");
+    } else {
+      m("applicant.firstName", data.firstName || "");
+      m("applicant.middleName", data.middleName || "");
+      m("applicant.lastName", data.lastName || "");
+    }
+    m("applicant.fatherName", data.fatherName || "");
+    m("applicant.motherName", data.motherName || "");
+    if (data.dob) {
+      const d = typeof data.dob === "string" ? new Date(data.dob) : data.dob;
+      const dateStr =
+        d instanceof Date && !isNaN(d.getTime())
+          ? d.toISOString().split("T")[0]
+          : "";
+      m("applicant.dob", dateStr);
+    }
+    if (data.gender) m("applicant.gender", data.gender);
+    if (data.nationality) m("applicant.nationality", data.nationality);
+    if (data.category) m("applicant.category", data.category);
+    if (data.contactNumber)
+      m("applicant.contactNumber", String(data.contactNumber));
+    if (data.alternateNumber)
+      m("applicant.alternateNumber", String(data.alternateNumber));
+    if (data.email) m("applicant.email", data.email);
+    if (data.aadhaarNumber)
+      m("applicant.aadhaarNumber", String(data.aadhaarNumber));
+    if (data.panNumber) m("applicant.panNumber", data.panNumber);
+    if (data.presentAccommodation)
+      m("applicant.presentAccommodation", data.presentAccommodation);
+    // Address mapping (best-effort)
+    if (data.address) {
+      // backend may return address as string or object
+      if (typeof data.address === "string") {
+        m("addresses.currentAddress.addressLine1", data.address);
+      } else {
+        m(
+          "addresses.currentAddress.addressLine1",
+          data.address.addressLine1 || data.address.line1 || "",
+        );
+      }
+      m(
+        "addresses.currentAddress.city",
+        data.city || (data.address && data.address.city) || "",
+      );
+      m(
+        "addresses.currentAddress.district",
+        (data.address && data.address.district) || "",
+      );
+      m(
+        "addresses.currentAddress.state",
+        data.state || (data.address && data.address.state) || "",
+      );
+      m(
+        "addresses.currentAddress.pinCode",
+        data.pinCode ||
+          (data.address && (data.address.pinCode || data.address.postal)) ||
+          "",
+      );
+      m(
+        "addresses.currentAddress.phoneNumber",
+        data.contactNumber ||
+          (data.address && (data.address.phoneNumber || data.address.phone)) ||
+          "",
+      );
+    }
 
-            <Grid cols={2}>
-              <Controller
-                name="applicant.correspondenceAddress"
-                control={control}
-                render={({ field }) => (
-                  <SelectField
-                    label="Correspondence Address"
-                    options={CORRESPONDENCE_OPTIONS}
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={errors.applicant?.correspondenceAddress?.message}
-                  />
-                )}
-              />
-              <Controller
-                name="applicant.qualification"
-                control={control}
-                render={({ field }) => (
-                  <SelectField
-                    label="Qualification"
-                    options={[
-                      { value: "MATRIC", label: "Matriculation" },
-                      { value: "INTERMEDIATE", label: "Intermediate" },
-                      { value: "GRADUATE", label: "Graduate" },
-                      { value: "POSTGRADUATE", label: "Post Graduate" },
-                      { value: "DOCTORATE", label: "Doctorate" },
-                      { value: "OTHER", label: "Other" },
-                    ]}
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={errors.applicant?.qualification?.message}
-                  />
-                )}
-              />
-            </Grid>
-          </div>
-        </SectionCard>
-      </>
-    )}
+    // loan-related mappings: loan amount and loan type
+    if (data.loanAmount !== undefined && data.loanAmount !== null) {
+      m("loanRequirement.loanAmount", Number(data.loanAmount));
+    }
+    if (data.loanType && data.loanType.id) {
+      m("loanTypeId", data.loanType.id);
+    }
+  };
 
-    {(mode === "contact" || mode === "all") && (
-      <>
-        <SectionCard title="Contact Details" icon={Phone}>
-          <div className="space-y-4">
-            <Grid>
-              <Controller
-                name="applicant.contactNumber"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Mobile Number"
-                    type="tel"
-                    isRequired
-                    icon={Phone}
-                    hint="10-digit"
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value.replace(/\D/g, "").slice(0, 10),
-                      )
-                    }
-                    error={errors.applicant?.contactNumber?.message}
-                  />
-                )}
-              />
-              <Controller
-                name="applicant.alternateNumber"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Alternate Number"
-                    type="tel"
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value.replace(/\D/g, "").slice(0, 10),
-                      )
-                    }
-                  />
-                )}
-              />
-            </Grid>
-            <Controller
-              name="applicant.email"
-              control={control}
-              render={({ field }) => (
+  const handleLeadSearch = async () => {
+    if (!leadQuery) return showInfo("Enter a lead number to search");
+    setSearching(true);
+    try {
+      const r = await leadQueryHook.refetch();
+      const item = r?.data ?? null;
+      if (!item) throw new Error("Lead not found");
+      fillApplicant(item);
+      showSuccess("Lead details loaded");
+    } catch (err) {
+      showError(err?.message || "Lead not found");
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  // const handleAadhaarSearch = async () => {
+  //   if (!aadhaarQuery) return showInfo("Enter Aadhaar to search");
+  //   try {
+  //     setSearching(true);
+  //     const res = await api.get(`/customers`, {
+  //       params: { aadhaar: aadhaarQuery },
+  //     });
+  //     fillApplicant(res.data?.data || res.data || {});
+  //     showSuccess("Customer details loaded");
+  //   } catch (err) {
+  //     showError(err?.response?.data?.message || "No record found for Aadhaar");
+  //   } finally {
+  //     setSearching(false);
+  //   }
+  // };
+
+  return (
+    <div>
+      {(mode === "personal" || mode === "all") && (
+        <>
+          <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {/* give a serach option to search Lead Number . On click of search, fetch details and prefill the form. Allow user to edit the prefilled details. */}
+            <div className="flex items-end gap-3">
+              <div className="flex-1">
                 <InputField
-                  label="Email Address"
-                  type="email"
-                  {...field}
-                  error={errors.applicant?.email?.message}
+                  label="Search by Lead Number"
+                  value={leadQuery}
+                  onChange={(e) => setLeadQuery(e.target.value)}
+                  placeholder="Enter Lead Number"
                 />
-              )}
-            />
-            <Controller
-              name="applicant.presentAccommodation"
-              control={control}
-              render={({ field }) => (
-                <SelectField
-                  label="Accommodation Type"
-                  isRequired
-                  options={ACCOMMODATION_OPTIONS}
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors?.applicant?.presentAccommodation?.message}
+              </div>
+              <div className="mt-6">
+                <Button
+                  type="button"
+                  onClick={handleLeadSearch}
+                  disabled={searching}
+                >
+                  {searching ? "Searching..." : "Search"}
+                </Button>
+              </div>
+            </div>
+            {/* Give a serach option to fetch details using Aadhaar . On click of search, fetch details and prefill the form. Allow user to edit the prefilled details. */}
+            <div className="flex items-end gap-3">
+              <div className="flex-1">
+                <InputField
+                  label="Search by Aadhaar"
+                  value={aadhaarQuery}
+                  onChange={(e) =>
+                    setAadhaarQuery(
+                      e.target.value.replace(/\D/g, "").slice(0, 12),
+                    )
+                  }
+                  placeholder="Enter 12-digit Aadhaar"
                 />
-              )}
-            />
-            <Grid>
-              <Controller
-                name="applicant.periodOfStay"
-                control={control}
-                render={({ field }) => (
-                  <InputField label="Period of Stay" {...field} />
-                )}
-              />
-              <Controller
-                name="applicant.rentPerMonth"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="If Rented Rent p.m. (₹)"
-                    type="number"
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid cols={3}>
-              <Controller
-                name="applicant.passportNumber"
-                control={control}
-                render={({ field }) => (
-                  <InputField label="Passport No." {...field} />
-                )}
-              />
-              <Controller
-                name="applicant.panNumber"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="PAN No."
-                    isRequired
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(e.target.value.toUpperCase().slice(0, 10))
-                    }
-                    error={errors.applicant?.panNumber?.message}
-                  />
-                )}
-              />
-              <Controller
-                name="applicant.drivingLicenceNo"
-                control={control}
-                render={({ field }) => (
-                  <InputField label="Driving Licence No." {...field} />
-                )}
-              />
-            </Grid>
-            <Grid cols={2}>
-              {/* Aadhaar Number (Required) */}
-              <Controller
-                name="applicant.aadhaarNumber"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Aadhaar Number"
-                    isRequired
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value.replace(/\D/g, "").slice(0, 12),
-                      )
-                    }
-                    error={errors.applicant?.aadhaarNumber?.message}
-                    placeholder="Enter 12-digit Aadhaar Number"
-                  />
-                )}
-              />
-              {/* Voter ID (Optional) */}
-              <Controller
-                name="applicant.voterId"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Voter ID"
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value
-                          .replace(/[^a-zA-Z0-9]/g, "")
-                          .slice(0, 15),
-                      )
-                    }
-                    error={errors.applicant?.voterId?.message}
-                    placeholder="Enter Voter ID "
-                  />
-                )}
-              />
-            </Grid>
+              </div>
+              <div className="mt-6">
+                <Button
+                  type="button"
+                  // onClick={handleAadhaarSearch}
+                  disabled={searching}
+                >
+                  {searching ? "Searching..." : "Search"}
+                </Button>
+              </div>
+            </div>
           </div>
-        </SectionCard>
-      </>
-    )}
-  </div>
-);
 
-// SECTION: ADDRESS (standalone applicant address)
+          {/* <LeadFetch setValue={setValue} showToast={showToast} /> */}
+          <SectionCard title="Personal Information" icon={User}>
+            <div className="space-y-4">
+              <Grid cols={3}>
+                <Controller
+                  name="applicant.title"
+                  control={control}
+                  render={({ field }) => (
+                    <SelectField
+                      label="Title"
+                      isRequired
+                      options={TITLE_OPTIONS}
+                      value={field.value}
+                      onChange={field.onChange}
+                      error={errors.applicant?.title?.message}
+                    />
+                  )}
+                />
+                <Controller
+                  name="applicant.firstName"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="First Name"
+                      isRequired
+                      {...field}
+                      error={errors.applicant?.firstName?.message}
+                    />
+                  )}
+                />
+                <Controller
+                  name="applicant.middleName"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField label="Middle Name" {...field} />
+                  )}
+                />
+              </Grid>
+              <Grid cols={3}>
+                <Controller
+                  name="applicant.lastName"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Last Name"
+                      isRequired
+                      {...field}
+                      error={errors.applicant?.lastName?.message}
+                    />
+                  )}
+                />
+                <Controller
+                  name="applicant.fatherName"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Father's Name"
+                      isRequired
+                      {...field}
+                      error={errors.applicant?.fatherName?.message}
+                    />
+                  )}
+                />
+                <Controller
+                  name="applicant.motherName"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Mother's Name"
+                      isRequired
+                      {...field}
+                      error={errors.applicant?.motherName?.message}
+                    />
+                  )}
+                />
+              </Grid>
+              <Controller
+                name="applicant.woname"
+                control={control}
+                render={({ field }) => <InputField label="W/o" {...field} />}
+              />
+              <Grid cols={3}>
+                <Controller
+                  name="applicant.dob"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Date of Birth"
+                      type="date"
+                      isRequired
+                      {...field}
+                      error={errors.applicant?.dob?.message}
+                    />
+                  )}
+                />
+                <Controller
+                  name="applicant.gender"
+                  control={control}
+                  render={({ field }) => (
+                    <SelectField
+                      label="Gender"
+                      isRequired
+                      options={GENDER_OPTIONS}
+                      value={field.value}
+                      onChange={field.onChange}
+                      error={errors.applicant?.gender?.message}
+                    />
+                  )}
+                />
+                <Controller
+                  name="applicant.nationality"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Nationality"
+                      isRequired
+                      {...field}
+                      error={errors.applicant?.nationality?.message}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid cols={2}>
+                <Controller
+                  name="applicant.category"
+                  control={control}
+                  render={({ field }) => (
+                    <SelectField
+                      label="Category"
+                      isRequired
+                      options={CATEGORY_OPTIONS}
+                      value={field.value}
+                      onChange={field.onChange}
+                      error={errors.applicant?.category?.message}
+                    />
+                  )}
+                />
+                <Controller
+                  name="applicant.maritalStatus"
+                  control={control}
+                  render={({ field }) => (
+                    <SelectField
+                      label="Marital Status"
+                      isRequired
+                      options={MARITAL_OPTIONS}
+                      value={field.value}
+                      onChange={field.onChange}
+                      error={errors.applicant?.maritalStatus?.message}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
+                No. of Family Dependents
+              </p>
+              <Grid>
+                <Controller
+                  name="applicant.noOfFamilyDependentsChildren"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Children"
+                      type="number"
+                      placeholder="0"
+                      {...field}
+                    />
+                  )}
+                />
+                <Controller
+                  name="applicant.noOfFamilyDependentsOther"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Others"
+                      type="number"
+                      placeholder="0"
+                      {...field}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid cols={2}>
+                <Controller
+                  name="applicant.correspondenceAddress"
+                  control={control}
+                  render={({ field }) => (
+                    <SelectField
+                      label="Correspondence Address"
+                      options={CORRESPONDENCE_OPTIONS}
+                      value={field.value}
+                      onChange={field.onChange}
+                      error={errors.applicant?.correspondenceAddress?.message}
+                    />
+                  )}
+                />
+                <Controller
+                  name="applicant.qualification"
+                  control={control}
+                  render={({ field }) => (
+                    <SelectField
+                      label="Qualification"
+                      options={[
+                        { value: "MATRIC", label: "Matriculation" },
+                        { value: "INTERMEDIATE", label: "Intermediate" },
+                        { value: "GRADUATE", label: "Graduate" },
+                        { value: "POSTGRADUATE", label: "Post Graduate" },
+                        { value: "DOCTORATE", label: "Doctorate" },
+                        { value: "OTHER", label: "Other" },
+                      ]}
+                      value={field.value}
+                      onChange={field.onChange}
+                      error={errors.applicant?.qualification?.message}
+                    />
+                  )}
+                />
+              </Grid>
+            </div>
+          </SectionCard>
+
+          <SectionCard title="Contact Details" icon={Phone}>
+            <div className="space-y-4">
+              <Grid>
+                <Controller
+                  name="applicant.contactNumber"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Mobile Number"
+                      type="tel"
+                      isRequired
+                      icon={Phone}
+                      hint="10-digit"
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value.replace(/\D/g, "").slice(0, 10),
+                        )
+                      }
+                      error={errors.applicant?.contactNumber?.message}
+                    />
+                  )}
+                />
+                <Controller
+                  name="applicant.alternateNumber"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Alternate Number"
+                      type="tel"
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value.replace(/\D/g, "").slice(0, 10),
+                        )
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+              <Controller
+                name="applicant.email"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Email Address"
+                    type="email"
+                    {...field}
+                    error={errors.applicant?.email?.message}
+                  />
+                )}
+              />
+              <Controller
+                name="applicant.presentAccommodation"
+                control={control}
+                render={({ field }) => (
+                  <SelectField
+                    label="Accommodation Type"
+                    isRequired
+                    options={ACCOMMODATION_OPTIONS}
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors?.applicant?.presentAccommodation?.message}
+                  />
+                )}
+              />
+              <Grid>
+                <Controller
+                  name="applicant.periodOfStay"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField label="Period of Stay" {...field} />
+                  )}
+                />
+                <Controller
+                  name="applicant.rentPerMonth"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="If Rented Rent p.m. (₹)"
+                      type="number"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid cols={3}>
+                <Controller
+                  name="applicant.passportNumber"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField label="Passport No." {...field} />
+                  )}
+                />
+                <Controller
+                  name="applicant.panNumber"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="PAN No."
+                      isRequired
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value.toUpperCase().slice(0, 10),
+                        )
+                      }
+                      error={errors.applicant?.panNumber?.message}
+                    />
+                  )}
+                />
+                <Controller
+                  name="applicant.drivingLicenceNo"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField label="Driving Licence No." {...field} />
+                  )}
+                />
+              </Grid>
+              <Grid cols={2}>
+                {/* Aadhaar Number (Required) */}
+                <Controller
+                  name="applicant.aadhaarNumber"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Aadhaar Number"
+                      isRequired
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value.replace(/\D/g, "").slice(0, 12),
+                        )
+                      }
+                      error={errors.applicant?.aadhaarNumber?.message}
+                      placeholder="Enter 12-digit Aadhaar Number"
+                    />
+                  )}
+                />
+                {/* Voter ID (Optional) */}
+                <Controller
+                  name="applicant.voterId"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      label="Voter ID"
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value
+                            .replace(/[^a-zA-Z0-9]/g, "")
+                            .slice(0, 15),
+                        )
+                      }
+                      error={errors.applicant?.voterId?.message}
+                      placeholder="Enter Voter ID "
+                    />
+                  )}
+                />
+              </Grid>
+            </div>
+          </SectionCard>
+
+          <AddressSection
+            control={control}
+            errors={errors}
+            watch={watch}
+            setValue={setValue}
+          />
+
+          <PersonEmploymentFields
+            control={control}
+            watch={watch}
+            prefix="applicant"
+          />
+
+          <LoanRequirementSection
+            control={control}
+            errors={errors}
+            watch={watch}
+            setValue={setValue}
+            loanTypeOptions={loanTypeOptions}
+          />
+
+          <SectionCard title="Financial Status — Income" icon={IndianRupee}>
+            <PersonFinancialFields
+              control={control}
+              watch={watch}
+              setValue={setValue}
+              prefix="applicant"
+            />
+          </SectionCard>
+        </>
+      )}
+    </div>
+  );
+};
+
+// // SECTION: ADDRESS (standalone applicant address)
 const AddressSection = ({ control, errors, watch, setValue }) => {
   const sameAddress = watch("sameAsCurrent");
   const copyCurrent = useCallback(() => {
@@ -2184,19 +2480,14 @@ const CoApplicantSection = ({
             control={control}
             prefix={`coApplicants.${index}`}
             watch={watch}
+            setValue={setValue}
           />
         </SectionCard>
-        <SectionCard
-          title={`Co-Applicant ${index + 1} — Occupational Details`}
-          icon={Briefcase}
-          accentColor="indigo"
-        >
-          <PersonEmploymentFields
-            control={control}
-            watch={watch}
-            prefix={`coApplicants.${index}`}
-          />
-        </SectionCard>
+        <PersonEmploymentFields
+          control={control}
+          watch={watch}
+          prefix={`coApplicants.${index}`}
+        />
         <SectionCard
           title={`Co-Applicant ${index + 1} — Financial Status`}
           icon={TrendingUp}
@@ -2269,19 +2560,14 @@ const GuarantorSection = ({
             control={control}
             prefix={`guarantors.${index}`}
             watch={watch}
+            setValue={setValue}
           />
         </SectionCard>
-        <SectionCard
-          title={`Guarantor ${index + 1} — Occupational Details`}
-          icon={Briefcase}
-          accentColor="amber"
-        >
-          <PersonEmploymentFields
-            control={control}
-            watch={watch}
-            prefix={`guarantors.${index}`}
-          />
-        </SectionCard>
+        <PersonEmploymentFields
+          control={control}
+          watch={watch}
+          prefix={`guarantors.${index}`}
+        />
         <SectionCard
           title={`Guarantor ${index + 1} — Financial Status`}
           icon={BarChart3}
@@ -3326,17 +3612,7 @@ const AdditionalSection = ({ control, watch, setValue }) => {
                     )}
                   />
 
-                  <Controller
-                    name={`properties.${i}.loanTypeId`}
-                    control={control}
-                    render={({ field }) => (
-                      <InputField label="Loan Type" as="select" {...field}>
-                        <option value="">Select</option>
-                        <option value="FREEHOLD">Freehold</option>
-                        <option value="LEASEHOLD">Leasehold</option>
-                      </InputField>
-                    )}
-                  />
+                  {/* Removed duplicate Loan Type field (landType covers Freehold/Leasehold) */}
                   <Controller
                     name={`properties.${i}.landType`}
                     control={control}
@@ -3489,7 +3765,7 @@ const AdditionalSection = ({ control, watch, setValue }) => {
                     {[true, false].map((v) => (
                       <label
                         key={String(v)}
-                        className={`... ${field.value === v ? "bg-blue-50 border-blue-400 text-blue-700" : ""}`}
+                        className={`... ${field.value === v ? "bg-blue-50 px-2 py-1 border-blue-400 text-blue-700" : ""}`}
                       >
                         <input
                           type="radio"
@@ -4072,6 +4348,26 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
     const toNumber = (val) =>
       val === "" || val === null || val === undefined ? undefined : Number(val);
 
+    const formatDate = (val) => {
+      if (!val && val !== 0) return undefined;
+      if (typeof val === "string") return val;
+      if (val instanceof Date) return val.toISOString().split("T")[0];
+      try {
+        const d = new Date(val);
+        if (!isNaN(d)) return d.toISOString().split("T")[0];
+      } catch {
+        /* ignore */
+      }
+      return undefined;
+    };
+
+    const toPhoneString = (v) => {
+      if (v === undefined || v === null) return undefined;
+      // Strip non-digits and keep as string
+      const s = String(v).replace(/\D/g, "");
+      return s || undefined;
+    };
+
     // Utility to normalize boolean-like values
     const toBoolean = (val) => {
       if (typeof val === "boolean") return val;
@@ -4083,33 +4379,102 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
     };
 
     const mapEmploymentType = (type) => {
-      switch (type) {
-        case "salaried":
+      switch (
+        String(type || "")
+          .trim()
+          .toUpperCase()
+      ) {
+        case "SALARIED":
           return "SALARIED";
-        case "business":
+        case "BUSINESS":
           return "BUSINESS";
-        case "professional":
+        case "PROFESSIONAL":
           return "PROFESSIONAL";
         default:
           return "OTHER";
       }
     };
 
+    const hasMeaningfulValue = (value) =>
+      value !== "" && value !== null && value !== undefined;
+
+    const buildOccupationEntry = (person) => {
+      const address = {
+        addressLine1: person.companyAddress,
+        city: person.companyCity,
+        district: person.companyDistrict,
+        state: person.companyState,
+        pinCode: person.companyPinCode,
+        landmark: person.companyLandMark,
+        phoneNumber: toPhoneString(person.companyPhone),
+      };
+
+      return {
+        occupationalCategory: mapEmploymentType(person.employmentType),
+        occupationalCategoryOther: person.occupationalCategoryOther,
+        companyBusinessName: person.companyName,
+        address: Object.values(address).some(hasMeaningfulValue)
+          ? address
+          : undefined,
+        phoneNumber: toPhoneString(person.companyPhone),
+        extensionNumber: person.companyExtNo,
+        totalWorkExperience: toNumber(person.workExperience),
+        noOfEmployees: toNumber(person.noOfEmployees),
+        commencementDate: formatDate(person.commencementDate) || undefined,
+        professionalType: person.professionalType,
+        professionalSpecify: person.professionalTypeOther,
+        businessType: person.businessType,
+        businessSpecify: person.businessTypeOther,
+      };
+    };
+
+    const buildEmploymentEntry = (person) => ({
+      employerType: person.salariedWorkingFor,
+      employerTypeOther: person.salariedWorkingForOther,
+      designation: person.designation,
+      department: person.department,
+      dateOfJoining: formatDate(person.dateOfJoining) || undefined,
+      dateOfRetirement: formatDate(person.dateOfRetirement) || undefined,
+    });
+
+    const buildOccupationalDetails = (person) => {
+      const additionalEntries = cleanArray(
+        person?.additionalOccupationalDetails,
+      );
+      return cleanArray(
+        [person, ...additionalEntries].map(buildOccupationEntry),
+      );
+    };
+
+    const buildEmploymentDetails = (person) => {
+      const additionalEntries = cleanArray(
+        person?.additionalOccupationalDetails,
+      );
+      return cleanArray(
+        [person, ...additionalEntries].map(buildEmploymentEntry),
+      );
+    };
+
     return {
       loanTypeId: data.loanTypeId,
-      applicant: data.applicant,
+      applicant: { ...data.applicant, dob: formatDate(data.applicant?.dob) },
       addresses: data.addresses,
-      occupationalDetails: {
-        occupationalCategory: mapEmploymentType(data.applicant?.employmentType),
-      },
-      employmentDetails: {
-        ...data.employmentDetails,
-        employerType: data.applicant?.salariedWorkingFor,
-      },
+      occupationalDetails: buildOccupationalDetails(data.applicant),
+      employmentDetails: buildEmploymentDetails(data.applicant),
       financialDetails: data.financialDetails,
 
-      coApplicants: cleanArray(data.coApplicants),
-      guarantors: cleanArray(data.guarantors),
+      coApplicants: cleanArray(data.coApplicants).map((person) => ({
+        ...person,
+        dob: formatDate(person?.dob),
+        occupationalDetails: buildOccupationalDetails(person),
+        employmentDetails: buildEmploymentDetails(person),
+      })),
+      guarantors: cleanArray(data.guarantors).map((person) => ({
+        ...person,
+        dob: formatDate(person?.dob),
+        occupationalDetails: buildOccupationalDetails(person),
+        employmentDetails: buildEmploymentDetails(person),
+      })),
 
       existingLoans: cleanArray(data.existingLoans),
 
@@ -4166,8 +4531,24 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
   const submitToBackend = (data) => {
     setIsSubmitting(true);
     const payload = normalizePayload(data);
-    // console.log("FINAL CLEAN PAYLOAD:", payload);
-    createLoanApplication(payload, {
+    // Ensure Date objects are serialized to ISO date strings (YYYY-MM-DD)
+    const serializeDates = (obj) => {
+      if (obj === null || obj === undefined) return obj;
+      if (obj instanceof Date) return obj.toISOString().split("T")[0];
+      if (Array.isArray(obj)) return obj.map(serializeDates);
+      if (typeof obj === "object") {
+        const out = {};
+        for (const k of Object.keys(obj)) {
+          out[k] = serializeDates(obj[k]);
+        }
+        return out;
+      }
+      return obj;
+    };
+
+    const serializedPayload = serializeDates(payload);
+    // console.log("FINAL CLEAN PAYLOAD:", serializedPayload);
+    createLoanApplication(serializedPayload, {
       onSettled: () => setIsSubmitting(false),
     });
   };
@@ -4229,26 +4610,37 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
     }
   };
 
-  const saveDraft = useCallback(() => {
-    try {
-      localStorage.setItem(
-        DRAFT_KEY,
-        JSON.stringify({
-          values: getValues(),
-          completedSteps,
-          currentStep,
-        }),
-      );
-      showToast(
-        `Draft saved — "${STEPS.find((s) => s.id === currentStep)?.label}"`,
-        "draft",
-      );
-    } catch {
-      showToast("Failed to save draft", "error");
-    }
-  }, [getValues, completedSteps, currentStep, showToast]);
+  const saveDraft = useCallback(
+    (override = {}) => {
+      const nextCompletedSteps = override.completedSteps ?? completedSteps;
+      const nextCurrentStep = override.currentStep ?? currentStep;
+      try {
+        localStorage.setItem(
+          DRAFT_KEY,
+          JSON.stringify({
+            values: getValues(),
+            completedSteps: nextCompletedSteps,
+            currentStep: nextCurrentStep,
+          }),
+        );
+        showToast(
+          `Draft saved — "${STEPS.find((s) => s.id === nextCurrentStep)?.label}"`,
+          "draft",
+        );
+      } catch {
+        showToast("Failed to save draft", "error");
+      }
+    },
+    [getValues, completedSteps, currentStep, showToast],
+  );
 
   const currentIdx = STEPS.findIndex((s) => s.id === currentStep);
+
+  useEffect(() => {
+    if (currentIdx === -1) {
+      setCurrentStep(STEPS[0].id);
+    }
+  }, [currentIdx]);
 
   const goNext = useCallback(async () => {
     const fields = STEP_FIELDS[currentStep] || [];
@@ -4272,14 +4664,19 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
       showError(errorMsg);
       return;
     }
-    if (!completedSteps.includes(currentStep)) {
-      setCompletedSteps((prev) => [...prev, currentStep]);
-    }
+    const nextCompletedSteps = completedSteps.includes(currentStep)
+      ? completedSteps
+      : [...completedSteps, currentStep];
+    setCompletedSteps(nextCompletedSteps);
+    saveDraft({
+      completedSteps: nextCompletedSteps,
+      currentStep,
+    });
     if (currentIdx < STEPS.length - 1) {
       setCurrentStep(STEPS[currentIdx + 1].id);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [currentStep, completedSteps, currentIdx, trigger, errors]);
+  }, [currentStep, completedSteps, currentIdx, trigger, errors, saveDraft]);
 
   const goPrev = useCallback(() => {
     if (currentIdx > 0) {
@@ -4288,9 +4685,41 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
     }
   }, [currentIdx]);
 
+  const flattenErrors = (obj, prefix = "") => {
+    const res = [];
+    if (!obj) return res;
+    if (Array.isArray(obj)) {
+      obj.forEach((item, idx) => {
+        const childPrefix = prefix ? `${prefix}[${idx}]` : `[${idx}]`;
+        if (item && typeof item === "object") {
+          res.push(...flattenErrors(item, childPrefix));
+        }
+      });
+      return res;
+    }
+    if (typeof obj === "object") {
+      for (const key of Object.keys(obj)) {
+        const val = obj[key];
+        const path = prefix ? `${prefix}.${key}` : key;
+        if (val && typeof val === "object" && "message" in val && val.message) {
+          res.push(`${path}: ${val.message}`);
+        } else if (val && typeof val === "object") {
+          res.push(...flattenErrors(val, path));
+        }
+      }
+    }
+    return res;
+  };
+
   const onSubmit = handleSubmit(submitToBackend, (errs) => {
-    console.log("FULL ERRORS:", JSON.stringify(errs, null, 2));
-    showToast("Please complete all required fields", "error");
+    const details = flattenErrors(errs);
+    if (details.length) {
+      const preview = details.slice(0, 5).join(" • ");
+      const more = details.length > 5 ? ` (+${details.length - 5} more)` : "";
+      showToast(`${preview}${more}`, "error");
+    } else {
+      showToast("Please complete all required fields", "error");
+    }
   });
 
   if (submitted) {
@@ -4316,398 +4745,11 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
             errors={errors}
             watch={watch}
             setValue={setValue}
+            loanTypeOptions={loanTypeOptions}
             showToast={showToast}
-            mode="personal"
+            mode="all"
           />
         );
-      case "applicantContact":
-        return (
-          <ApplicantSection
-            control={control}
-            errors={errors}
-            watch={watch}
-            setValue={setValue}
-            showToast={showToast}
-            mode="contact"
-          />
-        );
-
-      case "occupational":
-        return (
-          <SectionCard title="Occupational Details" icon={Briefcase}>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4 items-center">
-                <Controller
-                  name="applicant.employmentType"
-                  control={control}
-                  render={({ field }) => (
-                    <SelectField
-                      label="Occupational Category"
-                      isRequired
-                      options={[
-                        { label: "Salaried", value: "SALARIED" },
-                        { label: "Business", value: "BUSINESS" },
-                        { label: "Professional", value: "PROFESSIONAL" },
-                        { label: "Other", value: "OTHER" },
-                      ]}
-                      value={field.value}
-                      onChange={(val) => {
-                        field.onChange(val);
-                        // Reset subcategory and specify fields when main category changes
-                        setValue("applicant.professionalType", undefined);
-                        setValue("applicant.professionalTypeOther", "");
-                        setValue("applicant.businessType", undefined);
-                        setValue("applicant.businessTypeOther", "");
-                        setValue("applicant.salariedWorkingFor", undefined);
-                        setValue("applicant.salariedTypeOther", "");
-                      }}
-                      error={errors?.applicant?.employmentType?.message}
-                    />
-                  )}
-                />
-                {/* Working For Dropdown (conditionally rendered) */}
-                {watch("applicant.employmentType") === "SALARIED" && (
-                  <div>
-                    <Controller
-                      name="applicant.salariedWorkingFor"
-                      control={control}
-                      render={({ field }) => (
-                        <SelectField
-                          label="Working For"
-                          options={SALARIED_WORKING_FOR}
-                          value={field.value}
-                          onChange={(val) => {
-                            field.onChange(val);
-                            if (val !== "other")
-                              setValue("applicant.salariedTypeOther", "");
-                          }}
-                          error={errors?.applicant?.salariedWorkingFor?.message}
-                        />
-                      )}
-                    />
-                    {/* {watch("applicant.salariedType") === "other" && (
-                      <Controller
-                        name="applicant.salariedTypeOther"
-                        control={control}
-                        render={({ field }) => (
-                          <InputField
-                            label="Please Specify Working For"
-                            {...field}
-                          />
-                        )}
-                      />
-                    )} */}
-                  </div>
-                )}
-              </div>
-              {/* Conditional Professional Subcategory */}
-              {watch("applicant.employmentType") === "professional" && (
-                <>
-                  <Controller
-                    name="applicant.professionalType"
-                    control={control}
-                    render={({ field }) => (
-                      <SelectField
-                        label="Professional Type"
-                        options={[
-                          { label: "Doctor", value: "doctor" },
-                          { label: "CA/ICWA/CS", value: "ca_icwa_cs" },
-                          { label: "Architect", value: "architect" },
-                          { label: "Other", value: "other" },
-                        ]}
-                        value={field.value}
-                        onChange={(val) => {
-                          field.onChange(val);
-                          if (val !== "other")
-                            setValue("applicant.professionalTypeOther", "");
-                        }}
-                        error={errors?.applicant?.professionalType?.message}
-                      />
-                    )}
-                  />
-                  {watch("applicant.professionalType") === "other" && (
-                    <Controller
-                      name="applicant.professionalTypeOther"
-                      control={control}
-                      render={({ field }) => (
-                        <InputField
-                          label="Please Specify Professional Type"
-                          {...field}
-                        />
-                      )}
-                    />
-                  )}
-                </>
-              )}
-              {/* Conditional Salaried Subcategory */}
-              {watch("applicant.employmentType") === "SALARIED" && (
-                <>
-                  <div className="grid grid-cols-2 gap-4 items-center">
-                    <div>
-                      {watch("applicant.salariedType") === "other" && (
-                        <Controller
-                          name="applicant.salariedTypeOther"
-                          control={control}
-                          render={({ field }) => (
-                            <InputField
-                              label="Please Specify Working For"
-                              {...field}
-                            />
-                          )}
-                        />
-                      )}
-                    </div>
-                  </div>
-                  <Grid>
-                    <Controller
-                      name="applicant.salariedDesignation"
-                      control={control}
-                      render={({ field }) => (
-                        <InputField label="Designation" {...field} />
-                      )}
-                    />
-                    <Controller
-                      name="applicant.salariedDepartment"
-                      control={control}
-                      render={({ field }) => (
-                        <InputField label="Department" {...field} />
-                      )}
-                    />
-                  </Grid>
-                  <Grid>
-                    <Controller
-                      name="applicant.salariedDateOfJoining"
-                      control={control}
-                      render={({ field }) => (
-                        <InputField
-                          label="Date of Joining"
-                          type="date"
-                          value={
-                            field.value
-                              ? new Date(field.value)
-                                  .toISOString()
-                                  .split("T")[0]
-                              : ""
-                          }
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.value
-                                ? new Date(e.target.value)
-                                : undefined,
-                            )
-                          }
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="applicant.salariedDateOfRetirement"
-                      control={control}
-                      render={({ field }) => (
-                        <InputField
-                          label="Date of Retirement"
-                          type="date"
-                          value={
-                            field.value
-                              ? new Date(field.value)
-                                  .toISOString()
-                                  .split("T")[0]
-                              : ""
-                          }
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.value
-                                ? new Date(e.target.value)
-                                : undefined,
-                            )
-                          }
-                        />
-                      )}
-                    />
-                  </Grid>
-                </>
-              )}
-              {/* Conditional Business Subcategory */}
-              {watch("applicant.employmentType") === "business" && (
-                <>
-                  <Controller
-                    name="applicant.businessType"
-                    control={control}
-                    render={({ field }) => (
-                      <SelectField
-                        label="Business Type"
-                        options={[
-                          { label: "Trader", value: "trader" },
-                          { label: "Manufacturer", value: "manufacturer" },
-                          { label: "Wholeseller", value: "wholeseller" },
-                          { label: "Other", value: "other" },
-                        ]}
-                        value={field.value}
-                        onChange={(val) => {
-                          field.onChange(val);
-                          if (val !== "other")
-                            setValue("applicant.businessTypeOther", "");
-                        }}
-                        error={errors?.applicant?.businessType?.message}
-                      />
-                    )}
-                  />
-                  {watch("applicant.businessType") === "other" && (
-                    <Controller
-                      name="applicant.businessTypeOther"
-                      control={control}
-                      render={({ field }) => (
-                        <InputField
-                          label="Please Specify Business Type"
-                          {...field}
-                        />
-                      )}
-                    />
-                  )}
-                </>
-              )}
-              <Grid>
-                <Controller
-                  name="applicant.companyOrBusinessName"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField
-                      label="Company/Business Name"
-                      isRequired
-                      {...field}
-                    />
-                  )}
-                />
-                <Controller
-                  name="applicant.occupationAddress"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField label="Address" isRequired {...field} />
-                  )}
-                />
-              </Grid>
-              <Grid>
-                <Controller
-                  name="applicant.occupationCity"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField label="City/Town" isRequired {...field} />
-                  )}
-                />
-                <Controller
-                  name="applicant.occupationDistrict"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField label="District" isRequired {...field} />
-                  )}
-                />
-              </Grid>
-              <Grid>
-                <Controller
-                  name="applicant.occupationState"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField label="State" isRequired {...field} />
-                  )}
-                />
-                <Controller
-                  name="applicant.occupationPincode"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField
-                      label="Pincode"
-                      isRequired
-                      type="number"
-                      {...field}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid>
-                <Controller
-                  name="applicant.occupationLandmark"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField label="Landmark" {...field} />
-                  )}
-                />
-                <Controller
-                  name="applicant.occupationPhone"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField label="Phone No." type="tel" {...field} />
-                  )}
-                />
-              </Grid>
-              <Grid>
-                <Controller
-                  name="applicant.totalWorkExperience"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField
-                      label="Total Work Experience (years)"
-                      type="number"
-                      {...field}
-                    />
-                  )}
-                />
-                <Controller
-                  name="applicant.noOfEmployees"
-                  control={control}
-                  render={({ field }) => (
-                    <InputField
-                      label="No. of Employees"
-                      type="number"
-                      {...field}
-                    />
-                  )}
-                />
-              </Grid>
-              <Controller
-                name="applicant.dateOfCommencement"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    label="Date of Commencement of Business/Profession"
-                    type="date"
-                    value={
-                      field.value
-                        ? new Date(field.value).toISOString().split("T")[0]
-                        : ""
-                    }
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value ? new Date(e.target.value) : undefined,
-                      )
-                    }
-                  />
-                )}
-              />
-            </div>
-          </SectionCard>
-        );
-
-      case "address":
-        return (
-          <AddressSection
-            control={control}
-            errors={errors}
-            watch={watch}
-            setValue={setValue}
-          />
-        );
-      case "financial":
-        return (
-          <SectionCard title="Financial Status — Income" icon={IndianRupee}>
-            <PersonFinancialFields
-              control={control}
-              watch={watch}
-              setValue={setValue}
-              prefix="applicant"
-            />
-          </SectionCard>
-        );
-      case "loanType":
-        return <LoanTypeSection control={control} errors={errors} />;
 
       case "coApplicant":
         return (
@@ -4732,17 +4774,6 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
             fields={guarFields}
             append={guarAppend}
             remove={guarRemove}
-            showToast={showToast}
-          />
-        );
-      case "loanReq":
-        return (
-          <LoanRequirementSection
-            control={control}
-            errors={errors}
-            watch={watch}
-            setValue={setValue}
-            loanTypeOptions={loanTypeOptions}
             showToast={showToast}
           />
         );
@@ -4779,26 +4810,38 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
     <div className="fixed inset-0 pt-16 lg:pl-64 bg-linear-to-br from-slate-50 via-blue-50/20 to-slate-100 overflow-y-auto">
       {/* Top Navbar for Steps */}
       <nav className="flex flex-wrap gap-2 justify-center mt-6">
-        {steps.map((step, idx) => (
-          <button
-            key={step.id}
-            type="button"
-            className={`px-3 py-2 rounded-2xl border text-sm font-semibold transition-all duration-150 flex items-center gap-1
-              ${currentStep === step.id ? "bg-blue-600 text-white border-blue-700 shadow" : "bg-white text-blue-700 border-blue-200 hover:bg-blue-50"}`}
-            onClick={() => setCurrentStep && setCurrentStep(step.id)}
-          >
-            {step.icon && (
-              <span className="mr-1">
-                <step.icon size={14} />
-              </span>
-            )}
-            <span>{step.shortLabel || step.label}</span>
-            <span className="text-[10px] text-blue-400">{idx + 1}</span>
-          </button>
-        ))}
+        {steps.map((step, idx) =>
+          (() => {
+            const isActive = currentStep === step.id;
+            const isCompleted = completedSteps.includes(step.id);
+            return (
+              <button
+                key={step.id}
+                type="button"
+                className={`px-3 py-2 rounded-2xl border text-sm font-semibold transition-all duration-150 flex items-center gap-1
+              ${isActive || isCompleted ? "bg-blue-600 text-white border-blue-700 shadow" : "bg-white text-blue-700 border-blue-200 hover:bg-blue-50"}`}
+                onClick={() => setCurrentStep && setCurrentStep(step.id)}
+              >
+                {step.icon && (
+                  <span className="mr-1">
+                    <step.icon size={14} />
+                  </span>
+                )}
+                <span>{step.shortLabel || step.label}</span>
+                <span
+                  className={`text-[10px] ${isActive || isCompleted ? "text-white/80" : "text-blue-400"}`}
+                >
+                  {idx + 1}
+                </span>
+              </button>
+            );
+          })(),
+        )}
       </nav>
       ;
       <main className="max-w-5xl mx-auto px-6 py-3">
+        {/* Lead Search Bar */}
+
         {renderSection()}
         {currentStep !== "review" && (
           <div className="mt-6 flex items-center justify-between pt-6 border-t border-slate-200">

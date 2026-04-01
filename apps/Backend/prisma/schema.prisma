@@ -1263,9 +1263,13 @@ model TechnicalReport {
   agencyName   String?
 
   //property details
-  propertyType String // Residential, Commercial, Land Flat Villa etc.
-  addressId    String?  @unique
-  address      Address? @relation("TechnicalReportAddress", fields: [addressId], references: [id])
+  propertyType    String // Residential, Commercial, Land Flat Villa etc.
+  propertyAddress String  // Added for address line
+  city            String // Added for city
+  state           String // Added for state
+  pincode         String // Added for pincode
+  addressId       String?  @unique
+  address         Address? @relation("TechnicalReportAddress", fields: [addressId], references: [id])
 
   //Valuation details
   marketValue      Float
@@ -1291,6 +1295,7 @@ model TechnicalReport {
   // Audit
   submittedAt DateTime?
   approvedBy  String?
+  rejectedBy  String?
   approvedAt  DateTime?
 
   branchId String

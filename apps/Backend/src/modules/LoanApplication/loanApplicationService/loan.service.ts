@@ -177,34 +177,58 @@ type EntityIds = {
   guarantorId?: string;
 };
 
+function hasMeaningfulValue(value: unknown): boolean {
+  if (value === undefined || value === null) return false;
+  if (typeof value === "string") return value.trim().length > 0;
+  if (value instanceof Date) return !Number.isNaN(value.getTime());
+  if (Array.isArray(value)) return value.some(hasMeaningfulValue);
+  if (typeof value === "object")
+    return Object.values(value).some(hasMeaningfulValue);
+  return true;
+}
+
 export async function createOccupationalDetailsForEntity(
   tx: any,
   entity: EntityIds,
-  input: OccupationalInput | undefined,
+  input: OccupationalInput | OccupationalInput[] | undefined,
 ) {
   if (!input) return;
-  const { address, ...rest } = input;
-  let addressId: string | undefined;
-  if (address) {
-    const addr = await tx.address.create({
-      data: { ...address, addressType: Enums.AddressType.OFFICE },
+  const occupationalInputs = Array.isArray(input) ? input : [input];
+
+  for (const occupationalInput of occupationalInputs) {
+    if (!occupationalInput || !hasMeaningfulValue(occupationalInput)) continue;
+
+    const { address, ...rest } = occupationalInput;
+    let addressId: string | undefined;
+    if (address && hasMeaningfulValue(address)) {
+      const addr = await tx.address.create({
+        data: { ...address, addressType: Enums.AddressType.OFFICE },
+      });
+      addressId = addr.id;
+    }
+
+    await tx.occupationalDetails.create({
+      data: { ...entity, ...rest, addressId },
     });
-    addressId = addr.id;
   }
-  await tx.occupationalDetails.create({
-    data: { ...entity, ...rest, addressId },
-  });
 }
 
 export async function createEmploymentDetailsForEntity(
   tx: any,
   entity: EntityIds,
-  input: EmploymentInput | undefined,
+  input: EmploymentInput | EmploymentInput[] | undefined,
 ) {
-  if (!input?.employerType) return;
-  await tx.employmentDetails.create({
-    data: { ...entity, ...input },
-  });
+  if (!input) return;
+  const employmentInputs = Array.isArray(input) ? input : [input];
+
+  for (const employmentInput of employmentInputs) {
+    if (!employmentInput?.employerType || !hasMeaningfulValue(employmentInput))
+      continue;
+
+    await tx.employmentDetails.create({
+      data: { ...entity, ...employmentInput },
+    });
+  }
 }
 
 export async function createGuarantors(

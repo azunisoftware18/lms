@@ -74,11 +74,11 @@ export default function Sidebar() {
             { name: "Leads", path: "/admin/los/leads" },
             { name: "Applications", path: "/admin/los/applications" },
             { name: "Documents", path: "/admin/los/documents" },
-            { name: "Kyc Verification", path: "/admin/los/kyc-verification" },
+            // { name: "Kyc Verification", path: "/admin/los/kyc-verification" },
             { name: "Credit Check", path: "/admin/los/credit-check" },
             { name: "Technical Review", path: "/admin/los/technical-review" },
             { name: "Legal Compliance", path: "/admin/los/legal-compliance" },
-            { name: "EMI Management", path: "/admin/los/emi-management" },
+            // { name: "EMI Management", path: "/admin/los/emi-management" },
             { name: "Sanction", path: "/admin/los/sanction" },
             { name: "Disbursement", path: "/admin/los/disbursement" },
           ]
@@ -106,7 +106,7 @@ export default function Sidebar() {
                 : "/admin/lms/emi-schedule",
               permission: "VIEW_EMI_SCHEDULE"
             },
-
+            { name: "EMI Management", path: "/admin/lms/emi-management" },
             {
               name: "Repayment Management",
               path: currentUser?.role === "EMPLOYEE"
@@ -145,6 +145,7 @@ export default function Sidebar() {
                 : "/admin/lms/nach-auto-debit",
               permission: "VIEW_NACH_AUTO_DEBIT"
             },
+            
             {
               name: "DPD Tracking",
               path: currentUser?.role === "EMPLOYEE"
@@ -186,14 +187,14 @@ export default function Sidebar() {
             : "/admin/borrowers",
           permission: "VIEW_BORROWERS"
         },
-        {
-          name: "Leads",
-          icon: <User size={20} />,
-          path: currentUser?.role === "EMPLOYEE"
-            ? "/employee/reports/leads"
-            : "/admin/reports/leads",
-          permission: "VIEW_LEADS"
-        },
+        // {
+        //   name: "Leads",
+        //   icon: <User size={20} />,
+        //   path: currentUser?.role === "EMPLOYEE"
+        //     ? "/employee/reports/leads"
+        //     : "/admin/reports/leads",
+        //   permission: "VIEW_LEADS"
+        // },
 
       ]
     },

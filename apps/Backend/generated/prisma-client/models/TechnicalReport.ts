@@ -51,6 +51,10 @@ export type TechnicalReportMinAggregateOutputType = {
   engineerName: string | null
   agencyName: string | null
   propertyType: string | null
+  propertyAddress: string | null
+  city: string | null
+  state: string | null
+  pincode: string | null
   addressId: string | null
   marketValue: number | null
   discussionValue: number | null
@@ -66,6 +70,7 @@ export type TechnicalReportMinAggregateOutputType = {
   sitePhotographs: string | null
   submittedAt: Date | null
   approvedBy: string | null
+  rejectedBy: string | null
   approvedAt: Date | null
   branchId: string | null
   createdAt: Date | null
@@ -79,6 +84,10 @@ export type TechnicalReportMaxAggregateOutputType = {
   engineerName: string | null
   agencyName: string | null
   propertyType: string | null
+  propertyAddress: string | null
+  city: string | null
+  state: string | null
+  pincode: string | null
   addressId: string | null
   marketValue: number | null
   discussionValue: number | null
@@ -94,6 +103,7 @@ export type TechnicalReportMaxAggregateOutputType = {
   sitePhotographs: string | null
   submittedAt: Date | null
   approvedBy: string | null
+  rejectedBy: string | null
   approvedAt: Date | null
   branchId: string | null
   createdAt: Date | null
@@ -107,6 +117,10 @@ export type TechnicalReportCountAggregateOutputType = {
   engineerName: number
   agencyName: number
   propertyType: number
+  propertyAddress: number
+  city: number
+  state: number
+  pincode: number
   addressId: number
   marketValue: number
   discussionValue: number
@@ -122,6 +136,7 @@ export type TechnicalReportCountAggregateOutputType = {
   sitePhotographs: number
   submittedAt: number
   approvedBy: number
+  rejectedBy: number
   approvedAt: number
   branchId: number
   createdAt: number
@@ -155,6 +170,10 @@ export type TechnicalReportMinAggregateInputType = {
   engineerName?: true
   agencyName?: true
   propertyType?: true
+  propertyAddress?: true
+  city?: true
+  state?: true
+  pincode?: true
   addressId?: true
   marketValue?: true
   discussionValue?: true
@@ -170,6 +189,7 @@ export type TechnicalReportMinAggregateInputType = {
   sitePhotographs?: true
   submittedAt?: true
   approvedBy?: true
+  rejectedBy?: true
   approvedAt?: true
   branchId?: true
   createdAt?: true
@@ -183,6 +203,10 @@ export type TechnicalReportMaxAggregateInputType = {
   engineerName?: true
   agencyName?: true
   propertyType?: true
+  propertyAddress?: true
+  city?: true
+  state?: true
+  pincode?: true
   addressId?: true
   marketValue?: true
   discussionValue?: true
@@ -198,6 +222,7 @@ export type TechnicalReportMaxAggregateInputType = {
   sitePhotographs?: true
   submittedAt?: true
   approvedBy?: true
+  rejectedBy?: true
   approvedAt?: true
   branchId?: true
   createdAt?: true
@@ -211,6 +236,10 @@ export type TechnicalReportCountAggregateInputType = {
   engineerName?: true
   agencyName?: true
   propertyType?: true
+  propertyAddress?: true
+  city?: true
+  state?: true
+  pincode?: true
   addressId?: true
   marketValue?: true
   discussionValue?: true
@@ -226,6 +255,7 @@ export type TechnicalReportCountAggregateInputType = {
   sitePhotographs?: true
   submittedAt?: true
   approvedBy?: true
+  rejectedBy?: true
   approvedAt?: true
   branchId?: true
   createdAt?: true
@@ -326,6 +356,10 @@ export type TechnicalReportGroupByOutputType = {
   engineerName: string
   agencyName: string | null
   propertyType: string
+  propertyAddress: string
+  city: string
+  state: string
+  pincode: string
   addressId: string | null
   marketValue: number
   discussionValue: number
@@ -341,6 +375,7 @@ export type TechnicalReportGroupByOutputType = {
   sitePhotographs: string | null
   submittedAt: Date | null
   approvedBy: string | null
+  rejectedBy: string | null
   approvedAt: Date | null
   branchId: string
   createdAt: Date
@@ -377,6 +412,10 @@ export type TechnicalReportWhereInput = {
   engineerName?: Prisma.StringFilter<"TechnicalReport"> | string
   agencyName?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
   propertyType?: Prisma.StringFilter<"TechnicalReport"> | string
+  propertyAddress?: Prisma.StringFilter<"TechnicalReport"> | string
+  city?: Prisma.StringFilter<"TechnicalReport"> | string
+  state?: Prisma.StringFilter<"TechnicalReport"> | string
+  pincode?: Prisma.StringFilter<"TechnicalReport"> | string
   addressId?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
   marketValue?: Prisma.FloatFilter<"TechnicalReport"> | number
   discussionValue?: Prisma.FloatFilter<"TechnicalReport"> | number
@@ -392,6 +431,7 @@ export type TechnicalReportWhereInput = {
   sitePhotographs?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
   submittedAt?: Prisma.DateTimeNullableFilter<"TechnicalReport"> | Date | string | null
   approvedBy?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
+  rejectedBy?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"TechnicalReport"> | Date | string | null
   branchId?: Prisma.StringFilter<"TechnicalReport"> | string
   createdAt?: Prisma.DateTimeFilter<"TechnicalReport"> | Date | string
@@ -408,6 +448,10 @@ export type TechnicalReportOrderByWithRelationInput = {
   engineerName?: Prisma.SortOrder
   agencyName?: Prisma.SortOrderInput | Prisma.SortOrder
   propertyType?: Prisma.SortOrder
+  propertyAddress?: Prisma.SortOrder
+  city?: Prisma.SortOrder
+  state?: Prisma.SortOrder
+  pincode?: Prisma.SortOrder
   addressId?: Prisma.SortOrderInput | Prisma.SortOrder
   marketValue?: Prisma.SortOrder
   discussionValue?: Prisma.SortOrder
@@ -423,6 +467,7 @@ export type TechnicalReportOrderByWithRelationInput = {
   sitePhotographs?: Prisma.SortOrderInput | Prisma.SortOrder
   submittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   branchId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -444,6 +489,10 @@ export type TechnicalReportWhereUniqueInput = Prisma.AtLeast<{
   engineerName?: Prisma.StringFilter<"TechnicalReport"> | string
   agencyName?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
   propertyType?: Prisma.StringFilter<"TechnicalReport"> | string
+  propertyAddress?: Prisma.StringFilter<"TechnicalReport"> | string
+  city?: Prisma.StringFilter<"TechnicalReport"> | string
+  state?: Prisma.StringFilter<"TechnicalReport"> | string
+  pincode?: Prisma.StringFilter<"TechnicalReport"> | string
   marketValue?: Prisma.FloatFilter<"TechnicalReport"> | number
   discussionValue?: Prisma.FloatFilter<"TechnicalReport"> | number
   forcesdSaleValue?: Prisma.FloatNullableFilter<"TechnicalReport"> | number | null
@@ -458,6 +507,7 @@ export type TechnicalReportWhereUniqueInput = Prisma.AtLeast<{
   sitePhotographs?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
   submittedAt?: Prisma.DateTimeNullableFilter<"TechnicalReport"> | Date | string | null
   approvedBy?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
+  rejectedBy?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"TechnicalReport"> | Date | string | null
   branchId?: Prisma.StringFilter<"TechnicalReport"> | string
   createdAt?: Prisma.DateTimeFilter<"TechnicalReport"> | Date | string
@@ -474,6 +524,10 @@ export type TechnicalReportOrderByWithAggregationInput = {
   engineerName?: Prisma.SortOrder
   agencyName?: Prisma.SortOrderInput | Prisma.SortOrder
   propertyType?: Prisma.SortOrder
+  propertyAddress?: Prisma.SortOrder
+  city?: Prisma.SortOrder
+  state?: Prisma.SortOrder
+  pincode?: Prisma.SortOrder
   addressId?: Prisma.SortOrderInput | Prisma.SortOrder
   marketValue?: Prisma.SortOrder
   discussionValue?: Prisma.SortOrder
@@ -489,6 +543,7 @@ export type TechnicalReportOrderByWithAggregationInput = {
   sitePhotographs?: Prisma.SortOrderInput | Prisma.SortOrder
   submittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   branchId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -510,6 +565,10 @@ export type TechnicalReportScalarWhereWithAggregatesInput = {
   engineerName?: Prisma.StringWithAggregatesFilter<"TechnicalReport"> | string
   agencyName?: Prisma.StringNullableWithAggregatesFilter<"TechnicalReport"> | string | null
   propertyType?: Prisma.StringWithAggregatesFilter<"TechnicalReport"> | string
+  propertyAddress?: Prisma.StringWithAggregatesFilter<"TechnicalReport"> | string
+  city?: Prisma.StringWithAggregatesFilter<"TechnicalReport"> | string
+  state?: Prisma.StringWithAggregatesFilter<"TechnicalReport"> | string
+  pincode?: Prisma.StringWithAggregatesFilter<"TechnicalReport"> | string
   addressId?: Prisma.StringNullableWithAggregatesFilter<"TechnicalReport"> | string | null
   marketValue?: Prisma.FloatWithAggregatesFilter<"TechnicalReport"> | number
   discussionValue?: Prisma.FloatWithAggregatesFilter<"TechnicalReport"> | number
@@ -525,6 +584,7 @@ export type TechnicalReportScalarWhereWithAggregatesInput = {
   sitePhotographs?: Prisma.StringNullableWithAggregatesFilter<"TechnicalReport"> | string | null
   submittedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TechnicalReport"> | Date | string | null
   approvedBy?: Prisma.StringNullableWithAggregatesFilter<"TechnicalReport"> | string | null
+  rejectedBy?: Prisma.StringNullableWithAggregatesFilter<"TechnicalReport"> | string | null
   approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TechnicalReport"> | Date | string | null
   branchId?: Prisma.StringWithAggregatesFilter<"TechnicalReport"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TechnicalReport"> | Date | string
@@ -537,6 +597,10 @@ export type TechnicalReportCreateInput = {
   engineerName: string
   agencyName?: string | null
   propertyType: string
+  propertyAddress: string
+  city: string
+  state: string
+  pincode: string
   marketValue: number
   discussionValue: number
   forcesdSaleValue?: number | null
@@ -551,6 +615,7 @@ export type TechnicalReportCreateInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -566,6 +631,10 @@ export type TechnicalReportUncheckedCreateInput = {
   engineerName: string
   agencyName?: string | null
   propertyType: string
+  propertyAddress: string
+  city: string
+  state: string
+  pincode: string
   addressId?: string | null
   marketValue: number
   discussionValue: number
@@ -581,6 +650,7 @@ export type TechnicalReportUncheckedCreateInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   branchId: string
   createdAt?: Date | string
@@ -593,6 +663,10 @@ export type TechnicalReportUpdateInput = {
   engineerName?: Prisma.StringFieldUpdateOperationsInput | string
   agencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.StringFieldUpdateOperationsInput | string
   marketValue?: Prisma.FloatFieldUpdateOperationsInput | number
   discussionValue?: Prisma.FloatFieldUpdateOperationsInput | number
   forcesdSaleValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -607,6 +681,7 @@ export type TechnicalReportUpdateInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -622,6 +697,10 @@ export type TechnicalReportUncheckedUpdateInput = {
   engineerName?: Prisma.StringFieldUpdateOperationsInput | string
   agencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.StringFieldUpdateOperationsInput | string
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   marketValue?: Prisma.FloatFieldUpdateOperationsInput | number
   discussionValue?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -637,6 +716,7 @@ export type TechnicalReportUncheckedUpdateInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -650,6 +730,10 @@ export type TechnicalReportCreateManyInput = {
   engineerName: string
   agencyName?: string | null
   propertyType: string
+  propertyAddress: string
+  city: string
+  state: string
+  pincode: string
   addressId?: string | null
   marketValue: number
   discussionValue: number
@@ -665,6 +749,7 @@ export type TechnicalReportCreateManyInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   branchId: string
   createdAt?: Date | string
@@ -677,6 +762,10 @@ export type TechnicalReportUpdateManyMutationInput = {
   engineerName?: Prisma.StringFieldUpdateOperationsInput | string
   agencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.StringFieldUpdateOperationsInput | string
   marketValue?: Prisma.FloatFieldUpdateOperationsInput | number
   discussionValue?: Prisma.FloatFieldUpdateOperationsInput | number
   forcesdSaleValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -691,6 +780,7 @@ export type TechnicalReportUpdateManyMutationInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -703,6 +793,10 @@ export type TechnicalReportUncheckedUpdateManyInput = {
   engineerName?: Prisma.StringFieldUpdateOperationsInput | string
   agencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.StringFieldUpdateOperationsInput | string
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   marketValue?: Prisma.FloatFieldUpdateOperationsInput | number
   discussionValue?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -718,6 +812,7 @@ export type TechnicalReportUncheckedUpdateManyInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -752,6 +847,10 @@ export type TechnicalReportCountOrderByAggregateInput = {
   engineerName?: Prisma.SortOrder
   agencyName?: Prisma.SortOrder
   propertyType?: Prisma.SortOrder
+  propertyAddress?: Prisma.SortOrder
+  city?: Prisma.SortOrder
+  state?: Prisma.SortOrder
+  pincode?: Prisma.SortOrder
   addressId?: Prisma.SortOrder
   marketValue?: Prisma.SortOrder
   discussionValue?: Prisma.SortOrder
@@ -767,6 +866,7 @@ export type TechnicalReportCountOrderByAggregateInput = {
   sitePhotographs?: Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
   approvedBy?: Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
   branchId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -789,6 +889,10 @@ export type TechnicalReportMaxOrderByAggregateInput = {
   engineerName?: Prisma.SortOrder
   agencyName?: Prisma.SortOrder
   propertyType?: Prisma.SortOrder
+  propertyAddress?: Prisma.SortOrder
+  city?: Prisma.SortOrder
+  state?: Prisma.SortOrder
+  pincode?: Prisma.SortOrder
   addressId?: Prisma.SortOrder
   marketValue?: Prisma.SortOrder
   discussionValue?: Prisma.SortOrder
@@ -804,6 +908,7 @@ export type TechnicalReportMaxOrderByAggregateInput = {
   sitePhotographs?: Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
   approvedBy?: Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
   branchId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -817,6 +922,10 @@ export type TechnicalReportMinOrderByAggregateInput = {
   engineerName?: Prisma.SortOrder
   agencyName?: Prisma.SortOrder
   propertyType?: Prisma.SortOrder
+  propertyAddress?: Prisma.SortOrder
+  city?: Prisma.SortOrder
+  state?: Prisma.SortOrder
+  pincode?: Prisma.SortOrder
   addressId?: Prisma.SortOrder
   marketValue?: Prisma.SortOrder
   discussionValue?: Prisma.SortOrder
@@ -832,6 +941,7 @@ export type TechnicalReportMinOrderByAggregateInput = {
   sitePhotographs?: Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
   approvedBy?: Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
   branchId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -973,6 +1083,10 @@ export type TechnicalReportCreateWithoutAddressInput = {
   engineerName: string
   agencyName?: string | null
   propertyType: string
+  propertyAddress: string
+  city: string
+  state: string
+  pincode: string
   marketValue: number
   discussionValue: number
   forcesdSaleValue?: number | null
@@ -987,6 +1101,7 @@ export type TechnicalReportCreateWithoutAddressInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1001,6 +1116,10 @@ export type TechnicalReportUncheckedCreateWithoutAddressInput = {
   engineerName: string
   agencyName?: string | null
   propertyType: string
+  propertyAddress: string
+  city: string
+  state: string
+  pincode: string
   marketValue: number
   discussionValue: number
   forcesdSaleValue?: number | null
@@ -1015,6 +1134,7 @@ export type TechnicalReportUncheckedCreateWithoutAddressInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   branchId: string
   createdAt?: Date | string
@@ -1043,6 +1163,10 @@ export type TechnicalReportUpdateWithoutAddressInput = {
   engineerName?: Prisma.StringFieldUpdateOperationsInput | string
   agencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.StringFieldUpdateOperationsInput | string
   marketValue?: Prisma.FloatFieldUpdateOperationsInput | number
   discussionValue?: Prisma.FloatFieldUpdateOperationsInput | number
   forcesdSaleValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1057,6 +1181,7 @@ export type TechnicalReportUpdateWithoutAddressInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1071,6 +1196,10 @@ export type TechnicalReportUncheckedUpdateWithoutAddressInput = {
   engineerName?: Prisma.StringFieldUpdateOperationsInput | string
   agencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.StringFieldUpdateOperationsInput | string
   marketValue?: Prisma.FloatFieldUpdateOperationsInput | number
   discussionValue?: Prisma.FloatFieldUpdateOperationsInput | number
   forcesdSaleValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1085,6 +1214,7 @@ export type TechnicalReportUncheckedUpdateWithoutAddressInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1097,6 +1227,10 @@ export type TechnicalReportCreateWithoutBranchInput = {
   engineerName: string
   agencyName?: string | null
   propertyType: string
+  propertyAddress: string
+  city: string
+  state: string
+  pincode: string
   marketValue: number
   discussionValue: number
   forcesdSaleValue?: number | null
@@ -1111,6 +1245,7 @@ export type TechnicalReportCreateWithoutBranchInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1125,6 +1260,10 @@ export type TechnicalReportUncheckedCreateWithoutBranchInput = {
   engineerName: string
   agencyName?: string | null
   propertyType: string
+  propertyAddress: string
+  city: string
+  state: string
+  pincode: string
   addressId?: string | null
   marketValue: number
   discussionValue: number
@@ -1140,6 +1279,7 @@ export type TechnicalReportUncheckedCreateWithoutBranchInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1181,6 +1321,10 @@ export type TechnicalReportScalarWhereInput = {
   engineerName?: Prisma.StringFilter<"TechnicalReport"> | string
   agencyName?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
   propertyType?: Prisma.StringFilter<"TechnicalReport"> | string
+  propertyAddress?: Prisma.StringFilter<"TechnicalReport"> | string
+  city?: Prisma.StringFilter<"TechnicalReport"> | string
+  state?: Prisma.StringFilter<"TechnicalReport"> | string
+  pincode?: Prisma.StringFilter<"TechnicalReport"> | string
   addressId?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
   marketValue?: Prisma.FloatFilter<"TechnicalReport"> | number
   discussionValue?: Prisma.FloatFilter<"TechnicalReport"> | number
@@ -1196,6 +1340,7 @@ export type TechnicalReportScalarWhereInput = {
   sitePhotographs?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
   submittedAt?: Prisma.DateTimeNullableFilter<"TechnicalReport"> | Date | string | null
   approvedBy?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
+  rejectedBy?: Prisma.StringNullableFilter<"TechnicalReport"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"TechnicalReport"> | Date | string | null
   branchId?: Prisma.StringFilter<"TechnicalReport"> | string
   createdAt?: Prisma.DateTimeFilter<"TechnicalReport"> | Date | string
@@ -1208,6 +1353,10 @@ export type TechnicalReportCreateWithoutLoanApplicationInput = {
   engineerName: string
   agencyName?: string | null
   propertyType: string
+  propertyAddress: string
+  city: string
+  state: string
+  pincode: string
   marketValue: number
   discussionValue: number
   forcesdSaleValue?: number | null
@@ -1222,6 +1371,7 @@ export type TechnicalReportCreateWithoutLoanApplicationInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1235,6 +1385,10 @@ export type TechnicalReportUncheckedCreateWithoutLoanApplicationInput = {
   engineerName: string
   agencyName?: string | null
   propertyType: string
+  propertyAddress: string
+  city: string
+  state: string
+  pincode: string
   addressId?: string | null
   marketValue: number
   discussionValue: number
@@ -1250,6 +1404,7 @@ export type TechnicalReportUncheckedCreateWithoutLoanApplicationInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   branchId: string
   createdAt?: Date | string
@@ -1289,6 +1444,10 @@ export type TechnicalReportCreateManyBranchInput = {
   engineerName: string
   agencyName?: string | null
   propertyType: string
+  propertyAddress: string
+  city: string
+  state: string
+  pincode: string
   addressId?: string | null
   marketValue: number
   discussionValue: number
@@ -1304,6 +1463,7 @@ export type TechnicalReportCreateManyBranchInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1315,6 +1475,10 @@ export type TechnicalReportUpdateWithoutBranchInput = {
   engineerName?: Prisma.StringFieldUpdateOperationsInput | string
   agencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.StringFieldUpdateOperationsInput | string
   marketValue?: Prisma.FloatFieldUpdateOperationsInput | number
   discussionValue?: Prisma.FloatFieldUpdateOperationsInput | number
   forcesdSaleValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1329,6 +1493,7 @@ export type TechnicalReportUpdateWithoutBranchInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1343,6 +1508,10 @@ export type TechnicalReportUncheckedUpdateWithoutBranchInput = {
   engineerName?: Prisma.StringFieldUpdateOperationsInput | string
   agencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.StringFieldUpdateOperationsInput | string
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   marketValue?: Prisma.FloatFieldUpdateOperationsInput | number
   discussionValue?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1358,6 +1527,7 @@ export type TechnicalReportUncheckedUpdateWithoutBranchInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1370,6 +1540,10 @@ export type TechnicalReportUncheckedUpdateManyWithoutBranchInput = {
   engineerName?: Prisma.StringFieldUpdateOperationsInput | string
   agencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.StringFieldUpdateOperationsInput | string
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   marketValue?: Prisma.FloatFieldUpdateOperationsInput | number
   discussionValue?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1385,6 +1559,7 @@ export type TechnicalReportUncheckedUpdateManyWithoutBranchInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1396,6 +1571,10 @@ export type TechnicalReportCreateManyLoanApplicationInput = {
   engineerName: string
   agencyName?: string | null
   propertyType: string
+  propertyAddress: string
+  city: string
+  state: string
+  pincode: string
   addressId?: string | null
   marketValue: number
   discussionValue: number
@@ -1411,6 +1590,7 @@ export type TechnicalReportCreateManyLoanApplicationInput = {
   sitePhotographs?: string | null
   submittedAt?: Date | string | null
   approvedBy?: string | null
+  rejectedBy?: string | null
   approvedAt?: Date | string | null
   branchId: string
   createdAt?: Date | string
@@ -1423,6 +1603,10 @@ export type TechnicalReportUpdateWithoutLoanApplicationInput = {
   engineerName?: Prisma.StringFieldUpdateOperationsInput | string
   agencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.StringFieldUpdateOperationsInput | string
   marketValue?: Prisma.FloatFieldUpdateOperationsInput | number
   discussionValue?: Prisma.FloatFieldUpdateOperationsInput | number
   forcesdSaleValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1437,6 +1621,7 @@ export type TechnicalReportUpdateWithoutLoanApplicationInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1450,6 +1635,10 @@ export type TechnicalReportUncheckedUpdateWithoutLoanApplicationInput = {
   engineerName?: Prisma.StringFieldUpdateOperationsInput | string
   agencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.StringFieldUpdateOperationsInput | string
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   marketValue?: Prisma.FloatFieldUpdateOperationsInput | number
   discussionValue?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1465,6 +1654,7 @@ export type TechnicalReportUncheckedUpdateWithoutLoanApplicationInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1477,6 +1667,10 @@ export type TechnicalReportUncheckedUpdateManyWithoutLoanApplicationInput = {
   engineerName?: Prisma.StringFieldUpdateOperationsInput | string
   agencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyAddress?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.StringFieldUpdateOperationsInput | string
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   marketValue?: Prisma.FloatFieldUpdateOperationsInput | number
   discussionValue?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1492,6 +1686,7 @@ export type TechnicalReportUncheckedUpdateManyWithoutLoanApplicationInput = {
   sitePhotographs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1507,6 +1702,10 @@ export type TechnicalReportSelect<ExtArgs extends runtime.Types.Extensions.Inter
   engineerName?: boolean
   agencyName?: boolean
   propertyType?: boolean
+  propertyAddress?: boolean
+  city?: boolean
+  state?: boolean
+  pincode?: boolean
   addressId?: boolean
   marketValue?: boolean
   discussionValue?: boolean
@@ -1522,6 +1721,7 @@ export type TechnicalReportSelect<ExtArgs extends runtime.Types.Extensions.Inter
   sitePhotographs?: boolean
   submittedAt?: boolean
   approvedBy?: boolean
+  rejectedBy?: boolean
   approvedAt?: boolean
   branchId?: boolean
   createdAt?: boolean
@@ -1540,6 +1740,10 @@ export type TechnicalReportSelectScalar = {
   engineerName?: boolean
   agencyName?: boolean
   propertyType?: boolean
+  propertyAddress?: boolean
+  city?: boolean
+  state?: boolean
+  pincode?: boolean
   addressId?: boolean
   marketValue?: boolean
   discussionValue?: boolean
@@ -1555,13 +1759,14 @@ export type TechnicalReportSelectScalar = {
   sitePhotographs?: boolean
   submittedAt?: boolean
   approvedBy?: boolean
+  rejectedBy?: boolean
   approvedAt?: boolean
   branchId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TechnicalReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "engineerId" | "engineerName" | "agencyName" | "propertyType" | "addressId" | "marketValue" | "discussionValue" | "forcesdSaleValue" | "recommendedLtv" | "constructionStatus" | "propertyAge" | "residualLife" | "qualityOfConstruction" | "status" | "remarks" | "reportUrl" | "sitePhotographs" | "submittedAt" | "approvedBy" | "approvedAt" | "branchId" | "createdAt" | "updatedAt", ExtArgs["result"]["technicalReport"]>
+export type TechnicalReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "engineerId" | "engineerName" | "agencyName" | "propertyType" | "propertyAddress" | "city" | "state" | "pincode" | "addressId" | "marketValue" | "discussionValue" | "forcesdSaleValue" | "recommendedLtv" | "constructionStatus" | "propertyAge" | "residualLife" | "qualityOfConstruction" | "status" | "remarks" | "reportUrl" | "sitePhotographs" | "submittedAt" | "approvedBy" | "rejectedBy" | "approvedAt" | "branchId" | "createdAt" | "updatedAt", ExtArgs["result"]["technicalReport"]>
 export type TechnicalReportInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   loanApplication?: boolean | Prisma.LoanApplicationDefaultArgs<ExtArgs>
   address?: boolean | Prisma.TechnicalReport$addressArgs<ExtArgs>
@@ -1582,6 +1787,10 @@ export type $TechnicalReportPayload<ExtArgs extends runtime.Types.Extensions.Int
     engineerName: string
     agencyName: string | null
     propertyType: string
+    propertyAddress: string
+    city: string
+    state: string
+    pincode: string
     addressId: string | null
     marketValue: number
     discussionValue: number
@@ -1597,6 +1806,7 @@ export type $TechnicalReportPayload<ExtArgs extends runtime.Types.Extensions.Int
     sitePhotographs: string | null
     submittedAt: Date | null
     approvedBy: string | null
+    rejectedBy: string | null
     approvedAt: Date | null
     branchId: string
     createdAt: Date
@@ -1979,6 +2189,10 @@ export interface TechnicalReportFieldRefs {
   readonly engineerName: Prisma.FieldRef<"TechnicalReport", 'String'>
   readonly agencyName: Prisma.FieldRef<"TechnicalReport", 'String'>
   readonly propertyType: Prisma.FieldRef<"TechnicalReport", 'String'>
+  readonly propertyAddress: Prisma.FieldRef<"TechnicalReport", 'String'>
+  readonly city: Prisma.FieldRef<"TechnicalReport", 'String'>
+  readonly state: Prisma.FieldRef<"TechnicalReport", 'String'>
+  readonly pincode: Prisma.FieldRef<"TechnicalReport", 'String'>
   readonly addressId: Prisma.FieldRef<"TechnicalReport", 'String'>
   readonly marketValue: Prisma.FieldRef<"TechnicalReport", 'Float'>
   readonly discussionValue: Prisma.FieldRef<"TechnicalReport", 'Float'>
@@ -1994,6 +2208,7 @@ export interface TechnicalReportFieldRefs {
   readonly sitePhotographs: Prisma.FieldRef<"TechnicalReport", 'String'>
   readonly submittedAt: Prisma.FieldRef<"TechnicalReport", 'DateTime'>
   readonly approvedBy: Prisma.FieldRef<"TechnicalReport", 'String'>
+  readonly rejectedBy: Prisma.FieldRef<"TechnicalReport", 'String'>
   readonly approvedAt: Prisma.FieldRef<"TechnicalReport", 'DateTime'>
   readonly branchId: Prisma.FieldRef<"TechnicalReport", 'String'>
   readonly createdAt: Prisma.FieldRef<"TechnicalReport", 'DateTime'>

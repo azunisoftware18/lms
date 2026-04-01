@@ -193,7 +193,51 @@ export const getLeadByIdService = async (id: string) => {
       pinCode: lead.address?.pinCode ?? null,
     };
   }
-  throw new Error("Lead not found");
+
+  // If not found by primary id, try lookup by leadNumber
+  const byLeadNumber = await prisma.leads.findFirst({
+    where: { leadNumber: id },
+    select: {
+      id: true,
+      fullName: true,
+      contactNumber: true,
+      email: true,
+      leadNumber: true,
+      dob: true,
+      gender: true,
+      loanAmount: true,
+      status: true,
+      assignedTo: true,
+      assignedBy: true,
+      convertedLoanApplicationId: true,
+      createdAt: true,
+      updatedAt: true,
+      loanTypeId: true,
+      loanType: true,
+      address: {
+        select: {
+          addressLine1: true,
+          city: true,
+          state: true,
+          pinCode: true,
+        },
+      },
+    },
+  });
+
+  if (byLeadNumber) {
+    return {
+      ...byLeadNumber,
+      address: byLeadNumber.address?.addressLine1 ?? null,
+      city: byLeadNumber.address?.city ?? null,
+      state: byLeadNumber.address?.state ?? null,
+      pinCode: byLeadNumber.address?.pinCode ?? null,
+    };
+  }
+
+  const e: any = new Error("Lead not found");
+  e.statusCode = 404;
+  throw e;
 };
 
 export const updateLeadStatusService = async (id: string, status: string) => {

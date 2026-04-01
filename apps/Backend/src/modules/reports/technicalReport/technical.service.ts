@@ -7,23 +7,46 @@ import {
 import { buildTechnicalReportSearch } from "../../../common/utils/search.js";
 import { prisma } from "../../../db/prismaService.js";
 
+
+class AppError extends Error {
+  statusCode: number;
+  constructor(message: string, statusCode = 500) {
+    super(message);
+    this.statusCode = statusCode;
+  }
+}
+
 export const createTechnicalReportService = async (
-  loanApplicationId: string,
+  loanNumber: string,
   data: any,
-  userId: string,
+  userId: string
 ) => {
-  //TODO : add upload images logic here
   return prisma.$transaction(async (tx) => {
-    // Fetch loan application to get branchId
+    // ✅ Find loan by loanNumber
     const loanApplication = await tx.loanApplication.findUnique({
-      where: { id: loanApplicationId },
-      select: { branchId: true },
+      where: { loanNumber }, // 🔥 must be unique in DB
+      select: { id: true, branchId: true },
     });
 
     if (!loanApplication) {
-      throw new Error("Loan application not found");
+      throw new AppError("Loan application not found", 404);
     }
 
+    const loanApplicationId = loanApplication.id;
+
+    // ✅ Prevent duplicate report
+    const existingReport = await tx.technicalReport.findFirst({
+      where: { loanApplicationId },
+    });
+
+    if (existingReport) {
+      throw new AppError(
+        "Technical report already exists for this loan",
+        409
+      );
+    }
+
+    // ✅ Create report
     const report = await tx.technicalReport.create({
       data: {
         ...data,
@@ -34,11 +57,13 @@ export const createTechnicalReportService = async (
       },
     });
 
+    // ✅ Update loan status
     await tx.loanApplication.update({
       where: { id: loanApplicationId },
       data: { status: "TECHNICAL_PENDING" },
     });
 
+    // ✅ Audit log
     await tx.auditLog.create({
       data: {
         entityType: "TECHNICAL_REPORT",
@@ -62,6 +87,7 @@ export const approveTechnicalReportService = async (
       where: { id: reportId },
       data: {
         status: "APPROVED",
+        approvedBy: approved,
         approvedAt: new Date(),
       },
     });
@@ -80,6 +106,9 @@ export const getAllTechnicalReportsService = async (
     page?: number;
     limit?: number;
     q?: string;
+    propertyType?: string;
+    constructionStatus?: string;
+    city?: string;
   },
   user: {
     id: string;
@@ -98,6 +127,10 @@ export const getAllTechnicalReportsService = async (
   const where = {
     ...buildTechnicalReportSearch(params.q),
     ...buildBranchFilter(allowedBranchIds),
+    // server-side filters
+    ...(params.propertyType ? { propertyType: params.propertyType } : {}),
+    ...(params.constructionStatus ? { constructionStatus: params.constructionStatus } : {}),
+    ...(params.city ? { city: params.city } : {}),
   };
 
   const [total, data] = await prisma.$transaction([
@@ -114,3 +147,73 @@ export const getAllTechnicalReportsService = async (
     meta: buildPaginationMeta(total, page, limit),
   };
 };
+
+
+export const editTechnicalReportService = async (
+  reportId: string,
+  data: any,
+  userId: string
+) => {
+  try {
+    const report = await prisma.technicalReport.findUnique({
+      where: { id: reportId },
+    });
+
+    if (!report) {
+      throw new AppError("Technical report not found", 404);
+    }
+    if (report.status === "APPROVED") {
+      throw new AppError("Approved technical report cannot be edited", 400);
+    }
+
+    const updatedReport = await prisma.technicalReport.update({
+      where: { id: reportId },
+      data: {
+        ...data,
+        // Optionally, you can track who edited the report and when
+        lastEditedBy: userId,
+        lastEditedAt: new Date(),
+      },
+    });
+    return updatedReport;
+
+  } catch (error) {
+    throw new AppError(
+      error instanceof AppError ? error.message : "Failed to edit technical report",
+      error instanceof AppError ? error.statusCode : 500
+    );
+  }
+};
+
+export const rejectTechnicalReportService = async (
+  reportId: string,
+  rejectedBy: string
+) => {
+  try {
+    const report = await prisma.technicalReport.findUnique({
+      where: { id: reportId },
+    });
+    if (!report) {
+      throw new AppError("Technical report not found", 404);
+    }
+    if (report.status === "APPROVED") {
+      throw new AppError("Approved technical report cannot be rejected", 400);
+    }
+    const updatedReport = await prisma.technicalReport.update({
+      where: { id: reportId },
+      data: {
+
+        status: "REJECTED",
+        rejectedBy: rejectedBy
+      }
+    });
+    return updatedReport;
+  }
+  catch (error) {
+    throw new AppError(
+      error instanceof AppError ? error.message : "Failed to reject technical report",
+      error instanceof AppError ? error.statusCode : 500
+    );
+  }
+};
+
