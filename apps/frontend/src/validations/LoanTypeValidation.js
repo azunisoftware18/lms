@@ -28,11 +28,26 @@ export const loanTypeSchema = z
       error: "Interest type must be FLAT or REDUCING",
     }),
 
-    processingFeeType: z.enum(["FIXED", "PERCENTAGE"], {
-      error: "Processing fee type must be FIXED or PERCENTAGE",
-    }),
+    minProcessingFee: z.coerce
+      .number()
+      .min(0, "Minimum processing fee must be at least 0"),
+    maxProcessingFee: z.coerce
+      .number()
+      .min(0, "Maximum processing fee must be at least 0"),
 
-    processingFeeValue: z.coerce.number().min(0, "Processing fee is required"),
+    minLoginCharges: z.preprocess((value) => {
+      if (value === "" || value === null || value === undefined)
+        return undefined;
+      const parsed = Number(value);
+      return Number.isNaN(parsed) ? value : parsed;
+    }, z.number().min(0).optional()),
+
+    maxLoginCharges: z.preprocess((value) => {
+      if (value === "" || value === null || value === undefined)
+        return undefined;
+      const parsed = Number(value);
+      return Number.isNaN(parsed) ? value : parsed;
+    }, z.number().min(0).optional()),
 
     gstApplicable: z.boolean().default(false),
 
@@ -141,6 +156,8 @@ export const loanTypeSchema = z
       .array(z.string())
       .min(1, "Select at least one guarantor required document"),
     guarantorDocumentsOptional: z.array(z.string()).default([]),
+    otherDocumentsRequired: z.array(z.string()).default([]),
+    otherDocumentsOptions: z.array(z.string()).default([]),
   })
   .superRefine((data, ctx) => {
     if (data.maxLoanAmount < data.minLoanAmount) {
@@ -237,6 +254,32 @@ export const loanTypeSchema = z
         code: "custom",
         message: "GST percentage is required when GST is applicable",
         path: ["gstPercentage"],
+      });
+    }
+
+    if (
+      data.maxProcessingFee !== undefined &&
+      data.minProcessingFee !== undefined &&
+      data.maxProcessingFee < data.minProcessingFee
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        message:
+          "Maximum processing fee must be greater than or equal to minimum processing fee",
+        path: ["maxProcessingFee"],
+      });
+    }
+
+    if (
+      data.maxLoginCharges !== undefined &&
+      data.minLoginCharges !== undefined &&
+      data.maxLoginCharges < data.minLoginCharges
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        message:
+          "Maximum login charges must be greater than or equal to minimum login charges",
+        path: ["maxLoginCharges"],
       });
     }
   });

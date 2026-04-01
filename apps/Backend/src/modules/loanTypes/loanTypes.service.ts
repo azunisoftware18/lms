@@ -74,8 +74,11 @@ export const createLoanTypeService = async (loanTypeData: LoanTypeDTO) => {
         maxInterestRate: data.maxInterestRate,
         defaultInterestRate: data.defaultInterestRate,
 
-        processingFeeType: data.processingFeeType,
-        processingFee: data.processingFee,
+        
+        minProcessingFee: data.minProcessingFee,
+        maxProcessingFee: data.maxProcessingFee,
+        minLoginCharges: data.minLoginCharges,
+        maxLoginCharges: data.maxLoginCharges,
         gstApplicable: data.gstApplicable,
         gstPercentage: data.gstApplicable ? data.gstPercentage : null,
 
@@ -106,6 +109,8 @@ export const createLoanTypeService = async (loanTypeData: LoanTypeDTO) => {
         coApplicantDocumentsOptional: data.coApplicantDocumentsOptional,
         guarantorDocumentsRequired: data.guarantorDocumentsRequired,
         guarantorDocumentsOptional: data.guarantorDocumentsOptional,
+        otherDocumentsRequired: data.otherDocumentsRequired,
+        otherDocumentsOptions: data.otherDocumentsOptions,
       },
     });
 

@@ -7,7 +7,6 @@ import {
 import { buildTechnicalReportSearch } from "../../../common/utils/search.js";
 import { prisma } from "../../../db/prismaService.js";
 
-
 class AppError extends Error {
   statusCode: number;
   constructor(message: string, statusCode = 500) {
@@ -19,14 +18,14 @@ class AppError extends Error {
 export const createTechnicalReportService = async (
   loanNumber: string,
   data: any,
-  userId: string
+  userId: string,
 ) => {
   return prisma.$transaction(async (tx) => {
     // ✅ Find loan by loanNumber
-        const loanApplication = await tx.loanApplication.findUnique({
-      where: { loanNumber }, // 🔥 must be unique in DB
+    const loanApplication = await tx.loanApplication.findUnique({
+      where: { loanNumber }, // must be unique in DB
       select: { id: true, branchId: true },
-        });
+    });
 
     if (!loanApplication) {
       throw new AppError("Loan application not found", 404);
@@ -40,10 +39,7 @@ export const createTechnicalReportService = async (
     });
 
     if (existingReport) {
-      throw new AppError(
-        "Technical report already exists for this loan",
-        409
-      );
+      throw new AppError("Technical report already exists for this loan", 409);
     }
 
     // ✅ Create report
@@ -129,7 +125,9 @@ export const getAllTechnicalReportsService = async (
     ...buildBranchFilter(allowedBranchIds),
     // server-side filters
     ...(params.propertyType ? { propertyType: params.propertyType } : {}),
-    ...(params.constructionStatus ? { constructionStatus: params.constructionStatus } : {}),
+    ...(params.constructionStatus
+      ? { constructionStatus: params.constructionStatus }
+      : {}),
     ...(params.city ? { city: params.city } : {}),
   };
 
@@ -148,11 +146,10 @@ export const getAllTechnicalReportsService = async (
   };
 };
 
-
 export const editTechnicalReportService = async (
   reportId: string,
   data: any,
-  userId: string
+  userId: string,
 ) => {
   try {
     const report = await prisma.technicalReport.findUnique({
@@ -176,18 +173,19 @@ export const editTechnicalReportService = async (
       },
     });
     return updatedReport;
-
   } catch (error) {
     throw new AppError(
-      error instanceof AppError ? error.message : "Failed to edit technical report",
-      error instanceof AppError ? error.statusCode : 500
+      error instanceof AppError
+        ? error.message
+        : "Failed to edit technical report",
+      error instanceof AppError ? error.statusCode : 500,
     );
   }
 };
 
 export const rejectTechnicalReportService = async (
   reportId: string,
-  rejectedBy: string
+  rejectedBy: string,
 ) => {
   try {
     const report = await prisma.technicalReport.findUnique({
@@ -202,10 +200,9 @@ export const rejectTechnicalReportService = async (
     const updatedReport = await prisma.technicalReport.update({
       where: { id: reportId },
       data: {
-
         status: "REJECTED",
-        rejectedBy: rejectedBy
-      }
+        rejectedBy: rejectedBy,
+      },
     });
 
     const loanApplicationId = report.loanApplicationId;
@@ -215,14 +212,14 @@ export const rejectTechnicalReportService = async (
         data: { status: "TECHNICAL_REJECTED" },
       });
     }
-    
+
     return updatedReport;
-  }
-  catch (error) {
+  } catch (error) {
     throw new AppError(
-      error instanceof AppError ? error.message : "Failed to reject technical report",
-      error instanceof AppError ? error.statusCode : 500
+      error instanceof AppError
+        ? error.message
+        : "Failed to reject technical report",
+      error instanceof AppError ? error.statusCode : 500,
     );
   }
 };
-

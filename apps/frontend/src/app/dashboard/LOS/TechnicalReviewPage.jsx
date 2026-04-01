@@ -112,7 +112,7 @@ function TechnicalReportModal({ isOpen, onClose }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
       <div
-        className="relative w-full max-w-2xl md:w-175 rounded-2xl border border-slate-200 bg-white shadow-2xl flex flex-col max-h-[90vh]"
+        className="relative w-full max-w-2xl md:w-[700px] rounded-2xl border border-slate-200 bg-white shadow-2xl flex flex-col max-h-[90vh]"
         style={{ minWidth: 320 }}
       >
         <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
