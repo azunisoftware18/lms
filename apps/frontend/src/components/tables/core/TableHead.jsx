@@ -257,14 +257,14 @@ export default function TableHead({
       {/* Toolbar Row */}
       <tr>
         <th colSpan={columns.length + 1} className="px-4 sm:px-6 py-3 sm:py-4">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 min-w-0">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-3 min-w-0">
             {/* Title */}
             <h2 className="text-sm sm:text-base font-semibold text-slate-700 min-w-0">
               {title}
             </h2>
 
             {/* Controls */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 min-w-0 lg:ml-auto lg:justify-end">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 min-w-0 lg:ml-4 lg:justify-end">
               {/* Search */}
               <div className="w-full sm:flex-1 lg:flex-none lg:w-72 min-w-0">
                 <SearchField

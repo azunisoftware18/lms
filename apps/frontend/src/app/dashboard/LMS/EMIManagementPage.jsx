@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { useSelector } from "react-redux";
 import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
 import QuickActionCard from "../../../components/common/QuickAction";
 import EMIManagementTable from "../../../components/tables/EMIManagementTable";
@@ -11,6 +12,7 @@ import {
   useGenerateSchedule,
   usePayEmi,
 } from "../../../hooks/useEmi";
+import GenerateEmiModal from "../../../components/modals/GenerateEmiModal";
 import { colorVariables } from "../../../lib/index";
 
 export default function EMIManagementPage() {
@@ -20,39 +22,93 @@ export default function EMIManagementPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
+  // developer toggle removed (raw inspector is commented out)
 
   const itemsPerPage = 5;
 
   // ---------- DATA (from API) ----------------
   const loanQuery = useLoanApplications({ status: "APPROVED", limit: 1000 });
-  const { emis: emiVouchers, refetch: emisRefetch } = useAllEmis({
+  const {
+    emis: emiVouchers,
+    meta: emisMeta,
+    refetch: emisRefetch,
+  } = useAllEmis({
     page: currentPage,
     limit: itemsPerPage,
     q: searchTerm,
     status: filterStatus,
   });
 
+  // Prefer normalized data from react-query but fall back to Redux store
+  const loanAppsFromStore = useSelector(
+    (s) => s.loanApplication?.loanApplications || [],
+  );
+
   const loanList = useMemo(() => {
-    return loanQuery?.data?.data || loanQuery?.data || [];
-  }, [loanQuery?.data]);
+    const qData = loanQuery?.data?.data || loanQuery?.data;
+    if (Array.isArray(qData) && qData.length) return qData;
+    if (Array.isArray(loanAppsFromStore) && loanAppsFromStore.length)
+      return loanAppsFromStore;
+    return [];
+  }, [loanQuery?.data, loanAppsFromStore]);
 
   // ---------- APPROVED FILTER ----------
   const approvedApplications = useMemo(() => {
-    return loanList.filter((loan) =>
-      (loan.applicationStatus || loan.status || loan.loanStatus || "")
-        .toLowerCase()
-        .includes("approved"),
-    );
+    return (loanList || []).filter((loan) => {
+      const candidates = [
+        loan.applicationStatus,
+        loan.status,
+        loan.loanStatus,
+        loan.loanApplication?.status,
+        loan.application?.status,
+      ]
+        .filter(Boolean)
+        .map((s) => String(s).toLowerCase());
+
+      return candidates.some((s) => s.includes("approved"));
+    });
   }, [loanList]);
 
   // ---------- TAB DATA ----------
+  // For "approved" tab we use client-side filtered loan list.
+  // For "all" (EMI vouchers) we use server-provided page (emiVouchers) and meta for pagination.
   const filteredByTab = useMemo(() => {
     if (activeTab === "approved") return approvedApplications;
     return emiVouchers || [];
   }, [activeTab, approvedApplications, emiVouchers]);
 
-  // ---------- SEARCH + FILTER ----------
+  // ---------- SEARCH + FILTER (client-side only for approved tab) ----------
   const filteredData = useMemo(() => {
+    if (activeTab === "all") {
+      // when showing EMI vouchers, server already paginates/filters — apply minimal client-side search fallback
+      if (!searchTerm && !filterStatus) return filteredByTab;
+      return (filteredByTab || []).filter((item) => {
+        const name =
+          item.loanApplication?.customer?.firstName ||
+          item.customerName ||
+          item.applicantName ||
+          "";
+        const loanNumber =
+          item.loanApplication?.loanNumber ||
+          item.loanNumber ||
+          item.voucherNo ||
+          "";
+        const status = item.status || item.voucherStatus || "";
+
+        const matchesSearch =
+          searchTerm === "" ||
+          name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          loanNumber.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const matchesFilter =
+          filterStatus === "" ||
+          status.toUpperCase() === filterStatus.toUpperCase();
+
+        return matchesSearch && matchesFilter;
+      });
+    }
+
+    // approved tab: filter client-side
     return filteredByTab.filter((item) => {
       const name = item.applicantName || item.customerName || "";
       const loanNumber = item.loanNumber || item.voucherNo || "";
@@ -74,18 +130,32 @@ export default function EMIManagementPage() {
   }, [filteredByTab, searchTerm, filterStatus, activeTab]);
 
   // ---------- PAGINATION ----------
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedData = filteredData.slice(
-    startIndex,
-    startIndex + itemsPerPage,
-  );
+  // Use server meta when available for EMI vouchers
+  const totalPages = useMemo(() => {
+    if (activeTab === "all" && emisMeta && emisMeta.total != null) {
+      return Math.max(1, Math.ceil((emisMeta.total || 0) / itemsPerPage));
+    }
+    return Math.max(1, Math.ceil(filteredData.length / itemsPerPage));
+  }, [activeTab, filteredData.length, emisMeta]);
+
+  // When server provides paged data (EMI vouchers), use that page directly. Otherwise slice client-side.
+  const paginatedData = useMemo(() => {
+    if (activeTab === "all" && emiVouchers) return emiVouchers;
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredData.slice(startIndex, startIndex + itemsPerPage);
+  }, [activeTab, emiVouchers, filteredData, currentPage]);
 
   // ---------- HANDLE ACTION ----------
   const generateSchedule = useGenerateSchedule();
   const payEmi = usePayEmi();
 
   const handleActionClick = (action, item) => {
+    if (action === "generate") {
+      // open EMI generate modal with selected loan
+      setSelectedLoan(item);
+      setIsGenerateOpen(true);
+      return;
+    }
     setConfirmAction({ type: action, item });
     setIsConfirmOpen(true);
   };
@@ -128,6 +198,22 @@ export default function EMIManagementPage() {
     setConfirmAction(null);
   };
 
+  // ---------- GENERATE MODAL ----------
+  const [isGenerateOpen, setIsGenerateOpen] = useState(false);
+  const [selectedLoan, setSelectedLoan] = useState(null);
+
+  const handleGenerate = (loanId) =>
+    new Promise((resolve, reject) => {
+      generateSchedule.mutate(loanId, {
+        onSuccess: (data) => {
+          if (loanQuery?.refetch) loanQuery.refetch();
+          if (emisRefetch) emisRefetch();
+          resolve(data);
+        },
+        onError: (err) => reject(err),
+      });
+    });
+
   // ---------- FORMAT HELPERS ----------
   const formatCurrency = (amount) =>
     new Intl.NumberFormat("en-IN", {
@@ -150,58 +236,87 @@ export default function EMIManagementPage() {
     {
       accessor: "applicantName",
       header: "Customer",
-      render: (val, row) => (
-        <div className="flex items-center gap-3">
-          <div className={`p-2 ${colorVariables.LIGHT_BG} rounded-lg`}>
-            <Icons.User className={`w-4 h-4 ${colorVariables.PRIMARY_COLOR}`} />
+      render: (_val, row) => {
+        const first =
+          row.customer?.firstName ||
+          row.applicant?.firstName ||
+          row.firstName ||
+          row.customerName ||
+          row.applicantName;
+        const last =
+          row.customer?.lastName ||
+          row.applicant?.lastName ||
+          row.lastName ||
+          "";
+        const name = [first, last].filter(Boolean).join(" ") || "N/A";
+        return (
+          <div className="flex items-center gap-3">
+            <div className={`p-2 ${colorVariables.LIGHT_BG} rounded-lg`}>
+              <Icons.User
+                className={`w-4 h-4 ${colorVariables.PRIMARY_COLOR}`}
+              />
+            </div>
+            <div>
+              <div className="font-medium text-gray-900">{name}</div>
+              <div className="text-xs text-gray-500">
+                {row.loanNumber || row.loanApplication?.loanNumber || "N/A"}
+              </div>
+            </div>
           </div>
-          <div>
-            <div className="font-medium text-gray-900">{val || "N/A"}</div>
-            <div className="text-xs text-gray-500">ID: {row.id || "N/A"}</div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      accessor: "loanNumber",
-      header: "Loan Number",
-      render: (val) => (
-        <div className="flex items-center gap-2">
-          <Icons.FileText className="w-4 h-4 text-gray-400" />
-          <span className="font-medium">{val || "N/A"}</span>
-        </div>
-      ),
+        );
+      },
     },
     {
       accessor: "tenureMonths",
       header: "Tenure",
-      render: (val) => (
+      render: (_val, row) => (
         <div className="flex items-center gap-2">
           <Icons.Clock className="w-4 h-4 text-gray-400" />
-          <span>{val || 0} months</span>
+          <span>
+            {row.tenureMonths ||
+              row.tenure ||
+              row.loanApplication?.tenureMonths ||
+              0}{" "}
+            months
+          </span>
         </div>
       ),
     },
     {
       accessor: "approvedAmount",
       header: "Loan Amount",
-      render: (val) => (
+      render: (_val, row) => (
         <span className="font-semibold text-gray-900">
-          {formatCurrency(val)}
+          {formatCurrency(
+            row.approvedAmount ||
+              row.approvedLoanAmount ||
+              row.requestedAmount ||
+              row.loanApplication?.approvedAmount ||
+              0,
+          )}
         </span>
       ),
     },
     {
       accessor: "interestRate",
       header: "Interest",
-      render: (val) => <span className="font-medium">{val}%</span>,
+      render: (_val, row) => (
+        <span className="font-medium">
+          {row.interestRate || row.loanApplication?.interestRate || 0}%
+        </span>
+      ),
     },
     {
       accessor: "applicationStatus",
       header: "Status",
-      render: (val) => (
+      render: (_val, row) => (
         <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
-          {val || "APPROVED"}
+          {(
+            row.applicationStatus ||
+            row.status ||
+            row.loanApplication?.status ||
+            "APPROVED"
+          ).toString()}
         </span>
       ),
     },
@@ -211,77 +326,114 @@ export default function EMIManagementPage() {
     {
       accessor: "customerName",
       header: "Customer",
-      render: (val, row) => (
-        <div className="flex items-center gap-3">
-          <div className={`p-2 ${colorVariables.LIGHT_BG} rounded-lg`}>
-            <Icons.User className={`w-4 h-4 ${colorVariables.PRIMARY_COLOR}`} />
-          </div>
-          <div>
-            <div className="font-medium text-gray-900">{val || "N/A"}</div>
-            <div className="text-xs text-gray-500">
-              {row.voucherNo || "N/A"}
+      render: (_val, row) => {
+        const first =
+          row.loanApplication?.customer?.firstName ||
+          row.customerName ||
+          row.customer?.firstName ||
+          row.applicantName;
+        const last =
+          row.loanApplication?.customer?.lastName ||
+          row.customer?.lastName ||
+          "";
+        const name = [first, last].filter(Boolean).join(" ") || "N/A";
+        return (
+          <div className="flex items-center gap-3">
+            <div className={`p-2 ${colorVariables.LIGHT_BG} rounded-lg`}>
+              <Icons.User
+                className={`w-4 h-4 ${colorVariables.PRIMARY_COLOR}`}
+              />
+            </div>
+            <div>
+              <div className="font-medium text-gray-900">{name}</div>
+              <div className="text-xs text-gray-500">
+                {row.voucherNo || row.loanApplication?.voucherNo || "N/A"}
+              </div>
             </div>
           </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       accessor: "loanNumber",
       header: "Loan Number",
-      render: (val) => (
+      render: (_val, row) => (
         <div className="flex items-center gap-2">
           <Icons.FileText className="w-4 h-4 text-gray-400" />
-          <span className="font-medium">{val || "N/A"}</span>
+          <span className="font-medium">
+            {row.loanNumber || row.loanApplication?.loanNumber || "N/A"}
+          </span>
         </div>
       ),
     },
     {
       accessor: "tenure",
       header: "Tenure",
-      render: (val) => `${val || 0} months`,
+      render: (_val, row) =>
+        `${row.tenure || row.loanApplication?.tenureMonths || row.loanApplication?.tenure || 0} months`,
     },
     {
       accessor: "amount",
       header: "Loan Amount",
-      render: (val) => (
+      render: (_val, row) => (
         <span className="font-semibold text-gray-900">
-          {formatCurrency(val)}
+          {formatCurrency(
+            row.amount ||
+              row.loanApplication?.approvedAmount ||
+              row.loanApplication?.requestedAmount ||
+              row.approvedAmount ||
+              0,
+          )}
         </span>
       ),
     },
     {
       accessor: "paidAmount",
       header: "Paid Amount",
-      render: (val) => (
+      render: (_val, row) => (
         <span className="font-semibold text-green-600">
-          {formatCurrency(val)}
+          {formatCurrency(row.paidAmount || row.emiPaymentAmount || 0)}
         </span>
       ),
     },
     {
       accessor: "startDate",
       header: "Start Date",
-      render: (val) => (
+      render: (_val, row) => (
         <div className="flex items-center gap-2">
           <Icons.Calendar className="w-4 h-4 text-gray-400" />
-          <span>{formatDate(val)}</span>
+          <span>
+            {formatDate(
+              row.startDate || row.dueDate || row.loanApplication?.emiStartDate,
+            )}
+          </span>
         </div>
       ),
     },
     {
       accessor: "status",
       header: "Status",
-      render: (val) => (
-        <span
-          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
-            (val || "").toUpperCase() === "ACTIVE"
-              ? colorVariables.INDEPENDENT_COLOR + " border border-green-300"
-              : "bg-yellow-100 text-yellow-800 border border-yellow-200"
-          }`}
-        >
-          {val || "PENDING"}
-        </span>
-      ),
+      render: (_val, row) => {
+        const s = (
+          row.status ||
+          row.loanApplication?.status ||
+          row.voucherStatus ||
+          "PENDING"
+        ).toString();
+        const isActive =
+          s.toUpperCase() === "ACTIVE" || s.toUpperCase() === "PAID";
+        return (
+          <span
+            className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+              isActive
+                ? colorVariables.INDEPENDENT_COLOR + " border border-green-300"
+                : "bg-yellow-100 text-yellow-800 border border-yellow-200"
+            }`}
+          >
+            {s}
+          </span>
+        );
+      },
     },
   ];
 
@@ -322,7 +474,10 @@ export default function EMIManagementPage() {
       value: "approved",
       label: `Approved Applications (${approvedApplications.length})`,
     },
-    { value: "all", label: `EMI Vouchers (${(emiVouchers || []).length})` },
+    {
+      value: "all",
+      label: `EMI Vouchers (${emisMeta?.total ?? (emiVouchers || []).length})`,
+    },
   ];
 
   // ---------- UI ----------
@@ -353,6 +508,16 @@ export default function EMIManagementPage() {
           onClick={() => setActiveTab("all")}
         />
       </div>
+      {/* GENERATE EMI MODAL */}
+      <GenerateEmiModal
+        isOpen={isGenerateOpen}
+        onClose={() => {
+          setIsGenerateOpen(false);
+          setSelectedLoan(null);
+        }}
+        loan={selectedLoan}
+        onGenerate={handleGenerate}
+      />
 
       {/* TABLE */}
       <EMIManagementTable
@@ -402,6 +567,25 @@ export default function EMIManagementPage() {
           setConfirmAction(null);
         }}
       />
+      {/* DEV: Raw data inspector */}
+      {/* {showRawData && (
+        <div className="mt-4 bg-white p-4 rounded-lg border border-slate-100">
+          <h3 className="text-sm font-medium mb-2">Raw paginated data</h3>
+          <pre className="text-xs overflow-auto max-h-64">
+            <strong>paginatedData:</strong>
+            {"\n"}
+            {JSON.stringify(paginatedData, null, 2)}
+            {"\n\n"}
+            <strong>loanQuery.data:</strong>
+            {"\n"}
+            {JSON.stringify(loanQuery?.data || null, null, 2)}
+            {"\n\n"}
+            <strong>loanAppsFromStore:</strong>
+            {"\n"}
+            {JSON.stringify(loanAppsFromStore || null, null, 2)}
+          </pre>
+        </div>
+      )} */}
     </div>
   );
 }
