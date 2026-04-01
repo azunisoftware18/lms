@@ -161,9 +161,9 @@ export const getLeadByIdController = async (req: Request, res: Response) => {
       data: toPublicLead(lead),
     });
   } catch (error: any) {
-    res.status(500).json({
+    res.status(error?.statusCode || 500).json({
       success: false,
-      message: "Failed to retrieve lead",
+      message: getSafeErrorMessage(error, "Failed to retrieve lead"),
     });
   }
 };
