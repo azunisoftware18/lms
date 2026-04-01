@@ -34,7 +34,10 @@ export type LoanTypeAvgAggregateOutputType = {
   minInterestRate: number | null
   maxInterestRate: number | null
   defaultInterestRate: number | null
-  processingFee: number | null
+  minProcessingFee: number | null
+  maxProcessingFee: number | null
+  minLoginCharges: number | null
+  maxLoginCharges: number | null
   gstPercentage: number | null
   minAge: number | null
   maxAge: number | null
@@ -57,7 +60,10 @@ export type LoanTypeSumAggregateOutputType = {
   minInterestRate: number | null
   maxInterestRate: number | null
   defaultInterestRate: number | null
-  processingFee: number | null
+  minProcessingFee: number | null
+  maxProcessingFee: number | null
+  minLoginCharges: number | null
+  maxLoginCharges: number | null
   gstPercentage: number | null
   minAge: number | null
   maxAge: number | null
@@ -87,8 +93,10 @@ export type LoanTypeMinAggregateOutputType = {
   minInterestRate: number | null
   maxInterestRate: number | null
   defaultInterestRate: number | null
-  processingFeeType: $Enums.CommissionType | null
-  processingFee: number | null
+  minProcessingFee: number | null
+  maxProcessingFee: number | null
+  minLoginCharges: number | null
+  maxLoginCharges: number | null
   gstApplicable: boolean | null
   gstPercentage: number | null
   minAge: number | null
@@ -109,6 +117,8 @@ export type LoanTypeMinAggregateOutputType = {
   isPublic: boolean | null
   approvalRequired: boolean | null
   estimatedProcessingTimeDays: number | null
+  otherDocumentsRequired: string | null
+  otherDocumentsOptions: string | null
   applicantDocumentsRequired: string | null
   applicantDocumentsOptional: string | null
   coApplicantDocumentsRequired: string | null
@@ -135,8 +145,10 @@ export type LoanTypeMaxAggregateOutputType = {
   minInterestRate: number | null
   maxInterestRate: number | null
   defaultInterestRate: number | null
-  processingFeeType: $Enums.CommissionType | null
-  processingFee: number | null
+  minProcessingFee: number | null
+  maxProcessingFee: number | null
+  minLoginCharges: number | null
+  maxLoginCharges: number | null
   gstApplicable: boolean | null
   gstPercentage: number | null
   minAge: number | null
@@ -157,6 +169,8 @@ export type LoanTypeMaxAggregateOutputType = {
   isPublic: boolean | null
   approvalRequired: boolean | null
   estimatedProcessingTimeDays: number | null
+  otherDocumentsRequired: string | null
+  otherDocumentsOptions: string | null
   applicantDocumentsRequired: string | null
   applicantDocumentsOptional: string | null
   coApplicantDocumentsRequired: string | null
@@ -183,8 +197,10 @@ export type LoanTypeCountAggregateOutputType = {
   minInterestRate: number
   maxInterestRate: number
   defaultInterestRate: number
-  processingFeeType: number
-  processingFee: number
+  minProcessingFee: number
+  maxProcessingFee: number
+  minLoginCharges: number
+  maxLoginCharges: number
   gstApplicable: number
   gstPercentage: number
   minAge: number
@@ -205,6 +221,8 @@ export type LoanTypeCountAggregateOutputType = {
   isPublic: number
   approvalRequired: number
   estimatedProcessingTimeDays: number
+  otherDocumentsRequired: number
+  otherDocumentsOptions: number
   applicantDocumentsRequired: number
   applicantDocumentsOptional: number
   coApplicantDocumentsRequired: number
@@ -226,7 +244,10 @@ export type LoanTypeAvgAggregateInputType = {
   minInterestRate?: true
   maxInterestRate?: true
   defaultInterestRate?: true
-  processingFee?: true
+  minProcessingFee?: true
+  maxProcessingFee?: true
+  minLoginCharges?: true
+  maxLoginCharges?: true
   gstPercentage?: true
   minAge?: true
   maxAge?: true
@@ -249,7 +270,10 @@ export type LoanTypeSumAggregateInputType = {
   minInterestRate?: true
   maxInterestRate?: true
   defaultInterestRate?: true
-  processingFee?: true
+  minProcessingFee?: true
+  maxProcessingFee?: true
+  minLoginCharges?: true
+  maxLoginCharges?: true
   gstPercentage?: true
   minAge?: true
   maxAge?: true
@@ -279,8 +303,10 @@ export type LoanTypeMinAggregateInputType = {
   minInterestRate?: true
   maxInterestRate?: true
   defaultInterestRate?: true
-  processingFeeType?: true
-  processingFee?: true
+  minProcessingFee?: true
+  maxProcessingFee?: true
+  minLoginCharges?: true
+  maxLoginCharges?: true
   gstApplicable?: true
   gstPercentage?: true
   minAge?: true
@@ -301,6 +327,8 @@ export type LoanTypeMinAggregateInputType = {
   isPublic?: true
   approvalRequired?: true
   estimatedProcessingTimeDays?: true
+  otherDocumentsRequired?: true
+  otherDocumentsOptions?: true
   applicantDocumentsRequired?: true
   applicantDocumentsOptional?: true
   coApplicantDocumentsRequired?: true
@@ -327,8 +355,10 @@ export type LoanTypeMaxAggregateInputType = {
   minInterestRate?: true
   maxInterestRate?: true
   defaultInterestRate?: true
-  processingFeeType?: true
-  processingFee?: true
+  minProcessingFee?: true
+  maxProcessingFee?: true
+  minLoginCharges?: true
+  maxLoginCharges?: true
   gstApplicable?: true
   gstPercentage?: true
   minAge?: true
@@ -349,6 +379,8 @@ export type LoanTypeMaxAggregateInputType = {
   isPublic?: true
   approvalRequired?: true
   estimatedProcessingTimeDays?: true
+  otherDocumentsRequired?: true
+  otherDocumentsOptions?: true
   applicantDocumentsRequired?: true
   applicantDocumentsOptional?: true
   coApplicantDocumentsRequired?: true
@@ -375,8 +407,10 @@ export type LoanTypeCountAggregateInputType = {
   minInterestRate?: true
   maxInterestRate?: true
   defaultInterestRate?: true
-  processingFeeType?: true
-  processingFee?: true
+  minProcessingFee?: true
+  maxProcessingFee?: true
+  minLoginCharges?: true
+  maxLoginCharges?: true
   gstApplicable?: true
   gstPercentage?: true
   minAge?: true
@@ -397,6 +431,8 @@ export type LoanTypeCountAggregateInputType = {
   isPublic?: true
   approvalRequired?: true
   estimatedProcessingTimeDays?: true
+  otherDocumentsRequired?: true
+  otherDocumentsOptions?: true
   applicantDocumentsRequired?: true
   applicantDocumentsOptional?: true
   coApplicantDocumentsRequired?: true
@@ -510,8 +546,10 @@ export type LoanTypeGroupByOutputType = {
   minInterestRate: number
   maxInterestRate: number
   defaultInterestRate: number
-  processingFeeType: $Enums.CommissionType
-  processingFee: number
+  minProcessingFee: number
+  maxProcessingFee: number
+  minLoginCharges: number | null
+  maxLoginCharges: number | null
   gstApplicable: boolean
   gstPercentage: number | null
   minAge: number
@@ -532,6 +570,8 @@ export type LoanTypeGroupByOutputType = {
   isPublic: boolean
   approvalRequired: boolean
   estimatedProcessingTimeDays: number | null
+  otherDocumentsRequired: string
+  otherDocumentsOptions: string | null
   applicantDocumentsRequired: string
   applicantDocumentsOptional: string | null
   coApplicantDocumentsRequired: string
@@ -581,8 +621,10 @@ export type LoanTypeWhereInput = {
   minInterestRate?: Prisma.FloatFilter<"LoanType"> | number
   maxInterestRate?: Prisma.FloatFilter<"LoanType"> | number
   defaultInterestRate?: Prisma.FloatFilter<"LoanType"> | number
-  processingFeeType?: Prisma.EnumCommissionTypeFilter<"LoanType"> | $Enums.CommissionType
-  processingFee?: Prisma.FloatFilter<"LoanType"> | number
+  minProcessingFee?: Prisma.FloatFilter<"LoanType"> | number
+  maxProcessingFee?: Prisma.FloatFilter<"LoanType"> | number
+  minLoginCharges?: Prisma.FloatNullableFilter<"LoanType"> | number | null
+  maxLoginCharges?: Prisma.FloatNullableFilter<"LoanType"> | number | null
   gstApplicable?: Prisma.BoolFilter<"LoanType"> | boolean
   gstPercentage?: Prisma.FloatNullableFilter<"LoanType"> | number | null
   minAge?: Prisma.IntFilter<"LoanType"> | number
@@ -603,6 +645,8 @@ export type LoanTypeWhereInput = {
   isPublic?: Prisma.BoolFilter<"LoanType"> | boolean
   approvalRequired?: Prisma.BoolFilter<"LoanType"> | boolean
   estimatedProcessingTimeDays?: Prisma.IntNullableFilter<"LoanType"> | number | null
+  otherDocumentsRequired?: Prisma.StringFilter<"LoanType"> | string
+  otherDocumentsOptions?: Prisma.StringNullableFilter<"LoanType"> | string | null
   applicantDocumentsRequired?: Prisma.StringFilter<"LoanType"> | string
   applicantDocumentsOptional?: Prisma.StringNullableFilter<"LoanType"> | string | null
   coApplicantDocumentsRequired?: Prisma.StringFilter<"LoanType"> | string
@@ -631,8 +675,10 @@ export type LoanTypeOrderByWithRelationInput = {
   minInterestRate?: Prisma.SortOrder
   maxInterestRate?: Prisma.SortOrder
   defaultInterestRate?: Prisma.SortOrder
-  processingFeeType?: Prisma.SortOrder
-  processingFee?: Prisma.SortOrder
+  minProcessingFee?: Prisma.SortOrder
+  maxProcessingFee?: Prisma.SortOrder
+  minLoginCharges?: Prisma.SortOrderInput | Prisma.SortOrder
+  maxLoginCharges?: Prisma.SortOrderInput | Prisma.SortOrder
   gstApplicable?: Prisma.SortOrder
   gstPercentage?: Prisma.SortOrderInput | Prisma.SortOrder
   minAge?: Prisma.SortOrder
@@ -653,6 +699,8 @@ export type LoanTypeOrderByWithRelationInput = {
   isPublic?: Prisma.SortOrder
   approvalRequired?: Prisma.SortOrder
   estimatedProcessingTimeDays?: Prisma.SortOrderInput | Prisma.SortOrder
+  otherDocumentsRequired?: Prisma.SortOrder
+  otherDocumentsOptions?: Prisma.SortOrderInput | Prisma.SortOrder
   applicantDocumentsRequired?: Prisma.SortOrder
   applicantDocumentsOptional?: Prisma.SortOrderInput | Prisma.SortOrder
   coApplicantDocumentsRequired?: Prisma.SortOrder
@@ -685,8 +733,10 @@ export type LoanTypeWhereUniqueInput = Prisma.AtLeast<{
   minInterestRate?: Prisma.FloatFilter<"LoanType"> | number
   maxInterestRate?: Prisma.FloatFilter<"LoanType"> | number
   defaultInterestRate?: Prisma.FloatFilter<"LoanType"> | number
-  processingFeeType?: Prisma.EnumCommissionTypeFilter<"LoanType"> | $Enums.CommissionType
-  processingFee?: Prisma.FloatFilter<"LoanType"> | number
+  minProcessingFee?: Prisma.FloatFilter<"LoanType"> | number
+  maxProcessingFee?: Prisma.FloatFilter<"LoanType"> | number
+  minLoginCharges?: Prisma.FloatNullableFilter<"LoanType"> | number | null
+  maxLoginCharges?: Prisma.FloatNullableFilter<"LoanType"> | number | null
   gstApplicable?: Prisma.BoolFilter<"LoanType"> | boolean
   gstPercentage?: Prisma.FloatNullableFilter<"LoanType"> | number | null
   minAge?: Prisma.IntFilter<"LoanType"> | number
@@ -707,6 +757,8 @@ export type LoanTypeWhereUniqueInput = Prisma.AtLeast<{
   isPublic?: Prisma.BoolFilter<"LoanType"> | boolean
   approvalRequired?: Prisma.BoolFilter<"LoanType"> | boolean
   estimatedProcessingTimeDays?: Prisma.IntNullableFilter<"LoanType"> | number | null
+  otherDocumentsRequired?: Prisma.StringFilter<"LoanType"> | string
+  otherDocumentsOptions?: Prisma.StringNullableFilter<"LoanType"> | string | null
   applicantDocumentsRequired?: Prisma.StringFilter<"LoanType"> | string
   applicantDocumentsOptional?: Prisma.StringNullableFilter<"LoanType"> | string | null
   coApplicantDocumentsRequired?: Prisma.StringFilter<"LoanType"> | string
@@ -735,8 +787,10 @@ export type LoanTypeOrderByWithAggregationInput = {
   minInterestRate?: Prisma.SortOrder
   maxInterestRate?: Prisma.SortOrder
   defaultInterestRate?: Prisma.SortOrder
-  processingFeeType?: Prisma.SortOrder
-  processingFee?: Prisma.SortOrder
+  minProcessingFee?: Prisma.SortOrder
+  maxProcessingFee?: Prisma.SortOrder
+  minLoginCharges?: Prisma.SortOrderInput | Prisma.SortOrder
+  maxLoginCharges?: Prisma.SortOrderInput | Prisma.SortOrder
   gstApplicable?: Prisma.SortOrder
   gstPercentage?: Prisma.SortOrderInput | Prisma.SortOrder
   minAge?: Prisma.SortOrder
@@ -757,6 +811,8 @@ export type LoanTypeOrderByWithAggregationInput = {
   isPublic?: Prisma.SortOrder
   approvalRequired?: Prisma.SortOrder
   estimatedProcessingTimeDays?: Prisma.SortOrderInput | Prisma.SortOrder
+  otherDocumentsRequired?: Prisma.SortOrder
+  otherDocumentsOptions?: Prisma.SortOrderInput | Prisma.SortOrder
   applicantDocumentsRequired?: Prisma.SortOrder
   applicantDocumentsOptional?: Prisma.SortOrderInput | Prisma.SortOrder
   coApplicantDocumentsRequired?: Prisma.SortOrder
@@ -791,8 +847,10 @@ export type LoanTypeScalarWhereWithAggregatesInput = {
   minInterestRate?: Prisma.FloatWithAggregatesFilter<"LoanType"> | number
   maxInterestRate?: Prisma.FloatWithAggregatesFilter<"LoanType"> | number
   defaultInterestRate?: Prisma.FloatWithAggregatesFilter<"LoanType"> | number
-  processingFeeType?: Prisma.EnumCommissionTypeWithAggregatesFilter<"LoanType"> | $Enums.CommissionType
-  processingFee?: Prisma.FloatWithAggregatesFilter<"LoanType"> | number
+  minProcessingFee?: Prisma.FloatWithAggregatesFilter<"LoanType"> | number
+  maxProcessingFee?: Prisma.FloatWithAggregatesFilter<"LoanType"> | number
+  minLoginCharges?: Prisma.FloatNullableWithAggregatesFilter<"LoanType"> | number | null
+  maxLoginCharges?: Prisma.FloatNullableWithAggregatesFilter<"LoanType"> | number | null
   gstApplicable?: Prisma.BoolWithAggregatesFilter<"LoanType"> | boolean
   gstPercentage?: Prisma.FloatNullableWithAggregatesFilter<"LoanType"> | number | null
   minAge?: Prisma.IntWithAggregatesFilter<"LoanType"> | number
@@ -813,6 +871,8 @@ export type LoanTypeScalarWhereWithAggregatesInput = {
   isPublic?: Prisma.BoolWithAggregatesFilter<"LoanType"> | boolean
   approvalRequired?: Prisma.BoolWithAggregatesFilter<"LoanType"> | boolean
   estimatedProcessingTimeDays?: Prisma.IntNullableWithAggregatesFilter<"LoanType"> | number | null
+  otherDocumentsRequired?: Prisma.StringWithAggregatesFilter<"LoanType"> | string
+  otherDocumentsOptions?: Prisma.StringNullableWithAggregatesFilter<"LoanType"> | string | null
   applicantDocumentsRequired?: Prisma.StringWithAggregatesFilter<"LoanType"> | string
   applicantDocumentsOptional?: Prisma.StringNullableWithAggregatesFilter<"LoanType"> | string | null
   coApplicantDocumentsRequired?: Prisma.StringWithAggregatesFilter<"LoanType"> | string
@@ -839,8 +899,10 @@ export type LoanTypeCreateInput = {
   minInterestRate: number
   maxInterestRate: number
   defaultInterestRate: number
-  processingFeeType: $Enums.CommissionType
-  processingFee: number
+  minProcessingFee: number
+  maxProcessingFee: number
+  minLoginCharges?: number | null
+  maxLoginCharges?: number | null
   gstApplicable?: boolean
   gstPercentage?: number | null
   minAge: number
@@ -861,6 +923,8 @@ export type LoanTypeCreateInput = {
   isPublic?: boolean
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: number | null
+  otherDocumentsRequired: string
+  otherDocumentsOptions?: string | null
   applicantDocumentsRequired?: string
   applicantDocumentsOptional?: string | null
   coApplicantDocumentsRequired?: string
@@ -889,8 +953,10 @@ export type LoanTypeUncheckedCreateInput = {
   minInterestRate: number
   maxInterestRate: number
   defaultInterestRate: number
-  processingFeeType: $Enums.CommissionType
-  processingFee: number
+  minProcessingFee: number
+  maxProcessingFee: number
+  minLoginCharges?: number | null
+  maxLoginCharges?: number | null
   gstApplicable?: boolean
   gstPercentage?: number | null
   minAge: number
@@ -911,6 +977,8 @@ export type LoanTypeUncheckedCreateInput = {
   isPublic?: boolean
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: number | null
+  otherDocumentsRequired: string
+  otherDocumentsOptions?: string | null
   applicantDocumentsRequired?: string
   applicantDocumentsOptional?: string | null
   coApplicantDocumentsRequired?: string
@@ -939,8 +1007,10 @@ export type LoanTypeUpdateInput = {
   minInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
   maxInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
   defaultInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  processingFeeType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
-  processingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  minProcessingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxProcessingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  minLoginCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  maxLoginCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   gstApplicable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gstPercentage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   minAge?: Prisma.IntFieldUpdateOperationsInput | number
@@ -961,6 +1031,8 @@ export type LoanTypeUpdateInput = {
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   approvalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   estimatedProcessingTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  otherDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  otherDocumentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applicantDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
   applicantDocumentsOptional?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
@@ -989,8 +1061,10 @@ export type LoanTypeUncheckedUpdateInput = {
   minInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
   maxInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
   defaultInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  processingFeeType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
-  processingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  minProcessingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxProcessingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  minLoginCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  maxLoginCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   gstApplicable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gstPercentage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   minAge?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1011,6 +1085,8 @@ export type LoanTypeUncheckedUpdateInput = {
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   approvalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   estimatedProcessingTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  otherDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  otherDocumentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applicantDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
   applicantDocumentsOptional?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1039,8 +1115,10 @@ export type LoanTypeCreateManyInput = {
   minInterestRate: number
   maxInterestRate: number
   defaultInterestRate: number
-  processingFeeType: $Enums.CommissionType
-  processingFee: number
+  minProcessingFee: number
+  maxProcessingFee: number
+  minLoginCharges?: number | null
+  maxLoginCharges?: number | null
   gstApplicable?: boolean
   gstPercentage?: number | null
   minAge: number
@@ -1061,6 +1139,8 @@ export type LoanTypeCreateManyInput = {
   isPublic?: boolean
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: number | null
+  otherDocumentsRequired: string
+  otherDocumentsOptions?: string | null
   applicantDocumentsRequired?: string
   applicantDocumentsOptional?: string | null
   coApplicantDocumentsRequired?: string
@@ -1087,8 +1167,10 @@ export type LoanTypeUpdateManyMutationInput = {
   minInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
   maxInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
   defaultInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  processingFeeType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
-  processingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  minProcessingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxProcessingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  minLoginCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  maxLoginCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   gstApplicable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gstPercentage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   minAge?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1109,6 +1191,8 @@ export type LoanTypeUpdateManyMutationInput = {
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   approvalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   estimatedProcessingTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  otherDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  otherDocumentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applicantDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
   applicantDocumentsOptional?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1135,8 +1219,10 @@ export type LoanTypeUncheckedUpdateManyInput = {
   minInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
   maxInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
   defaultInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  processingFeeType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
-  processingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  minProcessingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxProcessingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  minLoginCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  maxLoginCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   gstApplicable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gstPercentage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   minAge?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1157,6 +1243,8 @@ export type LoanTypeUncheckedUpdateManyInput = {
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   approvalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   estimatedProcessingTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  otherDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  otherDocumentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applicantDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
   applicantDocumentsOptional?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1199,8 +1287,10 @@ export type LoanTypeCountOrderByAggregateInput = {
   minInterestRate?: Prisma.SortOrder
   maxInterestRate?: Prisma.SortOrder
   defaultInterestRate?: Prisma.SortOrder
-  processingFeeType?: Prisma.SortOrder
-  processingFee?: Prisma.SortOrder
+  minProcessingFee?: Prisma.SortOrder
+  maxProcessingFee?: Prisma.SortOrder
+  minLoginCharges?: Prisma.SortOrder
+  maxLoginCharges?: Prisma.SortOrder
   gstApplicable?: Prisma.SortOrder
   gstPercentage?: Prisma.SortOrder
   minAge?: Prisma.SortOrder
@@ -1221,6 +1311,8 @@ export type LoanTypeCountOrderByAggregateInput = {
   isPublic?: Prisma.SortOrder
   approvalRequired?: Prisma.SortOrder
   estimatedProcessingTimeDays?: Prisma.SortOrder
+  otherDocumentsRequired?: Prisma.SortOrder
+  otherDocumentsOptions?: Prisma.SortOrder
   applicantDocumentsRequired?: Prisma.SortOrder
   applicantDocumentsOptional?: Prisma.SortOrder
   coApplicantDocumentsRequired?: Prisma.SortOrder
@@ -1240,7 +1332,10 @@ export type LoanTypeAvgOrderByAggregateInput = {
   minInterestRate?: Prisma.SortOrder
   maxInterestRate?: Prisma.SortOrder
   defaultInterestRate?: Prisma.SortOrder
-  processingFee?: Prisma.SortOrder
+  minProcessingFee?: Prisma.SortOrder
+  maxProcessingFee?: Prisma.SortOrder
+  minLoginCharges?: Prisma.SortOrder
+  maxLoginCharges?: Prisma.SortOrder
   gstPercentage?: Prisma.SortOrder
   minAge?: Prisma.SortOrder
   maxAge?: Prisma.SortOrder
@@ -1270,8 +1365,10 @@ export type LoanTypeMaxOrderByAggregateInput = {
   minInterestRate?: Prisma.SortOrder
   maxInterestRate?: Prisma.SortOrder
   defaultInterestRate?: Prisma.SortOrder
-  processingFeeType?: Prisma.SortOrder
-  processingFee?: Prisma.SortOrder
+  minProcessingFee?: Prisma.SortOrder
+  maxProcessingFee?: Prisma.SortOrder
+  minLoginCharges?: Prisma.SortOrder
+  maxLoginCharges?: Prisma.SortOrder
   gstApplicable?: Prisma.SortOrder
   gstPercentage?: Prisma.SortOrder
   minAge?: Prisma.SortOrder
@@ -1292,6 +1389,8 @@ export type LoanTypeMaxOrderByAggregateInput = {
   isPublic?: Prisma.SortOrder
   approvalRequired?: Prisma.SortOrder
   estimatedProcessingTimeDays?: Prisma.SortOrder
+  otherDocumentsRequired?: Prisma.SortOrder
+  otherDocumentsOptions?: Prisma.SortOrder
   applicantDocumentsRequired?: Prisma.SortOrder
   applicantDocumentsOptional?: Prisma.SortOrder
   coApplicantDocumentsRequired?: Prisma.SortOrder
@@ -1318,8 +1417,10 @@ export type LoanTypeMinOrderByAggregateInput = {
   minInterestRate?: Prisma.SortOrder
   maxInterestRate?: Prisma.SortOrder
   defaultInterestRate?: Prisma.SortOrder
-  processingFeeType?: Prisma.SortOrder
-  processingFee?: Prisma.SortOrder
+  minProcessingFee?: Prisma.SortOrder
+  maxProcessingFee?: Prisma.SortOrder
+  minLoginCharges?: Prisma.SortOrder
+  maxLoginCharges?: Prisma.SortOrder
   gstApplicable?: Prisma.SortOrder
   gstPercentage?: Prisma.SortOrder
   minAge?: Prisma.SortOrder
@@ -1340,6 +1441,8 @@ export type LoanTypeMinOrderByAggregateInput = {
   isPublic?: Prisma.SortOrder
   approvalRequired?: Prisma.SortOrder
   estimatedProcessingTimeDays?: Prisma.SortOrder
+  otherDocumentsRequired?: Prisma.SortOrder
+  otherDocumentsOptions?: Prisma.SortOrder
   applicantDocumentsRequired?: Prisma.SortOrder
   applicantDocumentsOptional?: Prisma.SortOrder
   coApplicantDocumentsRequired?: Prisma.SortOrder
@@ -1359,7 +1462,10 @@ export type LoanTypeSumOrderByAggregateInput = {
   minInterestRate?: Prisma.SortOrder
   maxInterestRate?: Prisma.SortOrder
   defaultInterestRate?: Prisma.SortOrder
-  processingFee?: Prisma.SortOrder
+  minProcessingFee?: Prisma.SortOrder
+  maxProcessingFee?: Prisma.SortOrder
+  minLoginCharges?: Prisma.SortOrder
+  maxLoginCharges?: Prisma.SortOrder
   gstPercentage?: Prisma.SortOrder
   minAge?: Prisma.SortOrder
   maxAge?: Prisma.SortOrder
@@ -1423,8 +1529,10 @@ export type LoanTypeCreateWithoutLeadsInput = {
   minInterestRate: number
   maxInterestRate: number
   defaultInterestRate: number
-  processingFeeType: $Enums.CommissionType
-  processingFee: number
+  minProcessingFee: number
+  maxProcessingFee: number
+  minLoginCharges?: number | null
+  maxLoginCharges?: number | null
   gstApplicable?: boolean
   gstPercentage?: number | null
   minAge: number
@@ -1445,6 +1553,8 @@ export type LoanTypeCreateWithoutLeadsInput = {
   isPublic?: boolean
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: number | null
+  otherDocumentsRequired: string
+  otherDocumentsOptions?: string | null
   applicantDocumentsRequired?: string
   applicantDocumentsOptional?: string | null
   coApplicantDocumentsRequired?: string
@@ -1472,8 +1582,10 @@ export type LoanTypeUncheckedCreateWithoutLeadsInput = {
   minInterestRate: number
   maxInterestRate: number
   defaultInterestRate: number
-  processingFeeType: $Enums.CommissionType
-  processingFee: number
+  minProcessingFee: number
+  maxProcessingFee: number
+  minLoginCharges?: number | null
+  maxLoginCharges?: number | null
   gstApplicable?: boolean
   gstPercentage?: number | null
   minAge: number
@@ -1494,6 +1606,8 @@ export type LoanTypeUncheckedCreateWithoutLeadsInput = {
   isPublic?: boolean
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: number | null
+  otherDocumentsRequired: string
+  otherDocumentsOptions?: string | null
   applicantDocumentsRequired?: string
   applicantDocumentsOptional?: string | null
   coApplicantDocumentsRequired?: string
@@ -1537,8 +1651,10 @@ export type LoanTypeUpdateWithoutLeadsInput = {
   minInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
   maxInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
   defaultInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  processingFeeType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
-  processingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  minProcessingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxProcessingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  minLoginCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  maxLoginCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   gstApplicable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gstPercentage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   minAge?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1559,6 +1675,8 @@ export type LoanTypeUpdateWithoutLeadsInput = {
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   approvalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   estimatedProcessingTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  otherDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  otherDocumentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applicantDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
   applicantDocumentsOptional?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1586,8 +1704,10 @@ export type LoanTypeUncheckedUpdateWithoutLeadsInput = {
   minInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
   maxInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
   defaultInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  processingFeeType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
-  processingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  minProcessingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxProcessingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  minLoginCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  maxLoginCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   gstApplicable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gstPercentage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   minAge?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1608,6 +1728,8 @@ export type LoanTypeUncheckedUpdateWithoutLeadsInput = {
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   approvalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   estimatedProcessingTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  otherDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  otherDocumentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applicantDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
   applicantDocumentsOptional?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1635,8 +1757,10 @@ export type LoanTypeCreateWithoutLoanApplicationsInput = {
   minInterestRate: number
   maxInterestRate: number
   defaultInterestRate: number
-  processingFeeType: $Enums.CommissionType
-  processingFee: number
+  minProcessingFee: number
+  maxProcessingFee: number
+  minLoginCharges?: number | null
+  maxLoginCharges?: number | null
   gstApplicable?: boolean
   gstPercentage?: number | null
   minAge: number
@@ -1657,6 +1781,8 @@ export type LoanTypeCreateWithoutLoanApplicationsInput = {
   isPublic?: boolean
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: number | null
+  otherDocumentsRequired: string
+  otherDocumentsOptions?: string | null
   applicantDocumentsRequired?: string
   applicantDocumentsOptional?: string | null
   coApplicantDocumentsRequired?: string
@@ -1684,8 +1810,10 @@ export type LoanTypeUncheckedCreateWithoutLoanApplicationsInput = {
   minInterestRate: number
   maxInterestRate: number
   defaultInterestRate: number
-  processingFeeType: $Enums.CommissionType
-  processingFee: number
+  minProcessingFee: number
+  maxProcessingFee: number
+  minLoginCharges?: number | null
+  maxLoginCharges?: number | null
   gstApplicable?: boolean
   gstPercentage?: number | null
   minAge: number
@@ -1706,6 +1834,8 @@ export type LoanTypeUncheckedCreateWithoutLoanApplicationsInput = {
   isPublic?: boolean
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: number | null
+  otherDocumentsRequired: string
+  otherDocumentsOptions?: string | null
   applicantDocumentsRequired?: string
   applicantDocumentsOptional?: string | null
   coApplicantDocumentsRequired?: string
@@ -1749,8 +1879,10 @@ export type LoanTypeUpdateWithoutLoanApplicationsInput = {
   minInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
   maxInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
   defaultInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  processingFeeType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
-  processingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  minProcessingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxProcessingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  minLoginCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  maxLoginCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   gstApplicable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gstPercentage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   minAge?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1771,6 +1903,8 @@ export type LoanTypeUpdateWithoutLoanApplicationsInput = {
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   approvalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   estimatedProcessingTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  otherDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  otherDocumentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applicantDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
   applicantDocumentsOptional?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1798,8 +1932,10 @@ export type LoanTypeUncheckedUpdateWithoutLoanApplicationsInput = {
   minInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
   maxInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
   defaultInterestRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  processingFeeType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
-  processingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  minProcessingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxProcessingFee?: Prisma.FloatFieldUpdateOperationsInput | number
+  minLoginCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  maxLoginCharges?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   gstApplicable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gstPercentage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   minAge?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1820,6 +1956,8 @@ export type LoanTypeUncheckedUpdateWithoutLoanApplicationsInput = {
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   approvalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   estimatedProcessingTimeDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  otherDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  otherDocumentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applicantDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
   applicantDocumentsOptional?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coApplicantDocumentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1887,8 +2025,10 @@ export type LoanTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   minInterestRate?: boolean
   maxInterestRate?: boolean
   defaultInterestRate?: boolean
-  processingFeeType?: boolean
-  processingFee?: boolean
+  minProcessingFee?: boolean
+  maxProcessingFee?: boolean
+  minLoginCharges?: boolean
+  maxLoginCharges?: boolean
   gstApplicable?: boolean
   gstPercentage?: boolean
   minAge?: boolean
@@ -1909,6 +2049,8 @@ export type LoanTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   isPublic?: boolean
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: boolean
+  otherDocumentsRequired?: boolean
+  otherDocumentsOptions?: boolean
   applicantDocumentsRequired?: boolean
   applicantDocumentsOptional?: boolean
   coApplicantDocumentsRequired?: boolean
@@ -1940,8 +2082,10 @@ export type LoanTypeSelectScalar = {
   minInterestRate?: boolean
   maxInterestRate?: boolean
   defaultInterestRate?: boolean
-  processingFeeType?: boolean
-  processingFee?: boolean
+  minProcessingFee?: boolean
+  maxProcessingFee?: boolean
+  minLoginCharges?: boolean
+  maxLoginCharges?: boolean
   gstApplicable?: boolean
   gstPercentage?: boolean
   minAge?: boolean
@@ -1962,6 +2106,8 @@ export type LoanTypeSelectScalar = {
   isPublic?: boolean
   approvalRequired?: boolean
   estimatedProcessingTimeDays?: boolean
+  otherDocumentsRequired?: boolean
+  otherDocumentsOptions?: boolean
   applicantDocumentsRequired?: boolean
   applicantDocumentsOptional?: boolean
   coApplicantDocumentsRequired?: boolean
@@ -1973,7 +2119,7 @@ export type LoanTypeSelectScalar = {
   updatedAt?: boolean
 }
 
-export type LoanTypeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "name" | "description" | "category" | "secured" | "minAmount" | "maxAmount" | "minTenureMonths" | "maxTenureMonths" | "interestType" | "minInterestRate" | "maxInterestRate" | "defaultInterestRate" | "processingFeeType" | "processingFee" | "gstApplicable" | "gstPercentage" | "minAge" | "maxAge" | "minIncome" | "employmentType" | "minCibilScore" | "maxCibilScore" | "maxLoanToValueRatio" | "prepaymentAllowed" | "foreclosureAllowed" | "prepaymentCharges" | "foreclosureCharges" | "latePaymentFeeType" | "latePaymentFee" | "bounceCharges" | "isActive" | "isPublic" | "approvalRequired" | "estimatedProcessingTimeDays" | "applicantDocumentsRequired" | "applicantDocumentsOptional" | "coApplicantDocumentsRequired" | "coApplicantDocumentsOptional" | "guarantorDocumentsRequired" | "guarantorDocumentsOptional" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["loanType"]>
+export type LoanTypeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "name" | "description" | "category" | "secured" | "minAmount" | "maxAmount" | "minTenureMonths" | "maxTenureMonths" | "interestType" | "minInterestRate" | "maxInterestRate" | "defaultInterestRate" | "minProcessingFee" | "maxProcessingFee" | "minLoginCharges" | "maxLoginCharges" | "gstApplicable" | "gstPercentage" | "minAge" | "maxAge" | "minIncome" | "employmentType" | "minCibilScore" | "maxCibilScore" | "maxLoanToValueRatio" | "prepaymentAllowed" | "foreclosureAllowed" | "prepaymentCharges" | "foreclosureCharges" | "latePaymentFeeType" | "latePaymentFee" | "bounceCharges" | "isActive" | "isPublic" | "approvalRequired" | "estimatedProcessingTimeDays" | "otherDocumentsRequired" | "otherDocumentsOptions" | "applicantDocumentsRequired" | "applicantDocumentsOptional" | "coApplicantDocumentsRequired" | "coApplicantDocumentsOptional" | "guarantorDocumentsRequired" | "guarantorDocumentsOptional" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["loanType"]>
 export type LoanTypeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   leads?: boolean | Prisma.LoanType$leadsArgs<ExtArgs>
   loanApplications?: boolean | Prisma.LoanType$loanApplicationsArgs<ExtArgs>
@@ -2001,8 +2147,10 @@ export type $LoanTypePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     minInterestRate: number
     maxInterestRate: number
     defaultInterestRate: number
-    processingFeeType: $Enums.CommissionType
-    processingFee: number
+    minProcessingFee: number
+    maxProcessingFee: number
+    minLoginCharges: number | null
+    maxLoginCharges: number | null
     gstApplicable: boolean
     gstPercentage: number | null
     minAge: number
@@ -2023,6 +2171,8 @@ export type $LoanTypePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     isPublic: boolean
     approvalRequired: boolean
     estimatedProcessingTimeDays: number | null
+    otherDocumentsRequired: string
+    otherDocumentsOptions: string | null
     applicantDocumentsRequired: string
     applicantDocumentsOptional: string | null
     coApplicantDocumentsRequired: string
@@ -2417,8 +2567,10 @@ export interface LoanTypeFieldRefs {
   readonly minInterestRate: Prisma.FieldRef<"LoanType", 'Float'>
   readonly maxInterestRate: Prisma.FieldRef<"LoanType", 'Float'>
   readonly defaultInterestRate: Prisma.FieldRef<"LoanType", 'Float'>
-  readonly processingFeeType: Prisma.FieldRef<"LoanType", 'CommissionType'>
-  readonly processingFee: Prisma.FieldRef<"LoanType", 'Float'>
+  readonly minProcessingFee: Prisma.FieldRef<"LoanType", 'Float'>
+  readonly maxProcessingFee: Prisma.FieldRef<"LoanType", 'Float'>
+  readonly minLoginCharges: Prisma.FieldRef<"LoanType", 'Float'>
+  readonly maxLoginCharges: Prisma.FieldRef<"LoanType", 'Float'>
   readonly gstApplicable: Prisma.FieldRef<"LoanType", 'Boolean'>
   readonly gstPercentage: Prisma.FieldRef<"LoanType", 'Float'>
   readonly minAge: Prisma.FieldRef<"LoanType", 'Int'>
@@ -2439,6 +2591,8 @@ export interface LoanTypeFieldRefs {
   readonly isPublic: Prisma.FieldRef<"LoanType", 'Boolean'>
   readonly approvalRequired: Prisma.FieldRef<"LoanType", 'Boolean'>
   readonly estimatedProcessingTimeDays: Prisma.FieldRef<"LoanType", 'Int'>
+  readonly otherDocumentsRequired: Prisma.FieldRef<"LoanType", 'String'>
+  readonly otherDocumentsOptions: Prisma.FieldRef<"LoanType", 'String'>
   readonly applicantDocumentsRequired: Prisma.FieldRef<"LoanType", 'String'>
   readonly applicantDocumentsOptional: Prisma.FieldRef<"LoanType", 'String'>
   readonly coApplicantDocumentsRequired: Prisma.FieldRef<"LoanType", 'String'>

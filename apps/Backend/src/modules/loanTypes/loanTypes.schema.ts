@@ -28,8 +28,10 @@ const loanTypeBaseSchema = z.object({
   maxInterestRate: z.number().min(0),
   defaultInterestRate: z.number().min(0),
 
-  processingFeeType: z.nativeEnum(CommissionType),
-  processingFee: z.number().min(0),
+  minProcessingFee: z.number().min(0),
+  maxProcessingFee: z.number().min(0),
+  minLoginCharges: z.number().min(0),
+  maxLoginCharges: z.number().min(0),
   gstApplicable: z.boolean().default(true),
   gstPercentage: z.number().min(0).max(100).optional(),
 
@@ -62,6 +64,8 @@ const loanTypeBaseSchema = z.object({
   coApplicantDocumentsOptional: z.string().optional(),
   guarantorDocumentsRequired: z.string(),
   guarantorDocumentsOptional: z.string().optional(),
+  otherDocumentsRequired: z.string(),
+  otherDocumentsOptions: z.string().optional(),
 });
 
 export const createLoanTypeSchema = loanTypeBaseSchema
@@ -98,6 +102,8 @@ export const createLoanTypeSchema = loanTypeBaseSchema
       ["coApplicantDocumentsOptional", data.coApplicantDocumentsOptional],
       ["guarantorDocumentsRequired", data.guarantorDocumentsRequired],
       ["guarantorDocumentsOptional", data.guarantorDocumentsOptional],
+      ["otherDocumentsRequired", data.otherDocumentsRequired],
+      ["otherDocumentsOptions", data.otherDocumentsOptions],
     ];
     for (const [fieldName, fieldValue] of perPartyFields) {
       if (fieldValue) {
