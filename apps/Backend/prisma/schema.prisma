@@ -1305,6 +1305,7 @@ model TechnicalReport {
   updatedAt DateTime @updatedAt
 }
 
+
 model LegalReport {
   id                String           @id @default(cuid())
   loanApplication   LoanApplication? @relation(fields: [loanApplicationId], references: [id])
@@ -1340,6 +1341,10 @@ model LegalReport {
   // Audit
   submittedAt DateTime?
   approvedBy  String?
+  rejectedBy String?
+  rejectedAt DateTime?
+
+
   approvedAt  DateTime?
 
   branchId String
@@ -1835,12 +1840,12 @@ enum LoanStatus {
   kyc_pending
   credit_check
   under_review
-  LEGAL_PENDING
   TECHNICAL_PENDING
-  LEGAL_APPROVED
   TECHNICAL_APPROVED
-  LOANRULES_REJECTED
-  LOANRULES_APPROVED
+  TECHNICAL_REJECTED
+  LEGAL_PENDING
+  LEGAL_APPROVED
+  LEGAL_REJECTED
   approved
   rejected
   disbursed

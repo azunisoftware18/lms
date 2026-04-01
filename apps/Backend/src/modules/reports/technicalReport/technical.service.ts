@@ -207,6 +207,15 @@ export const rejectTechnicalReportService = async (
         rejectedBy: rejectedBy
       }
     });
+
+    const loanApplicationId = report.loanApplicationId;
+    if (loanApplicationId) {
+      await prisma.loanApplication.update({
+        where: { id: loanApplicationId },
+        data: { status: "TECHNICAL_REJECTED" },
+      });
+    }
+    
     return updatedReport;
   }
   catch (error) {
