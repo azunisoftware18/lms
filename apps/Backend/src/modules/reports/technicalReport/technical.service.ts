@@ -24,7 +24,7 @@ export const createTechnicalReportService = async (
   return prisma.$transaction(async (tx) => {
     // ✅ Check loan exists
     const loanApplication = await tx.loanApplication.findUnique({
-      where: { id: loanApplicationId },
+      where: { loanNumber: loanApplicationId },
       select: { id: true, branchId: true },
     });
 

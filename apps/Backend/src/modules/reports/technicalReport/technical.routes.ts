@@ -12,10 +12,10 @@ import { authMiddleware } from "../../../common/middlewares/auth.middleware.js";
 const technicalReportRouter = Router();
 
 technicalReportRouter.post(
-  "/loan-applications/:loanId/technical-reports",
-  authMiddleware,
-  checkPermissionMiddleware("CREATE_TECHNICAL_REPORT"),
-  createTechnicalReportController
+    "/loan-applications/:loanNumber/technical-reports",
+    authMiddleware,
+    checkPermissionMiddleware("CREATE_TECHNICAL_REPORT"),
+    createTechnicalReportController
 );
 
 technicalReportRouter.post(

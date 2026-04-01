@@ -13,13 +13,13 @@ export const createTechnicalReportController = async (
   res: Response
 ) => {
   try {
-    const { loanId } = req.params;
+    const { loanNumber } = req.params;
 
     // ✅ Validate request body
     const validatedData = createTechnicalReportSchema.parse(req.body);
 
     const report = await createTechnicalReportService(
-      loanId,
+      loanNumber,
       validatedData,
       req.user!.id
     );
