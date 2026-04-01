@@ -23,14 +23,10 @@ export const createTechnicalReportService = async (
 ) => {
   return prisma.$transaction(async (tx) => {
     // ✅ Find loan by loanNumber
-    const loanApplication = await tx.loanApplication.findUnique({
-<<<<<<< HEAD
-      where: { loanNumber: loanApplicationId },
-=======
+        const loanApplication = await tx.loanApplication.findUnique({
       where: { loanNumber }, // 🔥 must be unique in DB
->>>>>>> 6ec960cc106620289711fcc48ae5907a946f9078
       select: { id: true, branchId: true },
-    });
+        });
 
     if (!loanApplication) {
       throw new AppError("Loan application not found", 404);
