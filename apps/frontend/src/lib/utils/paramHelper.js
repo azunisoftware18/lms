@@ -10,6 +10,9 @@ export const normalizeParams = (params = {}) => {
     limit: params?.limit || 10,
     q: params?.search ?? params?.q ?? "",
     search: params?.search ?? params?.q ?? "",
+    ...(params?.propertyType !== undefined && params.propertyType !== "" && { propertyType: params.propertyType }),
+    ...(params?.constructionStatus !== undefined && params.constructionStatus !== "" && { constructionStatus: params.constructionStatus }),
+    ...(params?.city !== undefined && params.city !== "" && { city: params.city }),
     // Preserve additional filter parameters
     ...(params?.status !== undefined && params.status !== "" && { status: params.status }),
     ...(params?.isActive !== undefined && { isActive: params.isActive }),

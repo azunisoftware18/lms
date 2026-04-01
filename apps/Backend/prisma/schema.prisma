@@ -1295,6 +1295,7 @@ model TechnicalReport {
   // Audit
   submittedAt DateTime?
   approvedBy  String?
+  rejectedBy  String?
   approvedAt  DateTime?
 
   branchId String
