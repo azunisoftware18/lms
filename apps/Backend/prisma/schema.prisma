@@ -438,7 +438,8 @@ model CoApplicant {
   periodOfStay              String?
   rentPerMonth              Float?
 
-  employmentType EmploymentType
+  employmentTypeId String
+  employmentType   EmploymentType @relation(fields: [employmentTypeId], references: [id])
 
   //kyc Details
   kycId String? @unique
@@ -526,7 +527,8 @@ model Customer {
   relationshipWithCoApplicant  CoApplicantRelation // Relation with co-applicant if any
   relationWithCoApplicantOther String? // Specify if relation is OTHER
 
-  employmentType EmploymentType
+  employmentTypeId String
+  employmentType   EmploymentType @relation(fields: [employmentTypeId], references: [id])
 
   status CustomerStatus @default(ACTIVE)
 
@@ -689,7 +691,8 @@ model Guarantor {
   periodOfStay      String?
   rentPerMonth      Float?
 
-  employmentType EmploymentType?
+  employmentTypeId String?
+  employmentType   EmploymentType? @relation(fields: [employmentTypeId], references: [id])
 
   kycId     String?   @unique
   kyc       Kyc?      @relation("GuarantorKyc", fields: [kycId], references: [id])
@@ -1189,8 +1192,15 @@ model LoanType {
   defaultInterestRate Float
 
   //processing & Charges
-  processingFeeType CommissionType
-  processingFee     Float // amount or %
+
+  minProcessingFee     Float // amount
+  maxProcessingFee     Float // amount
+
+
+  //login charges
+minLoginCharges     Float // amount or %
+maxLoginCharges     Float // amount or %
+
   gstApplicable     Boolean        @default(true)
   gstPercentage     Float? //usually 18%
 
@@ -1198,7 +1208,8 @@ model LoanType {
   minAge         Int
   maxAge         Int
   minIncome      Float?
-  employmentType EmploymentType?
+  employmentTypeId String?
+  employmentType   EmploymentType? @relation(fields: [employmentTypeId], references: [id])
 
   //Risk & Credit 
 
@@ -1227,8 +1238,9 @@ model LoanType {
 
   //SLA & WorkFlow 
   estimatedProcessingTimeDays Int? //turnaround time
-  // documentsRequired           String //list of documents /comma separated 
-  // documentsOptions            String? // any optional documents that can help in faster processing
+
+  documentsRequired           String  @default("")    
+  documentsOptions            String? 
 
   // Applicant documents
   applicantDocumentsRequired  String @default("") // required docs for primary applicant (comma-separated)
@@ -1492,6 +1504,11 @@ enum DraftStatus {
   SUBMITTED
 }
 
+enum CommissionType {
+  FIXED
+  PERCENTAGE
+}
+
 enum InterestOption {
   FIXED
   VARIABLE
@@ -1741,10 +1758,6 @@ enum PartnerType {
   AGENCY
 }
 
-enum CommissionType {
-  FIXED
-  PERCENTAGE
-}
 
 enum PaymentCycle {
   MONTHLY
@@ -1762,11 +1775,19 @@ enum Title {
   PROF
 }
 
-enum EmploymentType {
-  salaried
-  self_employed
-  business
-  professional
+model EmploymentType {
+  id         String   @id @default(cuid())
+  code       String   @unique
+  name       String?
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Back relations
+  loanTypes    LoanType[]
+  customers    Customer[]
+  coApplicants CoApplicant[]
+  guarantors   Guarantor[]
 }
 
 enum OccupationalCategory {
