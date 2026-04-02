@@ -2,15 +2,16 @@ import { Request, Response } from "express";
 import { disburseLoanService } from "./loanDisbursement.service.js";
 
 
-export const disburseloanController = async (req: Request, res: Response) => {
+export const disburseLoanController = async (req: Request, res: Response) => {
  
     try {
         const { id } = req.params;
+        const loanId = typeof id === "string" ? id : id[0];
             if (!req.user) {
                 return res.status(401).json({ success: false, message: "Unauthorized" });
             }
             const result = await disburseLoanService(
-                id,
+                loanId,
                 req.user.id,
                 req.body
             )

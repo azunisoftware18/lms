@@ -91,6 +91,8 @@ export const loanStatusEnum = z.enum([
   "kyc_pending",
   "credit_check",
   "under_review",
+  "LOANRULES_APPROVED",
+  "LOANRULES_REJECTED",
   "approved",
   "rejected",
   "disbursed",

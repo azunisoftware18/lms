@@ -1323,6 +1323,23 @@ export type EnumDebitStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumDebitStatusFilter<$PrismaModel>
 }
 
+export type EnumSanctionStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.SanctionStatus | Prisma.EnumSanctionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.SanctionStatus[]
+  notIn?: $Enums.SanctionStatus[]
+  not?: Prisma.NestedEnumSanctionStatusFilter<$PrismaModel> | $Enums.SanctionStatus
+}
+
+export type EnumSanctionStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SanctionStatus | Prisma.EnumSanctionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.SanctionStatus[]
+  notIn?: $Enums.SanctionStatus[]
+  not?: Prisma.NestedEnumSanctionStatusWithAggregatesFilter<$PrismaModel> | $Enums.SanctionStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSanctionStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSanctionStatusFilter<$PrismaModel>
+}
+
 export type NestedIntFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel>
   in?: number[]
@@ -2571,6 +2588,23 @@ export type NestedEnumDebitStatusWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumDebitStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumDebitStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumSanctionStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.SanctionStatus | Prisma.EnumSanctionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.SanctionStatus[]
+  notIn?: $Enums.SanctionStatus[]
+  not?: Prisma.NestedEnumSanctionStatusFilter<$PrismaModel> | $Enums.SanctionStatus
+}
+
+export type NestedEnumSanctionStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SanctionStatus | Prisma.EnumSanctionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.SanctionStatus[]
+  notIn?: $Enums.SanctionStatus[]
+  not?: Prisma.NestedEnumSanctionStatusWithAggregatesFilter<$PrismaModel> | $Enums.SanctionStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSanctionStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSanctionStatusFilter<$PrismaModel>
 }
 
 

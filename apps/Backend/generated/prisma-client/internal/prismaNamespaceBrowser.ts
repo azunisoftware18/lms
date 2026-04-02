@@ -102,7 +102,8 @@ export const ModelName = {
   SLABreachLog: 'SLABreachLog',
   LoanDisbursement: 'LoanDisbursement',
   NachMandate: 'NachMandate',
-  NachDebit: 'NachDebit'
+  NachDebit: 'NachDebit',
+  Sanction: 'Sanction'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1184,7 +1185,7 @@ export type SLABreachLogScalarFieldEnum = (typeof SLABreachLogScalarFieldEnum)[k
 
 export const LoanDisbursementScalarFieldEnum = {
   id: 'id',
-  loanId: 'loanId',
+  loanNumber: 'loanNumber',
   amount: 'amount',
   disbursementMode: 'disbursementMode',
   transactionReference: 'transactionReference',
@@ -1230,6 +1231,24 @@ export const NachDebitScalarFieldEnum = {
 } as const
 
 export type NachDebitScalarFieldEnum = (typeof NachDebitScalarFieldEnum)[keyof typeof NachDebitScalarFieldEnum]
+
+
+export const SanctionScalarFieldEnum = {
+  id: 'id',
+  loanApplicationNumber: 'loanApplicationNumber',
+  sanctionedAmount: 'sanctionedAmount',
+  currency: 'currency',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  status: 'status',
+  remarks: 'remarks',
+  documents: 'documents',
+  branchId: 'branchId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SanctionScalarFieldEnum = (typeof SanctionScalarFieldEnum)[keyof typeof SanctionScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1923,7 +1942,7 @@ export type SLABreachLogOrderByRelevanceFieldEnum = (typeof SLABreachLogOrderByR
 
 export const LoanDisbursementOrderByRelevanceFieldEnum = {
   id: 'id',
-  loanId: 'loanId',
+  loanNumber: 'loanNumber',
   transactionReference: 'transactionReference',
   processedBy: 'processedBy',
   remarks: 'remarks'
@@ -1953,4 +1972,16 @@ export const NachDebitOrderByRelevanceFieldEnum = {
 } as const
 
 export type NachDebitOrderByRelevanceFieldEnum = (typeof NachDebitOrderByRelevanceFieldEnum)[keyof typeof NachDebitOrderByRelevanceFieldEnum]
+
+
+export const SanctionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loanApplicationNumber: 'loanApplicationNumber',
+  currency: 'currency',
+  approvedBy: 'approvedBy',
+  remarks: 'remarks',
+  branchId: 'branchId'
+} as const
+
+export type SanctionOrderByRelevanceFieldEnum = (typeof SanctionOrderByRelevanceFieldEnum)[keyof typeof SanctionOrderByRelevanceFieldEnum]
 

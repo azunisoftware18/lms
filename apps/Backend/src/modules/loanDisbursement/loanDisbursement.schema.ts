@@ -1,3 +1,5 @@
+// loanDisbursement.schema.ts
+
 import { z } from "zod";
 
 export const disburseLoanSchema = z.object({
@@ -10,6 +12,6 @@ export const disburseLoanSchema = z.object({
     "CASH",
     "CHEQUE",
   ]),
-  transactionReference: z.string().min(1),
-  remarks: z.string().optional(),
+  transactionReference: z.string().min(3, "Transaction reference required"),
+  remarks: z.string().max(255).optional(),
 });
