@@ -61,14 +61,19 @@ const getStatusColor = (status) => {
 
 const getApplicationStatusColor = (status) => {
   const statusLower = status?.toLowerCase();
+
   switch(statusLower) {
     case 'application_in_progress': return 'text-blue-600 bg-blue-100';
     case 'under_review': return 'text-purple-600 bg-purple-100';
-    case 'LOANRULES_APPROVED': return 'text-green-700 bg-green-100';
-    case 'LOANRULES_REJECTED': return 'text-red-700 bg-red-100';
+
+    
+    case 'loanrules_approved': return 'text-green-700 bg-green-100';
+    case 'loanrules_rejected': return 'text-red-700 bg-red-100';
+
     case 'approved': return 'text-green-700 bg-green-100';
     case 'rejected': return 'text-red-700 bg-red-100';
     case 'disbursed': return 'text-indigo-600 bg-indigo-100';
+
     default: return 'text-gray-600 bg-gray-100';
   }
 };
@@ -190,8 +195,8 @@ const CompactApplicationCard = ({
   const status = application.status?.toLowerCase();
   const isUnderReview = status === 'under_review';
   const isApplicationInProgress = status === 'application_in_progress';
-  const isLoanRulesApproved = status === 'LOANRULES_APPROVED';
-  const isLoanRulesRejected = status === 'LOANRULES_REJECTED';
+  const isLoanRulesApproved = status === 'loanrules_approved'; 
+  const isLoanRulesRejected = status === 'loanrules_rejected'; 
   const isApproved = status === 'approved';
   const isRejected = status === 'rejected';
   const hasResult = result && result.status;
@@ -232,19 +237,24 @@ const CompactApplicationCard = ({
 
   // Format status display for UI
   const getStatusDisplay = (status) => {
-    if (!status) return 'PENDING';
-    const statusLower = status.toLowerCase();
-    switch(statusLower) {
-      case 'application_in_progress': return 'IN PROGRESS';
-      case 'under_review': return 'UNDER REVIEW';
-      case 'LOANRULES_APPROVED': return 'LOANRULES_APPROVED';
-      case 'LOANRULES_REJECTED': return 'LOANRULES_REJECTED';
-      case 'approved': return 'APPROVED';
-      case 'rejected': return 'REJECTED';
-      case 'disbursed': return 'DISBURSED';
-      default: return status.toUpperCase();
-    }
-  };
+  if (!status) return 'PENDING';
+  const statusLower = status.toLowerCase();
+
+  switch(statusLower) {
+    case 'application_in_progress': return 'IN PROGRESS';
+    case 'under_review': return 'UNDER REVIEW';
+
+    //FIXED
+    case 'loanrules_approved': return 'LOANRULES APPROVED';
+    case 'loanrules_rejected': return 'LOANRULES REJECTED';
+
+    case 'approved': return 'APPROVED';
+    case 'rejected': return 'REJECTED';
+    case 'disbursed': return 'DISBURSED';
+
+    default: return status.toUpperCase();
+  }
+};
 
   return (
     <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all overflow-hidden border border-gray-100">
