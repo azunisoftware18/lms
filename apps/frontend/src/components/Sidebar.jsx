@@ -79,8 +79,8 @@ export default function Sidebar() {
             { name: "Credit Check", path: "/admin/los/credit-check" },
             { name: "Technical Review", path: "/admin/los/technical-review" },
             { name: "Legal Report", path: "/admin/los/legal-compliance" },
-            // { name: "EMI Management", path: "/admin/los/emi-management" },
             { name: "Sanction", path: "/admin/los/sanction" },
+            {name:"EMI Schedule", path:"/admin/los/emi-schedule"},
             { name: "Disbursement", path: "/admin/los/disbursement" },
           ]
         },
@@ -100,13 +100,13 @@ export default function Sidebar() {
               permission: "CREATE_LOAN"
             },
 
-            {
-              name: "EMI Schedule",
-              path: currentUser?.role === "EMPLOYEE"
-                ? "/employee/lms/emi-schedule"
-                : "/admin/lms/emi-schedule",
-              permission: "VIEW_EMI_SCHEDULE"
-            },
+            // {
+            //   name: "EMI Schedule",
+            //   path: currentUser?.role === "EMPLOYEE"
+            //     ? "/employee/lms/emi-schedule"
+            //     : "/admin/lms/emi-schedule",
+            //   permission: "VIEW_EMI_SCHEDULE"
+            // },
             { name: "EMI Management", path: "/admin/lms/emi-management" },
             {
               name: "Repayment Management",

@@ -609,29 +609,35 @@ export const getLoanApplicationByIdService = async (
   id: string,
   user?: { id: string; role: Enums.Role },
 ) => {
- const loanApplication = await prisma.loanApplication.findUnique({
-  where: { id },
-  include: {
-    customer: true,
-    loanType: true,
-    kyc: {
-      include: {
-        documents: true,
+  const loanApplication = await prisma.loanApplication.findUnique({
+    where: { id },
+    include: {
+      customer: {
+        include: {
+          addresses: true,
+          financialDetails: true,
+          employmentDetails: true,
+        },
       },
-    },
-    coapplicants: {
-      include: {
-        documents: true,
+      loanType: true,
+      kyc: {
+        include: {
+          documents: true,
+        },
       },
-    },
-    guarantors: {
-      include: {
-        documents: true,
+      coapplicants: {
+        include: {
+          documents: true,
+        },
       },
+      guarantors: {
+        include: {
+          documents: true,
+        },
+      },
+      bankAccounts: true,
     },
-
-  },
-});
+  });
 
   if (!loanApplication) {
     throw AppError.notFound("Loan application not found");
@@ -667,7 +673,6 @@ export const getLoanApplicationByIdService = async (
   }
 
   return loanApplication;
- 
 };
 
 type StatusUpdate = {

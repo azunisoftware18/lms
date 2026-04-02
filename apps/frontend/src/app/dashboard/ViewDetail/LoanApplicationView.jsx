@@ -79,8 +79,153 @@ export default function LoanApplicationView({
   }
 
   // Fallback: use applicant if customer is missing
-  const customer = application.customer || application.applicant || {};
-  
+  const customerRaw = application.customer || application.applicant || {};
+
+  // Derive full name from possible fields
+  const customerFirstName =
+    customerRaw.firstName || customerRaw.first_name || customerRaw.first || "";
+  const customerLastName =
+    customerRaw.lastName || customerRaw.last_name || customerRaw.last || "";
+  const customerFullName =
+    (
+      customerRaw.name || `${customerFirstName} ${customerLastName}`.trim()
+    ).trim() || null;
+
+  // Derive address from possible shapes: flattened fields, single `address` string,
+  // or an `addresses` array with Address objects.
+  let customerAddress = null;
+  if (customerRaw.address) {
+    customerAddress = customerRaw.address;
+  } else if (
+    customerRaw.addresses &&
+    Array.isArray(customerRaw.addresses) &&
+    customerRaw.addresses.length > 0
+  ) {
+    const a = customerRaw.addresses[0];
+    customerAddress = [a.addressLine1, a.city, a.state, a.pinCode]
+      .filter(Boolean)
+      .join(", ");
+  } else if (customerRaw.currentAddress) {
+    const a = customerRaw.currentAddress;
+    customerAddress = [a.addressLine1, a.city, a.state, a.pinCode]
+      .filter(Boolean)
+      .join(", ");
+  } else {
+    // Try flattened fields on customerRaw
+    const parts = [
+      customerRaw.addressLine1,
+      customerRaw.city,
+      customerRaw.state,
+      customerRaw.pinCode,
+    ].filter(Boolean);
+    if (parts.length > 0) customerAddress = parts.join(", ");
+  }
+
+  // Build a normalized `customer` object used by the UI below
+  const customer = {
+    ...customerRaw,
+    name: customerFullName,
+    address: customerAddress,
+  };
+
+  // Derive employment & financial values for display
+  const toNumber = (v) => {
+    if (v === null || v === undefined) return null;
+    const n = Number(String(v).replace(/[^0-9.-]+/g, ""));
+    return Number.isFinite(n) ? n : null;
+  };
+
+  const toTitleCase = (s) => {
+    if (!s) return s;
+    return String(s)
+      .toLowerCase()
+      .split(/_|\s+/)
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+  };
+
+  const customerEmploymentType =
+    customer.employmentType ||
+    customer.occupation ||
+    (customer.employmentDetails &&
+      customer.employmentDetails[0]?.employerType) ||
+    customerRaw.employmentType ||
+    null;
+
+  const possibleMonthlyCandidates = [
+    customer.monthlyIncome,
+    customer.monthly_income,
+    customer.financialDetails?.grossMonthlyIncome,
+    customer.financialDetails?.gross_monthly_income,
+    customer.financialDetails?.netMonthlyIncome,
+    customer.financialDetails?.net_monthly_income,
+    application.financialDetails?.grossMonthlyIncome,
+    application.financialDetails?.netMonthlyIncome,
+  ];
+
+  let customerMonthlyIncome = null;
+  for (const c of possibleMonthlyCandidates) {
+    const n = toNumber(c);
+    if (n !== null) {
+      customerMonthlyIncome = n;
+      break;
+    }
+  }
+
+  // Prefer to show both gross and net monthly incomes when available
+  const possibleGrossCandidates = [
+    customer.financialDetails?.grossMonthlyIncome,
+    customer.financialDetails?.gross_monthly_income,
+    customer.grossMonthlyIncome,
+    customer.gross_monthly_income,
+    customer.monthlyIncome,
+  ];
+  const possibleNetCandidates = [
+    customer.financialDetails?.netMonthlyIncome,
+    customer.financialDetails?.net_monthly_income,
+    customer.netMonthlyIncome,
+    customer.net_monthly_income,
+  ];
+
+  let customerGrossMonthly = null;
+  for (const c of possibleGrossCandidates) {
+    const n = toNumber(c);
+    if (n !== null) {
+      customerGrossMonthly = n;
+      break;
+    }
+  }
+
+  let customerNetMonthly = null;
+  for (const c of possibleNetCandidates) {
+    const n = toNumber(c);
+    if (n !== null) {
+      customerNetMonthly = n;
+      break;
+    }
+  }
+
+  const possibleAnnualCandidates = [
+    customer.annualIncome,
+    customer.annual_income,
+    customer.financialDetails?.annualIncome,
+    customer.financialDetails?.annual_income,
+  ];
+  let customerAnnualIncome = null;
+  for (const c of possibleAnnualCandidates) {
+    const n = toNumber(c);
+    if (n !== null) {
+      customerAnnualIncome = n;
+      break;
+    }
+  }
+
+  if (customerAnnualIncome === null && customerMonthlyIncome !== null) {
+    customerAnnualIncome = Math.round(customerMonthlyIncome * 12);
+  }
+
+  const customerOtherIncome =
+    toNumber(customer.otherIncome) || toNumber(customer.other_income) || null;
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-60 p-2 sm:p-4">
@@ -96,9 +241,9 @@ export default function LoanApplicationView({
                 Loan Application Details
               </h2>
               <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 mt-1">
-                <p className="text-xs sm:text-sm text-blue-100 truncate">
+                {/* <p className="text-xs sm:text-sm text-blue-100 truncate">
                   ID: {application.id}
-                </p>
+                </p> */}
                 <span className="w-1 h-1 rounded-full bg-blue-300 hidden sm:block"></span>
                 <p className="text-xs sm:text-sm text-blue-100 truncate">
                   Loan #: {application.loanNumber}
@@ -336,9 +481,9 @@ export default function LoanApplicationView({
               </div>
 
               {/* KYC Status */}
-              {application.kyc && (
-                <div className="mt-4 p-3 bg-slate-50 rounded-lg">
-                  <div className="flex items-center justify-between">
+              {/* {application.kyc && (
+                <div className="mt-4 p-3 bg-slate-50 rounded-lg"> */}
+              {/* <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-slate-700">
                         KYC Status:
@@ -361,10 +506,10 @@ export default function LoanApplicationView({
                         {formatDate(application.kyc.verifiedAt)}
                       </span>
                     )}
-                  </div>
+                  </div> */}
 
-                  {/* Documents */}
-                  {application.kyc.documents &&
+              {/* Documents */}
+              {/* {application.kyc.documents &&
                     application.kyc.documents.length > 0 && (
                       <div className="mt-3">
                         <p className="text-xs font-medium text-slate-500 mb-2">
@@ -393,10 +538,10 @@ export default function LoanApplicationView({
                           ))}
                         </div>
                       </div>
-                    )}
-                </div>
-              )}
+                    )} */}
             </div>
+            {/* )}
+            </div> */}
           </div>
 
           {/* Employment & Financial Section */}
@@ -412,18 +557,29 @@ export default function LoanApplicationView({
                 <InfoCard
                   icon={<Briefcase size={16} className="text-blue-500" />}
                   label="Employment Type"
-                  value={application.customer?.employmentType?.replace(
-                    "_",
-                    " ",
-                  )}
+                  value={
+                    customerEmploymentType
+                      ? toTitleCase(customerEmploymentType)
+                      : null
+                  }
                   fallback="Not provided"
                 />
                 <InfoCard
                   icon={<IndianRupee size={16} className="text-blue-500" />}
-                  label="Monthly Income"
+                  label="Gross Monthly Income"
                   value={
-                    application.customer?.monthlyIncome
-                      ? formatCurrency(application.customer.monthlyIncome)
+                    customerGrossMonthly !== null
+                      ? formatCurrency(customerGrossMonthly)
+                      : null
+                  }
+                  fallback="Not provided"
+                />
+                <InfoCard
+                  icon={<IndianRupee size={16} className="text-blue-500" />}
+                  label="Net Monthly Income"
+                  value={
+                    customerNetMonthly !== null
+                      ? formatCurrency(customerNetMonthly)
                       : null
                   }
                   fallback="Not provided"
@@ -432,8 +588,8 @@ export default function LoanApplicationView({
                   icon={<IndianRupee size={16} className="text-blue-500" />}
                   label="Annual Income"
                   value={
-                    application.customer?.annualIncome
-                      ? formatCurrency(application.customer.annualIncome)
+                    customerAnnualIncome !== null
+                      ? formatCurrency(customerAnnualIncome)
                       : null
                   }
                   fallback="Not provided"
@@ -442,8 +598,8 @@ export default function LoanApplicationView({
                   icon={<IndianRupee size={16} className="text-blue-500" />}
                   label="Other Income"
                   value={
-                    application.customer?.otherIncome
-                      ? formatCurrency(application.customer.otherIncome)
+                    customerOtherIncome !== null
+                      ? formatCurrency(customerOtherIncome)
                       : null
                   }
                   fallback="Not provided"
@@ -462,30 +618,48 @@ export default function LoanApplicationView({
             </div>
             <div className="p-5">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <InfoCard
-                  icon={<Building size={16} className="text-blue-500" />}
-                  label="Bank Name"
-                  value={application.customer?.bankName}
-                  fallback="Not provided"
-                />
-                <InfoCard
-                  icon={<CreditCard size={16} className="text-blue-500" />}
-                  label="Account Number"
-                  value={application.customer?.bankAccountNumber}
-                  fallback="Not provided"
-                />
-                <InfoCard
-                  icon={<Hash size={16} className="text-blue-500" />}
-                  label="IFSC Code"
-                  value={application.customer?.ifscCode}
-                  fallback="Not provided"
-                />
-                <InfoCard
-                  icon={<Hash size={16} className="text-blue-500" />}
-                  label="Account Type"
-                  value={application.customer?.accountType}
-                  fallback="Not provided"
-                />
+                {(() => {
+                  const acct =
+                    application.bankAccounts &&
+                    application.bankAccounts.length > 0
+                      ? application.bankAccounts[0]
+                      : null;
+                  return (
+                    <>
+                      <InfoCard
+                        icon={<Building size={16} className="text-blue-500" />}
+                        label="Bank Name"
+                        value={acct?.bankName || application.customer?.bankName}
+                        fallback="Not provided"
+                      />
+                      <InfoCard
+                        icon={
+                          <CreditCard size={16} className="text-blue-500" />
+                        }
+                        label="Account Number"
+                        value={
+                          acct?.accountNumber ||
+                          application.customer?.bankAccountNumber
+                        }
+                        fallback="Not provided"
+                      />
+                      <InfoCard
+                        icon={<Hash size={16} className="text-blue-500" />}
+                        label="IFSC Code"
+                        value={acct?.ifscCode || application.customer?.ifscCode}
+                        fallback="Not provided"
+                      />
+                      <InfoCard
+                        icon={<Hash size={16} className="text-blue-500" />}
+                        label="Account Type"
+                        value={
+                          acct?.accountType || application.customer?.accountType
+                        }
+                        fallback="Not provided"
+                      />
+                    </>
+                  );
+                })()}
               </div>
             </div>
           </div>
@@ -505,11 +679,11 @@ export default function LoanApplicationView({
                   value={application.loanNumber}
                   fallback="Not provided"
                 />
-                <InfoCard
-                  label="Loan Type ID"
-                  value={application.loanTypeId}
+                {/* <InfoCard
+                  label="Loan Type "
+                  value={application.loanType}
                   fallback="Not provided"
-                />
+                /> */}
                 <InfoCard
                   icon={<IndianRupee size={16} className="text-blue-500" />}
                   label="Requested Amount"
@@ -553,7 +727,7 @@ export default function LoanApplicationView({
                   value={application.interestType}
                   fallback="Not specified"
                 />
-                <InfoCard
+                {/* <InfoCard
                   icon={<IndianRupee size={16} className="text-blue-500" />}
                   label="EMI Amount"
                   value={
@@ -562,7 +736,7 @@ export default function LoanApplicationView({
                       : null
                   }
                   fallback="Not calculated"
-                />
+                /> */}
                 <InfoCard
                   icon={<IndianRupee size={16} className="text-blue-500" />}
                   label="Total Payable"
@@ -587,7 +761,7 @@ export default function LoanApplicationView({
               </div>
 
               {/* CIBIL Score with Visual */}
-              <div className="mt-4 pt-4 border-t border-slate-100">
+              {/* <div className="mt-4 pt-4 border-t border-slate-100">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
                   <div className="text-center sm:text-left">
                     <p className="text-xs text-slate-500 mb-1">CIBIL Score</p>
@@ -620,7 +794,7 @@ export default function LoanApplicationView({
                     </p>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 

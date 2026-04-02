@@ -42,13 +42,28 @@ export const generateEmiScheduleService = async (
   if (loan.status === "active") {
     throw AppError.conflict("EMI schedule already generated");
   }
-  if (loan.status !== "disbursed") {
+  if (loan.status !== "approved") {
     throw AppError.badRequest(
       "EMI schedule can only be generated after loan disbursement",
     );
   }
-  if (!loan.approvedAmount || !loan.interestRate || !loan.tenureMonths) {
-    throw AppError.badRequest("Invalid loan data for EMI schedule generation");
+  // Use approvedAmount, fall back to requestedAmount if approved missing
+  const principal = loan.approvedAmount ?? loan.requestedAmount;
+
+  // Validate inputs with specific messages to help debugging
+  if (!principal) {
+    throw AppError.badRequest(
+      "Loan amount missing (approvedAmount/requestedAmount)",
+    );
+  }
+
+  if (loan.tenureMonths == null || loan.tenureMonths <= 0) {
+    throw AppError.badRequest("Invalid or missing tenureMonths for loan");
+  }
+
+  if (loan.interestRate == null) {
+    // allow zero interest but not undefined/null
+    throw AppError.badRequest("Invalid or missing interestRate for loan");
   }
 
   const existingScheduleCount = await prisma.loanEmiSchedule.count({
@@ -61,7 +76,6 @@ export const generateEmiScheduleService = async (
     );
   }
 
-  const principal = loan.approvedAmount ?? loan.requestedAmount;
   const tenureMonths = loan.tenureMonths!;
   const annualRate = loan.interestRate;
   const monthlyRate = annualRate / 12 / 100;
@@ -93,7 +107,9 @@ export const generateEmiScheduleService = async (
 
   for (let i = 1; i <= tenureMonths; i++) {
     const interestAmount =
-      loan.interestType === "FLAT" ? monthlyFlatInterest : balance * monthlyRate;
+      loan.interestType === "FLAT"
+        ? monthlyFlatInterest
+        : balance * monthlyRate;
 
     let principalAmount = emiAmount - interestAmount;
     let emiInstallmentAmount = emiAmount;
@@ -152,7 +168,13 @@ export const generateEmiScheduleService = async (
     });
   }
 
-  return emi;
+  // Fetch and return the created EMI records from DB (createMany doesn't return created rows)
+  const createdEmis = await prisma.loanEmiSchedule.findMany({
+    where: { loanApplicationId: loanId },
+    orderBy: { emiNo: "asc" },
+  });
+
+  return createdEmis;
 };
 
 export const getLoanEmiService = async (loanId: string) => {
@@ -403,10 +425,11 @@ export const getEmisPayableAmountbyId = async (emiId: string) => {
     };
   } catch (error: any) {
     if (error?.statusCode) throw error;
-    throw AppError.internal(error.message || "Failed to fetch payable EMI amount");
+    throw AppError.internal(
+      error.message || "Failed to fetch payable EMI amount",
+    );
   }
 };
-
 
 // not use
 export const getEmiAmountService = async ({
@@ -586,7 +609,10 @@ export const forecloseLoanService = async (loanId: string) => {
     });
     const now = new Date();
 
-    const remainingPrincipal = emis.reduce((sum, e) => sum + e.principalAmount, 0);
+    const remainingPrincipal = emis.reduce(
+      (sum, e) => sum + e.principalAmount,
+      0,
+    );
     const accruedInterest = emis.reduce((sum, e) => sum + e.interestAmount, 0);
 
     const unpaidEmiCharges = emis.reduce((sum, emi) => {
@@ -605,7 +631,10 @@ export const forecloseLoanService = async (loanId: string) => {
           : 0;
 
       const chargeDue = lateFee + bounceCharge;
-      const extraPaidTowardCharges = Math.max((emi.emiPaymentAmount ?? 0) - emi.emiAmount, 0);
+      const extraPaidTowardCharges = Math.max(
+        (emi.emiPaymentAmount ?? 0) - emi.emiAmount,
+        0,
+      );
       const chargeOutstanding = Math.max(chargeDue - extraPaidTowardCharges, 0);
 
       return sum + chargeOutstanding;
@@ -955,7 +984,8 @@ export const applyMoratoriumService = async ({
 
         // Get the last affected EMI's closingBalance to use as starting point for remaining EMIs
         const lastAffectedEmi = affectedEmis[affectedEmis.length - 1];
-        let currentOpeningBalance = lastAffectedEmi?.closingBalance ?? loan.approvedAmount ?? 0;
+        let currentOpeningBalance =
+          lastAffectedEmi?.closingBalance ?? loan.approvedAmount ?? 0;
 
         // Update remaining EMIs sequentially to maintain balance continuity
         for (const emi of remainingEmis) {
@@ -992,7 +1022,8 @@ export const applyMoratoriumService = async ({
 
         // Get the last affected EMI's closingBalance for the first new EMI
         const lastAffectedEmi = affectedEmis[affectedEmis.length - 1];
-        let currentOpeningBalance = lastAffectedEmi?.closingBalance ?? loan.approvedAmount ?? 0;
+        let currentOpeningBalance =
+          lastAffectedEmi?.closingBalance ?? loan.approvedAmount ?? 0;
 
         // Find the highest emiNo to continue sequence
         const maxEmiNo = Math.max(...futureEmis.map((e) => e.emiNo));
@@ -1006,14 +1037,22 @@ export const applyMoratoriumService = async ({
 
           const openingBalance = currentOpeningBalance;
           // Conservative interest calc on deferred principal
-          const interestOnDeferred = (principalPerNewEmi * (loan.interestRate ?? 0)) / 100 / 12;
-          const closingBalance = Math.max(0, openingBalance - principalPerNewEmi);
+          const interestOnDeferred =
+            (principalPerNewEmi * (loan.interestRate ?? 0)) / 100 / 12;
+          const closingBalance = Math.max(
+            0,
+            openingBalance - principalPerNewEmi,
+          );
 
           await tx.loanEmiSchedule.create({
             data: {
               loanApplicationId: loanId,
               emiNo: newEmiNo,
-              emiStartDate: new Date(endDate.getFullYear(), endDate.getMonth() + i, endDate.getDate()),
+              emiStartDate: new Date(
+                endDate.getFullYear(),
+                endDate.getMonth() + i,
+                endDate.getDate(),
+              ),
               dueDate: newDueDate,
               openingBalance,
               principalAmount: principalPerNewEmi,

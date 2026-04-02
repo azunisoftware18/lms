@@ -4300,7 +4300,11 @@ const SuccessScreen = ({ onReset, leadNumber }) => {
 };
 
 // MAIN
-export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
+export default function LoanApplicationForm({
+  onClose,
+  onSuccess = () => {},
+  initialData = null,
+}) {
   const [currentStep, setCurrentStep] = useState("applicant");
   const [completedSteps, setCompletedSteps] = useState([]);
   const [submitted, setSubmitted] = useState(false);
@@ -4322,6 +4326,20 @@ export default function LoanApplicationForm({ onClose, onSuccess = () => {} }) {
     mode: "onTouched",
     defaultValues: DEFAULT_VALUES,
   });
+
+  // If `initialData` provided (edit mode), reset the form with it.
+  useEffect(() => {
+    if (!initialData) return;
+    try {
+      reset({
+        ...DEFAULT_VALUES,
+        ...initialData,
+      });
+    } catch (e) {
+      // ignore reset errors
+      console.warn("Failed to apply initialData to LoanApplicationForm", e);
+    }
+  }, [initialData, reset]);
 
   useEffect(() => {
     const current = getValues("loanTypeId");

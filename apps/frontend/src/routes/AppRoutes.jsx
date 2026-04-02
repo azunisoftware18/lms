@@ -21,7 +21,7 @@ import LeadsPage from "../app/dashboard/LOS/LeadsPage.jsx";
 // LMS pages
 import LoanAccountCreation from "../app/dashboard/LMS/LoanAccountCreation.jsx";
 import EMIManagementPage from "../app/dashboard/LMS/EMIManagementPage.jsx";
-import EMISchedule from "../app/dashboard/LMS/EMISchedule.jsx";
+import EMISchedule from "../app/dashboard/LOS/EMISchedule.jsx";
 import RepaymentManagement from "../app/dashboard/LMS/RepaymentManagement.jsx";
 import NachAutoDebit from "../app/dashboard/LMS/NachAutoDebit.jsx";
 import DpdTracking from "../app/dashboard/LMS/DpdTracking.jsx";
@@ -180,7 +180,7 @@ export default function AppRoutes() {
           element={<LoanAccountCreation />}
         />
         <Route path="lms/emi-management" element={<EMIManagementPage />} />
-        <Route path="lms/emi-schedule" element={<EMISchedule />} />
+        
         <Route
           path="lms/repayment-management"
           element={<RepaymentManagement />}
@@ -203,6 +203,7 @@ export default function AppRoutes() {
         <Route path="los/technical-review" element={<TechnicalReviewPage />} />
         <Route path="los/legal-compliance" element={<LegalCompliancePage />} />
         <Route path="los/sanction" element={<SanctionPage />} />
+        <Route path="los/emi-schedule" element={<EMISchedule />} />
         <Route
           path="los/disbursement"
           element={<DisbursementManagementPage />}

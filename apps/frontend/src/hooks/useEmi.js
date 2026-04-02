@@ -14,7 +14,6 @@ import {
   clearError,
 } from "../store/slices/emiSlice";
 
-
 export const useAllEmis = (params = {}) => {
   const dispatch = useDispatch();
   const emis = useSelector((state) => state.emi.emis);
@@ -88,7 +87,9 @@ export const useGenerateSchedule = () => {
       dispatch(setLoading(true));
     },
     onSuccess: (data) => {
-      dispatch(setEmiSchedule(data));
+      // backend returns { success: true, data: [...] }
+      const payload = data?.data ?? data;
+      dispatch(setEmiSchedule(payload));
       queryClient.invalidateQueries(["emis"]);
       queryClient.invalidateQueries(["allEmis"]);
       dispatch(setLoading(false));
