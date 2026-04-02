@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Eye } from "lucide-react";
+import { Eye, PenIcon } from "lucide-react";
 
 import { TableShell, TableHead, TableBody, TableLoader } from "./core";
 
@@ -10,6 +10,7 @@ export default function ApplicationPageTable({
   tableColumns = [],
   loading = false,
   onViewDetails,
+  onEdit,
   headerAction,
   onRefresh,
   refreshing = false,
@@ -25,13 +26,45 @@ export default function ApplicationPageTable({
   /* ---------------- Search Filter ---------------- */
 
   const filteredApplications = useMemo(() => {
-    return applications.filter((app) =>
-      tableColumns.some((col) =>
-        String(app[col.accessor] || "")
+    const q = (search || "").trim().toLowerCase();
+    if (!q) return applications;
+
+    return applications.filter((app) => {
+      // Search by loan number
+      const loanNumber = (app.loanNumber || app.loan?.loanNumber || "")
+        .toString()
+        .toLowerCase();
+      if (loanNumber.includes(q)) return true;
+
+      // Search by applicant/customer full name
+      const firstName = (
+        app.customer?.firstName ||
+        app.applicant?.firstName ||
+        ""
+      )
+        .toString()
+        .toLowerCase();
+      const lastName = (app.customer?.lastName || app.applicant?.lastName || "")
+        .toString()
+        .toLowerCase();
+      const fullName = `${firstName} ${lastName}`.trim();
+      if (fullName.includes(q)) return true;
+
+      // Fallback: search through configured columns (handles nested objects)
+      return tableColumns.some((col) => {
+        const value = app[col.accessor];
+        if (value && typeof value === "object") {
+          return Object.values(value).some((v) =>
+            String(v || "")
+              .toLowerCase()
+              .includes(q),
+          );
+        }
+        return String(value || "")
           .toLowerCase()
-          .includes(search.toLowerCase()),
-      ),
-    );
+          .includes(q);
+      });
+    });
   }, [applications, search, tableColumns]);
 
   /* ---------------- Pagination ---------------- */
@@ -75,6 +108,11 @@ export default function ApplicationPageTable({
               label: "View",
               icon: Eye,
               onClick: (row) => onViewDetails?.(row),
+            },
+            {
+              label: "Edit Application",
+              icon: PenIcon,
+              onClick: (row) => onEdit?.(row),
             },
           ]}
         />

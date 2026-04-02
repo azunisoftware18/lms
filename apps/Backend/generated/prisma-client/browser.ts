@@ -277,3 +277,8 @@ export type NachMandate = Prisma.NachMandateModel
  * 
  */
 export type NachDebit = Prisma.NachDebitModel
+/**
+ * Model Sanction
+ * 
+ */
+export type Sanction = Prisma.SanctionModel

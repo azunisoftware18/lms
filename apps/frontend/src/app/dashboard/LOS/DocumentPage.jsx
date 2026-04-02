@@ -78,7 +78,7 @@ export default function DocumentPage() {
   // Document stats
   const documentStats = {
     total: documents.length,
-    verified: documents.filter((d) => d.verificationStatus === "VERIFIED")
+    verified: documents.filter((d) => d.verificationStatus === "verified")
       .length,
     pending: documents.filter((d) => d.verificationStatus === "PENDING").length,
     rejected: documents.filter((d) => d.verificationStatus === "REJECTED")
@@ -760,41 +760,126 @@ export default function DocumentPage() {
             <div className="col-span-3 text-center py-12">Loading...</div>
           ) : (
             filteredApplications.map((app) => {
+              // Compute total required documents from the loan type when available
+              const appLoanTypeId =
+                app.loanTypeId ?? app.loanApplication?.loanTypeId;
+              const appLoanType = loanTypes?.find(
+                (lt) => lt.id === appLoanTypeId,
+              );
+              const reqApplicant = parseDocs(
+                appLoanType?.applicantDocumentsRequired,
+              ).length;
+              const reqCoApplicant = parseDocs(
+                appLoanType?.coApplicantDocumentsRequired,
+              ).length;
+              const reqGuarantor = parseDocs(
+                appLoanType?.guarantorDocumentsRequired,
+              ).length;
+              const reqOther = parseDocs(
+                appLoanType?.otherDocumentsRequired,
+              ).length;
+              const totalRequired =
+                reqApplicant + reqCoApplicant + reqGuarantor + reqOther;
+              // Actual uploaded documents count (prefer documents array, then server counts)
+              const uploadedCount = Array.isArray(app.documents)
+                ? app.documents.length
+                : (app.uploadedDocuments ??
+                  app.documentCount ??
+                  app.totalDocuments ??
+                  0);
+              const verifiedCount =
+                app.verifiedDocuments ??
+                (Array.isArray(app.documents)
+                  ? app.documents.filter(
+                      (d) => d.verificationStatus === "verified",
+                    ).length
+                  : 0);
+              const rejectedCount =
+                app.rejectedDocuments ??
+                (Array.isArray(app.documents)
+                  ? app.documents.filter(
+                      (d) => d.verificationStatus === "rejected",
+                    ).length
+                  : 0);
+              const pendingCount = Math.max(
+                0,
+                uploadedCount - verifiedCount - rejectedCount,
+              );
+              const totalDocumentsDisplay =
+                totalRequired > 0
+                  ? totalRequired
+                  : (app.totalDocuments ?? uploadedCount);
+              const fullName =
+                [
+                  app.customer?.firstName,
+                  app.customer?.middleName,
+                  app.customer?.lastName,
+                ]
+                  .filter(Boolean)
+                  .join(" ") ||
+                app.customer?.name ||
+                app.applicantName ||
+                "Unknown Applicant";
+
               return (
                 <div
                   key={app.id}
                   onClick={() => setSelectedApplication(app)}
-                  className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-lg hover:border-blue-300 transition-all cursor-pointer"
+                  className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-lg hover:border-blue-300 transition-all cursor-pointer"
                 >
-                  <div className="flex justify-between items-start mb-4">
+                  <div className="flex items-start justify-between mb-3">
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {app.loanNumber}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        App: {app.customer?.name}
+                      <p className=" text-gray-900">
+                        Loan No :
+                        {app.loanNumber ||
+                          app.loanApplication?.loanNumber ||
+                          " —"}
                       </p>
-                    </div>
-                    <span
-                      className={`px-2.5 py-1 ${colorVariables.LIGHT_BG} text-blue-700 text-xs font-medium rounded-full`}
-                    >
-                      Document Verification
-                    </span>
-                  </div>
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center text-sm">
-                      <span className="text-gray-700">
-                        {app.customer?.firstName} {app.customer?.lastName}
-                      </span>
+                      <p className="text-sm text-gray-600 mt-1">{fullName}</p>
                     </div>
                   </div>
-                  {/* Click Indicator */}
-                  <div className="mt-4 pt-3 border-t border-gray-100 text-right">
-                    <span
-                      className={`text-xs ${colorVariables.PRIMARY_COLOR} font-medium`}
+                  <div className="text-left">
+                    <div className="inline-flex items-center gap-3">
+                      <div className="text-xs text-gray-500">
+                        Total Documents
+                      </div>
+                      <div className="px-2 py-1 bg-gray-100 text-gray-800 rounded-md font-medium">
+                        {totalDocumentsDisplay}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4 mb-4 text-sm">
+                    <div className="flex items-center gap-2">
+                      <div className="text-xs text-gray-500">Uploaded</div>
+                      <div className="px-2 py-1 bg-gray-100 text-gray-800 rounded-md font-medium">
+                        {uploadedCount}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="text-xs text-gray-500">Verified</div>
+                      <div className="px-2 py-1 bg-green-50 text-green-700 rounded-md font-medium">
+                        {verifiedCount}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="text-xs text-gray-500">Pending</div>
+                      <div className="px-2 py-1 bg-yellow-50 text-yellow-700 rounded-md font-medium">
+                        {pendingCount}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 pt-3 border-t border-gray-100 text-right">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedApplication(app);
+                      }}
+                      className="text-xs text-blue-600 font-medium hover:underline"
                     >
                       Click to manage documents →
-                    </span>
+                    </button>
                   </div>
                 </div>
               );

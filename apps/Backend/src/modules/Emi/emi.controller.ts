@@ -19,6 +19,19 @@ import {
   forecloseLoanService,
 } from "./emi.service.js";
 
+const sanitizeErrorMessage = (error: any) => {
+  if (!error) return "INTERNAL_SERVER_ERROR";
+  const msg = typeof error.message === "string" ? error.message : String(error);
+  const lines = msg
+    .split(/\r?\n/)
+    .map((l: string) => l.trim())
+    .filter(Boolean);
+  if (lines.length === 0) return msg;
+  const last = lines[lines.length - 1];
+  if (last.length > 200) return "Database error";
+  return last;
+};
+
 const getParam = (req: Request, key: string) => {
   const value = req.params[key as keyof typeof req.params];
   if (typeof value === "string") return value;
@@ -39,7 +52,10 @@ const requireActor = (req: Request) => {
 };
 
 const hasBranchAccess = (req: Request, branchId: string) => {
-  const accessibleBranchIds = (req as any).accessibleBranchIds as string[] | null | undefined;
+  const accessibleBranchIds = (req as any).accessibleBranchIds as
+    | string[]
+    | null
+    | undefined;
   if (accessibleBranchIds == null) return true;
   return accessibleBranchIds.includes(branchId);
 };
@@ -79,8 +95,9 @@ export const getAllEmisController = async (req: Request, res: Response) => {
     const result = await getAllEmisService({
       page: Number(req.query.page),
       limit: Number(req.query.limit),
-      q: typeof req.query.q === 'string' ? req.query.q : undefined,
-      status: typeof req.query.status === 'string' ? req.query.status : undefined,
+      q: typeof req.query.q === "string" ? req.query.q : undefined,
+      status:
+        typeof req.query.status === "string" ? req.query.status : undefined,
       accessibleBranchIds: (req as any).accessibleBranchIds,
     });
 
@@ -93,8 +110,8 @@ export const getAllEmisController = async (req: Request, res: Response) => {
   } catch (error: any) {
     return res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message || "Failed to retrieve EMIs",
-      error: error.message || "INTERNAL_SERVER_ERROR",
+      message: sanitizeErrorMessage(error) || "Failed to retrieve EMIs",
+      error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
     });
   }
 };
@@ -118,8 +135,8 @@ export const generateEmiScheduleController = async (
   } catch (error: any) {
     res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message || "Failed to generate EMI schedule",
-      error: error.message || "INTERNAL_SERVER_ERROR",
+      message: sanitizeErrorMessage(error) || "Failed to generate EMI schedule",
+      error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
     });
   }
 };
@@ -147,7 +164,7 @@ export const getThisMonthEmiAmountController = async (
   } catch (error: any) {
     res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message || "Failed to fetch EMI amount",
+      message: sanitizeErrorMessage(error) || "Failed to fetch EMI amount",
     });
   }
 };
@@ -167,8 +184,8 @@ export const getLoanEmiController = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message || "Failed to fetch EMI schedule",
-      error: error.message || "INTERNAL_SERVER_ERROR",
+      message: sanitizeErrorMessage(error) || "Failed to fetch EMI schedule",
+      error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
     });
   }
 };
@@ -197,7 +214,7 @@ export const markEmiPaidController = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message || "Failed to mark EMI as paid",
+      message: sanitizeErrorMessage(error) || "Failed to mark EMI as paid",
     });
   }
 };
@@ -217,7 +234,8 @@ export const getEmiPayableAmountController = async (
   } catch (error: any) {
     res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message || "Failed to get payable EMI amount",
+      message:
+        sanitizeErrorMessage(error) || "Failed to get payable EMI amount",
     });
   }
 };
@@ -235,8 +253,8 @@ export const generateEmiAmount = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message || "Failed to calculate EMI amount",
-      error: error.message || "INTERNAL_SERVER_ERROR",
+      message: sanitizeErrorMessage(error) || "Failed to calculate EMI amount",
+      error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
     });
   }
 };
@@ -281,8 +299,8 @@ export const payEmiServiceController = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message || "Failed to pay EMI",
-      error: error.message || "INTERNAL_SERVER_ERROR",
+      message: sanitizeErrorMessage(error) || "Failed to pay EMI",
+      error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
     });
   }
 };
@@ -304,8 +322,8 @@ export const forecloseLoanController = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message || "Failed to foreclose loan",
-      error: error.message || "INTERNAL_SERVER_ERROR",
+      message: sanitizeErrorMessage(error) || "Failed to foreclose loan",
+      error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
     });
   }
 };
@@ -337,8 +355,8 @@ export const payforecloseLoanController = async (
   } catch (error: any) {
     res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message || "Failed to foreclose loan",
-      error: error.message || "INTERNAL_SERVER_ERROR",
+      message: sanitizeErrorMessage(error) || "Failed to foreclose loan",
+      error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
     });
   }
 };
@@ -376,8 +394,8 @@ export const applyMoratoriumController = async (
   } catch (error: any) {
     res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message || "Failed to apply moratorium",
-      error: error.message || "INTERNAL_SERVER_ERROR",
+      message: sanitizeErrorMessage(error) || "Failed to apply moratorium",
+      error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
     });
   }
 };
@@ -416,8 +434,8 @@ export const editEmiController = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message || "Failed to update EMI",
-      error: error.message || "INTERNAL_SERVER_ERROR",
+      message: sanitizeErrorMessage(error) || "Failed to update EMI",
+      error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
     });
   }
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Search,
   CreditCard,
@@ -19,143 +19,106 @@ import {
   AlertCircle,
   ArrowRight,
   BadgeCheck,
-  History
-} from 'lucide-react';
+  History,
+} from "lucide-react";
+import {
+  useGetForecloseSummary,
+  usePayForecloseLoan,
+} from "../../../hooks/useEmi";
+import toast from "react-hot-toast";
+import ForeClosureTable from "../../../components/tables/ForeClosureTable";
+import { apiGet } from "../../../lib/api/apiClient";
+import { useSettlementsByLoan } from "../../../hooks/useSettlements";
 
 const PrepaymentForeclosure = () => {
   // State for active tab
-  const [activeTab, setActiveTab] = useState('prepayment');
-  
+  const [activeTab, setActiveTab] = useState("prepayment");
+
   // State for loan search
-  const [searchLoanNumber, setSearchLoanNumber] = useState('');
+  const [searchLoanNumber, setSearchLoanNumber] = useState("");
   const [searchedLoan, setSearchedLoan] = useState(null);
-  const [searchError, setSearchError] = useState('');
+  const [searchError, setSearchError] = useState("");
 
   // State for prepayment form
   const [prepaymentData, setPrepaymentData] = useState({
-    amount: '',
-    charges: '2.5',
-    applyCharges: true
+    amount: "",
+    charges: "2.5",
+    applyCharges: true,
   });
 
   // State for prepayment calculation results
   const [prepaymentResults, setPrepaymentResults] = useState({
-    updatedBalance: '',
-    newEmi: '',
-    remainingTenure: ''
+    updatedBalance: "",
+    newEmi: "",
+    remainingTenure: "",
   });
 
   // State for foreclosure calculation
   const [foreclosureData, setForeclosureData] = useState({
-    outstandingPrincipal: '',
-    accruedInterest: '',
-    foreclosureCharges: '',
-    totalPayable: ''
+    outstandingPrincipal: "",
+    accruedInterest: "",
+    foreclosureCharges: "",
+    totalPayable: "",
   });
 
   // State for confirmation
-  const [paymentMethod, setPaymentMethod] = useState('bank_transfer');
-  const [transactionRef, setTransactionRef] = useState('');
-  const [loanStatus, setLoanStatus] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState("bank_transfer");
+  const [transactionRef, setTransactionRef] = useState("");
+  const [loanStatus, setLoanStatus] = useState("");
 
   // State for transaction history
   const [transactionHistory, setTransactionHistory] = useState([]);
 
-  // Mock loan database
-  const mockLoanDatabase = [
-    {
-      accountNumber: 'LN-2024-001234',
-      customerName: 'Rajesh Kumar Sharma',
-      loanAmount: '15,00,000',
-      interestRate: '8.5',
-      tenure: '60',
-      outstandingBalance: '12,45,678',
-      nextEMIDate: '15 Apr 2024',
-      status: 'ACTIVE',
-      emiAmount: '32,450'
-    },
-    {
-      accountNumber: 'LN-2024-005678',
-      customerName: 'Priya Singh',
-      loanAmount: '25,00,000',
-      interestRate: '9.0',
-      tenure: '84',
-      outstandingBalance: '18,90,456',
-      nextEMIDate: '20 Apr 2024',
-      status: 'ACTIVE',
-      emiAmount: '42,850'
-    },
-    {
-      accountNumber: 'LN-2024-009012',
-      customerName: 'Amit Patel',
-      loanAmount: '10,00,000',
-      interestRate: '8.0',
-      tenure: '36',
-      outstandingBalance: '7,34,890',
-      nextEMIDate: '10 Apr 2024',
-      status: 'ACTIVE',
-      emiAmount: '28,450'
-    }
-  ];
-
-  // Mock transaction history
-  const mockTransactions = [
-    {
-      loanNumber: 'LN-2023-004567',
-      customerName: 'Sunita Reddy',
-      transactionType: 'Prepayment',
-      amountPaid: '2,00,000',
-      status: 'Completed',
-      date: '15 Mar 2024'
-    },
-    {
-      loanNumber: 'LN-2023-008901',
-      customerName: 'Vikram Mehta',
-      transactionType: 'Foreclosure',
-      amountPaid: '8,50,000',
-      status: 'Completed',
-      date: '22 Feb 2024'
-    }
-  ];
-
   // Tabs configuration
   const tabs = [
-    { id: 'prepayment', label: 'Prepayment', icon: IndianRupee },
-    { id: 'foreclosure', label: 'Foreclosure Calculator', icon: Calculator },
-    { id: 'confirmation', label: 'Confirmation', icon: CheckCircle }
+    { id: "prepayment", label: "Prepayment", icon: IndianRupee },
+    { id: "foreclosure", label: "Foreclosure Calculator", icon: Calculator },
+    { id: "confirmation", label: "Confirmation", icon: CheckCircle },
   ];
 
-  // Handle search loan
-  const handleSearchLoan = () => {
-    setSearchError('');
-    const foundLoan = mockLoanDatabase.find(
-      loan => loan.accountNumber === searchLoanNumber
-    );
+  // Handle search loan via API (use q param to search by account number)
+  const handleSearchLoan = async () => {
+    setSearchError("");
+    if (!searchLoanNumber) return setSearchError("Enter loan account number");
+    try {
+      const resp = await apiGet(`/loan-applications`, {
+        params: { q: searchLoanNumber },
+      });
+      const list = resp?.data ?? resp;
+      // API returns data array in data or returns array directly
+      const first = Array.isArray(list)
+        ? list[0]
+        : list?.data
+          ? list.data[0]
+          : null;
+      if (!first) {
+        setSearchError("Loan account number not found");
+        setSearchedLoan(null);
+        setLoanStatus(null);
+        return;
+      }
 
-    if (foundLoan) {
-      setSearchedLoan(foundLoan);
-      setLoanStatus(foundLoan.status);
-      setTransactionRef('TXN' + Math.floor(Math.random() * 1000000));
-      
+      setSearchedLoan(first);
+      setLoanStatus(first.status ?? "");
+      setTransactionRef("TXN" + Math.floor(Math.random() * 1000000));
+
       // Reset forms
-      setPrepaymentData({
-        amount: '',
-        charges: '2.5',
-        applyCharges: true
-      });
+      setPrepaymentData({ amount: "", charges: "2.5", applyCharges: true });
       setPrepaymentResults({
-        updatedBalance: '',
-        newEmi: '',
-        remainingTenure: ''
+        updatedBalance: "",
+        newEmi: "",
+        remainingTenure: "",
       });
-      setForeclosureData({
-        outstandingPrincipal: foundLoan.outstandingBalance,
-        accruedInterest: '12,450',
-        foreclosureCharges: '31,142',
-        totalPayable: '12,89,270'
-      });
-    } else {
-      setSearchError('Loan account number not found');
+
+      // reset local foreclosure fallback until API summary populates
+      setForeclosureData((s) => ({
+        ...s,
+        outstandingPrincipal:
+          first.outstandingBalance ?? s.outstandingPrincipal,
+      }));
+    } catch (err) {
+      console.error(err);
+      setSearchError("Failed to lookup loan");
       setSearchedLoan(null);
       setLoanStatus(null);
     }
@@ -164,30 +127,32 @@ const PrepaymentForeclosure = () => {
   // Handle calculate EMI for prepayment
   const handleCalculateEMI = () => {
     if (!prepaymentData.amount) {
-      alert('Please enter prepayment amount');
+      alert("Please enter prepayment amount");
       return;
     }
 
     // Mock calculation logic
-    const prepaymentAmount = parseInt(prepaymentData.amount.replace(/,/g, ''));
-    const currentBalance = parseInt(searchedLoan.outstandingBalance.replace(/,/g, ''));
+    const prepaymentAmount = parseInt(prepaymentData.amount.replace(/,/g, ""));
+    const currentBalance = parseInt(
+      searchedLoan.outstandingBalance.replace(/,/g, ""),
+    );
     const updatedBalance = currentBalance - prepaymentAmount;
-    
+
     // Calculate new EMI (simplified mock calculation)
     const newEmi = Math.round(updatedBalance * 0.0085);
     const remainingTenure = Math.round(updatedBalance / newEmi);
 
     setPrepaymentResults({
-      updatedBalance: updatedBalance.toLocaleString('en-IN'),
-      newEmi: newEmi.toLocaleString('en-IN'),
-      remainingTenure: remainingTenure.toString()
+      updatedBalance: updatedBalance.toLocaleString("en-IN"),
+      newEmi: newEmi.toLocaleString("en-IN"),
+      remainingTenure: remainingTenure.toString(),
     });
   };
 
   // Handle apply prepayment
   const handleApplyPrepayment = () => {
     if (!prepaymentResults.updatedBalance) {
-      alert('Please calculate EMI first');
+      alert("Please calculate EMI first");
       return;
     }
 
@@ -195,93 +160,150 @@ const PrepaymentForeclosure = () => {
     const newTransaction = {
       loanNumber: searchedLoan.accountNumber,
       customerName: searchedLoan.customerName,
-      transactionType: 'Prepayment',
+      transactionType: "Prepayment",
       amountPaid: prepaymentData.amount,
-      status: 'Completed',
-      date: new Date().toLocaleDateString('en-IN', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric'
-      })
+      status: "Completed",
+      date: new Date().toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }),
     };
 
     setTransactionHistory([newTransaction, ...transactionHistory]);
-    
+
     // Update loan outstanding balance
     setSearchedLoan({
       ...searchedLoan,
-      outstandingBalance: prepaymentResults.updatedBalance
+      outstandingBalance: prepaymentResults.updatedBalance,
     });
 
-    alert('Prepayment applied successfully!');
+    alert("Prepayment applied successfully!");
   };
 
   // Handle calculate foreclosure
   const handleCalculateForeclosure = () => {
-    // Mock calculation logic
-    const outstandingPrincipal = parseInt(searchedLoan.outstandingBalance.replace(/,/g, ''));
-    const accruedInterest = Math.round(outstandingPrincipal * 0.01);
-    const foreclosureCharges = Math.round(outstandingPrincipal * 0.025);
-    const totalPayable = outstandingPrincipal + accruedInterest + foreclosureCharges;
-
-    setForeclosureData({
-      outstandingPrincipal: searchedLoan.outstandingBalance,
-      accruedInterest: accruedInterest.toLocaleString('en-IN'),
-      foreclosureCharges: foreclosureCharges.toLocaleString('en-IN'),
-      totalPayable: totalPayable.toLocaleString('en-IN')
-    });
+    // Use API to fetch foreclosure summary. If API not available, previous mockfallback remains.
+    const loanId = searchedLoan?.id ?? searchedLoan?.accountNumber;
+    if (!loanId) {
+      toast.error("Loan id unavailable for foreclosure summary");
+      return;
+    }
+    // trigger refetch via query hook (see useGetForecloseSummary below)
+    if (typeof refetchForeclose === "function") refetchForeclose();
   };
 
   // Handle proceed to confirmation
   const handleProceedToConfirmation = () => {
-    setActiveTab('confirmation');
+    setActiveTab("confirmation");
   };
 
   // Handle confirm foreclosure
-  const handleConfirmForeclosure = () => {
-    // Add to transaction history
-    const newTransaction = {
-      loanNumber: searchedLoan.accountNumber,
-      customerName: searchedLoan.customerName,
-      transactionType: 'Foreclosure',
-      amountPaid: foreclosureData.totalPayable,
-      status: 'Completed',
-      date: new Date().toLocaleDateString('en-IN', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric'
-      })
-    };
+  const payForecloseMut = usePayForecloseLoan();
 
-    setTransactionHistory([newTransaction, ...transactionHistory]);
-    
-    // Update loan status
-    setLoanStatus('CLOSED');
-    setSearchedLoan({
-      ...searchedLoan,
-      status: 'CLOSED',
-      outstandingBalance: '0'
-    });
+  const handleConfirmForeclosure = async () => {
+    const loanId = searchedLoan?.id ?? searchedLoan?.accountNumber;
+    if (!loanId) return toast.error("Loan id unavailable");
 
-    alert('Foreclosure confirmed successfully!');
+    // amountPaid should be numeric; try to parse from formatted string
+    const payableString =
+      forecloseApiData?.totalPayable ?? foreclosureData.totalPayable;
+    const amountRaw = payableString
+      ? payableString.toString().replace(/,/g, "")
+      : "";
+    const amountPaid = Number(amountRaw) || Number(payableString) || 0;
+    if (!amountPaid || amountPaid <= 0)
+      return toast.error("Invalid payable amount");
+
+    try {
+      const payload = {
+        amountPaid,
+        paymentMethod,
+        transactionRef,
+      };
+      await payForecloseMut.mutateAsync({ loanId, payload });
+      // success: add to history and update loan status
+      const newTransaction = {
+        loanNumber: searchedLoan.accountNumber,
+        customerName: searchedLoan.customerName,
+        transactionType: "Foreclosure",
+        amountPaid: amountPaid.toLocaleString("en-IN"),
+        status: "Completed",
+        date: new Date().toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+      };
+      setTransactionHistory([newTransaction, ...transactionHistory]);
+      setLoanStatus("CLOSED");
+      setSearchedLoan({
+        ...searchedLoan,
+        status: "CLOSED",
+        outstandingBalance: "0",
+      });
+      toast.success("Foreclosure confirmed successfully");
+    } catch (err) {
+      // error handled by hook; optionally log
+      console.error(err);
+    }
   };
 
   // Handle download receipt
   const handleDownloadReceipt = () => {
-    alert('Downloading closure receipt...');
+    alert("Downloading closure receipt...");
   };
 
   // Handle generate NOC
   const handleGenerateNOC = () => {
-    alert('NOC generated successfully!');
+    alert("NOC generated successfully!");
   };
+
+  // Foreclosure API: fetch summary when loan selected
+  const loanIdForApi = searchedLoan?.id ?? searchedLoan?.accountNumber;
+  const {
+    data: forecloseApiData,
+    isLoading: isForecloseLoading,
+    refetch: refetchForeclose,
+  } = useGetForecloseSummary(loanIdForApi);
+
+  // fetch settlements/closure transactions for this loan
+  const { data: settlementsForLoan, isLoading: isSettlementsLoading } =
+    useSettlementsByLoan(searchedLoan?.id ?? null);
+
+  // Map server settlements to table rows
+  const serverTransactions = (
+    Array.isArray(settlementsForLoan) ? settlementsForLoan : []
+  ).map((r) => {
+    const payments = Array.isArray(r.recoveryPayments)
+      ? r.recoveryPayments
+      : [];
+    const lastPayment = payments.length ? payments[payments.length - 1] : null;
+    const loanApp = r.loanApplication ?? {};
+    const customer = loanApp.customer ?? null;
+    return {
+      loanNumber: loanApp.loanNumber ?? searchedLoan?.accountNumber ?? "",
+      customerName: customer?.firstName
+        ? `${customer.firstName} ${customer.lastName ?? ""}`.trim()
+        : (loanApp.customerName ?? searchedLoan?.customerName ?? ""),
+      transactionType: "Settlement",
+      amountPaid: lastPayment ? lastPayment.amount : (r.recoveredAmount ?? 0),
+      status: r.recoveryStatus ?? "",
+      date: (lastPayment?.paymentDate ?? r.updatedAt ?? r.createdAt) || "",
+      id: r.id || `${loanApp.loanNumber}-${r.updatedAt}`,
+    };
+  });
 
   return (
     <div className="bg-slate-50 min-h-screen p-4 md:p-6">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-slate-800">Prepayment & Foreclosure</h1>
-        <p className="text-slate-600 mt-1">Manage loan prepayments and foreclosure requests</p>
+        <h1 className="text-2xl font-semibold text-slate-800">
+          Prepayment & Foreclosure
+        </h1>
+        <p className="text-slate-600 mt-1">
+          Manage loan prepayments and foreclosure requests
+        </p>
       </div>
 
       {/* Loan Search Card */}
@@ -299,7 +321,7 @@ const PrepaymentForeclosure = () => {
                 onChange={(e) => setSearchLoanNumber(e.target.value)}
                 placeholder="Enter loan account number"
                 className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onKeyPress={(e) => e.key === 'Enter' && handleSearchLoan()}
+                onKeyPress={(e) => e.key === "Enter" && handleSearchLoan()}
               />
             </div>
             {searchError && (
@@ -325,17 +347,21 @@ const PrepaymentForeclosure = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
             <div className="flex items-center gap-2">
               <CreditCard className="w-5 h-5 text-blue-600" />
-              <h2 className="text-lg font-semibold text-slate-800">Loan Summary</h2>
+              <h2 className="text-lg font-semibold text-slate-800">
+                Loan Summary
+              </h2>
             </div>
-            <span className={`px-3 py-1 rounded-full text-xs font-medium w-fit ${
-              loanStatus === 'ACTIVE' 
-                ? 'bg-yellow-100 text-yellow-700' 
-                : 'bg-green-100 text-green-700'
-            }`}>
+            <span
+              className={`px-3 py-1 rounded-full text-xs font-medium w-fit ${
+                loanStatus === "ACTIVE"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-green-100 text-green-700"
+              }`}
+            >
               {loanStatus}
             </span>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-50 rounded-lg shrink-0">
@@ -343,57 +369,69 @@ const PrepaymentForeclosure = () => {
               </div>
               <div className="min-w-0">
                 <p className="text-xs text-slate-500">Loan Account Number</p>
-                <p className="font-medium text-slate-800 truncate">{searchedLoan.accountNumber}</p>
+                <p className="font-medium text-slate-800 truncate">
+                  {searchedLoan.accountNumber}
+                </p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-50 rounded-lg shrink-0">
                 <User className="w-4 h-4 text-blue-600" />
               </div>
               <div className="min-w-0">
                 <p className="text-xs text-slate-500">Customer Name</p>
-                <p className="font-medium text-slate-800 truncate">{searchedLoan.customerName}</p>
+                <p className="font-medium text-slate-800 truncate">
+                  {searchedLoan.customerName}
+                </p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-50 rounded-lg shrink-0">
                 <IndianRupee className="w-4 h-4 text-blue-600" />
               </div>
               <div className="min-w-0">
                 <p className="text-xs text-slate-500">Loan Amount</p>
-                <p className="font-medium text-slate-800">₹{searchedLoan.loanAmount}</p>
+                <p className="font-medium text-slate-800">
+                  ₹{searchedLoan.loanAmount}
+                </p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-50 rounded-lg shrink-0">
                 <Percent className="w-4 h-4 text-blue-600" />
               </div>
               <div className="min-w-0">
                 <p className="text-xs text-slate-500">Interest Rate</p>
-                <p className="font-medium text-slate-800">{searchedLoan.interestRate}%</p>
+                <p className="font-medium text-slate-800">
+                  {searchedLoan.interestRate}%
+                </p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-50 rounded-lg shrink-0">
                 <Calendar className="w-4 h-4 text-blue-600" />
               </div>
               <div className="min-w-0">
                 <p className="text-xs text-slate-500">Tenure</p>
-                <p className="font-medium text-slate-800">{searchedLoan.tenure} months</p>
+                <p className="font-medium text-slate-800">
+                  {searchedLoan.tenure} months
+                </p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-50 rounded-lg shrink-0">
                 <IndianRupee className="w-4 h-4 text-blue-600" />
               </div>
               <div className="min-w-0">
                 <p className="text-xs text-slate-500">Outstanding Balance</p>
-                <p className="font-medium text-slate-800">₹{searchedLoan.outstandingBalance}</p>
+                <p className="font-medium text-slate-800">
+                  ₹{searchedLoan.outstandingBalance}
+                </p>
               </div>
             </div>
 
@@ -403,7 +441,9 @@ const PrepaymentForeclosure = () => {
               </div>
               <div className="min-w-0">
                 <p className="text-xs text-slate-500">Next EMI Date</p>
-                <p className="font-medium text-slate-800">{searchedLoan.nextEMIDate}</p>
+                <p className="font-medium text-slate-800">
+                  {searchedLoan.nextEMIDate}
+                </p>
               </div>
             </div>
           </div>
@@ -411,7 +451,7 @@ const PrepaymentForeclosure = () => {
       )}
 
       {/* Tabs Navigation - Only show when loan is searched */}
-      {searchedLoan && loanStatus === 'ACTIVE' && (
+      {searchedLoan && loanStatus === "ACTIVE" && (
         <div className="bg-white rounded-xl shadow-sm p-1 inline-flex flex-wrap mb-6">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -421,8 +461,8 @@ const PrepaymentForeclosure = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   activeTab === tab.id
-                    ? 'bg-blue-600 text-white'
-                    : 'text-slate-600 hover:bg-slate-100'
+                    ? "bg-blue-600 text-white"
+                    : "text-slate-600 hover:bg-slate-100"
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -434,18 +474,20 @@ const PrepaymentForeclosure = () => {
       )}
 
       {/* Tab Content - Only show when loan is searched and active */}
-      {searchedLoan && loanStatus === 'ACTIVE' && (
+      {searchedLoan && loanStatus === "ACTIVE" && (
         <div className="space-y-6">
           {/* Tab 1: Prepayment */}
-          {activeTab === 'prepayment' && (
+          {activeTab === "prepayment" && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Prepayment Form Card */}
               <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
                 <div className="flex items-center gap-2 mb-4">
                   <IndianRupee className="w-5 h-5 text-blue-600" />
-                  <h2 className="text-lg font-semibold text-slate-800">Prepayment Details</h2>
+                  <h2 className="text-lg font-semibold text-slate-800">
+                    Prepayment Details
+                  </h2>
                 </div>
-                
+
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -454,12 +496,17 @@ const PrepaymentForeclosure = () => {
                     <input
                       type="number"
                       value={prepaymentData.amount}
-                      onChange={(e) => setPrepaymentData({...prepaymentData, amount: e.target.value})}
+                      onChange={(e) =>
+                        setPrepaymentData({
+                          ...prepaymentData,
+                          amount: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Enter amount"
                     />
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">
                       Prepayment Charges (%)
@@ -467,16 +514,28 @@ const PrepaymentForeclosure = () => {
                     <input
                       type="number"
                       value={prepaymentData.charges}
-                      onChange={(e) => setPrepaymentData({...prepaymentData, charges: e.target.value})}
+                      onChange={(e) =>
+                        setPrepaymentData({
+                          ...prepaymentData,
+                          charges: e.target.value,
+                        })
+                      }
                       className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Enter charges"
                     />
                   </div>
-                  
+
                   <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                    <span className="text-sm font-medium text-slate-700">Apply Charges</span>
+                    <span className="text-sm font-medium text-slate-700">
+                      Apply Charges
+                    </span>
                     <button
-                      onClick={() => setPrepaymentData({...prepaymentData, applyCharges: !prepaymentData.applyCharges})}
+                      onClick={() =>
+                        setPrepaymentData({
+                          ...prepaymentData,
+                          applyCharges: !prepaymentData.applyCharges,
+                        })
+                      }
                       className="focus:outline-none"
                     >
                       {prepaymentData.applyCharges ? (
@@ -486,7 +545,7 @@ const PrepaymentForeclosure = () => {
                       )}
                     </button>
                   </div>
-                  
+
                   <div className="flex gap-3 pt-2">
                     <button
                       onClick={handleCalculateEMI}
@@ -510,31 +569,47 @@ const PrepaymentForeclosure = () => {
               <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
                 <div className="flex items-center gap-2 mb-4">
                   <TrendingUp className="w-5 h-5 text-blue-600" />
-                  <h2 className="text-lg font-semibold text-slate-800">Recalculated EMI Details</h2>
+                  <h2 className="text-lg font-semibold text-slate-800">
+                    Recalculated EMI Details
+                  </h2>
                 </div>
-                
+
                 {prepaymentResults.updatedBalance ? (
                   <div className="space-y-4">
                     <div className="p-4 bg-blue-50 rounded-lg">
-                      <p className="text-xs text-blue-600 mb-1">Updated Outstanding Balance</p>
-                      <p className="text-2xl font-semibold text-blue-700">₹{prepaymentResults.updatedBalance}</p>
+                      <p className="text-xs text-blue-600 mb-1">
+                        Updated Outstanding Balance
+                      </p>
+                      <p className="text-2xl font-semibold text-blue-700">
+                        ₹{prepaymentResults.updatedBalance}
+                      </p>
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-3">
                       <div className="p-3 bg-slate-50 rounded-lg">
-                        <p className="text-xs text-slate-500 mb-1">New EMI Amount</p>
-                        <p className="font-medium text-slate-800">₹{prepaymentResults.newEmi}</p>
+                        <p className="text-xs text-slate-500 mb-1">
+                          New EMI Amount
+                        </p>
+                        <p className="font-medium text-slate-800">
+                          ₹{prepaymentResults.newEmi}
+                        </p>
                       </div>
                       <div className="p-3 bg-slate-50 rounded-lg">
-                        <p className="text-xs text-slate-500 mb-1">Remaining Tenure</p>
-                        <p className="font-medium text-slate-800">{prepaymentResults.remainingTenure} months</p>
+                        <p className="text-xs text-slate-500 mb-1">
+                          Remaining Tenure
+                        </p>
+                        <p className="font-medium text-slate-800">
+                          {prepaymentResults.remainingTenure} months
+                        </p>
                       </div>
                     </div>
                   </div>
                 ) : (
                   <div className="text-center py-8">
                     <Calculator className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                    <p className="text-slate-500">Enter amount and calculate EMI</p>
+                    <p className="text-slate-500">
+                      Enter amount and calculate EMI
+                    </p>
                   </div>
                 )}
               </div>
@@ -542,43 +617,71 @@ const PrepaymentForeclosure = () => {
           )}
 
           {/* Tab 2: Foreclosure Calculator */}
-          {activeTab === 'foreclosure' && (
+          {activeTab === "foreclosure" && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Calculation Card */}
               <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
                 <div className="flex items-center gap-2 mb-4">
                   <Calculator className="w-5 h-5 text-blue-600" />
-                  <h2 className="text-lg font-semibold text-slate-800">Foreclosure Calculation</h2>
+                  <h2 className="text-lg font-semibold text-slate-800">
+                    Foreclosure Calculation
+                  </h2>
                 </div>
-                
+
                 <div className="space-y-4">
                   <div className="flex justify-between py-3 border-b border-slate-100">
-                    <span className="text-slate-600">Outstanding Principal</span>
-                    <span className="font-medium text-slate-800">₹{foreclosureData.outstandingPrincipal}</span>
+                    <span className="text-slate-600">
+                      Outstanding Principal
+                    </span>
+                    <span className="font-medium text-slate-800">
+                      ₹
+                      {forecloseApiData?.outstandingPrincipal ??
+                        foreclosureData.outstandingPrincipal}
+                    </span>
                   </div>
                   <div className="flex justify-between py-3 border-b border-slate-100">
                     <span className="text-slate-600">Accrued Interest</span>
-                    <span className="font-medium text-slate-800">₹{foreclosureData.accruedInterest}</span>
+                    <span className="font-medium text-slate-800">
+                      ₹
+                      {forecloseApiData?.accruedInterest ??
+                        foreclosureData.accruedInterest}
+                    </span>
                   </div>
                   <div className="flex justify-between py-3 border-b border-slate-100">
                     <span className="text-slate-600">Foreclosure Charges</span>
-                    <span className="font-medium text-orange-600">₹{foreclosureData.foreclosureCharges}</span>
+                    <span className="font-medium text-orange-600">
+                      ₹
+                      {forecloseApiData?.foreclosureCharges ??
+                        foreclosureData.foreclosureCharges}
+                    </span>
                   </div>
-                  
+
                   <div className="mt-4 p-4 bg-blue-50 rounded-lg">
                     <div className="flex justify-between items-center">
-                      <span className="font-semibold text-slate-700">Total Payable Amount</span>
-                      <span className="text-xl font-bold text-blue-600">₹{foreclosureData.totalPayable}</span>
+                      <span className="font-semibold text-slate-700">
+                        Total Payable Amount
+                      </span>
+                      <span className="text-xl font-bold text-blue-600">
+                        ₹
+                        {forecloseApiData?.totalPayable ??
+                          foreclosureData.totalPayable}
+                      </span>
                     </div>
                   </div>
-                  
+
                   <div className="flex gap-3 pt-2">
                     <button
                       onClick={handleCalculateForeclosure}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      disabled={isForecloseLoading}
+                      aria-busy={isForecloseLoading}
+                      className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                        isForecloseLoading
+                          ? "bg-blue-400 text-white cursor-not-allowed"
+                          : "bg-blue-600 text-white hover:bg-blue-700"
+                      }`}
                     >
                       <Calculator className="w-4 h-4" />
-                      Calculate
+                      {isForecloseLoading ? "Calculating..." : "Calculate"}
                     </button>
                     <button
                       onClick={handleProceedToConfirmation}
@@ -595,12 +698,16 @@ const PrepaymentForeclosure = () => {
               <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
                 <div className="flex items-center gap-2 mb-4">
                   <TrendingUp className="w-5 h-5 text-blue-600" />
-                  <h2 className="text-lg font-semibold text-slate-800">Calculation Formula</h2>
+                  <h2 className="text-lg font-semibold text-slate-800">
+                    Calculation Formula
+                  </h2>
                 </div>
-                
+
                 <div className="space-y-3 p-4 bg-slate-50 rounded-lg">
                   <div className="flex items-center gap-2 text-sm">
-                    <span className="text-slate-600">Outstanding Principal</span>
+                    <span className="text-slate-600">
+                      Outstanding Principal
+                    </span>
                     <span className="text-slate-400">+</span>
                     <span className="text-slate-600">Accrued Interest</span>
                   </div>
@@ -617,7 +724,8 @@ const PrepaymentForeclosure = () => {
                 <div className="mt-4 p-3 bg-yellow-50 rounded-lg">
                   <p className="text-xs text-yellow-700 flex items-center gap-1">
                     <AlertCircle className="w-4 h-4" />
-                    Foreclosure charges are applicable as per loan agreement terms
+                    Foreclosure charges are applicable as per loan agreement
+                    terms
                   </p>
                 </div>
               </div>
@@ -625,31 +733,49 @@ const PrepaymentForeclosure = () => {
           )}
 
           {/* Tab 3: Foreclosure Confirmation */}
-          {activeTab === 'confirmation' && (
+          {activeTab === "confirmation" && (
             <div className="grid grid-cols-1 gap-6">
               {/* Payment Summary Card */}
               <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
                 <div className="flex items-center gap-2 mb-4">
                   <CheckCircle className="w-5 h-5 text-blue-600" />
-                  <h2 className="text-lg font-semibold text-slate-800">Payment Summary</h2>
+                  <h2 className="text-lg font-semibold text-slate-800">
+                    Payment Summary
+                  </h2>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                   <div className="p-3 bg-slate-50 rounded-lg">
-                    <p className="text-xs text-slate-500 mb-1">Loan Account Number</p>
-                    <p className="font-medium text-slate-800">{searchedLoan.accountNumber}</p>
+                    <p className="text-xs text-slate-500 mb-1">
+                      Loan Account Number
+                    </p>
+                    <p className="font-medium text-slate-800">
+                      {searchedLoan.accountNumber}
+                    </p>
                   </div>
                   <div className="p-3 bg-slate-50 rounded-lg">
                     <p className="text-xs text-slate-500 mb-1">Customer Name</p>
-                    <p className="font-medium text-slate-800">{searchedLoan.customerName}</p>
+                    <p className="font-medium text-slate-800">
+                      {searchedLoan.customerName}
+                    </p>
                   </div>
                   <div className="p-3 bg-slate-50 rounded-lg">
-                    <p className="text-xs text-slate-500 mb-1">Total Payable Amount</p>
-                    <p className="font-medium text-slate-800">₹{foreclosureData.totalPayable}</p>
+                    <p className="text-xs text-slate-500 mb-1">
+                      Total Payable Amount
+                    </p>
+                    <p className="font-medium text-slate-800">
+                      ₹
+                      {forecloseApiData?.totalPayable ??
+                        foreclosureData.totalPayable}
+                    </p>
                   </div>
                   <div className="p-3 bg-slate-50 rounded-lg">
-                    <p className="text-xs text-slate-500 mb-1">Transaction Reference</p>
-                    <p className="font-medium text-slate-800">{transactionRef}</p>
+                    <p className="text-xs text-slate-500 mb-1">
+                      Transaction Reference
+                    </p>
+                    <p className="font-medium text-slate-800">
+                      {transactionRef}
+                    </p>
                   </div>
                 </div>
 
@@ -700,98 +826,9 @@ const PrepaymentForeclosure = () => {
 
       {/* Transaction History Table */}
       <div className="mt-8">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <History className="w-5 h-5 text-blue-600" />
-            <h2 className="text-lg font-semibold text-slate-800">Transaction History</h2>
-          </div>
-          <span className="text-sm text-slate-500">Total: {transactionHistory.length + mockTransactions.length}</span>
-        </div>
-        
-        <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Loan Number
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Customer Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Transaction Type
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Amount Paid
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Date
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200">
-                {/* New transactions */}
-                {transactionHistory.map((transaction, index) => (
-                  <tr key={`new-${index}`} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-4 text-sm font-medium text-slate-800">{transaction.loanNumber}</td>
-                    <td className="px-6 py-4 text-sm text-slate-600">{transaction.customerName}</td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        transaction.transactionType === 'Prepayment' 
-                          ? 'bg-blue-100 text-blue-700'
-                          : 'bg-purple-100 text-purple-700'
-                      }`}>
-                        {transaction.transactionType}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-600">₹{transaction.amountPaid}</td>
-                    <td className="px-6 py-4">
-                      <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                        {transaction.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-600">{transaction.date}</td>
-                  </tr>
-                ))}
-                
-                {/* Mock transactions */}
-                {mockTransactions.map((transaction, index) => (
-                  <tr key={`mock-${index}`} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-4 text-sm font-medium text-slate-800">{transaction.loanNumber}</td>
-                    <td className="px-6 py-4 text-sm text-slate-600">{transaction.customerName}</td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        transaction.transactionType === 'Prepayment' 
-                          ? 'bg-blue-100 text-blue-700'
-                          : 'bg-purple-100 text-purple-700'
-                      }`}>
-                        {transaction.transactionType}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-600">₹{transaction.amountPaid}</td>
-                    <td className="px-6 py-4">
-                      <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                        {transaction.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-600">{transaction.date}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          
-          {(transactionHistory.length === 0 && mockTransactions.length === 0) && (
-            <div className="text-center py-8">
-              <History className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-              <p className="text-slate-500">No transaction history found</p>
-            </div>
-          )}
-        </div>
+        <ForeClosureTable
+          data={[...transactionHistory, ...serverTransactions]}
+        />
       </div>
     </div>
   );

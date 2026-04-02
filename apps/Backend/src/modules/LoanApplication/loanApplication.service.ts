@@ -554,7 +554,7 @@ export const getAllLoanApplicationsService = async (params: {
           select: {
             status: true,
             documents: {
-              select: { id: true },
+              select: { id: true, verificationStatus: true },
             },
           },
         },
@@ -596,6 +596,15 @@ export const getAllLoanApplicationsService = async (params: {
     loanTypeId: loan.loanType?.id || null,
     kycStatus: loan.kyc?.status,
     documentCount: loan.kyc?.documents?.length || 0,
+    totalDocuments: loan.kyc?.documents?.length || 0,
+    verifiedDocuments: loan.kyc?.documents
+      ? loan.kyc.documents.filter((d) => d.verificationStatus === "verified")
+          .length
+      : 0,
+    rejectedDocuments: loan.kyc?.documents
+      ? loan.kyc.documents.filter((d) => d.verificationStatus === "rejected")
+          .length
+      : 0,
     coApplicantCount: loan.coapplicants?.length || 0,
   }));
 
@@ -609,29 +618,35 @@ export const getLoanApplicationByIdService = async (
   id: string,
   user?: { id: string; role: Enums.Role },
 ) => {
- const loanApplication = await prisma.loanApplication.findUnique({
-  where: { id },
-  include: {
-    customer: true,
-    loanType: true,
-    kyc: {
-      include: {
-        documents: true,
+  const loanApplication = await prisma.loanApplication.findUnique({
+    where: { id },
+    include: {
+      customer: {
+        include: {
+          addresses: true,
+          financialDetails: true,
+          employmentDetails: true,
+        },
       },
-    },
-    coapplicants: {
-      include: {
-        documents: true,
+      loanType: true,
+      kyc: {
+        include: {
+          documents: true,
+        },
       },
-    },
-    guarantors: {
-      include: {
-        documents: true,
+      coapplicants: {
+        include: {
+          documents: true,
+        },
       },
+      guarantors: {
+        include: {
+          documents: true,
+        },
+      },
+      bankAccounts: true,
     },
-
-  },
-});
+  });
 
   if (!loanApplication) {
     throw AppError.notFound("Loan application not found");
@@ -667,7 +682,6 @@ export const getLoanApplicationByIdService = async (
   }
 
   return loanApplication;
- 
 };
 
 type StatusUpdate = {

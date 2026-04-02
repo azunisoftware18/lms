@@ -97,38 +97,61 @@ export default function ProfessionalNBFCPortal() {
     {
       header: "Applicant",
       accessor: "customer",
-      render: (_, app) => (
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-blue-700 font-bold border border-slate-200">
-            {app.applicant?.firstName?.charAt(0) || "U"}
-          </div>
-          <div>
-            <div className="font-bold text-slate-900">
-              {`${app.applicant?.firstName || ""} ${app.applicant?.lastName || ""}`}
+      render: (_, app) => {
+        const firstName =
+          app.customer?.firstName || app.applicant?.firstName || "";
+        const lastName =
+          app.customer?.lastName || app.applicant?.lastName || "";
+        const fullName = `${firstName} ${lastName}`.trim() || "Unknown";
+        const initial = fullName.charAt(0) || "U";
+        const loanNumber = app.loanNumber || app.loan?.loanNumber || "-";
+
+        return (
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-blue-700 font-bold border border-slate-200">
+              {initial}
             </div>
-            <div className="text-xs text-slate-500 flex items-center gap-1">
-              <Hash size={12} /> {app.applicant?.panNumber || "No PAN"} |{" "}
-              {app.applicant?.category || "Gen"}
+            <div>
+              <div className="font-bold text-slate-900">{fullName}</div>
+              <div className="text-xs text-slate-500 flex items-center gap-1">
+                <Hash size={12} /> {loanNumber}
+              </div>
             </div>
           </div>
-        </div>
-      ),
+        );
+      },
     },
     {
-      header: "Employment & Income",
+      header: "Employment",
       accessor: "occupation",
-      render: (_, app) => (
-        <div>
-          <div className="text-sm font-medium text-slate-700 flex items-center gap-1">
-            <Briefcase size={14} className="text-slate-400" />
-            {app.occupation?.category || "Salaried"}
+      render: (_, app) => {
+        const grossMonthly =
+          app.customer?.financialDetails?.grossMonthlyIncome ??
+          app.financials?.grossMonthlyIncome ??
+          app.customer?.grossMonthlyIncome;
+        const netMonthly =
+          app.customer?.financialDetails?.netMonthlyIncome ??
+          app.financials?.netMonthlyIncome ??
+          app.customer?.netMonthlyIncome;
+
+        const fmt = (v) =>
+          typeof v === "number" ? v.toLocaleString() : v || "Not provided";
+
+        return (
+          <div>
+            <div className="text-sm font-medium text-slate-700 flex items-center gap-1">
+              <Briefcase size={14} className="text-slate-400" />
+              {app.occupation?.category || "Salaried"}
+            </div>
+            <div className="text-xs text-green-600 font-semibold">
+              Gross: ₹{fmt(grossMonthly)}
+            </div>
+            <div className="text-xs text-slate-500">
+              Net: ₹{fmt(netMonthly)}
+            </div>
           </div>
-          <div className="text-xs text-green-600 font-semibold">
-            Monthly: ₹
-            {app.financials?.grossMonthlyIncome?.toLocaleString() || "0"}
-          </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       header: "Loan Structure",
@@ -145,7 +168,7 @@ export default function ProfessionalNBFCPortal() {
       ),
     },
     {
-      header: "Risk Grade (CIBIL)",
+      header: "CIBIL",
       accessor: "cibilScore",
       render: (value) => (
         <span
@@ -239,6 +262,11 @@ export default function ProfessionalNBFCPortal() {
               setSelectedId(app.id);
               setViewModalOpen(true);
             }}
+            onEdit={(app) => {
+              setSelectedId(app.id);
+              // open the form in edit mode
+              setShowForm(true);
+            }}
             filterOptions={filterOptions}
             filterValue={statusFilter}
             setFilterValue={setStatusFilter}
@@ -247,7 +275,16 @@ export default function ProfessionalNBFCPortal() {
       </div>
 
       {/* Modals */}
-      {showForm && <LoanApplicationForm onClose={() => setShowForm(false)} />}
+      {showForm && (
+        <LoanApplicationForm
+          onClose={() => setShowForm(false)}
+          initialData={selectedApp}
+          onSuccess={() => {
+            setShowForm(false);
+            refetchApplications();
+          }}
+        />
+      )}
       {viewModalOpen && (
         <LoanApplicationView
           application={selectedApp}

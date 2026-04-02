@@ -14,7 +14,6 @@ import {
   clearError,
 } from "../store/slices/emiSlice";
 
-
 export const useAllEmis = (params = {}) => {
   const dispatch = useDispatch();
   const emis = useSelector((state) => state.emi.emis);
@@ -51,23 +50,21 @@ export const useLoanEmis = (loanId) => {
   const loading = useSelector((state) => state.emi.loading);
   const error = useSelector((state) => state.emi.error);
 
-  const query = useQuery(
-    ["emis", loanId],
-    () => apiGet(`/emi/loan-applications/${loanId}/emis`),
-    {
-      enabled: !!loanId,
-      onSuccess: (data) => {
-        dispatch(setEmis(data));
-        dispatch(clearError());
-      },
-      onError: (error) => {
-        const message = error?.message || "Failed to fetch EMIs";
-        dispatch(setError(message));
-        showError(message);
-      },
-      staleTime: 1000 * 60 * 5, // 5 minutes
+  const query = useQuery({
+    queryKey: ["emis", loanId],
+    queryFn: () => apiGet(`/emi/loan-applications/${loanId}/emis`),
+    enabled: !!loanId,
+    onSuccess: (data) => {
+      dispatch(setEmis(data));
+      dispatch(clearError());
     },
-  );
+    onError: (error) => {
+      const message = error?.message || "Failed to fetch EMIs";
+      dispatch(setError(message));
+      showError(message);
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
 
   return {
     emis,
@@ -88,7 +85,9 @@ export const useGenerateSchedule = () => {
       dispatch(setLoading(true));
     },
     onSuccess: (data) => {
-      dispatch(setEmiSchedule(data));
+      // backend returns { success: true, data: [...] }
+      const payload = data?.data ?? data;
+      dispatch(setEmiSchedule(payload));
       queryClient.invalidateQueries(["emis"]);
       queryClient.invalidateQueries(["allEmis"]);
       dispatch(setLoading(false));
@@ -155,23 +154,21 @@ export const useCalculateEmi = () => {
 export const useEmiPayableAmount = (emiId) => {
   const dispatch = useDispatch();
 
-  return useQuery(
-    ["emiPayable", emiId],
-    () => apiGet(`/emi/loan-emis/${emiId}/payable-amount`),
-    {
-      enabled: !!emiId,
-      onSuccess: (data) => {
-        dispatch(setPayableAmount(data));
-        dispatch(clearError());
-      },
-      onError: (error) => {
-        const message = error?.message || "Failed to fetch payable amount";
-        dispatch(setError(message));
-        showError(message);
-      },
-      staleTime: 1000 * 60 * 1, // 1 minute (more frequent for payment amounts)
+  return useQuery({
+    queryKey: ["emiPayable", emiId],
+    queryFn: () => apiGet(`/emi/loan-emis/${emiId}/payable-amount`),
+    enabled: !!emiId,
+    onSuccess: (data) => {
+      dispatch(setPayableAmount(data));
+      dispatch(clearError());
     },
-  );
+    onError: (error) => {
+      const message = error?.message || "Failed to fetch payable amount";
+      dispatch(setError(message));
+      showError(message);
+    },
+    staleTime: 1000 * 60 * 1, // 1 minute (more frequent for payment amounts)
+  });
 };
 
 export const useApplyMoratorium = () => {
@@ -199,12 +196,60 @@ export const useApplyMoratorium = () => {
   });
 };
 
-export const useForecloseLoan = () => {
+// Fetch foreclosure summary (GET /emi/loans/:loanId/foreclose)
+export const useGetForecloseSummary = (loanId) => {
+  const dispatch = useDispatch();
+
+  return useQuery({
+    queryKey: ["forecloseSummary", loanId],
+    queryFn: () => apiGet(`/emi/loans/${loanId}/foreclose`),
+    enabled: !!loanId,
+    // map various possible API shapes into a consistent UI-friendly object
+    select: (d) => {
+      const payload = d?.data ?? d;
+      if (!payload) return null;
+      const outstanding =
+        payload.outstandingPrincipal ?? payload.loanOutstanding ?? "";
+      const accrued =
+        payload.accruedInterest ??
+        payload.interest ??
+        payload.summary?.totalLateFee ??
+        "";
+      const charges = payload.foreclosureCharges ?? payload.charges ?? "";
+      const total =
+        payload.totalPayable ??
+        payload.summary?.totalPayable ??
+        payload.totalPayableAmount ??
+        "";
+
+      return {
+        outstandingPrincipal: outstanding?.toString?.() || outstanding || "",
+        accruedInterest: accrued?.toString?.() || accrued || "",
+        foreclosureCharges: charges?.toString?.() || charges || "",
+        totalPayable:
+          typeof total === "number" ? total.toLocaleString("en-IN") : total,
+      };
+    },
+    onSuccess: () => {
+      dispatch(clearError());
+    },
+    onError: (error) => {
+      const message = error?.message || "Failed to fetch foreclosure summary";
+      dispatch(setError(message));
+      showError(message);
+    },
+    staleTime: 1000 * 60 * 1,
+  });
+};
+
+// Pay foreclosure (POST /emi/loans/:loanId/foreclose)
+export const usePayForecloseLoan = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: (loanId) => apiGet(`/emi/loans/${loanId}/foreclose`),
+    mutationFn: ({ loanId, payload }) =>
+      apiPost(`/emi/loans/${loanId}/foreclose`, payload),
     onMutate: () => {
       dispatch(setLoading(true));
     },

@@ -19,6 +19,16 @@ export const KycStatus = {
 export type KycStatus = (typeof KycStatus)[keyof typeof KycStatus]
 
 
+export const SanctionStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  PARTIAL: 'PARTIAL'
+} as const
+
+export type SanctionStatus = (typeof SanctionStatus)[keyof typeof SanctionStatus]
+
+
 export const DisbursementMode = {
   BANK_TRANSFER: 'BANK_TRANSFER',
   NEFT: 'NEFT',
@@ -535,6 +545,8 @@ export const LoanStatus = {
   LEGAL_PENDING: 'LEGAL_PENDING',
   LEGAL_APPROVED: 'LEGAL_APPROVED',
   LEGAL_REJECTED: 'LEGAL_REJECTED',
+  LOANRULES_APPROVED: 'LOANRULES_APPROVED',
+  LOANRULES_REJECTED: 'LOANRULES_REJECTED',
   approved: 'approved',
   rejected: 'rejected',
   disbursed: 'disbursed',

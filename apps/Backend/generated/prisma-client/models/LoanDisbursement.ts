@@ -36,7 +36,7 @@ export type LoanDisbursementSumAggregateOutputType = {
 
 export type LoanDisbursementMinAggregateOutputType = {
   id: string | null
-  loanId: string | null
+  loanNumber: string | null
   amount: number | null
   disbursementMode: $Enums.DisbursementMode | null
   transactionReference: string | null
@@ -49,7 +49,7 @@ export type LoanDisbursementMinAggregateOutputType = {
 
 export type LoanDisbursementMaxAggregateOutputType = {
   id: string | null
-  loanId: string | null
+  loanNumber: string | null
   amount: number | null
   disbursementMode: $Enums.DisbursementMode | null
   transactionReference: string | null
@@ -62,7 +62,7 @@ export type LoanDisbursementMaxAggregateOutputType = {
 
 export type LoanDisbursementCountAggregateOutputType = {
   id: number
-  loanId: number
+  loanNumber: number
   amount: number
   disbursementMode: number
   transactionReference: number
@@ -85,7 +85,7 @@ export type LoanDisbursementSumAggregateInputType = {
 
 export type LoanDisbursementMinAggregateInputType = {
   id?: true
-  loanId?: true
+  loanNumber?: true
   amount?: true
   disbursementMode?: true
   transactionReference?: true
@@ -98,7 +98,7 @@ export type LoanDisbursementMinAggregateInputType = {
 
 export type LoanDisbursementMaxAggregateInputType = {
   id?: true
-  loanId?: true
+  loanNumber?: true
   amount?: true
   disbursementMode?: true
   transactionReference?: true
@@ -111,7 +111,7 @@ export type LoanDisbursementMaxAggregateInputType = {
 
 export type LoanDisbursementCountAggregateInputType = {
   id?: true
-  loanId?: true
+  loanNumber?: true
   amount?: true
   disbursementMode?: true
   transactionReference?: true
@@ -211,7 +211,7 @@ export type LoanDisbursementGroupByArgs<ExtArgs extends runtime.Types.Extensions
 
 export type LoanDisbursementGroupByOutputType = {
   id: string
-  loanId: string
+  loanNumber: string
   amount: number
   disbursementMode: $Enums.DisbursementMode
   transactionReference: string
@@ -247,7 +247,7 @@ export type LoanDisbursementWhereInput = {
   OR?: Prisma.LoanDisbursementWhereInput[]
   NOT?: Prisma.LoanDisbursementWhereInput | Prisma.LoanDisbursementWhereInput[]
   id?: Prisma.StringFilter<"LoanDisbursement"> | string
-  loanId?: Prisma.StringFilter<"LoanDisbursement"> | string
+  loanNumber?: Prisma.StringFilter<"LoanDisbursement"> | string
   amount?: Prisma.FloatFilter<"LoanDisbursement"> | number
   disbursementMode?: Prisma.EnumDisbursementModeFilter<"LoanDisbursement"> | $Enums.DisbursementMode
   transactionReference?: Prisma.StringFilter<"LoanDisbursement"> | string
@@ -261,7 +261,7 @@ export type LoanDisbursementWhereInput = {
 
 export type LoanDisbursementOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  loanId?: Prisma.SortOrder
+  loanNumber?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   disbursementMode?: Prisma.SortOrder
   transactionReference?: Prisma.SortOrder
@@ -276,7 +276,7 @@ export type LoanDisbursementOrderByWithRelationInput = {
 
 export type LoanDisbursementWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  loanId?: string
+  loanNumber?: string
   AND?: Prisma.LoanDisbursementWhereInput | Prisma.LoanDisbursementWhereInput[]
   OR?: Prisma.LoanDisbursementWhereInput[]
   NOT?: Prisma.LoanDisbursementWhereInput | Prisma.LoanDisbursementWhereInput[]
@@ -289,11 +289,11 @@ export type LoanDisbursementWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"LoanDisbursement"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LoanDisbursement"> | Date | string
   loanApplication?: Prisma.XOR<Prisma.LoanApplicationScalarRelationFilter, Prisma.LoanApplicationWhereInput>
-}, "id" | "loanId">
+}, "id" | "loanNumber">
 
 export type LoanDisbursementOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  loanId?: Prisma.SortOrder
+  loanNumber?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   disbursementMode?: Prisma.SortOrder
   transactionReference?: Prisma.SortOrder
@@ -314,7 +314,7 @@ export type LoanDisbursementScalarWhereWithAggregatesInput = {
   OR?: Prisma.LoanDisbursementScalarWhereWithAggregatesInput[]
   NOT?: Prisma.LoanDisbursementScalarWhereWithAggregatesInput | Prisma.LoanDisbursementScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
-  loanId?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
+  loanNumber?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
   amount?: Prisma.FloatWithAggregatesFilter<"LoanDisbursement"> | number
   disbursementMode?: Prisma.EnumDisbursementModeWithAggregatesFilter<"LoanDisbursement"> | $Enums.DisbursementMode
   transactionReference?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
@@ -340,7 +340,7 @@ export type LoanDisbursementCreateInput = {
 
 export type LoanDisbursementUncheckedCreateInput = {
   id?: string
-  loanId: string
+  loanNumber: string
   amount: number
   disbursementMode: $Enums.DisbursementMode
   transactionReference: string
@@ -366,7 +366,7 @@ export type LoanDisbursementUpdateInput = {
 
 export type LoanDisbursementUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  loanId?: Prisma.StringFieldUpdateOperationsInput | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   disbursementMode?: Prisma.EnumDisbursementModeFieldUpdateOperationsInput | $Enums.DisbursementMode
   transactionReference?: Prisma.StringFieldUpdateOperationsInput | string
@@ -379,7 +379,7 @@ export type LoanDisbursementUncheckedUpdateInput = {
 
 export type LoanDisbursementCreateManyInput = {
   id?: string
-  loanId: string
+  loanNumber: string
   amount: number
   disbursementMode: $Enums.DisbursementMode
   transactionReference: string
@@ -404,7 +404,7 @@ export type LoanDisbursementUpdateManyMutationInput = {
 
 export type LoanDisbursementUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  loanId?: Prisma.StringFieldUpdateOperationsInput | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   disbursementMode?: Prisma.EnumDisbursementModeFieldUpdateOperationsInput | $Enums.DisbursementMode
   transactionReference?: Prisma.StringFieldUpdateOperationsInput | string
@@ -433,7 +433,7 @@ export type LoanDisbursementOrderByRelevanceInput = {
 
 export type LoanDisbursementCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  loanId?: Prisma.SortOrder
+  loanNumber?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   disbursementMode?: Prisma.SortOrder
   transactionReference?: Prisma.SortOrder
@@ -450,7 +450,7 @@ export type LoanDisbursementAvgOrderByAggregateInput = {
 
 export type LoanDisbursementMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  loanId?: Prisma.SortOrder
+  loanNumber?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   disbursementMode?: Prisma.SortOrder
   transactionReference?: Prisma.SortOrder
@@ -463,7 +463,7 @@ export type LoanDisbursementMaxOrderByAggregateInput = {
 
 export type LoanDisbursementMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  loanId?: Prisma.SortOrder
+  loanNumber?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   disbursementMode?: Prisma.SortOrder
   transactionReference?: Prisma.SortOrder
@@ -579,7 +579,7 @@ export type LoanDisbursementScalarWhereInput = {
   OR?: Prisma.LoanDisbursementScalarWhereInput[]
   NOT?: Prisma.LoanDisbursementScalarWhereInput | Prisma.LoanDisbursementScalarWhereInput[]
   id?: Prisma.StringFilter<"LoanDisbursement"> | string
-  loanId?: Prisma.StringFilter<"LoanDisbursement"> | string
+  loanNumber?: Prisma.StringFilter<"LoanDisbursement"> | string
   amount?: Prisma.FloatFilter<"LoanDisbursement"> | number
   disbursementMode?: Prisma.EnumDisbursementModeFilter<"LoanDisbursement"> | $Enums.DisbursementMode
   transactionReference?: Prisma.StringFilter<"LoanDisbursement"> | string
@@ -642,7 +642,7 @@ export type LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationInput = {
 
 export type LoanDisbursementSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  loanId?: boolean
+  loanNumber?: boolean
   amount?: boolean
   disbursementMode?: boolean
   transactionReference?: boolean
@@ -658,7 +658,7 @@ export type LoanDisbursementSelect<ExtArgs extends runtime.Types.Extensions.Inte
 
 export type LoanDisbursementSelectScalar = {
   id?: boolean
-  loanId?: boolean
+  loanNumber?: boolean
   amount?: boolean
   disbursementMode?: boolean
   transactionReference?: boolean
@@ -669,7 +669,7 @@ export type LoanDisbursementSelectScalar = {
   updatedAt?: boolean
 }
 
-export type LoanDisbursementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanId" | "amount" | "disbursementMode" | "transactionReference" | "disbursementDate" | "processedBy" | "remarks" | "createdAt" | "updatedAt", ExtArgs["result"]["loanDisbursement"]>
+export type LoanDisbursementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanNumber" | "amount" | "disbursementMode" | "transactionReference" | "disbursementDate" | "processedBy" | "remarks" | "createdAt" | "updatedAt", ExtArgs["result"]["loanDisbursement"]>
 export type LoanDisbursementInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   loanApplication?: boolean | Prisma.LoanApplicationDefaultArgs<ExtArgs>
 }
@@ -681,7 +681,7 @@ export type $LoanDisbursementPayload<ExtArgs extends runtime.Types.Extensions.In
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    loanId: string
+    loanNumber: string
     amount: number
     disbursementMode: $Enums.DisbursementMode
     transactionReference: string
@@ -1061,7 +1061,7 @@ export interface Prisma__LoanDisbursementClient<T, Null = never, ExtArgs extends
  */
 export interface LoanDisbursementFieldRefs {
   readonly id: Prisma.FieldRef<"LoanDisbursement", 'String'>
-  readonly loanId: Prisma.FieldRef<"LoanDisbursement", 'String'>
+  readonly loanNumber: Prisma.FieldRef<"LoanDisbursement", 'String'>
   readonly amount: Prisma.FieldRef<"LoanDisbursement", 'Float'>
   readonly disbursementMode: Prisma.FieldRef<"LoanDisbursement", 'DisbursementMode'>
   readonly transactionReference: Prisma.FieldRef<"LoanDisbursement", 'String'>
