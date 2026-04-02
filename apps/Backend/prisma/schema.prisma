@@ -256,6 +256,7 @@ model Branch {
   loanRecoveries        LoanRecovery[]
   technicalReports      TechnicalReport[]
   legalReports          LegalReport[]
+  sanction               Sanction[]
   documents             Document[]
   loanApplicationDrafts LoanApplicationDraft[]
 
@@ -382,6 +383,7 @@ model LoanApplication {
   emis                 LoanEmiSchedule[]
   nachMandates         NachMandate[]
   commissionPayments   PartnerCommission[]
+  sanction             Sanction[]
   createdById          String?
   createdBy            User?               @relation(fields: [createdById], references: [id])
   createdAt            DateTime            @default(now())
@@ -1427,7 +1429,7 @@ model SLABreachLog {
 
 model LoanDisbursement {
   id                   String           @id @default(cuid())
-  loanId               String           @unique
+  loanNumber           String          @unique
   amount               Float
   disbursementMode     DisbursementMode
   transactionReference String
@@ -1435,11 +1437,11 @@ model LoanDisbursement {
   processedBy          String
   remarks              String?
 
-  loanApplication LoanApplication @relation(fields: [loanId], references: [id])
+  loanApplication LoanApplication @relation(fields: [loanNumber], references: [id])
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
 
-  @@index([loanId])
+  @@index([loanNumber])
 }
 
 model NachMandate {
@@ -1478,6 +1480,38 @@ model NachDebit {
 
   @@index([mandateId])
   @@index([emiId])
+}
+
+model Sanction {
+  id                String   @id @default(cuid())
+  loanApplicationNumber String
+  loanApplication   LoanApplication @relation(fields: [loanApplicationNumber], references: [loanNumber])
+
+  sanctionedAmount  Float
+  currency          String   @default("INR")
+  approvedBy        String?
+  approvedAt        DateTime?
+  status            SanctionStatus @default(PENDING)
+  remarks           String?
+
+  // documents links or json metadata
+  documents Json?
+
+  branchId String
+  branch   Branch @relation(fields: [branchId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([loanApplicationNumber])
+  @@index([branchId])
+}
+
+enum SanctionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  PARTIAL
 }
 
 // =================================ENUMS=====================================
@@ -1850,6 +1884,8 @@ enum LoanStatus {
   LEGAL_PENDING
   LEGAL_APPROVED
   LEGAL_REJECTED
+  LOANRULES_APPROVED
+  LOANRULES_REJECTED
   approved
   rejected
   disbursed

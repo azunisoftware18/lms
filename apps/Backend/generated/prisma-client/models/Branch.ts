@@ -215,6 +215,7 @@ export type BranchWhereInput = {
   loanRecoveries?: Prisma.LoanRecoveryListRelationFilter
   technicalReports?: Prisma.TechnicalReportListRelationFilter
   legalReports?: Prisma.LegalReportListRelationFilter
+  sanction?: Prisma.SanctionListRelationFilter
   documents?: Prisma.DocumentListRelationFilter
   loanApplicationDrafts?: Prisma.LoanApplicationDraftListRelationFilter
 }
@@ -237,6 +238,7 @@ export type BranchOrderByWithRelationInput = {
   loanRecoveries?: Prisma.LoanRecoveryOrderByRelationAggregateInput
   technicalReports?: Prisma.TechnicalReportOrderByRelationAggregateInput
   legalReports?: Prisma.LegalReportOrderByRelationAggregateInput
+  sanction?: Prisma.SanctionOrderByRelationAggregateInput
   documents?: Prisma.DocumentOrderByRelationAggregateInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftOrderByRelationAggregateInput
   _relevance?: Prisma.BranchOrderByRelevanceInput
@@ -263,6 +265,7 @@ export type BranchWhereUniqueInput = Prisma.AtLeast<{
   loanRecoveries?: Prisma.LoanRecoveryListRelationFilter
   technicalReports?: Prisma.TechnicalReportListRelationFilter
   legalReports?: Prisma.LegalReportListRelationFilter
+  sanction?: Prisma.SanctionListRelationFilter
   documents?: Prisma.DocumentListRelationFilter
   loanApplicationDrafts?: Prisma.LoanApplicationDraftListRelationFilter
 }, "id" | "code">
@@ -312,6 +315,7 @@ export type BranchCreateInput = {
   loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutBranchInput
 }
@@ -333,6 +337,7 @@ export type BranchUncheckedCreateInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionUncheckedCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutBranchInput
 }
@@ -354,6 +359,7 @@ export type BranchUpdateInput = {
   loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutBranchNestedInput
 }
@@ -375,6 +381,7 @@ export type BranchUncheckedUpdateInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUncheckedUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutBranchNestedInput
 }
@@ -658,6 +665,20 @@ export type BranchUpdateOneRequiredWithoutLegalReportsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BranchUpdateToOneWithWhereWithoutLegalReportsInput, Prisma.BranchUpdateWithoutLegalReportsInput>, Prisma.BranchUncheckedUpdateWithoutLegalReportsInput>
 }
 
+export type BranchCreateNestedOneWithoutSanctionInput = {
+  create?: Prisma.XOR<Prisma.BranchCreateWithoutSanctionInput, Prisma.BranchUncheckedCreateWithoutSanctionInput>
+  connectOrCreate?: Prisma.BranchCreateOrConnectWithoutSanctionInput
+  connect?: Prisma.BranchWhereUniqueInput
+}
+
+export type BranchUpdateOneRequiredWithoutSanctionNestedInput = {
+  create?: Prisma.XOR<Prisma.BranchCreateWithoutSanctionInput, Prisma.BranchUncheckedCreateWithoutSanctionInput>
+  connectOrCreate?: Prisma.BranchCreateOrConnectWithoutSanctionInput
+  upsert?: Prisma.BranchUpsertWithoutSanctionInput
+  connect?: Prisma.BranchWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BranchUpdateToOneWithWhereWithoutSanctionInput, Prisma.BranchUpdateWithoutSanctionInput>, Prisma.BranchUncheckedUpdateWithoutSanctionInput>
+}
+
 export type BranchCreateWithoutUserInput = {
   id?: string
   name: string
@@ -674,6 +695,7 @@ export type BranchCreateWithoutUserInput = {
   loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutBranchInput
 }
@@ -694,6 +716,7 @@ export type BranchUncheckedCreateWithoutUserInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionUncheckedCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutBranchInput
 }
@@ -730,6 +753,7 @@ export type BranchUpdateWithoutUserInput = {
   loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutBranchNestedInput
 }
@@ -750,6 +774,7 @@ export type BranchUncheckedUpdateWithoutUserInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUncheckedUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutBranchNestedInput
 }
@@ -770,6 +795,7 @@ export type BranchCreateWithoutEmployeesInput = {
   loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutBranchInput
 }
@@ -790,6 +816,7 @@ export type BranchUncheckedCreateWithoutEmployeesInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionUncheckedCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutBranchInput
 }
@@ -826,6 +853,7 @@ export type BranchUpdateWithoutEmployeesInput = {
   loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutBranchNestedInput
 }
@@ -846,6 +874,7 @@ export type BranchUncheckedUpdateWithoutEmployeesInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUncheckedUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutBranchNestedInput
 }
@@ -866,6 +895,7 @@ export type BranchCreateWithoutPartnersInput = {
   loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutBranchInput
 }
@@ -886,6 +916,7 @@ export type BranchUncheckedCreateWithoutPartnersInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionUncheckedCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutBranchInput
 }
@@ -922,6 +953,7 @@ export type BranchUpdateWithoutPartnersInput = {
   loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutBranchNestedInput
 }
@@ -942,6 +974,7 @@ export type BranchUncheckedUpdateWithoutPartnersInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUncheckedUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutBranchNestedInput
 }
@@ -962,6 +995,7 @@ export type BranchCreateWithoutSubBranchesInput = {
   loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutBranchInput
 }
@@ -982,6 +1016,7 @@ export type BranchUncheckedCreateWithoutSubBranchesInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionUncheckedCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutBranchInput
 }
@@ -1007,6 +1042,7 @@ export type BranchCreateWithoutParentBranchInput = {
   loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutBranchInput
 }
@@ -1027,6 +1063,7 @@ export type BranchUncheckedCreateWithoutParentBranchInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionUncheckedCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutBranchInput
 }
@@ -1068,6 +1105,7 @@ export type BranchUpdateWithoutSubBranchesInput = {
   loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutBranchNestedInput
 }
@@ -1088,6 +1126,7 @@ export type BranchUncheckedUpdateWithoutSubBranchesInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUncheckedUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutBranchNestedInput
 }
@@ -1139,6 +1178,7 @@ export type BranchCreateWithoutLoanApplicationDraftsInput = {
   loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentCreateNestedManyWithoutBranchInput
 }
 
@@ -1159,6 +1199,7 @@ export type BranchUncheckedCreateWithoutLoanApplicationDraftsInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionUncheckedCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutBranchInput
 }
 
@@ -1195,6 +1236,7 @@ export type BranchUpdateWithoutLoanApplicationDraftsInput = {
   loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutBranchNestedInput
 }
 
@@ -1215,6 +1257,7 @@ export type BranchUncheckedUpdateWithoutLoanApplicationDraftsInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUncheckedUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutBranchNestedInput
 }
 
@@ -1234,6 +1277,7 @@ export type BranchCreateWithoutLoanApplicationsInput = {
   loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutBranchInput
 }
@@ -1254,6 +1298,7 @@ export type BranchUncheckedCreateWithoutLoanApplicationsInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionUncheckedCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutBranchInput
 }
@@ -1290,6 +1335,7 @@ export type BranchUpdateWithoutLoanApplicationsInput = {
   loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutBranchNestedInput
 }
@@ -1310,6 +1356,7 @@ export type BranchUncheckedUpdateWithoutLoanApplicationsInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUncheckedUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutBranchNestedInput
 }
@@ -1330,6 +1377,7 @@ export type BranchCreateWithoutLoanRecoveriesInput = {
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutBranchInput
 }
@@ -1350,6 +1398,7 @@ export type BranchUncheckedCreateWithoutLoanRecoveriesInput = {
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionUncheckedCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutBranchInput
 }
@@ -1386,6 +1435,7 @@ export type BranchUpdateWithoutLoanRecoveriesInput = {
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutBranchNestedInput
 }
@@ -1406,6 +1456,7 @@ export type BranchUncheckedUpdateWithoutLoanRecoveriesInput = {
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUncheckedUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutBranchNestedInput
 }
@@ -1427,6 +1478,7 @@ export type BranchCreateWithoutDocumentsInput = {
   loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutBranchInput
 }
 
@@ -1447,6 +1499,7 @@ export type BranchUncheckedCreateWithoutDocumentsInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionUncheckedCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutBranchInput
 }
 
@@ -1483,6 +1536,7 @@ export type BranchUpdateWithoutDocumentsInput = {
   loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutBranchNestedInput
 }
 
@@ -1503,6 +1557,7 @@ export type BranchUncheckedUpdateWithoutDocumentsInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUncheckedUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutBranchNestedInput
 }
 
@@ -1522,6 +1577,7 @@ export type BranchCreateWithoutTechnicalReportsInput = {
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutBranchInput
   loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutBranchInput
 }
@@ -1542,6 +1598,7 @@ export type BranchUncheckedCreateWithoutTechnicalReportsInput = {
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutBranchInput
   loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutBranchInput
   legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionUncheckedCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutBranchInput
 }
@@ -1578,6 +1635,7 @@ export type BranchUpdateWithoutTechnicalReportsInput = {
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutBranchNestedInput
   loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutBranchNestedInput
 }
@@ -1598,6 +1656,7 @@ export type BranchUncheckedUpdateWithoutTechnicalReportsInput = {
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutBranchNestedInput
   loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUncheckedUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutBranchNestedInput
 }
@@ -1618,6 +1677,7 @@ export type BranchCreateWithoutLegalReportsInput = {
   loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutBranchInput
   loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutBranchInput
 }
@@ -1638,6 +1698,7 @@ export type BranchUncheckedCreateWithoutLegalReportsInput = {
   loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutBranchInput
   loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutBranchInput
   technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutBranchInput
+  sanction?: Prisma.SanctionUncheckedCreateNestedManyWithoutBranchInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutBranchInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutBranchInput
 }
@@ -1674,6 +1735,7 @@ export type BranchUpdateWithoutLegalReportsInput = {
   loanApplications?: Prisma.LoanApplicationUpdateManyWithoutBranchNestedInput
   loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutBranchNestedInput
 }
@@ -1694,6 +1756,107 @@ export type BranchUncheckedUpdateWithoutLegalReportsInput = {
   loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutBranchNestedInput
   loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUncheckedUpdateManyWithoutBranchNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutBranchNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutBranchNestedInput
+}
+
+export type BranchCreateWithoutSanctionInput = {
+  id?: string
+  name: string
+  code: string
+  type: $Enums.BranchType
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  parentBranch?: Prisma.BranchCreateNestedOneWithoutSubBranchesInput
+  subBranches?: Prisma.BranchCreateNestedManyWithoutParentBranchInput
+  user?: Prisma.UserCreateNestedManyWithoutBranchInput
+  partners?: Prisma.PartnerCreateNestedManyWithoutBranchInput
+  employees?: Prisma.EmployeeCreateNestedManyWithoutBranchInput
+  loanApplications?: Prisma.LoanApplicationCreateNestedManyWithoutBranchInput
+  loanRecoveries?: Prisma.LoanRecoveryCreateNestedManyWithoutBranchInput
+  technicalReports?: Prisma.TechnicalReportCreateNestedManyWithoutBranchInput
+  legalReports?: Prisma.LegalReportCreateNestedManyWithoutBranchInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutBranchInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftCreateNestedManyWithoutBranchInput
+}
+
+export type BranchUncheckedCreateWithoutSanctionInput = {
+  id?: string
+  name: string
+  code: string
+  type: $Enums.BranchType
+  parentBranchId?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  subBranches?: Prisma.BranchUncheckedCreateNestedManyWithoutParentBranchInput
+  user?: Prisma.UserUncheckedCreateNestedManyWithoutBranchInput
+  partners?: Prisma.PartnerUncheckedCreateNestedManyWithoutBranchInput
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutBranchInput
+  loanApplications?: Prisma.LoanApplicationUncheckedCreateNestedManyWithoutBranchInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedCreateNestedManyWithoutBranchInput
+  technicalReports?: Prisma.TechnicalReportUncheckedCreateNestedManyWithoutBranchInput
+  legalReports?: Prisma.LegalReportUncheckedCreateNestedManyWithoutBranchInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutBranchInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedCreateNestedManyWithoutBranchInput
+}
+
+export type BranchCreateOrConnectWithoutSanctionInput = {
+  where: Prisma.BranchWhereUniqueInput
+  create: Prisma.XOR<Prisma.BranchCreateWithoutSanctionInput, Prisma.BranchUncheckedCreateWithoutSanctionInput>
+}
+
+export type BranchUpsertWithoutSanctionInput = {
+  update: Prisma.XOR<Prisma.BranchUpdateWithoutSanctionInput, Prisma.BranchUncheckedUpdateWithoutSanctionInput>
+  create: Prisma.XOR<Prisma.BranchCreateWithoutSanctionInput, Prisma.BranchUncheckedCreateWithoutSanctionInput>
+  where?: Prisma.BranchWhereInput
+}
+
+export type BranchUpdateToOneWithWhereWithoutSanctionInput = {
+  where?: Prisma.BranchWhereInput
+  data: Prisma.XOR<Prisma.BranchUpdateWithoutSanctionInput, Prisma.BranchUncheckedUpdateWithoutSanctionInput>
+}
+
+export type BranchUpdateWithoutSanctionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumBranchTypeFieldUpdateOperationsInput | $Enums.BranchType
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parentBranch?: Prisma.BranchUpdateOneWithoutSubBranchesNestedInput
+  subBranches?: Prisma.BranchUpdateManyWithoutParentBranchNestedInput
+  user?: Prisma.UserUpdateManyWithoutBranchNestedInput
+  partners?: Prisma.PartnerUpdateManyWithoutBranchNestedInput
+  employees?: Prisma.EmployeeUpdateManyWithoutBranchNestedInput
+  loanApplications?: Prisma.LoanApplicationUpdateManyWithoutBranchNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutBranchNestedInput
+  technicalReports?: Prisma.TechnicalReportUpdateManyWithoutBranchNestedInput
+  legalReports?: Prisma.LegalReportUpdateManyWithoutBranchNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutBranchNestedInput
+  loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutBranchNestedInput
+}
+
+export type BranchUncheckedUpdateWithoutSanctionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumBranchTypeFieldUpdateOperationsInput | $Enums.BranchType
+  parentBranchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subBranches?: Prisma.BranchUncheckedUpdateManyWithoutParentBranchNestedInput
+  user?: Prisma.UserUncheckedUpdateManyWithoutBranchNestedInput
+  partners?: Prisma.PartnerUncheckedUpdateManyWithoutBranchNestedInput
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutBranchNestedInput
+  loanApplications?: Prisma.LoanApplicationUncheckedUpdateManyWithoutBranchNestedInput
+  loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutBranchNestedInput
+  technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutBranchNestedInput
+  legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutBranchNestedInput
 }
@@ -1724,6 +1887,7 @@ export type BranchUpdateWithoutParentBranchInput = {
   loanRecoveries?: Prisma.LoanRecoveryUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUpdateManyWithoutBranchNestedInput
 }
@@ -1744,6 +1908,7 @@ export type BranchUncheckedUpdateWithoutParentBranchInput = {
   loanRecoveries?: Prisma.LoanRecoveryUncheckedUpdateManyWithoutBranchNestedInput
   technicalReports?: Prisma.TechnicalReportUncheckedUpdateManyWithoutBranchNestedInput
   legalReports?: Prisma.LegalReportUncheckedUpdateManyWithoutBranchNestedInput
+  sanction?: Prisma.SanctionUncheckedUpdateManyWithoutBranchNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutBranchNestedInput
   loanApplicationDrafts?: Prisma.LoanApplicationDraftUncheckedUpdateManyWithoutBranchNestedInput
 }
@@ -1772,6 +1937,7 @@ export type BranchCountOutputType = {
   loanRecoveries: number
   technicalReports: number
   legalReports: number
+  sanction: number
   documents: number
   loanApplicationDrafts: number
 }
@@ -1785,6 +1951,7 @@ export type BranchCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   loanRecoveries?: boolean | BranchCountOutputTypeCountLoanRecoveriesArgs
   technicalReports?: boolean | BranchCountOutputTypeCountTechnicalReportsArgs
   legalReports?: boolean | BranchCountOutputTypeCountLegalReportsArgs
+  sanction?: boolean | BranchCountOutputTypeCountSanctionArgs
   documents?: boolean | BranchCountOutputTypeCountDocumentsArgs
   loanApplicationDrafts?: boolean | BranchCountOutputTypeCountLoanApplicationDraftsArgs
 }
@@ -1858,6 +2025,13 @@ export type BranchCountOutputTypeCountLegalReportsArgs<ExtArgs extends runtime.T
 /**
  * BranchCountOutputType without action
  */
+export type BranchCountOutputTypeCountSanctionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SanctionWhereInput
+}
+
+/**
+ * BranchCountOutputType without action
+ */
 export type BranchCountOutputTypeCountDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.DocumentWhereInput
 }
@@ -1888,6 +2062,7 @@ export type BranchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   loanRecoveries?: boolean | Prisma.Branch$loanRecoveriesArgs<ExtArgs>
   technicalReports?: boolean | Prisma.Branch$technicalReportsArgs<ExtArgs>
   legalReports?: boolean | Prisma.Branch$legalReportsArgs<ExtArgs>
+  sanction?: boolean | Prisma.Branch$sanctionArgs<ExtArgs>
   documents?: boolean | Prisma.Branch$documentsArgs<ExtArgs>
   loanApplicationDrafts?: boolean | Prisma.Branch$loanApplicationDraftsArgs<ExtArgs>
   _count?: boolean | Prisma.BranchCountOutputTypeDefaultArgs<ExtArgs>
@@ -1917,6 +2092,7 @@ export type BranchInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   loanRecoveries?: boolean | Prisma.Branch$loanRecoveriesArgs<ExtArgs>
   technicalReports?: boolean | Prisma.Branch$technicalReportsArgs<ExtArgs>
   legalReports?: boolean | Prisma.Branch$legalReportsArgs<ExtArgs>
+  sanction?: boolean | Prisma.Branch$sanctionArgs<ExtArgs>
   documents?: boolean | Prisma.Branch$documentsArgs<ExtArgs>
   loanApplicationDrafts?: boolean | Prisma.Branch$loanApplicationDraftsArgs<ExtArgs>
   _count?: boolean | Prisma.BranchCountOutputTypeDefaultArgs<ExtArgs>
@@ -1934,6 +2110,7 @@ export type $BranchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     loanRecoveries: Prisma.$LoanRecoveryPayload<ExtArgs>[]
     technicalReports: Prisma.$TechnicalReportPayload<ExtArgs>[]
     legalReports: Prisma.$LegalReportPayload<ExtArgs>[]
+    sanction: Prisma.$SanctionPayload<ExtArgs>[]
     documents: Prisma.$DocumentPayload<ExtArgs>[]
     loanApplicationDrafts: Prisma.$LoanApplicationDraftPayload<ExtArgs>[]
   }
@@ -2295,6 +2472,7 @@ export interface Prisma__BranchClient<T, Null = never, ExtArgs extends runtime.T
   loanRecoveries<T extends Prisma.Branch$loanRecoveriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Branch$loanRecoveriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoanRecoveryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   technicalReports<T extends Prisma.Branch$technicalReportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Branch$technicalReportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TechnicalReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   legalReports<T extends Prisma.Branch$legalReportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Branch$legalReportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LegalReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sanction<T extends Prisma.Branch$sanctionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Branch$sanctionArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SanctionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   documents<T extends Prisma.Branch$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Branch$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   loanApplicationDrafts<T extends Prisma.Branch$loanApplicationDraftsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Branch$loanApplicationDraftsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoanApplicationDraftPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2885,6 +3063,30 @@ export type Branch$legalReportsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.LegalReportScalarFieldEnum | Prisma.LegalReportScalarFieldEnum[]
+}
+
+/**
+ * Branch.sanction
+ */
+export type Branch$sanctionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Sanction
+   */
+  select?: Prisma.SanctionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Sanction
+   */
+  omit?: Prisma.SanctionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SanctionInclude<ExtArgs> | null
+  where?: Prisma.SanctionWhereInput
+  orderBy?: Prisma.SanctionOrderByWithRelationInput | Prisma.SanctionOrderByWithRelationInput[]
+  cursor?: Prisma.SanctionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SanctionScalarFieldEnum | Prisma.SanctionScalarFieldEnum[]
 }
 
 /**

@@ -435,7 +435,8 @@ export const ModelName = {
   SLABreachLog: 'SLABreachLog',
   LoanDisbursement: 'LoanDisbursement',
   NachMandate: 'NachMandate',
-  NachDebit: 'NachDebit'
+  NachDebit: 'NachDebit',
+  Sanction: 'Sanction'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -451,7 +452,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "loanNumberCounter" | "user" | "userProfile" | "admin" | "employee" | "employeeRole" | "partner" | "address" | "partnerCommission" | "branch" | "leads" | "loanApplicationDraft" | "loanApplication" | "coApplicant" | "coApplicantFinancialDetails" | "customer" | "occupationalDetails" | "employmentDetails" | "financialDetails" | "guarantor" | "guarantorFinancialDetails" | "existingLoan" | "creditCard" | "bankAccount" | "insurancePolicy" | "property" | "reference" | "loanRequirement" | "loanQuestionnaire" | "loanRecovery" | "recoveryPayment" | "permission" | "userPermission" | "rolePermission" | "document" | "kyc" | "requiredKycDocument" | "loanEmiSchedule" | "emiPayment" | "emiMoratorium" | "creditReport" | "creditAccount" | "loanType" | "technicalReport" | "legalReport" | "loanAssignment" | "auditLog" | "sLAPolicy" | "sLABreachLog" | "loanDisbursement" | "nachMandate" | "nachDebit"
+    modelProps: "loanNumberCounter" | "user" | "userProfile" | "admin" | "employee" | "employeeRole" | "partner" | "address" | "partnerCommission" | "branch" | "leads" | "loanApplicationDraft" | "loanApplication" | "coApplicant" | "coApplicantFinancialDetails" | "customer" | "occupationalDetails" | "employmentDetails" | "financialDetails" | "guarantor" | "guarantorFinancialDetails" | "existingLoan" | "creditCard" | "bankAccount" | "insurancePolicy" | "property" | "reference" | "loanRequirement" | "loanQuestionnaire" | "loanRecovery" | "recoveryPayment" | "permission" | "userPermission" | "rolePermission" | "document" | "kyc" | "requiredKycDocument" | "loanEmiSchedule" | "emiPayment" | "emiMoratorium" | "creditReport" | "creditAccount" | "loanType" | "technicalReport" | "legalReport" | "loanAssignment" | "auditLog" | "sLAPolicy" | "sLABreachLog" | "loanDisbursement" | "nachMandate" | "nachDebit" | "sanction"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3887,6 +3888,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Sanction: {
+      payload: Prisma.$SanctionPayload<ExtArgs>
+      fields: Prisma.SanctionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SanctionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SanctionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionPayload>
+        }
+        findFirst: {
+          args: Prisma.SanctionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SanctionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionPayload>
+        }
+        findMany: {
+          args: Prisma.SanctionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionPayload>[]
+        }
+        create: {
+          args: Prisma.SanctionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionPayload>
+        }
+        createMany: {
+          args: Prisma.SanctionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.SanctionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionPayload>
+        }
+        update: {
+          args: Prisma.SanctionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionPayload>
+        }
+        deleteMany: {
+          args: Prisma.SanctionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SanctionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.SanctionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionPayload>
+        }
+        aggregate: {
+          args: Prisma.SanctionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSanction>
+        }
+        groupBy: {
+          args: Prisma.SanctionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SanctionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SanctionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SanctionCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -4989,7 +5056,7 @@ export type SLABreachLogScalarFieldEnum = (typeof SLABreachLogScalarFieldEnum)[k
 
 export const LoanDisbursementScalarFieldEnum = {
   id: 'id',
-  loanId: 'loanId',
+  loanNumber: 'loanNumber',
   amount: 'amount',
   disbursementMode: 'disbursementMode',
   transactionReference: 'transactionReference',
@@ -5035,6 +5102,24 @@ export const NachDebitScalarFieldEnum = {
 } as const
 
 export type NachDebitScalarFieldEnum = (typeof NachDebitScalarFieldEnum)[keyof typeof NachDebitScalarFieldEnum]
+
+
+export const SanctionScalarFieldEnum = {
+  id: 'id',
+  loanApplicationNumber: 'loanApplicationNumber',
+  sanctionedAmount: 'sanctionedAmount',
+  currency: 'currency',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  status: 'status',
+  remarks: 'remarks',
+  documents: 'documents',
+  branchId: 'branchId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SanctionScalarFieldEnum = (typeof SanctionScalarFieldEnum)[keyof typeof SanctionScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -5728,7 +5813,7 @@ export type SLABreachLogOrderByRelevanceFieldEnum = (typeof SLABreachLogOrderByR
 
 export const LoanDisbursementOrderByRelevanceFieldEnum = {
   id: 'id',
-  loanId: 'loanId',
+  loanNumber: 'loanNumber',
   transactionReference: 'transactionReference',
   processedBy: 'processedBy',
   remarks: 'remarks'
@@ -5758,6 +5843,18 @@ export const NachDebitOrderByRelevanceFieldEnum = {
 } as const
 
 export type NachDebitOrderByRelevanceFieldEnum = (typeof NachDebitOrderByRelevanceFieldEnum)[keyof typeof NachDebitOrderByRelevanceFieldEnum]
+
+
+export const SanctionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loanApplicationNumber: 'loanApplicationNumber',
+  currency: 'currency',
+  approvedBy: 'approvedBy',
+  remarks: 'remarks',
+  branchId: 'branchId'
+} as const
+
+export type SanctionOrderByRelevanceFieldEnum = (typeof SanctionOrderByRelevanceFieldEnum)[keyof typeof SanctionOrderByRelevanceFieldEnum]
 
 
 
@@ -6164,6 +6261,13 @@ export type EnumNachStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
 export type EnumDebitStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DebitStatus'>
     
 
+
+/**
+ * Reference to a field of type 'SanctionStatus'
+ */
+export type EnumSanctionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SanctionStatus'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -6311,6 +6415,7 @@ export type GlobalOmitConfig = {
   loanDisbursement?: Prisma.LoanDisbursementOmit
   nachMandate?: Prisma.NachMandateOmit
   nachDebit?: Prisma.NachDebitOmit
+  sanction?: Prisma.SanctionOmit
 }
 
 /* Types for Logging */
