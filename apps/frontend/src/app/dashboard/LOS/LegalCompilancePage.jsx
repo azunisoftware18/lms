@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 
 import ActionMenu from "../../../components/common/ActionMenu";
+import { useSelector, shallowEqual } from "react-redux";
+import { useLegalReports, useApproveLegalReport, useCreateLegalReport } from "../../../hooks/useLegalReports";
 
 import StatusCard from "../../../components/common/StatusCard";
 import Pagination from "../../../components/common/Pagination";
@@ -27,43 +29,143 @@ import Button from "../../../components/ui/Button";
 import SearchField from "../../../components/ui/SearchField";
 import FilterDropdown from "../../../components/ui/FilterDropdown";
 import LegalCompilanceTable from "../../../components/tables/core/LegalCompilanceTable.jsx";
+import LegalReportTable from "../../../components/tables/core/LegalReportTable.jsx";
 import { colorVariables } from "../../../lib";
-import {
-  LEGAL_COMPLIANCE_REPORTS,
-  LEGAL_COMPLIANCE_STATISTICS,
-} from "../../../lib/LOSDummyData";
+// NOTE: data will come from API via hook/redux; dummy data removed
 
 function LegalComplianceModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
+  const createMutation = useCreateLegalReport();
+  const [form, setForm] = useState({
+    loanNumber: "",
+    advocateName: "",
+    lawFirmName: "",
+    ownerName: "",
+    ownershipType: "SELF",
+    titleClear: true,
+    titleChainYears: 1,
+    encumbranceFound: false,
+    encumbranceDetails: "",
+    reraRegistered: false,
+    landUserClear: false,
+    buildingApproval: false,
+    remarks: "",
+    reportUrl: "",
+  });
+  const [fieldErrors, setFieldErrors] = useState({});
+
+  const handleChange = (key, value) => setForm((s) => ({ ...s, [key]: value }));
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const errors = {};
+    if (!form.loanNumber || form.loanNumber.trim() === "") errors.loanNumber = "Loan number is required";
+    if (!form.advocateName || form.advocateName.trim() === "") errors.advocateName = "Advocate name is required";
+    if (!form.ownerName || form.ownerName.trim() === "") errors.ownerName = "Owner name is required";
+    if (!form.ownershipType) errors.ownershipType = "Ownership type is required";
+    if (typeof form.titleClear !== "boolean") errors.titleClear = "Title clear must be specified";
+    if (!form.titleChainYears || Number(form.titleChainYears) < 1) errors.titleChainYears = "Title chain years must be at least 1";
+    if (typeof form.encumbranceFound !== "boolean") errors.encumbranceFound = "Encumbrance flag required";
+    if (form.encumbranceFound && (!form.encumbranceDetails || form.encumbranceDetails.trim() === "")) errors.encumbranceDetails = "Encumbrance details are required when encumbrance is found";
+
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+
+    try {
+      // API hook expects `loanId` param; pass loanNumber as loanId
+      await createMutation.mutateAsync({ loanId: form.loanNumber, data: form });
+      onClose();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative w-full max-w-2xl rounded-2xl border border-slate-200 bg-white shadow-2xl">
+      <form onSubmit={handleSubmit} className="relative w-full max-w-2xl rounded-2xl border border-slate-200 bg-white shadow-2xl max-h-[90vh] overflow-auto">
         <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
-          <h2 className="text-lg font-semibold text-slate-800">
-            Create Legal Report
-          </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"
-          >
-            <X className="h-5 w-5" />
-          </button>
+          <h2 className="text-lg font-semibold text-slate-800">Create Legal Report</h2>
+          <button type="button" onClick={onClose} className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"><X className="h-5 w-5" /></button>
         </div>
-        <div className="px-6 py-8 text-sm text-slate-600">
-          Legal report creation form is not configured yet.
+        <div className="px-6 py-6 text-sm text-slate-600">
+          <div className="grid grid-cols-1 gap-3">
+            <div>
+              <input required placeholder="Loan Number" value={form.loanNumber} onChange={(e) => handleChange('loanNumber', e.target.value)} className="w-full p-2 border rounded" />
+              {fieldErrors.loanNumber && <div className="text-red-500 text-xs mt-1">{fieldErrors.loanNumber}</div>}
+              <div className="text-xs text-slate-400 mt-1">Enter the loan application number (loanNumber)</div>
+            </div>
+
+            <div>
+              <input placeholder="Advocate Name" value={form.advocateName} onChange={(e) => handleChange('advocateName', e.target.value)} className="w-full p-2 border rounded" />
+              {fieldErrors.advocateName && <div className="text-red-500 text-xs mt-1">{fieldErrors.advocateName}</div>}
+            </div>
+
+            <div>
+              <input placeholder="Law Firm Name (optional)" value={form.lawFirmName} onChange={(e) => handleChange('lawFirmName', e.target.value)} className="w-full p-2 border rounded" />
+            </div>
+
+            <div>
+              <input placeholder="Owner Name" value={form.ownerName} onChange={(e) => handleChange('ownerName', e.target.value)} className="w-full p-2 border rounded" />
+              {fieldErrors.ownerName && <div className="text-red-500 text-xs mt-1">{fieldErrors.ownerName}</div>}
+            </div>
+
+            <div>
+              <label className="text-sm">Ownership Type</label>
+              <select value={form.ownershipType} onChange={(e) => handleChange('ownershipType', e.target.value)} className="w-full p-2 border rounded">
+                <option value="SELF">Self</option>
+                <option value="JOINT">Joint</option>
+                <option value="INHERITED">Inherited</option>
+              </select>
+              {fieldErrors.ownershipType && <div className="text-red-500 text-xs mt-1">{fieldErrors.ownershipType}</div>}
+            </div>
+
+            <div className="flex items-center gap-3">
+              <label className="text-sm">Title Clear</label>
+              <input type="checkbox" checked={form.titleClear} onChange={(e) => handleChange('titleClear', e.target.checked)} />
+              {fieldErrors.titleClear && <div className="text-red-500 text-xs mt-1">{fieldErrors.titleClear}</div>}
+            </div>
+
+            <div>
+              <label className="text-sm">Title Chain Years</label>
+              <input type="number" min={1} value={form.titleChainYears} onChange={(e) => handleChange('titleChainYears', Number(e.target.value))} className="w-full p-2 border rounded" />
+              {fieldErrors.titleChainYears && <div className="text-red-500 text-xs mt-1">{fieldErrors.titleChainYears}</div>}
+            </div>
+
+            <div className="flex items-center gap-3">
+              <label className="text-sm">Encumbrance Found</label>
+              <input type="checkbox" checked={form.encumbranceFound} onChange={(e) => handleChange('encumbranceFound', e.target.checked)} />
+            </div>
+            {form.encumbranceFound && (
+              <div>
+                <textarea placeholder="Encumbrance details" value={form.encumbranceDetails} onChange={(e) => handleChange('encumbranceDetails', e.target.value)} className="w-full p-2 border rounded" />
+                {fieldErrors.encumbranceDetails && <div className="text-red-500 text-xs mt-1">{fieldErrors.encumbranceDetails}</div>}
+              </div>
+            )}
+
+            <div className="flex items-center gap-3">
+              <label className="text-sm">RERA Registered</label>
+              <input type="checkbox" checked={form.reraRegistered} onChange={(e) => handleChange('reraRegistered', e.target.checked)} />
+              <label className="text-sm">Land Use Clear</label>
+              <input type="checkbox" checked={form.landUserClear} onChange={(e) => handleChange('landUserClear', e.target.checked)} />
+              <label className="text-sm">Building Approval</label>
+              <input type="checkbox" checked={form.buildingApproval} onChange={(e) => handleChange('buildingApproval', e.target.checked)} />
+            </div>
+
+            <div>
+              <input placeholder="Remarks" value={form.remarks} onChange={(e) => handleChange('remarks', e.target.value)} className="w-full p-2 border rounded" />
+            </div>
+            <div>
+              <input placeholder="Report URL" value={form.reportUrl} onChange={(e) => handleChange('reportUrl', e.target.value)} className="w-full p-2 border rounded" />
+            </div>
+          </div>
         </div>
         <div className="flex justify-end border-t border-slate-200 px-6 py-4">
-          <Button
-            onClick={onClose}
-            className="bg-white! text-slate-700! border border-slate-300"
-          >
-            Close
-          </Button>
+          <Button type="submit" className="mr-2">Create</Button>
+          <Button onClick={onClose} className="bg-white! text-slate-700! border border-slate-300">Close</Button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
@@ -74,7 +176,7 @@ function LegalComplianceViewModal({ isOpen, report, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative w-full max-w-3xl rounded-2xl border border-slate-200 bg-white shadow-2xl">
+      <div className="relative w-full max-w-3xl rounded-2xl border border-slate-200 bg-white shadow-2xl max-h-[90vh] overflow-auto">
         <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
           <h2 className="text-lg font-semibold text-slate-800">
             Legal Report Details
@@ -88,37 +190,94 @@ function LegalComplianceViewModal({ isOpen, report, onClose }) {
           </button>
         </div>
         <div className="space-y-3 px-6 py-5 text-sm">
-          <div>
-            <span className="text-slate-500">Engineer:</span>{" "}
-            <span className="font-medium text-slate-800">
-              {report.engineerName}
-            </span>
-          </div>
-          <div>
-            <span className="text-slate-500">Agency:</span>{" "}
-            <span className="text-slate-800">{report.agencyName}</span>
-          </div>
-          <div>
-            <span className="text-slate-500">Property:</span>{" "}
-            <span className="text-slate-800">{report.propertyType}</span>
-          </div>
-          <div>
-            <span className="text-slate-500">Location:</span>{" "}
-            <span className="text-slate-800">
-              {report.city}, {report.state}
-            </span>
-          </div>
-          <div>
-            <span className="text-slate-500">Market Value:</span>{" "}
-            <span className="text-slate-800">{report.marketValue}</span>
-          </div>
-          <div>
-            <span className="text-slate-500">Status:</span>{" "}
-            <span className="uppercase text-slate-800">{report.status}</span>
-          </div>
-          <div>
-            <span className="text-slate-500">Address:</span>{" "}
-            <span className="text-slate-800">{report.address}</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <span className="text-slate-500">Loan Number:</span>{" "}
+              <div className="font-medium text-slate-800 break-words">{report.loanNumber ?? report.loanApplication?.loanNumber ?? "-"}</div>
+            </div>
+            <div>
+              <span className="text-slate-500">Status:</span>{" "}
+              <div className="uppercase text-slate-800 break-words">{report.status ?? "-"}</div>
+            </div>
+
+            <div>
+              <span className="text-slate-500">Advocate:</span>{" "}
+              <div className="font-medium text-slate-800 break-words">{report.advocateName ?? "-"}</div>
+            </div>
+            <div>
+              <span className="text-slate-500">Law Firm:</span>{" "}
+              <div className="text-slate-800 break-words">{report.lawFirmName ?? "-"}</div>
+            </div>
+
+            <div>
+              <span className="text-slate-500">Owner:</span>{" "}
+              <div className="text-slate-800 break-words">{report.ownerName ?? "-"}</div>
+            </div>
+            <div>
+              <span className="text-slate-500">Ownership Type:</span>{" "}
+              <div className="text-slate-800 break-words">{report.ownershipType ?? "-"}</div>
+            </div>
+
+            <div>
+              <span className="text-slate-500">Title Clear:</span>{" "}
+              <div className="text-slate-800 break-words">{typeof report.titleClear === 'boolean' ? (report.titleClear ? 'Yes' : 'No') : '-'}</div>
+            </div>
+            <div>
+              <span className="text-slate-500">Title Chain Years:</span>{" "}
+              <div className="text-slate-800 break-words">{report.titleChainYears ?? "-"}</div>
+            </div>
+
+            <div>
+              <span className="text-slate-500">Encumbrance Found:</span>{" "}
+              <div className="text-slate-800 break-words">{typeof report.encumbranceFound === 'boolean' ? (report.encumbranceFound ? 'Yes' : 'No') : '-'}</div>
+            </div>
+            <div>
+              <span className="text-slate-500">Encumbrance Details:</span>{" "}
+              <div className="text-slate-800 break-words">{report.encumbranceDetails ?? '-'}</div>
+            </div>
+
+            <div>
+              <span className="text-slate-500">RERA Registered:</span>{" "}
+              <div className="text-slate-800 break-words">{typeof report.reraRegistered === 'boolean' ? (report.reraRegistered ? 'Yes' : 'No') : '-'}</div>
+            </div>
+            <div>
+              <span className="text-slate-500">Land Use Clear:</span>{" "}
+              <div className="text-slate-800 break-words">{typeof report.landUserClear === 'boolean' ? (report.landUserClear ? 'Yes' : 'No') : '-'}</div>
+            </div>
+
+            <div>
+              <span className="text-slate-500">Building Approval:</span>{" "}
+              <div className="text-slate-800 break-words">{typeof report.buildingApproval === 'boolean' ? (report.buildingApproval ? 'Yes' : 'No') : '-'}</div>
+            </div>
+            <div>
+              <span className="text-slate-500">Submitted At:</span>{" "}
+              <div className="text-slate-800 break-words">{report.submittedAt ? new Date(report.submittedAt).toLocaleString() : '-'}</div>
+            </div>
+
+            <div>
+              <span className="text-slate-500">Approved By:</span>{" "}
+              <div className="text-slate-800 break-words">{report.approvedBy ?? '-'}</div>
+            </div>
+            <div>
+              <span className="text-slate-500">Approved At:</span>{" "}
+              <div className="text-slate-800 break-words">{report.approvedAt ? new Date(report.approvedAt).toLocaleString() : '-'}</div>
+            </div>
+
+            <div className="col-span-2">
+              <span className="text-slate-500">Remarks:</span>
+              <div className="text-slate-800 break-words">{report.remarks ?? '-'}</div>
+            </div>
+
+            <div className="col-span-2">
+              <span className="text-slate-500">Report URL:</span>
+              <div>
+                {report.reportUrl ? (
+                  <a href={report.reportUrl} target="_blank" rel="noreferrer" className="text-blue-600 underline break-words">Open report</a>
+                ) : (
+                  <span className="text-slate-800">-</span>
+                )}
+              </div>
+            </div>
           </div>
         </div>
         <div className="flex justify-end border-t border-slate-200 px-6 py-4">
@@ -192,6 +351,18 @@ export default function LegalCompliancePage() {
     // Add delete logic here
   };
 
+  const approveMutation = useApproveLegalReport();
+
+  const handleApprove = async (report) => {
+    try {
+      const id = report.id || report._id || report.reportId;
+      if (!id) return;
+      await approveMutation.mutateAsync(id);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const iconMap = {
     FileText,
     CheckCircle,
@@ -199,12 +370,37 @@ export default function LegalCompliancePage() {
     XCircle,
   };
 
-  const statistics = LEGAL_COMPLIANCE_STATISTICS.map((stat) => ({
-    ...stat,
-    icon: iconMap[stat.iconName] || FileText,
-  }));
+  // Fetch legal reports from API (server-preferred) using hook
+  const params = {
+    page: currentPage,
+    limit: itemsPerPage,
+    q: searchTerm || undefined,
+    status: statusFilter !== "all" ? statusFilter.toUpperCase() : undefined,
+    propertyType: propertyTypeFilter !== "all" ? propertyTypeFilter.toUpperCase() : undefined,
+  };
+  const { data: apiData, isLoading, error } = useLegalReports(params);
+  const reportsFromStore = useSelector(
+    (state) => state.legalReport?.legalReports?.data ?? [],
+    shallowEqual,
+  );
+  const metaFromStore = useSelector(
+    (state) => state.legalReport?.legalReports?.meta ?? {},
+    shallowEqual,
+  );
 
-  const reports = LEGAL_COMPLIANCE_REPORTS;
+  const reports = apiData?.data ?? reportsFromStore;
+  const meta = apiData?.meta ?? metaFromStore;
+
+  // Build statistics from returned data
+  const totalCount = meta?.total ?? reports.length;
+  const approvedCount = (reports || []).filter((r) => (r.status || "").toString().toUpperCase().includes("APPROV")).length;
+  const rejectedCount = (reports || []).filter((r) => (r.status || "").toString().toUpperCase().includes("REJECT")).length;
+
+  const statistics = [
+    { id: 1, title: "Total Reports", value: totalCount, subtext: "All legal reports", icon: FileText, iconColor: "blue" },
+    { id: 2, title: "Approved", value: approvedCount, subtext: "Approved reports", icon: CheckCircle, iconColor: "green" },
+    { id: 3, title: "Rejected", value: rejectedCount, subtext: "Rejected reports", icon: XCircle, iconColor: "red" },
+  ];
 
   const getStatusBadge = (status) => {
     const statusConfig = {
@@ -275,11 +471,12 @@ export default function LegalCompliancePage() {
       report.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
       report.address.toLowerCase().includes(searchTerm.toLowerCase());
 
+    const reportStatus = (report.status || "").toString().toUpperCase();
     const matchesStatus =
-      statusFilter === "all" || report.status === statusFilter;
+      statusFilter === "all" || reportStatus === statusFilter.toString().toUpperCase();
     const matchesPropertyType =
       propertyTypeFilter === "all" ||
-      report.propertyType.toLowerCase() === propertyTypeFilter.toLowerCase();
+      (report.propertyType || "").toString().toUpperCase() === propertyTypeFilter.toString().toUpperCase();
 
     return matchesSearch && matchesStatus && matchesPropertyType;
   });
@@ -296,17 +493,17 @@ export default function LegalCompliancePage() {
     {
       value: "approved",
       label: "Approved",
-      count: reports.filter((r) => r.status === "approved").length,
+      count: reports.filter((r) => (r.status || "").toString().toUpperCase() === "APPROVED").length,
     },
     {
       value: "pending",
       label: "Pending",
-      count: reports.filter((r) => r.status === "pending").length,
+      count: reports.filter((r) => (r.status || "").toString().toUpperCase() === "PENDING").length,
     },
     {
       value: "rejected",
       label: "Rejected",
-      count: reports.filter((r) => r.status === "rejected").length,
+      count: reports.filter((r) => (r.status || "").toString().toUpperCase() === "REJECTED").length,
     },
   ];
 
@@ -316,27 +513,27 @@ export default function LegalCompliancePage() {
       value: "residential",
       label: "Residential",
       count: reports.filter(
-        (r) => r.propertyType.toLowerCase() === "residential",
+        (r) => (r.propertyType || "").toString().toUpperCase() === "RESIDENTIAL",
       ).length,
     },
     {
       value: "commercial",
       label: "Commercial",
       count: reports.filter(
-        (r) => r.propertyType.toLowerCase() === "commercial",
+        (r) => (r.propertyType || "").toString().toUpperCase() === "COMMERCIAL",
       ).length,
     },
     {
       value: "industrial",
       label: "Industrial",
       count: reports.filter(
-        (r) => r.propertyType.toLowerCase() === "industrial",
+        (r) => (r.propertyType || "").toString().toUpperCase() === "INDUSTRIAL",
       ).length,
     },
     {
       value: "land",
       label: "Land",
-      count: reports.filter((r) => r.propertyType.toLowerCase() === "land")
+      count: reports.filter((r) => (r.propertyType || "").toString().toUpperCase() === "LAND")
         .length,
     },
   ];
@@ -762,80 +959,53 @@ export default function LegalCompliancePage() {
 
         {/* Reports Section - Responsive layouts */}
         {device.isDesktop && (
-          <LegalCompilanceTable
+          <LegalReportTable
             items={paginatedReports}
-            loading={false}
-            getStatusBadge={getStatusBadge}
-            getQualityBadge={getQualityBadge}
+            loading={isLoading}
             onView={handleView}
-            onEdit={handleEdit}
+            onApprove={handleApprove}
+            onDownload={(r) => console.log('download', r)}
             onDelete={handleDelete}
           />
         )}
 
         {(device.isTablet || device.isMobile) && (
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-            {/* Tablet View */}
-            {device.isTablet && (
-              <div className="p-4">
-                {paginatedReports.length > 0 ? (
-                  <>
-                    {viewMode === "grid" && (
-                      <div className="grid grid-cols-2 gap-4">
-                        {paginatedReports.map((report) => (
-                          <TabletGridCard key={report.id} report={report} />
-                        ))}
+            {/* Tablet / Mobile: render simple legal cards */}
+            <div className="p-4">
+              {paginatedReports.length > 0 ? (
+                <div className={`${device.isMobile ? "space-y-3" : "grid grid-cols-2 gap-4"}`}>
+                  {paginatedReports.map((report) => (
+                    <div key={report.id} className="bg-white p-4 rounded-xl border border-slate-200 hover:shadow-md">
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <h3 className="font-semibold text-slate-800 text-sm truncate">{report.loanNumber ?? report.loanApplication?.loanNumber ?? "-"}</h3>
+                          <p className="text-xs text-slate-500">{report.advocateName ?? "-"}</p>
+                        </div>
+                        <div className="text-xs text-slate-600">{(report.submittedAt && new Date(report.submittedAt).toLocaleDateString()) || "-"}</div>
                       </div>
-                    )}
-                    {viewMode === "list" && (
-                      <div className="space-y-3">
-                        {paginatedReports.map((report) => (
-                          <TabletListItem key={report.id} report={report} />
-                        ))}
-                      </div>
-                    )}
-                    {viewMode === "compact" && (
-                      <div className="grid grid-cols-3 gap-3">
-                        {paginatedReports.map((report) => (
-                          <TabletCompactCard key={report.id} report={report} />
-                        ))}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <div className="flex flex-col items-center justify-center py-12">
-                    <FileText className="w-16 h-16 text-slate-300 mb-4" />
-                    <p className="text-slate-500 text-lg font-medium">
-                      No reports found
-                    </p>
-                    <p className="text-slate-400 text-sm mt-2">
-                      Try adjusting your search or filters
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
 
-            {/* Mobile View */}
-            {device.isMobile && (
-              <div className="p-3">
-                {paginatedReports.length > 0 ? (
-                  paginatedReports.map((report) => (
-                    <MobileReportCard key={report.id} report={report} />
-                  ))
-                ) : (
-                  <div className="flex flex-col items-center justify-center py-12">
-                    <FileText className="w-16 h-16 text-slate-300 mb-4" />
-                    <p className="text-slate-500 text-base font-medium">
-                      No reports found
-                    </p>
-                    <p className="text-slate-400 text-xs mt-2">
-                      Try adjusting your search or filters
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
+                      <div className="text-sm text-slate-700 mb-2">Owner: {report.ownerName ?? '-'}</div>
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs text-slate-500">Ownership: <span className="text-slate-800">{report.ownershipType ?? '-'}</span></div>
+                        <div>
+                          <ActionMenu actions={[
+                            { label: 'View', icon: <Eye className="w-4 h-4" />, onClick: () => handleView(report) },
+                            { label: 'Approve', icon: <CheckCircle className="w-4 h-4" />, onClick: () => handleApprove(report) },
+                          ]} />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-12">
+                  <FileText className="w-16 h-16 text-slate-300 mb-4" />
+                  <p className="text-slate-500 text-lg font-medium">No reports found</p>
+                  <p className="text-slate-400 text-sm mt-2">Try adjusting your search or filters</p>
+                </div>
+              )}
+            </div>
           </div>
         )}
 

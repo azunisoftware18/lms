@@ -32,8 +32,12 @@ export interface LoanTypeDTO {
   defaultInterestRate: number;
 
   // Processing & Charges
-  processingFeeType: CommissionType;
-  processingFee: number;
+  minProcessingFee: number;
+  maxProcessingFee: number;
+
+  minLoginCharges: number;
+  maxLoginCharges: number;
+
   gstApplicable: boolean;
   gstPercentage?: number | null;
 
@@ -74,8 +78,11 @@ export interface LoanTypeDTO {
   guarantorDocumentsRequired: string;
   guarantorDocumentsOptional?: string | null;
 
+  // Other documents
+  otherDocumentsRequired: string;
+  otherDocumentsOptions?: string | null;
+
   // Audit
   createdAt: Date;
   updatedAt: Date;
 }
-

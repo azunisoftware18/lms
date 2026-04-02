@@ -67,14 +67,7 @@ export default function LoanProduct() {
   // Calculate stats
   const activeProductsCount = products.filter((p) => p.isActive).length;
   const totalProducts = products.length;
-  const averageInterestRate = useMemo(() => {
-    if (!products.length) return "0%";
-    const totalDefaultInterest = products.reduce(
-      (sum, product) => sum + (Number(product.defaultInterestRate) || 0),
-      0,
-    );
-    return `${(totalDefaultInterest / products.length).toFixed(1)}%`;
-  }, [products]);
+
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8">
@@ -122,12 +115,12 @@ export default function LoanProduct() {
           variant="purple"
         />
 
-        <StatusCard
+        {/* <StatusCard
           title="Avg Interest Rate"
           value={averageInterestRate}
           icon={Percent}
           variant="orange"
-        />
+        /> */}
       </div>
 
       <LoanProductTable

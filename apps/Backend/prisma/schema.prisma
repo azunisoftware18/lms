@@ -98,14 +98,14 @@ model Employee {
   emergencyRelationshipOther String? // Specify if relationship is OTHER
 
   // Professional
-  department         String
-  dateOfJoining      DateTime
-  experience         String
-  workLocation       WorkLocation
-  salary             Float
-  branchId           String
-  branch             Branch       @relation(fields: [branchId], references: [id])
-  employeeRole       EmployeeRole? @relation(fields: [employeeRoleId], references: [id])
+  department    String
+  dateOfJoining DateTime
+  experience    String
+  workLocation  WorkLocation
+  salary        Float
+  branchId      String
+  branch        Branch        @relation(fields: [branchId], references: [id])
+  employeeRole  EmployeeRole? @relation(fields: [employeeRoleId], references: [id])
 
   // Optional username if separate from `User`
   loanAssignments LoanAssignment[]
@@ -119,12 +119,12 @@ model Employee {
 }
 
 model EmployeeRole {
-  id          String     @id @default(cuid())
-  name        String     @unique
+  id          String   @id @default(cuid())
+  name        String   @unique
   description String?
-  isActive    Boolean    @default(true)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   employees Employee[]
 }
@@ -691,8 +691,8 @@ model Guarantor {
 
   employmentType EmploymentType?
 
-  kycId     String?   @unique
-  kyc       Kyc?      @relation("GuarantorKyc", fields: [kycId], references: [id])
+  kycId String? @unique
+  kyc   Kyc?    @relation("GuarantorKyc", fields: [kycId], references: [id])
 
   addresses           Address[]
   occupationalDetails OccupationalDetails[]
@@ -1000,9 +1000,9 @@ model Document {
   guarantor          Guarantor?         @relation(fields: [guarantorId], references: [id])
   branch             Branch             @relation(fields: [branchId], references: [id])
 
-  @@unique([coApplicantId, documentType])     // ✅ prevents duplicate uploads per co-applicant
-  @@unique([guarantorId, documentType])       // ✅ prevents duplicate uploads per guarantor
-  @@index([loanApplicationId, documentType])  // supports loan-level queries without forcing cross-party uniqueness
+  @@unique([coApplicantId, documentType]) // ✅ prevents duplicate uploads per co-applicant
+  @@unique([guarantorId, documentType]) // ✅ prevents duplicate uploads per guarantor
+  @@index([loanApplicationId, documentType]) // supports loan-level queries without forcing cross-party uniqueness
 }
 
 model Kyc {
@@ -1052,7 +1052,7 @@ model LoanEmiSchedule {
 
   openingBalance     Float
   principalAmount    Float
-  deferredPrincipal  Float @default(0) // Principal deferred during INTEREST_ONLY moratorium
+  deferredPrincipal  Float  @default(0) // Principal deferred during INTEREST_ONLY moratorium
   interestAmount     Float
   emiAmount          Float // Scheduled EMI amount
   emiPaymentAmount   Float? // Actual amount paid (can be partial / excess)
@@ -1189,10 +1189,16 @@ model LoanType {
   defaultInterestRate Float
 
   //processing & Charges
-  processingFeeType CommissionType
-  processingFee     Float // amount or %
-  gstApplicable     Boolean        @default(true)
-  gstPercentage     Float? //usually 18%
+
+  minProcessingFee Float // amount or %
+  maxProcessingFee Float // amount or %
+
+  //login charges
+  minLoginCharges Float? // amount or %
+  maxLoginCharges Float? // amount or %
+
+  gstApplicable Boolean @default(true)
+  gstPercentage Float? //usually 18%
 
   //Eligibility Criteria 
   minAge         Int
@@ -1207,9 +1213,9 @@ model LoanType {
 
   //Disbursement Rules
   maxLoanToValueRatio Float? //for secured loans
-  
-  prepaymentAllowed   Boolean @default(true)
-  foreclosureAllowed  Boolean @default(true)
+
+  prepaymentAllowed  Boolean @default(true)
+  foreclosureAllowed Boolean @default(true)
 
   prepaymentCharges  Float? // amount or %
   foreclosureCharges Float? // amount or %
@@ -1227,25 +1233,25 @@ model LoanType {
 
   //SLA & WorkFlow 
   estimatedProcessingTimeDays Int? //turnaround time
-  // documentsRequired           String //list of documents /comma separated 
-  // documentsOptions            String? // any optional documents that can help in faster processing
+  otherDocumentsRequired           String //list of documents /comma separated 
+  otherDocumentsOptions            String? // any optional documents that can help in faster processing
 
   // Applicant documents
-  applicantDocumentsRequired  String @default("") // required docs for primary applicant (comma-separated)
-  applicantDocumentsOptional  String? // optional docs for primary applicant (comma-separated)
+  applicantDocumentsRequired String  @default("") // required docs for primary applicant (comma-separated)
+  applicantDocumentsOptional String? // optional docs for primary applicant (comma-separated)
 
   // Co-Applicant documents
-  coApplicantDocumentsRequired String @default("") // required docs for co-applicant (comma-separated)
+  coApplicantDocumentsRequired String  @default("") // required docs for co-applicant (comma-separated)
   coApplicantDocumentsOptional String? // optional docs for co-applicant (comma-separated)
 
   // Guarantor documents
-  guarantorDocumentsRequired  String @default("") // required docs for guarantor (comma-separated)
-  guarantorDocumentsOptional  String? // optional docs for guarantor (comma-separated)
+  guarantorDocumentsRequired String  @default("") // required docs for guarantor (comma-separated)
+  guarantorDocumentsOptional String? // optional docs for guarantor (comma-separated)
 
   //Audit Fields
   deletedAt DateTime?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   // Relations
   leads            Leads[]
@@ -1264,7 +1270,7 @@ model TechnicalReport {
 
   //property details
   propertyType    String // Residential, Commercial, Land Flat Villa etc.
-  propertyAddress String  // Added for address line
+  propertyAddress String // Added for address line
   city            String // Added for city
   state           String // Added for state
   pincode         String // Added for pincode
@@ -1340,7 +1346,10 @@ model LegalReport {
   // Audit
   submittedAt DateTime?
   approvedBy  String?
-  approvedAt  DateTime?
+  rejectedBy  String?
+  rejectedAt  DateTime?
+
+  approvedAt DateTime?
 
   branchId String
   branch   Branch @relation(fields: [branchId], references: [id])
@@ -1835,12 +1844,12 @@ enum LoanStatus {
   kyc_pending
   credit_check
   under_review
-  LEGAL_PENDING
   TECHNICAL_PENDING
-  LEGAL_APPROVED
   TECHNICAL_APPROVED
-  LOANRULES_REJECTED
-  LOANRULES_APPROVED
+  TECHNICAL_REJECTED
+  LEGAL_PENDING
+  LEGAL_APPROVED
+  LEGAL_REJECTED
   approved
   rejected
   disbursed

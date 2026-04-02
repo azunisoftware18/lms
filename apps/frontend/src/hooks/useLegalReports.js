@@ -18,7 +18,7 @@ export const useLegalReports = (params = {}) => {
 
   return useQuery({
     queryKey: ["legalReports", normalizedParams],
-    queryFn: () => apiGet("/legal-reports", { params: normalizedParams }),
+    queryFn: () => apiGet("/reports/legal/legal-reports", { params: normalizedParams }),
     onSuccess: (data) => {
       dispatch(setLegalReports(data));
       dispatch(clearError());
@@ -36,7 +36,7 @@ export const useCreateLegalReport = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: ({ loanId, data }) => apiPost(`/loan/${loanId}/legal-report`, data),
+    mutationFn: ({ loanId, data }) => apiPost(`/reports/legal/loan/${loanId}/legal-report`, data),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -61,7 +61,7 @@ export const useApproveLegalReport = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: (reportId) => apiPost(`/legal-report/${reportId}/approve`),
+    mutationFn: (reportId) => apiPost(`/reports/legal/legal-report/${reportId}/approve`),
     onMutate: () => {
       dispatch(setLoading(true));
     },

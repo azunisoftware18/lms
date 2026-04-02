@@ -90,6 +90,7 @@ export const useGenerateSchedule = () => {
     onSuccess: (data) => {
       dispatch(setEmiSchedule(data));
       queryClient.invalidateQueries(["emis"]);
+      queryClient.invalidateQueries(["allEmis"]);
       dispatch(setLoading(false));
       dispatch(clearError());
       showSuccess("EMI schedule generated successfully!");

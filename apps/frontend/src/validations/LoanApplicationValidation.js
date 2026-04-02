@@ -279,8 +279,6 @@ export const repaymentMethodEnum = z.enum([
   "SALARY_DEDUCTION",
   "ECS",
   "CHEQUE",
-  "STANDING_INSTRUCTION",
-  "OTHER",
 ]);
 
 export const loanRequirementSchema = z.object({

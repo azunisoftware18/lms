@@ -97,7 +97,7 @@ export default function AddLoanTypesForm({ onClose, editData }) {
   const updateLoanTypeMutation = useUpdateLoanType();
 
   const interestTypes = INTEREST_TYPES;
-  const processingFeeTypes = PROCESSING_FEE_TYPES;
+
   const chargeTypes = PROCESSING_FEE_TYPES;
   const employmentTypes = EMPLOYMENT_TYPES;
 
@@ -124,8 +124,10 @@ export default function AddLoanTypesForm({ onClose, editData }) {
       minInterestRate: "",
       maxInterestRate: "",
       defaultInterestRate: "",
-      processingFeeType: "PERCENTAGE",
-      processingFeeValue: "",
+      minProcessingFee: "",
+      maxProcessingFee: "",
+      minLoginCharges: "",
+      maxLoginCharges: "",
       gstApplicable: false,
       gstPercentage: "",
       minAge: "",
@@ -152,6 +154,8 @@ export default function AddLoanTypesForm({ onClose, editData }) {
       coApplicantDocumentsOptional: [],
       guarantorDocumentsRequired: [],
       guarantorDocumentsOptional: [],
+      otherDocumentsRequired: [],
+      otherDocumentsOptions: [],
     },
   });
 
@@ -190,6 +194,14 @@ export default function AddLoanTypesForm({ onClose, editData }) {
   const watchGuarantorDocumentsOptional = useWatch({
     control,
     name: "guarantorDocumentsOptional",
+  });
+  const watchOtherDocumentsRequired = useWatch({
+    control,
+    name: "otherDocumentsRequired",
+  });
+  const watchOtherDocumentsOptions = useWatch({
+    control,
+    name: "otherDocumentsOptions",
   });
 
   const applicantOptionalOptions = useMemo(
@@ -233,8 +245,11 @@ export default function AddLoanTypesForm({ onClose, editData }) {
         minInterestRate: editData.minInterestRate || "",
         maxInterestRate: editData.maxInterestRate || "",
         defaultInterestRate: editData.defaultInterestRate || "",
-        processingFeeType: editData.processingFeeType || "PERCENTAGE",
-        processingFeeValue: editData.processingFee || "",
+
+        minProcessingFee: editData.minProcessingFee || "",
+        maxProcessingFee: editData.maxProcessingFee || "",
+        minLoginCharges: editData.minLoginCharges || "",
+        maxLoginCharges: editData.maxLoginCharges || "",
         gstApplicable: editData.gstApplicable || false,
         gstPercentage: editData.gstPercentage || "",
         minAge: editData.minAge || "",
@@ -272,6 +287,12 @@ export default function AddLoanTypesForm({ onClose, editData }) {
           : [],
         guarantorDocumentsOptional: editData.guarantorDocumentsOptional
           ? editData.guarantorDocumentsOptional.split(",")
+          : [],
+        otherDocumentsRequired: editData.otherDocumentsRequired
+          ? editData.otherDocumentsRequired.split(",")
+          : [],
+        otherDocumentsOptions: editData.otherDocumentsOptions
+          ? editData.otherDocumentsOptions.split(",")
           : [],
       });
     }
@@ -355,9 +376,18 @@ export default function AddLoanTypesForm({ onClose, editData }) {
       minInterestRate: Number(data.minInterestRate),
       maxInterestRate: Number(data.maxInterestRate),
       defaultInterestRate: Number(data.defaultInterestRate),
-      processingFeeType: normalizeProcessingFeeType(data.processingFeeType),
-      processingFee: data.processingFeeValue
-        ? Number(data.processingFeeValue)
+
+      minProcessingFee: data.minProcessingFee
+        ? Number(data.minProcessingFee)
+        : undefined,
+      maxProcessingFee: data.maxProcessingFee
+        ? Number(data.maxProcessingFee)
+        : undefined,
+      minLoginCharges: data.minLoginCharges
+        ? Number(data.minLoginCharges)
+        : undefined,
+      maxLoginCharges: data.maxLoginCharges
+        ? Number(data.maxLoginCharges)
         : undefined,
       gstApplicable: data.gstApplicable,
       gstPercentage:
@@ -411,6 +441,10 @@ export default function AddLoanTypesForm({ onClose, editData }) {
       guarantorDocumentsRequired: data.guarantorDocumentsRequired.join(","),
       guarantorDocumentsOptional: data.guarantorDocumentsOptional.length
         ? data.guarantorDocumentsOptional.join(",")
+        : undefined,
+      otherDocumentsRequired: data.otherDocumentsRequired.join(","),
+      otherDocumentsOptions: data.otherDocumentsOptions.length
+        ? data.otherDocumentsOptions.join(",")
         : undefined,
     };
 
@@ -742,35 +776,6 @@ export default function AddLoanTypesForm({ onClose, editData }) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Controller
-              name="processingFeeType"
-              control={control}
-              render={({ field }) => (
-                <SelectField
-                  label="Processing Fee Type"
-                  options={processingFeeTypes}
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors.processingFeeType?.message}
-                />
-              )}
-            />
-
-            <Controller
-              name="processingFeeValue"
-              control={control}
-              render={({ field }) => (
-                <InputField
-                  label="Processing Fee Value"
-                  type="number"
-                  placeholder="0.00"
-                  error={errors.processingFeeValue?.message}
-                  icon={IndianRupee}
-                  {...field}
-                />
-              )}
-            />
-
             <div className="space-y-3">
               <Controller
                 name="gstApplicable"
@@ -801,6 +806,69 @@ export default function AddLoanTypesForm({ onClose, editData }) {
                   )}
                 />
               )}
+            </div>
+
+            {/* New fields: min/max processing fee and min/max login charges */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+              <Controller
+                name="minProcessingFee"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Minimum Processing Fee"
+                    type="number"
+                    placeholder="0.00"
+                    error={errors.minProcessingFee?.message}
+                    icon={IndianRupee}
+                    {...field}
+                  />
+                )}
+              />
+
+              <Controller
+                name="maxProcessingFee"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Maximum Processing Fee"
+                    type="number"
+                    placeholder="0.00"
+                    error={errors.maxProcessingFee?.message}
+                    icon={IndianRupee}
+                    {...field}
+                  />
+                )}
+              />
+
+              <Controller
+                name="minLoginCharges"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Minimum Login Charges"
+                    type="number"
+                    placeholder="0.00"
+                    error={errors.minLoginCharges?.message}
+                    icon={IndianRupee}
+                    {...field}
+                  />
+                )}
+              />
+
+              <Controller
+                name="maxLoginCharges"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Maximum Login Charges"
+                    type="number"
+                    placeholder="0.00"
+                    error={errors.maxLoginCharges?.message}
+                    icon={IndianRupee}
+                    {...field}
+                  />
+                )}
+              />
             </div>
           </div>
         </div>
@@ -1158,6 +1226,46 @@ export default function AddLoanTypesForm({ onClose, editData }) {
                   isSearchable
                   placeholder="Select optional guarantor documents"
                   error={errors.guarantorDocumentsOptional?.message}
+                  className="bg-white rounded-lg"
+                />
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+              <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-emerald-600" />
+                Other Documents
+              </h4>
+              <div className="space-y-3">
+                <SelectField
+                  label="Required"
+                  options={DOCUMENT_OPTIONS}
+                  value={watchOtherDocumentsRequired || []}
+                  onChange={(value) =>
+                    setValue("otherDocumentsRequired", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select other required documents"
+                  error={errors.otherDocumentsRequired?.message}
+                  className="bg-white rounded-lg"
+                />
+
+                <SelectField
+                  label="Options"
+                  options={DOCUMENT_OPTIONS}
+                  value={watchOtherDocumentsOptions || []}
+                  onChange={(value) =>
+                    setValue("otherDocumentsOptions", value || [], {
+                      shouldValidate: true,
+                    })
+                  }
+                  isMulti
+                  isSearchable
+                  placeholder="Select other optional documents"
+                  error={errors.otherDocumentsOptions?.message}
                   className="bg-white rounded-lg"
                 />
               </div>

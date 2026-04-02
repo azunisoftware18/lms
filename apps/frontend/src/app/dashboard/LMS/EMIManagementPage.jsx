@@ -1,407 +1,160 @@
-import React, { useState, useMemo } from "react";
-import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
-import QuickActionCard from "../../../components/common/QuickAction";
-import EMIManagementTable from "../../../components/tables/EMIManagementTable";
-import * as Icons from "lucide-react";
-
-import { EMI_APPROVED_LOANS, EMI_VOUCHERS } from "../../../lib/LOSDummyData";
-import { useLoanApplications } from "../../../hooks/useLoanApplication";
-import {
-  useAllEmis,
-  useGenerateSchedule,
-  usePayEmi,
-} from "../../../hooks/useEmi";
-import { colorVariables } from "../../../lib/index";
+import React, { useState, useMemo } from 'react';
+import EMIManagementTableView from '../../../components/tables/EMIManagementTable';
+import { useAllEmis } from '../../../hooks/useEmi';
+import StatusCard from '../../../components/common/StatusCard';
+import { Wallet, CheckCircle, Clock, AlertCircle, Download, Bell } from 'lucide-react';
 
 export default function EMIManagementPage() {
-  const [activeTab, setActiveTab] = useState("approved");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [confirmAction, setConfirmAction] = useState(null);
+  const [filterStatus, setFilterStatus] = useState('');
 
-  const itemsPerPage = 5;
+  // Fetch EMIs from API / store
+  const { emis: rawEmis = [], meta, loading, isFetching, refetch } = useAllEmis({ page: 1, limit: 100 });
 
-  // ---------- DATA (from API) ----------------
-  const loanQuery = useLoanApplications({ status: "APPROVED", limit: 1000 });
-  const { emis: emiVouchers, refetch: emisRefetch } = useAllEmis({
-    page: currentPage,
-    limit: itemsPerPage,
-    q: searchTerm,
-    status: filterStatus,
-  });
+  // Map backend EMI shape to table-friendly shape
+  const data = useMemo(() => {
+    if (!Array.isArray(rawEmis)) return [];
+    return rawEmis.map((e, idx) => {
+      const due = e.dueDate || e.due_date || e.due || null;
+      const emiNo = e.emiNo ?? e.emi_no ?? e.emiNo;
+      const emiNumber = `EMI${String(emiNo ?? idx + 1).padStart(3, '0')}`;
+      const principal = e.principalAmount ?? e.openingBalance ?? 0;
+      const interest = e.interestAmount ?? 0;
+      const emiAmount = e.emiAmount ?? e.emi_amount ?? 0;
+      const status = (e.status || '').toString().toLowerCase();
+      const isToday = due ? new Date(due).toISOString().split('T')[0] === new Date().toISOString().split('T')[0] : false;
+      return {
+        ...e,
+        id: e.id || `${emiNumber}-${idx}`,
+        emiNumber,
+        dueDate: due,
+        principal,
+        interest,
+        emiAmount,
+        status,
+        isToday,
+      };
+    }).filter(Boolean);
+  }, [rawEmis]);
 
-  const loanList = useMemo(() => {
-    return loanQuery?.data?.data || loanQuery?.data || [];
-  }, [loanQuery?.data]);
-
-  // ---------- APPROVED FILTER ----------
-  const approvedApplications = useMemo(() => {
-    return loanList.filter((loan) =>
-      (loan.applicationStatus || loan.status || loan.loanStatus || "")
-        .toLowerCase()
-        .includes("approved"),
-    );
-  }, [loanList]);
-
-  // ---------- TAB DATA ----------
-  const filteredByTab = useMemo(() => {
-    if (activeTab === "approved") return approvedApplications;
-    return emiVouchers || [];
-  }, [activeTab, approvedApplications, emiVouchers]);
-
-  // ---------- SEARCH + FILTER ----------
-  const filteredData = useMemo(() => {
-    return filteredByTab.filter((item) => {
-      const name = item.applicantName || item.customerName || "";
-      const loanNumber = item.loanNumber || item.voucherNo || "";
-      const status =
-        item.applicationStatus || item.status || item.loanStatus || "";
-
-      const matchesSearch =
-        searchTerm === "" ||
-        name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        loanNumber.toLowerCase().includes(searchTerm.toLowerCase());
-
-      const matchesFilter =
-        activeTab !== "all" ||
-        filterStatus === "" ||
-        status.toUpperCase() === filterStatus.toUpperCase();
-
-      return matchesSearch && matchesFilter;
-    });
-  }, [filteredByTab, searchTerm, filterStatus, activeTab]);
-
-  // ---------- PAGINATION ----------
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedData = filteredData.slice(
-    startIndex,
-    startIndex + itemsPerPage,
-  );
-
-  // ---------- HANDLE ACTION ----------
-  const generateSchedule = useGenerateSchedule();
-  const payEmi = usePayEmi();
-
-  const handleActionClick = (action, item) => {
-    setConfirmAction({ type: action, item });
-    setIsConfirmOpen(true);
-  };
-
-  const handleConfirmAction = () => {
-    const item = confirmAction?.item;
-    if (confirmAction?.type === "generate") {
-      // item is expected to be a loan application
-      if (item?.id) {
-        generateSchedule.mutate(item.id, {
-          onSuccess: () => {
-            // refresh lists
-            if (loanQuery?.refetch) loanQuery.refetch();
-            if (emisRefetch) emisRefetch();
-          },
-        });
-      }
-    } else if (confirmAction?.type === "download") {
-      // TODO: implement export/download (placeholder)
-    } else if (confirmAction?.type === "print") {
-      // TODO: implement print (placeholder)
-    } else if (confirmAction?.type === "pay") {
-      // item is expected to be an EMI schedule entry
-      if (item?.id) {
-        const amount = Number(item.emiAmount || item.totalPayable || 0);
-        if (amount > 0) {
-          payEmi.mutate(
-            { emiId: item.id, amountPaid: amount, paymentMode: "CASH" },
-            {
-              onSuccess: () => {
-                if (loanQuery?.refetch) loanQuery.refetch();
-                if (emisRefetch) emisRefetch();
-              },
-            },
-          );
-        }
-      }
-    }
-    setIsConfirmOpen(false);
-    setConfirmAction(null);
-  };
-
-  // ---------- FORMAT HELPERS ----------
-  const formatCurrency = (amount) =>
-    new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
+  // Format currency
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
       minimumFractionDigits: 0,
+      maximumFractionDigits: 0
     }).format(amount || 0);
-
-  const formatDate = (dateString) => {
-    if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleDateString("en-IN", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
   };
 
-  // ---------- TABLE COLUMNS ----------
-  const approvedColumns = [
-    {
-      accessor: "applicantName",
-      header: "Customer",
-      render: (val, row) => (
-        <div className="flex items-center gap-3">
-          <div className={`p-2 ${colorVariables.LIGHT_BG} rounded-lg`}>
-            <Icons.User className={`w-4 h-4 ${colorVariables.PRIMARY_COLOR}`} />
-          </div>
-          <div>
-            <div className="font-medium text-gray-900">{val || "N/A"}</div>
-            <div className="text-xs text-gray-500">ID: {row.id || "N/A"}</div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      accessor: "loanNumber",
-      header: "Loan Number",
-      render: (val) => (
-        <div className="flex items-center gap-2">
-          <Icons.FileText className="w-4 h-4 text-gray-400" />
-          <span className="font-medium">{val || "N/A"}</span>
-        </div>
-      ),
-    },
-    {
-      accessor: "tenureMonths",
-      header: "Tenure",
-      render: (val) => (
-        <div className="flex items-center gap-2">
-          <Icons.Clock className="w-4 h-4 text-gray-400" />
-          <span>{val || 0} months</span>
-        </div>
-      ),
-    },
-    {
-      accessor: "approvedAmount",
-      header: "Loan Amount",
-      render: (val) => (
-        <span className="font-semibold text-gray-900">
-          {formatCurrency(val)}
-        </span>
-      ),
-    },
-    {
-      accessor: "interestRate",
-      header: "Interest",
-      render: (val) => <span className="font-medium">{val}%</span>,
-    },
-    {
-      accessor: "applicationStatus",
-      header: "Status",
-      render: (val) => (
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
-          {val || "APPROVED"}
-        </span>
-      ),
-    },
-  ];
+  // Format date
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    try {
+      return new Date(dateString).toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
+    } catch {
+      return 'Invalid Date';
+    }
+  };
 
-  const voucherColumns = [
-    {
-      accessor: "customerName",
-      header: "Customer",
-      render: (val, row) => (
-        <div className="flex items-center gap-3">
-          <div className={`p-2 ${colorVariables.LIGHT_BG} rounded-lg`}>
-            <Icons.User className={`w-4 h-4 ${colorVariables.PRIMARY_COLOR}`} />
-          </div>
-          <div>
-            <div className="font-medium text-gray-900">{val || "N/A"}</div>
-            <div className="text-xs text-gray-500">
-              {row.voucherNo || "N/A"}
-            </div>
+  // Calculate totals from fetched data
+  const totals = useMemo(() => ({
+    totalPrincipal: data.reduce((sum, item) => sum + (item?.principal || 0), 0),
+    totalInterest: data.reduce((sum, item) => sum + (item?.interest || 0), 0),
+    totalEMI: data.reduce((sum, item) => sum + (item?.emiAmount || 0), 0),
+    paidCount: data.filter(item => item?.status === 'paid').length,
+    pendingCount: data.filter(item => item?.status === 'pending').length,
+    overdueCount: data.filter(item => item?.status === 'overdue').length,
+    paidAmount: data.filter(item => item?.status === 'paid').reduce((s, i) => s + (i?.emiAmount || 0), 0),
+    pendingAmount: data.filter(item => item?.status === 'pending').reduce((s, i) => s + (i?.emiAmount || 0), 0),
+    overdueAmount: data.filter(item => item?.status === 'overdue').reduce((s, i) => s + (i?.emiAmount || 0), 0)
+  }), [data]);
+
+  // Handlers
+  const handleView = (row) => {
+    alert(`📋 EMI Details:\nEMI: ${row.emiNumber}\nDue Date: ${formatDate(row.dueDate)}\nAmount: ${formatCurrency(row.emiAmount)}\nStatus: ${row.status}`);
+  };
+
+  const handlePayEMI = (row) => {
+    if (window.confirm(`💰 Pay ${formatCurrency(row.emiAmount)} for ${formatDate(row.dueDate)}?`)) {
+      alert('Payment processing...');
+    }
+  };
+
+  const handleEdit = (row) => {
+    alert(`✏️ Editing EMI: ${row.emiNumber}`);
+  };
+
+  const handleDownload = (row) => {
+    alert(`📥 Downloading receipt for EMI: ${row.emiNumber}`);
+  };
+
+  const handleViewStatement = (row) => {
+    alert(`📄 Viewing statement for EMI: ${row.emiNumber}`);
+  };
+
+  const handleDownloadReceipt = (row) => {
+    alert(`📑 Downloading summary for EMI: ${row.emiNumber}`);
+  };
+
+  const handleCardClick = (status) => {
+    setFilterStatus(status);
+  };
+
+  if (loading || isFetching) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-3xl font-bold text-gray-900 mb-8">EMI Management</h1>
+          <div className="bg-white rounded-lg shadow-lg p-12 text-center">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"></div>
+            <p className="mt-4 text-gray-600">Loading EMI data...</p>
           </div>
         </div>
-      ),
-    },
-    {
-      accessor: "loanNumber",
-      header: "Loan Number",
-      render: (val) => (
-        <div className="flex items-center gap-2">
-          <Icons.FileText className="w-4 h-4 text-gray-400" />
-          <span className="font-medium">{val || "N/A"}</span>
-        </div>
-      ),
-    },
-    {
-      accessor: "tenure",
-      header: "Tenure",
-      render: (val) => `${val || 0} months`,
-    },
-    {
-      accessor: "amount",
-      header: "Loan Amount",
-      render: (val) => (
-        <span className="font-semibold text-gray-900">
-          {formatCurrency(val)}
-        </span>
-      ),
-    },
-    {
-      accessor: "paidAmount",
-      header: "Paid Amount",
-      render: (val) => (
-        <span className="font-semibold text-green-600">
-          {formatCurrency(val)}
-        </span>
-      ),
-    },
-    {
-      accessor: "startDate",
-      header: "Start Date",
-      render: (val) => (
-        <div className="flex items-center gap-2">
-          <Icons.Calendar className="w-4 h-4 text-gray-400" />
-          <span>{formatDate(val)}</span>
-        </div>
-      ),
-    },
-    {
-      accessor: "status",
-      header: "Status",
-      render: (val) => (
-        <span
-          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
-            (val || "").toUpperCase() === "ACTIVE"
-              ? colorVariables.INDEPENDENT_COLOR + " border border-green-300"
-              : "bg-yellow-100 text-yellow-800 border border-yellow-200"
-          }`}
-        >
-          {val || "PENDING"}
-        </span>
-      ),
-    },
-  ];
+      </div>
+    );
+  }
 
-  const activeColumns =
-    activeTab === "approved" ? approvedColumns : voucherColumns;
-
-  const approvedActions = [
-    {
-      label: "Generate EMI",
-      icon: Icons.IndianRupee,
-      onClick: (row) => handleActionClick("generate", row),
-    },
-  ];
-
-  const voucherActions = [
-    {
-      label: "Pay",
-      icon: Icons.CreditCard,
-      onClick: (row) => handleActionClick("pay", row),
-    },
-    {
-      label: "Download",
-      icon: Icons.Download,
-      onClick: (row) => handleActionClick("download", row),
-    },
-    {
-      label: "Print",
-      icon: Icons.Printer,
-      onClick: (row) => handleActionClick("print", row),
-    },
-  ];
-
-  const activeActions =
-    activeTab === "approved" ? approvedActions : voucherActions;
-
-  const viewOptions = [
-    {
-      value: "approved",
-      label: `Approved Applications (${approvedApplications.length})`,
-    },
-    { value: "all", label: `EMI Vouchers (${(emiVouchers || []).length})` },
-  ];
-
-  // ---------- UI ----------
   return (
-    <div className="p-6 bg-gray-50 min-h-screen space-y-6">
-      {/* PAGE HEADER */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-800">EMI Management</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Manage loan EMIs and track approved applications
-        </p>
-      </div>
+    <div className="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">EMI Management</h1>
+            <p className="mt-2 text-sm text-gray-600">Manage and track all your EMI payments</p>
+          </div>
+        </div>
 
-      {/* QUICK ACTIONS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <QuickActionCard
-          title="Generate EMI"
-          subtitle={`${approvedApplications.length} approved loans pending`}
-          icon={Icons.Calculator}
-          variant="blue"
-          onClick={() => setActiveTab("approved")}
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <StatusCard title="TOTAL EMI" value={formatCurrency(totals.totalEMI)} subtext={`${data.length} EMIs`} icon={Wallet} variant="purple" />
+          <div onClick={() => handleCardClick('paid')} className="cursor-pointer">
+            <StatusCard title="PAID" value={totals.paidCount.toString()} subtext={formatCurrency(totals.paidAmount)} icon={CheckCircle} variant="green" />
+          </div>
+          <div onClick={() => handleCardClick('pending')} className="cursor-pointer">
+            <StatusCard title="PENDING" value={totals.pendingCount.toString()} subtext={formatCurrency(totals.pendingAmount)} icon={Clock} variant="orange" />
+          </div>
+          <div onClick={() => handleCardClick('overdue')} className="cursor-pointer">
+            <StatusCard title="OVERDUE" value={totals.overdueCount.toString()} subtext={formatCurrency(totals.overdueAmount)} icon={AlertCircle} variant="red" />
+          </div>
+        </div>
+
+        
+        <EMIManagementTableView
+          data={data}
+          loading={loading}
+          onView={handleView}
+          onEdit={handleEdit}
+          onDownload={handleDownload}
+          onPayEMI={handlePayEMI}
+          onViewStatement={handleViewStatement}
+          onDownloadReceipt={handleDownloadReceipt}
         />
-        <QuickActionCard
-          title="Download EMI Report"
-          subtitle="Export all EMI voucher data"
-          icon={Icons.Download}
-          variant="indigo"
-          onClick={() => setActiveTab("all")}
-        />
       </div>
-
-      {/* TABLE */}
-      <EMIManagementTable
-        title={
-          activeTab === "approved"
-            ? `Approved Applications (${filteredData.length})`
-            : `EMI Vouchers (${filteredData.length})`
-        }
-        columns={activeColumns}
-        data={paginatedData}
-        actions={activeActions}
-        search={searchTerm}
-        onSearchChange={(v) => {
-          setSearchTerm(v);
-          setCurrentPage(1);
-        }}
-        filterValue={activeTab}
-        onFilterChange={(v) => {
-          setActiveTab(v);
-          setFilterStatus("");
-          setCurrentPage(1);
-        }}
-        filterOptions={viewOptions}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
-
-      {/* CONFIRMATION DIALOG */}
-      <ConfirmationDialog
-        isOpen={isConfirmOpen}
-        title={`Confirm ${
-          confirmAction?.type === "download"
-            ? "Download"
-            : confirmAction?.type === "print"
-              ? "Print"
-              : "Generate EMI"
-        }`}
-        message={`Are you sure you want to ${confirmAction?.type} EMI for ${
-          confirmAction?.item?.applicantName ||
-          confirmAction?.item?.customerName ||
-          "this loan"
-        }?`}
-        onConfirm={handleConfirmAction}
-        onCancel={() => {
-          setIsConfirmOpen(false);
-          setConfirmAction(null);
-        }}
-      />
     </div>
   );
 }

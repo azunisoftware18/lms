@@ -119,18 +119,36 @@ export async function createFinancialDetails(
 
   if (data.properties?.length) {
     await tx.property.createMany({
-      data: data.properties.map((p: any) => ({
-        propertySelected: p.propertySelected,
-        landArea: p.landArea,
-        buildUpArea: p.buildUpArea,
-        ownershipType: p.ownershipType,
-        landType: p.landType,
-        purchaseFrom: p.purchaseFrom,
-        purchaseOther: p.purchaseOther,
-        constructionStage: p.constructionStage,
-        constructionPercent: p.constructionPercent,
-        loanApplicationId: loanId,
-      })),
+      data: data.properties.map((p: any) => {
+        const allowedPurchaseSources = new Set([
+          Enums.PurchaseSource.BUILDER,
+          Enums.PurchaseSource.SOCIETY,
+          Enums.PurchaseSource.DEVELOPMENT_AUTHORITY,
+          Enums.PurchaseSource.RESALE,
+          Enums.PurchaseSource.SELF_CONSTRUCTION,
+          Enums.PurchaseSource.OTHER,
+        ]);
+        const incoming = p.purchaseFrom;
+        const normalizedPurchaseFrom = allowedPurchaseSources.has(incoming)
+          ? incoming
+          : Enums.PurchaseSource.OTHER;
+        const purchaseOther = allowedPurchaseSources.has(incoming)
+          ? p.purchaseOther
+          : (p.purchaseOther ?? incoming);
+
+        return {
+          propertySelected: p.propertySelected,
+          landArea: p.landArea,
+          buildUpArea: p.buildUpArea,
+          ownershipType: p.ownershipType,
+          landType: p.landType,
+          purchaseFrom: normalizedPurchaseFrom,
+          purchaseOther,
+          constructionStage: p.constructionStage,
+          constructionPercent: p.constructionPercent,
+          loanApplicationId: loanId,
+        };
+      }),
     });
   }
 
