@@ -129,7 +129,7 @@ export const useDeleteCoApplicant = () => {
       queryClient.invalidateQueries(["coApplicants"]);
       dispatch(setLoading(false));
       dispatch(clearError());
-      showSuccess('Co-applicant deleted successfully!');
+      showSuccess("Co-applicant deleted successfully!");
     },
     onError: (error) => {
       const message = error?.message || "Failed to delete co-applicant";
