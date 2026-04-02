@@ -59,6 +59,7 @@ export const useLoanTypes = () => {
   });
   return data || [];
 };
+// GET loan by id: /loan-applications/:id
 export const useLoanApplication = (id) => {
   const dispatch = useDispatch();
 
@@ -84,7 +85,6 @@ export const useLoanApplication = (id) => {
 };
 
 // POST create loan: /loan-applications/loan/create
-// Accepts callbacks for onSuccess, onError, and onSettled for full control from the form
 export const useCreateLoanApplication = ({
   onSuccess: onSuccessCallback,
   onError: onErrorCallback,
