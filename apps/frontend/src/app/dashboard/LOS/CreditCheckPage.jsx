@@ -396,7 +396,7 @@ export default function CreditCheckPage() {
                 showButton
                 buttonText={isSearching ? "Searching..." : "Search"}
                 isLoading={isSearching}
-                placeholder="Enter Loan Number (e.g., LON-2024-001) or Application Number"
+                placeholder="Enter Loan Number (e.g., LN-2026-000001) or Application Number"
                 className="py-4 text-base"
               />
 
@@ -439,7 +439,7 @@ export default function CreditCheckPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div className={`p-3 ${colorVariables.LIGHT_BG} rounded-lg`}>
                   <div className="font-mono text-sm text-blue-700 mb-1">
-                    LON-2024-001
+                    LN-2026-000008
                   </div>
                   <div className="text-xs text-gray-600">
                     Rajesh Kumar - Home Loan
@@ -447,7 +447,7 @@ export default function CreditCheckPage() {
                 </div>
                 <div className={`p-3 ${colorVariables.LIGHT_BG} rounded-lg`}>
                   <div className="font-mono text-sm text-blue-700 mb-1">
-                    LON-2024-002
+                    LN-2026-000007
                   </div>
                   <div className="text-xs text-gray-600">
                     Amit Sharma - Personal Loan
@@ -455,7 +455,7 @@ export default function CreditCheckPage() {
                 </div>
                 <div className={`p-3 ${colorVariables.LIGHT_BG} rounded-lg`}>
                   <div className="font-mono text-sm text-blue-700 mb-1">
-                    LON-2024-003
+                    LN-2026-000006
                   </div>
                   <div className="text-xs text-gray-600">
                     Sunita Patel - Business Loan

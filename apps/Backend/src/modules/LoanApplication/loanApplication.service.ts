@@ -554,7 +554,7 @@ export const getAllLoanApplicationsService = async (params: {
           select: {
             status: true,
             documents: {
-              select: { id: true },
+              select: { id: true, verificationStatus: true },
             },
           },
         },
@@ -596,6 +596,15 @@ export const getAllLoanApplicationsService = async (params: {
     loanTypeId: loan.loanType?.id || null,
     kycStatus: loan.kyc?.status,
     documentCount: loan.kyc?.documents?.length || 0,
+    totalDocuments: loan.kyc?.documents?.length || 0,
+    verifiedDocuments: loan.kyc?.documents
+      ? loan.kyc.documents.filter((d) => d.verificationStatus === "verified")
+          .length
+      : 0,
+    rejectedDocuments: loan.kyc?.documents
+      ? loan.kyc.documents.filter((d) => d.verificationStatus === "rejected")
+          .length
+      : 0,
     coApplicantCount: loan.coapplicants?.length || 0,
   }));
 

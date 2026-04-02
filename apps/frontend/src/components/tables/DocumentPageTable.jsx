@@ -30,7 +30,7 @@ function ApplicantBadge({ applicantType }) {
 
 function StatusBadge({ status }) {
   const tone =
-    status === "VERIFIED"
+    status === "verified"
       ? "bg-green-100 text-green-700"
       : status === "PENDING"
         ? "bg-yellow-100 text-yellow-700"
@@ -40,7 +40,7 @@ function StatusBadge({ status }) {
     <span
       className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${tone}`}
     >
-      {status === "VERIFIED" && <CheckCircle className="w-3 h-3 mr-1" />}
+      {status === "verified" && <CheckCircle className="w-3 h-3 mr-1" />}
       {status === "PENDING" && <Clock className="w-3 h-3 mr-1" />}
       {status === "REJECTED" && <XCircle className="w-3 h-3 mr-1" />}
       {status}
