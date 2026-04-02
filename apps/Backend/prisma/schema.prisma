@@ -1887,6 +1887,7 @@ enum LoanStatus {
   LOANRULES_APPROVED
   LOANRULES_REJECTED
   approved
+  SANCTIONED
   rejected
   disbursed
   active
