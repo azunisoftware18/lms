@@ -1,7 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { apiGet, apiPost } from "../lib/api/apiClient";
-import { showSuccess, showError } from "../lib/utils/toastService";import { normalizeParams } from '../lib/utils/paramHelper';import {
+import { showSuccess, showError } from "../lib/utils/toastService";
+import { normalizeParams } from "../lib/utils/paramHelper";
+import {
   setLoading,
   setError,
   clearError,
@@ -136,7 +138,8 @@ export const usePayableAmount = (recoveryId) => {
 
   return useQuery({
     queryKey: ["payableAmount", recoveryId],
-    queryFn: () => apiGet(`/recoveries/${recoveryId}/settlement/payable-amount`),
+    queryFn: () =>
+      apiGet(`/recoveries/${recoveryId}/settlement/payable-amount`),
     enabled: !!recoveryId,
     onSuccess: (data) => {
       dispatch(setPayableAmount(data));
@@ -158,6 +161,24 @@ export const useSettlementDashboard = () => {
     queryFn: () => apiGet("/settlements/dashboard"),
     onError: (err) => {
       const message = err?.message || "Failed to fetch settlement dashboard";
+      dispatch(setError(message));
+      showError(message);
+    },
+  });
+};
+
+// Fetch settlements for a specific loan: GET /loan-applications/:loanId/settlements
+export const useSettlementsByLoan = (loanId) => {
+  const dispatch = useDispatch();
+
+  return useQuery({
+    queryKey: ["settlementsByLoan", loanId],
+    queryFn: () => apiGet(`/loan-applications/${loanId}/settlements`),
+    enabled: !!loanId,
+    // controller returns { success, message, data: [...] }
+    select: (d) => d?.data ?? d,
+    onError: (err) => {
+      const message = err?.message || "Failed to fetch settlements for loan";
       dispatch(setError(message));
       showError(message);
     },

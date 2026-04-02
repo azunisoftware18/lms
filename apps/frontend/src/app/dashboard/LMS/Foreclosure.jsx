@@ -28,6 +28,7 @@ import {
 import toast from "react-hot-toast";
 import ForeClosureTable from "../../../components/tables/ForeClosureTable";
 import { apiGet } from "../../../lib/api/apiClient";
+import { useSettlementsByLoan } from "../../../hooks/useSettlements";
 
 const PrepaymentForeclosure = () => {
   // State for active tab
@@ -265,6 +266,33 @@ const PrepaymentForeclosure = () => {
     isLoading: isForecloseLoading,
     refetch: refetchForeclose,
   } = useGetForecloseSummary(loanIdForApi);
+
+  // fetch settlements/closure transactions for this loan
+  const { data: settlementsForLoan, isLoading: isSettlementsLoading } =
+    useSettlementsByLoan(searchedLoan?.id ?? null);
+
+  // Map server settlements to table rows
+  const serverTransactions = (
+    Array.isArray(settlementsForLoan) ? settlementsForLoan : []
+  ).map((r) => {
+    const payments = Array.isArray(r.recoveryPayments)
+      ? r.recoveryPayments
+      : [];
+    const lastPayment = payments.length ? payments[payments.length - 1] : null;
+    const loanApp = r.loanApplication ?? {};
+    const customer = loanApp.customer ?? null;
+    return {
+      loanNumber: loanApp.loanNumber ?? searchedLoan?.accountNumber ?? "",
+      customerName: customer?.firstName
+        ? `${customer.firstName} ${customer.lastName ?? ""}`.trim()
+        : (loanApp.customerName ?? searchedLoan?.customerName ?? ""),
+      transactionType: "Settlement",
+      amountPaid: lastPayment ? lastPayment.amount : (r.recoveredAmount ?? 0),
+      status: r.recoveryStatus ?? "",
+      date: (lastPayment?.paymentDate ?? r.updatedAt ?? r.createdAt) || "",
+      id: r.id || `${loanApp.loanNumber}-${r.updatedAt}`,
+    };
+  });
 
   return (
     <div className="bg-slate-50 min-h-screen p-4 md:p-6">
@@ -798,7 +826,9 @@ const PrepaymentForeclosure = () => {
 
       {/* Transaction History Table */}
       <div className="mt-8">
-        <ForeClosureTable data={[...transactionHistory]} />
+        <ForeClosureTable
+          data={[...transactionHistory, ...serverTransactions]}
+        />
       </div>
     </div>
   );
