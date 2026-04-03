@@ -35,6 +35,7 @@ export const useLoanApplications = (params = {}) => {
     },
   });
 };
+
 export const useLoanTypes = () => {
   // Fetch loan types from API
   const { data } = useQuery({

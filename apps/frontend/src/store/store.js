@@ -1,4 +1,3 @@
-
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
 import loanTypeReducer from "./slices/loanTypeSlice";
@@ -12,6 +11,7 @@ import loanDraftReducer from "./slices/loanDraftSlice";
 import leadReducer from "./slices/leadSlice";
 import employeeReducer from "./slices/employeeSlice";
 import technicalReportReducer from "./slices/technicalReportSlice";
+import disbursementReducer from "./slices/disbursementSlice";
 
 export const store = configureStore({
   reducer: {
@@ -27,6 +27,7 @@ export const store = configureStore({
     lead: leadReducer,
     employee: employeeReducer,
     technicalReport: technicalReportReducer,
+    disbursement: disbursementReducer,
   },
 });
 
