@@ -19,7 +19,18 @@ loanDisbursementRouter.post(
   disburseLoanController
 
 );
-loanDisbursementRouter.get("/", authMiddleware, checkPermissionMiddleware("DISBURSE_LOAN"), listDisbursementsController);
-loanDisbursementRouter.get("/:loanNumber", authMiddleware, checkPermissionMiddleware("DISBURSE_LOAN"), getDisbursementController);
-loanDisbursementRouter.post("/:loanNumber/reverse", authMiddleware, checkPermissionMiddleware("DISBURSE_LOAN"), reverseDisbursementController);
+loanDisbursementRouter.get("/", 
+  authMiddleware,
+  checkPermissionMiddleware("DISBURSE_LOAN"),
+  listDisbursementsController);
+loanDisbursementRouter.get("/:loanNumber", 
+  authMiddleware,
+  checkPermissionMiddleware("DISBURSE_LOAN"), 
+  getDisbursementController);
+loanDisbursementRouter.post("/:loanNumber/reverse", 
+  authMiddleware, 
+  checkPermissionMiddleware("DISBURSE_LOAN"),
+  reverseDisbursementController);
+
+  
 export default loanDisbursementRouter;
