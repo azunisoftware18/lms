@@ -1,5 +1,9 @@
 export interface SanctionCreateInput {
-	loanApplicationId: string;
+	loanNumber: string;
+    interestRate: number;
+    tenureMonths: number;
+    latePaymentFee: number;
+    latePaymentFeeType: "FIXED" | "PERCENTAGE";
 	sanctionedAmount: number;
 	currency?: string;
 	remarks?: string;

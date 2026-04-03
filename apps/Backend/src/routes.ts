@@ -28,6 +28,7 @@ import loanDisbursementRouter from "./modules/loanDisbursement/loanDisburesment.
 import nachRouter from "./modules/nach/nach.router.js";
 import guarantorRouter from "./modules/guarantor/guarantor.routes.js";
 import loanDraftRouter from "./modules/loanDraft/loanDraft.router.js";
+import sanctionRouter from "./modules/Sanction/sanction.router.js";
 
 const router = Router();
 
@@ -63,5 +64,6 @@ router.use("/disbursement", loanDisbursementRouter);
 router.use("/nach",nachRouter)
 router.use("/guarantor", guarantorRouter);
 router.use("/loan-drafts", loanDraftRouter);
+router.use("/sanctions", sanctionRouter);
 
 export default router;

@@ -58,6 +58,16 @@ export const InterestOption = {
 export type InterestOption = (typeof InterestOption)[keyof typeof InterestOption]
 
 
+export const DisbursementStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  REVERSED: 'REVERSED'
+} as const
+
+export type DisbursementStatus = (typeof DisbursementStatus)[keyof typeof DisbursementStatus]
+
+
 export const LoanPurpose = {
   HOME: 'HOME',
   HOME_IMPROVEMENT: 'HOME_IMPROVEMENT',
@@ -548,6 +558,7 @@ export const LoanStatus = {
   LOANRULES_APPROVED: 'LOANRULES_APPROVED',
   LOANRULES_REJECTED: 'LOANRULES_REJECTED',
   approved: 'approved',
+  SANCTIONED: 'SANCTIONED',
   rejected: 'rejected',
   disbursed: 'disbursed',
   active: 'active',

@@ -5058,11 +5058,30 @@ export const LoanDisbursementScalarFieldEnum = {
   id: 'id',
   loanNumber: 'loanNumber',
   amount: 'amount',
+  principalAmount: 'principalAmount',
+  interestAmount: 'interestAmount',
+  chargesAmount: 'chargesAmount',
+  currency: 'currency',
   disbursementMode: 'disbursementMode',
-  transactionReference: 'transactionReference',
+  disbursementStatus: 'disbursementStatus',
   disbursementDate: 'disbursementDate',
+  valueDate: 'valueDate',
+  transactionReference: 'transactionReference',
+  externalTxnId: 'externalTxnId',
+  utrNumber: 'utrNumber',
+  bankName: 'bankName',
+  bankAccountNumber: 'bankAccountNumber',
+  ifscCode: 'ifscCode',
+  accountHolderName: 'accountHolderName',
   processedBy: 'processedBy',
+  approvedBy: 'approvedBy',
+  rejectedBy: 'rejectedBy',
+  rejectionReason: 'rejectionReason',
+  isReversed: 'isReversed',
+  reversedAt: 'reversedAt',
+  reversalReason: 'reversalReason',
   remarks: 'remarks',
+  metadata: 'metadata',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -5814,8 +5833,19 @@ export type SLABreachLogOrderByRelevanceFieldEnum = (typeof SLABreachLogOrderByR
 export const LoanDisbursementOrderByRelevanceFieldEnum = {
   id: 'id',
   loanNumber: 'loanNumber',
+  currency: 'currency',
   transactionReference: 'transactionReference',
+  externalTxnId: 'externalTxnId',
+  utrNumber: 'utrNumber',
+  bankName: 'bankName',
+  bankAccountNumber: 'bankAccountNumber',
+  ifscCode: 'ifscCode',
+  accountHolderName: 'accountHolderName',
   processedBy: 'processedBy',
+  approvedBy: 'approvedBy',
+  rejectedBy: 'rejectedBy',
+  rejectionReason: 'rejectionReason',
+  reversalReason: 'reversalReason',
   remarks: 'remarks'
 } as const
 
@@ -6245,6 +6275,13 @@ export type EnumAssignedRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'DisbursementMode'
  */
 export type EnumDisbursementModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DisbursementMode'>
+    
+
+
+/**
+ * Reference to a field of type 'DisbursementStatus'
+ */
+export type EnumDisbursementStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DisbursementStatus'>
     
 
 

@@ -17,7 +17,6 @@ export default function LegalCompilanceTable({
       render: (value, row) => (
         <div>
           <div className="text-sm font-medium text-slate-800">{value}</div>
-          <div className="text-xs text-slate-400">ID: {row.id}</div>
         </div>
       ),
     },

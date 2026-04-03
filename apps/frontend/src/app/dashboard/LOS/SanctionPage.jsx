@@ -35,41 +35,76 @@ import FilterDropdown from "../../../components/ui/FilterDropdown";
 import SelectField from "../../../components/ui/SelectField";
 import SanctionTable from "../../../components/tables/SanctionTable";
 import { colorVariables } from "../../../lib";
-import {
-  SANCTION_LOAN_TYPES,
-  SANCTION_REPORTS,
-  SANCTION_STATISTICS,
-} from "../../../lib/LOSDummyData";
+import { SANCTION_LOAN_TYPES, SANCTION_STATISTICS } from "../../../lib/LOSDummyData";
+import { useSanctions, useCreateSanction } from "../../../hooks/useSanction";
+import { useLoanApplications } from "../../../hooks/useLoanApplication";
+import { useSelector } from "react-redux";
 
 function CreateSanctionModal({ isOpen, onClose }) {
   if (!isOpen) return null;
+
+  const mutation = useCreateSanction();
+  const [form, setForm] = React.useState({
+    loanNumber: "",
+    sanctionedAmount: "",
+    currency: "INR",
+    interestRate: "",
+    tenureMonths: "",
+    latePaymentFee: "",
+    latePaymentFeeType: "FIXED",
+    remarks: "",
+    documents: { sanctionLetter: "" },
+  });
+
+  const onChange = (key, value) => setForm((f) => ({ ...f, [key]: value }));
+
+  const submit = async () => {
+    try {
+      await mutation.mutateAsync({
+        loanNumber: form.loanNumber,
+        sanctionedAmount: Number(form.sanctionedAmount),
+        currency: form.currency,
+        interestRate: form.interestRate ? Number(form.interestRate) : undefined,
+        tenureMonths: form.tenureMonths ? Number(form.tenureMonths) : undefined,
+        latePaymentFee: form.latePaymentFee ? Number(form.latePaymentFee) : undefined,
+        latePaymentFeeType: form.latePaymentFeeType,
+        remarks: form.remarks,
+        documents: { sanctionLetter: form.documents.sanctionLetter },
+      });
+      onClose();
+    } catch (err) {
+      // error handled in hook
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
       <div className="relative w-full max-w-2xl rounded-2xl border border-slate-200 bg-white shadow-2xl">
         <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
-          <h2 className="text-lg font-semibold text-slate-800">
-            Create Loan Sanction
-          </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"
-          >
+          <h2 className="text-lg font-semibold text-slate-800">Create Loan Sanction</h2>
+          <button type="button" onClick={onClose} className="rounded-lg p-2 text-slate-500 hover:bg-slate-100">
             <X className="h-5 w-5" />
           </button>
         </div>
-        <div className="px-6 py-8 text-sm text-slate-600">
-          Sanction creation form is not configured yet.
+        <div className="px-6 py-6 text-sm text-slate-600">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <input placeholder="Loan Number" value={form.loanNumber} onChange={(e)=>onChange('loanNumber', e.target.value)} className="p-2 border rounded" />
+            <input placeholder="Sanctioned Amount" type="number" value={form.sanctionedAmount} onChange={(e)=>onChange('sanctionedAmount', e.target.value)} className="p-2 border rounded" />
+            <input placeholder="Interest Rate" type="number" value={form.interestRate} onChange={(e)=>onChange('interestRate', e.target.value)} className="p-2 border rounded" />
+            <input placeholder="Tenure Months" type="number" value={form.tenureMonths} onChange={(e)=>onChange('tenureMonths', e.target.value)} className="p-2 border rounded" />
+            <input placeholder="Late Payment Fee" type="number" value={form.latePaymentFee} onChange={(e)=>onChange('latePaymentFee', e.target.value)} className="p-2 border rounded" />
+            <select value={form.latePaymentFeeType} onChange={(e)=>onChange('latePaymentFeeType', e.target.value)} className="p-2 border rounded">
+              <option value="FIXED">FIXED</option>
+              <option value="PERCENTAGE">PERCENTAGE</option>
+            </select>
+            <input placeholder="Sanction Letter URL" value={form.documents.sanctionLetter} onChange={(e)=>setForm(f=>({...f, documents: { sanctionLetter: e.target.value }}))} className="col-span-1 sm:col-span-2 p-2 border rounded" />
+            <textarea placeholder="Remarks" value={form.remarks} onChange={(e)=>onChange('remarks', e.target.value)} className="col-span-1 sm:col-span-2 p-2 border rounded" />
+          </div>
         </div>
         <div className="flex justify-end border-t border-slate-200 px-6 py-4">
-          <Button
-            onClick={onClose}
-            className="bg-white! text-slate-700! border border-slate-300"
-          >
-            Close
-          </Button>
+          <Button onClick={onClose} className="bg-white! text-slate-700! border border-slate-300 mr-2">Cancel</Button>
+          <Button onClick={submit} className="bg-blue-600 text-white">Create</Button>
         </div>
       </div>
     </div>
@@ -210,19 +245,128 @@ export default function SanctionPage() {
     XCircle,
   };
 
-  const statistics = SANCTION_STATISTICS.map((stat) => ({
-    ...stat,
-    icon: sanctionIconMap[stat.iconName] || FileCheck,
-    variant: stat.iconColor || "blue",
-    trendData:
-      stat.trend === "up"
-        ? { value: 12, isPositive: true }
-        : stat.trend === "down"
-          ? { value: 9, isPositive: false }
-          : undefined,
+  
+
+  // Load sanctions and loan applications from API/store
+  const { data: apiData, isLoading: sanctionsLoading } = useSanctions({
+    page: currentPage,
+    limit: itemsPerPage,
+    status: statusFilter === "all" ? undefined : statusFilter,
+  });
+
+  // Load loan applications to show in the table
+  const { data: loanApiData, isLoading: loansLoading } = useLoanApplications({
+    page: currentPage,
+    limit: itemsPerPage,
+    q: searchTerm || undefined,
+  });
+
+  const loanApplicationsFromStore = useSelector((s) => s.loanApplication?.loanApplications || []);
+
+  // Prefer the query result when available, otherwise fall back to the store
+  // Try multiple common response shapes: array, { data: [...] }, { data: { data: [...] } }
+  const rawLoanList = Array.isArray(loanApiData)
+    ? loanApiData
+    : Array.isArray(loanApiData?.data)
+    ? loanApiData.data
+    : Array.isArray(loanApiData?.data?.data)
+    ? loanApiData.data.data
+    : loanApplicationsFromStore;
+
+  React.useEffect(() => {
+    // Debug: inspect API/store shapes when troubleshooting empty table
+    // Remove in production
+    // eslint-disable-next-line no-console
+    console.debug("SanctionPage rawLoanList shape:", {
+      loanApiData,
+      loanApplicationsFromStore,
+      rawLoanListPreview: Array.isArray(rawLoanList) ? rawLoanList.slice(0, 5) : rawLoanList,
+    });
+  }, [loanApiData, loanApplicationsFromStore]);
+
+  // Map loan applications to the table shape expected by SanctionTable
+  const mappedLoanApplications = (rawLoanList || []).map((l) => ({
+    id: l.id,
+    loanNumber: l.loanNumber,
+    applicantName:
+      (l.customer && (l.customer.firstName || l.customer.lastName))
+        ? `${l.customer.firstName || ""} ${l.customer.lastName || ""}`.trim()
+        : (l.applicantName || ""),
+    loanType: l.loanTypeName  || "",
+    requestedAmount: l.requestedAmount || l.requestedAmount || "",
+    sanctionedAmount: l.approvedAmount ?? "",
+    interestRate: l.interestRate ?? "",
+    tenure: l.tenureMonths ?? l.tenure ?? "",
+    branch:
+      (l.branch && (l.branch.name || l.branch.id)) ||
+      l.branchName ||
+      l.branchId ||
+      "",
+    // Normalize status values to expected lower-case keys used by UI
+    // Preserve 'approved' as its own status (do not map to 'sanctioned')
+    status: (() => {
+      const raw = l.status ?? l.applicationStatus ?? "";
+      const s = String(raw).toLowerCase();
+      if (!s) return "pending"; // default to pending when unknown
+      if (s === "approved") return "approved";
+      if (s === "sanctioned") return "sanctioned";
+      return s;
+    })(),
+    sanctionDate: l.approvedAt || l.createdAt || "",
   }));
 
-  const sanctions = SANCTION_REPORTS;
+  const sanctions = mappedLoanApplications; // show loan applications in the sanction table
+
+  // Build real statistics based on current sanctions data (counts + last-updated dates)
+  const computeLastUpdated = (items) => {
+    if (!items || items.length === 0) return null;
+    const dates = items
+      .map((it) => it.sanctionDate || it.updatedAt || it.createdAt)
+      .filter(Boolean)
+      .map((d) => new Date(d));
+    if (!dates.length) return null;
+    const max = new Date(Math.max(...dates.map((d) => d.getTime())));
+    return max.toISOString();
+  };
+
+  const statistics = [
+    {
+      id: 1,
+      title: "Total Sanctions",
+      value: String(sanctions.length),
+      icon: FileCheck,
+      variant: "blue",
+      subtext: undefined,
+      lastUpdated: computeLastUpdated(sanctions),
+    },
+    {
+      id: 2,
+      title: "Sanctioned Loans",
+      value: String(sanctions.filter((s) => s.status === "sanctioned").length),
+      icon: CheckCircle,
+      variant: "green",
+      subtext: undefined,
+      lastUpdated: computeLastUpdated(sanctions.filter((s) => s.status === "sanctioned")),
+    },
+    {
+      id: 3,
+      title: "Pending Sanctions",
+      value: String(sanctions.filter((s) => s.status === "pending").length),
+      icon: Clock,
+      variant: "orange",
+      subtext: undefined,
+      lastUpdated: computeLastUpdated(sanctions.filter((s) => s.status === "pending")),
+    },
+    {
+      id: 4,
+      title: "Rejected",
+      value: String(sanctions.filter((s) => s.status === "rejected").length),
+      icon: XCircle,
+      variant: "red",
+      subtext: undefined,
+      lastUpdated: computeLastUpdated(sanctions.filter((s) => s.status === "rejected")),
+    },
+  ];
 
   // Get unique branches for filter
   const branches = ["all", ...new Set(sanctions.map((s) => s.branch))];
@@ -241,6 +385,11 @@ export default function SanctionPage() {
       value: "sanctioned",
       label: "Sanctioned",
       count: sanctions.filter((item) => item.status === "sanctioned").length,
+    },
+    {
+      value: "approved",
+      label: "Approved",
+      count: sanctions.filter((item) => item.status === "approved").length,
     },
     {
       value: "pending",
@@ -269,6 +418,12 @@ export default function SanctionPage() {
         bg: "bg-green-100",
         text: "text-green-700",
         label: "Sanctioned",
+        icon: CheckCircle,
+      },
+      approved: {
+        bg: "bg-green-100",
+        text: "text-green-700",
+        label: "Approved",
         icon: CheckCircle,
       },
       pending: {
@@ -344,18 +499,20 @@ export default function SanctionPage() {
 
   // Filter sanctions
   const filteredSanctions = sanctions.filter((sanction) => {
+    const loanNumber = (sanction.loanNumber || "").toString();
+    const applicantName = (sanction.applicantName || "").toString();
     const matchesSearch =
       searchTerm === "" ||
-      sanction.loanNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      sanction.applicantName.toLowerCase().includes(searchTerm.toLowerCase());
+      loanNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      applicantName.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesLoanType =
-      loanTypeFilter === "all" || sanction.loanType === loanTypeFilter;
+      loanTypeFilter === "all" || (sanction.loanType || "") === loanTypeFilter;
     const matchesBranch =
-      branchFilter === "all" || sanction.branch === branchFilter;
+      branchFilter === "all" || (sanction.branch || "") === branchFilter;
     const matchesStatus =
-      statusFilter === "all" || sanction.status === statusFilter;
-    const matchesDate = !dateFilter || sanction.sanctionDate === dateFilter;
+      statusFilter === "all" || (sanction.status || "").toString() === statusFilter;
+    const matchesDate = !dateFilter || (sanction.sanctionDate || "") === dateFilter;
 
     return (
       matchesSearch &&
@@ -428,10 +585,7 @@ export default function SanctionPage() {
       accessor: "loanNumber",
       header: "Loan Number",
       render: (value, row) => (
-        <div>
-          <div className="text-sm font-medium text-slate-800">{value}</div>
-          <div className="text-xs text-slate-400">ID: {row.id}</div>
-        </div>
+        <div className="text-sm font-medium text-slate-800">{value}</div>
       ),
     },
     { accessor: "applicantName", header: "Applicant" },
@@ -659,14 +813,15 @@ export default function SanctionPage() {
               key={stat.id}
               className="transform transition-all duration-200 hover:scale-105"
             >
-              <StatusCard
-                title={stat.title}
-                value={stat.value}
-                subtext={stat.subtext}
-                icon={stat.icon}
-                variant={stat.variant}
-                trend={stat.trendData}
-              />
+                    <StatusCard
+                      title={stat.title}
+                      value={stat.value}
+                      subtext={stat.subtext}
+                      icon={stat.icon}
+                      variant={stat.variant}
+                      trend={stat.trendData}
+                      lastUpdated={stat.lastUpdated}
+                    />
             </div>
           ))}
         </div>

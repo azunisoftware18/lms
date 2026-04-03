@@ -3,6 +3,10 @@ import { z } from "zod";
 export const createSanctionSchema = z.object({
 	loanNumber: z.string().min(1),
 	sanctionedAmount: z.number().positive(),
+	interestRate: z.number().optional(),
+	tenureMonths: z.number().int().optional(),
+	latePaymentFee: z.number().optional(),
+	latePaymentFeeType: z.enum(["FIXED", "PERCENTAGE"]).optional(),
 	currency: z.string().optional(),
 	remarks: z.string().optional(),
 	documents: z.any().optional(),

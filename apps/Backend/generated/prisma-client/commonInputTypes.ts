@@ -1279,6 +1279,13 @@ export type EnumDisbursementModeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumDisbursementModeFilter<$PrismaModel> | $Enums.DisbursementMode
 }
 
+export type EnumDisbursementStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.DisbursementStatus | Prisma.EnumDisbursementStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DisbursementStatus[]
+  notIn?: $Enums.DisbursementStatus[]
+  not?: Prisma.NestedEnumDisbursementStatusFilter<$PrismaModel> | $Enums.DisbursementStatus
+}
+
 export type EnumDisbursementModeWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.DisbursementMode | Prisma.EnumDisbursementModeFieldRefInput<$PrismaModel>
   in?: $Enums.DisbursementMode[]
@@ -1287,6 +1294,16 @@ export type EnumDisbursementModeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumDisbursementModeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumDisbursementModeFilter<$PrismaModel>
+}
+
+export type EnumDisbursementStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DisbursementStatus | Prisma.EnumDisbursementStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DisbursementStatus[]
+  notIn?: $Enums.DisbursementStatus[]
+  not?: Prisma.NestedEnumDisbursementStatusWithAggregatesFilter<$PrismaModel> | $Enums.DisbursementStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDisbursementStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDisbursementStatusFilter<$PrismaModel>
 }
 
 export type EnumNachStatusFilter<$PrismaModel = never> = {
@@ -2546,6 +2563,13 @@ export type NestedEnumDisbursementModeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumDisbursementModeFilter<$PrismaModel> | $Enums.DisbursementMode
 }
 
+export type NestedEnumDisbursementStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.DisbursementStatus | Prisma.EnumDisbursementStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DisbursementStatus[]
+  notIn?: $Enums.DisbursementStatus[]
+  not?: Prisma.NestedEnumDisbursementStatusFilter<$PrismaModel> | $Enums.DisbursementStatus
+}
+
 export type NestedEnumDisbursementModeWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.DisbursementMode | Prisma.EnumDisbursementModeFieldRefInput<$PrismaModel>
   in?: $Enums.DisbursementMode[]
@@ -2554,6 +2578,16 @@ export type NestedEnumDisbursementModeWithAggregatesFilter<$PrismaModel = never>
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumDisbursementModeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumDisbursementModeFilter<$PrismaModel>
+}
+
+export type NestedEnumDisbursementStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DisbursementStatus | Prisma.EnumDisbursementStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DisbursementStatus[]
+  notIn?: $Enums.DisbursementStatus[]
+  not?: Prisma.NestedEnumDisbursementStatusWithAggregatesFilter<$PrismaModel> | $Enums.DisbursementStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDisbursementStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDisbursementStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumNachStatusFilter<$PrismaModel = never> = {
