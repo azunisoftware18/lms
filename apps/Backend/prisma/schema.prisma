@@ -1428,21 +1428,65 @@ model SLABreachLog {
 }
 
 model LoanDisbursement {
-  id                   String           @id @default(cuid())
-  loanNumber           String          @unique
+  id                   String             @id @default(cuid())
+
+  // 🔗 Loan Reference
+  loanNumber           String             @unique
+  loanApplication      LoanApplication    @relation(fields: [loanNumber], references: [id])
+
+  // 💰 Financial Details
   amount               Float
+  principalAmount      Float?             // optional breakup
+  interestAmount       Float?             // optional breakup
+  chargesAmount        Float?             // processing / fees
+
+  currency             String             @default("INR")
+
+  // 🏦 Disbursement Details
   disbursementMode     DisbursementMode
-  transactionReference String
-  disbursementDate     DateTime         @default(now())
+  disbursementStatus   DisbursementStatus @default(PENDING)
+  disbursementDate     DateTime           @default(now())
+  valueDate            DateTime?          // bank settlement date
+
+  // 🔁 Transaction Details
+  transactionReference String             @unique
+  externalTxnId        String?            // from payment gateway / bank
+  utrNumber            String?            // UTR for NEFT/RTGS/IMPS
+
+  // 🏛️ Bank Details
+  bankName             String?
+  bankAccountNumber    String?
+  ifscCode             String?
+  accountHolderName    String?
+
+  // 🧾 Internal Tracking
   processedBy          String
+  approvedBy           String?            // maker-checker system
+  rejectedBy           String?
+  rejectionReason      String?
+
+  // 🔐 Compliance & Audit
+  isReversed           Boolean            @default(false)
+  reversedAt           DateTime?
+  reversalReason       String?
+
+  // 📝 Remarks
   remarks              String?
 
-  loanApplication LoanApplication @relation(fields: [loanNumber], references: [id])
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  // 📊 Metadata
+  metadata             Json?
 
+  // ⏱️ Timestamps
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  // 📌 Indexes
   @@index([loanNumber])
+  @@index([transactionReference])
+  @@index([disbursementStatus])
 }
+
+
 
 model NachMandate {
   id                String          @id @default(cuid())
@@ -1534,6 +1578,15 @@ enum InterestOption {
   FIXED
   VARIABLE
 }
+
+
+enum DisbursementStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REVERSED
+}
+
 
 enum LoanPurpose {
   HOME

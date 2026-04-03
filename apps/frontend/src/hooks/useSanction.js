@@ -12,24 +12,24 @@ import {
   updateSanctionInList,
 } from "../store/slices/sanctionSlice";
 
-// export const useSanctions = (params = {}) => {
-//   const dispatch = useDispatch();
-//   const normalizedParams = normalizeParams(params);
+export const useSanctions = (params = {}) => {
+  const dispatch = useDispatch();
+  const normalizedParams = normalizeParams(params);
 
-//   return useQuery({
-//     queryKey: ["sanctions", normalizedParams],
-//     queryFn: () => apiGet(`/sanctions`, { params: normalizedParams }),
-//     onSuccess: (data) => {
-//       dispatch(setSanctions(data));
-//       dispatch(clearError());
-//     },
-//     onError: (err) => {
-//       const message = err?.message || "Failed to fetch sanctions";
-//       dispatch(setError(message));
-//       showError(message);
-//     },
-//   });
-// };
+  return useQuery({
+    queryKey: ["sanctions", normalizedParams],
+    queryFn: () => apiGet(`/sanctions`, { params: normalizedParams }),
+    onSuccess: (data) => {
+      dispatch(setSanctions(data));
+      dispatch(clearError());
+    },
+    onError: (err) => {
+      const message = err?.message || "Failed to fetch sanctions";
+      dispatch(setError(message));
+      showError(message);
+    },
+  });
+};
 
 export const useCreateSanction = () => {
   const queryClient = useQueryClient();

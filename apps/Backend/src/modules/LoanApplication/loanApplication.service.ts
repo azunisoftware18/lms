@@ -523,9 +523,11 @@ export const getAllLoanApplicationsService = async (params: {
       select: {
         id: true,
         loanNumber: true,
+      
         status: true,
         requestedAmount: true,
         approvedAmount: true,
+        interestRate: true,
         tenureMonths: true,
         loanPurpose: true,
         createdAt: true,
@@ -548,6 +550,13 @@ export const getAllLoanApplicationsService = async (params: {
         loanType: {
           select: {
             id: true,
+              name: true,
+          },
+        },
+        branch: {
+          select: {
+            id: true,
+            name: true,
           },
         },
         kyc: {
@@ -568,11 +577,13 @@ export const getAllLoanApplicationsService = async (params: {
     }),
     prisma.loanApplication.count({ where }),
   ]);
+ 
 
   const sanitizedData = data.map((loan) => ({
     id: loan.id,
     loanNumber: loan.loanNumber,
     status: loan.status,
+    interestRate: loan.interestRate,
     requestedAmount: loan.requestedAmount,
     approvedAmount: loan.approvedAmount,
     tenureMonths: loan.tenureMonths,
@@ -594,6 +605,9 @@ export const getAllLoanApplicationsService = async (params: {
       alternateNumber: loan.customer.alternateNumber,
     },
     loanTypeId: loan.loanType?.id || null,
+    loanTypeName: loan.loanType?.name || null,
+    branchId: loan.branch?.id || null,
+    branchName: loan.branch?.name || null,
     kycStatus: loan.kyc?.status,
     documentCount: loan.kyc?.documents?.length || 0,
     totalDocuments: loan.kyc?.documents?.length || 0,
@@ -645,6 +659,7 @@ export const getLoanApplicationByIdService = async (
         },
       },
       bankAccounts: true,
+      branch: { select: { id: true, name: true } },
     },
   });
 

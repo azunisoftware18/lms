@@ -35,7 +35,7 @@ export const disburseLoanService = async (
       throw new Error("Approved amount not found for this loan");
     }
     const existingDisbursement = await tx.loanDisbursement.findUnique({
-      where: { loanId },
+      where: { loanNumber: loanId },
     });
     if (existingDisbursement) {
       throw new Error("loan already disbursed");
@@ -43,7 +43,7 @@ export const disburseLoanService = async (
 
     const disbursement = await tx.loanDisbursement.create({
       data: {
-        loanId,
+        loanNumber: loanId,
         amount: loan.approvedAmount,
         disbursementMode: input.disbursementMode,
         transactionReference: input.transactionReference,

@@ -245,17 +245,7 @@ export default function SanctionPage() {
     XCircle,
   };
 
-  const statistics = SANCTION_STATISTICS.map((stat) => ({
-    ...stat,
-    icon: sanctionIconMap[stat.iconName] || FileCheck,
-    variant: stat.iconColor || "blue",
-    trendData:
-      stat.trend === "up"
-        ? { value: 12, isPositive: true }
-        : stat.trend === "down"
-          ? { value: 9, isPositive: false }
-          : undefined,
-  }));
+  
 
   // Load sanctions and loan applications from API/store
   const { data: apiData, isLoading: sanctionsLoading } = useSanctions({
@@ -302,17 +292,81 @@ export default function SanctionPage() {
       (l.customer && (l.customer.firstName || l.customer.lastName))
         ? `${l.customer.firstName || ""} ${l.customer.lastName || ""}`.trim()
         : (l.applicantName || ""),
-    loanType: (l.loanType && (l.loanType.name || l.loanType.code)) || l.loanTypeId || "",
+    loanType: l.loanTypeName  || "",
     requestedAmount: l.requestedAmount || l.requestedAmount || "",
     sanctionedAmount: l.approvedAmount ?? "",
     interestRate: l.interestRate ?? "",
     tenure: l.tenureMonths ?? l.tenure ?? "",
-    branch: (l.branch && (l.branch.name || l.branch.id)) || l.branchId || "",
-    status: l.status || "",
+    branch:
+      (l.branch && (l.branch.name || l.branch.id)) ||
+      l.branchName ||
+      l.branchId ||
+      "",
+    // Normalize status values to expected lower-case keys used by UI
+    // Preserve 'approved' as its own status (do not map to 'sanctioned')
+    status: (() => {
+      const raw = l.status ?? l.applicationStatus ?? "";
+      const s = String(raw).toLowerCase();
+      if (!s) return "pending"; // default to pending when unknown
+      if (s === "approved") return "approved";
+      if (s === "sanctioned") return "sanctioned";
+      return s;
+    })(),
     sanctionDate: l.approvedAt || l.createdAt || "",
   }));
 
   const sanctions = mappedLoanApplications; // show loan applications in the sanction table
+
+  // Build real statistics based on current sanctions data (counts + last-updated dates)
+  const computeLastUpdated = (items) => {
+    if (!items || items.length === 0) return null;
+    const dates = items
+      .map((it) => it.sanctionDate || it.updatedAt || it.createdAt)
+      .filter(Boolean)
+      .map((d) => new Date(d));
+    if (!dates.length) return null;
+    const max = new Date(Math.max(...dates.map((d) => d.getTime())));
+    return max.toISOString();
+  };
+
+  const statistics = [
+    {
+      id: 1,
+      title: "Total Sanctions",
+      value: String(sanctions.length),
+      icon: FileCheck,
+      variant: "blue",
+      subtext: undefined,
+      lastUpdated: computeLastUpdated(sanctions),
+    },
+    {
+      id: 2,
+      title: "Sanctioned Loans",
+      value: String(sanctions.filter((s) => s.status === "sanctioned").length),
+      icon: CheckCircle,
+      variant: "green",
+      subtext: undefined,
+      lastUpdated: computeLastUpdated(sanctions.filter((s) => s.status === "sanctioned")),
+    },
+    {
+      id: 3,
+      title: "Pending Sanctions",
+      value: String(sanctions.filter((s) => s.status === "pending").length),
+      icon: Clock,
+      variant: "orange",
+      subtext: undefined,
+      lastUpdated: computeLastUpdated(sanctions.filter((s) => s.status === "pending")),
+    },
+    {
+      id: 4,
+      title: "Rejected",
+      value: String(sanctions.filter((s) => s.status === "rejected").length),
+      icon: XCircle,
+      variant: "red",
+      subtext: undefined,
+      lastUpdated: computeLastUpdated(sanctions.filter((s) => s.status === "rejected")),
+    },
+  ];
 
   // Get unique branches for filter
   const branches = ["all", ...new Set(sanctions.map((s) => s.branch))];
@@ -331,6 +385,11 @@ export default function SanctionPage() {
       value: "sanctioned",
       label: "Sanctioned",
       count: sanctions.filter((item) => item.status === "sanctioned").length,
+    },
+    {
+      value: "approved",
+      label: "Approved",
+      count: sanctions.filter((item) => item.status === "approved").length,
     },
     {
       value: "pending",
@@ -359,6 +418,12 @@ export default function SanctionPage() {
         bg: "bg-green-100",
         text: "text-green-700",
         label: "Sanctioned",
+        icon: CheckCircle,
+      },
+      approved: {
+        bg: "bg-green-100",
+        text: "text-green-700",
+        label: "Approved",
         icon: CheckCircle,
       },
       pending: {
@@ -520,10 +585,7 @@ export default function SanctionPage() {
       accessor: "loanNumber",
       header: "Loan Number",
       render: (value, row) => (
-        <div>
-          <div className="text-sm font-medium text-slate-800">{value}</div>
-          <div className="text-xs text-slate-400">ID: {row.id}</div>
-        </div>
+        <div className="text-sm font-medium text-slate-800">{value}</div>
       ),
     },
     { accessor: "applicantName", header: "Applicant" },
@@ -751,14 +813,15 @@ export default function SanctionPage() {
               key={stat.id}
               className="transform transition-all duration-200 hover:scale-105"
             >
-              <StatusCard
-                title={stat.title}
-                value={stat.value}
-                subtext={stat.subtext}
-                icon={stat.icon}
-                variant={stat.variant}
-                trend={stat.trendData}
-              />
+                    <StatusCard
+                      title={stat.title}
+                      value={stat.value}
+                      subtext={stat.subtext}
+                      icon={stat.icon}
+                      variant={stat.variant}
+                      trend={stat.trendData}
+                      lastUpdated={stat.lastUpdated}
+                    />
             </div>
           ))}
         </div>
