@@ -1454,10 +1454,10 @@ model LoanDisbursement {
   utrNumber            String?            // UTR for NEFT/RTGS/IMPS
 
   // 🏛️ Bank Details
-  bankName             String?
-  bankAccountNumber    String?
-  ifscCode             String?
-  accountHolderName    String?
+  bankName             String
+  bankAccountNumber    String
+  ifscCode             String
+  accountHolderName    String
 
   // 🧾 Internal Tracking
   processedBy          String
