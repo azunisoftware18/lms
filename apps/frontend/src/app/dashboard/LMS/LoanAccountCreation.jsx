@@ -12,17 +12,64 @@ import {
 import Button from "../../../components/ui/Button";
 import StatusCard from "../../../components/common/StatusCard";
 import LoanAccountTable from "../../../components/tables/LoanAccountTable";
-import { mockLoans } from "../../../lib/dumyData";
+import { useLoanApplications } from "../../../hooks/useLoanApplication";
 
 export default function LoanAccountCreation() {
   const navigate = useNavigate(); // Initialize navigate
   const [, setShowModal] = useState(false);
-  const [loans] = useState(mockLoans);
+
+  // Fetch loan applications from API (all statuses)
+  const { data: loanApiData, isLoading: loansLoading } = useLoanApplications({ page: 1, limit: 200 });
+
+  const rawLoans = Array.isArray(loanApiData)
+    ? loanApiData
+    : Array.isArray(loanApiData?.data)
+    ? loanApiData.data
+    : Array.isArray(loanApiData?.data?.data)
+    ? loanApiData.data.data
+    : [];
+
+  const formatStatusDisplay = (s) => {
+    if (!s) return "Active";
+    const key = String(s).toLowerCase();
+    return key
+      .replace(/_/g, " ")
+      .split(" ")
+      .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1) : ""))
+      .join(" ");
+  };
+
+  const loans = (rawLoans || []).map((l) => {
+    const statusKey = String(l.status || "").toLowerCase();
+    return {
+      id: l.id || l.loanNumber,
+      loanNumber: l.loanNumber || l.id,
+      customerName:
+        (l.customer && (l.customer.firstName || l.customer.lastName))
+          ? `${l.customer.firstName || ""} ${l.customer.lastName || ""}`.trim()
+          : l.customer?.name || "",
+      branch: l.branchName || l.branch?.name || "",
+      loanAmount: Math.round(l.approvedAmount ?? l.requestedAmount ?? 0),
+      outstandingBalance: Math.round(l.outstandingBalance ?? l.approvedAmount ?? 0),
+      status: formatStatusDisplay(statusKey),
+      statusKey,
+    };
+  });
+
+  // Table receives all loans; table filter controls which statuses are shown
+  const filteredLoans = loans;
+
+  // Prefer server-reported total (pagination meta) when available
+  const totalAccounts = Number(
+    loanApiData?.meta?.total ?? loanApiData?.data?.meta?.total ?? loans.length
+  );
 
   const counts = {
-    active: loans.filter((l) => l.status === "Active").length,
-    delinquent: loans.filter((l) => l.status === "Delinquent").length,
-    closed: loans.filter((l) => l.status === "Closed").length,
+    active: loans.filter((l) => l.statusKey === "active").length,
+    delinquent: loans.filter((l) => l.statusKey === "delinquent").length,
+    closed: loans.filter((l) => l.statusKey === "closed").length,
+    writtenOff: loans.filter((l) => l.statusKey === "written_off" || l.statusKey === "written off").length,
+    defaulted: loans.filter((l) => l.statusKey === "defaulted").length,
   };
 
   const handleViewLoan = (loan) => {
@@ -62,7 +109,7 @@ export default function LoanAccountCreation() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
           <StatusCard
             title="Total Accounts"
-            value={loans.length}
+            value={totalAccounts}
             subtext="All accounts"
             icon={FileText}
             variant="blue"
@@ -92,14 +139,30 @@ export default function LoanAccountCreation() {
             variant="orange"
             size="compact"
           />
+          <StatusCard
+            title="Written Off"
+            value={counts.writtenOff}
+            subtext="Write-offs"
+            icon={XCircle}
+            variant="slate"
+            size="compact"
+          />
+          <StatusCard
+            title="Defaulted"
+            value={counts.defaulted}
+            subtext="Defaulted loans"
+            icon={AlertCircle}
+            variant="yellow"
+            size="compact"
+          />
         </div>
 
         {/* TABLE CARD */}
         <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <LoanAccountTable
-              loans={loans}
-              loading={false}
+                loans={filteredLoans}
+                loading={loansLoading}
               onView={handleViewLoan}
             />
           </div>

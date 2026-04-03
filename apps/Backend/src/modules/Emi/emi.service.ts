@@ -7,12 +7,12 @@ import { logAction } from "../../audit/audit.helper.js";
 import { AppError } from "../../common/utils/apiError.js";
 
 export const generateEmiScheduleService = async (
-  loanId: string,
+  loanNumber: string,
   userId?: string,
   branchId?: string,
 ) => {
   const loan = await prisma.loanApplication.findUnique({
-    where: { id: loanId },
+    where: { loanNumber: loanNumber },
     select: {
       id: true,
       approvedAmount: true,
@@ -37,18 +37,27 @@ export const generateEmiScheduleService = async (
   });
 
   if (!loan) {
-    throw AppError.notFound("Loan application not found");
+    throw AppError.notFound("Loan application not found .....");
   }
+
   if (loan.status === "active") {
     throw AppError.conflict("EMI schedule already generated");
   }
+ 
+
   if (loan.status !== "approved") {
     throw AppError.badRequest(
-      "EMI schedule can only be generated after loan disbursement",
+      "EMI schedule can only be generated after loan approval",
     );
   }
+  if (!loan.approvedAmount && !loan.requestedAmount) {
+    throw AppError.badRequest("Loan approved amount is missing");
+  }
+
+
+
   // Use approvedAmount, fall back to requestedAmount if approved missing
-  const principal = loan.approvedAmount ?? loan.requestedAmount;
+  const principal = loan.approvedAmount ;
 
   // Validate inputs with specific messages to help debugging
   if (!principal) {
@@ -67,7 +76,7 @@ export const generateEmiScheduleService = async (
   }
 
   const existingScheduleCount = await prisma.loanEmiSchedule.count({
-    where: { loanApplicationId: loanId },
+    where: { loanApplicationId: loan.id },
   });
 
   if (existingScheduleCount > 0) {
@@ -150,7 +159,7 @@ export const generateEmiScheduleService = async (
   });
 
   await prisma.loanApplication.update({
-    where: { id: loanId },
+    where: { id: loan.id },
     data: { status: "active" },
   });
 
@@ -158,23 +167,94 @@ export const generateEmiScheduleService = async (
   if (userId && branchId) {
     await logAction({
       entityType: "EMI_SCHEDULE",
-      entityId: loanId,
+      entityId: loan.id,
       action: "GENERATE_EMI_SCHEDULE",
       performedBy: userId,
       branchId: branchId,
       oldValue: { status: "disbursed" },
       newValue: { status: "active" },
-      remarks: `EMI schedule generated for loan application ${loanId}`,
+      remarks: `EMI schedule generated for loan application ${loan.id}`,
     });
   }
 
   // Fetch and return the created EMI records from DB (createMany doesn't return created rows)
   const createdEmis = await prisma.loanEmiSchedule.findMany({
-    where: { loanApplicationId: loanId },
+    where: { loanApplicationId: loan.id },
     orderBy: { emiNo: "asc" },
+    include: {
+      loanApplication: {
+        select: {
+          id: true,
+          loanNumber: true,
+          approvedAmount: true,
+          requestedAmount: true,
+          interestRate: true,
+          tenureMonths: true,
+          interestType: true,
+          status: true,
+          branchId: true,
+          customer: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              contactNumber: true,
+              email: true,
+            },
+          },
+        },
+      },
+    },
   });
 
-  return createdEmis;
+  const summary = createdEmis.reduce(
+    (acc, e) => {
+      acc.totalPrincipal += Number((e.principalAmount ?? 0).toFixed(2));
+      acc.totalInterest += Number((e.interestAmount ?? 0).toFixed(2));
+      acc.totalEmiAmount += Number((e.emiAmount ?? 0).toFixed(2));
+      return acc;
+    },
+    { totalPrincipal: 0, totalInterest: 0, totalEmiAmount: 0 },
+  );
+
+  return {
+    loan: createdEmis[0]?.loanApplication
+      ? {
+          id: createdEmis[0].loanApplication.id,
+          loanNumber: createdEmis[0].loanApplication.loanNumber,
+          approvedAmount:
+            createdEmis[0].loanApplication.approvedAmount ??
+            createdEmis[0].loanApplication.requestedAmount,
+          interestRate: createdEmis[0].loanApplication.interestRate,
+          tenureMonths: createdEmis[0].loanApplication.tenureMonths,
+          interestType: createdEmis[0].loanApplication.interestType,
+          status: createdEmis[0].loanApplication.status,
+          branchId: createdEmis[0].loanApplication.branchId,
+          customer: createdEmis[0].loanApplication.customer,
+        }
+      : null,
+    emis: createdEmis.map((e) => ({
+      id: e.id,
+      emiNo: e.emiNo,
+      dueDate: e.dueDate,
+      openingBalance: e.openingBalance,
+      principalAmount: e.principalAmount,
+      interestAmount: e.interestAmount,
+      emiAmount: e.emiAmount,
+      closingBalance: e.closingBalance,
+      totalPayableAmount: e.totalPayableAmount,
+      latePaymentFee: e.latePaymentFee,
+      latePaymentFeeType: e.latePaymentFeeType,
+      bounceCharges: e.bounceCharges,
+      status: e.status,
+    })),
+    summary: {
+      totalPrincipal: Number(summary.totalPrincipal.toFixed(2)),
+      totalInterest: Number(summary.totalInterest.toFixed(2)),
+      totalEmiAmount: Number(summary.totalEmiAmount.toFixed(2)),
+      emiCount: createdEmis.length,
+    },
+  };
 };
 
 export const getLoanEmiService = async (loanId: string) => {

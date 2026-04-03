@@ -1436,9 +1436,9 @@ model LoanDisbursement {
 
   // 💰 Financial Details
   amount               Float
-  principalAmount      Float?             // optional breakup
-  interestAmount       Float?             // optional breakup
-  chargesAmount        Float?             // processing / fees
+  principalAmount      Float            // optional breakup
+  interestAmount       Float            // optional breakup
+  chargesAmount        Float?            // processing / fees
 
   currency             String             @default("INR")
 
@@ -1451,7 +1451,7 @@ model LoanDisbursement {
   // 🔁 Transaction Details
   transactionReference String             @unique
   externalTxnId        String?            // from payment gateway / bank
-  utrNumber            String?            // UTR for NEFT/RTGS/IMPS
+  utrNumber            String            // UTR for NEFT/RTGS/IMPS
 
   // 🏛️ Bank Details
   bankName             String

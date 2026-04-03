@@ -60,11 +60,19 @@ const hasBranchAccess = (req: Request, branchId: string) => {
   return accessibleBranchIds.includes(branchId);
 };
 
-const ensureLoanBranchAccess = async (req: Request, loanId: string) => {
-  const loan = await prisma.loanApplication.findUnique({
-    where: { id: loanId },
-    select: { branchId: true },
+const ensureLoanBranchAccess = async (req: Request, loanKey: string) => {
+  // Resolve by primary id first, then by loanNumber
+  let loan = await prisma.loanApplication.findUnique({
+    where: { id: loanKey },
+    select: { id: true, branchId: true, loanNumber: true },
   });
+
+  if (!loan) {
+    loan = await prisma.loanApplication.findUnique({
+      where: { loanNumber: loanKey },
+      select: { id: true, branchId: true, loanNumber: true },
+    });
+  }
 
   if (!loan) {
     throw AppError.notFound("Loan application not found");
@@ -73,6 +81,8 @@ const ensureLoanBranchAccess = async (req: Request, loanId: string) => {
   if (!hasBranchAccess(req, loan.branchId)) {
     throw AppError.forbidden("You are not allowed to access this loan");
   }
+
+  return loan;
 };
 
 const ensureEmiBranchAccess = async (req: Request, emiId: string) => {
@@ -121,16 +131,20 @@ export const generateEmiScheduleController = async (
   res: Response,
 ) => {
   try {
-    const loanId = getParam(req, "id");
+    const loanNumber = getParam(req, "id");
     const { userId, branchId } = requireActor(req);
 
-    if (!loanId) {
-      throw AppError.badRequest("Loan id is required");
+    if (!loanNumber) {
+      throw AppError.badRequest("Loan number is required");
     }
 
-    await ensureLoanBranchAccess(req, loanId);
+    const loan = await ensureLoanBranchAccess(req, loanNumber);
 
-    const schedule = await generateEmiScheduleService(loanId, userId, branchId);
+    const schedule = await generateEmiScheduleService(
+      loan.loanNumber,
+      userId,
+      branchId,
+    );
     res.status(200).json({ success: true, data: schedule });
   } catch (error: any) {
     res.status(error.statusCode || 500).json({
@@ -152,9 +166,9 @@ export const getThisMonthEmiAmountController = async (
       throw AppError.badRequest("Loan application id is required");
     }
 
-    await ensureLoanBranchAccess(req, loanApplicationId);
+    const loan = await ensureLoanBranchAccess(req, loanApplicationId);
 
-    const result = await getThisMonthEmiAmountService(loanApplicationId);
+    const result = await getThisMonthEmiAmountService(loan.id);
 
     res.status(200).json({
       success: true,
@@ -175,8 +189,8 @@ export const getLoanEmiController = async (req: Request, res: Response) => {
     if (!loanId) {
       throw AppError.badRequest("Loan id is required");
     }
-    await ensureLoanBranchAccess(req, loanId);
-    const emis = await getLoanEmiService(loanId);
+    const loan = await ensureLoanBranchAccess(req, loanId);
+    const emis = await getLoanEmiService(loan.id);
     res.status(200).json({
       success: true,
       data: emis,
@@ -311,9 +325,9 @@ export const forecloseLoanController = async (req: Request, res: Response) => {
     if (!loanId) {
       throw AppError.badRequest("Loan id is required");
     }
-    await ensureLoanBranchAccess(req, loanId);
+    const loan = await ensureLoanBranchAccess(req, loanId);
     // Implement foreclose loan logic here
-    const result = await forecloseLoanService(loanId);
+    const result = await forecloseLoanService(loan.id);
     res.status(200).json({
       success: true,
       message: "Loan foreclosed successfully",
@@ -338,15 +352,10 @@ export const payforecloseLoanController = async (
     if (!loanId) {
       throw AppError.badRequest("Loan id is required");
     }
-    await ensureLoanBranchAccess(req, loanId);
+    const loan = await ensureLoanBranchAccess(req, loanId);
     const data = req.body;
     // Implement foreclose loan logic here
-    const result = await payforecloseLoanService(
-      loanId,
-      data,
-      userId,
-      branchId,
-    );
+    const result = await payforecloseLoanService(loan.id, data, userId, branchId);
     res.status(200).json({
       success: true,
       message: "Loan foreclosed successfully",
@@ -376,10 +385,10 @@ export const applyMoratoriumController = async (
       });
     }
 
-    await ensureLoanBranchAccess(req, loanId);
+    const loan = await ensureLoanBranchAccess(req, loanId);
 
     const result = await applyMoratoriumService({
-      loanId,
+      loanId: loan.id,
       type,
       startDate: new Date(startDate),
       endDate: new Date(endDate),

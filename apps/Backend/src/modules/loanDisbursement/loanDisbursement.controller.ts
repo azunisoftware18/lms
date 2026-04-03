@@ -19,7 +19,7 @@ export const disburseLoanController = async (req: Request, res: Response) => {
     } catch (error) {
         const statusCode = error instanceof Error && "statusCode" in error ? (error as { statusCode: number }).statusCode : 500;
         const message = error instanceof Error ? error.message : "INTERNAL_SERVER_ERROR";
-        res.status(statusCode).json({ success: false, message: "Failed to disburse loan", error: message });
+        res.status(statusCode).json({ success: false, message: message || "Failed to disburse loan", error: message });
     }
 };
 
@@ -60,6 +60,6 @@ export const reverseDisbursementController = async (req: Request, res: Response)
     } catch (error) {
         const statusCode = error instanceof Error && "statusCode" in error ? (error as { statusCode: number }).statusCode : 500;
         const message = error instanceof Error ? error.message : "INTERNAL_SERVER_ERROR";
-        res.status(statusCode).json({ success: false, message: "Failed to reverse disbursement", error: message });
+        res.status(statusCode).json({ success: false, message: message ||"Failed to reverse disbursement", error: message });
     }
 };

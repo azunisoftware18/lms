@@ -98,6 +98,14 @@ export default function LoanAccountTable({
           ${
             value === "Closed" &&
             "bg-gray-100 text-gray-600 border-gray-200"
+          }
+          ${
+            value === "Written Off" &&
+            "bg-yellow-100 text-yellow-600 border-yellow-200"
+          }
+          ${
+            value === "Defaulted" &&
+            "bg-red-100 text-red-600 border-red-200"
           }`}
         >
           {value}
@@ -148,6 +156,8 @@ export default function LoanAccountTable({
             { label: "Active", value: "Active" },
             { label: "Delinquent", value: "Delinquent" },
             { label: "Closed", value: "Closed" },
+            { label: "Written Off", value: "Written Off" },
+            { label: "Defaulted", value: "Defaulted" },
           ]}
         />
 

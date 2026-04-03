@@ -952,7 +952,7 @@ export default function SanctionPage() {
                   placeholder="All Status"
                 />
 
-                <div className="flex items-center gap-2">
+                {/* <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-slate-400 hidden sm:block" />
                   <input
                     type="date"
@@ -961,7 +961,7 @@ export default function SanctionPage() {
                     className="w-full sm:w-auto px-3 sm:px-4 py-2.5 sm:py-3 text-sm border border-slate-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white"
                     placeholder="Select Date"
                   />
-                </div>
+                </div> */}
 
                 <Button
                   onClick={resetFilters}
