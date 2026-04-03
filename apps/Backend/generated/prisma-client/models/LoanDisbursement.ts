@@ -346,10 +346,10 @@ export type LoanDisbursementGroupByOutputType = {
   transactionReference: string
   externalTxnId: string | null
   utrNumber: string | null
-  bankName: string | null
-  bankAccountNumber: string | null
-  ifscCode: string | null
-  accountHolderName: string | null
+  bankName: string
+  bankAccountNumber: string
+  ifscCode: string
+  accountHolderName: string
   processedBy: string
   approvedBy: string | null
   rejectedBy: string | null
@@ -401,10 +401,10 @@ export type LoanDisbursementWhereInput = {
   transactionReference?: Prisma.StringFilter<"LoanDisbursement"> | string
   externalTxnId?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
   utrNumber?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
-  bankName?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
-  bankAccountNumber?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
-  ifscCode?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
-  accountHolderName?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
+  bankName?: Prisma.StringFilter<"LoanDisbursement"> | string
+  bankAccountNumber?: Prisma.StringFilter<"LoanDisbursement"> | string
+  ifscCode?: Prisma.StringFilter<"LoanDisbursement"> | string
+  accountHolderName?: Prisma.StringFilter<"LoanDisbursement"> | string
   processedBy?: Prisma.StringFilter<"LoanDisbursement"> | string
   approvedBy?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
   rejectedBy?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
@@ -434,10 +434,10 @@ export type LoanDisbursementOrderByWithRelationInput = {
   transactionReference?: Prisma.SortOrder
   externalTxnId?: Prisma.SortOrderInput | Prisma.SortOrder
   utrNumber?: Prisma.SortOrderInput | Prisma.SortOrder
-  bankName?: Prisma.SortOrderInput | Prisma.SortOrder
-  bankAccountNumber?: Prisma.SortOrderInput | Prisma.SortOrder
-  ifscCode?: Prisma.SortOrderInput | Prisma.SortOrder
-  accountHolderName?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankName?: Prisma.SortOrder
+  bankAccountNumber?: Prisma.SortOrder
+  ifscCode?: Prisma.SortOrder
+  accountHolderName?: Prisma.SortOrder
   processedBy?: Prisma.SortOrder
   approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   rejectedBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -471,10 +471,10 @@ export type LoanDisbursementWhereUniqueInput = Prisma.AtLeast<{
   valueDate?: Prisma.DateTimeNullableFilter<"LoanDisbursement"> | Date | string | null
   externalTxnId?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
   utrNumber?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
-  bankName?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
-  bankAccountNumber?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
-  ifscCode?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
-  accountHolderName?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
+  bankName?: Prisma.StringFilter<"LoanDisbursement"> | string
+  bankAccountNumber?: Prisma.StringFilter<"LoanDisbursement"> | string
+  ifscCode?: Prisma.StringFilter<"LoanDisbursement"> | string
+  accountHolderName?: Prisma.StringFilter<"LoanDisbursement"> | string
   processedBy?: Prisma.StringFilter<"LoanDisbursement"> | string
   approvedBy?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
   rejectedBy?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
@@ -504,10 +504,10 @@ export type LoanDisbursementOrderByWithAggregationInput = {
   transactionReference?: Prisma.SortOrder
   externalTxnId?: Prisma.SortOrderInput | Prisma.SortOrder
   utrNumber?: Prisma.SortOrderInput | Prisma.SortOrder
-  bankName?: Prisma.SortOrderInput | Prisma.SortOrder
-  bankAccountNumber?: Prisma.SortOrderInput | Prisma.SortOrder
-  ifscCode?: Prisma.SortOrderInput | Prisma.SortOrder
-  accountHolderName?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankName?: Prisma.SortOrder
+  bankAccountNumber?: Prisma.SortOrder
+  ifscCode?: Prisma.SortOrder
+  accountHolderName?: Prisma.SortOrder
   processedBy?: Prisma.SortOrder
   approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   rejectedBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -544,10 +544,10 @@ export type LoanDisbursementScalarWhereWithAggregatesInput = {
   transactionReference?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
   externalTxnId?: Prisma.StringNullableWithAggregatesFilter<"LoanDisbursement"> | string | null
   utrNumber?: Prisma.StringNullableWithAggregatesFilter<"LoanDisbursement"> | string | null
-  bankName?: Prisma.StringNullableWithAggregatesFilter<"LoanDisbursement"> | string | null
-  bankAccountNumber?: Prisma.StringNullableWithAggregatesFilter<"LoanDisbursement"> | string | null
-  ifscCode?: Prisma.StringNullableWithAggregatesFilter<"LoanDisbursement"> | string | null
-  accountHolderName?: Prisma.StringNullableWithAggregatesFilter<"LoanDisbursement"> | string | null
+  bankName?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
+  bankAccountNumber?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
+  ifscCode?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
+  accountHolderName?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
   processedBy?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
   approvedBy?: Prisma.StringNullableWithAggregatesFilter<"LoanDisbursement"> | string | null
   rejectedBy?: Prisma.StringNullableWithAggregatesFilter<"LoanDisbursement"> | string | null
@@ -575,10 +575,10 @@ export type LoanDisbursementCreateInput = {
   transactionReference: string
   externalTxnId?: string | null
   utrNumber?: string | null
-  bankName?: string | null
-  bankAccountNumber?: string | null
-  ifscCode?: string | null
-  accountHolderName?: string | null
+  bankName: string
+  bankAccountNumber: string
+  ifscCode: string
+  accountHolderName: string
   processedBy: string
   approvedBy?: string | null
   rejectedBy?: string | null
@@ -608,10 +608,10 @@ export type LoanDisbursementUncheckedCreateInput = {
   transactionReference: string
   externalTxnId?: string | null
   utrNumber?: string | null
-  bankName?: string | null
-  bankAccountNumber?: string | null
-  ifscCode?: string | null
-  accountHolderName?: string | null
+  bankName: string
+  bankAccountNumber: string
+  ifscCode: string
+  accountHolderName: string
   processedBy: string
   approvedBy?: string | null
   rejectedBy?: string | null
@@ -639,10 +639,10 @@ export type LoanDisbursementUpdateInput = {
   transactionReference?: Prisma.StringFieldUpdateOperationsInput | string
   externalTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   utrNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accountHolderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  bankAccountNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  ifscCode?: Prisma.StringFieldUpdateOperationsInput | string
+  accountHolderName?: Prisma.StringFieldUpdateOperationsInput | string
   processedBy?: Prisma.StringFieldUpdateOperationsInput | string
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -672,10 +672,10 @@ export type LoanDisbursementUncheckedUpdateInput = {
   transactionReference?: Prisma.StringFieldUpdateOperationsInput | string
   externalTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   utrNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accountHolderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  bankAccountNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  ifscCode?: Prisma.StringFieldUpdateOperationsInput | string
+  accountHolderName?: Prisma.StringFieldUpdateOperationsInput | string
   processedBy?: Prisma.StringFieldUpdateOperationsInput | string
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -704,10 +704,10 @@ export type LoanDisbursementCreateManyInput = {
   transactionReference: string
   externalTxnId?: string | null
   utrNumber?: string | null
-  bankName?: string | null
-  bankAccountNumber?: string | null
-  ifscCode?: string | null
-  accountHolderName?: string | null
+  bankName: string
+  bankAccountNumber: string
+  ifscCode: string
+  accountHolderName: string
   processedBy: string
   approvedBy?: string | null
   rejectedBy?: string | null
@@ -735,10 +735,10 @@ export type LoanDisbursementUpdateManyMutationInput = {
   transactionReference?: Prisma.StringFieldUpdateOperationsInput | string
   externalTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   utrNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accountHolderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  bankAccountNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  ifscCode?: Prisma.StringFieldUpdateOperationsInput | string
+  accountHolderName?: Prisma.StringFieldUpdateOperationsInput | string
   processedBy?: Prisma.StringFieldUpdateOperationsInput | string
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -767,10 +767,10 @@ export type LoanDisbursementUncheckedUpdateManyInput = {
   transactionReference?: Prisma.StringFieldUpdateOperationsInput | string
   externalTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   utrNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accountHolderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  bankAccountNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  ifscCode?: Prisma.StringFieldUpdateOperationsInput | string
+  accountHolderName?: Prisma.StringFieldUpdateOperationsInput | string
   processedBy?: Prisma.StringFieldUpdateOperationsInput | string
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -972,10 +972,10 @@ export type LoanDisbursementCreateWithoutLoanApplicationInput = {
   transactionReference: string
   externalTxnId?: string | null
   utrNumber?: string | null
-  bankName?: string | null
-  bankAccountNumber?: string | null
-  ifscCode?: string | null
-  accountHolderName?: string | null
+  bankName: string
+  bankAccountNumber: string
+  ifscCode: string
+  accountHolderName: string
   processedBy: string
   approvedBy?: string | null
   rejectedBy?: string | null
@@ -1003,10 +1003,10 @@ export type LoanDisbursementUncheckedCreateWithoutLoanApplicationInput = {
   transactionReference: string
   externalTxnId?: string | null
   utrNumber?: string | null
-  bankName?: string | null
-  bankAccountNumber?: string | null
-  ifscCode?: string | null
-  accountHolderName?: string | null
+  bankName: string
+  bankAccountNumber: string
+  ifscCode: string
+  accountHolderName: string
   processedBy: string
   approvedBy?: string | null
   rejectedBy?: string | null
@@ -1064,10 +1064,10 @@ export type LoanDisbursementScalarWhereInput = {
   transactionReference?: Prisma.StringFilter<"LoanDisbursement"> | string
   externalTxnId?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
   utrNumber?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
-  bankName?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
-  bankAccountNumber?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
-  ifscCode?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
-  accountHolderName?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
+  bankName?: Prisma.StringFilter<"LoanDisbursement"> | string
+  bankAccountNumber?: Prisma.StringFilter<"LoanDisbursement"> | string
+  ifscCode?: Prisma.StringFilter<"LoanDisbursement"> | string
+  accountHolderName?: Prisma.StringFilter<"LoanDisbursement"> | string
   processedBy?: Prisma.StringFilter<"LoanDisbursement"> | string
   approvedBy?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
   rejectedBy?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
@@ -1095,10 +1095,10 @@ export type LoanDisbursementCreateManyLoanApplicationInput = {
   transactionReference: string
   externalTxnId?: string | null
   utrNumber?: string | null
-  bankName?: string | null
-  bankAccountNumber?: string | null
-  ifscCode?: string | null
-  accountHolderName?: string | null
+  bankName: string
+  bankAccountNumber: string
+  ifscCode: string
+  accountHolderName: string
   processedBy: string
   approvedBy?: string | null
   rejectedBy?: string | null
@@ -1126,10 +1126,10 @@ export type LoanDisbursementUpdateWithoutLoanApplicationInput = {
   transactionReference?: Prisma.StringFieldUpdateOperationsInput | string
   externalTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   utrNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accountHolderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  bankAccountNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  ifscCode?: Prisma.StringFieldUpdateOperationsInput | string
+  accountHolderName?: Prisma.StringFieldUpdateOperationsInput | string
   processedBy?: Prisma.StringFieldUpdateOperationsInput | string
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1157,10 +1157,10 @@ export type LoanDisbursementUncheckedUpdateWithoutLoanApplicationInput = {
   transactionReference?: Prisma.StringFieldUpdateOperationsInput | string
   externalTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   utrNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accountHolderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  bankAccountNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  ifscCode?: Prisma.StringFieldUpdateOperationsInput | string
+  accountHolderName?: Prisma.StringFieldUpdateOperationsInput | string
   processedBy?: Prisma.StringFieldUpdateOperationsInput | string
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1188,10 +1188,10 @@ export type LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationInput = {
   transactionReference?: Prisma.StringFieldUpdateOperationsInput | string
   externalTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   utrNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  accountHolderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  bankAccountNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  ifscCode?: Prisma.StringFieldUpdateOperationsInput | string
+  accountHolderName?: Prisma.StringFieldUpdateOperationsInput | string
   processedBy?: Prisma.StringFieldUpdateOperationsInput | string
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1299,10 +1299,10 @@ export type $LoanDisbursementPayload<ExtArgs extends runtime.Types.Extensions.In
     transactionReference: string
     externalTxnId: string | null
     utrNumber: string | null
-    bankName: string | null
-    bankAccountNumber: string | null
-    ifscCode: string | null
-    accountHolderName: string | null
+    bankName: string
+    bankAccountNumber: string
+    ifscCode: string
+    accountHolderName: string
     processedBy: string
     approvedBy: string | null
     rejectedBy: string | null

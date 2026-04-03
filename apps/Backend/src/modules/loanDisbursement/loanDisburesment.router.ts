@@ -19,7 +19,7 @@ loanDisbursementRouter.post(
   disburseLoanController
 
 );
-loanDisbursementRouter.get("/", 
+loanDisbursementRouter.get("/",
   authMiddleware,
   checkPermissionMiddleware("DISBURSE_LOAN"),
   listDisbursementsController);
