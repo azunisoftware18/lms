@@ -7,6 +7,7 @@ import TableLoader from './core/TableLoader';
 import ActionMenu from '../common/ActionMenu';
 import Pagination from '../common/Pagination';
 import { Eye, Edit, Download, CheckCircle, Clock, AlertCircle, Calendar, CreditCard, FileText, Receipt } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 // Component ka naam badal diya - ab ye EMIScheduleTableView hai
 const EMIManagementTableView = ({ 
@@ -23,6 +24,7 @@ const EMIManagementTableView = ({
   const [filterStatus, setFilterStatus] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const navigate = useNavigate();
 
   // Format currency
   const formatCurrency = (amount) => {
@@ -88,16 +90,43 @@ const EMIManagementTableView = ({
     );
   };
 
-  // Filter options
-  const filterOptions = [
-    { value: '', label: 'All Status', count: data.length },
-    { value: 'paid', label: 'Paid', count: data.filter(d => d.status === 'paid').length },
-    { value: 'pending', label: 'Pending', count: data.filter(d => d.status === 'pending').length },
-    { value: 'overdue', label: 'Overdue', count: data.filter(d => d.status === 'overdue').length },
-  ];
+  // If EMI items include `loanStatus`, show loan-status filters restricted to allowed list.
+  const allowedLoanStatuses = ['active', 'closed', 'delinquent', 'written_off', 'defaulted'];
+
+  const hasLoanStatus = data.some((d) => !!d.loanStatus);
+
+  const filterOptions = hasLoanStatus
+    ? [
+        { value: '', label: 'All Status', count: data.length },
+        ...allowedLoanStatuses.map((s) => ({
+          value: s,
+          label: s
+            .replace(/_/g, ' ')
+            .split(' ')
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(' '),
+          count: data.filter((d) => d.loanStatus === s).length,
+        })),
+      ]
+    : [
+        { value: '', label: 'All Status', count: data.length },
+        { value: 'paid', label: 'Paid', count: data.filter(d => d.status === 'paid').length },
+        { value: 'pending', label: 'Pending', count: data.filter(d => d.status === 'pending').length },
+        { value: 'overdue', label: 'Overdue', count: data.filter(d => d.status === 'overdue').length },
+      ];
 
   // Table columns
   const columns = [
+    {
+      header: 'Loan',
+      accessor: 'loanNumber',
+      render: (value, row) => (
+        <div className="font-medium text-sm text-slate-700">
+          <div>{row.loanNumber || row.loanApplication?.loanNumber || 'N/A'}</div>
+          <div className="text-xs text-slate-400">{row.customerName || row.loanApplication?.customer?.firstName || ''}</div>
+        </div>
+      ),
+    },
     {
       header: 'EMI No.',
       accessor: 'emiNumber',
@@ -160,6 +189,18 @@ const EMIManagementTableView = ({
   const renderActions = (row) => {
     const rowActions = [
       {
+        label: 'View EMIs',
+        icon: <FileText size={16} />,
+        onClick: () => {
+          // Prefer loanApplicationId, fallback to loanNumber
+          const loanId = row.loanApplicationId || row.loanId || row.loan?.id;
+          const loanNumber = row.loanNumber || row.loanApplication?.loanNumber || row.loan?.loanNumber;
+          if (loanId) navigate(`/los/emi-schedule?loanId=${loanId}`);
+          else if (loanNumber) navigate(`/los/emi-schedule?loanNumber=${encodeURIComponent(loanNumber)}`);
+          else navigate(`/los/emi-schedule`);
+        }
+      },
+      {
         label: 'View Details',
         icon: <Eye size={16} />,
         onClick: () => onView?.(row)
@@ -216,7 +257,12 @@ const EMIManagementTableView = ({
 
   // Filter and search data
   const filteredData = data.filter(item => {
-    if (filterStatus && item.status !== filterStatus) return false;
+    // If filtering by loanStatus (when present), use loanStatus; otherwise fallback to EMI status
+    if (filterStatus) {
+      if (item.loanStatus) {
+        if (item.loanStatus !== filterStatus) return false;
+      } else if (item.status !== filterStatus) return false;
+    }
     
     if (search) {
       const searchLower = search.toLowerCase();

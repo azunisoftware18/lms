@@ -335,8 +335,8 @@ export type LoanDisbursementGroupByOutputType = {
   id: string
   loanNumber: string
   amount: number
-  principalAmount: number | null
-  interestAmount: number | null
+  principalAmount: number
+  interestAmount: number
   chargesAmount: number | null
   currency: string
   disbursementMode: $Enums.DisbursementMode
@@ -345,7 +345,7 @@ export type LoanDisbursementGroupByOutputType = {
   valueDate: Date | null
   transactionReference: string
   externalTxnId: string | null
-  utrNumber: string | null
+  utrNumber: string
   bankName: string
   bankAccountNumber: string
   ifscCode: string
@@ -390,8 +390,8 @@ export type LoanDisbursementWhereInput = {
   id?: Prisma.StringFilter<"LoanDisbursement"> | string
   loanNumber?: Prisma.StringFilter<"LoanDisbursement"> | string
   amount?: Prisma.FloatFilter<"LoanDisbursement"> | number
-  principalAmount?: Prisma.FloatNullableFilter<"LoanDisbursement"> | number | null
-  interestAmount?: Prisma.FloatNullableFilter<"LoanDisbursement"> | number | null
+  principalAmount?: Prisma.FloatFilter<"LoanDisbursement"> | number
+  interestAmount?: Prisma.FloatFilter<"LoanDisbursement"> | number
   chargesAmount?: Prisma.FloatNullableFilter<"LoanDisbursement"> | number | null
   currency?: Prisma.StringFilter<"LoanDisbursement"> | string
   disbursementMode?: Prisma.EnumDisbursementModeFilter<"LoanDisbursement"> | $Enums.DisbursementMode
@@ -400,7 +400,7 @@ export type LoanDisbursementWhereInput = {
   valueDate?: Prisma.DateTimeNullableFilter<"LoanDisbursement"> | Date | string | null
   transactionReference?: Prisma.StringFilter<"LoanDisbursement"> | string
   externalTxnId?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
-  utrNumber?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
+  utrNumber?: Prisma.StringFilter<"LoanDisbursement"> | string
   bankName?: Prisma.StringFilter<"LoanDisbursement"> | string
   bankAccountNumber?: Prisma.StringFilter<"LoanDisbursement"> | string
   ifscCode?: Prisma.StringFilter<"LoanDisbursement"> | string
@@ -423,8 +423,8 @@ export type LoanDisbursementOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   loanNumber?: Prisma.SortOrder
   amount?: Prisma.SortOrder
-  principalAmount?: Prisma.SortOrderInput | Prisma.SortOrder
-  interestAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  principalAmount?: Prisma.SortOrder
+  interestAmount?: Prisma.SortOrder
   chargesAmount?: Prisma.SortOrderInput | Prisma.SortOrder
   currency?: Prisma.SortOrder
   disbursementMode?: Prisma.SortOrder
@@ -433,7 +433,7 @@ export type LoanDisbursementOrderByWithRelationInput = {
   valueDate?: Prisma.SortOrderInput | Prisma.SortOrder
   transactionReference?: Prisma.SortOrder
   externalTxnId?: Prisma.SortOrderInput | Prisma.SortOrder
-  utrNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  utrNumber?: Prisma.SortOrder
   bankName?: Prisma.SortOrder
   bankAccountNumber?: Prisma.SortOrder
   ifscCode?: Prisma.SortOrder
@@ -461,8 +461,8 @@ export type LoanDisbursementWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.LoanDisbursementWhereInput[]
   NOT?: Prisma.LoanDisbursementWhereInput | Prisma.LoanDisbursementWhereInput[]
   amount?: Prisma.FloatFilter<"LoanDisbursement"> | number
-  principalAmount?: Prisma.FloatNullableFilter<"LoanDisbursement"> | number | null
-  interestAmount?: Prisma.FloatNullableFilter<"LoanDisbursement"> | number | null
+  principalAmount?: Prisma.FloatFilter<"LoanDisbursement"> | number
+  interestAmount?: Prisma.FloatFilter<"LoanDisbursement"> | number
   chargesAmount?: Prisma.FloatNullableFilter<"LoanDisbursement"> | number | null
   currency?: Prisma.StringFilter<"LoanDisbursement"> | string
   disbursementMode?: Prisma.EnumDisbursementModeFilter<"LoanDisbursement"> | $Enums.DisbursementMode
@@ -470,7 +470,7 @@ export type LoanDisbursementWhereUniqueInput = Prisma.AtLeast<{
   disbursementDate?: Prisma.DateTimeFilter<"LoanDisbursement"> | Date | string
   valueDate?: Prisma.DateTimeNullableFilter<"LoanDisbursement"> | Date | string | null
   externalTxnId?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
-  utrNumber?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
+  utrNumber?: Prisma.StringFilter<"LoanDisbursement"> | string
   bankName?: Prisma.StringFilter<"LoanDisbursement"> | string
   bankAccountNumber?: Prisma.StringFilter<"LoanDisbursement"> | string
   ifscCode?: Prisma.StringFilter<"LoanDisbursement"> | string
@@ -493,8 +493,8 @@ export type LoanDisbursementOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   loanNumber?: Prisma.SortOrder
   amount?: Prisma.SortOrder
-  principalAmount?: Prisma.SortOrderInput | Prisma.SortOrder
-  interestAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  principalAmount?: Prisma.SortOrder
+  interestAmount?: Prisma.SortOrder
   chargesAmount?: Prisma.SortOrderInput | Prisma.SortOrder
   currency?: Prisma.SortOrder
   disbursementMode?: Prisma.SortOrder
@@ -503,7 +503,7 @@ export type LoanDisbursementOrderByWithAggregationInput = {
   valueDate?: Prisma.SortOrderInput | Prisma.SortOrder
   transactionReference?: Prisma.SortOrder
   externalTxnId?: Prisma.SortOrderInput | Prisma.SortOrder
-  utrNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  utrNumber?: Prisma.SortOrder
   bankName?: Prisma.SortOrder
   bankAccountNumber?: Prisma.SortOrder
   ifscCode?: Prisma.SortOrder
@@ -533,8 +533,8 @@ export type LoanDisbursementScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
   loanNumber?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
   amount?: Prisma.FloatWithAggregatesFilter<"LoanDisbursement"> | number
-  principalAmount?: Prisma.FloatNullableWithAggregatesFilter<"LoanDisbursement"> | number | null
-  interestAmount?: Prisma.FloatNullableWithAggregatesFilter<"LoanDisbursement"> | number | null
+  principalAmount?: Prisma.FloatWithAggregatesFilter<"LoanDisbursement"> | number
+  interestAmount?: Prisma.FloatWithAggregatesFilter<"LoanDisbursement"> | number
   chargesAmount?: Prisma.FloatNullableWithAggregatesFilter<"LoanDisbursement"> | number | null
   currency?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
   disbursementMode?: Prisma.EnumDisbursementModeWithAggregatesFilter<"LoanDisbursement"> | $Enums.DisbursementMode
@@ -543,7 +543,7 @@ export type LoanDisbursementScalarWhereWithAggregatesInput = {
   valueDate?: Prisma.DateTimeNullableWithAggregatesFilter<"LoanDisbursement"> | Date | string | null
   transactionReference?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
   externalTxnId?: Prisma.StringNullableWithAggregatesFilter<"LoanDisbursement"> | string | null
-  utrNumber?: Prisma.StringNullableWithAggregatesFilter<"LoanDisbursement"> | string | null
+  utrNumber?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
   bankName?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
   bankAccountNumber?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
   ifscCode?: Prisma.StringWithAggregatesFilter<"LoanDisbursement"> | string
@@ -564,8 +564,8 @@ export type LoanDisbursementScalarWhereWithAggregatesInput = {
 export type LoanDisbursementCreateInput = {
   id?: string
   amount: number
-  principalAmount?: number | null
-  interestAmount?: number | null
+  principalAmount: number
+  interestAmount: number
   chargesAmount?: number | null
   currency?: string
   disbursementMode: $Enums.DisbursementMode
@@ -574,7 +574,7 @@ export type LoanDisbursementCreateInput = {
   valueDate?: Date | string | null
   transactionReference: string
   externalTxnId?: string | null
-  utrNumber?: string | null
+  utrNumber: string
   bankName: string
   bankAccountNumber: string
   ifscCode: string
@@ -597,8 +597,8 @@ export type LoanDisbursementUncheckedCreateInput = {
   id?: string
   loanNumber: string
   amount: number
-  principalAmount?: number | null
-  interestAmount?: number | null
+  principalAmount: number
+  interestAmount: number
   chargesAmount?: number | null
   currency?: string
   disbursementMode: $Enums.DisbursementMode
@@ -607,7 +607,7 @@ export type LoanDisbursementUncheckedCreateInput = {
   valueDate?: Date | string | null
   transactionReference: string
   externalTxnId?: string | null
-  utrNumber?: string | null
+  utrNumber: string
   bankName: string
   bankAccountNumber: string
   ifscCode: string
@@ -628,8 +628,8 @@ export type LoanDisbursementUncheckedCreateInput = {
 export type LoanDisbursementUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  principalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  interestAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  principalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  interestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   chargesAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   disbursementMode?: Prisma.EnumDisbursementModeFieldUpdateOperationsInput | $Enums.DisbursementMode
@@ -638,7 +638,7 @@ export type LoanDisbursementUpdateInput = {
   valueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transactionReference?: Prisma.StringFieldUpdateOperationsInput | string
   externalTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  utrNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  utrNumber?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.StringFieldUpdateOperationsInput | string
   ifscCode?: Prisma.StringFieldUpdateOperationsInput | string
@@ -661,8 +661,8 @@ export type LoanDisbursementUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  principalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  interestAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  principalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  interestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   chargesAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   disbursementMode?: Prisma.EnumDisbursementModeFieldUpdateOperationsInput | $Enums.DisbursementMode
@@ -671,7 +671,7 @@ export type LoanDisbursementUncheckedUpdateInput = {
   valueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transactionReference?: Prisma.StringFieldUpdateOperationsInput | string
   externalTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  utrNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  utrNumber?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.StringFieldUpdateOperationsInput | string
   ifscCode?: Prisma.StringFieldUpdateOperationsInput | string
@@ -693,8 +693,8 @@ export type LoanDisbursementCreateManyInput = {
   id?: string
   loanNumber: string
   amount: number
-  principalAmount?: number | null
-  interestAmount?: number | null
+  principalAmount: number
+  interestAmount: number
   chargesAmount?: number | null
   currency?: string
   disbursementMode: $Enums.DisbursementMode
@@ -703,7 +703,7 @@ export type LoanDisbursementCreateManyInput = {
   valueDate?: Date | string | null
   transactionReference: string
   externalTxnId?: string | null
-  utrNumber?: string | null
+  utrNumber: string
   bankName: string
   bankAccountNumber: string
   ifscCode: string
@@ -724,8 +724,8 @@ export type LoanDisbursementCreateManyInput = {
 export type LoanDisbursementUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  principalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  interestAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  principalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  interestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   chargesAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   disbursementMode?: Prisma.EnumDisbursementModeFieldUpdateOperationsInput | $Enums.DisbursementMode
@@ -734,7 +734,7 @@ export type LoanDisbursementUpdateManyMutationInput = {
   valueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transactionReference?: Prisma.StringFieldUpdateOperationsInput | string
   externalTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  utrNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  utrNumber?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.StringFieldUpdateOperationsInput | string
   ifscCode?: Prisma.StringFieldUpdateOperationsInput | string
@@ -756,8 +756,8 @@ export type LoanDisbursementUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  principalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  interestAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  principalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  interestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   chargesAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   disbursementMode?: Prisma.EnumDisbursementModeFieldUpdateOperationsInput | $Enums.DisbursementMode
@@ -766,7 +766,7 @@ export type LoanDisbursementUncheckedUpdateManyInput = {
   valueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transactionReference?: Prisma.StringFieldUpdateOperationsInput | string
   externalTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  utrNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  utrNumber?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.StringFieldUpdateOperationsInput | string
   ifscCode?: Prisma.StringFieldUpdateOperationsInput | string
@@ -961,8 +961,8 @@ export type EnumDisbursementStatusFieldUpdateOperationsInput = {
 export type LoanDisbursementCreateWithoutLoanApplicationInput = {
   id?: string
   amount: number
-  principalAmount?: number | null
-  interestAmount?: number | null
+  principalAmount: number
+  interestAmount: number
   chargesAmount?: number | null
   currency?: string
   disbursementMode: $Enums.DisbursementMode
@@ -971,7 +971,7 @@ export type LoanDisbursementCreateWithoutLoanApplicationInput = {
   valueDate?: Date | string | null
   transactionReference: string
   externalTxnId?: string | null
-  utrNumber?: string | null
+  utrNumber: string
   bankName: string
   bankAccountNumber: string
   ifscCode: string
@@ -992,8 +992,8 @@ export type LoanDisbursementCreateWithoutLoanApplicationInput = {
 export type LoanDisbursementUncheckedCreateWithoutLoanApplicationInput = {
   id?: string
   amount: number
-  principalAmount?: number | null
-  interestAmount?: number | null
+  principalAmount: number
+  interestAmount: number
   chargesAmount?: number | null
   currency?: string
   disbursementMode: $Enums.DisbursementMode
@@ -1002,7 +1002,7 @@ export type LoanDisbursementUncheckedCreateWithoutLoanApplicationInput = {
   valueDate?: Date | string | null
   transactionReference: string
   externalTxnId?: string | null
-  utrNumber?: string | null
+  utrNumber: string
   bankName: string
   bankAccountNumber: string
   ifscCode: string
@@ -1053,8 +1053,8 @@ export type LoanDisbursementScalarWhereInput = {
   id?: Prisma.StringFilter<"LoanDisbursement"> | string
   loanNumber?: Prisma.StringFilter<"LoanDisbursement"> | string
   amount?: Prisma.FloatFilter<"LoanDisbursement"> | number
-  principalAmount?: Prisma.FloatNullableFilter<"LoanDisbursement"> | number | null
-  interestAmount?: Prisma.FloatNullableFilter<"LoanDisbursement"> | number | null
+  principalAmount?: Prisma.FloatFilter<"LoanDisbursement"> | number
+  interestAmount?: Prisma.FloatFilter<"LoanDisbursement"> | number
   chargesAmount?: Prisma.FloatNullableFilter<"LoanDisbursement"> | number | null
   currency?: Prisma.StringFilter<"LoanDisbursement"> | string
   disbursementMode?: Prisma.EnumDisbursementModeFilter<"LoanDisbursement"> | $Enums.DisbursementMode
@@ -1063,7 +1063,7 @@ export type LoanDisbursementScalarWhereInput = {
   valueDate?: Prisma.DateTimeNullableFilter<"LoanDisbursement"> | Date | string | null
   transactionReference?: Prisma.StringFilter<"LoanDisbursement"> | string
   externalTxnId?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
-  utrNumber?: Prisma.StringNullableFilter<"LoanDisbursement"> | string | null
+  utrNumber?: Prisma.StringFilter<"LoanDisbursement"> | string
   bankName?: Prisma.StringFilter<"LoanDisbursement"> | string
   bankAccountNumber?: Prisma.StringFilter<"LoanDisbursement"> | string
   ifscCode?: Prisma.StringFilter<"LoanDisbursement"> | string
@@ -1084,8 +1084,8 @@ export type LoanDisbursementScalarWhereInput = {
 export type LoanDisbursementCreateManyLoanApplicationInput = {
   id?: string
   amount: number
-  principalAmount?: number | null
-  interestAmount?: number | null
+  principalAmount: number
+  interestAmount: number
   chargesAmount?: number | null
   currency?: string
   disbursementMode: $Enums.DisbursementMode
@@ -1094,7 +1094,7 @@ export type LoanDisbursementCreateManyLoanApplicationInput = {
   valueDate?: Date | string | null
   transactionReference: string
   externalTxnId?: string | null
-  utrNumber?: string | null
+  utrNumber: string
   bankName: string
   bankAccountNumber: string
   ifscCode: string
@@ -1115,8 +1115,8 @@ export type LoanDisbursementCreateManyLoanApplicationInput = {
 export type LoanDisbursementUpdateWithoutLoanApplicationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  principalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  interestAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  principalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  interestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   chargesAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   disbursementMode?: Prisma.EnumDisbursementModeFieldUpdateOperationsInput | $Enums.DisbursementMode
@@ -1125,7 +1125,7 @@ export type LoanDisbursementUpdateWithoutLoanApplicationInput = {
   valueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transactionReference?: Prisma.StringFieldUpdateOperationsInput | string
   externalTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  utrNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  utrNumber?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.StringFieldUpdateOperationsInput | string
   ifscCode?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1146,8 +1146,8 @@ export type LoanDisbursementUpdateWithoutLoanApplicationInput = {
 export type LoanDisbursementUncheckedUpdateWithoutLoanApplicationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  principalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  interestAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  principalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  interestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   chargesAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   disbursementMode?: Prisma.EnumDisbursementModeFieldUpdateOperationsInput | $Enums.DisbursementMode
@@ -1156,7 +1156,7 @@ export type LoanDisbursementUncheckedUpdateWithoutLoanApplicationInput = {
   valueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transactionReference?: Prisma.StringFieldUpdateOperationsInput | string
   externalTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  utrNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  utrNumber?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.StringFieldUpdateOperationsInput | string
   ifscCode?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1177,8 +1177,8 @@ export type LoanDisbursementUncheckedUpdateWithoutLoanApplicationInput = {
 export type LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
-  principalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  interestAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  principalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  interestAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   chargesAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   disbursementMode?: Prisma.EnumDisbursementModeFieldUpdateOperationsInput | $Enums.DisbursementMode
@@ -1187,7 +1187,7 @@ export type LoanDisbursementUncheckedUpdateManyWithoutLoanApplicationInput = {
   valueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transactionReference?: Prisma.StringFieldUpdateOperationsInput | string
   externalTxnId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  utrNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  utrNumber?: Prisma.StringFieldUpdateOperationsInput | string
   bankName?: Prisma.StringFieldUpdateOperationsInput | string
   bankAccountNumber?: Prisma.StringFieldUpdateOperationsInput | string
   ifscCode?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1288,8 +1288,8 @@ export type $LoanDisbursementPayload<ExtArgs extends runtime.Types.Extensions.In
     id: string
     loanNumber: string
     amount: number
-    principalAmount: number | null
-    interestAmount: number | null
+    principalAmount: number
+    interestAmount: number
     chargesAmount: number | null
     currency: string
     disbursementMode: $Enums.DisbursementMode
@@ -1298,7 +1298,7 @@ export type $LoanDisbursementPayload<ExtArgs extends runtime.Types.Extensions.In
     valueDate: Date | null
     transactionReference: string
     externalTxnId: string | null
-    utrNumber: string | null
+    utrNumber: string
     bankName: string
     bankAccountNumber: string
     ifscCode: string

@@ -523,7 +523,6 @@ export const getAllLoanApplicationsService = async (params: {
       select: {
         id: true,
         loanNumber: true,
-      
         status: true,
         requestedAmount: true,
         approvedAmount: true,

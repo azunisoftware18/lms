@@ -22,9 +22,9 @@ export default function LoanAccountTable({
     {
       header: "Loan Number",
       accessor: "id",
-      render: (value) => (
+      render: (value, row) => (
         <span className="text-blue-600 font-medium cursor-pointer whitespace-nowrap">
-          {value}
+          {row.loanNumber || value}
         </span>
       ),
     },

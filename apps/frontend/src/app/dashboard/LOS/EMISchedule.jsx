@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useSelector } from "react-redux";
 import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
 import QuickActionCard from "../../../components/common/QuickAction";
@@ -10,7 +10,9 @@ import {
   useAllEmis,
   useGenerateSchedule,
   usePayEmi,
+  useLoanEmis,
 } from "../../../hooks/useEmi";
+import { useLocation } from "react-router-dom";
 import GenerateEmiModal from "../../../components/modals/GenerateEmiModal";
 import { colorVariables } from "../../../lib/index";
 
@@ -25,17 +27,33 @@ export default function EMISchedulePage() {
   const itemsPerPage = 5;
 
   // ---------- DATA (from API) ----------------
-  const loanQuery = useLoanApplications({ status: "APPROVED", limit: 1000 });
-  const {
-    emis: emiVouchers,
-    meta: emisMeta,
-    refetch: emisRefetch,
-  } = useAllEmis({
+  // Fetch loan applications (no status filter) and apply client-side filtering
+  const loanQuery = useLoanApplications({ limit: 1000 });
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const queryLoanId = params.get("loanId");
+  const queryLoanNumber = params.get("loanNumber");
+
+  // If opened with a loanId in query, show the EMI vouchers tab by default
+  useEffect(() => {
+    if (queryLoanId || queryLoanNumber) setActiveTab("all");
+  }, [queryLoanId, queryLoanNumber]);
+
+  // If a loanId is provided in query params, fetch EMIs for that loan specifically.
+  const loanEmisQuery = useLoanEmis(queryLoanId || null);
+
+  const allEmisQuery = useAllEmis({
     page: currentPage,
     limit: itemsPerPage,
     q: searchTerm,
     status: filterStatus,
   });
+
+  const emisSource = queryLoanId ? loanEmisQuery : allEmisQuery;
+  const emiVouchers = emisSource.emis;
+  const emisMeta = emisSource.meta;
+  const emisRefetch = emisSource.refetch || emisSource.refetch;
+  const emisLoading = emisSource.loading || false;
 
   // Prefer normalized data from react-query but fall back to Redux store
   const loanAppsFromStore = useSelector(
@@ -63,7 +81,8 @@ export default function EMISchedulePage() {
         .filter(Boolean)
         .map((s) => String(s).toLowerCase());
 
-      return candidates.some((s) => s.includes("approved"));
+      // treat both APPROVED and SANCTIONED as eligible for EMI schedule generation
+      return candidates.some((s) => s.includes("approved") || s.includes("sanction"));
     });
   }, [loanList]);
 
@@ -190,9 +209,9 @@ export default function EMISchedulePage() {
   const [isGenerateOpen, setIsGenerateOpen] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState(null);
 
-  const handleGenerate = (loanId) =>
+  const handleGenerate = (loanIdOrPayload) =>
     new Promise((resolve, reject) => {
-      generateSchedule.mutate(loanId, {
+      generateSchedule.mutate(loanIdOrPayload, {
         onSuccess: (data) => {
           if (loanQuery?.refetch) loanQuery.refetch();
           if (emisRefetch) emisRefetch();

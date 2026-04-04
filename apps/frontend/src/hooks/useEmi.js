@@ -78,9 +78,29 @@ export const useLoanEmis = (loanId) => {
 export const useGenerateSchedule = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
 
   return useMutation({
-    mutationFn: (loanId) => apiPost(`/emi/loan-applications/${loanId}/emis`),
+    mutationFn: (loanIdOrPayload) => {
+      // Accept either a plain loanId string or an object { loanId, emiStartDate }
+      let loanId = loanIdOrPayload;
+      let emiStartDate = undefined;
+      if (loanIdOrPayload && typeof loanIdOrPayload === "object") {
+        loanId = loanIdOrPayload.loanId || loanIdOrPayload.id || loanIdOrPayload.loanNumber;
+        emiStartDate = loanIdOrPayload.emiStartDate || loanIdOrPayload.startDate;
+      }
+      const uid = user?.id || user?.userId || user?.uid || null;
+      const bid = user?.branchId || (user?.branch && user.branch.id) || null;
+      const payload = {
+        userId: uid,
+        branchId: bid,
+        // include alternate common keys in case backend expects different naming
+        createdBy: uid,
+        created_by: uid,
+      };
+      if (emiStartDate) payload.emiStartDate = emiStartDate;
+      return apiPost(`/emi/loan-applications/${loanId}/emis`, payload);
+    },
     onMutate: () => {
       dispatch(setLoading(true));
     },
