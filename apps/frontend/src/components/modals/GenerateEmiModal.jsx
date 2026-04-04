@@ -72,10 +72,10 @@ export default function GenerateEmiModal({
     if (!loan) return;
     try {
       setSubmitting(true);
-      // onGenerate is expected to call the mutation; backend currently accepts only loanId
       // prefer loanNumber when available (backend accepts either)
       const key = loan.loanNumber || loan.id;
-      const resp = await onGenerate(key);
+      // pass emiStartDate to parent so mutation includes it in payload
+      const resp = await onGenerate({ loanId: key, emiStartDate: startDate });
       // mutation resolves with API response; parent returns that
       setGenerated(resp?.data ?? resp);
     } catch  {

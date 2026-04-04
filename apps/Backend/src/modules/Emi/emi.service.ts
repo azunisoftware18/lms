@@ -10,7 +10,15 @@ export const generateEmiScheduleService = async (
   loanNumber: string,
   userId?: string,
   branchId?: string,
+  emiStartDate?: Date,
 ) => {
+const loanData = await prisma.loanApplication.update({
+  where: { loanNumber },
+  data: {
+    emiStartDate: emiStartDate , // only update if provided
+  },
+});
+
   const loan = await prisma.loanApplication.findUnique({
     where: { loanNumber: loanNumber },
     select: {
@@ -45,9 +53,9 @@ export const generateEmiScheduleService = async (
   }
  
 
-  if (loan.status !== "approved") {
+  if (loan.status !== "SANCTIONED") {
     throw AppError.badRequest(
-      "EMI schedule can only be generated after loan approval",
+      "EMI schedule can only be generated after loan is sanctioned",
     );
   }
   if (!loan.approvedAmount && !loan.requestedAmount) {
@@ -160,7 +168,7 @@ export const generateEmiScheduleService = async (
 
   await prisma.loanApplication.update({
     where: { id: loan.id },
-    data: { status: "active" },
+    data: { status: "Ready_for_disbursement" },
   });
 
   // Only log action if userId and branchId are provided
@@ -172,7 +180,7 @@ export const generateEmiScheduleService = async (
       performedBy: userId,
       branchId: branchId,
       oldValue: { status: "disbursed" },
-      newValue: { status: "active" },
+      newValue: { status: "Ready_for_disbursement" },
       remarks: `EMI schedule generated for loan application ${loan.id}`,
     });
   }

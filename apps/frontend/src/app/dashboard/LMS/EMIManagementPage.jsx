@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from "react";
+import LoanAccountTable from "../../../components/tables/LoanAccountTable";
 import EMIManagementTableView from "../../../components/tables/EMIManagementTable";
 import { useAllEmis } from "../../../hooks/useEmi";
+import { useLoanApplications } from "../../../hooks/useLoanApplication";
 import StatusCard from "../../../components/common/StatusCard";
 import {
   Wallet,
@@ -35,24 +37,121 @@ export default function EMIManagementPage() {
         const interest = e.interestAmount ?? 0;
         const emiAmount = e.emiAmount ?? e.emi_amount ?? 0;
         const status = (e.status || "").toString().toLowerCase();
+        // Map loan status when returned on EMI payload (backend may include loan or loanApplication)
+        const loanStatus = (
+          e.loanStatus || e.loan?.status || e.loanApplication?.status || ""
+        )
+          .toString()
+          .toLowerCase();
         const isToday = due
           ? new Date(due).toISOString().split("T")[0] ===
             new Date().toISOString().split("T")[0]
           : false;
         return {
           ...e,
-          id: e.id || `${emiNumber}-${idx}`,
+          id: e.loanNumber || `${emiNumber}-${idx}`,
           emiNumber,
           dueDate: due,
           principal,
           interest,
           emiAmount,
           status,
+          loanStatus,
           isToday,
         };
       })
       .filter(Boolean);
   }, [rawEmis]);
+
+  // Fetch loan applications so we can map loan status into each EMI (avoid relying on EMI API)
+  const { data: loanApiData } = useLoanApplications({ page: 1, limit: 500 });
+
+  const rawLoans = Array.isArray(loanApiData)
+    ? loanApiData
+    : Array.isArray(loanApiData?.data)
+    ? loanApiData.data
+    : Array.isArray(loanApiData?.data?.data)
+    ? loanApiData.data.data
+    : [];
+
+  // build loan lookup maps by id and loanNumber
+  const loanMapById = {};
+  const loanMapByNumber = {};
+  rawLoans.forEach((L) => {
+    const id = L.loanNumber || L.id;
+    const number = L.loanNumber || L.id;
+    const statusKey = (L.status || "").toString().toLowerCase();
+    if (id) loanMapById[id] = { ...L, status: statusKey };
+    if (number) loanMapByNumber[number] = { ...L, status: statusKey };
+  });
+
+  // If EMI item does not contain loanStatus, try to derive it from the loan maps
+  const dataWithLoanStatus = data.map((d) => {
+    if (d.loanStatus) return d;
+    const fromId = d.loanApplicationId && loanMapById[d.loanApplicationId];
+    const fromNumber = d.loanNumber && loanMapByNumber[d.loanNumber];
+    const fromLoan = d.loan && (loanMapById[d.loan?.id] || loanMapByNumber[d.loan?.loanNumber]);
+    const resolved = fromId || fromNumber || fromLoan;
+    return {
+      ...d,
+      loanStatus: resolved ? resolved.status : d.loanStatus || "",
+    };
+  });
+
+  // Only include EMIs that belong to loans with these statuses
+  const allowedLoanStatuses = [
+    "active",
+    "closed",
+    "delinquent",
+    "written_off",
+    "defaulted",
+  ];
+
+  const filteredByLoanStatus = dataWithLoanStatus.filter((d) =>
+    d.loanStatus ? allowedLoanStatuses.includes(d.loanStatus) : false
+  );
+
+  // If there are no EMIs to show, fall back to showing loan applications (so the user can click View EMIs)
+  const formatStatusDisplay = (s) => {
+    if (!s) return "";
+    const key = String(s).toLowerCase();
+    return key
+      .replace(/_/g, " ")
+      .split(" ")
+      .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1) : ""))
+      .join(" ");
+  };
+
+  // Show only loan applications whose status is in allowedLoanStatuses
+  const loanRows = rawLoans
+    .filter((L) => {
+      const s = (L.status || L.applicationStatus || L.loanStatus || "").toString().toLowerCase();
+      return allowedLoanStatuses.includes(s);
+    })
+    .map((L) => {
+      const customerName = L.customer
+        ? `${L.customer.firstName || ""} ${L.customer.lastName || ""}`.trim()
+        : L.customerName || "";
+      return {
+        id: L.id || L.loanNumber,
+        loanNumber: L.loanNumber || L.id,
+        customerName,
+        branch: L.branch?.name || L.branchName || "",
+        loanAmount: Math.round(L.approvedAmount || L.requestedAmount || 0),
+        outstandingBalance: Math.round(L.outstandingAmount || L.outstandingBalance || 0),
+        status: formatStatusDisplay(L.status || L.applicationStatus || L.loanStatus || ""),
+        loanApplicationId: L.id,
+        loan: L,
+      };
+    });
+
+  const displayData = (filteredByLoanStatus && filteredByLoanStatus.length > 0)
+    ? filteredByLoanStatus
+    : loanRows;
+
+  // Debug logs to help diagnose empty table
+  // eslint-disable-next-line no-console
+  console.log("EMI Management: rawEmis:", rawEmis.length, "rawLoans:", rawLoans.length, "filteredByLoanStatus:", filteredByLoanStatus.length, "displayData:", displayData.length);
 
   // Format currency
   const formatCurrency = (amount) => {
@@ -78,29 +177,29 @@ export default function EMIManagementPage() {
     }
   };
 
-  // Calculate totals from fetched data
+  // Calculate totals from fetched data (restricted to allowed loan statuses)
   const totals = useMemo(
     () => ({
-      totalPrincipal: data.reduce(
+      totalPrincipal: filteredByLoanStatus.reduce(
         (sum, item) => sum + (item?.principal || 0),
         0,
       ),
-      totalInterest: data.reduce((sum, item) => sum + (item?.interest || 0), 0),
-      totalEMI: data.reduce((sum, item) => sum + (item?.emiAmount || 0), 0),
-      paidCount: data.filter((item) => item?.status === "paid").length,
-      pendingCount: data.filter((item) => item?.status === "pending").length,
-      overdueCount: data.filter((item) => item?.status === "overdue").length,
-      paidAmount: data
+      totalInterest: filteredByLoanStatus.reduce((sum, item) => sum + (item?.interest || 0), 0),
+      totalEMI: filteredByLoanStatus.reduce((sum, item) => sum + (item?.emiAmount || 0), 0),
+      paidCount: filteredByLoanStatus.filter((item) => item?.status === "paid").length,
+      pendingCount: filteredByLoanStatus.filter((item) => item?.status === "pending").length,
+      overdueCount: filteredByLoanStatus.filter((item) => item?.status === "overdue").length,
+      paidAmount: filteredByLoanStatus
         .filter((item) => item?.status === "paid")
         .reduce((s, i) => s + (i?.emiAmount || 0), 0),
-      pendingAmount: data
+      pendingAmount: filteredByLoanStatus
         .filter((item) => item?.status === "pending")
         .reduce((s, i) => s + (i?.emiAmount || 0), 0),
-      overdueAmount: data
+      overdueAmount: filteredByLoanStatus
         .filter((item) => item?.status === "overdue")
         .reduce((s, i) => s + (i?.emiAmount || 0), 0),
     }),
-    [data],
+    [filteredByLoanStatus],
   );
 
   // Handlers
@@ -174,7 +273,7 @@ export default function EMIManagementPage() {
           <StatusCard
             title="TOTAL EMI"
             value={formatCurrency(totals.totalEMI)}
-            subtext={`${data.length} EMIs`}
+            subtext={`${filteredByLoanStatus.length} EMIs`}
             icon={Wallet}
             variant="purple"
           />
@@ -216,8 +315,8 @@ export default function EMIManagementPage() {
           </div>
         </div>
 
-        <EMIManagementTableView
-          data={data}
+        <LoanAccountTable
+          loans={displayData}
           loading={loading}
           onView={handleView}
           onEdit={handleEdit}

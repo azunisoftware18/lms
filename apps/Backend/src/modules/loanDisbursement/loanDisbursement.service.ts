@@ -27,7 +27,7 @@ export const disburseLoanService = async (
       err.statusCode = 404;
       throw err;
     }
-    if (loan.status !== "approved") {
+    if (loan.status !== "Ready_for_disbursement" && loan.status !== "approved" && loan.status !== "SANCTIONED") {
       throw new Error("Only approved loans can be disbursed");
     }
     if (!loan.approvedAmount) {
@@ -44,24 +44,27 @@ export const disburseLoanService = async (
         // relation expects loanApplication.id
         loanNumber: loan.id,
         amount: loan.approvedAmount,
+        // required by Prisma schema
+        principalAmount: loan.approvedAmount,
+        interestAmount: 0,
         disbursementMode: input.disbursementMode,
         transactionReference: input.transactionReference,
-        externalTxnId: input.externalTxnId || undefined,
-        utrNumber: input.utrNumber || undefined,
-        bankName: input.bankName || "",
-        bankAccountNumber: input.bankAccountNumber || "",
-        ifscCode: input.ifscCode || "",
-        accountHolderName: input.accountHolderName || "",
+        externalTxnId: input.externalTxnId ?? "",
+        utrNumber: input.utrNumber ?? "",
+        bankName: input.bankName ?? "",
+        bankAccountNumber: input.bankAccountNumber ?? "",
+        ifscCode: input.ifscCode ?? "",
+        accountHolderName: input.accountHolderName ?? "",
         valueDate: input.valueDate ? new Date(input.valueDate) : undefined,
-        remarks: input.remarks,
+        remarks: input.remarks ?? "",
         processedBy: userId,
         metadata: {
-          branchId: loan.branchId || null,
+          branchId: loan.branchId ?? "",
           createdFrom: "api",
         },
       },
     });
-    await tx.loanApplication.update({ where: { id: loan.id }, data: { status: "disbursed" } });
+    await tx.loanApplication.update({ where: { id: loan.id }, data: { status: "active" } });
 
     await logAction({
       action: "LOAN_DISBURSED",
@@ -76,6 +79,8 @@ export const disburseLoanService = async (
         disbursementMode: input.disbursementMode,
         transactionReference: input.transactionReference,
         amount: loan.approvedAmount,
+        principalAmount: loan.approvedAmount,
+        interestAmount: 0,
       },
       remarks: `Disbursed via ${input.disbursementMode} `,
     });

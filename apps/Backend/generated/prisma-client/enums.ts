@@ -559,6 +559,7 @@ export const LoanStatus = {
   LOANRULES_REJECTED: 'LOANRULES_REJECTED',
   approved: 'approved',
   SANCTIONED: 'SANCTIONED',
+  Ready_for_disbursement: 'Ready_for_disbursement',
   rejected: 'rejected',
   disbursed: 'disbursed',
   active: 'active',

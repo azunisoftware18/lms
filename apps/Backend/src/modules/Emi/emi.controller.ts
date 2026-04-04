@@ -40,9 +40,28 @@ const getParam = (req: Request, key: string) => {
 };
 
 const requireActor = (req: Request) => {
-  const userId = typeof req.user?.id === "string" ? req.user.id.trim() : "";
+  // Prefer authenticated user from middleware, but accept fallbacks from request body
+  const body = (req as any).body || {};
+
+  const userId =
+    typeof req.user?.id === "string"
+      ? req.user.id.trim()
+      : typeof body.userId === "string"
+      ? body.userId.trim()
+      : typeof body.user_id === "string"
+      ? body.user_id.trim()
+      : typeof body.createdBy === "string"
+      ? body.createdBy.trim()
+      : "";
+
   const branchId =
-    typeof req.user?.branchId === "string" ? req.user.branchId.trim() : "";
+    typeof req.user?.branchId === "string"
+      ? req.user.branchId.trim()
+      : typeof body.branchId === "string"
+      ? body.branchId.trim()
+      : typeof body.branch_id === "string"
+      ? body.branch_id.trim()
+      : "";
 
   if (!userId || !branchId) {
     throw AppError.badRequest("User id and branch id are required");
@@ -132,6 +151,13 @@ export const generateEmiScheduleController = async (
 ) => {
   try {
     const loanNumber = getParam(req, "id");
+    const emiStartDate = req.body.emiStartDate
+      ? new Date(req.body.emiStartDate)
+      : undefined;
+      if (emiStartDate && isNaN(emiStartDate.getTime())) {
+        throw AppError.badRequest("Invalid EMI start date");
+      }
+
     const { userId, branchId } = requireActor(req);
 
     if (!loanNumber) {
@@ -144,6 +170,7 @@ export const generateEmiScheduleController = async (
       loan.loanNumber,
       userId,
       branchId,
+      emiStartDate
     );
     res.status(200).json({ success: true, data: schedule });
   } catch (error: any) {
