@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Search,
   CreditCard,
@@ -14,12 +14,8 @@ import {
   Download,
   ToggleLeft,
   ToggleRight,
-  Clock,
-  Check,
   AlertCircle,
   ArrowRight,
-  BadgeCheck,
-  History,
 } from "lucide-react";
 import {
   useGetForecloseSummary,
@@ -27,8 +23,8 @@ import {
 } from "../../../hooks/useEmi";
 import toast from "react-hot-toast";
 import ForeClosureTable from "../../../components/tables/ForeClosureTable";
-import { apiGet } from "../../../lib/api/apiClient";
 import { useSettlementsByLoan } from "../../../hooks/useSettlements";
+import { useLoanApplications } from "../../../hooks/useLoanApplication"; // Import the actual hook
 
 const PrepaymentForeclosure = () => {
   // State for active tab
@@ -69,78 +65,132 @@ const PrepaymentForeclosure = () => {
   // State for transaction history
   const [transactionHistory, setTransactionHistory] = useState([]);
 
-  // Tabs configuration
-  const tabs = [
-    { id: "prepayment", label: "Prepayment", icon: IndianRupee },
-    { id: "foreclosure", label: "Foreclosure Calculator", icon: Calculator },
-    { id: "confirmation", label: "Confirmation", icon: CheckCircle },
-  ];
+  // ✅ Use the actual useLoanApplications hook
+  const { data: loansData, isLoading: isLoadingLoans, refetch: refetchLoans } = useLoanApplications({
+    limit: 100,
+  });
 
-  // Handle search loan via API (use q param to search by account number)
+  // Debug: Log the API response
+  useEffect(() => {
+    console.log("Raw loansData:", loansData);
+  }, [loansData]);
+
+  // Format loans for display/search - FIXED: Handle nested data structure
+  const loans = useMemo(() => {
+    // Try different possible data structures
+    let list = [];
+    
+    if (loansData?.data?.data && Array.isArray(loansData.data.data)) {
+      list = loansData.data.data;
+    } else if (loansData?.data && Array.isArray(loansData.data)) {
+      list = loansData.data;
+    } else if (Array.isArray(loansData)) {
+      list = loansData;
+    } else if (loansData?.data?.items && Array.isArray(loansData.data.items)) {
+      list = loansData.data.items;
+    }
+
+    console.log("Extracted loan list:", list);
+    
+    if (!Array.isArray(list) || list.length === 0) return [];
+
+    return list.map((loan) => ({
+      id: loan.id || loan._id || loan.loanNumber || loan.loanId,
+      loanNumber: loan.loanNumber || loan.accountNumber || loan.id,
+      customerName: loan.customer?.name ||
+        loan.customerName ||
+        `${loan.customer?.firstName || ""} ${loan.customer?.lastName || ""}`.trim() ||
+        "N/A",
+      loanAmount: loan.approvedAmount || loan.requestedAmount || loan.loanAmount || 0,
+      bank: loan.customer?.bankName || loan.bankName || "N/A",
+      status: loan.status || "pending",
+      interestRate: loan.interestRate || 0,
+      tenure: loan.tenure || loan.tenureMonths || 0,
+      outstandingBalance: loan.outstandingBalance || loan.approvedAmount || loan.requestedAmount || 0,
+      nextEMIDate: loan.nextEmiDate || loan.nextEMIDate || "N/A",
+      customerId: loan.customer?.id || loan.customerId,
+      approvedAmount: loan.approvedAmount,
+      requestedAmount: loan.requestedAmount,
+    }));
+  }, [loansData]);
+
+  // Handle search loan from the fetched loans list
   const handleSearchLoan = async () => {
     setSearchError("");
-    if (!searchLoanNumber) return setSearchError("Enter loan account number");
-    try {
-      const resp = await apiGet(`/loan-applications`, {
-        params: { q: searchLoanNumber },
-      });
-      const list = resp?.data ?? resp;
-      // API returns data array in data or returns array directly
-      const first = Array.isArray(list)
-        ? list[0]
-        : list?.data
-          ? list.data[0]
-          : null;
-      if (!first) {
-        setSearchError("Loan account number not found");
-        setSearchedLoan(null);
-        setLoanStatus(null);
-        return;
-      }
+    if (!searchLoanNumber) {
+      setSearchError("Enter loan account number");
+      return;
+    }
 
-      setSearchedLoan(first);
-      setLoanStatus(first.status ?? "");
-      setTransactionRef("TXN" + Math.floor(Math.random() * 1000000));
+    console.log("Searching for loan number:", searchLoanNumber);
+    console.log("Available loans:", loans);
 
-      // Reset forms
-      setPrepaymentData({ amount: "", charges: "2.5", applyCharges: true });
-      setPrepaymentResults({
-        updatedBalance: "",
-        newEmi: "",
-        remainingTenure: "",
-      });
+    // Search in the fetched loans list
+    const foundLoan = loans.find(
+      (loan) => loan.loanNumber?.toLowerCase() === searchLoanNumber.toLowerCase()
+    );
 
-      // reset local foreclosure fallback until API summary populates
-      setForeclosureData((s) => ({
-        ...s,
-        outstandingPrincipal:
-          first.outstandingBalance ?? s.outstandingPrincipal,
-      }));
-    } catch (err) {
-      console.error(err);
-      setSearchError("Failed to lookup loan");
+    if (!foundLoan) {
+      setSearchError("Loan account number not found");
       setSearchedLoan(null);
       setLoanStatus(null);
+      return;
     }
+
+    console.log("Found loan:", foundLoan);
+
+    setSearchedLoan(foundLoan);
+    setLoanStatus(foundLoan.status ?? "");
+    setTransactionRef("TXN" + Math.floor(Math.random() * 1000000));
+
+    // Reset forms
+    setPrepaymentData({ amount: "", charges: "2.5", applyCharges: true });
+    setPrepaymentResults({
+      updatedBalance: "",
+      newEmi: "",
+      remainingTenure: "",
+    });
+
+    // Reset foreclosure data
+    setForeclosureData((s) => ({
+      ...s,
+      outstandingPrincipal: foundLoan.outstandingBalance ?? s.outstandingPrincipal,
+    }));
   };
 
   // Handle calculate EMI for prepayment
   const handleCalculateEMI = () => {
     if (!prepaymentData.amount) {
-      alert("Please enter prepayment amount");
+      toast.error("Please enter prepayment amount");
       return;
     }
 
-    // Mock calculation logic
-    const prepaymentAmount = parseInt(prepaymentData.amount.replace(/,/g, ""));
-    const currentBalance = parseInt(
-      searchedLoan.outstandingBalance.replace(/,/g, ""),
-    );
+    if (!searchedLoan) {
+      toast.error("No loan selected");
+      return;
+    }
+
+    const prepaymentAmount = parseFloat(prepaymentData.amount);
+    const currentBalance = parseFloat(searchedLoan.outstandingBalance);
     const updatedBalance = currentBalance - prepaymentAmount;
 
-    // Calculate new EMI (simplified mock calculation)
-    const newEmi = Math.round(updatedBalance * 0.0085);
-    const remainingTenure = Math.round(updatedBalance / newEmi);
+    if (updatedBalance < 0) {
+      toast.error("Prepayment amount cannot exceed outstanding balance");
+      return;
+    }
+
+    // Simplified EMI calculation
+    const monthlyRate = parseFloat(searchedLoan.interestRate) / 12 / 100;
+    let newEmi = 0;
+    let remainingTenure = 0;
+
+    if (monthlyRate > 0 && searchedLoan.tenure > 0 && updatedBalance > 0) {
+      newEmi = Math.round(updatedBalance * monthlyRate * Math.pow(1 + monthlyRate, searchedLoan.tenure) / (Math.pow(1 + monthlyRate, searchedLoan.tenure) - 1));
+      remainingTenure = Math.round(updatedBalance / newEmi);
+    } else {
+      newEmi = updatedBalance;
+      remainingTenure = 1;
+    }
 
     setPrepaymentResults({
       updatedBalance: updatedBalance.toLocaleString("en-IN"),
@@ -152,13 +202,13 @@ const PrepaymentForeclosure = () => {
   // Handle apply prepayment
   const handleApplyPrepayment = () => {
     if (!prepaymentResults.updatedBalance) {
-      alert("Please calculate EMI first");
+      toast.error("Please calculate EMI first");
       return;
     }
 
     // Add to transaction history
     const newTransaction = {
-      loanNumber: searchedLoan.accountNumber,
+      loanNumber: searchedLoan.loanNumber,
       customerName: searchedLoan.customerName,
       transactionType: "Prepayment",
       amountPaid: prepaymentData.amount,
@@ -175,26 +225,49 @@ const PrepaymentForeclosure = () => {
     // Update loan outstanding balance
     setSearchedLoan({
       ...searchedLoan,
-      outstandingBalance: prepaymentResults.updatedBalance,
+      outstandingBalance: prepaymentResults.updatedBalance.replace(/,/g, ""),
     });
 
-    alert("Prepayment applied successfully!");
+    toast.success("Prepayment applied successfully!");
   };
+
+  // Foreclosure API: fetch summary when loan selected
+  const loanIdForApi = searchedLoan?.id ?? searchedLoan?.loanNumber;
+  const {
+    data: forecloseApiData,
+    isLoading: isForecloseLoading,
+    refetch: refetchForeclose,
+  } = useGetForecloseSummary(loanIdForApi);
+
+  // Effect to update foreclosureData when API data is available
+  useEffect(() => {
+    if (forecloseApiData) {
+      console.log("Foreclose API data:", forecloseApiData);
+      setForeclosureData({
+        outstandingPrincipal: forecloseApiData.outstandingPrincipal || "",
+        accruedInterest: forecloseApiData.accruedInterest || "",
+        foreclosureCharges: forecloseApiData.foreclosureCharges || "",
+        totalPayable: forecloseApiData.totalPayable || "",
+      });
+    }
+  }, [forecloseApiData]);
 
   // Handle calculate foreclosure
   const handleCalculateForeclosure = () => {
-    // Use API to fetch foreclosure summary. If API not available, previous mockfallback remains.
-    const loanId = searchedLoan?.id ?? searchedLoan?.accountNumber;
+    const loanId = searchedLoan?.id ?? searchedLoan?.loanNumber;
     if (!loanId) {
       toast.error("Loan id unavailable for foreclosure summary");
       return;
     }
-    // trigger refetch via query hook (see useGetForecloseSummary below)
-    if (typeof refetchForeclose === "function") refetchForeclose();
+    refetchForeclose();
   };
 
   // Handle proceed to confirmation
   const handleProceedToConfirmation = () => {
+    if (!foreclosureData.totalPayable) {
+      toast.error("Please calculate foreclosure amount first");
+      return;
+    }
     setActiveTab("confirmation");
   };
 
@@ -202,18 +275,14 @@ const PrepaymentForeclosure = () => {
   const payForecloseMut = usePayForecloseLoan();
 
   const handleConfirmForeclosure = async () => {
-    const loanId = searchedLoan?.id ?? searchedLoan?.accountNumber;
+    const loanId = searchedLoan?.id ?? searchedLoan?.loanNumber;
     if (!loanId) return toast.error("Loan id unavailable");
 
-    // amountPaid should be numeric; try to parse from formatted string
-    const payableString =
-      forecloseApiData?.totalPayable ?? foreclosureData.totalPayable;
-    const amountRaw = payableString
-      ? payableString.toString().replace(/,/g, "")
-      : "";
+    const payableString = forecloseApiData?.totalPayable ?? foreclosureData.totalPayable;
+    const amountRaw = payableString ? payableString.toString().replace(/,/g, "") : "";
     const amountPaid = Number(amountRaw) || Number(payableString) || 0;
-    if (!amountPaid || amountPaid <= 0)
-      return toast.error("Invalid payable amount");
+    
+    if (!amountPaid || amountPaid <= 0) return toast.error("Invalid payable amount");
 
     try {
       const payload = {
@@ -222,9 +291,9 @@ const PrepaymentForeclosure = () => {
         transactionRef,
       };
       await payForecloseMut.mutateAsync({ loanId, payload });
-      // success: add to history and update loan status
+      
       const newTransaction = {
-        loanNumber: searchedLoan.accountNumber,
+        loanNumber: searchedLoan.loanNumber,
         customerName: searchedLoan.customerName,
         transactionType: "Foreclosure",
         amountPaid: amountPaid.toLocaleString("en-IN"),
@@ -243,31 +312,26 @@ const PrepaymentForeclosure = () => {
         outstandingBalance: "0",
       });
       toast.success("Foreclosure confirmed successfully");
+      
+      // Refresh the loan list
+      refetchLoans();
     } catch (err) {
-      // error handled by hook; optionally log
       console.error(err);
+      toast.error(err.message || "Failed to process foreclosure");
     }
   };
 
   // Handle download receipt
   const handleDownloadReceipt = () => {
-    alert("Downloading closure receipt...");
+    toast.success("Downloading closure receipt...");
   };
 
   // Handle generate NOC
   const handleGenerateNOC = () => {
-    alert("NOC generated successfully!");
+    toast.success("NOC generated successfully!");
   };
 
-  // Foreclosure API: fetch summary when loan selected
-  const loanIdForApi = searchedLoan?.id ?? searchedLoan?.accountNumber;
-  const {
-    data: forecloseApiData,
-    isLoading: isForecloseLoading,
-    refetch: refetchForeclose,
-  } = useGetForecloseSummary(loanIdForApi);
-
-  // fetch settlements/closure transactions for this loan
+  // Fetch settlements/closure transactions for this loan
   const { data: settlementsForLoan, isLoading: isSettlementsLoading } =
     useSettlementsByLoan(searchedLoan?.id ?? null);
 
@@ -275,14 +339,12 @@ const PrepaymentForeclosure = () => {
   const serverTransactions = (
     Array.isArray(settlementsForLoan) ? settlementsForLoan : []
   ).map((r) => {
-    const payments = Array.isArray(r.recoveryPayments)
-      ? r.recoveryPayments
-      : [];
+    const payments = Array.isArray(r.recoveryPayments) ? r.recoveryPayments : [];
     const lastPayment = payments.length ? payments[payments.length - 1] : null;
     const loanApp = r.loanApplication ?? {};
     const customer = loanApp.customer ?? null;
     return {
-      loanNumber: loanApp.loanNumber ?? searchedLoan?.accountNumber ?? "",
+      loanNumber: loanApp.loanNumber ?? searchedLoan?.loanNumber ?? "",
       customerName: customer?.firstName
         ? `${customer.firstName} ${customer.lastName ?? ""}`.trim()
         : (loanApp.customerName ?? searchedLoan?.customerName ?? ""),
@@ -333,12 +395,27 @@ const PrepaymentForeclosure = () => {
           </div>
           <button
             onClick={handleSearchLoan}
-            className="flex items-center justify-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors md:self-center"
+            disabled={isLoadingLoans}
+            className="flex items-center justify-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors md:self-center disabled:bg-blue-400"
           >
             <Search className="w-4 h-4" />
-            Search Loan
+            {isLoadingLoans ? "Loading..." : "Search Loan"}
           </button>
         </div>
+        
+        {/* Show loading indicator */}
+        {isLoadingLoans && (
+          <div className="mt-4 text-center text-slate-500">
+            Loading loan applications...
+          </div>
+        )}
+        
+        {/* Show count of loaded loans */}
+        {!isLoadingLoans && loans.length > 0 && (
+          <div className="mt-2 text-xs text-slate-400">
+            {loans.length} loans available for search
+          </div>
+        )}
       </div>
 
       {/* Loan Summary Card - Only show when loan is searched */}
@@ -353,12 +430,14 @@ const PrepaymentForeclosure = () => {
             </div>
             <span
               className={`px-3 py-1 rounded-full text-xs font-medium w-fit ${
-                loanStatus === "ACTIVE"
-                  ? "bg-yellow-100 text-yellow-700"
-                  : "bg-green-100 text-green-700"
+                loanStatus === "ACTIVE" || loanStatus === "active" || loanStatus === "approved"
+                  ? "bg-green-100 text-green-700"
+                  : loanStatus === "CLOSED" || loanStatus === "closed" || loanStatus === "settled"
+                  ? "bg-gray-100 text-gray-700"
+                  : "bg-yellow-100 text-yellow-700"
               }`}
             >
-              {loanStatus}
+              {loanStatus?.toUpperCase() || "ACTIVE"}
             </span>
           </div>
 
@@ -370,7 +449,7 @@ const PrepaymentForeclosure = () => {
               <div className="min-w-0">
                 <p className="text-xs text-slate-500">Loan Account Number</p>
                 <p className="font-medium text-slate-800 truncate">
-                  {searchedLoan.accountNumber}
+                  {searchedLoan.loanNumber}
                 </p>
               </div>
             </div>
@@ -394,7 +473,9 @@ const PrepaymentForeclosure = () => {
               <div className="min-w-0">
                 <p className="text-xs text-slate-500">Loan Amount</p>
                 <p className="font-medium text-slate-800">
-                  ₹{searchedLoan.loanAmount}
+                  ₹{typeof searchedLoan.loanAmount === 'number' 
+                    ? searchedLoan.loanAmount.toLocaleString() 
+                    : searchedLoan.loanAmount}
                 </p>
               </div>
             </div>
@@ -430,7 +511,9 @@ const PrepaymentForeclosure = () => {
               <div className="min-w-0">
                 <p className="text-xs text-slate-500">Outstanding Balance</p>
                 <p className="font-medium text-slate-800">
-                  ₹{searchedLoan.outstandingBalance}
+                  ₹{typeof searchedLoan.outstandingBalance === 'number' 
+                    ? searchedLoan.outstandingBalance.toLocaleString() 
+                    : searchedLoan.outstandingBalance}
                 </p>
               </div>
             </div>
@@ -450,10 +533,14 @@ const PrepaymentForeclosure = () => {
         </div>
       )}
 
-      {/* Tabs Navigation - Only show when loan is searched */}
-      {searchedLoan && loanStatus === "ACTIVE" && (
+      {/* Tabs Navigation - Only show when loan is searched and active */}
+      {searchedLoan && (loanStatus === "ACTIVE" || loanStatus === "active" || loanStatus === "approved") && (
         <div className="bg-white rounded-xl shadow-sm p-1 inline-flex flex-wrap mb-6">
-          {tabs.map((tab) => {
+          {[
+            { id: "prepayment", label: "Prepayment", icon: IndianRupee },
+            { id: "foreclosure", label: "Foreclosure Calculator", icon: Calculator },
+            { id: "confirmation", label: "Confirmation", icon: CheckCircle },
+          ].map((tab) => {
             const Icon = tab.icon;
             return (
               <button
@@ -474,7 +561,7 @@ const PrepaymentForeclosure = () => {
       )}
 
       {/* Tab Content - Only show when loan is searched and active */}
-      {searchedLoan && loanStatus === "ACTIVE" && (
+      {searchedLoan && (loanStatus === "ACTIVE" || loanStatus === "active" || loanStatus === "approved") && (
         <div className="space-y-6">
           {/* Tab 1: Prepayment */}
           {activeTab === "prepayment" && (
@@ -634,25 +721,25 @@ const PrepaymentForeclosure = () => {
                       Outstanding Principal
                     </span>
                     <span className="font-medium text-slate-800">
-                      ₹
-                      {forecloseApiData?.outstandingPrincipal ??
-                        foreclosureData.outstandingPrincipal}
+                      ₹{typeof foreclosureData.outstandingPrincipal === 'number'
+                        ? foreclosureData.outstandingPrincipal.toLocaleString()
+                        : foreclosureData.outstandingPrincipal}
                     </span>
                   </div>
                   <div className="flex justify-between py-3 border-b border-slate-100">
                     <span className="text-slate-600">Accrued Interest</span>
                     <span className="font-medium text-slate-800">
-                      ₹
-                      {forecloseApiData?.accruedInterest ??
-                        foreclosureData.accruedInterest}
+                      ₹{typeof foreclosureData.accruedInterest === 'number'
+                        ? foreclosureData.accruedInterest.toLocaleString()
+                        : foreclosureData.accruedInterest}
                     </span>
                   </div>
                   <div className="flex justify-between py-3 border-b border-slate-100">
                     <span className="text-slate-600">Foreclosure Charges</span>
                     <span className="font-medium text-orange-600">
-                      ₹
-                      {forecloseApiData?.foreclosureCharges ??
-                        foreclosureData.foreclosureCharges}
+                      ₹{typeof foreclosureData.foreclosureCharges === 'number'
+                        ? foreclosureData.foreclosureCharges.toLocaleString()
+                        : foreclosureData.foreclosureCharges}
                     </span>
                   </div>
 
@@ -662,9 +749,9 @@ const PrepaymentForeclosure = () => {
                         Total Payable Amount
                       </span>
                       <span className="text-xl font-bold text-blue-600">
-                        ₹
-                        {forecloseApiData?.totalPayable ??
-                          foreclosureData.totalPayable}
+                        ₹{typeof foreclosureData.totalPayable === 'number'
+                          ? foreclosureData.totalPayable.toLocaleString()
+                          : foreclosureData.totalPayable}
                       </span>
                     </div>
                   </div>
@@ -673,7 +760,6 @@ const PrepaymentForeclosure = () => {
                     <button
                       onClick={handleCalculateForeclosure}
                       disabled={isForecloseLoading}
-                      aria-busy={isForecloseLoading}
                       className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                         isForecloseLoading
                           ? "bg-blue-400 text-white cursor-not-allowed"
@@ -750,7 +836,7 @@ const PrepaymentForeclosure = () => {
                       Loan Account Number
                     </p>
                     <p className="font-medium text-slate-800">
-                      {searchedLoan.accountNumber}
+                      {searchedLoan.loanNumber}
                     </p>
                   </div>
                   <div className="p-3 bg-slate-50 rounded-lg">
@@ -764,9 +850,9 @@ const PrepaymentForeclosure = () => {
                       Total Payable Amount
                     </p>
                     <p className="font-medium text-slate-800">
-                      ₹
-                      {forecloseApiData?.totalPayable ??
-                        foreclosureData.totalPayable}
+                      ₹{typeof foreclosureData.totalPayable === 'number'
+                        ? foreclosureData.totalPayable.toLocaleString()
+                        : foreclosureData.totalPayable}
                     </p>
                   </div>
                   <div className="p-3 bg-slate-50 rounded-lg">
@@ -798,10 +884,11 @@ const PrepaymentForeclosure = () => {
                 <div className="flex flex-wrap gap-3">
                   <button
                     onClick={handleConfirmForeclosure}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    disabled={payForecloseMut.isLoading}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed"
                   >
                     <CheckCircle className="w-4 h-4" />
-                    Confirm Foreclosure
+                    {payForecloseMut.isLoading ? "Processing..." : "Confirm Foreclosure"}
                   </button>
                   <button
                     onClick={handleDownloadReceipt}

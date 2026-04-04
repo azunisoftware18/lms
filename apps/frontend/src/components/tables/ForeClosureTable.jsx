@@ -3,9 +3,11 @@ import TableShell from "./core/TableShell";
 import TableHead from "./core/TableHead";
 import TableBody from "./core/TableBody";
 
+
 export default function ForeClosureTable({ data = [] }) {
   const [search, setSearch] = useState("");
   const [filterValue, setFilterValue] = useState("");
+  console.log("loan data:", data);
 
   const columns = useMemo(
     () => [
@@ -54,8 +56,7 @@ export default function ForeClosureTable({ data = [] }) {
 
   const filtered = useMemo(() => {
     const term = (search || "").toString().toLowerCase();
-    return data
-      .filter((r) => {
+    return data?.filter((r) => {
         if (filterValue) {
           if ((r.transactionType || "").toString() !== filterValue)
             return false;
