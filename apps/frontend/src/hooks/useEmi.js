@@ -66,8 +66,11 @@ export const useLoanEmis = (loanId) => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
+  // Prefer the query result payload (many APIs return { success: true, data: [...] })
+  const queryPayload = query.data?.data ?? query.data;
+
   return {
-    emis,
+    emis: Array.isArray(queryPayload) ? queryPayload : emis,
     loading: query.isLoading || loading,
     error: error || query.error,
     isFetching: query.isFetching,

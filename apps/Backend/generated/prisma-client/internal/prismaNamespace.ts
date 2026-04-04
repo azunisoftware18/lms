@@ -4772,6 +4772,7 @@ export type RequiredKycDocumentScalarFieldEnum = (typeof RequiredKycDocumentScal
 export const LoanEmiScheduleScalarFieldEnum = {
   id: 'id',
   loanApplicationId: 'loanApplicationId',
+  loanNumber: 'loanNumber',
   emiNo: 'emiNo',
   emiStartDate: 'emiStartDate',
   dueDate: 'dueDate',
@@ -5677,7 +5678,8 @@ export type RequiredKycDocumentOrderByRelevanceFieldEnum = (typeof RequiredKycDo
 
 export const LoanEmiScheduleOrderByRelevanceFieldEnum = {
   id: 'id',
-  loanApplicationId: 'loanApplicationId'
+  loanApplicationId: 'loanApplicationId',
+  loanNumber: 'loanNumber'
 } as const
 
 export type LoanEmiScheduleOrderByRelevanceFieldEnum = (typeof LoanEmiScheduleOrderByRelevanceFieldEnum)[keyof typeof LoanEmiScheduleOrderByRelevanceFieldEnum]

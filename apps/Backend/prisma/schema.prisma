@@ -1047,7 +1047,7 @@ enum KycStatus {
 model LoanEmiSchedule {
   id                String @id @default(cuid())
   loanApplicationId String
-
+  loanNumber      String
   emiNo        Int
   emiStartDate DateTime? // EMI cycle start date
   dueDate      DateTime // EMI due date

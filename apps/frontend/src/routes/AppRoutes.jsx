@@ -28,6 +28,7 @@ import DpdTracking from "../app/dashboard/LMS/DpdTracking.jsx";
 import RecoveryManagement from "../app/dashboard/LMS/RecoveryManagement.jsx";
 import Foreclosure from "../app/dashboard/LMS/Foreclosure.jsx";
 import LoanClosure from "../app/dashboard/LMS/LoanClosure.jsx";
+import ViewEMIs from "../app/dashboard/LMS/Viewemi.jsx";
 
 // View detail pages
 import LoanAccountView from "../app/dashboard/ViewDetail/LoanAccountView.jsx";
@@ -180,6 +181,7 @@ export default function AppRoutes() {
           element={<LoanAccountCreation />}
         />
         <Route path="lms/emi-management" element={<EMIManagementPage />} />
+        <Route path="lms/view-emis" element={<ViewEMIs />} />
         
         <Route
           path="lms/repayment-management"
