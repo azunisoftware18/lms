@@ -14,6 +14,7 @@ import {
 } from "../store/slices/loanApplicationSlice";
 import toast from "react-hot-toast";
 
+// GET all loans with optional filters: /loan-applications/?page=1&q=LN-2026-000001
 export const useLoanApplications = (params = {}) => {
   const dispatch = useDispatch();
 
@@ -36,6 +37,7 @@ export const useLoanApplications = (params = {}) => {
   });
 };
 
+// GET loan types for dropdowns
 export const useLoanTypes = () => {
   // Fetch loan types from API
   const { data } = useQuery({
@@ -165,6 +167,7 @@ export const useCreateLoanApplication = ({
   });
 };
 
+// PUT update loan status: /loan-applications/:id/status
 export const useUpdateLoanStatus = () => {
   const qc = useQueryClient();
   const dispatch = useDispatch();
@@ -225,6 +228,7 @@ export const useApproveLoan = () => {
   });
 };
 
+// DELETE reject loan: /loan-applications/:id/reject
 export const useRejectLoan = () => {
   const qc = useQueryClient();
   const dispatch = useDispatch();
@@ -251,6 +255,7 @@ export const useRejectLoan = () => {
   });
 };
 
+// Additional hooks for document upload, verification, and rejection can be added here following similar patterns
 export const useUploadDocuments = () => {
   const qc = useQueryClient();
   const dispatch = useDispatch();
@@ -292,6 +297,7 @@ export const useUploadDocuments = () => {
   });
 };
 
+// POST verify document: /loan-applications/documents/:documentId/verify
 export const useVerifyDocument = () => {
   const qc = useQueryClient();
   const dispatch = useDispatch();
@@ -317,6 +323,7 @@ export const useVerifyDocument = () => {
   });
 };
 
+// POST reject document: /loan-applications/documents/:documentId/reject
 export const useRejectDocument = () => {
   const qc = useQueryClient();
   const dispatch = useDispatch();

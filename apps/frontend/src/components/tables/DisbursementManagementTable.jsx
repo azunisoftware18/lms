@@ -48,14 +48,15 @@ export default function DisbursementManagementTable({
   const isPending = activeTab === "pending";
   const isApproved = activeTab === "approved";
   const isPaid = activeTab === "paid";
-  const colSpan = isPending ? 5 : 6;
+  // Status column is now shown for all tabs
+  const colSpan = 6; // Always 6 columns: Customer, Loan ID, Amount, Bank, Status, Action
 
   return (
     <>
       <TableShell>
         <thead className="bg-slate-50 border-b border-slate-300">
           <tr className="text-left">
-            {["Customer", "Loan ID", "Amount", "Bank"].map((col) => (
+            {["Customer", "Loan ID", "Amount", "Bank", "Status"].map((col) => (
               <th
                 key={col}
                 className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider"
@@ -63,11 +64,6 @@ export default function DisbursementManagementTable({
                 {col}
               </th>
             ))}
-            {!isPending && (
-              <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
-            )}
             <th className="p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">
               Action
             </th>
@@ -86,7 +82,7 @@ export default function DisbursementManagementTable({
 
               return (
                 <tr
-                  key={item.id || item.dvNo}
+                  key={item.id || item.loanId}
                   className="hover:bg-blue-50/50 transition-colors duration-150"
                 >
                   <td className={`${cellClass} font-medium text-gray-800`}>
@@ -110,11 +106,10 @@ export default function DisbursementManagementTable({
 
                   <td className={`${cellClass} text-gray-700`}>{item.bank}</td>
 
-                  {!isPending && (
-                    <td className={cellClass}>
-                      <StatusBadge status={item.status} />
-                    </td>
-                  )}
+                  {/* Status column - now always visible */}
+                  <td className={cellClass}>
+                    <StatusBadge status={item.status || activeTab} />
+                  </td>
 
                   <td className={cellClass}>
                     <div className="flex justify-end gap-2">

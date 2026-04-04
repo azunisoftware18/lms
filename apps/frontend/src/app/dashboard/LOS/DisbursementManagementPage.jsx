@@ -52,24 +52,26 @@ export default function DisbursementManagementPage() {
     },
   });
 
-  // ✅ Format loans for display
+  // Format loans for display
   const loans = useMemo(() => {
     let list = data?.data?.data || data?.data || [];
 
     if (!Array.isArray(list)) return [];
 
     return list.map((loan) => ({
-      id: loan.id,
+      id: loan.loanNumber,
       loanNumber: loan.loanNumber,
       customer:
         loan.customer?.name ||
         `${loan.customer?.firstName || ""} ${loan.customer?.lastName || ""}`.trim(),
       amount: loan.approvedAmount || loan.requestedAmount,
       bank: loan.customer?.bankName || "N/A",
+      status: loan.status || "approved", // ✅ Add status from API response
+      originalStatus: loan.status // Keep original for reference
     }));
   }, [data]);
 
-  // ✅ Filter loans based on search query
+  // Filter loans based on search query
   const filteredLoans = useMemo(() => {
     if (!searchQuery.trim()) return loans;
     
@@ -87,7 +89,7 @@ export default function DisbursementManagementPage() {
     setShowModal(true);
   };
 
-  // ✅ FIXED: Handle disbursement form submission
+  // FIXED: Handle disbursement form submission
   const handleDisbursementSubmit = async (payload) => {
     // Validate selected loan has loanNumber
     if (!selectedLoan?.loanNumber) {
@@ -103,7 +105,7 @@ export default function DisbursementManagementPage() {
     return new Promise((resolve, reject) => {
       disburseLoan(
         {
-          loanNumber: selectedLoan.loanNumber, // ✅ Using loanNumber (not loanId)
+          loanNumber: selectedLoan.loanNumber, // Using loanNumber
           payload,
         },
         {
