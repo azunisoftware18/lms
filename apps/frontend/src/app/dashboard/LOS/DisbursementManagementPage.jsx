@@ -67,7 +67,7 @@ export default function DisbursementManagementPage() {
     if (!Array.isArray(list)) return [];
 
     return list.map((loan) => ({
-      id: loan.id || loan._id || loan.loanId, // Ensure we capture the ID properly
+      id: loan.loanNumber || loan._id || loan.loanId, // Ensure we capture the ID properly
       loanNumber: loan.loanNumber,
       customer:
         loan.customer?.name ||
