@@ -17,7 +17,7 @@ export const useDisbursement = ({
   const dispatch = useDispatch();
 
   return useMutation({
-    // ✅ SAME PATTERN AS createLoanApplication
+    // SAME PATTERN AS createLoanApplication
     mutationFn: ({ loanNumber, payload }) => {
       if (!loanNumber) throw new Error("Loan Number is required");
 
@@ -32,14 +32,14 @@ export const useDisbursement = ({
       dispatch(setLoading(false));
       dispatch(clearError());
 
-      // ✅ optional: store update
+      // optional: store update
       // dispatch(addDisbursement(data));
 
       // 🔄 refetch
       qc.invalidateQueries({ queryKey: ["loanApplications"] });
       qc.invalidateQueries({ queryKey: ["disbursements"] });
 
-      showSuccess("Disbursement successful ✅");
+      showSuccess("Disbursement successful");
 
       if (typeof onSuccessCallback === "function") {
         onSuccessCallback(data, variables, context);
@@ -50,7 +50,7 @@ export const useDisbursement = ({
       let serverMsg = "Disbursement failed ❌";
 
       try {
-        // ✅ IMPORTANT: apiClient already returns response.data
+        // IMPORTANT: apiClient already returns response.data
         if (!error) {
           serverMsg = "Unknown error";
         } else if (typeof error === "string") {

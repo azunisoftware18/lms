@@ -32,7 +32,7 @@ export const getDisbursementController = async (req: Request, res: Response) => 
     } catch (error) {
         const statusCode = error instanceof Error && "statusCode" in error ? (error as { statusCode: number }).statusCode : 500;
         const message = error instanceof Error ? error.message : "INTERNAL_SERVER_ERROR";
-        res.status(statusCode).json({ success: false, message: "Failed to fetch disbursement", error: message });
+        res.status(statusCode).json({ success: false, message:message|| "Failed to fetch disbursement", error: message });
     }
 };
 
@@ -45,7 +45,7 @@ export const listDisbursementsController = async (req: Request, res: Response) =
     } catch (error) {
         const statusCode = error instanceof Error && "statusCode" in error ? (error as { statusCode: number }).statusCode : 500;
         const message = error instanceof Error ? error.message : "INTERNAL_SERVER_ERROR";
-        res.status(statusCode).json({ success: false, message: "Failed to list disbursements", error: message });
+        res.status(statusCode).json({ success: false, message:message|| "Failed to list disbursements", error: message });
     }
 };
 

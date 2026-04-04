@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
@@ -21,6 +21,10 @@ const useLoanApplicationsList = (params = {}) => {
   return useQuery({
     queryKey: ["loanApplications", normalizedParams],
     queryFn: () => apiGet(`/loan-applications`, { params: normalizedParams }),
+    // Optional: Add error handling
+    onError: (error) => {
+      console.error("Failed to fetch loan applications:", error);
+    },
   });
 };
 
@@ -29,20 +33,26 @@ export default function DisbursementManagementPage() {
   const [selectedLoan, setSelectedLoan] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  const { data, isLoading, refetch } = useLoanApplicationsList({
+  // Fetch approved loan applications
+  const { data, isLoading, error, refetch } = useLoanApplicationsList({
     status: "approved",
     limit: 100,
   });
 
+  // Disbursement mutation hook
   const { mutate: disburseLoan, isPending } = useDisbursement({
     onSuccess: () => {
-      refetch();
-      setShowModal(false);
-      setSelectedLoan(null);
+      console.log("Disbursement successful, refreshing list...");
+      refetch(); // Refresh the loan list
+      setShowModal(false); // Close modal
+      setSelectedLoan(null); // Clear selected loan
+    },
+    onError: (error) => {
+      console.error("Disbursement failed:", error);
     },
   });
 
-  // ✅ Format loans
+  // ✅ Format loans for display
   const loans = useMemo(() => {
     let list = data?.data?.data || data?.data || [];
 
@@ -53,39 +63,78 @@ export default function DisbursementManagementPage() {
       loanNumber: loan.loanNumber,
       customer:
         loan.customer?.name ||
-        `${loan.customer?.firstName || ""} ${loan.customer?.lastName || ""}`,
+        `${loan.customer?.firstName || ""} ${loan.customer?.lastName || ""}`.trim(),
       amount: loan.approvedAmount || loan.requestedAmount,
       bank: loan.customer?.bankName || "N/A",
     }));
   }, [data]);
 
-  // ✅ FIXED FILTER (IMPORTANT)
-  const filteredLoans = loans.filter(
-    (loan) =>
-      loan.customer?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      loan.loanNumber?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // ✅ Filter loans based on search query
+  const filteredLoans = useMemo(() => {
+    if (!searchQuery.trim()) return loans;
+    
+    return loans.filter(
+      (loan) =>
+        loan.customer?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        loan.loanNumber?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [loans, searchQuery]);
 
+  // Handle disburse button click
   const handleDisburse = (loan) => {
+    console.log("Selected loan for disbursement:", loan);
     setSelectedLoan(loan);
     setShowModal(true);
   };
 
-  // ✅ FIXED (loanId instead of loanNumber)
+  // ✅ FIXED: Handle disbursement form submission
   const handleDisbursementSubmit = async (payload) => {
+    // Validate selected loan has loanNumber
+    if (!selectedLoan?.loanNumber) {
+      console.error("No loan number found for selected loan:", selectedLoan);
+      return Promise.reject(new Error("Loan number is missing"));
+    }
+
+    console.log("Submitting disbursement with:", {
+      loanNumber: selectedLoan.loanNumber,
+      payload,
+    });
+
     return new Promise((resolve, reject) => {
       disburseLoan(
         {
-          loanId: selectedLoan.id, // 🔥 MOST IMPORTANT FIX
+          loanNumber: selectedLoan.loanNumber, // ✅ Using loanNumber (not loanId)
           payload,
         },
         {
-          onSuccess: resolve,
-          onError: reject,
+          onSuccess: (data) => {
+            console.log("Disbursement success response:", data);
+            resolve(data);
+          },
+          onError: (error) => {
+            console.error("Disbursement error response:", error);
+            reject(error);
+          },
         }
       );
     });
   };
+
+  // Debug: Log when component mounts and data changes
+  useEffect(() => {
+    console.log("Component mounted");
+    console.log("Fetching loans with status: approved");
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      console.log("Loans data received:", data);
+      console.log("Number of loans:", loans.length);
+    }
+    if (error) {
+      console.error("Error fetching loans:", error);
+    }
+  }, [data, error, loans.length]);
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -94,7 +143,7 @@ export default function DisbursementManagementPage() {
         <div className="flex items-center gap-2 text-gray-500 text-sm">
           Admin <ChevronRight size={14} /> Disbursement
         </div>
-        <h1 className="text-2xl font-bold">Disbursement</h1>
+        <h1 className="text-2xl font-bold">Disbursement Management</h1>
         <p className="text-gray-500 mt-1">
           Disburse approved loans to customers
         </p>
@@ -104,11 +153,18 @@ export default function DisbursementManagementPage() {
       <div className="mb-4">
         <SearchField
           value={searchQuery}
-          placeholder="Search by customer or loan..."
+          placeholder="Search by customer name or loan number..."
           onChange={(e) => setSearchQuery(e.target.value)}
           onClear={() => setSearchQuery("")}
         />
       </div>
+
+      {/* Error Display */}
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          <strong>Error loading loans:</strong> {error.message || "Please try again later"}
+        </div>
+      )}
 
       {/* Table */}
       <DisbursementManagementTable
@@ -126,6 +182,7 @@ export default function DisbursementManagementPage() {
         }}
         loanData={selectedLoan}
         onSubmit={handleDisbursementSubmit}
+        isSubmitting={isPending}
       />
     </div>
   );
