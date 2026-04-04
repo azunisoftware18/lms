@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import EMIManagementTableView from "../../../components/tables/EMIManagementTable";
 import { useSearchParams } from "react-router-dom";
+import PayEmiModal from "../../../components/modals/PayEmiModal";
 
 export default function ViewEMIs() {
   const [searchParams] = useSearchParams();
   const loanIdParam = searchParams.get("loanId") || searchParams.get("loanNumber") || null;
+
+  const [payOpen, setPayOpen] = useState(false);
+  const [selectedEmiId, setSelectedEmiId] = useState(null);
 
   const handleView = (row) => {
     // Minimal details view; table also provides actions
@@ -12,8 +16,14 @@ export default function ViewEMIs() {
   };
 
   const handlePayEMI = (row) => {
-    // Placeholder behaviour - table's actions will call this when needed
-    alert(`Initiate payment for ${row.emiNumber || row.id}`);
+    // Open Pay EMI modal for the clicked row
+    setSelectedEmiId(row.id || row.emiId || row.emi_id);
+    setPayOpen(true);
+  };
+
+  const closePayModal = () => {
+    setPayOpen(false);
+    setSelectedEmiId(null);
   };
 
   return (
@@ -32,6 +42,7 @@ export default function ViewEMIs() {
           onView={handleView}
           onPayEMI={handlePayEMI}
         />
+        <PayEmiModal emiId={selectedEmiId} open={payOpen} onClose={closePayModal} />
       </div>
     </div>
   );
