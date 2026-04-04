@@ -13,6 +13,7 @@ import { normalizeParams } from "../../../lib/utils/paramHelper";
 
 // Hooks
 import { useDisbursement } from "../../../hooks/useDisbursement";
+import { useLoanApplication } from "../../../hooks/useLoanApplication"; //Added import
 
 // 🔹 Loan list hook
 const useLoanApplicationsList = (params = {}) => {
@@ -39,6 +40,13 @@ export default function DisbursementManagementPage() {
     limit: 100,
   });
 
+  // Fetch specific loan application details when a loan is selected
+  const { 
+    data: loanApplicationDetails, 
+    isLoading: isLoadingLoanDetails,
+    error: loanDetailsError
+  } = useLoanApplication(selectedLoan?.id);
+
   // Disbursement mutation hook
   const { mutate: disburseLoan, isPending } = useDisbursement({
     onSuccess: () => {
@@ -59,15 +67,19 @@ export default function DisbursementManagementPage() {
     if (!Array.isArray(list)) return [];
 
     return list.map((loan) => ({
-      id: loan.loanNumber,
+      id: loan.id || loan._id || loan.loanId, // Ensure we capture the ID properly
       loanNumber: loan.loanNumber,
       customer:
         loan.customer?.name ||
         `${loan.customer?.firstName || ""} ${loan.customer?.lastName || ""}`.trim(),
       amount: loan.approvedAmount || loan.requestedAmount,
       bank: loan.customer?.bankName || "N/A",
-      status: loan.status || "approved", // ✅ Add status from API response
-      originalStatus: loan.status // Keep original for reference
+      status: loan.status || "approved",
+      originalStatus: loan.status,
+      // Include additional fields that might be needed for disbursement
+      customerId: loan.customer?.id || loan.customerId,
+      approvedAmount: loan.approvedAmount,
+      requestedAmount: loan.requestedAmount,
     }));
   }, [data]);
 
@@ -89,7 +101,7 @@ export default function DisbursementManagementPage() {
     setShowModal(true);
   };
 
-  // FIXED: Handle disbursement form submission
+  // Handle disbursement form submission
   const handleDisbursementSubmit = async (payload) => {
     // Validate selected loan has loanNumber
     if (!selectedLoan?.loanNumber) {
@@ -97,16 +109,40 @@ export default function DisbursementManagementPage() {
       return Promise.reject(new Error("Loan number is missing"));
     }
 
+    // Optionally validate using full loan application details
+    if (loanApplicationDetails) {
+      // Check if loan is still in approved status
+      if (loanApplicationDetails.status !== 'approved') {
+        const error = new Error(`Loan status is ${loanApplicationDetails.status}. Only approved loans can be disbursed.`);
+        console.error(error);
+        return Promise.reject(error);
+      }
+
+      // Check if amount matches
+      if (loanApplicationDetails.approvedAmount !== payload.amount) {
+        console.warn("Disbursement amount differs from approved amount:", {
+          approved: loanApplicationDetails.approvedAmount,
+          disbursing: payload.amount
+        });
+      }
+    }
+
     console.log("Submitting disbursement with:", {
       loanNumber: selectedLoan.loanNumber,
       payload,
+      fullDetails: loanApplicationDetails
     });
 
     return new Promise((resolve, reject) => {
       disburseLoan(
         {
-          loanNumber: selectedLoan.loanNumber, // Using loanNumber
-          payload,
+          loanNumber: selectedLoan.loanNumber,
+          payload: {
+            ...payload,
+            // Include additional data from full loan application if available
+            customerId: loanApplicationDetails?.customerId || selectedLoan.customerId,
+            approvedAmount: loanApplicationDetails?.approvedAmount || selectedLoan.approvedAmount,
+          },
         },
         {
           onSuccess: (data) => {
@@ -138,6 +174,16 @@ export default function DisbursementManagementPage() {
     }
   }, [data, error, loans.length]);
 
+  // Log when loan details are fetched
+  useEffect(() => {
+    if (loanApplicationDetails) {
+      console.log("Full loan application details fetched:", loanApplicationDetails);
+    }
+    if (loanDetailsError) {
+      console.error("Error fetching loan details:", loanDetailsError);
+    }
+  }, [loanApplicationDetails, loanDetailsError]);
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       {/* Header */}
@@ -168,6 +214,13 @@ export default function DisbursementManagementPage() {
         </div>
       )}
 
+      {/* Show loading indicator when fetching loan details */}
+      {isLoadingLoanDetails && selectedLoan && (
+        <div className="mb-4 p-3 bg-blue-100 border border-blue-400 text-blue-700 rounded">
+          Loading loan application details...
+        </div>
+      )}
+
       {/* Table */}
       <DisbursementManagementTable
         data={filteredLoans}
@@ -182,9 +235,12 @@ export default function DisbursementManagementPage() {
           setShowModal(false);
           setSelectedLoan(null);
         }}
-        loanData={selectedLoan}
+        loanData={{
+          ...selectedLoan,
+          fullDetails: loanApplicationDetails // Pass full details to modal if needed
+        }}
         onSubmit={handleDisbursementSubmit}
-        isSubmitting={isPending}
+        isSubmitting={isPending || isLoadingLoanDetails} // Disable submit while loading details
       />
     </div>
   );
