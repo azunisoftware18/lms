@@ -56,20 +56,32 @@ export default function LoanAccountCreation() {
     };
   });
 
-  // Table receives all loans; table filter controls which statuses are shown
-  const filteredLoans = loans;
+  // Only show these statuses on this page
+  const allowedStatusKeys = [
+    "active",
+    "closed",
+    "delinquent",
+    "written_off",
+    "defaulted",
+  ];
 
-  // Prefer server-reported total (pagination meta) when available
+  const filteredLoans = loans.filter((l) =>
+    allowedStatusKeys.includes(l.statusKey)
+  );
+
+  // Prefer server-reported total (pagination meta) when available — fallback to displayed count
   const totalAccounts = Number(
-    loanApiData?.meta?.total ?? loanApiData?.data?.meta?.total ?? loans.length
+    loanApiData?.meta?.total ?? loanApiData?.data?.meta?.total ?? filteredLoans.length
   );
 
   const counts = {
-    active: loans.filter((l) => l.statusKey === "active").length,
-    delinquent: loans.filter((l) => l.statusKey === "delinquent").length,
-    closed: loans.filter((l) => l.statusKey === "closed").length,
-    writtenOff: loans.filter((l) => l.statusKey === "written_off" || l.statusKey === "written off").length,
-    defaulted: loans.filter((l) => l.statusKey === "defaulted").length,
+    active: filteredLoans.filter((l) => l.statusKey === "active").length,
+    delinquent: filteredLoans.filter((l) => l.statusKey === "delinquent").length,
+    closed: filteredLoans.filter((l) => l.statusKey === "closed").length,
+    writtenOff: filteredLoans.filter((l) =>
+      l.statusKey === "written_off" || l.statusKey === "written off"
+    ).length,
+    defaulted: filteredLoans.filter((l) => l.statusKey === "defaulted").length,
   };
 
   const handleViewLoan = (loan) => {

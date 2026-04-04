@@ -9,6 +9,27 @@ export default function GenerateEmiModal({
 }) {
   const [startDate, setStartDate] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [generated, setGenerated] = useState(null);
+
+  const formatCurrency = (amount) =>
+    new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 0,
+    }).format(amount || 0);
+
+  const formatDate = (d) => {
+    if (!d) return "N/A";
+    try {
+      return new Date(d).toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
+    } catch {
+      return String(d);
+    }
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -48,12 +69,15 @@ export default function GenerateEmiModal({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!loan?.id) return;
+    if (!loan) return;
     try {
       setSubmitting(true);
       // onGenerate is expected to call the mutation; backend currently accepts only loanId
-      await onGenerate(loan.id);
-      onClose();
+      // prefer loanNumber when available (backend accepts either)
+      const key = loan.loanNumber || loan.id;
+      const resp = await onGenerate(key);
+      // mutation resolves with API response; parent returns that
+      setGenerated(resp?.data ?? resp);
     } catch  {
       // noop - parent handles errors via toast
       
@@ -85,38 +109,55 @@ export default function GenerateEmiModal({
             </button>
           </div>
           <form onSubmit={handleSubmit} className="p-6 space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm text-gray-600">Customer</label>
-                <div className="mt-1 font-medium text-gray-900">
-                  {loan?.customer?.firstName || loan?.applicantName || "N/A"}
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm text-gray-600">
-                  Loan Number
-                </label>
-                <div className="mt-1 font-medium text-gray-900">
-                  {loan?.loanNumber ||
-                    loan?.loanApplication?.loanNumber ||
-                    "N/A"}
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm text-gray-600">Principal</label>
-                <div className="mt-1 font-semibold">
-                  {new Intl.NumberFormat("en-IN", {
-                    style: "currency",
-                    currency: "INR",
-                    minimumFractionDigits: 0,
-                  }).format(principal)}
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm text-gray-600">Tenure</label>
-                <div className="mt-1">{tenure} months</div>
-              </div>
-            </div>
+            {/* Loan details grid - supports both loan and loan.loanApplication shapes */}
+            {loan && (
+              (() => {
+                const L = loan.loanApplication || loan;
+                return (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm text-gray-600">Customer</label>
+                      <div className="mt-1 font-medium text-gray-900">
+                        {L.customer?.firstName || L.applicantName || L.customer?.name || "N/A"}
+                      </div>
+                      <div className="text-xs text-gray-500">{L.customer?.email}</div>
+                      <div className="text-xs text-gray-500">{L.customer?.contactNumber}</div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm text-gray-600">Loan Number</label>
+                      <div className="mt-1 font-medium text-gray-900">{L.loanNumber || "N/A"}</div>
+                      <div className="text-xs text-gray-500">{L.loanTypeName || L.loanType?.name || ""}</div>
+                      <div className="text-xs text-gray-500">{L.branchName || L.branchId || ""}</div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm text-gray-600">Principal</label>
+                      <div className="mt-1 font-semibold">{formatCurrency(L.approvedAmount ?? L.requestedAmount)}</div>
+                      <div className="text-xs text-gray-500">Requested: {formatCurrency(L.requestedAmount)}</div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm text-gray-600">Tenure</label>
+                      <div className="mt-1">{L.tenureMonths ?? L.tenure ?? 0} months</div>
+                      <div className="text-xs text-gray-500">Interest: {L.interestRate ?? 0}% ({(L.interestType || L.loanType?.interestType || "REDUCING").toString()})</div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm text-gray-600">Status</label>
+                      <div className="mt-1 font-medium text-gray-900">{(L.status || L.applicationStatus || "N/A").toString()}</div>
+                      <div className="text-xs text-gray-500">Purpose: {L.loanPurpose || L.purpose || "-"}</div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm text-gray-600">Created</label>
+                      <div className="mt-1">{formatDate(L.createdAt)}</div>
+                      <div className="text-xs text-gray-500">KYC: {L.kycStatus || "-"} • Docs: {L.documentCount ?? 0}</div>
+                    </div>
+                  </div>
+                );
+              })()
+            )}
 
             <div>
               <label className="block text-sm text-gray-600">
@@ -152,15 +193,79 @@ export default function GenerateEmiModal({
               >
                 Cancel
               </button>
-              <button
-                type="submit"
-                disabled={submitting}
-                className="px-4 py-2 rounded-md bg-blue-600 text-white"
-              >
-                {submitting ? "Generating..." : "Generate EMI"}
-              </button>
+              {!generated ? (
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="px-4 py-2 rounded-md bg-blue-600 text-white"
+                >
+                  {submitting ? "Generating..." : "Generate EMI"}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setGenerated(null);
+                    onClose();
+                  }}
+                  className="px-4 py-2 rounded-md bg-blue-600 text-white"
+                >
+                  Close
+                </button>
+              )}
             </div>
           </form>
+          {generated && (
+            <div className="p-6 border-t">
+              <h4 className="text-md font-semibold mb-3">Generated EMI Schedule</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                <div>
+                  <div className="text-xs text-gray-500">Loan</div>
+                  <div className="font-medium">{generated.loan?.loanNumber}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500">Principal</div>
+                  <div className="font-medium">{new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", minimumFractionDigits: 0 }).format(generated.loan?.approvedAmount || 0)}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500">EMIs</div>
+                  <div className="font-medium">{generated.summary?.emiCount || 0}</div>
+                </div>
+              </div>
+
+              <div className="overflow-auto max-h-48">
+                <table className="w-full text-sm table-auto">
+                  <thead>
+                    <tr className="text-left text-xs text-gray-500">
+                      <th className="py-1">#</th>
+                      <th className="py-1">Due Date</th>
+                      <th className="py-1">Principal</th>
+                      <th className="py-1">Interest</th>
+                      <th className="py-1">EMI</th>
+                      <th className="py-1">Balance</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Array.isArray(generated.emis) && generated.emis.map((e) => (
+                      <tr key={e.id} className="border-t">
+                        <td className="py-2">{e.emiNo}</td>
+                        <td className="py-2">{new Date(e.dueDate).toLocaleDateString("en-IN")}</td>
+                        <td className="py-2">{new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", minimumFractionDigits: 0 }).format(e.principalAmount || 0)}</td>
+                        <td className="py-2">{new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", minimumFractionDigits: 0 }).format(e.interestAmount || 0)}</td>
+                        <td className="py-2">{new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", minimumFractionDigits: 0 }).format(e.emiAmount || 0)}</td>
+                        <td className="py-2">{new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", minimumFractionDigits: 0 }).format(e.closingBalance || 0)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="mt-3 text-right text-sm text-gray-600">
+                <div>Total Principal: {new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", minimumFractionDigits: 0 }).format(generated.summary?.totalPrincipal || 0)}</div>
+                <div>Total Interest: {new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", minimumFractionDigits: 0 }).format(generated.summary?.totalInterest || 0)}</div>
+                <div className="font-semibold">Total EMI Amount: {new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", minimumFractionDigits: 0 }).format(generated.summary?.totalEmiAmount || 0)}</div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
