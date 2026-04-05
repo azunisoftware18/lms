@@ -5,6 +5,7 @@ import {
   getDefaultLoanByIdService,
 } from "./loanDefault.service.js";
 import { AppError } from "../../common/utils/apiError.js";
+import { loanDefaultQuerySchema } from "./loandefault.schema.js";
 
 export const markLoanDefaultController = async (
   req: Request,
@@ -17,9 +18,13 @@ export const markLoanDefaultController = async (
     const loanId = typeof req.params.loanId === "string" ? req.params.loanId : req.params.loanId[0];
     const result = await checkAndMarkLoanDefault(loanId);
 
+    const message = result.skipped
+      ? "Loan already defaulted; no status update performed"
+      : "Loan default status checked and updated successfully";
+
     return res.status(200).json({
       success: true,
-      message: "Loan default status checked and updated successfully",
+      message,
       data: result,
     });
   } catch (error) {
@@ -35,11 +40,18 @@ export const getAllDefaultedLoansController = async (
   try {
     if (!req.user) throw AppError.unauthorized("Unauthorized");
 
+    const parsedQuery = loanDefaultQuerySchema.safeParse(req.query);
+    if (!parsedQuery.success) {
+      throw AppError.badRequest("Invalid query parameters");
+    }
+
+    const { page, limit, branchId } = parsedQuery.data;
+
     const result = await getAllDefaultedLoansService(
       {
-        page: Number(req.query.page) || undefined,
-        limit: Number(req.query.limit) || undefined,
-        branchId: typeof req.query.branchId === "string" ? req.query.branchId : undefined,
+        page,
+        limit,
+        branchId,
       },
       { id: req.user.id, role: req.user.role, branchId: req.user.branchId },
     );

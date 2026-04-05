@@ -18,7 +18,7 @@ export default function ViewEMIs() {
   const handlePayEMI = (row) => {
     // Open Pay EMI modal for the clicked row
     setSelectedEmiId(row.id || row.emiId || row.emi_id);
-    setPayOpen(true);
+    setPayOpen(true);n
   };
 
   const closePayModal = () => {

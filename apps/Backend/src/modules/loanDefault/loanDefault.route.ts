@@ -7,7 +7,7 @@ import {
 import { authMiddleware } from "../../common/middlewares/auth.middleware.js";
 import { checkPermissionMiddleware } from "../../common/middlewares/permission.middleware.js";
 import { validate } from "../../common/middlewares/zod.middleware.js";
-import { loanDefaultParamSchema, loanDefaultQuerySchema } from "./loandefault.schema.js";
+import { loanDefaultParamSchema } from "./loandefault.schema.js";
 
 const loanDefaultRouter = Router();
 

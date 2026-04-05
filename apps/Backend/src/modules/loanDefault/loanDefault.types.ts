@@ -9,3 +9,12 @@ export interface LoanDefaultQueryParams {
   limit?: number;
   branchId?: string;
 }
+
+export interface LoanDefaultCheckResult {
+  status?: "active" | "delinquent" | "defaulted";
+  dpd?: number | null;
+  outstandingAmount?: number;
+  isDefaulted?: boolean;
+  skipped?: boolean;
+  reason?: "already_defaulted";
+}
