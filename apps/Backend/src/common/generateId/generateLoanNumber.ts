@@ -1,30 +1,21 @@
 import { Prisma } from "../../../generated/prisma-client/client.js";
-;
 export const generateLoanNumber = async (tx: Prisma.TransactionClient) => {
   const year = new Date().getFullYear();
-
-  let counter = await tx.loanNumberCounter.findUnique({
-    where: { year },
+  // Use upsert to atomically create-or-increment the yearly counter.
+  // Compute a safe initial sequence based on the last existing loan for the year.
+  const lastLoan = await tx.loanApplication.findFirst({
+    where: { loanNumber: { startsWith: `LN-${year}-` } },
+    orderBy: { loanNumber: "desc" },
+    select: { loanNumber: true },
   });
 
-  if (!counter) {
-    const lastLoan = await tx.loanApplication.findFirst({
-      where: { loanNumber: { startsWith: `LN-${year}-` } },
-      orderBy: { loanNumber: "desc" },
-      select: { loanNumber: true },
-    });
+  const lastSeq = lastLoan ? Number(lastLoan.loanNumber.split("-").pop()) : 0;
 
-    const lastSeq = lastLoan ? Number(lastLoan.loanNumber.split("-").pop()) : 0;
-
-    counter = await tx.loanNumberCounter.create({
-      data: { year, sequence: lastSeq },
-    });
-  }
-
-  const updated = await tx.loanNumberCounter.update({
+  const upserted = await tx.loanNumberCounter.upsert({
     where: { year },
-    data: { sequence: { increment: 1 } },
+    update: { sequence: { increment: 1 } },
+    create: { year, sequence: lastSeq + 1 },
   });
 
-  return `LN-${year}-${String(updated.sequence).padStart(6, "0")}`;
+  return `LN-${year}-${String(upserted.sequence).padStart(6, "0")}`;
 };

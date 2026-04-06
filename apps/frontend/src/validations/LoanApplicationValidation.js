@@ -1,5 +1,33 @@
 import { z } from "zod";
 
+const emptyToUndefined = (arg) =>
+  typeof arg === "string" && arg.trim() === "" ? undefined : arg;
+
+const optionalString = z.preprocess(emptyToUndefined, z.string().optional());
+const optionalNonEmptyString = z.preprocess(
+  emptyToUndefined,
+  z.string().min(1).optional(),
+);
+const optionalEmail = z.preprocess(
+  emptyToUndefined,
+  z.string().email().optional(),
+);
+const optionalNumber = z.preprocess((arg) => {
+  if (arg === null || arg === undefined || arg === "") return undefined;
+  if (typeof arg === "number") return Number.isFinite(arg) ? arg : undefined;
+  const parsed = Number(arg);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}, z.number().optional());
+const optionalDate = z.preprocess((arg) => {
+  if (arg === null || arg === undefined || arg === "") return undefined;
+  if (arg instanceof Date) return isNaN(arg.getTime()) ? undefined : arg;
+  if (typeof arg === "string" || typeof arg === "number") {
+    const d = new Date(arg);
+    return isNaN(d.getTime()) ? undefined : d;
+  }
+  return undefined;
+}, z.date().optional());
+
 /* ─── ENUMS ─────────────────────────────────────────────────────── */
 
 export const titleEnum = z.enum(["MR", "MRS", "MS", "DR", "PROF"]);
@@ -33,15 +61,15 @@ export const employmentTypeEnum = z.enum([
 /* ─── ADDRESS ───────────────────────────────────────────────────── */
 
 export const addressSchema = z.object({
-  addressType: z.string().optional(),
-  addressLine1: z.string().optional(),
-  addressLine2: z.string().optional(),
-  city: z.string().optional(),
-  district: z.string().optional(),
-  state: z.string().optional(),
-  pinCode: z.string().optional(),
-  landmark: z.string().optional(),
-  phoneNumber: z.string().optional(),
+  addressType: optionalString,
+  addressLine1: optionalString,
+  addressLine2: optionalString,
+  city: optionalString,
+  district: optionalString,
+  state: optionalString,
+  pinCode: optionalString,
+  landmark: optionalString,
+  phoneNumber: optionalString,
 });
 
 /* ─── OCCUPATIONAL DETAILS ──────────────────────────────────────── */
@@ -55,18 +83,18 @@ export const occupationalCategoryEnum = z.enum([
 
 export const occupationalDetailsSchema = z.object({
   occupationalCategory: occupationalCategoryEnum.optional(),
-  occupationalCategoryOther: z.string().optional(),
-  companyBusinessName: z.string().optional(),
+  occupationalCategoryOther: optionalString,
+  companyBusinessName: optionalString,
   address: addressSchema.optional(),
-  phoneNumber: z.string().optional(),
-  extensionNumber: z.string().optional(),
-  totalWorkExperience: z.coerce.number().optional(),
-  noOfEmployees: z.coerce.number().optional(),
+  phoneNumber: optionalString,
+  extensionNumber: optionalString,
+  totalWorkExperience: optionalNumber,
+  noOfEmployees: optionalNumber,
   // commencementDate: z.coerce.date().optional(),
-  professionalType: z.string().optional(),
-  professionalSpecify: z.string().optional(),
-  businessType: z.string().optional(),
-  businessSpecify: z.string().optional(),
+  professionalType: optionalString,
+  professionalSpecify: optionalString,
+  businessType: optionalString,
+  businessSpecify: optionalString,
 });
 
 /* ─── EMPLOYMENT DETAILS ────────────────────────────────────────── */
@@ -84,48 +112,34 @@ export const employerTypeEnum = z.enum([
 
 export const employmentDetailsSchema = z.object({
   employerType: employerTypeEnum.optional(),
-  employerTypeOther: z.string().optional(),
-  designation: z.string().optional(),
-  department: z.string().optional(),
-  dateOfJoining: z.preprocess((arg) => {
-    if (arg === null || arg === undefined || arg === "") return undefined;
-    if (typeof arg === "string" || arg instanceof Date) {
-      const d = new Date(arg);
-      return isNaN(d.getTime()) ? undefined : d;
-    }
-    return undefined;
-  }, z.date().optional().nullable()),
-  dateOfRetirement: z.preprocess((arg) => {
-    if (arg === null || arg === undefined || arg === "") return undefined;
-    if (typeof arg === "string" || arg instanceof Date) {
-      const d = new Date(arg);
-      return isNaN(d.getTime()) ? undefined : d;
-    }
-    return undefined;
-  }, z.date().optional().nullable()),
+  employerTypeOther: optionalString,
+  designation: optionalString,
+  department: optionalString,
+  dateOfJoining: optionalDate,
+  dateOfRetirement: optionalDate,
 });
 
 /* ─── FINANCIAL DETAILS ─────────────────────────────────────────── */
 
 export const financialDetailsSchema = z.object({
-  grossMonthlyIncome: z.coerce.number().optional(),
-  netMonthlyIncome: z.coerce.number().optional(),
-  averageMonthlyExpenses: z.coerce.number().optional(),
-  savingBankBalance: z.coerce.number().optional(),
-  valueOfImmovableProperty: z.coerce.number().optional(),
-  currentBalanceInPF: z.coerce.number().optional(),
-  valueOfSharesSecurities: z.coerce.number().optional(),
-  fixedDeposits: z.coerce.number().optional(),
-  otherAssets: z.coerce.number().optional(),
-  totalAssets: z.coerce.number().optional(),
-  creditSocietyLoan: z.coerce.number().optional(),
-  employerLoan: z.coerce.number().optional(),
-  homeLoan: z.coerce.number().optional(),
-  pfLoan: z.coerce.number().optional(),
-  vehicleLoan: z.coerce.number().optional(),
-  personalLoan: z.coerce.number().optional(),
-  otherLoan: z.coerce.number().optional(),
-  totalLiabilities: z.coerce.number().optional(),
+  grossMonthlyIncome: optionalNumber,
+  netMonthlyIncome: optionalNumber,
+  averageMonthlyExpenses: optionalNumber,
+  savingBankBalance: optionalNumber,
+  valueOfImmovableProperty: optionalNumber,
+  currentBalanceInPF: optionalNumber,
+  valueOfSharesSecurities: optionalNumber,
+  fixedDeposits: optionalNumber,
+  otherAssets: optionalNumber,
+  totalAssets: optionalNumber,
+  creditSocietyLoan: optionalNumber,
+  employerLoan: optionalNumber,
+  homeLoan: optionalNumber,
+  pfLoan: optionalNumber,
+  vehicleLoan: optionalNumber,
+  personalLoan: optionalNumber,
+  otherLoan: optionalNumber,
+  totalLiabilities: optionalNumber,
 });
 
 /* ─── APPLICANT ─────────────────────────────────────────────────── */
@@ -134,34 +148,34 @@ export const applicantSchema = z
   .object({
     title: titleEnum,
     firstName: z.string().min(1, "First name is required"),
-    middleName: z.string().optional(),
+    middleName: optionalString,
     lastName: z.string().min(1, "Last name is required"),
     fatherName: z.string().min(1, "Father name required"),
     motherName: z.string().min(1, "Mother name required"),
-    woname: z.string().optional(),
+    woname: optionalString,
     dob: z.coerce.date(),
     gender: genderEnum,
     maritalStatus: maritalStatusEnum,
     nationality: z.string().min(1, "Nationality required"),
     category: categoryEnum,
-    aadhaarNumber: z.string().min(12, "Valid Aadhaar required").optional(),
-    panNumber: z.string().min(10, "Valid PAN required").optional(),
-    voterId: z.string().optional(),
-    drivingLicenceNo: z.string().optional(),
-    passportNumber: z.string().optional(),
-    contactNumber: z.string().min(10, "Contact number required").optional(),
-    alternateNumber: z.string().optional(),
-    phoneNumber: z.string().optional(),
-    email: z.string().email().optional(),
-    qualification: z.string().optional(),
-    employmentType: employmentTypeEnum.optional(),
-    relationshipWithCoApplicant: z.string().optional(),
-    noOfFamilyDependents: z.coerce.number().optional(),
-    noOfChildren: z.coerce.number().optional(),
-    correspondenceAddressType: z.string().optional(),
-    presentAccommodation: z.string().optional(),
-    periodOfStay: z.string().optional(),
-    rentPerMonth: z.coerce.number().optional(),
+    voterId: optionalString,
+    drivingLicenceNo: optionalString,
+    passportNumber: optionalString,
+    aadhaarNumber: z.string().min(12, "Valid Aadhaar required"),
+    panNumber: z.string().min(10, "Valid PAN required"),
+    contactNumber: z.string().min(10, "Contact number required"),
+    alternateNumber: optionalString,
+    phoneNumber: optionalString,
+    email: optionalEmail,
+    qualification: optionalString,
+    employmentType: employmentTypeEnum,
+    relationshipWithCoApplicant: optionalString,
+    noOfFamilyDependents: optionalNumber,
+    noOfChildren: optionalNumber,
+    correspondenceAddressType: optionalString,
+    presentAccommodation: optionalString,
+    periodOfStay: optionalString,
+    rentPerMonth: optionalNumber,
   })
   .passthrough();
 
@@ -180,33 +194,33 @@ export const relationEnum = z.enum([
 export const coApplicantSchema = z
   .object({
     firstName: z.string().min(1),
-    middleName: z.string().min(1).optional(),
-    lastName: z.string().min(1).optional(),
-    fatherName: z.string().min(1).optional(),
-    motherName: z.string().min(1).optional(),
-    woname: z.string().min(1).optional(),
-    relation: relationEnum.optional(),
+    middleName: optionalNonEmptyString,
+    lastName: optionalNonEmptyString,
+    fatherName: z.string().min(1, "Father name required"),
+    motherName: z.string().min(1, "Mother name required"),
+    woname: optionalNonEmptyString,
+    relation: relationEnum,
     contactNumber: z.string().min(10),
-    phoneNumber: z.string().min(1).optional(),
-    email: z.string().email().optional(),
-    dob: z.coerce.date().optional(),
+    phoneNumber: optionalNonEmptyString,
+    email: optionalEmail,
+    dob: z.coerce.date(),
     gender: genderEnum.optional(),
     category: categoryEnum.optional(),
     maritalStatus: maritalStatusEnum.optional(),
-    noOfDependents: z.coerce.number().optional(),
-    noOfChildren: z.coerce.number().optional(),
-    qualification: z.string().min(1).optional(),
-    correspondenceAddressType: z.string().min(1).optional(),
-    panNumber: z.string().min(1).optional(),
-    aadhaarNumber: z.string().min(1).optional(),
-    voterId: z.string().min(1).optional(),
-    drivingLicenceNo: z.string().optional(),
-    passportNumber: z.string().min(1).optional(),
-    presentAccommodation: z.string().min(1).optional(),
-    periodOfStay: z.string().min(1).optional(),
-    rentPerMonth: z.coerce.number().optional(),
-    employmentType: employmentTypeEnum.optional(),
-    monthlyIncome: z.coerce.number().optional(),
+    noOfDependents: optionalNumber,
+    noOfChildren: optionalNumber,
+    qualification: optionalNonEmptyString,
+    correspondenceAddressType: optionalNonEmptyString,
+    panNumber: z.string().min(10, "Valid PAN required"),
+    aadhaarNumber: z.string().min(12, "Valid Aadhaar required"),
+    voterId: optionalNonEmptyString,
+    drivingLicenceNo: optionalString,
+    passportNumber: optionalString,
+    presentAccommodation: optionalNonEmptyString,
+    periodOfStay: optionalNonEmptyString,
+    rentPerMonth: optionalNumber,
+    employmentType: employmentTypeEnum,
+    monthlyIncome: optionalNumber,
     addresses: z.array(addressSchema).optional(),
     occupationalDetails: occupationalDetailsSchema.optional(),
     employmentDetails: employmentDetailsSchema.optional(),
@@ -229,34 +243,34 @@ export const relationshipWithApplicantEnum = z.enum([
 export const guarantorSchema = z
   .object({
     firstName: z.string().min(1),
-    middleName: z.string().min(1).optional(),
-    lastName: z.string().min(1).optional(),
-    fatherName: z.string().min(1).optional(),
-    motherName: z.string().min(1).optional(),
-    woname: z.string().min(1).optional(),
-    dob: z.coerce.date().optional(),
+    middleName: optionalNonEmptyString,
+    lastName: z.string().min(1),
+    fatherName: z.string().min(1, "Father name required"),
+    motherName: z.string().min(1, "Mother name required"),
+    woname: optionalNonEmptyString,
+    dob: z.coerce.date(),
     gender: genderEnum.optional(),
     contactNumber: z.string().min(10),
-    phoneNumber: z.string().min(1).optional(),
-    email: z.string().email().optional(),
-    panNumber: z.string().min(1).optional(),
-    aadhaarNumber: z.string().min(1).optional(),
-    voterId: z.string().min(1).optional(),
-    drivingLicence: z.string().min(1).optional(),
-    drivingLicenceNo: z.string().optional(),
-    passportNumber: z.string().min(1).optional(),
+    phoneNumber: optionalNonEmptyString,
+    email: optionalEmail,
+    panNumber: z.string().min(10, "Valid PAN required"),
+    aadhaarNumber: z.string().min(12, "Valid Aadhaar required"),
+    voterId: optionalNonEmptyString,
+    drivingLicence: optionalNonEmptyString,
+    drivingLicenceNo: optionalString,
+    passportNumber: optionalString,
     category: categoryEnum.optional(),
     maritalStatus: maritalStatusEnum.optional(),
-    noOfDependents: z.coerce.number().optional(),
-    noOfChildren: z.coerce.number().optional(),
-    qualification: z.string().min(1).optional(),
-    correspondenceAddressType: z.string().min(1).optional(),
-    relationshipWithApplicant: relationshipWithApplicantEnum.optional(),
-    accommodationType: z.string().min(1).optional(),
-    presentAccommodation: z.string().min(1).optional(),
-    periodOfStay: z.string().min(1).optional(),
-    rentPerMonth: z.coerce.number().optional(),
-    employmentType: employmentTypeEnum.optional(),
+    noOfDependents: optionalNumber,
+    noOfChildren: optionalNumber,
+    qualification: optionalString,
+    correspondenceAddressType: optionalNonEmptyString,
+    relationshipWithApplicant: relationshipWithApplicantEnum,
+    accommodationType: optionalNonEmptyString,
+    presentAccommodation: optionalNonEmptyString,
+    periodOfStay: optionalNonEmptyString,
+    rentPerMonth: optionalNumber,
+    employmentType: employmentTypeEnum,
     addresses: z.array(addressSchema).optional(),
     occupationalDetails: occupationalDetailsSchema.optional(),
     employmentDetails: employmentDetailsSchema.optional(),
@@ -269,7 +283,7 @@ export const guarantorSchema = z
 export const loanPurposeEnum = z.enum([
   "HOME",
   "HOME_IMPROVEMENT",
-  "PLOT_PURCHASE",
+  "LAND_PURCHASE",
   "NRPL",
   "POST_DATED_CHEQUE",
   "STANDING_INSTRUCTION",
@@ -291,8 +305,9 @@ export const loanRequirementSchema = z.object({
 /* ─── PROPERTY SCHEMA ──────────────────────────────────────────── */
 
 export const propertySchema = z.object({
+  propertySelected: z.boolean(),
   ownershipType: z.string().min(1),
-  landType: z.string().min(1).optional(),
+  landType: optionalNonEmptyString,
   purchaseFrom: z.string().min(1),
   constructionStage: z.string().min(1),
   // Add other property fields as needed
@@ -301,17 +316,56 @@ export const propertySchema = z.object({
 /* ─── CREDIT CARD SCHEMA ────────────────────────────────────────── */
 
 export const creditCardSchema = z.object({
-  holderName: z.string().optional(),
-  cardNo: z.string().optional(),
-  cardHolderSince: z.coerce.date().optional(),
-  issuingBank: z.string().optional(),
-  creditLimit: z.coerce.number().optional(),
-  outstandingAmount: z.coerce.number().optional(),
+  holderName: z.string().min(1),
+  lastFourDigits: z
+    .string()
+    .regex(/^\d{4}$/)
+    .optional(),
+  cardNumber: z
+    .string()
+    .regex(/^\d{13,19}$/, "Invalid credit card number")
+    .optional(),
+  holderSince: optionalDate,
+  issuingBank: optionalString,
+  creditLimit: optionalNumber,
+  outstandingAmount: optionalNumber,
+});
+
+export const existingLoanSchema = z.object({
+  institutionName: z.string().min(1),
+  purpose: optionalString,
+  disbursedAmount: optionalNumber,
+  emi: optionalNumber,
+  balanceTerm: optionalNumber,
+  balanceOutstanding: optionalNumber,
+});
+
+export const bankAccountSchema = z.object({
+  holderName: z.string().min(1),
+  bankName: z.string().min(1),
+  branchName: optionalString,
+  accountType: z.string().min(1),
+  accountNumber: z.string().min(1),
+  openingDate: optionalDate,
+  balanceAmount: optionalNumber,
+});
+
+export const referenceSchema = z.object({
+  name: z.string().min(1),
+  fatherName: optionalString,
+  relation: optionalString,
+  contactNumber: z.string().min(10),
+  phone: optionalString,
+  address: optionalString,
+  city: optionalString,
+  state: optionalString,
+  pinCode: optionalString,
+  occupation: optionalString,
 });
 
 export const createLoanApplicationSchema = z.object({
   loanTypeId: z.string().min(1, "Loan type required"),
-  leadNumber: z.string().min(1).optional(),
+  leadNumber: optionalNonEmptyString,
 
   applicant: applicantSchema,
 
@@ -327,12 +381,12 @@ export const createLoanApplicationSchema = z.object({
   coApplicants: z.array(coApplicantSchema).optional(),
   guarantors: z.array(guarantorSchema).optional(),
 
-  existingLoans: z.array(z.any()).optional(),
+  existingLoans: z.array(existingLoanSchema).optional(),
   creditCards: z.array(creditCardSchema).optional(),
-  bankAccounts: z.array(z.any()).optional(),
+  bankAccounts: z.array(bankAccountSchema).optional(),
   insurancePolicies: z.array(z.any()).optional(),
   properties: z.array(propertySchema).optional(),
-  references: z.array(z.any()).optional(),
+  references: z.array(referenceSchema).optional(),
 
   loanRequirement: loanRequirementSchema,
 
@@ -349,11 +403,11 @@ export const createLoanApplicationSchema = z.object({
       guarantorAnywhere: z.boolean().optional(),
       mppLifeInsurance: z.boolean().optional(),
       howKnowAboutMPPL: z.array(z.string()).optional(),
-      howKnowAboutMPPLOther: z.string().min(1).optional(),
-      preferLoanSanctionedDate: z.coerce.date().optional(),
-      disbursedDate: z.coerce.date().optional(),
+      howKnowAboutMPPLOther: optionalNonEmptyString,
+      preferLoanSanctionedDate: optionalDate,
+      disbursedDate: optionalDate,
       doYouOwn: z.array(z.string()).optional(),
-      communicationLanguage: z.string().min(1).optional(),
+      communicationLanguage: optionalNonEmptyString,
     })
     .optional(),
 });
