@@ -154,9 +154,10 @@ export const useCreateLoanApplication = ({
 
       dispatch(setError(serverMsg));
       dispatch(setLoading(false));
-      showError(serverMsg);
       if (typeof onErrorCallback === "function") {
         onErrorCallback(error, variables, context);
+      } else {
+        showError(serverMsg);
       }
     },
     onSettled: (data, error, variables, context) => {

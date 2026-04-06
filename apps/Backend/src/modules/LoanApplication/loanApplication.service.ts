@@ -549,7 +549,7 @@ export const getAllLoanApplicationsService = async (params: {
         loanType: {
           select: {
             id: true,
-              name: true,
+            name: true,
           },
         },
         branch: {
@@ -576,7 +576,6 @@ export const getAllLoanApplicationsService = async (params: {
     }),
     prisma.loanApplication.count({ where }),
   ]);
- 
 
   const sanitizedData = data.map((loan) => ({
     id: loan.id,
@@ -991,90 +990,101 @@ export const createFullLoanApplicationService = async (
   data: FullLoanApplicationInput,
   userId: string,
 ) => {
-  try {
-    return await prisma.$transaction(async (tx) => {
-      if (!data.loanTypeId) {
-        throw AppError.badRequest("loanTypeId is required");
-      }
+  const MAX_ATTEMPTS = 3;
+  let attempt = 0;
+  while (true) {
+    attempt += 1;
+    try {
+      return await prisma.$transaction(async (tx) => {
+        if (!data.loanTypeId) {
+          throw AppError.badRequest("loanTypeId is required");
+        }
 
-      const branchId = await getUserBranchId(tx, userId);
-      const loanTypeId = await validateLoanTypeId(tx, data.loanTypeId);
-      const loanNumber = await generateLoanNumber(tx);
+        const branchId = await getUserBranchId(tx, userId);
+        const loanTypeId = await validateLoanTypeId(tx, data.loanTypeId);
+        const loanNumber = await generateLoanNumber(tx);
 
-      const customer = await createCustomer(tx, data);
-      await createAddress(tx, customer.id, data.addresses);
-      await ensureNoActiveLoan(tx, customer.id);
+        const customer = await createCustomer(tx, data);
+        await createAddress(tx, customer.id, data.addresses);
+        await ensureNoActiveLoan(tx, customer.id);
 
-      const loan = await createLoan(tx, {
-        loanNumber,
-        data,
-        customerId: customer.id,
-        loanTypeId,
-        branchId,
-        userId,
-      });
-
-      const kyc = await createKYC(tx, userId);
-      await attachKycToLoan(tx, loan.id, kyc.id);
-      await createCoApplicants(
-        tx,
-        loan.id,
-        userId,
-        customer.id,
-        data.coApplicants,
-      );
-
-      await createOccupationalDetailsForEntity(
-        tx,
-        { customerId: customer.id },
-        data.occupationalDetails,
-      );
-      await createEmploymentDetailsForEntity(
-        tx,
-        { customerId: customer.id },
-        data.employmentDetails,
-      );
-      if (data.financialDetails) {
-        await tx.financialDetails.create({
-          data: { customerId: customer.id, ...data.financialDetails },
+        const loan = await createLoan(tx, {
+          loanNumber,
+          data,
+          customerId: customer.id,
+          loanTypeId,
+          branchId,
+          userId,
         });
-      }
 
-      await createGuarantors(tx, loan.id, customer.id, data.guarantors);
+        const kyc = await createKYC(tx, userId);
+        await attachKycToLoan(tx, loan.id, kyc.id);
+        await createCoApplicants(
+          tx,
+          loan.id,
+          userId,
+          customer.id,
+          data.coApplicants,
+        );
 
-      await createFinancialDetails(tx, data, loan.id);
+        await createOccupationalDetailsForEntity(
+          tx,
+          { customerId: customer.id },
+          data.occupationalDetails,
+        );
+        await createEmploymentDetailsForEntity(
+          tx,
+          { customerId: customer.id },
+          data.employmentDetails,
+        );
+        if (data.financialDetails) {
+          await tx.financialDetails.create({
+            data: { customerId: customer.id, ...data.financialDetails },
+          });
+        }
 
-      await logAction({
-        entityType: "LOAN",
-        entityId: loan.id,
-        action: "CREATE_LOAN",
-        performedBy: userId,
-        branchId,
-        oldValue: null,
-        newValue: {
+        await createGuarantors(tx, loan.id, customer.id, data.guarantors);
+
+        await createFinancialDetails(tx, data, loan.id);
+
+        await logAction({
+          entityType: "LOAN",
+          entityId: loan.id,
+          action: "CREATE_LOAN",
+          performedBy: userId,
+          branchId,
+          oldValue: null,
+          newValue: {
+            loanNumber: loan.loanNumber,
+            status: loan.status,
+            loanTypeId: data.loanTypeId,
+            requestedAmount: data.loanRequirement.loanAmount,
+          },
+        });
+
+        return {
+          id: loan.id,
           loanNumber: loan.loanNumber,
           status: loan.status,
-          loanTypeId: data.loanTypeId,
-          requestedAmount: data.loanRequirement.loanAmount,
-        },
+          requestedAmount: loan.requestedAmount,
+          loanTypeId: loan.loanTypeId,
+          branchId: loan.branchId,
+          createdAt: loan.createdAt,
+        };
       });
-
-      return {
-        id: loan.id,
-        loanNumber: loan.loanNumber,
-        status: loan.status,
-        requestedAmount: loan.requestedAmount,
-        loanTypeId: loan.loanTypeId,
-        branchId: loan.branchId,
-        createdAt: loan.createdAt,
-      };
-    });
-  } catch (error) {
-    const err: any = error;
-    if (err?.code === "P2002") {
-      throw AppError.conflict("Loan number already exists");
+    } catch (error) {
+      const err: any = error;
+      // Unique constraint on loan number (P2002) — retry a few times
+      if (err?.code === "P2002" && attempt < MAX_ATTEMPTS) {
+        // small backoff
+        await new Promise((r) => setTimeout(r, 50 * attempt));
+        continue;
+      }
+      if (err?.code === "P2002") {
+        throw AppError.conflict("Loan number already exists");
+      }
+      throw error;
     }
-    throw error;
   }
 };
 
