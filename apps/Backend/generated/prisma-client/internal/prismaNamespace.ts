@@ -427,6 +427,7 @@ export const ModelName = {
   CreditReport: 'CreditReport',
   CreditAccount: 'CreditAccount',
   LoanType: 'LoanType',
+  foreClosure: 'foreClosure',
   TechnicalReport: 'TechnicalReport',
   LegalReport: 'LegalReport',
   LoanAssignment: 'LoanAssignment',
@@ -452,7 +453,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "loanNumberCounter" | "user" | "userProfile" | "admin" | "employee" | "employeeRole" | "partner" | "address" | "partnerCommission" | "branch" | "leads" | "loanApplicationDraft" | "loanApplication" | "coApplicant" | "coApplicantFinancialDetails" | "customer" | "occupationalDetails" | "employmentDetails" | "financialDetails" | "guarantor" | "guarantorFinancialDetails" | "existingLoan" | "creditCard" | "bankAccount" | "insurancePolicy" | "property" | "reference" | "loanRequirement" | "loanQuestionnaire" | "loanRecovery" | "recoveryPayment" | "permission" | "userPermission" | "rolePermission" | "document" | "kyc" | "requiredKycDocument" | "loanEmiSchedule" | "emiPayment" | "emiMoratorium" | "creditReport" | "creditAccount" | "loanType" | "technicalReport" | "legalReport" | "loanAssignment" | "auditLog" | "sLAPolicy" | "sLABreachLog" | "loanDisbursement" | "nachMandate" | "nachDebit" | "sanction"
+    modelProps: "loanNumberCounter" | "user" | "userProfile" | "admin" | "employee" | "employeeRole" | "partner" | "address" | "partnerCommission" | "branch" | "leads" | "loanApplicationDraft" | "loanApplication" | "coApplicant" | "coApplicantFinancialDetails" | "customer" | "occupationalDetails" | "employmentDetails" | "financialDetails" | "guarantor" | "guarantorFinancialDetails" | "existingLoan" | "creditCard" | "bankAccount" | "insurancePolicy" | "property" | "reference" | "loanRequirement" | "loanQuestionnaire" | "loanRecovery" | "recoveryPayment" | "permission" | "userPermission" | "rolePermission" | "document" | "kyc" | "requiredKycDocument" | "loanEmiSchedule" | "emiPayment" | "emiMoratorium" | "creditReport" | "creditAccount" | "loanType" | "foreClosure" | "technicalReport" | "legalReport" | "loanAssignment" | "auditLog" | "sLAPolicy" | "sLABreachLog" | "loanDisbursement" | "nachMandate" | "nachDebit" | "sanction"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3294,6 +3295,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    foreClosure: {
+      payload: Prisma.$foreClosurePayload<ExtArgs>
+      fields: Prisma.foreClosureFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.foreClosureFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$foreClosurePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.foreClosureFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$foreClosurePayload>
+        }
+        findFirst: {
+          args: Prisma.foreClosureFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$foreClosurePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.foreClosureFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$foreClosurePayload>
+        }
+        findMany: {
+          args: Prisma.foreClosureFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$foreClosurePayload>[]
+        }
+        create: {
+          args: Prisma.foreClosureCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$foreClosurePayload>
+        }
+        createMany: {
+          args: Prisma.foreClosureCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.foreClosureDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$foreClosurePayload>
+        }
+        update: {
+          args: Prisma.foreClosureUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$foreClosurePayload>
+        }
+        deleteMany: {
+          args: Prisma.foreClosureDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.foreClosureUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.foreClosureUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$foreClosurePayload>
+        }
+        aggregate: {
+          args: Prisma.ForeClosureAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateForeClosure>
+        }
+        groupBy: {
+          args: Prisma.foreClosureGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ForeClosureGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.foreClosureCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ForeClosureCountAggregateOutputType> | number
+        }
+      }
+    }
     TechnicalReport: {
       payload: Prisma.$TechnicalReportPayload<ExtArgs>
       fields: Prisma.TechnicalReportFieldRefs
@@ -4928,6 +4995,34 @@ export const LoanTypeScalarFieldEnum = {
 export type LoanTypeScalarFieldEnum = (typeof LoanTypeScalarFieldEnum)[keyof typeof LoanTypeScalarFieldEnum]
 
 
+export const ForeClosureScalarFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  appliedBy: 'appliedBy',
+  appliedAt: 'appliedAt',
+  applicationNote: 'applicationNote',
+  principalOutstanding: 'principalOutstanding',
+  interestAccrued: 'interestAccrued',
+  unpaidEmiCharges: 'unpaidEmiCharges',
+  penalty: 'penalty',
+  totalPayable: 'totalPayable',
+  approvalStatus: 'approvalStatus',
+  foreclosureAmount: 'foreclosureAmount',
+  foreclosureApprovedBy: 'foreclosureApprovedBy',
+  foreclosureApprovedAt: 'foreclosureApprovedAt',
+  settledAmount: 'settledAmount',
+  settledAt: 'settledAt',
+  settlementReference: 'settlementReference',
+  paymentMode: 'paymentMode',
+  settlementReceiptUrl: 'settlementReceiptUrl',
+  reason: 'reason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ForeClosureScalarFieldEnum = (typeof ForeClosureScalarFieldEnum)[keyof typeof ForeClosureScalarFieldEnum]
+
+
 export const TechnicalReportScalarFieldEnum = {
   id: 'id',
   loanApplicationId: 'loanApplicationId',
@@ -5741,6 +5836,20 @@ export const LoanTypeOrderByRelevanceFieldEnum = {
 export type LoanTypeOrderByRelevanceFieldEnum = (typeof LoanTypeOrderByRelevanceFieldEnum)[keyof typeof LoanTypeOrderByRelevanceFieldEnum]
 
 
+export const foreClosureOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  appliedBy: 'appliedBy',
+  applicationNote: 'applicationNote',
+  foreclosureApprovedBy: 'foreclosureApprovedBy',
+  settlementReference: 'settlementReference',
+  settlementReceiptUrl: 'settlementReceiptUrl',
+  reason: 'reason'
+} as const
+
+export type foreClosureOrderByRelevanceFieldEnum = (typeof foreClosureOrderByRelevanceFieldEnum)[keyof typeof foreClosureOrderByRelevanceFieldEnum]
+
+
 export const TechnicalReportOrderByRelevanceFieldEnum = {
   id: 'id',
   loanApplicationId: 'loanApplicationId',
@@ -6260,6 +6369,13 @@ export type EnumLoanTypesFieldRefInput<$PrismaModel> = FieldRefInputType<$Prisma
 
 
 /**
+ * Reference to a field of type 'ForeclosureStatus'
+ */
+export type EnumForeclosureStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ForeclosureStatus'>
+    
+
+
+/**
  * Reference to a field of type 'ReportStatus'
  */
 export type EnumReportStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReportStatus'>
@@ -6445,6 +6561,7 @@ export type GlobalOmitConfig = {
   creditReport?: Prisma.CreditReportOmit
   creditAccount?: Prisma.CreditAccountOmit
   loanType?: Prisma.LoanTypeOmit
+  foreClosure?: Prisma.foreClosureOmit
   technicalReport?: Prisma.TechnicalReportOmit
   legalReport?: Prisma.LegalReportOmit
   loanAssignment?: Prisma.LoanAssignmentOmit

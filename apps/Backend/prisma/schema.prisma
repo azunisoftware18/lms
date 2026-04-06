@@ -382,6 +382,7 @@ model LoanApplication {
   legalReports         LegalReport[]
   emis                 LoanEmiSchedule[]
   nachMandates         NachMandate[]
+  foreClosures         foreClosure[]
   commissionPayments   PartnerCommission[]
   sanction             Sanction[]
   createdById          String?
@@ -1258,6 +1259,55 @@ model LoanType {
   // Relations
   leads            Leads[]
   loanApplications LoanApplication[]
+}
+
+model foreClosure {
+  id                String          @id @default(cuid())
+  loanApplicationId String
+  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
+  // Application metadata
+  appliedBy             String?         // user id who applied
+  appliedAt             DateTime?       // when application was created
+  applicationNote       String?         // optional note provided by applicant
+
+  // Computed breakup at time of application
+  principalOutstanding  Float?          // outstanding principal at time of application
+  interestAccrued       Float?          // accrued interest
+  unpaidEmiCharges      Float?          // outstanding EMI charges (late / bounce)
+  penalty               Float?          // foreclosure penalty amount (absolute)
+  totalPayable          Float?          // sum of components (principal + interest + penalty + charges)
+
+  // Approval & settlement
+  approvalStatus        ForeclosureStatus @default(PENDING)
+  foreclosureAmount     Float?          // final approved foreclosure amount
+  foreclosureApprovedBy String?         // user id who approved
+  foreclosureApprovedAt DateTime?
+
+  settledAmount         Float?
+  settledAt             DateTime?
+  settlementReference   String?         // txn id / receipt reference
+  paymentMode           PaymentMode?
+  settlementReceiptUrl  String?
+  approvedBy              String?         // user id who approved the settlement
+  approvedAt              DateTime?
+  rejectedBy              String?         // user id who rejected the application
+  rejectedAt              DateTime?
+  
+
+  // Administrative
+  reason                String?         // reason for rejection/notes
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([loanApplicationId])
+  @@index([approvalStatus])
+}
+
+enum ForeclosureStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model TechnicalReport {

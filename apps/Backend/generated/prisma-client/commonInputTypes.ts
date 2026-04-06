@@ -1187,6 +1187,23 @@ export type EnumLoanTypesWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumLoanTypesFilter<$PrismaModel>
 }
 
+export type EnumForeclosureStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForeclosureStatus | Prisma.EnumForeclosureStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ForeclosureStatus[]
+  notIn?: $Enums.ForeclosureStatus[]
+  not?: Prisma.NestedEnumForeclosureStatusFilter<$PrismaModel> | $Enums.ForeclosureStatus
+}
+
+export type EnumForeclosureStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForeclosureStatus | Prisma.EnumForeclosureStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ForeclosureStatus[]
+  notIn?: $Enums.ForeclosureStatus[]
+  not?: Prisma.NestedEnumForeclosureStatusWithAggregatesFilter<$PrismaModel> | $Enums.ForeclosureStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumForeclosureStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumForeclosureStatusFilter<$PrismaModel>
+}
+
 export type EnumReportStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.ReportStatus | Prisma.EnumReportStatusFieldRefInput<$PrismaModel>
   in?: $Enums.ReportStatus[]
@@ -2496,6 +2513,23 @@ export type NestedEnumLoanTypesWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumLoanTypesFilter<$PrismaModel>
   _max?: Prisma.NestedEnumLoanTypesFilter<$PrismaModel>
+}
+
+export type NestedEnumForeclosureStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForeclosureStatus | Prisma.EnumForeclosureStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ForeclosureStatus[]
+  notIn?: $Enums.ForeclosureStatus[]
+  not?: Prisma.NestedEnumForeclosureStatusFilter<$PrismaModel> | $Enums.ForeclosureStatus
+}
+
+export type NestedEnumForeclosureStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForeclosureStatus | Prisma.EnumForeclosureStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ForeclosureStatus[]
+  notIn?: $Enums.ForeclosureStatus[]
+  not?: Prisma.NestedEnumForeclosureStatusWithAggregatesFilter<$PrismaModel> | $Enums.ForeclosureStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumForeclosureStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumForeclosureStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumReportStatusFilter<$PrismaModel = never> = {

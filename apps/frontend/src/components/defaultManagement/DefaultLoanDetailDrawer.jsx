@@ -22,9 +22,9 @@ export default function DefaultLoanDetailDrawer({ loan, onClose }) {
             <div className="text-slate-500">PAN:</div>
             <div>{loan.customer?.panNumber || "-"}</div>
             <div className="text-slate-500">Branch:</div>
-            <div>{loan.branchName || loan.branchId || "-"}</div>
+            <div>{loan.branchName || loan.branch?.name || loan.branchId || "-"}</div>
             <div className="text-slate-500">Loan Type:</div>
-            <div>{loan.loanType || loan.loanTypeName || "-"}</div>
+            <div>{loan.loanType?.name || loan.loanTypeName || (typeof loan.loanType === "string" ? loan.loanType : "-")}</div>
             <div className="text-slate-500">Approved Amount:</div>
             <div>₹{Number(loan.approvedAmount || 0).toLocaleString()}</div>
             <div className="text-slate-500">Outstanding:</div>
@@ -38,7 +38,7 @@ export default function DefaultLoanDetailDrawer({ loan, onClose }) {
             <div className="text-slate-500">Recovery Status:</div>
             <div>{loan.loanRecoveries?.[0]?.recoveryStatus || "-"}</div>
             <div className="text-slate-500">Assigned To:</div>
-            <div>{loan.assignedTo || "-"}</div>
+            <div>{loan.assignedTo?.name || loan.assignedTo || "-"}</div>
           </div>
 
           <div className="border-t pt-3">

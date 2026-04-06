@@ -9,6 +9,7 @@ import loanApplicationRouter from "./modules/LoanApplication/loanApplication.rou
 import permissionRouter from "./modules/permission/permission.routes.js";
 import kycRouter from "./modules/kyc/kyc.routes.js";
 import emiRouter from "./modules/Emi/emi.router.js";
+import forecloseRouter from "./modules/foreclose/foreclose.router.js";
 import loanTypeRouter from "./modules/loanTypes/loanTypes.routes.js";
 import jobsRouter from "./jobs/jobs.routes.js";
 import recoveryRouter from "./modules/recovery/recovery.routes.js";
@@ -46,6 +47,7 @@ router.use("/permissions", permissionRouter);
 router.use("/kyc", kycRouter);
 router.use("/jobs", jobsRouter);
 router.use("/emi", emiRouter);
+router.use("/foreclose", forecloseRouter);
 router.use("/loantypes", loanTypeRouter);
 router.use("/recovery", recoveryRouter);
 router.use("/settlement", loanSettlementRouter);
@@ -65,5 +67,6 @@ router.use("/nach",nachRouter)
 router.use("/guarantor", guarantorRouter);
 router.use("/loan-drafts", loanDraftRouter);
 router.use("/sanctions", sanctionRouter);
+router.use("/foreclose", forecloseRouter);
 
 export default router;

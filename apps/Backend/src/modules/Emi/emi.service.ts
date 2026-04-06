@@ -682,76 +682,6 @@ export const payEmiService = async (
   }
 };
 
-export const forecloseLoanService = async (loanId: string) => {
-  try {
-    const loan = await prisma.loanApplication.findUnique({
-      where: { id: loanId },
-    });
-    if (!loan) {
-      throw AppError.notFound("Loan application not found");
-    }
-
-    const emis = await prisma.loanEmiSchedule.findMany({
-      where: {
-        loanApplicationId: loanId,
-        status: { in: ["pending", "overdue"] },
-      },
-    });
-    const now = new Date();
-
-    const remainingPrincipal = emis.reduce(
-      (sum, e) => sum + e.principalAmount,
-      0,
-    );
-    const accruedInterest = emis.reduce((sum, e) => sum + e.interestAmount, 0);
-
-    const unpaidEmiCharges = emis.reduce((sum, emi) => {
-      const lateFee =
-        now > emi.dueDate
-          ? emi.latePaymentFeeType === "FIXED"
-            ? emi.latePaymentFee
-            : (emi.emiAmount * emi.latePaymentFee) / 100
-          : 0;
-
-      const bounceCharge =
-        emi.bounceChargeApplied &&
-        emi.lastPaymentMode === "CHEQUE" &&
-        emi.chequeStatus === "BOUNCED"
-          ? emi.bounceCharges
-          : 0;
-
-      const chargeDue = lateFee + bounceCharge;
-      const extraPaidTowardCharges = Math.max(
-        (emi.emiPaymentAmount ?? 0) - emi.emiAmount,
-        0,
-      );
-      const chargeOutstanding = Math.max(chargeDue - extraPaidTowardCharges, 0);
-
-      return sum + chargeOutstanding;
-    }, 0);
-
-    const foreclosurePenalty =
-      remainingPrincipal * ((loan.foreclosureCharges ?? 0) / 100);
-
-    const totalPayable =
-      remainingPrincipal +
-      accruedInterest +
-      foreclosurePenalty +
-      unpaidEmiCharges;
-
-    return {
-      remainingPrincipal: Number(remainingPrincipal.toFixed(2)),
-      accruedInterest: Number(accruedInterest.toFixed(2)),
-      foreclosurePenalty: Number(foreclosurePenalty.toFixed(2)),
-      unpaidEmiCharges: Number(unpaidEmiCharges.toFixed(2)),
-      totalPayable: Number(totalPayable.toFixed(2)),
-    };
-  } catch (error: any) {
-    if (error?.statusCode) throw error;
-    throw AppError.internal(error.message || "Failed to foreclose loan");
-  }
-};
-
 export const getThisMonthEmiAmountService = async (
   loanApplicationId: string,
 ) => {
@@ -853,103 +783,103 @@ export const getThisMonthEmiAmountService = async (
   };
 };
 
-export const payforecloseLoanService = async (
-  loanApplicationId: string,
-  data: any,
-  userId?: string,
-  branchId?: string,
-) => {
-  try {
-    const loan = await prisma.loanApplication.findUnique({
-      where: { id: loanApplicationId },
-    });
-    if (!loan) {
-      throw AppError.notFound("Loan application not found");
-    }
+// export const payforecloseLoanService = async (
+//   loanApplicationId: string,
+//   data: any,
+//   userId?: string,
+//   branchId?: string,
+// ) => {
+//   try {
+//     const loan = await prisma.loanApplication.findUnique({
+//       where: { id: loanApplicationId },
+//     });
+//     if (!loan) {
+//       throw AppError.notFound("Loan application not found");
+//     }
 
-    if (loan.status !== "active" && loan.status !== "defaulted") {
-      throw AppError.badRequest("Loan is not active");
-    }
+//     if (loan.status !== "active" && loan.status !== "defaulted") {
+//       throw AppError.badRequest("Loan is not active");
+//     }
 
-    //count PAID EMIs
-    const paidEmisCount = await prisma.loanEmiSchedule.count({
-      where: {
-        loanApplicationId: loanApplicationId,
-        status: "paid",
-      },
-    });
+//     //count PAID EMIs
+//     const paidEmisCount = await prisma.loanEmiSchedule.count({
+//       where: {
+//         loanApplicationId: loanApplicationId,
+//         status: "paid",
+//       },
+//     });
 
-    // minimum 6 emis should be paid before foreclosing
-    if (paidEmisCount < 6) {
-      throw AppError.badRequest(
-        "At least 6 EMIs must be paid before foreclosing the loan",
-      );
-    }
+//     // minimum 6 emis should be paid before foreclosing
+//     if (paidEmisCount < 6) {
+//       throw AppError.badRequest(
+//         "At least 6 EMIs must be paid before foreclosing the loan",
+//       );
+//     }
 
-    const emis = await prisma.loanEmiSchedule.findMany({
-      where: {
-        loanApplicationId: loanApplicationId,
-        status: { in: ["pending", "overdue"] },
-      },
-    });
+//     const emis = await prisma.loanEmiSchedule.findMany({
+//       where: {
+//         loanApplicationId: loanApplicationId,
+//         status: { in: ["pending", "overdue"] },
+//       },
+//     });
 
-    const foreclosureSummary = await forecloseLoanService(loanApplicationId);
-    const totalPayable = foreclosureSummary.totalPayable;
+//     const foreclosureSummary = await forecloseLoanService(loanApplicationId);
+//     const totalPayable = foreclosureSummary.totalPayable;
 
-    if (data.amountPaid <= 0) {
-      throw AppError.badRequest("Payment amount must be greater than zero");
-    }
-    if (data.amountPaid < totalPayable) {
-      throw AppError.badRequest("Insufficient amount to foreclose the loan");
-    }
+//     if (data.amountPaid <= 0) {
+//       throw AppError.badRequest("Payment amount must be greater than zero");
+//     }
+//     if (data.amountPaid < totalPayable) {
+//       throw AppError.badRequest("Insufficient amount to foreclose the loan");
+//     }
 
-    if (data.amountPaid >= totalPayable) {
-      // Mark all pending EMIs as paid
-      await prisma.$transaction(async (tx) => {
-        for (const emi of emis) {
-          await tx.loanEmiSchedule.update({
-            where: { id: emi.id },
-            data: {
-              status: "paid",
-              paidDate: new Date(),
-              emiPaymentAmount: emi.emiAmount,
-            },
-          });
-        }
-      });
-    }
+//     if (data.amountPaid >= totalPayable) {
+//       // Mark all pending EMIs as paid
+//       await prisma.$transaction(async (tx) => {
+//         for (const emi of emis) {
+//           await tx.loanEmiSchedule.update({
+//             where: { id: emi.id },
+//             data: {
+//               status: "paid",
+//               paidDate: new Date(),
+//               emiPaymentAmount: emi.emiAmount,
+//             },
+//           });
+//         }
+//       });
+//     }
 
-    //check remaining amount after foreclosure
-    await prisma.loanApplication.update({
-      where: { id: loanApplicationId },
-      data: {
-        status: "closed",
-        foreclosureDate: new Date(),
-      },
-    });
+//     //check remaining amount after foreclosure
+//     await prisma.loanApplication.update({
+//       where: { id: loanApplicationId },
+//       data: {
+//         status: "closed",
+//         foreclosureDate: new Date(),
+//       },
+//     });
 
-    if (userId && branchId) {
-      await logAction({
-        entityType: "LOAN",
-        entityId: loanApplicationId,
-        action: "UPDATE_LOAN_STATUS",
-        performedBy: userId,
-        branchId,
-        oldValue: { status: loan.status },
-        newValue: { status: "closed" },
-        remarks: "Loan foreclosed after settlement of outstanding amount",
-      });
-    }
+//     if (userId && branchId) {
+//       await logAction({
+//         entityType: "LOAN",
+//         entityId: loanApplicationId,
+//         action: "UPDATE_LOAN_STATUS",
+//         performedBy: userId,
+//         branchId,
+//         oldValue: { status: loan.status },
+//         newValue: { status: "closed" },
+//         remarks: "Loan foreclosed after settlement of outstanding amount",
+//       });
+//     }
 
-    return {
-      ...foreclosureSummary,
-      amountPaid: Number(data.amountPaid),
-    };
-  } catch (error: any) {
-    if (error?.statusCode) throw error;
-    throw AppError.internal(error.message || "Failed to foreclose loan");
-  }
-};
+//     return {
+//       ...foreclosureSummary,
+//       amountPaid: Number(data.amountPaid),
+//     };
+//   } catch (error: any) {
+//     if (error?.statusCode) throw error;
+//     throw AppError.internal(error.message || "Failed to foreclose loan");
+//   }
+// };
 
 export const applyMoratoriumService = async ({
   loanId,

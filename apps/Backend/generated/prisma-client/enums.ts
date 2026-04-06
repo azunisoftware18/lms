@@ -19,6 +19,15 @@ export const KycStatus = {
 export type KycStatus = (typeof KycStatus)[keyof typeof KycStatus]
 
 
+export const ForeclosureStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type ForeclosureStatus = (typeof ForeclosureStatus)[keyof typeof ForeclosureStatus]
+
+
 export const SanctionStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',

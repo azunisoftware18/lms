@@ -233,6 +233,11 @@ export type CreditAccount = Prisma.CreditAccountModel
  */
 export type LoanType = Prisma.LoanTypeModel
 /**
+ * Model foreClosure
+ * 
+ */
+export type foreClosure = Prisma.foreClosureModel
+/**
  * Model TechnicalReport
  * 
  */

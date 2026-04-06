@@ -6,13 +6,13 @@ import { createRateLimiter } from "../../common/middlewares/rateLimit.middleware
 import {
   applyMoratoriumController,
   editEmiController,
-  forecloseLoanController,
+  // forecloseLoanController,
   generateEmiScheduleController,
   generateEmiAmount,
   getLoanEmiController,
   getThisMonthEmiAmountController,
   markEmiPaidController,
-  payforecloseLoanController,
+  // payforecloseLoanController,
   getEmiPayableAmountController,
   getAllEmisController,
   // processOverdueEmisController,
@@ -77,20 +77,12 @@ emiRouter.post("/:emiId/pay",
   checkPermissionMiddleware("EMI_PAID"),
   markEmiPaidController);
 
-emiRouter.get("/loans/:loanId/foreclose",
-  authMiddleware,
-  branchMiddleware,
-  emiReadLimiter,
-  checkPermissionMiddleware("VIEW_FORECLOSE_AMOUNT"),
-  forecloseLoanController);
-emiRouter.post(
-  "/loans/:loanId/foreclose",
-  authMiddleware,
-  branchMiddleware,
-  emiWriteLimiter,
-  checkPermissionMiddleware("FORECLOSE_LOAN"),
-payforecloseLoanController
-);
+// emiRouter.get("/loans/:loanId/foreclose",
+//   authMiddleware,
+//   branchMiddleware,
+//   emiReadLimiter,
+//   checkPermissionMiddleware("VIEW_FORECLOSE_AMOUNT"),
+//   forecloseLoanController);
 
 
 emiRouter.post("/loans/:loanId/moratorium",
