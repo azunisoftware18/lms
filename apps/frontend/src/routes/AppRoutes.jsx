@@ -23,11 +23,13 @@ import LoanAccountCreation from "../app/dashboard/LMS/LoanAccountCreation.jsx";
 import EMIManagementPage from "../app/dashboard/LMS/EMIManagementPage.jsx";
 import EMISchedule from "../app/dashboard/LOS/EMISchedule.jsx";
 import RepaymentManagement from "../app/dashboard/LMS/RepaymentManagement.jsx";
+import DefaultManagementPage from "../app/dashboard/LMS/DefaultManagementPage.jsx";
 import NachAutoDebit from "../app/dashboard/LMS/NachAutoDebit.jsx";
 import DpdTracking from "../app/dashboard/LMS/DpdTracking.jsx";
 import RecoveryManagement from "../app/dashboard/LMS/RecoveryManagement.jsx";
 import Foreclosure from "../app/dashboard/LMS/Foreclosure.jsx";
 import LoanClosure from "../app/dashboard/LMS/LoanClosure.jsx";
+import ViewEMIs from "../app/dashboard/LMS/viewemi.jsx";
 
 // View detail pages
 import LoanAccountView from "../app/dashboard/ViewDetail/LoanAccountView.jsx";
@@ -165,6 +167,19 @@ export default function AppRoutes() {
 
       
       // Admin routes
+      {/* Employee routes */}
+      <Route
+        path="/employee"
+        element={
+          <PrivateRoute>
+            <AdminLayout />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<DashboardPage />} />
+        <Route path="lms/default-management" element={<DefaultManagementPage />} />
+      </Route>
+
       <Route
         path="/admin"
         element={
@@ -180,6 +195,8 @@ export default function AppRoutes() {
           element={<LoanAccountCreation />}
         />
         <Route path="lms/emi-management" element={<EMIManagementPage />} />
+        <Route path="lms/view-emis" element={<ViewEMIs />} />
+        <Route path="lms/default-management" element={<DefaultManagementPage />} />
         
         <Route
           path="lms/repayment-management"

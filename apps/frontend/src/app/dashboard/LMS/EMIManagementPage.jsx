@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import LoanAccountTable from "../../../components/tables/LoanAccountTable";
 import EMIManagementTableView from "../../../components/tables/EMIManagementTable";
 import { useAllEmis } from "../../../hooks/useEmi";
@@ -202,11 +203,14 @@ export default function EMIManagementPage() {
     [filteredByLoanStatus],
   );
 
+  const navigate = useNavigate();
+
   // Handlers
   const handleView = (row) => {
-    alert(
-      `📋 EMI Details:\nEMI: ${row.emiNumber}\nDue Date: ${formatDate(row.dueDate)}\nAmount: ${formatCurrency(row.emiAmount)}\nStatus: ${row.status}`,
-    );
+    // navigate to the View EMIs page for the given loan
+    const loanKey = row.loanApplicationId || row.loanNumber || row.id;
+  
+    navigate(`/admin/lms/view-emis?loanId=${encodeURIComponent(loanKey)}`);
   };
 
   const handlePayEMI = (row) => {

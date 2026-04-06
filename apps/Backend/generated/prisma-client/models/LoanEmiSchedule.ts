@@ -57,6 +57,7 @@ export type LoanEmiScheduleSumAggregateOutputType = {
 export type LoanEmiScheduleMinAggregateOutputType = {
   id: string | null
   loanApplicationId: string | null
+  loanNumber: string | null
   emiNo: number | null
   emiStartDate: Date | null
   dueDate: Date | null
@@ -83,6 +84,7 @@ export type LoanEmiScheduleMinAggregateOutputType = {
 export type LoanEmiScheduleMaxAggregateOutputType = {
   id: string | null
   loanApplicationId: string | null
+  loanNumber: string | null
   emiNo: number | null
   emiStartDate: Date | null
   dueDate: Date | null
@@ -109,6 +111,7 @@ export type LoanEmiScheduleMaxAggregateOutputType = {
 export type LoanEmiScheduleCountAggregateOutputType = {
   id: number
   loanApplicationId: number
+  loanNumber: number
   emiNo: number
   emiStartDate: number
   dueDate: number
@@ -165,6 +168,7 @@ export type LoanEmiScheduleSumAggregateInputType = {
 export type LoanEmiScheduleMinAggregateInputType = {
   id?: true
   loanApplicationId?: true
+  loanNumber?: true
   emiNo?: true
   emiStartDate?: true
   dueDate?: true
@@ -191,6 +195,7 @@ export type LoanEmiScheduleMinAggregateInputType = {
 export type LoanEmiScheduleMaxAggregateInputType = {
   id?: true
   loanApplicationId?: true
+  loanNumber?: true
   emiNo?: true
   emiStartDate?: true
   dueDate?: true
@@ -217,6 +222,7 @@ export type LoanEmiScheduleMaxAggregateInputType = {
 export type LoanEmiScheduleCountAggregateInputType = {
   id?: true
   loanApplicationId?: true
+  loanNumber?: true
   emiNo?: true
   emiStartDate?: true
   dueDate?: true
@@ -330,6 +336,7 @@ export type LoanEmiScheduleGroupByArgs<ExtArgs extends runtime.Types.Extensions.
 export type LoanEmiScheduleGroupByOutputType = {
   id: string
   loanApplicationId: string
+  loanNumber: string
   emiNo: number
   emiStartDate: Date | null
   dueDate: Date
@@ -379,6 +386,7 @@ export type LoanEmiScheduleWhereInput = {
   NOT?: Prisma.LoanEmiScheduleWhereInput | Prisma.LoanEmiScheduleWhereInput[]
   id?: Prisma.StringFilter<"LoanEmiSchedule"> | string
   loanApplicationId?: Prisma.StringFilter<"LoanEmiSchedule"> | string
+  loanNumber?: Prisma.StringFilter<"LoanEmiSchedule"> | string
   emiNo?: Prisma.IntFilter<"LoanEmiSchedule"> | number
   emiStartDate?: Prisma.DateTimeNullableFilter<"LoanEmiSchedule"> | Date | string | null
   dueDate?: Prisma.DateTimeFilter<"LoanEmiSchedule"> | Date | string
@@ -407,6 +415,7 @@ export type LoanEmiScheduleWhereInput = {
 export type LoanEmiScheduleOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   loanApplicationId?: Prisma.SortOrder
+  loanNumber?: Prisma.SortOrder
   emiNo?: Prisma.SortOrder
   emiStartDate?: Prisma.SortOrderInput | Prisma.SortOrder
   dueDate?: Prisma.SortOrder
@@ -439,6 +448,7 @@ export type LoanEmiScheduleWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.LoanEmiScheduleWhereInput[]
   NOT?: Prisma.LoanEmiScheduleWhereInput | Prisma.LoanEmiScheduleWhereInput[]
   loanApplicationId?: Prisma.StringFilter<"LoanEmiSchedule"> | string
+  loanNumber?: Prisma.StringFilter<"LoanEmiSchedule"> | string
   emiNo?: Prisma.IntFilter<"LoanEmiSchedule"> | number
   emiStartDate?: Prisma.DateTimeNullableFilter<"LoanEmiSchedule"> | Date | string | null
   dueDate?: Prisma.DateTimeFilter<"LoanEmiSchedule"> | Date | string
@@ -467,6 +477,7 @@ export type LoanEmiScheduleWhereUniqueInput = Prisma.AtLeast<{
 export type LoanEmiScheduleOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   loanApplicationId?: Prisma.SortOrder
+  loanNumber?: Prisma.SortOrder
   emiNo?: Prisma.SortOrder
   emiStartDate?: Prisma.SortOrderInput | Prisma.SortOrder
   dueDate?: Prisma.SortOrder
@@ -501,6 +512,7 @@ export type LoanEmiScheduleScalarWhereWithAggregatesInput = {
   NOT?: Prisma.LoanEmiScheduleScalarWhereWithAggregatesInput | Prisma.LoanEmiScheduleScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"LoanEmiSchedule"> | string
   loanApplicationId?: Prisma.StringWithAggregatesFilter<"LoanEmiSchedule"> | string
+  loanNumber?: Prisma.StringWithAggregatesFilter<"LoanEmiSchedule"> | string
   emiNo?: Prisma.IntWithAggregatesFilter<"LoanEmiSchedule"> | number
   emiStartDate?: Prisma.DateTimeNullableWithAggregatesFilter<"LoanEmiSchedule"> | Date | string | null
   dueDate?: Prisma.DateTimeWithAggregatesFilter<"LoanEmiSchedule"> | Date | string
@@ -526,6 +538,7 @@ export type LoanEmiScheduleScalarWhereWithAggregatesInput = {
 
 export type LoanEmiScheduleCreateInput = {
   id?: string
+  loanNumber: string
   emiNo: number
   emiStartDate?: Date | string | null
   dueDate: Date | string
@@ -554,6 +567,7 @@ export type LoanEmiScheduleCreateInput = {
 export type LoanEmiScheduleUncheckedCreateInput = {
   id?: string
   loanApplicationId: string
+  loanNumber: string
   emiNo: number
   emiStartDate?: Date | string | null
   dueDate: Date | string
@@ -580,6 +594,7 @@ export type LoanEmiScheduleUncheckedCreateInput = {
 
 export type LoanEmiScheduleUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
   emiNo?: Prisma.IntFieldUpdateOperationsInput | number
   emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -608,6 +623,7 @@ export type LoanEmiScheduleUpdateInput = {
 export type LoanEmiScheduleUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
   emiNo?: Prisma.IntFieldUpdateOperationsInput | number
   emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -635,6 +651,7 @@ export type LoanEmiScheduleUncheckedUpdateInput = {
 export type LoanEmiScheduleCreateManyInput = {
   id?: string
   loanApplicationId: string
+  loanNumber: string
   emiNo: number
   emiStartDate?: Date | string | null
   dueDate: Date | string
@@ -660,6 +677,7 @@ export type LoanEmiScheduleCreateManyInput = {
 
 export type LoanEmiScheduleUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
   emiNo?: Prisma.IntFieldUpdateOperationsInput | number
   emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -686,6 +704,7 @@ export type LoanEmiScheduleUpdateManyMutationInput = {
 export type LoanEmiScheduleUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
   emiNo?: Prisma.IntFieldUpdateOperationsInput | number
   emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -728,6 +747,7 @@ export type LoanEmiScheduleOrderByRelevanceInput = {
 export type LoanEmiScheduleCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   loanApplicationId?: Prisma.SortOrder
+  loanNumber?: Prisma.SortOrder
   emiNo?: Prisma.SortOrder
   emiStartDate?: Prisma.SortOrder
   dueDate?: Prisma.SortOrder
@@ -768,6 +788,7 @@ export type LoanEmiScheduleAvgOrderByAggregateInput = {
 export type LoanEmiScheduleMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   loanApplicationId?: Prisma.SortOrder
+  loanNumber?: Prisma.SortOrder
   emiNo?: Prisma.SortOrder
   emiStartDate?: Prisma.SortOrder
   dueDate?: Prisma.SortOrder
@@ -794,6 +815,7 @@ export type LoanEmiScheduleMaxOrderByAggregateInput = {
 export type LoanEmiScheduleMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   loanApplicationId?: Prisma.SortOrder
+  loanNumber?: Prisma.SortOrder
   emiNo?: Prisma.SortOrder
   emiStartDate?: Prisma.SortOrder
   dueDate?: Prisma.SortOrder
@@ -910,6 +932,7 @@ export type LoanEmiScheduleUpdateOneRequiredWithoutNachDebitsNestedInput = {
 
 export type LoanEmiScheduleCreateWithoutLoanApplicationInput = {
   id?: string
+  loanNumber: string
   emiNo: number
   emiStartDate?: Date | string | null
   dueDate: Date | string
@@ -936,6 +959,7 @@ export type LoanEmiScheduleCreateWithoutLoanApplicationInput = {
 
 export type LoanEmiScheduleUncheckedCreateWithoutLoanApplicationInput = {
   id?: string
+  loanNumber: string
   emiNo: number
   emiStartDate?: Date | string | null
   dueDate: Date | string
@@ -992,6 +1016,7 @@ export type LoanEmiScheduleScalarWhereInput = {
   NOT?: Prisma.LoanEmiScheduleScalarWhereInput | Prisma.LoanEmiScheduleScalarWhereInput[]
   id?: Prisma.StringFilter<"LoanEmiSchedule"> | string
   loanApplicationId?: Prisma.StringFilter<"LoanEmiSchedule"> | string
+  loanNumber?: Prisma.StringFilter<"LoanEmiSchedule"> | string
   emiNo?: Prisma.IntFilter<"LoanEmiSchedule"> | number
   emiStartDate?: Prisma.DateTimeNullableFilter<"LoanEmiSchedule"> | Date | string | null
   dueDate?: Prisma.DateTimeFilter<"LoanEmiSchedule"> | Date | string
@@ -1017,6 +1042,7 @@ export type LoanEmiScheduleScalarWhereInput = {
 
 export type LoanEmiScheduleCreateWithoutNachDebitsInput = {
   id?: string
+  loanNumber: string
   emiNo: number
   emiStartDate?: Date | string | null
   dueDate: Date | string
@@ -1044,6 +1070,7 @@ export type LoanEmiScheduleCreateWithoutNachDebitsInput = {
 export type LoanEmiScheduleUncheckedCreateWithoutNachDebitsInput = {
   id?: string
   loanApplicationId: string
+  loanNumber: string
   emiNo: number
   emiStartDate?: Date | string | null
   dueDate: Date | string
@@ -1085,6 +1112,7 @@ export type LoanEmiScheduleUpdateToOneWithWhereWithoutNachDebitsInput = {
 
 export type LoanEmiScheduleUpdateWithoutNachDebitsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
   emiNo?: Prisma.IntFieldUpdateOperationsInput | number
   emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1112,6 +1140,7 @@ export type LoanEmiScheduleUpdateWithoutNachDebitsInput = {
 export type LoanEmiScheduleUncheckedUpdateWithoutNachDebitsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
   emiNo?: Prisma.IntFieldUpdateOperationsInput | number
   emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1137,6 +1166,7 @@ export type LoanEmiScheduleUncheckedUpdateWithoutNachDebitsInput = {
 
 export type LoanEmiScheduleCreateManyLoanApplicationInput = {
   id?: string
+  loanNumber: string
   emiNo: number
   emiStartDate?: Date | string | null
   dueDate: Date | string
@@ -1162,6 +1192,7 @@ export type LoanEmiScheduleCreateManyLoanApplicationInput = {
 
 export type LoanEmiScheduleUpdateWithoutLoanApplicationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
   emiNo?: Prisma.IntFieldUpdateOperationsInput | number
   emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1188,6 +1219,7 @@ export type LoanEmiScheduleUpdateWithoutLoanApplicationInput = {
 
 export type LoanEmiScheduleUncheckedUpdateWithoutLoanApplicationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
   emiNo?: Prisma.IntFieldUpdateOperationsInput | number
   emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1214,6 +1246,7 @@ export type LoanEmiScheduleUncheckedUpdateWithoutLoanApplicationInput = {
 
 export type LoanEmiScheduleUncheckedUpdateManyWithoutLoanApplicationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  loanNumber?: Prisma.StringFieldUpdateOperationsInput | string
   emiNo?: Prisma.IntFieldUpdateOperationsInput | number
   emiStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1271,6 +1304,7 @@ export type LoanEmiScheduleCountOutputTypeCountNachDebitsArgs<ExtArgs extends ru
 export type LoanEmiScheduleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   loanApplicationId?: boolean
+  loanNumber?: boolean
   emiNo?: boolean
   emiStartDate?: boolean
   dueDate?: boolean
@@ -1302,6 +1336,7 @@ export type LoanEmiScheduleSelect<ExtArgs extends runtime.Types.Extensions.Inter
 export type LoanEmiScheduleSelectScalar = {
   id?: boolean
   loanApplicationId?: boolean
+  loanNumber?: boolean
   emiNo?: boolean
   emiStartDate?: boolean
   dueDate?: boolean
@@ -1325,7 +1360,7 @@ export type LoanEmiScheduleSelectScalar = {
   isDeferred?: boolean
 }
 
-export type LoanEmiScheduleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "emiNo" | "emiStartDate" | "dueDate" | "openingBalance" | "principalAmount" | "deferredPrincipal" | "interestAmount" | "emiAmount" | "emiPaymentAmount" | "closingBalance" | "totalPayableAmount" | "latePaymentFeeType" | "latePaymentFee" | "bounceCharges" | "bounceChargeApplied" | "lastPaymentMode" | "chequeStatus" | "lastPaymentDate" | "status" | "paidDate" | "isDeferred", ExtArgs["result"]["loanEmiSchedule"]>
+export type LoanEmiScheduleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "loanNumber" | "emiNo" | "emiStartDate" | "dueDate" | "openingBalance" | "principalAmount" | "deferredPrincipal" | "interestAmount" | "emiAmount" | "emiPaymentAmount" | "closingBalance" | "totalPayableAmount" | "latePaymentFeeType" | "latePaymentFee" | "bounceCharges" | "bounceChargeApplied" | "lastPaymentMode" | "chequeStatus" | "lastPaymentDate" | "status" | "paidDate" | "isDeferred", ExtArgs["result"]["loanEmiSchedule"]>
 export type LoanEmiScheduleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   nachDebits?: boolean | Prisma.LoanEmiSchedule$nachDebitsArgs<ExtArgs>
   loanApplication?: boolean | Prisma.LoanApplicationDefaultArgs<ExtArgs>
@@ -1341,6 +1376,7 @@ export type $LoanEmiSchedulePayload<ExtArgs extends runtime.Types.Extensions.Int
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     loanApplicationId: string
+    loanNumber: string
     emiNo: number
     emiStartDate: Date | null
     dueDate: Date
@@ -1735,6 +1771,7 @@ export interface Prisma__LoanEmiScheduleClient<T, Null = never, ExtArgs extends 
 export interface LoanEmiScheduleFieldRefs {
   readonly id: Prisma.FieldRef<"LoanEmiSchedule", 'String'>
   readonly loanApplicationId: Prisma.FieldRef<"LoanEmiSchedule", 'String'>
+  readonly loanNumber: Prisma.FieldRef<"LoanEmiSchedule", 'String'>
   readonly emiNo: Prisma.FieldRef<"LoanEmiSchedule", 'Int'>
   readonly emiStartDate: Prisma.FieldRef<"LoanEmiSchedule", 'DateTime'>
   readonly dueDate: Prisma.FieldRef<"LoanEmiSchedule", 'DateTime'>

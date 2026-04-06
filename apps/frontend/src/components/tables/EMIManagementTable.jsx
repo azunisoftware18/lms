@@ -1,18 +1,19 @@
 // components/tables/EMIScheduleTable.jsx
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import TableShell from './core/TableShell';
 import TableHead from './core/TableHead';
 import TableBody from './core/TableBody';
 import TableLoader from './core/TableLoader';
-import ActionMenu from '../common/ActionMenu';
 import Pagination from '../common/Pagination';
 import { Eye, Edit, Download, CheckCircle, Clock, AlertCircle, Calendar, CreditCard, FileText, Receipt } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useLoanEmis } from '../../hooks/useEmi';
 
 // Component ka naam badal diya - ab ye EMIScheduleTableView hai
 const EMIManagementTableView = ({ 
   data = [], 
   loading = false,
+  loanId = null,
   onView,
   onEdit,
   onDownload,
@@ -25,6 +26,42 @@ const EMIManagementTableView = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const navigate = useNavigate();
+
+  // If a loanId is provided, fetch EMIs for that loan and prefer showing them
+  const { emis: loanEmis = [], loading: loanLoading = false, isFetching: loanFetching = false } = useLoanEmis(loanId);
+
+  // Map loanEmis (API shape) to table-friendly rows
+  const loanEmiRows = useMemo(() => {
+    if (!Array.isArray(loanEmis)) return [];
+    return loanEmis.map((e, idx) => {
+      const due = e.dueDate || e.due_date || e.due || null;
+      const emiNo = e.emiNo ?? e.emi_no ?? e.emiNo ?? e.emiNo;
+      const emiNumber = `EMI${String(emiNo ?? idx + 1).padStart(3, '0')}`;
+      const principal = e.principalAmount ?? e.openingBalance ?? 0;
+      const interest = e.interestAmount ?? 0;
+      const emiAmount = e.emiAmount ?? e.emi_amount ?? e.totalPayableAmount ?? 0;
+      const status = (e.status || '').toString().toLowerCase();
+      const loanStatus = (e.loanStatus || e.loan?.status || e.loanApplication?.status || '').toString().toLowerCase();
+      const isToday = due ? new Date(due).toISOString().split('T')[0] === new Date().toISOString().split('T')[0] : false;
+      return {
+        ...e,
+        id: e.id || `${emiNumber}-${idx}`,
+        emiNumber,
+        dueDate: due,
+        principal,
+        interest,
+        emiAmount,
+        status,
+        loanStatus,
+        isToday,
+        loanApplicationId: e.loanApplicationId || e.loanId || e.loan?.id,
+        loanNumber: e.loanNumber || e.loan?.loanNumber,
+      };
+    });
+  }, [loanEmis]);
+
+  const dataToUse = loanId ? loanEmiRows : data;
+  const isLoading = loanId ? (loanLoading || loanFetching) : loading;
 
   // Format currency
   const formatCurrency = (amount) => {
@@ -93,11 +130,11 @@ const EMIManagementTableView = ({
   // If EMI items include `loanStatus`, show loan-status filters restricted to allowed list.
   const allowedLoanStatuses = ['active', 'closed', 'delinquent', 'written_off', 'defaulted'];
 
-  const hasLoanStatus = data.some((d) => !!d.loanStatus);
+  const hasLoanStatus = dataToUse.some((d) => !!d.loanStatus);
 
   const filterOptions = hasLoanStatus
     ? [
-        { value: '', label: 'All Status', count: data.length },
+        { value: '', label: 'All Status', count: dataToUse.length },
         ...allowedLoanStatuses.map((s) => ({
           value: s,
           label: s
@@ -105,14 +142,14 @@ const EMIManagementTableView = ({
             .split(' ')
             .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
             .join(' '),
-          count: data.filter((d) => d.loanStatus === s).length,
+          count: dataToUse.filter((d) => d.loanStatus === s).length,
         })),
       ]
     : [
-        { value: '', label: 'All Status', count: data.length },
-        { value: 'paid', label: 'Paid', count: data.filter(d => d.status === 'paid').length },
-        { value: 'pending', label: 'Pending', count: data.filter(d => d.status === 'pending').length },
-        { value: 'overdue', label: 'Overdue', count: data.filter(d => d.status === 'overdue').length },
+        { value: '', label: 'All Status', count: dataToUse.length },
+        { value: 'paid', label: 'Paid', count: dataToUse.filter(d => d.status === 'paid').length },
+        { value: 'pending', label: 'Pending', count: dataToUse.filter(d => d.status === 'pending').length },
+        { value: 'overdue', label: 'Overdue', count: dataToUse.filter(d => d.status === 'overdue').length },
       ];
 
   // Table columns
@@ -130,11 +167,12 @@ const EMIManagementTableView = ({
     {
       header: 'EMI No.',
       accessor: 'emiNumber',
-      render: (value) => (
-        <span className="font-mono text-xs font-medium text-indigo-600">
-          #{value}
-        </span>
-      )
+        render: (value, row) => {
+          const num = row.emiNo ?? row.emi_no ?? (typeof value === 'string' && value.replace(/^EMI/, '')) ?? value;
+          return (
+            <span className="font-mono text-xs font-medium text-indigo-600">#{num}</span>
+          );
+        }
     },
     {
       header: 'Due Date',
@@ -154,27 +192,27 @@ const EMIManagementTableView = ({
     {
       header: 'Principal',
       accessor: 'principal',
-      render: (value) => (
+      render: (value, row) => (
         <span className="text-gray-900">
-          {formatCurrency(value)}
+          {formatCurrency(row.principal ?? row.principalAmount ?? value)}
         </span>
       )
     },
     {
       header: 'Interest',
       accessor: 'interest',
-      render: (value) => (
+      render: (value, row) => (
         <span className="text-gray-600">
-          {formatCurrency(value)}
+          {formatCurrency(row.interest ?? row.interestAmount ?? value)}
         </span>
       )
     },
     {
       header: 'EMI Amount',
       accessor: 'emiAmount',
-      render: (value) => (
+      render: (value, row) => (
         <span className="font-semibold text-indigo-600">
-          {formatCurrency(value)}
+          {formatCurrency(row.emiAmount ?? row.emi_amount ?? row.totalPayableAmount ?? value)}
         </span>
       )
     },
@@ -185,7 +223,7 @@ const EMIManagementTableView = ({
     }
   ];
 
-  // Render actions for each row
+  // Build actions array for each row (returned, not rendered)
   const renderActions = (row) => {
     const rowActions = [
       {
@@ -195,23 +233,25 @@ const EMIManagementTableView = ({
           // Prefer loanApplicationId, fallback to loanNumber
           const loanId = row.loanApplicationId || row.loanId || row.loan?.id;
           const loanNumber = row.loanNumber || row.loanApplication?.loanNumber || row.loan?.loanNumber;
-          if (loanId) navigate(`/los/emi-schedule?loanId=${loanId}`);
-          else if (loanNumber) navigate(`/los/emi-schedule?loanNumber=${encodeURIComponent(loanNumber)}`);
-          else navigate(`/los/emi-schedule`);
+          if (loanId) navigate(`/admin/lms/view-emis?loanId=${encodeURIComponent(loanId)}`);
+          else if (loanNumber) navigate(`/admin/lms/view-emis?loanNumber=${encodeURIComponent(loanNumber)}`);
+          else navigate(`/admin/lms/view-emis`);
         }
       },
-      {
-        label: 'View Details',
-        icon: <Eye size={16} />,
-        onClick: () => onView?.(row)
-      }
+      // {
+      //   label: 'View Details',
+      //   icon: <Eye size={16} />,
+      //   onClick: () => onView?.(row),
+      //   inline: true,
+      // }
     ];
 
     if (row.status === 'pending' || row.status === 'overdue') {
       rowActions.push({
         label: 'Pay Now',
         icon: <CreditCard size={16} />,
-        onClick: () => onPayEMI?.(row)
+        onClick: () => onPayEMI?.(row),
+        inline: true,
       });
     }
 
@@ -245,18 +285,12 @@ const EMIManagementTableView = ({
       onClick: () => onDownloadReceipt?.(row)
     });
 
-    return (
-      <div className="flex justify-end">
-        <ActionMenu 
-          actions={rowActions}
-          align="right"
-        />
-      </div>
-    );
+    // Return the actions array; TableBody/TableRow will render inline buttons + ActionMenu
+    return rowActions;
   };
 
   // Filter and search data
-  const filteredData = data.filter(item => {
+  const filteredData = dataToUse.filter(item => {
     // If filtering by loanStatus (when present), use loanStatus; otherwise fallback to EMI status
     if (filterStatus) {
       if (item.loanStatus) {
@@ -267,12 +301,12 @@ const EMIManagementTableView = ({
     if (search) {
       const searchLower = search.toLowerCase();
       return (
-        item?.emiNumber?.toString().toLowerCase().includes(searchLower) ||
-        formatDate(item?.dueDate).toLowerCase().includes(searchLower) ||
-        item?.principal?.toString().includes(searchLower) ||
-        item?.interest?.toString().includes(searchLower) ||
-        item?.emiAmount?.toString().includes(searchLower) ||
-        item?.status?.toLowerCase().includes(searchLower)
+        (item && item.emiNumber && item.emiNumber.toString().toLowerCase().includes(searchLower)) ||
+        formatDate(item && item.dueDate).toLowerCase().includes(searchLower) ||
+        (item && item.principal && item.principal.toString().includes(searchLower)) ||
+        (item && item.interest && item.interest.toString().includes(searchLower)) ||
+        (item && item.emiAmount && item.emiAmount.toString().includes(searchLower)) ||
+        (item && item.status && item.status.toLowerCase().includes(searchLower))
       );
     }
     
@@ -312,7 +346,7 @@ const EMIManagementTableView = ({
     setCurrentPage(1);
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <TableShell>
         <TableHead 
@@ -345,7 +379,7 @@ const EMIManagementTableView = ({
         <TableBody 
           columns={columns}
           data={paginatedData}
-          renderActions={renderActions}
+          actions={renderActions}
         />
       </TableShell>
 

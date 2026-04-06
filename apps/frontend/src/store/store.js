@@ -12,6 +12,7 @@ import leadReducer from "./slices/leadSlice";
 import employeeReducer from "./slices/employeeSlice";
 import technicalReportReducer from "./slices/technicalReportSlice";
 import disbursementReducer from "./slices/disbursementSlice";
+import loanDefaultReducer from "./slices/loanDefultslice";
 
 export const store = configureStore({
   reducer: {
@@ -28,6 +29,7 @@ export const store = configureStore({
     employee: employeeReducer,
     technicalReport: technicalReportReducer,
     disbursement: disbursementReducer,
+    loanDefault: loanDefaultReducer,
   },
 });
 

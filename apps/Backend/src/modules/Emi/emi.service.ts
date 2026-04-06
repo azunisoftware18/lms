@@ -23,6 +23,7 @@ const loanData = await prisma.loanApplication.update({
     where: { loanNumber: loanNumber },
     select: {
       id: true,
+      loanNumber: true,
       approvedAmount: true,
       requestedAmount: true,
       interestRate: true,
@@ -141,6 +142,7 @@ const loanData = await prisma.loanApplication.update({
 
     emi.push({
       loanApplicationId: loan.id,
+      loanNumber: loan.loanNumber,
       emiStartDate: startDate,
       emiNo: i,
       dueDate: new Date(
@@ -1135,6 +1137,7 @@ export const applyMoratoriumService = async ({
           await tx.loanEmiSchedule.create({
             data: {
               loanApplicationId: loanId,
+              loanNumber: loan.loanNumber,
               emiNo: newEmiNo,
               emiStartDate: new Date(
                 endDate.getFullYear(),

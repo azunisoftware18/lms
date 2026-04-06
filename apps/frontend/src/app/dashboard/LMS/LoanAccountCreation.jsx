@@ -100,7 +100,7 @@ export default function LoanAccountCreation() {
             </div>
             <div>
               <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-800">
-                Loan Account Creation
+                Loan Account Management
               </h1>
               <p className="text-xs sm:text-sm text-slate-500">
                 Manage and monitor all loan accounts

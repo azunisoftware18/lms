@@ -168,6 +168,11 @@ export default function Sidebar() {
                 : "/admin/lms/foreclosure",
               permission: "VIEW_FORECLOSURE"
             },
+            {name:"Default Management",
+               path:"/employee/lms/default-management",
+                permission:"VIEW_DEFAULT_MANAGEMENT"
+
+            },
             {
               name: "Loan Closure",
               path: currentUser?.role === "EMPLOYEE"
