@@ -66,13 +66,17 @@ const PrepaymentForeclosure = () => {
   const [transactionHistory, setTransactionHistory] = useState([]);
 
   // ✅ Use the actual useLoanApplications hook
-  const { data: loansData, isLoading: isLoadingLoans, refetch: refetchLoans } = useLoanApplications({
-    limit: 100,
-  });
+  const loanQuery = useLoanApplications({ limit: 100 });
+
+  const loansData = loanQuery?.data;
+  const isLoadingLoans = loanQuery?.isLoading;
+  const refetchLoans = loanQuery?.refetch;
 
   // Debug: Log the API response
   useEffect(() => {
     console.log("Raw loansData:", loansData);
+    console.log("transactionHistory:", transactionHistory);
+    console.log("serverTransactions:", serverTransactions);
   }, [loansData]);
 
   // Format loans for display/search - FIXED: Handle nested data structure
@@ -909,13 +913,23 @@ const PrepaymentForeclosure = () => {
             </div>
           )}
         </div>
+        
       )}
+
+      
 
       {/* Transaction History Table */}
       <div className="mt-8">
         <ForeClosureTable
-          data={[...transactionHistory, ...serverTransactions]}
-        />
+          data={loans.map((loan) => ({
+            loanNumber: loan.loanNumber,
+            customerName: loan.customerName,
+            transactionType: "Prepayment",
+            amountPaid: loan.loanAmount,
+            status: loan.status,
+            date: "06 Apr 2026",
+        }))}
+/>
       </div>
     </div>
   );
