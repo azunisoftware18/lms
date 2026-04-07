@@ -46,7 +46,7 @@ const verifyDocumentLimiter = createRateLimiter({
 
 const uploadLoanDocumentsLimiter = createRateLimiter({
   windowMs: 10 * 60 * 1000,  // 10 minutes
-  max: 50,
+  max: 100,
   message: "Too many document upload requests. Please try again later.",
 });
 

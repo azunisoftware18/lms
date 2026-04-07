@@ -1078,6 +1078,10 @@ export const ForeClosureScalarFieldEnum = {
   settlementReference: 'settlementReference',
   paymentMode: 'paymentMode',
   settlementReceiptUrl: 'settlementReceiptUrl',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  rejectedBy: 'rejectedBy',
+  rejectedAt: 'rejectedAt',
   reason: 'reason',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1907,6 +1911,8 @@ export const foreClosureOrderByRelevanceFieldEnum = {
   foreclosureApprovedBy: 'foreclosureApprovedBy',
   settlementReference: 'settlementReference',
   settlementReceiptUrl: 'settlementReceiptUrl',
+  approvedBy: 'approvedBy',
+  rejectedBy: 'rejectedBy',
   reason: 'reason'
 } as const
 

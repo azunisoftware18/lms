@@ -66,6 +66,10 @@ export type ForeClosureMinAggregateOutputType = {
   settlementReference: string | null
   paymentMode: $Enums.PaymentMode | null
   settlementReceiptUrl: string | null
+  approvedBy: string | null
+  approvedAt: Date | null
+  rejectedBy: string | null
+  rejectedAt: Date | null
   reason: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -91,6 +95,10 @@ export type ForeClosureMaxAggregateOutputType = {
   settlementReference: string | null
   paymentMode: $Enums.PaymentMode | null
   settlementReceiptUrl: string | null
+  approvedBy: string | null
+  approvedAt: Date | null
+  rejectedBy: string | null
+  rejectedAt: Date | null
   reason: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -116,6 +124,10 @@ export type ForeClosureCountAggregateOutputType = {
   settlementReference: number
   paymentMode: number
   settlementReceiptUrl: number
+  approvedBy: number
+  approvedAt: number
+  rejectedBy: number
+  rejectedAt: number
   reason: number
   createdAt: number
   updatedAt: number
@@ -163,6 +175,10 @@ export type ForeClosureMinAggregateInputType = {
   settlementReference?: true
   paymentMode?: true
   settlementReceiptUrl?: true
+  approvedBy?: true
+  approvedAt?: true
+  rejectedBy?: true
+  rejectedAt?: true
   reason?: true
   createdAt?: true
   updatedAt?: true
@@ -188,6 +204,10 @@ export type ForeClosureMaxAggregateInputType = {
   settlementReference?: true
   paymentMode?: true
   settlementReceiptUrl?: true
+  approvedBy?: true
+  approvedAt?: true
+  rejectedBy?: true
+  rejectedAt?: true
   reason?: true
   createdAt?: true
   updatedAt?: true
@@ -213,6 +233,10 @@ export type ForeClosureCountAggregateInputType = {
   settlementReference?: true
   paymentMode?: true
   settlementReceiptUrl?: true
+  approvedBy?: true
+  approvedAt?: true
+  rejectedBy?: true
+  rejectedAt?: true
   reason?: true
   createdAt?: true
   updatedAt?: true
@@ -325,6 +349,10 @@ export type ForeClosureGroupByOutputType = {
   settlementReference: string | null
   paymentMode: $Enums.PaymentMode | null
   settlementReceiptUrl: string | null
+  approvedBy: string | null
+  approvedAt: Date | null
+  rejectedBy: string | null
+  rejectedAt: Date | null
   reason: string | null
   createdAt: Date
   updatedAt: Date
@@ -373,6 +401,10 @@ export type foreClosureWhereInput = {
   settlementReference?: Prisma.StringNullableFilter<"foreClosure"> | string | null
   paymentMode?: Prisma.EnumPaymentModeNullableFilter<"foreClosure"> | $Enums.PaymentMode | null
   settlementReceiptUrl?: Prisma.StringNullableFilter<"foreClosure"> | string | null
+  approvedBy?: Prisma.StringNullableFilter<"foreClosure"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"foreClosure"> | Date | string | null
+  rejectedBy?: Prisma.StringNullableFilter<"foreClosure"> | string | null
+  rejectedAt?: Prisma.DateTimeNullableFilter<"foreClosure"> | Date | string | null
   reason?: Prisma.StringNullableFilter<"foreClosure"> | string | null
   createdAt?: Prisma.DateTimeFilter<"foreClosure"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"foreClosure"> | Date | string
@@ -399,6 +431,10 @@ export type foreClosureOrderByWithRelationInput = {
   settlementReference?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentMode?: Prisma.SortOrderInput | Prisma.SortOrder
   settlementReceiptUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   reason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -429,6 +465,10 @@ export type foreClosureWhereUniqueInput = Prisma.AtLeast<{
   settlementReference?: Prisma.StringNullableFilter<"foreClosure"> | string | null
   paymentMode?: Prisma.EnumPaymentModeNullableFilter<"foreClosure"> | $Enums.PaymentMode | null
   settlementReceiptUrl?: Prisma.StringNullableFilter<"foreClosure"> | string | null
+  approvedBy?: Prisma.StringNullableFilter<"foreClosure"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"foreClosure"> | Date | string | null
+  rejectedBy?: Prisma.StringNullableFilter<"foreClosure"> | string | null
+  rejectedAt?: Prisma.DateTimeNullableFilter<"foreClosure"> | Date | string | null
   reason?: Prisma.StringNullableFilter<"foreClosure"> | string | null
   createdAt?: Prisma.DateTimeFilter<"foreClosure"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"foreClosure"> | Date | string
@@ -455,6 +495,10 @@ export type foreClosureOrderByWithAggregationInput = {
   settlementReference?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentMode?: Prisma.SortOrderInput | Prisma.SortOrder
   settlementReceiptUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   reason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -488,6 +532,10 @@ export type foreClosureScalarWhereWithAggregatesInput = {
   settlementReference?: Prisma.StringNullableWithAggregatesFilter<"foreClosure"> | string | null
   paymentMode?: Prisma.EnumPaymentModeNullableWithAggregatesFilter<"foreClosure"> | $Enums.PaymentMode | null
   settlementReceiptUrl?: Prisma.StringNullableWithAggregatesFilter<"foreClosure"> | string | null
+  approvedBy?: Prisma.StringNullableWithAggregatesFilter<"foreClosure"> | string | null
+  approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"foreClosure"> | Date | string | null
+  rejectedBy?: Prisma.StringNullableWithAggregatesFilter<"foreClosure"> | string | null
+  rejectedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"foreClosure"> | Date | string | null
   reason?: Prisma.StringNullableWithAggregatesFilter<"foreClosure"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"foreClosure"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"foreClosure"> | Date | string
@@ -512,6 +560,10 @@ export type foreClosureCreateInput = {
   settlementReference?: string | null
   paymentMode?: $Enums.PaymentMode | null
   settlementReceiptUrl?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
   reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -538,6 +590,10 @@ export type foreClosureUncheckedCreateInput = {
   settlementReference?: string | null
   paymentMode?: $Enums.PaymentMode | null
   settlementReceiptUrl?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
   reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -562,6 +618,10 @@ export type foreClosureUpdateInput = {
   settlementReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMode?: Prisma.NullableEnumPaymentModeFieldUpdateOperationsInput | $Enums.PaymentMode | null
   settlementReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -588,6 +648,10 @@ export type foreClosureUncheckedUpdateInput = {
   settlementReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMode?: Prisma.NullableEnumPaymentModeFieldUpdateOperationsInput | $Enums.PaymentMode | null
   settlementReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -613,6 +677,10 @@ export type foreClosureCreateManyInput = {
   settlementReference?: string | null
   paymentMode?: $Enums.PaymentMode | null
   settlementReceiptUrl?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
   reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -637,6 +705,10 @@ export type foreClosureUpdateManyMutationInput = {
   settlementReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMode?: Prisma.NullableEnumPaymentModeFieldUpdateOperationsInput | $Enums.PaymentMode | null
   settlementReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -662,6 +734,10 @@ export type foreClosureUncheckedUpdateManyInput = {
   settlementReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMode?: Prisma.NullableEnumPaymentModeFieldUpdateOperationsInput | $Enums.PaymentMode | null
   settlementReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -703,6 +779,10 @@ export type foreClosureCountOrderByAggregateInput = {
   settlementReference?: Prisma.SortOrder
   paymentMode?: Prisma.SortOrder
   settlementReceiptUrl?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrder
+  rejectedAt?: Prisma.SortOrder
   reason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -738,6 +818,10 @@ export type foreClosureMaxOrderByAggregateInput = {
   settlementReference?: Prisma.SortOrder
   paymentMode?: Prisma.SortOrder
   settlementReceiptUrl?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrder
+  rejectedAt?: Prisma.SortOrder
   reason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -763,6 +847,10 @@ export type foreClosureMinOrderByAggregateInput = {
   settlementReference?: Prisma.SortOrder
   paymentMode?: Prisma.SortOrder
   settlementReceiptUrl?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrder
+  rejectedAt?: Prisma.SortOrder
   reason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -843,6 +931,10 @@ export type foreClosureCreateWithoutLoanApplicationInput = {
   settlementReference?: string | null
   paymentMode?: $Enums.PaymentMode | null
   settlementReceiptUrl?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
   reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -867,6 +959,10 @@ export type foreClosureUncheckedCreateWithoutLoanApplicationInput = {
   settlementReference?: string | null
   paymentMode?: $Enums.PaymentMode | null
   settlementReceiptUrl?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
   reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -921,6 +1017,10 @@ export type foreClosureScalarWhereInput = {
   settlementReference?: Prisma.StringNullableFilter<"foreClosure"> | string | null
   paymentMode?: Prisma.EnumPaymentModeNullableFilter<"foreClosure"> | $Enums.PaymentMode | null
   settlementReceiptUrl?: Prisma.StringNullableFilter<"foreClosure"> | string | null
+  approvedBy?: Prisma.StringNullableFilter<"foreClosure"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"foreClosure"> | Date | string | null
+  rejectedBy?: Prisma.StringNullableFilter<"foreClosure"> | string | null
+  rejectedAt?: Prisma.DateTimeNullableFilter<"foreClosure"> | Date | string | null
   reason?: Prisma.StringNullableFilter<"foreClosure"> | string | null
   createdAt?: Prisma.DateTimeFilter<"foreClosure"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"foreClosure"> | Date | string
@@ -945,6 +1045,10 @@ export type foreClosureCreateManyLoanApplicationInput = {
   settlementReference?: string | null
   paymentMode?: $Enums.PaymentMode | null
   settlementReceiptUrl?: string | null
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
   reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -969,6 +1073,10 @@ export type foreClosureUpdateWithoutLoanApplicationInput = {
   settlementReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMode?: Prisma.NullableEnumPaymentModeFieldUpdateOperationsInput | $Enums.PaymentMode | null
   settlementReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -993,6 +1101,10 @@ export type foreClosureUncheckedUpdateWithoutLoanApplicationInput = {
   settlementReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMode?: Prisma.NullableEnumPaymentModeFieldUpdateOperationsInput | $Enums.PaymentMode | null
   settlementReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1017,6 +1129,10 @@ export type foreClosureUncheckedUpdateManyWithoutLoanApplicationInput = {
   settlementReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMode?: Prisma.NullableEnumPaymentModeFieldUpdateOperationsInput | $Enums.PaymentMode | null
   settlementReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1044,6 +1160,10 @@ export type foreClosureSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   settlementReference?: boolean
   paymentMode?: boolean
   settlementReceiptUrl?: boolean
+  approvedBy?: boolean
+  approvedAt?: boolean
+  rejectedBy?: boolean
+  rejectedAt?: boolean
   reason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1072,12 +1192,16 @@ export type foreClosureSelectScalar = {
   settlementReference?: boolean
   paymentMode?: boolean
   settlementReceiptUrl?: boolean
+  approvedBy?: boolean
+  approvedAt?: boolean
+  rejectedBy?: boolean
+  rejectedAt?: boolean
   reason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type foreClosureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "appliedBy" | "appliedAt" | "applicationNote" | "principalOutstanding" | "interestAccrued" | "unpaidEmiCharges" | "penalty" | "totalPayable" | "approvalStatus" | "foreclosureAmount" | "foreclosureApprovedBy" | "foreclosureApprovedAt" | "settledAmount" | "settledAt" | "settlementReference" | "paymentMode" | "settlementReceiptUrl" | "reason" | "createdAt" | "updatedAt", ExtArgs["result"]["foreClosure"]>
+export type foreClosureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "appliedBy" | "appliedAt" | "applicationNote" | "principalOutstanding" | "interestAccrued" | "unpaidEmiCharges" | "penalty" | "totalPayable" | "approvalStatus" | "foreclosureAmount" | "foreclosureApprovedBy" | "foreclosureApprovedAt" | "settledAmount" | "settledAt" | "settlementReference" | "paymentMode" | "settlementReceiptUrl" | "approvedBy" | "approvedAt" | "rejectedBy" | "rejectedAt" | "reason" | "createdAt" | "updatedAt", ExtArgs["result"]["foreClosure"]>
 export type foreClosureInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   loanApplication?: boolean | Prisma.LoanApplicationDefaultArgs<ExtArgs>
 }
@@ -1107,6 +1231,10 @@ export type $foreClosurePayload<ExtArgs extends runtime.Types.Extensions.Interna
     settlementReference: string | null
     paymentMode: $Enums.PaymentMode | null
     settlementReceiptUrl: string | null
+    approvedBy: string | null
+    approvedAt: Date | null
+    rejectedBy: string | null
+    rejectedAt: Date | null
     reason: string | null
     createdAt: Date
     updatedAt: Date
@@ -1499,6 +1627,10 @@ export interface foreClosureFieldRefs {
   readonly settlementReference: Prisma.FieldRef<"foreClosure", 'String'>
   readonly paymentMode: Prisma.FieldRef<"foreClosure", 'PaymentMode'>
   readonly settlementReceiptUrl: Prisma.FieldRef<"foreClosure", 'String'>
+  readonly approvedBy: Prisma.FieldRef<"foreClosure", 'String'>
+  readonly approvedAt: Prisma.FieldRef<"foreClosure", 'DateTime'>
+  readonly rejectedBy: Prisma.FieldRef<"foreClosure", 'String'>
+  readonly rejectedAt: Prisma.FieldRef<"foreClosure", 'DateTime'>
   readonly reason: Prisma.FieldRef<"foreClosure", 'String'>
   readonly createdAt: Prisma.FieldRef<"foreClosure", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"foreClosure", 'DateTime'>

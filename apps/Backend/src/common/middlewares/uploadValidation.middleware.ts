@@ -4,12 +4,14 @@ import {
   normalizeLoanDocumentType,
 } from "../constants/loanDocumentTypes.js";
 
-const MAX_DOC_FILES = Number(process.env.MAX_DOC_FILES || 15);
+const MAX_DOC_FILES = Number(process.env.MAX_UPLOAD_DOC_FILES || 75);
 
 function toMulterFiles(req: Request): Express.Multer.File[] {
   if (Array.isArray(req.files)) return req.files as Express.Multer.File[];
   if (req.files && typeof req.files === "object") {
-    return Object.values(req.files as Record<string, Express.Multer.File[]>).flat();
+    return Object.values(
+      req.files as Record<string, Express.Multer.File[]>,
+    ).flat();
   }
   return [];
 }
