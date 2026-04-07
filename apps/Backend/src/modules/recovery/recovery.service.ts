@@ -11,15 +11,16 @@ import { buildBranchFilter } from "../../common/utils/branchFilter.js";
 import { logAction } from "../../audit/audit.helper.js";
 
 export const getRecoveryByLoanIdService = async (
-  loanId: string,
+  loanNumber : string,
   userId?: string,
 ) => {
   return prisma.$transaction(async (tx) => {
     /* 1️⃣ Fetch loan */
     const loan = await tx.loanApplication.findUnique({
-      where: { id: loanId },
+      where: { loanNumber: loanNumber },
       select: {
         id: true,
+        loanNumber: true,
         status: true,
         approvedAmount: true,
         customerId: true,
@@ -40,7 +41,7 @@ export const getRecoveryByLoanIdService = async (
     /* 2️⃣ Calculate principal paid */
     const paidEmis = await tx.loanEmiSchedule.findMany({
       where: {
-        loanApplicationId: loanId,
+        loanApplicationId: loan.id,
         status: "paid",
       },
       select: { principalAmount: true },
@@ -59,7 +60,7 @@ export const getRecoveryByLoanIdService = async (
 
     /* 3️⃣ Check existing recovery */
     const existingRecovery = await tx.loanRecovery.findFirst({
-      where: { loanApplicationId: loanId },
+      where: { loanApplicationId: loan.id },
       include: { recoveryPayments: true },
     });
 
@@ -95,7 +96,7 @@ export const getRecoveryByLoanIdService = async (
               totalOutstandingAmount: Number(correctOutstanding.toFixed(2)),
               balanceAmount: Number(correctOutstanding.toFixed(2)),
             },
-            remarks: `Recovery amount corrected for loan ${loanId}`,
+            remarks: `Recovery amount corrected for loan ${loan.loanNumber}`,
           });
         }
 
@@ -136,7 +137,7 @@ export const getRecoveryByLoanIdService = async (
           recoveryStatus: "ONGOING",
           dpd: loan.dpd ?? 0,
         },
-        remarks: `Recovery initiated for defaulted loan ${loanId}`,
+        remarks: `Recovery initiated for defaulted loan ${loan.loanNumber}`,
       });
     }
 

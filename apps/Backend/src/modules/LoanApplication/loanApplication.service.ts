@@ -524,6 +524,7 @@ export const getAllLoanApplicationsService = async (params: {
         id: true,
         loanNumber: true,
         status: true,
+        dpd: true,
         requestedAmount: true,
         approvedAmount: true,
         interestRate: true,
@@ -581,6 +582,7 @@ export const getAllLoanApplicationsService = async (params: {
     id: loan.id,
     loanNumber: loan.loanNumber,
     status: loan.status,
+    dpd: loan.dpd,
     interestRate: loan.interestRate,
     requestedAmount: loan.requestedAmount,
     approvedAmount: loan.approvedAmount,
@@ -620,9 +622,16 @@ export const getAllLoanApplicationsService = async (params: {
     coApplicantCount: loan.coapplicants?.length || 0,
   }));
 
+  // Compute total outstanding amount (approximate): use approvedAmount when available, else requestedAmount
+  const totalOutstandingAmount = sanitizedData.reduce((sum, ln) => {
+    const amt = Number(ln.approvedAmount ?? ln.requestedAmount ?? 0);
+    return sum + (Number.isFinite(amt) ? amt : 0);
+  }, 0);
+
   return {
     data: sanitizedData,
     meta: buildPaginationMeta(total, page, limit),
+    totalOutstandingAmount,
   };
 };
 

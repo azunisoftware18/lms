@@ -191,7 +191,7 @@ export default function AppRoutes() {
         <Route index element={<DashboardPage />} />
         <Route path="borrowers" element={<BorrowerPage />} />
         <Route
-          path="lms/loan-account-creation"
+          path="lms/loan-account-management"
           element={<LoanAccountCreation />}
         />
         <Route path="lms/emi-management" element={<EMIManagementPage />} />
@@ -202,7 +202,7 @@ export default function AppRoutes() {
           path="lms/repayment-management"
           element={<RepaymentManagement />}
         />
-        <Route path="lms/nach-auto-debit" element={<NachAutoDebit />} />
+        <Route path="los/nach-auto-debit" element={<NachAutoDebit />} />
         <Route path="lms/dpd-tracking" element={<DpdTracking />} />
         <Route
           path="lms/recovery-management"

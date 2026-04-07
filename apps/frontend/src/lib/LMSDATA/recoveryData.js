@@ -1,0 +1,137 @@
+// Centralized mock data for Recovery Management (moved from inline file)
+export const recoveryMetrics = {
+  totalCases: 245,
+  assignedCases: 180,
+  pendingCalls: 65,
+  recoveredAmount: 4567890,
+  totalOutstanding: 12456789,
+  recoveryPercentage: 36.7,
+};
+
+export const recoveryAgents = [
+  { id: 1, name: 'Rajesh Kumar', activeCases: 15 },
+  { id: 2, name: 'Priya Singh', activeCases: 12 },
+  { id: 3, name: 'Amit Patel', activeCases: 18 },
+  { id: 4, name: 'Sunita Reddy', activeCases: 10 },
+  { id: 5, name: 'Vikram Mehta', activeCases: 14 },
+];
+
+export const recoveryCases = [
+  {
+    id: 1,
+    loanNumber: 'LN-2024-001234',
+    customerName: 'Rajesh Kumar Sharma',
+    phone: '+91 98765 43210',
+    email: 'rajesh.k@email.com',
+    address: '123, Green Park, New Delhi',
+    outstandingAmount: 1245678,
+    emiDue: 32450,
+    daysPastDue: 45,
+    riskCategory: 'High',
+    assignedAgent: 'Priya Singh',
+    status: 'In Progress',
+    lastCallDate: '2024-03-15',
+    callOutcome: 'Promise to pay',
+  },
+  {
+    id: 2,
+    loanNumber: 'LN-2024-005678',
+    customerName: 'Priya Singh',
+    phone: '+91 98765 43211',
+    email: 'priya.s@email.com',
+    address: '456, Lake View, Mumbai',
+    outstandingAmount: 1890456,
+    emiDue: 42850,
+    daysPastDue: 32,
+    riskCategory: 'Medium',
+    assignedAgent: 'Amit Patel',
+    status: 'Assigned',
+    lastCallDate: '2024-03-14',
+    callOutcome: 'No response',
+  },
+  {
+    id: 3,
+    loanNumber: 'LN-2024-009012',
+    customerName: 'Amit Patel',
+    phone: '+91 98765 43212',
+    email: 'amit.p@email.com',
+    address: '789, Koramangala, Bangalore',
+    outstandingAmount: 734890,
+    emiDue: 28450,
+    daysPastDue: 67,
+    riskCategory: 'High',
+    assignedAgent: 'Rajesh Kumar',
+    status: 'Legal Notice Sent',
+    lastCallDate: '2024-03-13',
+    callOutcome: 'Requested more time',
+  },
+  {
+    id: 4,
+    loanNumber: 'LN-2024-003456',
+    customerName: 'Sunita Reddy',
+    phone: '+91 98765 43213',
+    email: 'sunita.r@email.com',
+    address: '321, Jubilee Hills, Hyderabad',
+    outstandingAmount: 1567890,
+    emiDue: 38450,
+    daysPastDue: 92,
+    riskCategory: 'Critical',
+    assignedAgent: 'Vikram Mehta',
+    status: 'Legal Notice Sent',
+    lastCallDate: '2024-03-12',
+    callOutcome: 'Promised legal action',
+  },
+  {
+    id: 5,
+    loanNumber: 'LN-2024-007890',
+    customerName: 'Vikram Mehta',
+    phone: '+91 98765 43214',
+    email: 'vikram.m@email.com',
+    address: '654, Andheri East, Mumbai',
+    outstandingAmount: 2134567,
+    emiDue: 45600,
+    daysPastDue: 28,
+    riskCategory: 'Low',
+    assignedAgent: 'Sunita Reddy',
+    status: 'In Progress',
+    lastCallDate: '2024-03-16',
+    callOutcome: 'Payment scheduled',
+  },
+];
+
+export const callHistory = [
+  {
+    id: 1,
+    date: '2024-03-15',
+    agentName: 'Priya Singh',
+    outcome: 'Promise to pay',
+    remarks: 'Customer promised to pay by 20th March',
+  },
+  {
+    id: 2,
+    date: '2024-03-10',
+    agentName: 'Priya Singh',
+    outcome: 'No response',
+    remarks: 'Called 3 times, no answer',
+  },
+  {
+    id: 3,
+    date: '2024-03-05',
+    agentName: 'Rajesh Kumar',
+    outcome: 'Requested more time',
+    remarks: 'Customer requested extension till 15th March',
+  },
+];
+
+export const legalNotices = [
+  { id: 1, sentDate: '2024-03-01', noticeType: 'Demand Notice', status: 'Delivered' },
+  { id: 2, sentDate: '2024-02-15', noticeType: 'Final Notice', status: 'Acknowledged' },
+];
+
+export default {
+  recoveryMetrics,
+  recoveryAgents,
+  recoveryCases,
+  callHistory,
+  legalNotices,
+};

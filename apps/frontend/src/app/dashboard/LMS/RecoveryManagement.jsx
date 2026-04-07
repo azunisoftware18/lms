@@ -32,6 +32,11 @@ import {
   Bell,
   Download
 } from 'lucide-react';
+import {
+  useRecoveries,
+  useRecoveryDashboard,
+  useAssignRecoveryAgent,
+} from '../../../hooks/useRecoveries';
 
 const RecoveryManagement = () => {
   // State for active tab
@@ -42,150 +47,27 @@ const RecoveryManagement = () => {
   const [riskFilter, setRiskFilter] = useState('all');
   const [agentFilter, setAgentFilter] = useState('all');
   const [selectedCase, setSelectedCase] = useState(null);
+  // Fetch data from API (replaces mock data)
+  const { data: dashboardResp, isLoading: dashboardLoading } = useRecoveryDashboard();
+  const assignMutation = useAssignRecoveryAgent();
 
-  // Mock recovery metrics
+  // Use dashboardResp.data as the array of recoveries
+  const recoveryCases = Array.isArray(dashboardResp?.data) ? dashboardResp.data : [];
+
+  // Calculate metrics from the array
   const recoveryMetrics = {
-    totalCases: 245,
-    assignedCases: 180,
-    pendingCalls: 65,
-    recoveredAmount: 4567890,
-    totalOutstanding: 12456789,
-    recoveryPercentage: 36.7
+    totalCases: recoveryCases.length,
+    assignedCases: recoveryCases.filter(r => r.assignedTo).length,
+    pendingCalls: recoveryCases.length, // You can adjust this logic as needed
+    recoveredAmount: recoveryCases.reduce((sum, r) => sum + (r.recoveredAmount || 0), 0),
+    totalOutstanding: recoveryCases.reduce((sum, r) => sum + (r.totalOutstandingAmount || 0), 0),
+    recoveryPercentage: recoveryCases.length > 0 ?
+      (recoveryCases.reduce((sum, r) => sum + (r.recoveredAmount || 0), 0) /
+      recoveryCases.reduce((sum, r) => sum + (r.totalOutstandingAmount || 0), 0)) * 100 : 0
   };
 
-  // Mock recovery agents
-  const recoveryAgents = [
-    { id: 1, name: 'Rajesh Kumar', activeCases: 15 },
-    { id: 2, name: 'Priya Singh', activeCases: 12 },
-    { id: 3, name: 'Amit Patel', activeCases: 18 },
-    { id: 4, name: 'Sunita Reddy', activeCases: 10 },
-    { id: 5, name: 'Vikram Mehta', activeCases: 14 }
-  ];
-
-  // Mock recovery cases
-  const mockRecoveryCases = [
-    {
-      id: 1,
-      loanNumber: 'LN-2024-001234',
-      customerName: 'Rajesh Kumar Sharma',
-      phone: '+91 98765 43210',
-      email: 'rajesh.k@email.com',
-      address: '123, Green Park, New Delhi',
-      outstandingAmount: 1245678,
-      emiDue: 32450,
-      daysPastDue: 45,
-      riskCategory: 'High',
-      assignedAgent: 'Priya Singh',
-      status: 'In Progress',
-      lastCallDate: '2024-03-15',
-      callOutcome: 'Promise to pay'
-    },
-    {
-      id: 2,
-      loanNumber: 'LN-2024-005678',
-      customerName: 'Priya Singh',
-      phone: '+91 98765 43211',
-      email: 'priya.s@email.com',
-      address: '456, Lake View, Mumbai',
-      outstandingAmount: 1890456,
-      emiDue: 42850,
-      daysPastDue: 32,
-      riskCategory: 'Medium',
-      assignedAgent: 'Amit Patel',
-      status: 'Assigned',
-      lastCallDate: '2024-03-14',
-      callOutcome: 'No response'
-    },
-    {
-      id: 3,
-      loanNumber: 'LN-2024-009012',
-      customerName: 'Amit Patel',
-      phone: '+91 98765 43212',
-      email: 'amit.p@email.com',
-      address: '789, Koramangala, Bangalore',
-      outstandingAmount: 734890,
-      emiDue: 28450,
-      daysPastDue: 67,
-      riskCategory: 'High',
-      assignedAgent: 'Rajesh Kumar',
-      status: 'Legal Notice Sent',
-      lastCallDate: '2024-03-13',
-      callOutcome: 'Requested more time'
-    },
-    {
-      id: 4,
-      loanNumber: 'LN-2024-003456',
-      customerName: 'Sunita Reddy',
-      phone: '+91 98765 43213',
-      email: 'sunita.r@email.com',
-      address: '321, Jubilee Hills, Hyderabad',
-      outstandingAmount: 1567890,
-      emiDue: 38450,
-      daysPastDue: 92,
-      riskCategory: 'Critical',
-      assignedAgent: 'Vikram Mehta',
-      status: 'Legal Notice Sent',
-      lastCallDate: '2024-03-12',
-      callOutcome: 'Promised legal action'
-    },
-    {
-      id: 5,
-      loanNumber: 'LN-2024-007890',
-      customerName: 'Vikram Mehta',
-      phone: '+91 98765 43214',
-      email: 'vikram.m@email.com',
-      address: '654, Andheri East, Mumbai',
-      outstandingAmount: 2134567,
-      emiDue: 45600,
-      daysPastDue: 28,
-      riskCategory: 'Low',
-      assignedAgent: 'Sunita Reddy',
-      status: 'In Progress',
-      lastCallDate: '2024-03-16',
-      callOutcome: 'Payment scheduled'
-    }
-  ];
-
-  // Mock call history
-  const mockCallHistory = [
-    {
-      id: 1,
-      date: '2024-03-15',
-      agentName: 'Priya Singh',
-      outcome: 'Promise to pay',
-      remarks: 'Customer promised to pay by 20th March'
-    },
-    {
-      id: 2,
-      date: '2024-03-10',
-      agentName: 'Priya Singh',
-      outcome: 'No response',
-      remarks: 'Called 3 times, no answer'
-    },
-    {
-      id: 3,
-      date: '2024-03-05',
-      agentName: 'Rajesh Kumar',
-      outcome: 'Requested more time',
-      remarks: 'Customer requested extension till 15th March'
-    }
-  ];
-
-  // Mock legal notices
-  const mockLegalNotices = [
-    {
-      id: 1,
-      sentDate: '2024-03-01',
-      noticeType: 'Demand Notice',
-      status: 'Delivered'
-    },
-    {
-      id: 2,
-      sentDate: '2024-02-15',
-      noticeType: 'Final Notice',
-      status: 'Acknowledged'
-    }
-  ];
+  const mockCallHistory = dashboardResp?.data?.callHistory ?? dashboardResp?.callHistory ?? [];
+  const mockLegalNotices = dashboardResp?.data?.legalNotices ?? dashboardResp?.legalNotices ?? [];
 
   // Tabs configuration
   const tabs = [
@@ -236,13 +118,15 @@ const RecoveryManagement = () => {
   };
 
   const handleViewCase = (loanNumber) => {
-    const foundCase = mockRecoveryCases.find(c => c.loanNumber === loanNumber);
-    setSelectedCase(foundCase);
+    const foundCase = recoveryCases.find((c) => c.loanNumber === loanNumber);
+    setSelectedCase(foundCase || null);
     setActiveTab('case');
   };
 
   const handleAssignAgent = (loanNumber) => {
-    alert(`Assigning agent for loan: ${loanNumber}`);
+    const foundCase = recoveryCases.find((c) => c.loanNumber === loanNumber);
+    setSelectedCase(foundCase || null);
+    setActiveTab('assignment');
   };
 
   const handleAddCallLog = (customerName) => {
@@ -258,7 +142,11 @@ const RecoveryManagement = () => {
   };
 
   const handleAssignCase = (loanNumber, agent) => {
-    alert(`Case ${loanNumber} assigned to ${agent}`);
+    if (!loanNumber) return;
+    const foundCase = recoveryCases.find((c) => c.id === loanNumber);
+    if (!foundCase) return;
+    const agentId = agent?.id ?? agent;
+    assignMutation.mutate({ recoveryId: foundCase.id, data: { assignedTo: agentId } });
   };
 
   return (
@@ -395,7 +283,7 @@ const RecoveryManagement = () => {
                 <div className="mt-4">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm text-slate-600">Recovery Percentage</span>
-                    <span className="text-sm font-semibold text-blue-600">{recoveryMetrics.recoveryPercentage}%</span>
+                    <span className="text-sm font-semibold text-blue-600">{recoveryMetrics.recoveryPercentage.toFixed(2)}%</span>
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-3">
                     <div 
@@ -407,30 +295,7 @@ const RecoveryManagement = () => {
               </div>
             </div>
 
-            {/* Quick Stats Card */}
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
-              <div className="flex items-center gap-2 mb-4">
-                <Users className="w-5 h-5 text-blue-600" />
-                <h2 className="text-lg font-semibold text-slate-800">Agent Performance</h2>
-              </div>
-              
-              <div className="space-y-4">
-                {recoveryAgents.map((agent) => (
-                  <div key={agent.id} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center">
-                        <User className="w-4 h-4 text-blue-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-slate-800">{agent.name}</p>
-                        <p className="text-xs text-slate-500">{agent.activeCases} active cases</p>
-                      </div>
-                    </div>
-                    <span className="text-sm font-medium text-slate-600">₹{(Math.random() * 500000).toFixed(0)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            {/* Quick Stats Card (Agent Performance) removed: no agent data in API */}
           </div>
 
           {/* Recovery Cases Table */}
@@ -484,8 +349,8 @@ const RecoveryManagement = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200">
-                  {mockRecoveryCases.map((case_) => (
-                    <tr key={case_.id} className={`hover:bg-slate-50 transition-colors ${
+                  {recoveryCases.map((case_, idx) => (
+                    <tr key={case_.recoveryId || case_.id || case_.loanNumber || idx} className={`hover:bg-slate-50 transition-colors ${
                       case_.daysPastDue > 90 ? 'bg-red-50' : ''
                     }`}>
                       <td className="px-6 py-4 text-sm font-medium text-slate-800">
@@ -498,7 +363,7 @@ const RecoveryManagement = () => {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-sm text-slate-600">
-                        ₹{case_.outstandingAmount.toLocaleString()}
+                        ₹{Number(case_.outstandingAmount ?? case_.totalOutstandingAmount ?? 0).toLocaleString()}
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
@@ -561,14 +426,14 @@ const RecoveryManagement = () => {
               <select
                 value={selectedCase?.loanNumber || ''}
                 onChange={(e) => {
-                  const found = mockRecoveryCases.find(c => c.loanNumber === e.target.value);
+                  const found = recoveryCases.find(c => c.loanNumber === e.target.value);
                   setSelectedCase(found);
                 }}
                 className="flex-1 px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Select a recovery case</option>
-                {mockRecoveryCases.map(case_ => (
-                  <option key={case_.id} value={case_.loanNumber}>
+                {recoveryCases.map(case_ => (
+                  <option key={case_.recoveryId || case_.id || case_.loanNumber} value={case_.loanNumber}>
                     {case_.loanNumber} - {case_.customerName}
                   </option>
                 ))}
@@ -792,14 +657,14 @@ const RecoveryManagement = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200">
-                  {mockRecoveryCases.map((case_) => (
-                    <tr key={case_.id} className="hover:bg-slate-50 transition-colors">
+                  {recoveryCases.map((case_) => (
+                    <tr key={case_.id || case_.loanNumber || Math.random()} className="hover:bg-slate-50 transition-colors">
                       <td className="px-6 py-4 text-sm font-medium text-slate-800">
                         {case_.loanNumber}
                       </td>
                       <td className="px-6 py-4 text-sm text-slate-600">{case_.customerName}</td>
                       <td className="px-6 py-4 text-sm text-slate-600">
-                        ₹{case_.outstandingAmount.toLocaleString()}
+                        ₹{(case_.outstandingAmount ?? case_.totalOutstandingAmount ?? 0).toLocaleString()}
                       </td>
                       <td className="px-6 py-4">
                         <span className={`text-sm font-medium ${
@@ -812,21 +677,12 @@ const RecoveryManagement = () => {
                         </span>
                       </td>
                       <td className="px-6 py-4 text-sm text-slate-600">{case_.assignedAgent}</td>
-                      <td className="px-6 py-4">
-                        <select
-                          className="px-2 py-1 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-32"
-                          defaultValue=""
-                        >
-                          <option value="" disabled>Select agent</option>
-                          {recoveryAgents.map(agent => (
-                            <option key={agent.id} value={agent.name}>{agent.name}</option>
-                          ))}
-                        </select>
-                      </td>
+                      {/* Agent dropdown removed: no agent data available */}
                       <td className="px-6 py-4">
                         <button
-                          onClick={() => handleAssignCase(case_.loanNumber, 'Agent')}
+                          onClick={() => handleAssignCase(case_.id, 'Agent')}
                           className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                          disabled={!case_.id}
                         >
                           <UserCheck className="w-4 h-4" />
                           Assign
