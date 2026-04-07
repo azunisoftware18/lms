@@ -172,7 +172,7 @@ export const payforecloseLoanController = async (req: Request, res: Response) =>
     const summary = {
       remainingPrincipal: formatNumber(result.remainingPrincipal),
       accruedInterest: formatNumber(result.accruedInterest),
-      penalty: formatNumber(result.foreclosurePenalty ?? result.penalty ?? 0),
+      penalty: formatNumber(result.foreclosurePenalty ?? result?.foreClosure?.penalty ?? 0),
       unpaidEmiCharges: formatNumber(result.unpaidEmiCharges),
       totalPayable: formatNumber(result.totalPayable),
     };
