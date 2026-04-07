@@ -15,7 +15,7 @@ import Button from "../../../components/ui/Button";
 import SearchField from "../../../components/ui/SearchField";
 import StatusCard from "../../../components/common/StatusCard";
 import DocumentPageTable from "../../../components/tables/DocumentPageTable";
-import { colorVariables } from "../../../lib";
+// colorVariables intentionally unused in this file
 
 import {
   useLoanApplications,
@@ -25,13 +25,15 @@ import {
   useRejectDocument,
   useLoanApplication,
 } from "../../../hooks/useLoanApplication";
+// Document upload will render as a full page (like LoanApplicationForm) instead of a modal
+import DocumentUploadForm from "../../../components/forms/DocumentUploadForm";
 import { useLoanTypes } from "../../../hooks/useLoanType";
 import { useLoanDocumentList } from "../../../hooks/useLoanDocumentList";
 
 export default function DocumentPage() {
   const [showUploadModal, setShowUploadModal] = useState(false);
   // uploadFiles: { applicant: {docType: File}, coApplicant: {docType: File}, guarantor: {docType: File} }
-  const [uploadFiles, setUploadFiles] = useState({
+  const [_uploadFiles, _setUploadFiles] = useState({
     applicant: {},
     coApplicant: {},
     guarantor: {},
@@ -39,16 +41,17 @@ export default function DocumentPage() {
   });
 
   const [selectedApplication, setSelectedApplication] = useState(null);
+  const [uploadTargetDoc, setUploadTargetDoc] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const { data, isLoading: isLoadingApplications } = useLoanApplications();
-  const applications = data?.data || [];
+  const applications = React.useMemo(() => data?.data || [], [data]);
 
   // Fetch full application to get loanTypeId
   const { data: selectedAppFull } = useLoanApplication(selectedApplication?.id);
 
   const loanTypeId =
     selectedAppFull?.data?.loanTypeId || selectedApplication?.loanTypeId;
-  const { loanTypes, loading: isLoadingLoanTypes } = useLoanTypes();
+  const { loanTypes, loading: _isLoadingLoanTypes } = useLoanTypes();
   const loanType = loanTypes?.find((lt) => lt.id === loanTypeId);
 
   // Filter applications based on search
@@ -78,17 +81,21 @@ export default function DocumentPage() {
   // Document stats
   const documentStats = {
     total: documents.length,
-    verified: documents.filter((d) => d.verificationStatus === "verified")
-      .length,
-    pending: documents.filter((d) => d.verificationStatus === "PENDING").length,
-    rejected: documents.filter((d) => d.verificationStatus === "REJECTED")
-      .length,
+    verified: documents.filter(
+      (d) => (d.verificationStatus || "").toLowerCase() === "verified",
+    ).length,
+    pending: documents.filter(
+      (d) => (d.verificationStatus || "").toLowerCase() === "pending",
+    ).length,
+    rejected: documents.filter(
+      (d) => (d.verificationStatus || "").toLowerCase() === "rejected",
+    ).length,
   };
 
   // Handlers for document verification/rejection
   const verifyDocumentMutation = useVerifyDocument();
   const rejectDocumentMutation = useRejectDocument();
-  const uploadDocumentsMutation = useUploadDocuments();
+  const _uploadDocumentsMutation = useUploadDocuments();
 
   const handleVerify = async (docId) => {
     if (!docId) return;
@@ -97,8 +104,8 @@ export default function DocumentPage() {
     refetchDocuments();
   };
 
-  const handleReject = async (docId) => {
-    const reason = prompt("Enter rejection reason");
+  // Accept a rejection remark from the UI confirmation dialog
+  const handleReject = async (docId, reason) => {
     if (!reason) return;
     if (!selectedApplication) return;
     await rejectDocumentMutation.mutateAsync({
@@ -129,31 +136,31 @@ export default function DocumentPage() {
 
   // Defensive: fallback to empty array and log warnings if fields are missing
   const missingFields = [];
-  const applicantRequiredDocs =
+  const _applicantRequiredDocs =
     loanType?.applicantDocumentsRequired !== undefined
       ? parseDocs(loanType.applicantDocumentsRequired)
       : (missingFields.push("applicantDocumentsRequired"), []);
-  const applicantOptionalDocs =
+  const _applicantOptionalDocs =
     loanType?.applicantDocumentsOptional !== undefined
       ? parseDocs(loanType.applicantDocumentsOptional)
       : (missingFields.push("applicantDocumentsOptional"), []);
-  const coApplicantRequiredDocs =
+  const _coApplicantRequiredDocs =
     loanType?.coApplicantDocumentsRequired !== undefined
       ? parseDocs(loanType.coApplicantDocumentsRequired)
       : (missingFields.push("coApplicantDocumentsRequired"), []);
-  const coApplicantOptionalDocs =
+  const _coApplicantOptionalDocs =
     loanType?.coApplicantDocumentsOptional !== undefined
       ? parseDocs(loanType.coApplicantDocumentsOptional)
       : (missingFields.push("coApplicantDocumentsOptional"), []);
-  const guarantorRequiredDocs =
+  const _guarantorRequiredDocs =
     loanType?.guarantorDocumentsRequired !== undefined
       ? parseDocs(loanType.guarantorDocumentsRequired)
       : (missingFields.push("guarantorDocumentsRequired"), []);
-  const guarantorOptionalDocs =
+  const _guarantorOptionalDocs =
     loanType?.guarantorDocumentsOptional !== undefined
       ? parseDocs(loanType.guarantorDocumentsOptional)
       : (missingFields.push("guarantorDocumentsOptional"), []);
-  const otherRequiredDocs =
+  const _otherRequiredDocs =
     loanType?.otherDocumentsRequired !== undefined
       ? parseDocs(loanType.otherDocumentsRequired)
       : (missingFields.push("otherDocumentsRequired"), []);
@@ -161,7 +168,7 @@ export default function DocumentPage() {
   // Accept either `otherDocumentsOptional` or the older typo `otherDocumentsOptions`
   const otherOptionalRaw =
     loanType?.otherDocumentsOptional ?? loanType?.otherDocumentsOptions;
-  const otherOptionalDocs =
+  const _otherOptionalDocs =
     otherOptionalRaw !== undefined
       ? parseDocs(otherOptionalRaw)
       : (missingFields.push("otherDocumentsOptional"), []);
@@ -180,7 +187,7 @@ export default function DocumentPage() {
   }, [loanType && loanType.id]);
 
   // Show a warning in the UI if loanType or required doc fields are missing
-  const missingDocsWarning = !loanType
+  const _missingDocsWarning = !loanType
     ? "Loan type not found for this application. Document requirements unavailable."
     : [
           "applicantDocumentsRequired",
@@ -192,545 +199,150 @@ export default function DocumentPage() {
         ].some((field) => loanType[field] === undefined)
       ? "Some document requirement fields are missing for this loan type. Please check loan type configuration."
       : null;
-
+  // TODO: If Port will change then also should change this
   // If application selected, show document management view
+  const buildDocumentUrl = (path) => {
+    if (!path) return "";
+    if (/^https?:\/\//i.test(path)) return path;
+    const normalized = path.startsWith("/") ? path : `/${path}`;
+    return `http://localhost:4000${normalized}`;
+  };
+
   if (selectedApplication) {
     return (
-      <>
-        {/* New Document List Section */}
+      <div className="min-h-screen bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="mb-4 flex items-center justify-between">
+            <button
+              onClick={handleBackToApplications}
+              className="text-sm text-blue-600 hover:underline mr-4"
+            >
+              ← Back to applications
+            </button>
 
-        <div className="min-h-screen bg-slate-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {missingDocsWarning && (
-              <div className="mb-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 rounded">
-                {missingDocsWarning}
-              </div>
-            )}
-            <div className="mb-6">
+            <div className="ml-auto">
               <Button
-                onClick={handleBackToApplications}
-                className="mb-4 bg-transparent shadow-none px-0 py-0 text-blue-700 hover:text-blue-800 hover:bg-transparent"
+                variant="outline"
+                onClick={() => setShowUploadModal(true)}
               >
-                <span className="text-blue-900">← Back to Applications</span>
+                Upload Documents
               </Button>
-              <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-                <div>
-                  <div className="flex items-center gap-3 mb-3">
-                    <h1 className="text-2xl font-bold text-gray-900">
-                      {selectedApplication.loanNumber}
-                    </h1>
-                    <span
-                      className={`px-3 py-1 ${colorVariables.LIGHT_BG} text-blue-700 text-sm font-medium rounded-full`}
-                    >
-                      Document Verification
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold">Applicant</span>
-                      <span>
-                        {selectedApplication.customer?.firstName}{" "}
-                        {selectedApplication.customer?.lastName}
-                      </span>
-                    </div>
-                    {/* Add co-applicant info if available */}
-                    {selectedApplication.coApplicantName && (
-                      <div className="flex items-center gap-2">
-                        <UserPlus className="w-5 h-5 text-gray-500" />
-                        <div>
-                          <p className="text-sm text-gray-500">Co-applicant</p>
-                          <p className="font-semibold">
-                            {selectedApplication.coApplicantName}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                    <div className="flex items-center gap-2">
-                      <Banknote className="w-5 h-5 text-gray-500" />
-                      <div>
-                        <p className="text-sm text-gray-500">Loan Amount</p>
-                        <p className="font-semibold">
-                          ₹
-                          {selectedApplication.loanAmount
-                            ? selectedApplication.loanAmount.toLocaleString(
-                                "en-IN",
-                              )
-                            : "0"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <button
-                    type="button"
-                    className={`px-4 py-2 ${colorVariables.PRIMARY_BUTTON_COLOR} text-white rounded-lg flex items-center gap-2`}
-                    onClick={() => setShowUploadModal(true)}
-                  >
-                    <Upload size={18} />
-                    Upload Document
-                  </button>
-                </div>
-                {/* Upload Modal */}
-                {showUploadModal && (
-                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-                    <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl relative max-h-[90vh] overflow-y-auto">
-                      <button
-                        className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-                        onClick={() => setShowUploadModal(false)}
-                      >
-                        &times;
-                      </button>
-                      <h2 className="text-lg font-bold mb-4">
-                        Upload Documents
-                      </h2>
-                      {isLoadingLoanTypes ? (
-                        <div>Loading document requirements...</div>
-                      ) : (
-                        <form
-                          onSubmit={async (e) => {
-                            e.preventDefault();
-                            if (!selectedApplication) return;
-                            // Validation: Ensure all required docs are uploaded
-                            const missingRequired = [];
-                            [
-                              {
-                                party: "applicant",
-                                docs: applicantRequiredDocs,
-                              },
-                              {
-                                party: "coApplicant",
-                                docs: coApplicantRequiredDocs,
-                              },
-                              {
-                                party: "guarantor",
-                                docs: guarantorRequiredDocs,
-                              },
-                              { party: "other", docs: otherRequiredDocs },
-                            ].forEach(({ party, docs }) => {
-                              const partyFiles = uploadFiles[party] || {};
-                              docs.forEach((docType) => {
-                                if (!partyFiles[docType]) {
-                                  missingRequired.push(`${party} - ${docType}`);
-                                }
-                              });
-                            });
-                            if (missingRequired.length > 0) {
-                              toast.error(
-                                `Please upload all required documents: ${missingRequired.join(", ")}`,
-                              );
-                              return;
-                            }
-                            // Collect all files for all parties
-                            const allEntries = [];
-                            [
-                              "applicant",
-                              "coApplicant",
-                              "guarantor",
-                              "other",
-                            ].forEach((party) => {
-                              Object.entries(uploadFiles[party] || {}).forEach(
-                                ([docType, file]) => {
-                                  if (file)
-                                    allEntries.push({ party, docType, file });
-                                },
-                              );
-                            });
-                            if (allEntries.length === 0) {
-                              toast.error(
-                                "Please select at least one document to upload.",
-                              );
-                              return;
-                            }
-                            // Always normalize documentType to match backend expectations
-                            const normalizeDocType = (type) =>
-                              type.trim().toUpperCase().replace(/\s+/g, "_");
-                            const filesPayload = allEntries.map((entry) => ({
-                              file: entry.file,
-                              documentType: normalizeDocType(entry.docType),
-                            }));
-                            await uploadDocumentsMutation.mutateAsync({
-                              id: selectedApplication.id,
-                              files: filesPayload,
-                              // Optionally, party can be sent if needed for all
-                            });
-                            toast.success("Documents uploaded successfully");
-                            setShowUploadModal(false);
-                            setUploadFiles({
-                              applicant: {},
-                              coApplicant: {},
-                              guarantor: {},
-                              other: {},
-                            });
-                            refetchDocuments();
-                          }}
-                        >
-                          <div className="w-full overflow-x-auto max-h-[65vh] overflow-y-auto pr-2">
-                            {/* Applicant */}
-                            <h3 className="font-semibold mb-4 text-left">
-                              Applicant
-                            </h3>
-                            <div className="flex flex-col gap-3 mb-8">
-                              {[
-                                ...applicantRequiredDocs.map((d) => ({
-                                  type: d,
-                                  required: true,
-                                })),
-                                ...applicantOptionalDocs.map((d) => ({
-                                  type: d,
-                                  required: false,
-                                })),
-                              ].length === 0 && (
-                                <div className="text-xs text-gray-500">
-                                  No documents
-                                </div>
-                              )}
-                              {[
-                                ...applicantRequiredDocs.map((d) => ({
-                                  type: d,
-                                  required: true,
-                                })),
-                                ...applicantOptionalDocs.map((d) => ({
-                                  type: d,
-                                  required: false,
-                                })),
-                              ].map(({ type, required }) => (
-                                <div
-                                  key={type}
-                                  className="flex flex-col gap-2 border-2 border-blue-200 rounded-xl p-4 bg-white shadow-sm min-w-0 transition-all w-full"
-                                  style={{ minHeight: 90 }}
-                                >
-                                  <span
-                                    className="block text-base font-semibold text-gray-900 break-words max-w-full"
-                                    title={type}
-                                  >
-                                    {type}
-                                  </span>
-                                  <span
-                                    className={`block text-xs mt-1 ${required ? "text-red-500" : "text-gray-400"}`}
-                                  >
-                                    {required ? "Required" : "Optional"}
-                                  </span>
-                                  <input
-                                    type="file"
-                                    accept="application/pdf,image/*"
-                                    className="w-full file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-base file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                                    onChange={(e) => {
-                                      setUploadFiles((f) => ({
-                                        ...f,
-                                        applicant: {
-                                          ...f.applicant,
-                                          [type]: e.target.files[0],
-                                        },
-                                      }));
-                                    }}
-                                  />
-                                  {uploadFiles.applicant[type] && (
-                                    <span
-                                      className="text-green-700 text-sm font-medium truncate max-w-full"
-                                      title={uploadFiles.applicant[type].name}
-                                    >
-                                      {uploadFiles.applicant[type].name}
-                                    </span>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                            {/* Co-Applicant */}
-                            <h3 className="font-semibold mb-4 text-left">
-                              Co-Applicant
-                            </h3>
-                            <div className="flex flex-col gap-3 mb-8">
-                              {[
-                                ...coApplicantRequiredDocs.map((d) => ({
-                                  type: d,
-                                  required: true,
-                                })),
-                                ...coApplicantOptionalDocs.map((d) => ({
-                                  type: d,
-                                  required: false,
-                                })),
-                              ].length === 0 && (
-                                <div className="text-xs text-gray-500">
-                                  No documents
-                                </div>
-                              )}
-                              {[
-                                ...coApplicantRequiredDocs.map((d) => ({
-                                  type: d,
-                                  required: true,
-                                })),
-                                ...coApplicantOptionalDocs.map((d) => ({
-                                  type: d,
-                                  required: false,
-                                })),
-                              ].map(({ type, required }) => (
-                                <div
-                                  key={type}
-                                  className="flex flex-col gap-2 border-2 border-blue-200 rounded-xl p-4 bg-white shadow-sm min-w-0 transition-all w-full"
-                                  style={{ minHeight: 90 }}
-                                >
-                                  <span
-                                    className="block text-base font-semibold text-gray-900 break-words max-w-full"
-                                    title={type}
-                                  >
-                                    {type}
-                                  </span>
-                                  <span
-                                    className={`block text-xs mt-1 ${required ? "text-red-500" : "text-gray-400"}`}
-                                  >
-                                    {required ? "Required" : "Optional"}
-                                  </span>
-                                  <input
-                                    type="file"
-                                    accept="application/pdf,image/*"
-                                    className="w-full file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-base file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                                    onChange={(e) => {
-                                      setUploadFiles((f) => ({
-                                        ...f,
-                                        coApplicant: {
-                                          ...f.coApplicant,
-                                          [type]: e.target.files[0],
-                                        },
-                                      }));
-                                    }}
-                                  />
-                                  {uploadFiles.coApplicant[type] && (
-                                    <span
-                                      className="text-green-700 text-sm font-medium truncate max-w-full"
-                                      title={uploadFiles.coApplicant[type].name}
-                                    >
-                                      {uploadFiles.coApplicant[type].name}
-                                    </span>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                            {/* Guarantor */}
-                            <h3 className="font-semibold mb-4 text-left">
-                              Guarantor
-                            </h3>
-                            <div className="flex flex-col gap-3">
-                              {[
-                                ...guarantorRequiredDocs.map((d) => ({
-                                  type: d,
-                                  required: true,
-                                })),
-                                ...guarantorOptionalDocs.map((d) => ({
-                                  type: d,
-                                  required: false,
-                                })),
-                              ].length === 0 && (
-                                <div className="text-xs text-gray-500">
-                                  No documents
-                                </div>
-                              )}
-                              {[
-                                ...guarantorRequiredDocs.map((d) => ({
-                                  type: d,
-                                  required: true,
-                                })),
-                                ...guarantorOptionalDocs.map((d) => ({
-                                  type: d,
-                                  required: false,
-                                })),
-                              ].map(({ type, required }) => (
-                                <div
-                                  key={type}
-                                  className="flex flex-col gap-2 border-2 border-blue-200 rounded-xl p-4 bg-white shadow-sm min-w-0 transition-all w-full"
-                                  style={{ minHeight: 90 }}
-                                >
-                                  <span
-                                    className="block text-base font-semibold text-gray-900 break-words max-w-full"
-                                    title={type}
-                                  >
-                                    {type}
-                                  </span>
-                                  <span
-                                    className={`block text-xs mt-1 ${required ? "text-red-500" : "text-gray-400"}`}
-                                  >
-                                    {required ? "Required" : "Optional"}
-                                  </span>
-                                  <input
-                                    type="file"
-                                    accept="application/pdf,image/*"
-                                    className="w-full file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-base file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                                    onChange={(e) => {
-                                      setUploadFiles((f) => ({
-                                        ...f,
-                                        guarantor: {
-                                          ...f.guarantor,
-                                          [type]: e.target.files[0],
-                                        },
-                                      }));
-                                    }}
-                                  />
-                                  {uploadFiles.guarantor[type] && (
-                                    <span
-                                      className="text-green-700 text-sm font-medium truncate max-w-full"
-                                      title={uploadFiles.guarantor[type].name}
-                                    >
-                                      {uploadFiles.guarantor[type].name}
-                                    </span>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                            {/* Other Documents */}{" "}
-                            <h3 className="font-semibold mb-4 text-left">
-                              Other Documents
-                            </h3>
-                            <div className="flex flex-col gap-3">
-                              {[
-                                ...otherRequiredDocs.map((d) => ({
-                                  type: d,
-                                  required: true,
-                                })),
-                                ...otherOptionalDocs.map((d) => ({
-                                  type: d,
-                                  required: false,
-                                })),
-                              ].length === 0 && (
-                                <div className="text-xs text-gray-500">
-                                  No documents
-                                </div>
-                              )}
-                              {[
-                                ...otherRequiredDocs.map((d) => ({
-                                  type: d,
-                                  required: true,
-                                })),
-                                ...otherOptionalDocs.map((d) => ({
-                                  type: d,
-                                  required: false,
-                                })),
-                              ].map(({ type, required }) => (
-                                <div
-                                  key={type}
-                                  className="flex flex-col gap-2 border-2 border-blue-200 rounded-xl p-4 bg-white shadow-sm min-w-0 transition-all w-full"
-                                  style={{ minHeight: 90 }}
-                                >
-                                  <span
-                                    className="block text-base font-semibold text-gray-900 break-words max-w-full"
-                                    title={type}
-                                  >
-                                    {type}
-                                  </span>
-                                  <span
-                                    className={`block text-xs mt-1 ${required ? "text-red-500" : "text-gray-400"}`}
-                                  >
-                                    {required ? "Required" : "Optional"}
-                                  </span>
-                                  <input
-                                    type="file"
-                                    accept="application/pdf,image/*"
-                                    className="w-full file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-base file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                                    onChange={(e) => {
-                                      setUploadFiles((f) => ({
-                                        ...f,
-                                        other: {
-                                          ...f.other,
-                                          [type]: e.target.files[0],
-                                        },
-                                      }));
-                                    }}
-                                  />
-                                  {uploadFiles.other[type] && (
-                                    <span
-                                      className="text-green-700 text-sm font-medium truncate max-w-full"
-                                      title={uploadFiles.other[type].name}
-                                    >
-                                      {uploadFiles.other[type].name}
-                                    </span>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                          <div className="mt-6 flex justify-end gap-2">
-                            <button
-                              type="button"
-                              className="px-4 py-2 bg-gray-200 rounded"
-                              onClick={() => setShowUploadModal(false)}
-                            >
-                              Cancel
-                            </button>
-                            <button
-                              type="submit"
-                              className={`px-4 py-2 ${colorVariables.PRIMARY_BUTTON_COLOR} text-white rounded`}
-                            >
-                              Submit All
-                            </button>
-                          </div>
-                        </form>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-            {/* Document Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-              <StatusCard
-                title="Total Documents"
-                value={documentStats.total}
-                icon={FileText}
-                variant="blue"
-              />
-              <StatusCard
-                title="Verified"
-                value={documentStats.verified}
-                icon={CheckCircle}
-                variant="green"
-              />
-              <StatusCard
-                title="Pending"
-                value={documentStats.pending}
-                icon={Clock}
-                variant="orange"
-              />
-              <StatusCard
-                title="Rejected"
-                value={documentStats.rejected}
-                icon={XCircle}
-                variant="red"
-              />
-            </div>
-            {/* Documents Table */}
-            <div>
-              <div className="p-6 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Documents
-                </h2>
-              </div>
-              <DocumentPageTable
-                documents={documents.map((doc) => ({
-                  id: doc.id,
-                  name: doc.documentType || doc.documentName || "-",
-                  category: doc.category || "-",
-                  applicantType:
-                    doc.ownerType ||
-                    (doc.party ? doc.party.toUpperCase() : "APPLICANT"),
-                  uploadDate: doc.createdAt
-                    ? new Date(doc.createdAt).toLocaleDateString()
-                    : "-",
-                  status: doc.verificationStatus
-                    ? doc.verificationStatus.toUpperCase()
-                    : "-",
-                  documentPath: doc.documentPath,
-                  // Add any other fields needed for actions
-                }))}
-                loading={isLoadingDocuments}
-                onViewDocument={(doc) =>
-                  window.open(doc.documentPath, "_blank")
-                }
-                onVerify={handleVerify}
-                onReject={handleReject}
-              />
             </div>
           </div>
+
+          {!showUploadModal ? (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <StatusCard
+                  title="Total Documents"
+                  value={documentStats.total}
+                  icon={FileText}
+                  variant="blue"
+                />
+                <StatusCard
+                  title="Verified"
+                  value={documentStats.verified}
+                  icon={CheckCircle}
+                  variant="green"
+                />
+                <StatusCard
+                  title="Pending"
+                  value={documentStats.pending}
+                  icon={Clock}
+                  variant="orange"
+                />
+                <StatusCard
+                  title="Rejected"
+                  value={documentStats.rejected}
+                  icon={XCircle}
+                  variant="red"
+                />
+              </div>
+
+              {/* Documents Table */}
+              <div>
+                <div className="p-6 border-b border-gray-200">
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Documents
+                  </h2>
+                </div>
+                <DocumentPageTable
+                  documents={documents.map((doc) => ({
+                    id: doc.id,
+                    name: doc.documentType || doc.documentName || "-",
+                    category: doc.category || "-",
+                    applicantType:
+                      doc.ownerType ||
+                      (doc.party ? doc.party.toUpperCase() : "APPLICANT"),
+                    uploadDate: doc.createdAt
+                      ? new Date(doc.createdAt).toLocaleDateString()
+                      : "-",
+                    status: doc.verificationStatus
+                      ? doc.verificationStatus.toUpperCase()
+                      : "-",
+                    documentPath: doc.documentPath,
+                  }))}
+                  loading={isLoadingDocuments}
+                  onViewDocument={(doc) =>
+                    window.open(buildDocumentUrl(doc.documentPath), "_blank")
+                  }
+                  onUploadDocument={(doc) => {
+                    setUploadTargetDoc(doc);
+                    setShowUploadModal(true);
+                  }}
+                  onVerify={handleVerify}
+                  onReject={handleReject}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="max-w-5xl mx-auto px-6 py-6 bg-white rounded-lg shadow">
+              <DocumentUploadForm
+                selectedApplication={selectedApplication}
+                uploadFiles={_uploadFiles}
+                setUploadFiles={_setUploadFiles}
+                uploadDocumentsMutation={_uploadDocumentsMutation}
+                applicantRequiredDocs={_applicantRequiredDocs}
+                applicantOptionalDocs={_applicantOptionalDocs}
+                coApplicantRequiredDocs={_coApplicantRequiredDocs}
+                coApplicantOptionalDocs={_coApplicantOptionalDocs}
+                guarantorRequiredDocs={_guarantorRequiredDocs}
+                guarantorOptionalDocs={_guarantorOptionalDocs}
+                otherRequiredDocs={_otherRequiredDocs}
+                otherOptionalDocs={_otherOptionalDocs}
+                refetchDocuments={refetchDocuments}
+                onClose={() => setShowUploadModal(false)}
+              />
+            </div>
+          )}
+          {showUploadModal && (
+            <div className="fixed inset-0  lg:pl-64 bg-white overflow-y-auto z-40 pointer-events-auto mt-16">
+              <div className="max-w-5xl mx-auto px-6 py-6 pointer-events-auto">
+                <DocumentUploadForm
+                  selectedApplication={selectedApplication}
+                  uploadFiles={_uploadFiles}
+                  setUploadFiles={_setUploadFiles}
+                  uploadDocumentsMutation={_uploadDocumentsMutation}
+                  applicantRequiredDocs={_applicantRequiredDocs}
+                  applicantOptionalDocs={_applicantOptionalDocs}
+                  coApplicantRequiredDocs={_coApplicantRequiredDocs}
+                  coApplicantOptionalDocs={_coApplicantOptionalDocs}
+                  guarantorRequiredDocs={_guarantorRequiredDocs}
+                  guarantorOptionalDocs={_guarantorOptionalDocs}
+                  otherRequiredDocs={_otherRequiredDocs}
+                  otherOptionalDocs={_otherOptionalDocs}
+                  refetchDocuments={refetchDocuments}
+                  onClose={() => {
+                    setShowUploadModal(false);
+                    setUploadTargetDoc(null);
+                  }}
+                  initialDocument={uploadTargetDoc}
+                />
+              </div>
+            </div>
+          )}
         </div>
-      </>
+      </div>
     );
   }
 

@@ -14,7 +14,8 @@ export const useEligibility = (loanApplicationId) => {
 
   return useQuery({
     queryKey: ["eligibility", loanApplicationId],
-    queryFn: () => apiGet(`/rule-engine/eligibility-check/${loanApplicationId}`),
+    // Backend mounts the eligibility router under /risk
+    queryFn: () => apiGet(`/risk/eligibility-check/${loanApplicationId}`),
     enabled: !!loanApplicationId,
     onSuccess: (data) => {
       dispatch(setEligibilityData(data));
