@@ -59,7 +59,7 @@ export default function StepNavbar({
       </nav>
 
       <div className="mt-4">
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-blue-900 to-transparent" />
+        <div className="h-px w-full bg-linear-to-r from-transparent via-blue-900 to-transparent" />
       </div>
     </div>
   );

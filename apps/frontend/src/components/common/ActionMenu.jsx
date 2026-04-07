@@ -18,7 +18,10 @@ export default function ActionMenu({
       const rect = triggerRef.current.getBoundingClientRect();
       setCoords({
         top: rect.bottom + window.scrollY,
-        left: align === "right" ? rect.right + window.scrollX : rect.left + window.scrollX,
+        left:
+          align === "right"
+            ? rect.right + window.scrollX
+            : rect.left + window.scrollX,
       });
     }
     setIsOpen(!isOpen);
@@ -26,8 +29,12 @@ export default function ActionMenu({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target) &&
-        triggerRef.current && !triggerRef.current.contains(event.target)) {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(event.target)
+      ) {
         setIsOpen(false);
       }
     };
@@ -60,18 +67,18 @@ export default function ActionMenu({
   // alignment class adjustment
   const alignmentClass = align === "right" ? "-translate-x-full" : "";
 
-  const renderActionIcon = (icon, isDanger) => {
+  const renderActionIcon = (icon, isDanger, isSuccess) => {
     if (!icon) return null;
 
     const baseClass = isDanger
       ? "text-red-500"
-      : "text-gray-400 group-hover:text-blue-500";
+      : isSuccess
+        ? "text-green-500"
+        : "text-gray-400 group-hover:text-blue-500";
 
     if (React.isValidElement(icon)) {
       return (
-        <span className={`mr-3 transition-colors ${baseClass}`}>
-          {icon}
-        </span>
+        <span className={`mr-3 transition-colors ${baseClass}`}>{icon}</span>
       );
     }
 
@@ -91,53 +98,65 @@ export default function ActionMenu({
         type="button"
         onClick={handleToggle}
         className={`p-2 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-100 
-          ${isOpen ? 'bg-gray-100 text-blue-600' : 'hover:bg-gray-100 text-gray-500'}`}
+          ${isOpen ? "bg-gray-100 text-blue-600" : "hover:bg-gray-100 text-gray-500"}`}
       >
         <MoreVertical size={20} />
       </button>
 
       {/* Menu Panel using Portal */}
-      {isOpen && createPortal(
-        <div
-          ref={menuRef}
-          style={{
-            position: 'absolute',
-            top: `${coords.top}px`,
-            left: `${coords.left}px`,
-            zIndex: 9999 // Sabse upar dikhne ke liye
-          }}
-          className={`mt-2 w-52 rounded-xl border border-gray-100 
+      {isOpen &&
+        createPortal(
+          <div
+            ref={menuRef}
+            style={{
+              position: "absolute",
+              top: `${coords.top}px`,
+              left: `${coords.left}px`,
+              zIndex: 9999, // Sabse upar dikhne ke liye
+            }}
+            className={`mt-2 w-52 rounded-xl border border-gray-100 
             bg-white shadow-2xl focus:outline-none 
             animate-in fade-in zoom-in-95 duration-100 ${alignmentClass} ${menuClassName}`}
-          role="menu"
-        >
-          <div className="py-1.5 px-1.5">
-            {actions.map((action, index) => (
-              <React.Fragment key={index}>
-                {action.divider && <div className="my-1 border-t border-gray-100" />}
-                <button
-                  onClick={() => {
-                    action.onClick?.();
-                    setIsOpen(false);
-                  }}
-                  disabled={action.disabled}
-                  className={`flex w-full items-center px-3 py-2 text-sm rounded-lg transition-colors group
+            role="menu"
+          >
+            <div className="py-1.5 px-1.5">
+              {actions.map((action, index) => (
+                <React.Fragment key={index}>
+                  {action.divider && (
+                    <div className="my-1 border-t border-gray-100" />
+                  )}
+                  <button
+                    onClick={() => {
+                      action.onClick?.();
+                      setIsOpen(false);
+                    }}
+                    disabled={action.disabled}
+                    className={`flex w-full items-center px-3 py-2 text-sm rounded-lg transition-colors group
                     ${action.disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}
-                    ${action.isDanger
-                      ? "text-red-600 hover:bg-red-50"
-                      : "text-gray-700 hover:bg-gray-50 hover:text-blue-600"
+                    ${
+                      action.isDanger
+                        ? "text-red-600 hover:bg-red-50"
+                        : action.isSuccess
+                          ? "text-green-700 hover:bg-green-50"
+                          : "text-gray-700 hover:bg-gray-50 hover:text-blue-600"
                     }`}
-                  role="menuitem"
-                >
-                  {renderActionIcon(action.icon, action.isDanger)}
-                  <span className="flex-1 text-left font-medium">{action.label}</span>
-                </button>
-              </React.Fragment>
-            ))}
-          </div>
-        </div>,
-        document.body
-      )}
+                    role="menuitem"
+                  >
+                    {renderActionIcon(
+                      action.icon,
+                      action.isDanger,
+                      action.isSuccess,
+                    )}
+                    <span className="flex-1 text-left font-medium">
+                      {action.label}
+                    </span>
+                  </button>
+                </React.Fragment>
+              ))}
+            </div>
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

@@ -1,16 +1,17 @@
-import { FileText, CheckCircle, XCircle, Clock, Eye } from "lucide-react";
+import React, { useState } from "react";
+import {
+  FileText,
+  CheckCircle,
+  XCircle,
+  Clock,
+  Eye,
+  Upload,
+} from "lucide-react";
 import { TableShell, TableLoader, TableEmpty } from "./core";
+import ActionMenu from "../common/ActionMenu";
+import ConfirmationDialog from "../common/ConfirmationDialog";
 
-const COLUMNS = [
-  "Document",
-  "Category",
-  "Applicant",
-  "Upload Date",
-  "Status",
-  "Actions",
-];
-
-const getCategoryLabel = (category) => category?.replaceAll("_", " ") || "-";
+const COLUMNS = ["Document", "Applicant", "Upload Date", "Status", "Actions"];
 
 function ApplicantBadge({ applicantType }) {
   const isPrimary = applicantType === "APPLICANT";
@@ -29,21 +30,24 @@ function ApplicantBadge({ applicantType }) {
 }
 
 function StatusBadge({ status }) {
+  const normalized = (status || "").toLowerCase();
   const tone =
-    status === "verified"
+    normalized === "verified"
       ? "bg-green-100 text-green-700"
-      : status === "PENDING"
+      : normalized === "pending"
         ? "bg-yellow-100 text-yellow-700"
         : "bg-red-100 text-red-700";
+
+  const display = status ? String(status).toUpperCase() : "-";
 
   return (
     <span
       className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${tone}`}
     >
-      {status === "verified" && <CheckCircle className="w-3 h-3 mr-1" />}
-      {status === "PENDING" && <Clock className="w-3 h-3 mr-1" />}
-      {status === "REJECTED" && <XCircle className="w-3 h-3 mr-1" />}
-      {status}
+      {normalized === "verified" && <CheckCircle className="w-3 h-3 mr-1" />}
+      {normalized === "pending" && <Clock className="w-3 h-3 mr-1" />}
+      {normalized === "rejected" && <XCircle className="w-3 h-3 mr-1" />}
+      {display}
     </span>
   );
 }
@@ -54,6 +58,7 @@ export default function DocumentPageTable({
   onViewDocument = () => {},
   onVerify = () => {},
   onReject = () => {},
+  onUploadDocument = () => {},
 }) {
   return (
     <TableShell>
@@ -62,7 +67,9 @@ export default function DocumentPageTable({
           {COLUMNS.map((column) => (
             <th
               key={column}
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+              className={`px-6 py-3 text-xs font-medium text-gray-500 uppercase ${
+                column === "Actions" ? "text-right" : "text-left"
+              }`}
             >
               {column}
             </th>
@@ -90,9 +97,6 @@ export default function DocumentPageTable({
                     </span>
                   </div>
                 </td>
-                <td className={`${cellClass} text-sm text-gray-600`}>
-                  {getCategoryLabel(doc.category)}
-                </td>
                 <td className={cellClass}>
                   <ApplicantBadge applicantType={doc.applicantType} />
                 </td>
@@ -102,32 +106,15 @@ export default function DocumentPageTable({
                 <td className={cellClass}>
                   <StatusBadge status={doc.status} />
                 </td>
-                <td className={cellClass}>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => onViewDocument(doc)}
-                      className="text-blue-600 hover:text-blue-800"
-                      title="View Document"
-                    >
-                      <Eye className="w-4 h-4" />
-                    </button>
-
-                    {doc.status === "PENDING" && (
-                      <>
-                        <button
-                          onClick={() => onVerify(doc.id)}
-                          className="px-3 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200 text-xs font-medium"
-                        >
-                          Verify
-                        </button>
-                        <button
-                          onClick={() => onReject(doc.id)}
-                          className="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 text-xs font-medium"
-                        >
-                          Reject
-                        </button>
-                      </>
-                    )}
+                <td className={`${cellClass} text-right`}>
+                  <div className="inline-flex items-center">
+                    <TableRowActions
+                      doc={doc}
+                      onView={onViewDocument}
+                      onVerify={onVerify}
+                      onReject={onReject}
+                      onUpload={onUploadDocument}
+                    />
                   </div>
                 </td>
               </tr>
@@ -136,5 +123,70 @@ export default function DocumentPageTable({
         </tbody>
       )}
     </TableShell>
+  );
+}
+
+function TableRowActions({ doc, onView, onVerify, onReject, onUpload }) {
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const isPending = (doc.status || "").toLowerCase() === "pending";
+  const isRejected = (doc.status || "").toLowerCase() === "rejected";
+
+  const actions = [
+    {
+      label: "View",
+      icon: Eye,
+      onClick: () => onView(doc),
+    },
+    ...(isPending
+      ? [
+          {
+            label: "Verify",
+            icon: CheckCircle,
+            isSuccess: true,
+            onClick: () => onVerify(doc.id),
+          },
+        ]
+      : []),
+    ...(isRejected
+      ? [
+          {
+            label: "Upload",
+            icon: Upload,
+            onClick: () => onUpload && onUpload(doc),
+          },
+        ]
+      : []),
+    {
+      label: "Reject",
+      icon: XCircle,
+      isDanger: true,
+      onClick: () => setConfirmOpen(true),
+    },
+  ];
+
+  return (
+    <>
+      <ActionMenu
+        actions={actions}
+        containerClassName=""
+        menuClassName=""
+        align="right"
+      />
+      <ConfirmationDialog
+        open={confirmOpen}
+        title="Reject Document"
+        description="Please provide a reason for rejecting this document."
+        confirmText="Reject"
+        cancelText="Cancel"
+        showRemark={true}
+        variant="danger"
+        onCancel={() => setConfirmOpen(false)}
+        onConfirm={(remark) => {
+          setConfirmOpen(false);
+          onReject(doc.id, remark);
+        }}
+        isPopup={true}
+      />
+    </>
   );
 }
