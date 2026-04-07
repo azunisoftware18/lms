@@ -116,7 +116,9 @@ export default function EligibilityPage() {
     if (!loanApplicationId || checkingId) return;
     setCheckingId(loanApplicationId);
     try {
-        const response = await apiGet(`/risk/eligibility-check/${loanApplicationId}`);
+      const response = await apiGet(
+        `/risk/eligibility-check/${loanApplicationId}`,
+      );
       const result = normalizeResult(response);
       setEligibilityResults((prev) => ({
         ...prev,

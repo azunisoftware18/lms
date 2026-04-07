@@ -72,8 +72,12 @@ export default function EligibilityTable({
             return (
               <tr key={row.id} className="hover:bg-slate-50 transition-colors">
                 <td className="px-4 py-3">
-                  <p className="font-semibold text-slate-800">{row.loanNumber || "-"}</p>
-                  <p className="text-sm text-slate-700 mt-1">{row.applicantName || "-"}</p>
+                  <p className="font-semibold text-slate-800">
+                    {row.loanNumber || "-"}
+                  </p>
+                  <p className="text-sm text-slate-700 mt-1">
+                    {row.applicantName || "-"}
+                  </p>
                 </td>
                 <td className="px-4 py-3 font-semibold text-slate-800">
                   {formatCurrency(row.requestedAmount)}
