@@ -209,8 +209,8 @@ export default function DocumentUploadForm({
             onClose && onClose();
             refetchDocuments && refetchDocuments();
             return;
-          } catch (err) {
-            toast.error("Re-upload failed");
+          } catch (error) {
+            toast.error(error?.response?.data?.message || "Failed to re-upload document");
             return;
           }
         }
