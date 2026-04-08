@@ -24,7 +24,7 @@ import {
 import toast from "react-hot-toast";
 import ForeClosureTable from "../../../components/tables/ForeClosureTable";
 import { useSettlementsByLoan } from "../../../hooks/useSettlements";
-import { useLoanApplications } from "../../../hooks/useLoanApplication"; // Import the actual hook
+import { useLoanApplications } from "../../../hooks/useLoanApplication";
 
 const PrepaymentForeclosure = () => {
   // State for active tab
@@ -65,7 +65,7 @@ const PrepaymentForeclosure = () => {
   // State for transaction history
   const [transactionHistory, setTransactionHistory] = useState([]);
 
-  // ✅ Use the actual useLoanApplications hook
+  // Use the actual useLoanApplications hook
   const loanQuery = useLoanApplications({ limit: 100 });
 
   const loansData = loanQuery?.data;
@@ -275,6 +275,37 @@ const PrepaymentForeclosure = () => {
     setActiveTab("confirmation");
   };
 
+  // Handle apply foreclosure directly
+  const handleApplyForeclosure = () => {
+    if (!searchedLoan) {
+      toast.error("No loan selected");
+      return;
+    }
+    
+    // First check if foreclosure data is available
+    if (!foreclosureData.totalPayable) {
+      // Calculate foreclosure first
+      handleCalculateForeclosure();
+      toast.loading("Calculating foreclosure amount...", { id: "foreclosure-calc" });
+      
+      // Wait a bit for calculation to complete
+      setTimeout(() => {
+        toast.dismiss("foreclosure-calc");
+        if (foreclosureData.totalPayable) {
+          // Proceed to confirmation
+          setActiveTab("confirmation");
+          toast.success("Foreclosure amount calculated. Please proceed with confirmation.");
+        } else {
+          toast.error("Unable to calculate foreclosure amount. Please try again.");
+        }
+      }, 1000);
+    } else {
+      // If foreclosure data is already available, go directly to confirmation
+      setActiveTab("confirmation");
+      toast.success("Proceeding to foreclosure confirmation");
+    }
+  };
+
   // Handle confirm foreclosure
   const payForecloseMut = usePayForecloseLoan();
 
@@ -432,17 +463,29 @@ const PrepaymentForeclosure = () => {
                 Loan Summary
               </h2>
             </div>
-            <span
-              className={`px-3 py-1 rounded-full text-xs font-medium w-fit ${
-                loanStatus === "ACTIVE" || loanStatus === "active" || loanStatus === "approved"
-                  ? "bg-green-100 text-green-700"
-                  : loanStatus === "CLOSED" || loanStatus === "closed" || loanStatus === "settled"
-                  ? "bg-gray-100 text-gray-700"
-                  : "bg-yellow-100 text-yellow-700"
-              }`}
-            >
-              {loanStatus?.toUpperCase() || "ACTIVE"}
-            </span>
+            
+            <div className="flex flex-wrap items-center gap-3">
+              <span
+                className={`px-3 py-1 rounded-full text-xs font-medium ${
+                  loanStatus === "ACTIVE" || loanStatus === "active" || loanStatus === "approved"
+                    ? "bg-green-100 text-green-700"
+                    : loanStatus === "CLOSED" || loanStatus === "closed" || loanStatus === "settled"
+                    ? "bg-gray-100 text-gray-700"
+                    : "bg-yellow-100 text-yellow-700"
+                }`}
+              >
+                {loanStatus?.toUpperCase() || "ACTIVE"}
+              </span>
+              
+              {/* Apply Foreclosure Button */}
+              <button
+                onClick={handleApplyForeclosure}
+                className="flex items-center gap-2 px-4 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm whitespace-nowrap"
+              >
+                <FileCheck className="w-4 h-4" />
+                Apply Foreclosure
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -913,10 +956,7 @@ const PrepaymentForeclosure = () => {
             </div>
           )}
         </div>
-        
       )}
-
-      
 
       {/* Transaction History Table */}
       <div className="mt-8">
@@ -928,8 +968,8 @@ const PrepaymentForeclosure = () => {
             amountPaid: loan.loanAmount,
             status: loan.status,
             date: "06 Apr 2026",
-        }))}
-/>
+          }))}
+        />
       </div>
     </div>
   );

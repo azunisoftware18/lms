@@ -14,14 +14,10 @@ import {
   Bell,
   Search,
   Filter,
-  ChevronDown,
   ArrowUp,
   ArrowDown,
   PieChart,
   BarChart3,
-  Download,
-  Mail,
-  Phone,
   MoreVertical
 } from 'lucide-react';
 
