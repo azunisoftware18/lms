@@ -12,7 +12,9 @@ export default function FilterDropdown({
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
-  const activeOption = options.find((o) => o.value === value);
+  // Treat empty string as no selection so placeholder shows (useful for "All" semantics)
+  const activeOption =
+    value && value !== "" ? options.find((o) => o.value === value) : undefined;
 
   // Outside click logic
   useEffect(() => {

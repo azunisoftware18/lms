@@ -2,7 +2,7 @@ import React from "react";
 import FilterDropdown from "../ui/FilterDropdown";
 
 const OPTIONS = [
-  { label: "All", value: "ALL" },
+  { label: "All", value: "" },
   { label: "Today", value: "TODAY" },
   { label: "This Week", value: "WEEK" },
   { label: "This Month", value: "MONTH" },
@@ -16,11 +16,18 @@ export default function DateFilter({
   onChange = () => {},
   className = "",
 }) {
+  // Show placeholder when parent value is 'ALL' by mapping to empty-string
+  const displayValue = value === "ALL" ? "" : value;
+
+  const handleChange = (v) => {
+    onChange(v === "" ? "ALL" : v);
+  };
+
   return (
     <div className={className}>
       <FilterDropdown
-        value={value}
-        onChange={onChange}
+        value={displayValue}
+        onChange={handleChange}
         options={OPTIONS}
         placeholder="Filter by Date"
       />

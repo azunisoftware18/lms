@@ -1,5 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Plus, Hash, IndianRupee, ShieldCheck, Briefcase } from "lucide-react";
+import {
+  Plus,
+  Hash,
+  IndianRupee,
+  ShieldCheck,
+  Briefcase,
+  Clock3,
+  CircleCheckBig,
+  CircleX,
+  FileCheck2,
+  FileClock,
+} from "lucide-react";
 import Button from "../../../components/ui/Button";
 import StatusCard from "../../../components/common/StatusCard";
 import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
@@ -19,10 +30,10 @@ export default function ProfessionalNBFCPortal() {
   const [showForm, setShowForm] = useState(false);
   const [searchTerm] = useState("");
   const [viewModalOpen, setViewModalOpen] = useState(false);
-  const [currentPage] = useState(1);
   const [showApproveDialog, setShowApproveDialog] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [statusFilter, setStatusFilter] = useState("");
+  const [dateRange, setDateRange] = useState("ALL");
 
   // Correct usage: call the hook inside the component, after selectedId is defined
   const { data: selectedApp, isLoading } = useLoanApplication(selectedId);
@@ -43,7 +54,65 @@ export default function ProfessionalNBFCPortal() {
     return apiData.length > 0 ? apiData : SAMPLE_LOAN_APPLICATIONS;
   }, [applicationsResponse]);
 
-  const PAGE_SIZE = 10;
+  const getApplicationDate = (app) => {
+    const raw = app?.applicationDate || app?.createdAt || app?.updatedAt;
+    if (!raw) return null;
+    const d = new Date(raw);
+    return Number.isNaN(d.getTime()) ? null : d;
+  };
+
+  const inDateRange = (appDate, range) => {
+    if (!appDate || !range || range === "ALL") return true;
+
+    const now = new Date();
+    const startToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+    );
+
+    if (range === "TODAY") {
+      return appDate >= startToday;
+    }
+
+    if (range === "WEEK") {
+      const startWeek = new Date(startToday);
+      const day = startWeek.getDay();
+      const diff = day === 0 ? 6 : day - 1;
+      startWeek.setDate(startWeek.getDate() - diff);
+      return appDate >= startWeek;
+    }
+
+    if (range === "MONTH") {
+      const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      return appDate >= startMonth;
+    }
+
+    if (range === "LAST_3_MONTHS") {
+      const start = new Date(
+        now.getFullYear(),
+        now.getMonth() - 3,
+        now.getDate(),
+      );
+      return appDate >= start;
+    }
+
+    if (range === "LAST_6_MONTHS") {
+      const start = new Date(
+        now.getFullYear(),
+        now.getMonth() - 6,
+        now.getDate(),
+      );
+      return appDate >= start;
+    }
+
+    if (range === "YEAR") {
+      const startYear = new Date(now.getFullYear(), 0, 1);
+      return appDate >= startYear;
+    }
+
+    return true;
+  };
 
   const handleRefreshApplications = async () => {
     showInfo("Refreshing applications...");
@@ -67,22 +136,81 @@ export default function ProfessionalNBFCPortal() {
 
   // Filter applications based on search term
   const filteredApplications = applications.filter((app) => {
+    const appDate = getApplicationDate(app);
     const matchesStatus =
       !statusFilter ||
       (app.status && app.status.toLowerCase() === statusFilter.toLowerCase());
+    const matchesDate = inDateRange(appDate, dateRange);
     const matchesSearch =
       `${app.customer?.firstName || ""} ${app.customer?.lastName || ""}`
         .toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
       app.customer?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       app.customer?.panNumber?.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesStatus && matchesSearch;
+    return matchesStatus && matchesSearch && matchesDate;
   });
 
-  const paginatedApplications = filteredApplications.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE,
-  );
+  const statusCounts = useMemo(() => {
+    return filteredApplications.reduce((acc, app) => {
+      const key = String(app?.status || "PENDING").toUpperCase();
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+  }, [filteredApplications]);
+
+  const totalApplications = filteredApplications.length;
+  const statusCards = [
+    {
+      title: "Total Applications",
+      value: totalApplications,
+      icon: FileCheck2,
+      colorClass: "text-white",
+      bgClass: "bg-gradient-to-r from-blue-500 to-blue-600",
+      percent: totalApplications ? 100 : 0,
+    },
+    {
+      title: "Pending",
+      value: statusCounts.PENDING || 0,
+      icon: Clock3,
+      colorClass: "text-amber-700",
+      bgClass: "bg-amber-50",
+      percent: totalApplications
+        ? Math.round(((statusCounts.PENDING || 0) / totalApplications) * 100)
+        : 0,
+    },
+    {
+      title: "Under Review",
+      value: statusCounts.UNDER_REVIEW || 0,
+      icon: FileClock,
+      colorClass: "text-indigo-700",
+      bgClass: "bg-indigo-50",
+      percent: totalApplications
+        ? Math.round(
+            ((statusCounts.UNDER_REVIEW || 0) / totalApplications) * 100,
+          )
+        : 0,
+    },
+    {
+      title: "Approved",
+      value: statusCounts.APPROVED || 0,
+      icon: CircleCheckBig,
+      colorClass: "text-green-700",
+      bgClass: "bg-green-50",
+      percent: totalApplications
+        ? Math.round(((statusCounts.APPROVED || 0) / totalApplications) * 100)
+        : 0,
+    },
+    {
+      title: "Rejected",
+      value: statusCounts.REJECTED || 0,
+      icon: CircleX,
+      colorClass: "text-red-700",
+      bgClass: "bg-red-50",
+      percent: totalApplications
+        ? Math.round(((statusCounts.REJECTED || 0) / totalApplications) * 100)
+        : 0,
+    },
+  ];
 
   // Status filter options for dropdown
   const filterOptions = [
@@ -228,10 +356,10 @@ export default function ProfessionalNBFCPortal() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] p-6">
+    <div className="min-h-screen bg-[#f8fafc] p-3 sm:p-4 lg:p-6">
       {/* NBFC Header */}
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-end mb-8 border-b border-slate-200 pb-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-end mb-6 sm:mb-8 border-b border-slate-200 pb-4 sm:pb-6">
           <div>
             <div className="flex items-center gap-2 mb-2">
               <ShieldCheck className="text-blue-600" size={28} />
@@ -245,16 +373,30 @@ export default function ProfessionalNBFCPortal() {
           </div>
           <Button
             onClick={() => setShowForm(true)}
-            className="bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200"
+            className="bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200 w-full sm:w-auto justify-center"
           >
             <Plus size={18} className="mr-2" /> New Application
           </Button>
         </div>
 
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-3 sm:gap-4 mb-5 sm:mb-6">
+          {statusCards.map((card) => (
+            <StatusCard
+              key={card.title}
+              title={card.title}
+              value={card.value}
+              icon={card.icon}
+              colorClass={card.colorClass}
+              bgClass={card.bgClass}
+              percent={card.percent}
+            />
+          ))}
+        </div>
+
         {/* Application Data Grid */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
           <ApplicationPageTable
-            applications={paginatedApplications}
+            applications={filteredApplications}
             tableColumns={tableColumns}
             onRefresh={handleRefreshApplications}
             refreshing={refreshingApplications}
@@ -270,6 +412,8 @@ export default function ProfessionalNBFCPortal() {
             filterOptions={filterOptions}
             filterValue={statusFilter}
             setFilterValue={setStatusFilter}
+            dateRange={dateRange}
+            setDateRange={setDateRange}
           />
         </div>
       </div>

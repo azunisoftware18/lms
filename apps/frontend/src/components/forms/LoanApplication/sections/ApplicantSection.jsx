@@ -5,7 +5,7 @@ import { User, Phone, IndianRupee } from "lucide-react";
 import Button from "../../../ui/Button";
 import InputField from "../../../ui/InputField";
 import SelectField from "../../../ui/SelectField";
-import { apiGet } from "../../../../lib/api/apiClient";
+import { apiGet, apiPost } from "../../../../lib/api/apiClient";
 import {
   showError,
   showInfo,
@@ -40,6 +40,11 @@ export default function ApplicantSection({
 }) {
   const [leadQuery, setLeadQuery] = useState("");
   const [aadhaarQuery, setAadhaarQuery] = useState("");
+  const [aadhaarOtp, setAadhaarOtp] = useState("");
+  const [aadhaarOtpSent, setAadhaarOtpSent] = useState(false);
+  const [aadhaarVerified, setAadhaarVerified] = useState(false);
+  const [aadhaarSessionId, setAadhaarSessionId] = useState("");
+  const [fallbackOtp, setFallbackOtp] = useState("");
   const [searching, setSearching] = useState(false);
   const leadQueryHook = useGetLead(leadQuery, { enabled: false });
   const fillApplicant = (data) => {
@@ -147,6 +152,9 @@ export default function ApplicantSection({
 
   const handleAadhaarSearch = async () => {
     if (!aadhaarQuery) return showInfo("Enter Aadhaar to search");
+    if (!aadhaarVerified) {
+      return showInfo("Verify OTP first, then fetch Aadhaar details");
+    }
     const val = aadhaarQuery.replace(/\D/g, "").slice(0, 12);
     try {
       setSearching(true);
@@ -156,6 +164,70 @@ export default function ApplicantSection({
       showSuccess("Customer details loaded");
     } catch (err) {
       showError(err?.message || "No record found for Aadhaar");
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const handleSendAadhaarOtp = async () => {
+    const val = aadhaarQuery.replace(/\D/g, "").slice(0, 12);
+    if (val.length !== 12) return showInfo("Enter valid 12-digit Aadhaar");
+
+    try {
+      setSearching(true);
+      const res = await apiPost("/customers/aadhaar/send-otp", {
+        aadhaar: val,
+      });
+      const sid = res?.data?.sessionId || res?.sessionId || "";
+      setAadhaarSessionId(String(sid || ""));
+      setAadhaarOtpSent(true);
+      setAadhaarVerified(false);
+      setFallbackOtp("");
+      showSuccess("OTP sent successfully");
+    } catch {
+      // Development fallback when OTP service is unavailable.
+      setAadhaarOtpSent(true);
+      setAadhaarVerified(false);
+      setAadhaarSessionId("");
+      setFallbackOtp("123456");
+      showInfo("OTP service unavailable. Use OTP 123456 for now.");
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const handleVerifyAadhaarOtp = async () => {
+    const val = aadhaarQuery.replace(/\D/g, "").slice(0, 12);
+    const otp = aadhaarOtp.replace(/\D/g, "").slice(0, 6);
+    if (val.length !== 12) return showInfo("Enter valid 12-digit Aadhaar");
+    if (otp.length !== 6) return showInfo("Enter valid 6-digit OTP");
+
+    try {
+      setSearching(true);
+      if (aadhaarSessionId) {
+        await apiPost("/customers/aadhaar/verify-otp", {
+          aadhaar: val,
+          otp,
+          sessionId: aadhaarSessionId,
+        });
+        setAadhaarVerified(true);
+        showSuccess("OTP verified successfully");
+        return;
+      }
+
+      if (fallbackOtp && otp === fallbackOtp) {
+        setAadhaarVerified(true);
+        showSuccess("OTP verified successfully");
+      } else {
+        showError("Invalid OTP");
+      }
+    } catch (err) {
+      if (fallbackOtp && otp === fallbackOtp) {
+        setAadhaarVerified(true);
+        showSuccess("OTP verified successfully");
+      } else {
+        showError(err?.message || "OTP verification failed");
+      }
     } finally {
       setSearching(false);
     }
@@ -191,24 +263,69 @@ export default function ApplicantSection({
                 <InputField
                   label="Fetch by Aadhaar"
                   value={aadhaarQuery}
-                  onChange={(e) =>
-                    setAadhaarQuery(
-                      e.target.value.replace(/\D/g, "").slice(0, 12),
-                    )
-                  }
+                  onChange={(e) => {
+                    const sanitized = e.target.value
+                      .replace(/\D/g, "")
+                      .slice(0, 12);
+                    setAadhaarQuery(sanitized);
+                    setAadhaarOtp("");
+                    setAadhaarOtpSent(false);
+                    setAadhaarVerified(false);
+                    setAadhaarSessionId("");
+                    setFallbackOtp("");
+                  }}
                   placeholder="Enter 12-digit Aadhaar"
                 />
               </div>
               <div className="mt-6">
                 <Button
                   type="button"
-                  onClick={handleAadhaarSearch}
-                  disabled={searching}
+                  onClick={handleSendAadhaarOtp}
+                  disabled={searching || aadhaarQuery.length !== 12}
                 >
-                  {searching ? "Fetching..." : "Fetch"}
+                  {searching
+                    ? "Sending..."
+                    : aadhaarOtpSent
+                      ? "Resend OTP"
+                      : "Send OTP"}
                 </Button>
               </div>
             </div>
+
+            {aadhaarQuery.length === 12 && (
+              <div className="flex items-end gap-3">
+                <div className="flex-1">
+                  <InputField
+                    label="Enter OTP"
+                    value={aadhaarOtp}
+                    onChange={(e) =>
+                      setAadhaarOtp(
+                        e.target.value.replace(/\D/g, "").slice(0, 6),
+                      )
+                    }
+                    placeholder="Enter 6-digit OTP"
+                  />
+                </div>
+                <div className="mt-6 flex items-center gap-2">
+                  <Button
+                    type="button"
+                    onClick={handleVerifyAadhaarOtp}
+                    disabled={
+                      searching || aadhaarVerified || aadhaarOtp.length !== 6
+                    }
+                  >
+                    {aadhaarVerified ? "Verified" : "Verify OTP"}
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={handleAadhaarSearch}
+                    disabled={searching || !aadhaarVerified}
+                  >
+                    {searching ? "Fetching..." : "Fetch"}
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
 
           <SectionCard title="Personal Information" icon={User}>

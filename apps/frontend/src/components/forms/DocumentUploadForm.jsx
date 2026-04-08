@@ -210,7 +210,7 @@ export default function DocumentUploadForm({
             refetchDocuments && refetchDocuments();
             return;
           } catch (err) {
-            toast.error("Re-upload failed");
+            toast.error(err.message, "Re-upload failed");
             return;
           }
         }
