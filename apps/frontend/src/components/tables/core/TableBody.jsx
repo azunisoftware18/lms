@@ -80,9 +80,7 @@ export default function TableBody({
                         )}
                       </div>
 
-                      <div className="text-xs text-slate-400">
-                        #{row.id || index + 1}
-                      </div>
+                      {/* ID removed from mobile card view to avoid clutter */}
                     </div>
                   </div>
                 </div>

@@ -88,7 +88,7 @@ export default function ApplicationPageTable({
   return (
     <TableShell>
       <TableHead
-        title="Loan Applications"
+        title=""
         columns={columns}
         search={search}
         setSearch={setSearch}

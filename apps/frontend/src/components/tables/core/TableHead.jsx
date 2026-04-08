@@ -220,22 +220,7 @@ export default function TableHead({
           </th>
         </tr>
 
-        {/* Column Headers - Horizontal Scroll on Mobile */}
-        <tr className="border-t border-slate-200 bg-slate-50/50">
-          {columns.map((col) => (
-            <th
-              key={col.accessor}
-              className={`px-4 py-3 font-semibold text-slate-600 text-[10px] uppercase tracking-wider ${wrapHeaders ? "whitespace-normal wrap-break-word" : "whitespace-nowrap"} ${col.headerClassName || ""}`}
-            >
-              {col.header}
-            </th>
-          ))}
-          <th
-            className={`px-4 py-3 font-semibold text-slate-600 text-[10px] uppercase tracking-wider text-right ${wrapHeaders ? "whitespace-normal wrap-break-word" : "whitespace-nowrap"}`}
-          >
-            Actions
-          </th>
-        </tr>
+        {/* Column headers hidden on mobile to avoid duplicate/header clutter */}
 
         {/* Mobile Filter Drawer */}
         <MobileFilterDrawer
