@@ -94,6 +94,7 @@ export const ModelName = {
   CreditReport: 'CreditReport',
   CreditAccount: 'CreditAccount',
   LoanType: 'LoanType',
+  foreClosure: 'foreClosure',
   TechnicalReport: 'TechnicalReport',
   LegalReport: 'LegalReport',
   LoanAssignment: 'LoanAssignment',
@@ -1057,6 +1058,38 @@ export const LoanTypeScalarFieldEnum = {
 export type LoanTypeScalarFieldEnum = (typeof LoanTypeScalarFieldEnum)[keyof typeof LoanTypeScalarFieldEnum]
 
 
+export const ForeClosureScalarFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  appliedBy: 'appliedBy',
+  appliedAt: 'appliedAt',
+  applicationNote: 'applicationNote',
+  principalOutstanding: 'principalOutstanding',
+  interestAccrued: 'interestAccrued',
+  unpaidEmiCharges: 'unpaidEmiCharges',
+  penalty: 'penalty',
+  totalPayable: 'totalPayable',
+  approvalStatus: 'approvalStatus',
+  foreclosureAmount: 'foreclosureAmount',
+  foreclosureApprovedBy: 'foreclosureApprovedBy',
+  foreclosureApprovedAt: 'foreclosureApprovedAt',
+  settledAmount: 'settledAmount',
+  settledAt: 'settledAt',
+  settlementReference: 'settlementReference',
+  paymentMode: 'paymentMode',
+  settlementReceiptUrl: 'settlementReceiptUrl',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  rejectedBy: 'rejectedBy',
+  rejectedAt: 'rejectedAt',
+  reason: 'reason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ForeClosureScalarFieldEnum = (typeof ForeClosureScalarFieldEnum)[keyof typeof ForeClosureScalarFieldEnum]
+
+
 export const TechnicalReportScalarFieldEnum = {
   id: 'id',
   loanApplicationId: 'loanApplicationId',
@@ -1868,6 +1901,22 @@ export const LoanTypeOrderByRelevanceFieldEnum = {
 } as const
 
 export type LoanTypeOrderByRelevanceFieldEnum = (typeof LoanTypeOrderByRelevanceFieldEnum)[keyof typeof LoanTypeOrderByRelevanceFieldEnum]
+
+
+export const foreClosureOrderByRelevanceFieldEnum = {
+  id: 'id',
+  loanApplicationId: 'loanApplicationId',
+  appliedBy: 'appliedBy',
+  applicationNote: 'applicationNote',
+  foreclosureApprovedBy: 'foreclosureApprovedBy',
+  settlementReference: 'settlementReference',
+  settlementReceiptUrl: 'settlementReceiptUrl',
+  approvedBy: 'approvedBy',
+  rejectedBy: 'rejectedBy',
+  reason: 'reason'
+} as const
+
+export type foreClosureOrderByRelevanceFieldEnum = (typeof foreClosureOrderByRelevanceFieldEnum)[keyof typeof foreClosureOrderByRelevanceFieldEnum]
 
 
 export const TechnicalReportOrderByRelevanceFieldEnum = {

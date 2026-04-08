@@ -7,7 +7,7 @@ import {
   generateEmiScheduleService,
   markEmiPaidService,
   getThisMonthEmiAmountService,
-  payforecloseLoanService,
+  // payforecloseLoanService,
   getAllEmisService,
   applyMoratoriumService,
   getPayableEmiAmountService,
@@ -16,7 +16,7 @@ import {
 import {
   processOverdueEmis,
   payEmiService,
-  forecloseLoanService,
+
 } from "./emi.service.js";
 
 const sanitizeErrorMessage = (error: any) => {
@@ -346,56 +346,80 @@ export const payEmiServiceController = async (req: Request, res: Response) => {
   }
 };
 
-export const forecloseLoanController = async (req: Request, res: Response) => {
-  try {
-    const loanId = getParam(req, "loanId");
-    if (!loanId) {
-      throw AppError.badRequest("Loan id is required");
-    }
-    const loan = await ensureLoanBranchAccess(req, loanId);
-    // Implement foreclose loan logic here
-    const result = await forecloseLoanService(loan.id);
-    res.status(200).json({
-      success: true,
-      message: "Loan foreclosed successfully",
-      data: result,
-    });
-  } catch (error: any) {
-    res.status(error.statusCode || 500).json({
-      success: false,
-      message: sanitizeErrorMessage(error) || "Failed to foreclose loan",
-      error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
-    });
-  }
-};
+// export const forecloseLoanController = async (req: Request, res: Response) => {
+//   try {
+//     const loanId = getParam(req, "loanId");
+//     if (!loanId) {
+//       throw AppError.badRequest("Loan id is required");
+//     }
+//     const loan = await ensureLoanBranchAccess(req, loanId);
+//     // Implement foreclose loan logic here
+//     const result = await forecloseLoanService(loan.id);
+//     res.status(200).json({
+//       success: true,
+//       message: "Loan foreclosed successfully",
+//       data: result,
+//     });
+//   } catch (error: any) {
+//     res.status(error.statusCode || 500).json({
+//       success: false,
+//       message: sanitizeErrorMessage(error) || "Failed to foreclose loan",
+//       error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
+//     });
+//   }
+// };
 
-export const payforecloseLoanController = async (
-  req: Request,
-  res: Response,
-) => {
-  try {
-    const loanId = getParam(req, "loanId");
-    const { userId, branchId } = requireActor(req);
-    if (!loanId) {
-      throw AppError.badRequest("Loan id is required");
-    }
-    const loan = await ensureLoanBranchAccess(req, loanId);
-    const data = req.body;
-    // Implement foreclose loan logic here
-    const result = await payforecloseLoanService(loan.id, data, userId, branchId);
-    res.status(200).json({
-      success: true,
-      message: "Loan foreclosed successfully",
-      data: result,
-    });
-  } catch (error: any) {
-    res.status(error.statusCode || 500).json({
-      success: false,
-      message: sanitizeErrorMessage(error) || "Failed to foreclose loan",
-      error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
-    });
-  }
-};
+// export const applyForecloseController = async (req: Request, res: Response) => {
+//   try {
+//     const loanId = getParam(req, "loanId");
+//     const { userId, branchId } = requireActor(req);
+//     if (!loanId) {
+//       throw AppError.badRequest("Loan id is required");
+//     }
+//     const loan = await ensureLoanBranchAccess(req, loanId);
+//     // Implement foreclose loan logic here
+//     const result = await applyForecloseLoanService(loan.id, userId, branchId, true);
+//     res.status(200).json({
+//       success: true,
+//       message: "Loan foreclose application submitted successfully",
+//       data: result,
+//     });
+//   } catch (error: any) {
+//     res.status(error.statusCode || 500).json({
+//       success: false,
+//       message: sanitizeErrorMessage(error) || "Failed to apply for loan foreclose",
+//       error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
+//     });
+//   }
+
+
+// export const payforecloseLoanController = async (
+//   req: Request,
+//   res: Response,
+// ) => {
+//   try {
+//     const loanId = getParam(req, "loanId");
+//     const { userId, branchId } = requireActor(req);
+//     if (!loanId) {
+//       throw AppError.badRequest("Loan id is required");
+//     }
+//     const loan = await ensureLoanBranchAccess(req, loanId);
+//     const data = req.body;
+//     // Implement foreclose loan logic here
+//     const result = await payforecloseLoanService(loan.id, data, userId, branchId);
+//     res.status(200).json({
+//       success: true,
+//       message: "Loan foreclosed successfully",
+//       data: result,
+//     });
+//   } catch (error: any) {
+//     res.status(error.statusCode || 500).json({
+//       success: false,
+//       message: sanitizeErrorMessage(error) || "Failed to foreclose loan",
+//       error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
+//     });
+//   }
+// };
 export const applyMoratoriumController = async (
   req: Request,
   res: Response,

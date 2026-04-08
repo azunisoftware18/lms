@@ -60,6 +60,7 @@ export const getAllLoanApplicationsController = async (
       message: "Loan applications retrieved successfully",
       data: result.data,
       meta: result.meta,
+      totalOutstandingAmount: result.totalOutstandingAmount ?? 0,
     });
   } catch (error: any) {
     res.status(error.statusCode || 500).json({

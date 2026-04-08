@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
-import { apiGet, apiPost, apiPatch, apiPut } from "../lib/api/apiClient";
+import { apiGet, apiPost, apiPut } from "../lib/api/apiClient";
 import { showSuccess, showError } from "../lib/utils/toastService";
 import { normalizeParams } from "../lib/utils/paramHelper";
 import {
@@ -154,9 +154,10 @@ export const useCreateLoanApplication = ({
 
       dispatch(setError(serverMsg));
       dispatch(setLoading(false));
-      showError(serverMsg);
       if (typeof onErrorCallback === "function") {
         onErrorCallback(error, variables, context);
+      } else {
+        showError(serverMsg);
       }
     },
     onSettled: (data, error, variables, context) => {
@@ -235,7 +236,7 @@ export const useRejectLoan = () => {
 
   return useMutation({
     mutationFn: ({ id, reason }) =>
-      apiPost(`/loan-applications/${id}/reject`, { reason }),
+      apiPut(`/loan-applications/${id}/reject`, { reason }),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -329,13 +330,10 @@ export const useRejectDocument = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: ({ applicationId, documentId, reason }) =>
-      apiPost(
-        `/loan-applications/${applicationId}/documents/${documentId}/reject`,
-        {
-          reason,
-        },
-      ),
+    mutationFn: ({ documentId, reason }) =>
+      apiPost(`/loan-applications/documents/${documentId}/reject`, {
+        reason,
+      }),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -347,6 +345,40 @@ export const useRejectDocument = () => {
     },
     onError: (error) => {
       const message = error?.message || "Failed to reject document";
+      dispatch(setError(message));
+      dispatch(setLoading(false));
+      showError(message);
+    },
+  });
+};
+
+// POST re-upload document: /loan-applications/documents/:documentId/reject
+export const useReUploadDocument = () => {
+  const qc = useQueryClient();
+  const dispatch = useDispatch();
+
+  return useMutation({
+    // Expects: { loanApplicationId, documentType, file }
+    mutationFn: ({ loanApplicationId, documentType, file }) => {
+      const formData = new FormData();
+      if (file) formData.append("document", file);
+      // Do NOT set Content-Type header explicitly; let the browser/axios set the boundary
+      return apiPost(
+        `/loan-applications/documents/${loanApplicationId}/${documentType}/reupload`,
+        formData,
+      );
+    },
+    onMutate: () => {
+      dispatch(setLoading(true));
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["loanApplication"] });
+      dispatch(setLoading(false));
+      dispatch(clearError());
+      showSuccess("Document re-uploaded successfully!");
+    },
+    onError: (error) => {
+      const message = error?.message || "Failed to re-upload document";
       dispatch(setError(message));
       dispatch(setLoading(false));
       showError(message);

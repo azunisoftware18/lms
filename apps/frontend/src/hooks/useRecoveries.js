@@ -20,7 +20,7 @@ export const useRecoveries = (params = {}) => {
 
   return useQuery({
     queryKey: ["recoveries", normalizedParams],
-    queryFn: () => apiGet("/recoveries", { params: normalizedParams }),
+    queryFn: () => apiGet("/recovery/recoveries", { params: normalizedParams }),
     onSuccess: (data) => {
       dispatch(setRecoveries(data));
       dispatch(clearError());
@@ -38,7 +38,7 @@ export const useRecoveryDetails = (recoveryId) => {
 
   return useQuery({
     queryKey: ["recoveryDetails", recoveryId],
-    queryFn: () => apiGet(`/recoveries/${recoveryId}`),
+    queryFn: () => apiGet(`recovery/recoveries/${recoveryId}`),
     enabled: !!recoveryId,
     onSuccess: (data) => {
       dispatch(setRecoveryDetails(data));
@@ -57,7 +57,7 @@ export const usePayRecovery = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: ({ recoveryId, data }) => apiPost(`/recoveries/${recoveryId}/pay`, data),
+    mutationFn: ({ recoveryId, data }) => apiPost(`recovery/recoveries/${recoveryId}/pay`, data),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -82,7 +82,7 @@ export const useAssignRecoveryAgent = () => {
 
   return useMutation({
     mutationFn: ({ recoveryId, data }) =>
-      apiPost(`/recoveries/${recoveryId}/assign`, data),
+      apiPost(`recovery/recoveries/${recoveryId}/assign`, data),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -108,7 +108,7 @@ export const useUpdateRecoveryStage = () => {
 
   return useMutation({
     mutationFn: ({ recoveryId, data }) =>
-      apiPut(`/recoveries/${recoveryId}/stage`, data),
+      apiPut(`recovery/recoveries/${recoveryId}/stage`, data),
     onMutate: () => {
       dispatch(setLoading(true));
     },
@@ -132,7 +132,7 @@ export const useRecoveryDashboard = () => {
 
   return useQuery({
     queryKey: ["recoveryDashboard"],
-    queryFn: () => apiGet("/dashboard"),
+    queryFn: () => apiGet("recovery/dashboard"),
     onError: (err) => {
       const message = err?.message || "Failed to fetch recovery dashboard";
       dispatch(setError(message));

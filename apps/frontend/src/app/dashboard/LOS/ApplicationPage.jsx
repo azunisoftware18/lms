@@ -5,7 +5,7 @@ import StatusCard from "../../../components/common/StatusCard";
 import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
 import ApplicationPageTable from "../../../components/tables/ApplicationPageTable";
 import LoanApplicationView from "../ViewDetail/LoanApplicationView";
-import LoanApplicationForm from "../../../components/forms/LoanApplicationForm";
+import LoanApplicationForm from "../../../components/forms/LoanApplication/LoanApplicationForm";
 import { useLoanApplication } from "../../../hooks/useLoanApplication";
 
 import {

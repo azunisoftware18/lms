@@ -27,7 +27,7 @@ const recoveryRouter = Router();
 
 
 recoveryRouter.get(
-  "/loan-applications/:loanId/recoveries",
+  "/loan-applications/:loanNumber/recoveries",
   authMiddleware,
   checkPermissionMiddleware("VIEW_LOAN_RECOVERIES"),
   getRecoveryByLoanIdController
@@ -58,7 +58,7 @@ recoveryRouter.put(
 );
 
 recoveryRouter.get(
-  "/loan-applications/:loanId/recovery-details",
+  "/loan-applications/:loanNumber/recovery-details",
   authMiddleware,
   checkPermissionMiddleware("VIEW_LOAN_RECOVERY_DETAILS"),
   getLoanWithRecoveryController

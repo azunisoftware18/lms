@@ -79,8 +79,16 @@ export default function Sidebar() {
             { name: "Credit Check", path: "/admin/los/credit-check" },
             { name: "Technical Review", path: "/admin/los/technical-review" },
             { name: "Legal Report", path: "/admin/los/legal-compliance" },
-            { name: "Sanction", path: "/admin/los/sanction" },
             {name:"EMI Schedule", path:"/admin/los/emi-schedule"},
+            { name: "Sanction", path: "/admin/los/sanction" },
+                {
+              name: "NACH Auto Debit",
+              path: currentUser?.role === "EMPLOYEE"
+                ? "/employee/los/nach-auto-debit"
+                : "/admin/los/nach-auto-debit",
+              permission: "VIEW_NACH_AUTO_DEBIT"
+            },
+         
             { name: "Disbursement", path: "/admin/los/disbursement" },
           ]
         },
@@ -93,10 +101,10 @@ export default function Sidebar() {
           subItems: [
 
             {
-              name: "Loan Account Creation",
+              name: "Loan Account Management",
               path: currentUser?.role === "EMPLOYEE"
-                ? "/employee/lms/loan-account-creation"
-                : "/admin/lms/loan-account-creation",
+                ? "/employee/lms/loan-account-management"
+                : "/admin/lms/loan-account-management",
               permission: "CREATE_LOAN"
             },
 
@@ -108,13 +116,13 @@ export default function Sidebar() {
             //   permission: "VIEW_EMI_SCHEDULE"
             // },
             { name: "EMI Management", path: "/admin/lms/emi-management" },
-            {
-              name: "Repayment Management",
-              path: currentUser?.role === "EMPLOYEE"
-                ? "/employee/lms/repayment-management"
-                : "/admin/lms/repayment-management",
-              permission: "VIEW_REPAYMENT_MANAGEMENT"
-            },
+            // {
+            //   name: "Repayment Management",
+            //   path: currentUser?.role === "EMPLOYEE"
+            //     ? "/employee/lms/repayment-management"
+            //     : "/admin/lms/repayment-management",
+            //   permission: "VIEW_REPAYMENT_MANAGEMENT"
+            // },
 
             // // --- REPAYMENT (Dropdown) ---
             // {
@@ -139,13 +147,7 @@ export default function Sidebar() {
             // },
 
 
-            {
-              name: "NACH Auto Debit",
-              path: currentUser?.role === "EMPLOYEE"
-                ? "/employee/lms/nach-auto-debit"
-                : "/admin/lms/nach-auto-debit",
-              permission: "VIEW_NACH_AUTO_DEBIT"
-            },
+        
             
             {
               name: "DPD Tracking",

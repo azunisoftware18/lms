@@ -16,9 +16,10 @@ export const getRecoveryByLoanIdController = async (
   req: Request,
   res: Response,
 ) => {
-  const { loanId } = req.params;
+  let { loanNumber } = req.params;
+  loanNumber = Array.isArray(loanNumber) ? loanNumber[0] : loanNumber;
   try {
-    const recovery = await getRecoveryByLoanIdService(loanId, req.user?.id);
+    const recovery = await getRecoveryByLoanIdService(loanNumber, req.user?.id);
 
     if (!recovery) {
       return res.status(404).json({
@@ -44,7 +45,8 @@ export const payRecoveryAmountController = async (
   req: Request,
   res: Response,
 ) => {
-  const { recoveryId } = req.params;
+  let { recoveryId } = req.params;
+  recoveryId = Array.isArray(recoveryId) ? recoveryId[0] : recoveryId;
   const { amount, paymentMode, referenceNo } = req.body;
   try {
     if (!req.user) {
@@ -97,7 +99,8 @@ export const assignRecoveryAgentController = async (
   req: Request,
   res: Response,
 ) => {
-  const { recoveryId } = req.params;
+  let { recoveryId } = req.params;
+  recoveryId = Array.isArray(recoveryId) ? recoveryId[0] : recoveryId;
   const { assignedTo } = req.body;
   try {
     if (!req.user) {
@@ -137,7 +140,8 @@ export const updateRecoveryStageController = async (
   req: Request,
   res: Response,
 ) => {
-  const { recoveryId } = req.params;
+  let { recoveryId } = req.params;
+  recoveryId = Array.isArray(recoveryId) ? recoveryId[0] : recoveryId;
   const { recoveryStage, remarks } = req.body;
   try {
     if (!req.user) {
@@ -241,7 +245,8 @@ export const getRecoveryDetailsController = async (
   req: Request,
   res: Response,
 ) => {
-  const { recoveryId } = req.params;
+  let { recoveryId } = req.params;
+  recoveryId = Array.isArray(recoveryId) ? recoveryId[0] : recoveryId;
   try {
     const recovery = await getRecoveryDetailsService(recoveryId);
     if (!recovery) {
@@ -268,7 +273,8 @@ export const getRecoveryByAgentController = async (
   req: Request,
   res: Response,
 ) => {
-  const { agentId } = req.params;
+  let { agentId } = req.params;
+  agentId = Array.isArray(agentId) ? agentId[0] : agentId;
   try {
     const recoveries = await getRecoveriesByAgentService(agentId);
     res.status(200).json({

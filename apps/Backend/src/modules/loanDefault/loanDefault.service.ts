@@ -249,7 +249,20 @@ export const getAllDefaultedLoansService = async (
         defaultedAt: true,
         dpd: true,
         approvedAmount: true,
-        branchId: true,
+        branch: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        loanType:{
+          select: {
+            id: true,
+            name: true,
+            category: true,
+          },
+          
+        },
         customer: {
           select: {
             id: true,

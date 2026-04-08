@@ -20,6 +20,9 @@ import {
   BarChart3,
   MoreVertical
 } from 'lucide-react';
+import { useLoanApplications } from '../../../hooks/useLoanApplication';
+import { useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
 const DelinquencyDashboard = () => {
   // State for filters
@@ -40,7 +43,7 @@ const DelinquencyDashboard = () => {
     previousPeriodRisk: 12.8
   };
 
-  // Mock DPD bucket data
+  // Mock DPD bucket data (fallback)
   const dpdBuckets = [
     {
       range: '1–30 DPD',
@@ -168,6 +171,98 @@ const DelinquencyDashboard = () => {
     }
   ];
 
+  // Fetch real loan applications from API and map to UI shape
+  const { data: loanQueryData, totalOutstandingAmount: hookTotalOutstanding } = useLoanApplications();
+  const apiLoansRaw = loanQueryData?.data?.data ?? loanQueryData?.data ?? loanQueryData ?? [];
+  const qc = useQueryClient();
+  const navigate = useNavigate();
+  const [menuOpenFor, setMenuOpenFor] = useState(null);
+  const [exportOpen, setExportOpen] = useState(false);
+
+  const getRiskFromDpd = (dpd) => {
+    if (dpd > 90) return 'Critical';
+    if (dpd > 60) return 'High';
+    if (dpd > 30) return 'Medium';
+    return 'Low';
+  };
+
+  const apiOverdueLoans = Array.isArray(apiLoansRaw)
+    ? apiLoansRaw.map((l, idx) => ({
+        id: l.id ?? l._id ?? idx,
+        loanNumber: l.loanNumber ?? l.loan_number ?? l.applicationNumber ?? l.loanId ?? `LN-${idx}`,
+        customerName:
+          l.customer?.name ?? l.customerName ?? l.applicantName ?? l.borrowerName ?? l.name ?? 'Unknown',
+        branch: l.branch?.name ?? l.branchName ?? l.branch ?? 'N/A',
+        emiAmount: l.emiAmount ?? l.emi_amount ?? l.monthlyInstallment ?? 0,
+        outstandingAmount:
+          l.outstandingAmount ?? l.outstanding_amount ?? l.loanOutstanding ?? l.outstanding ?? 0,
+        daysPastDue: l.daysPastDue ?? l.dpd ?? l.daysPastDueCount ?? 0,
+        riskLevel: l.riskLevel ?? l.risk_level ?? getRiskFromDpd(l.daysPastDue ?? l.dpd ?? 0),
+        phone: l.customer?.phone ?? l.phone ?? l.mobile ?? '',
+        email: l.customer?.email ?? l.email ?? ''
+      }))
+    : [];
+
+  // Use API data if available, otherwise fall back to mock data
+  const dataSource = apiOverdueLoans.length ? apiOverdueLoans : mockOverdueLoans;
+
+    // Compute summary and DPD buckets from API data when available
+    const computeNumber = (v) => {
+      const n = Number(v);
+      return Number.isFinite(n) ? n : 0;
+    };
+
+    const totalActive = apiLoansRaw && apiLoansRaw.length ? apiLoansRaw.length : portfolioSummary.totalActiveLoans;
+    const overdueLoansList = dataSource.filter(l => (l.daysPastDue ?? 0) > 0);
+    const totalOverdue = overdueLoansList.length;
+
+    const apiTotalOutstanding =
+      hookTotalOutstanding ??
+      loanQueryData?.totalOutstandingAmount ??
+      loanQueryData?.data?.totalOutstandingAmount ??
+      loanQueryData?.data?.data?.totalOutstandingAmount ??
+      null;
+
+    const hasApiTotalOutstanding = typeof apiTotalOutstanding === 'number' && !Number.isNaN(apiTotalOutstanding);
+
+    const computedTotalOutstanding = dataSource.reduce((sum, l) => sum + computeNumber(l.outstandingAmount), 0);
+
+    const totalOutstanding = hasApiTotalOutstanding
+      ? apiTotalOutstanding
+      : (computedTotalOutstanding || portfolioSummary.totalOutstandingAmount);
+
+    const totalOverdueOutstanding = overdueLoansList.reduce((sum, l) => sum + computeNumber(l.outstandingAmount), 0) || 0;
+
+    const portfolioSummaryLive = {
+      totalActiveLoans: totalActive,
+      totalOverdueLoans: totalOverdue,
+      totalOutstandingAmount: totalOutstanding,
+      portfolioRiskPercentage: totalActive ? Number(((totalOverdue / totalActive) * 100).toFixed(1)) : portfolioSummary.portfolioRiskPercentage
+    };
+
+    const dpdBucketsLive = [
+      { key: '1-30', range: '1–30 DPD', min: 1, max: 30, color: 'yellow', icon: Clock },
+      { key: '31-60', range: '31–60 DPD', min: 31, max: 60, color: 'orange', icon: AlertTriangle },
+      { key: '61-90', range: '61–90 DPD', min: 61, max: 90, color: 'red', icon: ShieldAlert },
+      { key: '90+', range: '90+ DPD', min: 91, max: Infinity, color: 'darkRed', icon: AlertTriangle }
+    ].map(b => {
+      const loansInBucket = overdueLoansList.filter(l => (l.daysPastDue ?? 0) >= b.min && (l.daysPastDue ?? 0) <= b.max);
+      const outstanding = loansInBucket.reduce((s, x) => s + computeNumber(x.outstandingAmount), 0);
+      const count = loansInBucket.length;
+      const percentage = totalOverdueOutstanding ? Number(((outstanding / totalOverdueOutstanding) * 100).toFixed(1)) : 0;
+      return {
+        range: b.range,
+        count,
+        outstanding,
+        percentage,
+        color: b.color,
+        icon: b.icon,
+        riskLevel: count === 0 ? 'Low Risk' : (b.key === '90+' ? 'Critical' : b.key === '61-90' ? 'High Risk' : b.key === '31-60' ? 'Medium Risk' : 'Low Risk')
+      };
+    });
+
+    const dpdBucketsDisplay = dpdBucketsLive.some(b => b.count > 0) ? dpdBucketsLive : dpdBuckets;
+
   // Get risk level color
   const getRiskColor = (riskLevel) => {
     switch (riskLevel) {
@@ -261,7 +356,7 @@ const DelinquencyDashboard = () => {
   };
 
   // Sort loans
-  const sortedLoans = [...mockOverdueLoans].sort((a, b) => {
+  const sortedLoans = [...dataSource].sort((a, b) => {
     if (sortField === 'dpd') {
       return sortDirection === 'asc' 
         ? a.daysPastDue - b.daysPastDue
@@ -298,23 +393,100 @@ const DelinquencyDashboard = () => {
 
   // Handle actions
   const handleRefresh = () => {
-    alert('Refreshing data...');
+    qc.invalidateQueries({ queryKey: ['loanApplications'] });
   };
 
-  const handleExport = () => {
-    alert('Exporting report...');
+  const exportCSV = () => {
+    const rows = filteredLoans && filteredLoans.length ? filteredLoans : dataSource;
+    const header = ['Loan Number', 'Customer Name', 'Branch', 'EMI Amount', 'Outstanding', 'Days Past Due', 'Risk Level'];
+    const csv = [header.join(',')].concat(
+      rows.map(r => [r.loanNumber, r.customerName, r.branch, r.emiAmount, r.outstandingAmount, r.daysPastDue, r.riskLevel]
+        .map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','))
+    ).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `overdue_loans_${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    setExportOpen(false);
   };
 
-  const handleViewLoan = (loanNumber) => {
-    alert(`Viewing loan: ${loanNumber}`);
+  const exportXLS = () => {
+    const rows = filteredLoans && filteredLoans.length ? filteredLoans : dataSource;
+    // Simple Excel XML (SpreadsheetML) compatible with Excel
+    const header = ['Loan Number','Customer Name','Branch','EMI Amount','Outstanding','Days Past Due','Risk Level'];
+    const escapeXml = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const rowsXml = [header].concat(rows.map(r => [r.loanNumber, r.customerName, r.branch, r.emiAmount, r.outstandingAmount, r.daysPastDue, r.riskLevel]))
+      .map(cols => '<Row>' + cols.map(c => `<Cell><Data ss:Type="String">${escapeXml(c)}</Data></Cell>`).join('') + '</Row>')
+      .join('');
+
+    const xml = `<?xml version="1.0"?>\n<?mso-application progid="Excel.Sheet"?>\n<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">\n  <Worksheet ss:Name="OverdueLoans">\n    <Table>\n      ${rowsXml}\n    </Table>\n  </Worksheet>\n</Workbook>`;
+
+    const blob = new Blob([xml], { type: 'application/vnd.ms-excel' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `overdue_loans_${new Date().toISOString().slice(0,10)}.xls`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    setExportOpen(false);
   };
 
-  const handleAssignRecovery = (customerName) => {
-    alert(`Assigning recovery for: ${customerName}`);
+  const exportPDF = () => {
+    const rows = filteredLoans && filteredLoans.length ? filteredLoans : dataSource;
+    const htmlRows = rows.map(r => `
+      <tr>
+        <td style="padding:6px;border:1px solid #ddd;">${r.loanNumber}</td>
+        <td style="padding:6px;border:1px solid #ddd;">${r.customerName}</td>
+        <td style="padding:6px;border:1px solid #ddd;">${r.branch}</td>
+        <td style="padding:6px;border:1px solid #ddd;">${r.emiAmount}</td>
+        <td style="padding:6px;border:1px solid #ddd;">${r.outstandingAmount}</td>
+        <td style="padding:6px;border:1px solid #ddd;">${r.daysPastDue}</td>
+        <td style="padding:6px;border:1px solid #ddd;">${r.riskLevel}</td>
+      </tr>`).join('');
+
+    const html = `
+      <html><head><title>Overdue Loans</title></head><body>
+      <h2>Overdue Loans</h2>
+      <table style="border-collapse:collapse;width:100%;font-family:Arial,Helvetica,sans-serif;">\n<thead><tr>
+        <th style="padding:6px;border:1px solid #ddd;text-align:left">Loan Number</th>
+        <th style="padding:6px;border:1px solid #ddd;text-align:left">Customer Name</th>
+        <th style="padding:6px;border:1px solid #ddd;text-align:left">Branch</th>
+        <th style="padding:6px;border:1px solid #ddd;text-align:right">EMI Amount</th>
+        <th style="padding:6px;border:1px solid #ddd;text-align:right">Outstanding</th>
+        <th style="padding:6px;border:1px solid #ddd;text-align:right">Days Past Due</th>
+        <th style="padding:6px;border:1px solid #ddd;text-align:left">Risk Level</th>
+      </tr></thead><tbody>\n${htmlRows}\n</tbody></table>
+      <script>setTimeout(()=>{window.print();},300);</script>
+      </body></html>`;
+
+    const w = window.open('', '_blank', 'noopener');
+    if (w) {
+      w.document.write(html);
+      w.document.close();
+    }
+    setExportOpen(false);
   };
 
-  const handleSendReminder = (customerName) => {
-    alert(`Sending reminder to: ${customerName}`);
+  const handleViewLoan = (loanId) => {
+    if (!loanId) return;
+    navigate(`/loan-applications/${loanId}`);
+  };
+
+  const handleAssignRecovery = (loanId) => {
+    if (!loanId) return;
+    navigate(`/recovery/assign/${loanId}`);
+  };
+
+  const handleSendReminder = (loanId) => {
+    if (!loanId) return;
+    navigate(`/loan-applications/${loanId}/reminders`);
   };
 
   return (
@@ -336,13 +508,23 @@ const DelinquencyDashboard = () => {
             <RefreshCw className="w-4 h-4" />
             Refresh Data
           </button>
-          <button
-            onClick={handleExport}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <FileDown className="w-4 h-4" />
-            Export Report
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setExportOpen(e => !e)}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <FileDown className="w-4 h-4" />
+              Export Report
+              <ChevronDown className="w-4 h-4 ml-1" />
+            </button>
+            {exportOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-md shadow-lg z-50">
+                <button onClick={exportCSV} className="w-full text-left px-3 py-2 hover:bg-slate-50">Export CSV</button>
+                <button onClick={exportXLS} className="w-full text-left px-3 py-2 hover:bg-slate-50">Export Excel (.xls)</button>
+                <button onClick={exportPDF} className="w-full text-left px-3 py-2 hover:bg-slate-50">Export PDF</button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -359,7 +541,7 @@ const DelinquencyDashboard = () => {
               +2.5%
             </span>
           </div>
-          <p className="text-2xl font-semibold text-slate-800">{portfolioSummary.totalActiveLoans.toLocaleString()}</p>
+          <p className="text-2xl font-semibold text-slate-800">{portfolioSummaryLive.totalActiveLoans.toLocaleString()}</p>
           <p className="text-sm text-slate-500 mt-1">Total Active Loans</p>
         </div>
 
@@ -374,7 +556,7 @@ const DelinquencyDashboard = () => {
               +1.2%
             </span>
           </div>
-          <p className="text-2xl font-semibold text-slate-800">{portfolioSummary.totalOverdueLoans}</p>
+          <p className="text-2xl font-semibold text-slate-800">{portfolioSummaryLive.totalOverdueLoans}</p>
           <p className="text-sm text-slate-500 mt-1">Total Overdue Loans</p>
         </div>
 
@@ -389,7 +571,7 @@ const DelinquencyDashboard = () => {
               -0.8%
             </span>
           </div>
-          <p className="text-2xl font-semibold text-slate-800">₹{(portfolioSummary.totalOutstandingAmount / 10000000).toFixed(2)}Cr</p>
+          <p className="text-2xl font-semibold text-slate-800">₹{(portfolioSummaryLive.totalOutstandingAmount / 10000000).toFixed(2)}Cr</p>
           <p className="text-sm text-slate-500 mt-1">Total Outstanding Amount</p>
         </div>
 
@@ -404,14 +586,14 @@ const DelinquencyDashboard = () => {
               +1.4%
             </span>
           </div>
-          <p className="text-2xl font-semibold text-slate-800">{portfolioSummary.portfolioRiskPercentage}%</p>
+          <p className="text-2xl font-semibold text-slate-800">{portfolioSummaryLive.portfolioRiskPercentage}%</p>
           <p className="text-sm text-slate-500 mt-1">Portfolio Risk %</p>
         </div>
       </div>
 
       {/* DPD Bucket Distribution */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {dpdBuckets.map((bucket, index) => {
+        {dpdBucketsDisplay.map((bucket, index) => {
           const colors = getBucketColor(bucket.color);
           const Icon = bucket.icon;
           return (
@@ -458,10 +640,10 @@ const DelinquencyDashboard = () => {
           </div>
           
           <div className="space-y-4">
-            {dpdBuckets.map((bucket, index) => {
+            {dpdBucketsDisplay.map((bucket, index) => {
               const colors = getBucketColor(bucket.color);
-              const maxCount = Math.max(...dpdBuckets.map(b => b.count));
-              const barWidth = (bucket.count / maxCount) * 100;
+              const maxCount = Math.max(...dpdBucketsDisplay.map(b => b.count));
+              const barWidth = (bucket.count / (maxCount || 1)) * 100;
               
               return (
                 <div key={index} className="space-y-1">
@@ -489,7 +671,7 @@ const DelinquencyDashboard = () => {
           </div>
           
           <div className="space-y-4">
-            {dpdBuckets.map((bucket, index) => {
+            {dpdBucketsDisplay.map((bucket, index) => {
               const colors = getBucketColor(bucket.color);
               return (
                 <div key={index} className="flex items-center justify-between">
@@ -509,7 +691,7 @@ const DelinquencyDashboard = () => {
           <div className="mt-6 p-4 bg-slate-50 rounded-lg">
             <p className="text-sm text-slate-600 mb-1">Total Overdue Portfolio</p>
             <p className="text-2xl font-semibold text-slate-800">
-              ₹{(dpdBuckets.reduce((sum, b) => sum + b.outstanding, 0) / 10000000).toFixed(2)}Cr
+              ₹{(dpdBucketsDisplay.reduce((sum, b) => sum + b.outstanding, 0) / 10000000).toFixed(2)}Cr
             </p>
           </div>
         </div>
@@ -655,31 +837,60 @@ const DelinquencyDashboard = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 relative">
                         <button
-                          onClick={() => handleViewLoan(loan.loanNumber)}
+                          onClick={() => handleViewLoan(loan.id)}
                           className="p-1 hover:bg-slate-100 rounded-lg transition-colors"
                           title="View Loan"
                         >
                           <Eye className="w-4 h-4 text-slate-600" />
                         </button>
                         <button
-                          onClick={() => handleAssignRecovery(loan.customerName)}
+                          onClick={() => handleAssignRecovery(loan.id)}
                           className="p-1 hover:bg-slate-100 rounded-lg transition-colors"
                           title="Assign Recovery"
                         >
                           <UserCheck className="w-4 h-4 text-slate-600" />
                         </button>
                         <button
-                          onClick={() => handleSendReminder(loan.customerName)}
+                          onClick={() => handleSendReminder(loan.id)}
                           className="p-1 hover:bg-slate-100 rounded-lg transition-colors"
                           title="Send Reminder"
                         >
                           <Bell className="w-4 h-4 text-slate-600" />
                         </button>
-                        <button className="p-1 hover:bg-slate-100 rounded-lg transition-colors">
-                          <MoreVertical className="w-4 h-4 text-slate-600" />
-                        </button>
+
+                        <div className="relative">
+                          <button
+                            onClick={() => setMenuOpenFor(menuOpenFor === loan.id ? null : loan.id)}
+                            className="p-1 hover:bg-slate-100 rounded-lg transition-colors"
+                            title="More"
+                          >
+                            <MoreVertical className="w-4 h-4 text-slate-600" />
+                          </button>
+                          {menuOpenFor === loan.id && (
+                            <div className="absolute right-0 mt-2 w-44 bg-white border border-slate-200 rounded-md shadow-lg z-50">
+                              <button
+                                onClick={() => { handleViewLoan(loan.id); setMenuOpenFor(null); }}
+                                className="w-full text-left px-3 py-2 hover:bg-slate-50"
+                              >
+                                View Loan
+                              </button>
+                              <button
+                                onClick={() => { handleAssignRecovery(loan.id); setMenuOpenFor(null); }}
+                                className="w-full text-left px-3 py-2 hover:bg-slate-50"
+                              >
+                                Assign Recovery
+                              </button>
+                              <button
+                                onClick={() => { handleSendReminder(loan.id); setMenuOpenFor(null); }}
+                                className="w-full text-left px-3 py-2 hover:bg-slate-50"
+                              >
+                                Send Reminder
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </td>
                   </tr>
