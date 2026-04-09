@@ -155,22 +155,18 @@ export const forecloseLoanController = async (req: Request, res: Response) => {
     if (!loanId) throw new Error("Loan id is required");
     const loan = await ensureLoanBranchAccess(req, loanId);
     const result = await forecloseLoanService(loan.id);
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Foreclose summary fetched",
-        data: result,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Foreclose summary fetched",
+      data: result,
+    });
   } catch (error: any) {
-    res
-      .status(error?.statusCode || 500)
-      .json({
-        success: false,
-        message:
-          sanitizeErrorMessage(error) || "Failed to fetch foreclose summary",
-        error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
-      });
+    res.status(error?.statusCode || 500).json({
+      success: false,
+      message:
+        sanitizeErrorMessage(error) || "Failed to fetch foreclose summary",
+      error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
+    });
   }
 };
 
@@ -186,22 +182,18 @@ export const applyForecloseController = async (req: Request, res: Response) => {
       branchId,
       true,
     );
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Loan foreclose application submitted successfully",
-        data: result,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Loan foreclose application submitted successfully",
+      data: result,
+    });
   } catch (error: any) {
-    res
-      .status(error?.statusCode || 500)
-      .json({
-        success: false,
-        message:
-          sanitizeErrorMessage(error) || "Failed to apply for loan foreclose",
-        error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
-      });
+    res.status(error?.statusCode || 500).json({
+      success: false,
+      message:
+        sanitizeErrorMessage(error) || "Failed to apply for loan foreclose",
+      error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
+    });
   }
 };
 
@@ -291,21 +283,17 @@ export const payforecloseLoanController = async (
         }
       : null;
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Loan foreclosed successfully",
-        data: { summary, payment, foreClosure: closure },
-      });
+    res.status(200).json({
+      success: true,
+      message: "Loan foreclosed successfully",
+      data: { summary, payment, foreClosure: closure },
+    });
   } catch (error: any) {
-    res
-      .status(error?.statusCode || 500)
-      .json({
-        success: false,
-        message: sanitizeErrorMessage(error) || "Failed to foreclose loan",
-        error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
-      });
+    res.status(error?.statusCode || 500).json({
+      success: false,
+      message: sanitizeErrorMessage(error) || "Failed to foreclose loan",
+      error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
+    });
   }
 };
 
@@ -330,23 +318,19 @@ export const approveForecloseController = async (
       branchId,
       approve,
     );
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Foreclose application approved",
-        data: result,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Foreclose application approved",
+      data: result,
+    });
   } catch (error: any) {
-    res
-      .status(error?.statusCode || 500)
-      .json({
-        success: false,
-        message:
-          sanitizeErrorMessage(error) ||
-          "Failed to approve foreclose application",
-        error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
-      });
+    res.status(error?.statusCode || 500).json({
+      success: false,
+      message:
+        sanitizeErrorMessage(error) ||
+        "Failed to approve foreclose application",
+      error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
+    });
   }
 };
 
@@ -447,12 +431,10 @@ export const foreclosureStatementController = async (
     doc.end();
   } catch (error: any) {
     console.error("Failed to generate foreclosure statement", error);
-    res
-      .status(error?.statusCode || 500)
-      .json({
-        success: false,
-        message: sanitizeErrorMessage(error) || "Failed to generate statement",
-        error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
-      });
+    res.status(error?.statusCode || 500).json({
+      success: false,
+      message: sanitizeErrorMessage(error) || "Failed to generate statement",
+      error: sanitizeErrorMessage(error) || "INTERNAL_SERVER_ERROR",
+    });
   }
 };
