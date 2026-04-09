@@ -43,7 +43,7 @@ const LoanClosure = () => {
   // State for NOC
   const [nocGenerated, setNocGenerated] = useState(false);
   const [closureReference] = useState(
-    "CLR" + Math.floor(Math.random() * 1000000),
+    // "CLR" + Math.floor(Math.random() * 1000000),
   );
   const [closureDate] = useState(
     new Date().toLocaleDateString("en-IN", {

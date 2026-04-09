@@ -1,6 +1,6 @@
 // TableRow.jsx - Updated with responsive styling
 import ActionMenu from "../../common/ActionMenu";
-import { Eye, CreditCard } from 'lucide-react';
+import { Eye, CreditCard } from "lucide-react";
 
 export default function TableRow({
   columns,
@@ -10,8 +10,8 @@ export default function TableRow({
   wrapCells = false,
 }) {
   const safeActions = Array.isArray(actions) ? actions : [];
-  const inlineActions = safeActions.filter(a => a.inline);
-  const menuActions = safeActions.filter(a => !a.inline);
+  const inlineActions = safeActions.filter((a) => a.inline);
+  const menuActions = safeActions.filter((a) => !a.inline);
 
   return (
     <tr className="hover:bg-blue-50/50 transition-colors duration-150 group">

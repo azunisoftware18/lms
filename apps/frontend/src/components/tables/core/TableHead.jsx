@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Search, Filter, X, RefreshCw } from "lucide-react";
 import FilterDropdown from "../../ui/FilterDropdown";
 import SearchField from "../../ui/SearchField";
+import DateFilter from "../../common/DateFilter";
 
 // Mobile Filter Drawer Component
 const MobileFilterDrawer = ({
@@ -13,6 +14,8 @@ const MobileFilterDrawer = ({
   filterOptions,
   search,
   setSearch,
+  dateValue,
+  setDateValue,
 }) => {
   if (!isOpen) return null;
 
@@ -89,11 +92,23 @@ const MobileFilterDrawer = ({
             </div>
           </div>
 
+          {/* Date Filter */}
+          <div className="mb-6">
+            <label className="text-sm font-medium text-slate-700 mb-3 block">
+              Filter by Date
+            </label>
+            <DateFilter
+              value={dateValue}
+              onChange={(v) => setDateValue && setDateValue(v)}
+            />
+          </div>
+
           {/* Clear Button */}
           <button
             onClick={() => {
               setSearch("");
               setFilterValue("");
+              setDateValue && setDateValue("");
               onClose();
             }}
             className="w-full py-3 text-sm text-red-600 font-medium hover:bg-red-50 rounded-xl transition-colors active:bg-red-100"
@@ -113,6 +128,8 @@ export default function TableHead({
   setSearch,
   filterValue,
   setFilterValue,
+  dateValue,
+  setDateValue,
   filterOptions = [],
   wrapHeaders = false,
   onRefresh,
@@ -231,6 +248,8 @@ export default function TableHead({
           filterOptions={filterOptions}
           search={search}
           setSearch={setSearch}
+          dateValue={dateValue}
+          setDateValue={setDateValue}
         />
       </thead>
     );
@@ -270,6 +289,14 @@ export default function TableHead({
                     options={filterOptions}
                     placeholder="Filter by status"
                     className="w-full"
+                  />
+                </div>
+
+                {/* Date Filter (optional) */}
+                <div className="w-full sm:w-44 sm:shrink-0">
+                  <DateFilter
+                    value={dateValue}
+                    onChange={(v) => setDateValue && setDateValue(v)}
                   />
                 </div>
 

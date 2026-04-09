@@ -19,15 +19,18 @@ export default function LoanAccountCreation() {
   const [, setShowModal] = useState(false);
 
   // Fetch loan applications from API (all statuses)
-  const { data: loanApiData, isLoading: loansLoading } = useLoanApplications({ page: 1, limit: 200 });
+  const { data: loanApiData, isLoading: loansLoading } = useLoanApplications({
+    page: 1,
+    limit: 200,
+  });
 
   const rawLoans = Array.isArray(loanApiData)
     ? loanApiData
     : Array.isArray(loanApiData?.data)
-    ? loanApiData.data
-    : Array.isArray(loanApiData?.data?.data)
-    ? loanApiData.data.data
-    : [];
+      ? loanApiData.data
+      : Array.isArray(loanApiData?.data?.data)
+        ? loanApiData.data.data
+        : [];
 
   const formatStatusDisplay = (s) => {
     if (!s) return "Active";
@@ -40,17 +43,21 @@ export default function LoanAccountCreation() {
   };
 
   const loans = (rawLoans || []).map((l) => {
-    const statusKey = String(l.status || "").toLowerCase();
+    const statusKey = String(l.status || "")
+      .toLowerCase()
+      .replace(/\s+/g, "_");
     return {
       id: l.id || l.loanNumber,
       loanNumber: l.loanNumber || l.id,
       customerName:
-        (l.customer && (l.customer.firstName || l.customer.lastName))
+        l.customer && (l.customer.firstName || l.customer.lastName)
           ? `${l.customer.firstName || ""} ${l.customer.lastName || ""}`.trim()
           : l.customer?.name || "",
       branch: l.branchName || l.branch?.name || "",
       loanAmount: Math.round(l.approvedAmount ?? l.requestedAmount ?? 0),
-      outstandingBalance: Math.round(l.outstandingBalance ?? l.approvedAmount ?? 0),
+      outstandingBalance: Math.round(
+        l.outstandingBalance ?? l.approvedAmount ?? 0,
+      ),
       status: formatStatusDisplay(statusKey),
       statusKey,
     };
@@ -66,20 +73,23 @@ export default function LoanAccountCreation() {
   ];
 
   const filteredLoans = loans.filter((l) =>
-    allowedStatusKeys.includes(l.statusKey)
+    allowedStatusKeys.includes(l.statusKey),
   );
 
   // Prefer server-reported total (pagination meta) when available — fallback to displayed count
   const totalAccounts = Number(
-    loanApiData?.meta?.total ?? loanApiData?.data?.meta?.total ?? filteredLoans.length
+    loanApiData?.meta?.total ??
+      loanApiData?.data?.meta?.total ??
+      filteredLoans.length,
   );
 
   const counts = {
     active: filteredLoans.filter((l) => l.statusKey === "active").length,
-    delinquent: filteredLoans.filter((l) => l.statusKey === "delinquent").length,
+    delinquent: filteredLoans.filter((l) => l.statusKey === "delinquent")
+      .length,
     closed: filteredLoans.filter((l) => l.statusKey === "closed").length,
-    writtenOff: filteredLoans.filter((l) =>
-      l.statusKey === "written_off" || l.statusKey === "written off"
+    writtenOff: filteredLoans.filter(
+      (l) => l.statusKey === "written_off" || l.statusKey === "written off",
     ).length,
     defaulted: filteredLoans.filter((l) => l.statusKey === "defaulted").length,
   };
@@ -118,7 +128,7 @@ export default function LoanAccountCreation() {
         </div>
 
         {/* SUMMARY CARDS */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
           <StatusCard
             title="Total Accounts"
             value={totalAccounts}
@@ -173,8 +183,8 @@ export default function LoanAccountCreation() {
         <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <LoanAccountTable
-                loans={filteredLoans}
-                loading={loansLoading}
+              loans={filteredLoans}
+              loading={loansLoading}
               onView={handleViewLoan}
             />
           </div>
