@@ -18,7 +18,8 @@ import {
   ArrowDown,
   PieChart,
   BarChart3,
-  MoreVertical
+  MoreVertical,
+  ChevronDown
 } from 'lucide-react';
 import { useLoanApplications } from '../../../hooks/useLoanApplication';
 import { useQueryClient } from '@tanstack/react-query';

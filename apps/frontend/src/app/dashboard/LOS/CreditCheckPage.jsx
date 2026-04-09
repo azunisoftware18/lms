@@ -1,1286 +1,475 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
-  User,
   Users,
-  Building,
-  Banknote,
-  Calendar,
+  CreditCard,
+  Shield,
+  RefreshCw,
+  Eye,
+  User,
+  Users as UsersIcon,
   AlertCircle,
+  Loader2,
   CheckCircle,
   XCircle,
-  Clock,
-  Calculator,
-  FileText,
-  Shield,
-  Percent,
-  Home,
-  Save,
-  Send,
-  Download,
-  X,
-  IndianRupee,
-  Key,
-  ArrowLeft,
 } from "lucide-react";
-import Button from "../../../components/ui/Button";
-import SearchField from "../../../components/ui/SearchField";
-import InputField from "../../../components/ui/InputField";
-import SelectField from "../../../components/ui/SelectField";
-import TextAreaField from "../../../components/ui/TextAreaField";
-import StatusCard from "../../../components/common/StatusCard";
-import CreditCheckTable from "../../../components/tables/CreditCheckTable";
+import { useLoanApplications } from "../../../hooks/useLoanApplication";
+import { useEligibility } from "../../../hooks/useEligibility";
 import { useRefreshCreditReport } from "../../../hooks/useCreditReport";
 import {
-  CREDIT_CHECK_LOAN_APPLICATIONS,
-  CREDIT_CHECK_DATA,
-  CREDIT_CHECK_DECISIONS,
-  RECENT_CREDIT_SEARCHES,
-} from "../../../lib/LOSDummyData";
-import { colorVariables } from "../../../lib";
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+} from "recharts";
 
-export default function CreditCheckPage() {
-  const { mutateAsync: refreshCreditReport } = useRefreshCreditReport();
 
-  const fetchCredit = async (loanNumber) => {
-  try {
-    const response = await refreshCreditReport({
-      q: loanNumber,
-      reason: "User requested refresh", 
-    });
-    return response;
-  } catch (error) {
-    console.error("Error fetching credit report:", error);
-    throw error;
-  }
-};
 
-  const getScoreMeta = (score) => {
-    if (score >= 750)
-      return { status: "Excellent", color: "emerald", riskGrade: "A" };
-    if (score >= 700) return { status: "Good", color: "blue", riskGrade: "B+" };
-    if (score >= 650) return { status: "Fair", color: "amber", riskGrade: "C" };
-    return { status: "Poor", color: "rose", riskGrade: "D" };
-  };
+// charts will be computed from API data
 
-  const formatAccountType = (type) => {
-    if (!type) return "Loan";
-    return type
-      .toString()
-      .replace(/_/g, " ")
-      .toLowerCase()
-      .replace(/\b\w/g, (char) => char.toUpperCase());
-  };
+const CreditDashboard = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedLoan, setSelectedLoan] = useState(null);
+  const [selectedParty, setSelectedParty] = useState(null);
+  const [viewReportFor, setViewReportFor] = useState(null);
 
-  const normalizeCreditReport = (apiResponse, loanKey, monthlyIncome = 0) => {
-    const report = apiResponse?.data || apiResponse;
-    if (!report || typeof report !== "object") return null;
+  // Fetch real loan applications
+  const { data, isLoading, refetch } = useLoanApplications();
+  const applications = data?.data || data || [];
 
-    const score =
-      typeof report.creditScore === "number" ? report.creditScore : null;
-    const scoreMeta = score !== null ? getScoreMeta(score) : null;
-    const existingLoans = (report.creditAccount || []).map((account, index) => {
-      const isDefault = typeof account.dpd === "number" && account.dpd > 0;
-      const isActive = account.accountStatus === "ACTIVE";
-      const status = isDefault ? "Default" : isActive ? "Active" : "Closed";
-      const statusColor = isDefault ? "rose" : isActive ? "emerald" : "gray";
-      return {
-        id: account.id || index + 1,
-        loanType: formatAccountType(account.accountType),
-        bankName: account.lenderName || "Unknown Lender",
-        emiAmount: account.emiAmount || 0,
-        outstandingAmount: account.outstanding || 0,
-        overdueAmount: isDefault ? account.emiAmount || 0 : 0,
-        status,
-        statusColor,
-      };
-    });
-
-    const totalExistingEMI =
-      typeof report.totalMonthlyEmi === "number"
-        ? report.totalMonthlyEmi
-        : existingLoans.reduce((sum, loan) => sum + loan.emiAmount, 0);
-
-    const riskGrade = scoreMeta?.riskGrade || "B";
-    const provider = report.provider || "Credit Bureau";
-    const creditRemarks =
-      score !== null
-        ? `${provider} score ${score}. Total outstanding ${report.totalOutstandingLoans || 0}.`
-        : `Credit report fetched from ${provider}.`;
-
-    return {
-      loanNumber: loanKey,
-      creditScores:
-        score !== null
-          ? [
-              {
-                bureau: provider,
-                score,
-                status: scoreMeta.status,
-                color: scoreMeta.color,
-              },
-            ]
-          : [],
-      coApplicant: null,
-      existingLoans,
-      creditAnalysis: {
-        monthlyIncome,
-        totalExistingEMI,
-        foirPercentage: monthlyIncome
-          ? ((totalExistingEMI / monthlyIncome) * 100).toFixed(2)
-          : 0,
-        eligibleEMICapacity: monthlyIncome
-          ? (monthlyIncome * 0.5).toFixed(0)
-          : 0,
-        riskGrade,
-        recommendedLoanAmount: 0,
-        recommendedTenure: 0,
-        interestRate: 0,
-        creditRemarks,
-      },
-    };
-  };
-  
-  // Loan applications database
-  const [loanApplications] = useState(CREDIT_CHECK_LOAN_APPLICATIONS);
-
-  // Selected application state
-  const [selectedApplication, setSelectedApplication] = useState(null);
-
-  // Search state
-  const [loanNumberInput, setLoanNumberInput] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchError, setSearchError] = useState("");
-  const [recentSearches, setRecentSearches] = useState(RECENT_CREDIT_SEARCHES);
-
-  const [apiCreditData, setApiCreditData] = useState({});
-
-  // Credit data for each loan
-  const [creditData] = useState(CREDIT_CHECK_DATA);
-
-  // Decision state for each loan
-  const [decisions, setDecisions] = useState(CREDIT_CHECK_DECISIONS);
-
-  // User role
-  const [userRole] = useState("CREDIT_OFFICER");
-
-  // Handle loan number search
-  const handleLoanNumberSearch = async () => {
-    if (!loanNumberInput.trim()) {
-      setSearchError("Please enter a loan number");
-      return;
-    }
-
-    setIsSearching(true);
-    setSearchError("");
-
-    const normalizedQuery = loanNumberInput.trim();
-    let fetchedCredit = null;
-
-    try {
-      // Fixed: Pass the loan number correctly
-      fetchedCredit = await fetchCredit(normalizedQuery);
-      console.log("API Response:", fetchedCredit); // Debug log
-    } catch (err) {
-      console.error("Error in fetchCredit:", err);
-      setSearchError(err.message || "Failed to fetch credit report");
-      setIsSearching(false);
-      return;
-    }
-
-    const foundApplication = loanApplications.find(
-      (app) =>
-        app.loanNumber.toLowerCase() === normalizedQuery.toLowerCase() ||
-        app.applicationNumber.toLowerCase() === normalizedQuery.toLowerCase(),
-    );
-
-    const loanKey = normalizedQuery.toUpperCase();
-    const normalizedCredit = fetchedCredit && fetchedCredit.data
-      ? normalizeCreditReport(
-          fetchedCredit,
-          loanKey,
-          foundApplication?.monthlyIncome || 0,
-        )
-      : null;
-
-    if (normalizedCredit) {
-      setApiCreditData((prev) => ({
-        ...prev,
-        [loanKey]: normalizedCredit,
-      }));
-    }
-
-    if (foundApplication) {
-      setSelectedApplication(foundApplication);
-    } else if (fetchedCredit && fetchedCredit.data) {
-      const reportData = fetchedCredit.data;
-      const applicant = reportData.applicant || {};
-      const loanNumber = reportData.loanNumber || normalizedQuery.toUpperCase();
-      setSelectedApplication({
-        id: reportData.id || loanNumber,
-        applicationNumber: reportData.applicationNumber || loanNumber,
-        loanNumber,
-        applicantName: reportData.applicantName || applicant.name || "Unknown Applicant",
-        coApplicantName: reportData.coApplicantName || reportData.coApplicant?.name || null,
-        loanType: reportData.loanType || "Loan",
-        loanAmount: reportData.loanAmount || 0,
-        branchName: reportData.branchName || "Unknown Branch",
-        currentStage: reportData.currentStage || "Credit Check",
-        monthlyIncome: reportData.monthlyIncome || applicant.monthlyIncome || 0,
-        panNumber: reportData.panNumber || applicant.panNumber || "N/A",
-        dob: reportData.dob || applicant.dob || "N/A",
-        mobile: reportData.mobile || applicant.mobile || "N/A",
-        employmentType: reportData.employmentType || applicant.employmentType || "N/A",
-        companyName: reportData.companyName || applicant.companyName || "N/A",
-        tenure: reportData.tenure || 0,
-        interestRate: reportData.interestRate || 0,
-      });
-    } else {
-      setSearchError(`No loan found with number: ${normalizedQuery}`);
-    }
-
-    if (!recentSearches.includes(normalizedQuery.toUpperCase())) {
-      setRecentSearches((prev) => [
-        normalizedQuery.toUpperCase(),
-        ...prev.slice(0, 3),
-      ]);
-    }
-
-    setIsSearching(false);
-  };
-
-  // Handle Enter key press
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleLoanNumberSearch();
-    }
-  };
-
-  // Handle recent search click
-  const handleRecentSearchClick = (loanNum) => {
-    setLoanNumberInput(loanNum);
-    const foundApplication = loanApplications.find(
-      (app) => app.loanNumber === loanNum || app.applicationNumber === loanNum,
-    );
-    if (foundApplication) {
-      setSelectedApplication(foundApplication);
-      setSearchError("");
-    }
-  };
-
-  // Clear search and go back
-  const handleClearSearch = () => {
-    setSelectedApplication(null);
-    setLoanNumberInput("");
-    setSearchError("");
-  };
-
-  // Get current application data
-  const currentCreditData = selectedApplication
-    ? apiCreditData[selectedApplication.loanNumber] ||
-      creditData[selectedApplication.loanNumber]
-    : null;
-  const currentDecision = selectedApplication
-    ? decisions[selectedApplication.loanNumber]
-    : null;
-
-  // Calculate total existing EMI
-  const totalExistingEMI = useMemo(() => {
-    if (!currentCreditData) return 0;
-    return currentCreditData.existingLoans.reduce(
-      (sum, loan) => sum + loan.emiAmount,
-      0,
-    );
-  }, [currentCreditData]);
-
-  // Calculate FOIR percentage
-  const foirPercentage = useMemo(() => {
-    if (!selectedApplication) return 0;
+  // Helpers to normalize fields
+  const getAppDate = (app) => {
     return (
-      (totalExistingEMI / selectedApplication.monthlyIncome) *
-      100
-    ).toFixed(2);
-  }, [totalExistingEMI, selectedApplication]);
-
-  // Calculate eligible EMI capacity (50% of monthly income)
-  const eligibleEMICapacity = useMemo(() => {
-    if (!selectedApplication) return 0;
-    return (selectedApplication.monthlyIncome * 0.5).toFixed(0);
-  }, [selectedApplication]);
-
-  // Handle decision change
-  const handleDecisionChange = (type) => {
-    if (!selectedApplication) return;
-
-    setDecisions((prev) => ({
-      ...prev,
-      [selectedApplication.loanNumber]: {
-        ...prev[selectedApplication.loanNumber],
-        decisionType: type,
-        status: type === "reject" ? "rejected" : "approved",
-        officerName: "Credit Officer Sharma",
-        decisionDate: new Date().toISOString().split("T")[0],
-      },
-    }));
-  };
-
-  // Handle save decision
-  const handleSaveDecision = () => {
-    if (!selectedApplication) return;
-    alert(`Decision saved for ${selectedApplication.loanNumber}!`);
-  };
-
-  // Handle approve and move
-  const handleApproveMove = () => {
-    if (!selectedApplication) return;
-    alert(
-      `Application ${selectedApplication.loanNumber} approved and moved to underwriting!`,
+      app.createdAt || app.created_at || app.submittedAt || app.submitted_at || app.updatedAt || app.updated_at || null
     );
   };
 
-  // Handle reject application
-  const handleRejectApplication = () => {
-    if (!selectedApplication || !currentDecision?.remarks.trim()) {
-      alert("Please provide remarks for rejection");
-      return;
-    }
-    alert(`Application ${selectedApplication.loanNumber} rejected!`);
+  const getCibil = (app) => {
+    return (
+      app.cibilScore ?? app.cibil_score ?? app.creditScore ?? app.credit_score ?? app.customer?.cibilScore ?? app.customer?.creditScore ?? null
+    );
   };
 
-  // Role permissions
-  const canApprove = userRole === "CREDIT_OFFICER" || userRole === "ADMIN";
-  const canEdit = userRole === "ADMIN";
-
-  const riskGradeOptions = [
-    { label: "A+ (Excellent)", value: "A+" },
-    { label: "A (Very Good)", value: "A" },
-    { label: "B+ (Good)", value: "B+" },
-    { label: "B (Average)", value: "B" },
-    { label: "C (Below Average)", value: "C" },
-    { label: "D (Poor)", value: "D" },
+  // Compute monthly trends and distributions from applications
+  const monthlyMap = {};
+  const scoreBuckets = [
+    { range: "Approved", count: 0, color: "#ef4444" },
+    { range: "Pending", count: 0, color: "#f59e0b" },
+    { range: "Reject", count: 0, color: "#3b82f6" },
+    { range: "Eligible-approved", count: 0, color: "#10b981" },
+    { range: "Eligible-reject", count: 0, color: "#8b5cf6" },
   ];
+  const loanTypeMap = {};
 
-  // If no application selected, show search screen
-  if (!selectedApplication) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <div className="max-w-2xl w-full">
-          {/* Search Card */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                <Key className={colorVariables.PRIMARY_COLOR} size={32} />
+  applications.forEach((app) => {
+    // Monthly grouping
+    const rawDate = getAppDate(app);
+    const d = rawDate ? new Date(rawDate) : null;
+    const monthKey = d ? d.toLocaleString("en-US", { month: "short", year: "numeric" }) : "Unknown";
+    if (!monthlyMap[monthKey]) monthlyMap[monthKey] = { month: monthKey, applications: 0, totalScore: 0, avgScore: 0 };
+    monthlyMap[monthKey].applications += 1;
+
+    const cibil = getCibil(app);
+    if (typeof cibil === "number") {
+      monthlyMap[monthKey].totalScore += cibil;
+    }
+
+    // Determine application/eligibility category for distribution
+    const rawElig = app.eligibilityStatus || app.eligibility?.status || app.eligibilityResult?.status || app.eligibilityResult?.result?.status || null;
+    const eligStr = rawElig ? String(rawElig).toLowerCase() : null;
+    const appStatus = (app.status || app.applicationStatus || app.loanStatus || "").toString().toLowerCase();
+
+    let category = "Pending";
+    if (eligStr) {
+      if (eligStr.includes("eligible") || eligStr.includes("approved")) {
+        category = appStatus === "approved" ? "Eligible-approved" : "Eligible-reject";
+      } else if (eligStr.includes("ineligible") || eligStr.includes("reject") || eligStr.includes("rejected")) {
+        category = "Reject";
+      } else {
+        category = appStatus === "approved" ? "Approved" : "Pending";
+      }
+    } else {
+      if (appStatus === "approved") category = "Approved";
+      else if (appStatus === "rejected" || appStatus === "reject") category = "Reject";
+      else category = "Pending";
+    }
+
+    const bucket = scoreBuckets.find((b) => b.range.toLowerCase() === category.toLowerCase());
+    if (bucket) bucket.count += 1;
+
+    // loan type
+    const lt = (app.loanType && (app.loanType.code || app.loanType.name)) || app.purpose || app.purposeType || "OTHER";
+    const ltKey = (typeof lt === "string" ? lt : JSON.stringify(lt)).toUpperCase();
+    loanTypeMap[ltKey] = (loanTypeMap[ltKey] || 0) + 1;
+  });
+
+  const monthlyTrends = Object.values(monthlyMap)
+    .sort((a, b) => new Date(a.month) - new Date(b.month))
+    .map((m) => ({ month: m.month.split(" ")[0], applications: m.applications, avgScore: m.applications ? Math.round(m.totalScore / m.applications) : null }));
+
+  const scoreDistribution = scoreBuckets.map((b) => ({ range: b.range, count: b.count, color: b.color }));
+
+  const loanTypeDistribution = Object.keys(loanTypeMap).map((k, i) => ({ type: k, count: loanTypeMap[k], color: ["#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec489a"][i % 5] }));
+
+  // Fetch eligibility for the loan application (use loan id)
+  const eligibility = useEligibility(selectedLoan?.id);
+  // Use mutation to refresh/fetch credit report from backend (refresh endpoint)
+  const refreshReport = useRefreshCreditReport();
+
+  // Derived KPI values
+  const totalApplications = applications.length || 0;
+  const avgCibilScore = Math.round(
+    (applications.reduce((s, a) => s + (getCibil(a) || 0), 0) / (applications.filter((a) => typeof getCibil(a) === "number").length || 1)) || 0
+  );
+  const approvedCount = applications.filter((a) => (a.status || "").toLowerCase() === "approved").length;
+
+  // Helper to open modal and select applicant only
+  const handleCreditCheck = (loan) => {
+    setSelectedLoan(loan);
+    const applicant = { id: loan.customer?.id, ...loan.customer };
+    setSelectedParty({ ...applicant, label: "Applicant" });
+    setViewReportFor(null);
+    setModalOpen(true);
+    // Trigger initial fetch of credit report for the loan (backend accepts loanNumber as q)
+    try {
+      refreshReport.mutate({ q: loan.loanNumber, reason: "manual-check" });
+    } catch (e) {
+      // ignore
+    }
+  };
+
+  const navigate = useNavigate();
+
+  // Helper to select party (applicant/co-applicant/guarantor)
+  const handleSelectParty = (party, label) => {
+    setSelectedParty({ ...party, label });
+  };
+
+  const hasCoApplicant = !!(
+    selectedLoan && (
+      selectedLoan.coApplicant ||
+      (selectedLoan.coApplicants && selectedLoan.coApplicants.length > 0) ||
+      (selectedLoan.coapplicants && selectedLoan.coapplicants.length > 0)
+    )
+  );
+
+  const hasGuarantor = !!(
+    selectedLoan && (
+      selectedLoan.guarantor ||
+      (selectedLoan.guarantors && selectedLoan.guarantors.length > 0)
+    )
+  );
+
+  
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2.5 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl shadow-lg">
+                <Shield className="w-6 h-6 text-white" />
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                Credit Check Portal
+              <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+                Credit Dashboard
               </h1>
-              <p className="text-gray-600">
-                Enter loan number to review applicant's creditworthiness
-              </p>
             </div>
-
-            {/* Search Input */}
-            <div className="mb-8">
-              <SearchField
-                value={loanNumberInput}
-                onChange={(e) => {
-                  setLoanNumberInput(e.target.value);
-                  setSearchError("");
-                }}
-                onClear={() => {
-                  setLoanNumberInput("");
-                  setSearchError("");
-                }}
-                onSearch={handleLoanNumberSearch}
-                onKeyPress={handleKeyPress}
-                showResults={false}
-                showButton
-                buttonText={isSearching ? "Searching..." : "Search"}
-                isLoading={isSearching}
-                placeholder="Enter Loan Number (e.g., LN-2026-000001) or Application Number"
-                className="py-4 text-base"
-              />
-
-              {searchError && (
-                <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                  <div className="flex items-center gap-2 text-red-700">
-                    <AlertCircle size={18} />
-                    <span className="font-medium">{searchError}</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Recent Searches */}
-            {recentSearches.length > 0 && (
-              <div className="mb-8">
-                <h3 className="text-sm font-medium text-gray-700 mb-3">
-                  Recent Searches
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {recentSearches.map((loanNum, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleRecentSearchClick(loanNum)}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
-                    >
-                      <Clock size={14} />
-                      <span className="font-mono">{loanNum}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Example Loan Numbers */}
-            <div className="border-t border-gray-200 pt-8">
-              <h3 className="text-sm font-medium text-gray-700 mb-3">
-                Example Loan Numbers
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <div className={`p-3 ${colorVariables.LIGHT_BG} rounded-lg`}>
-                  <div className="font-mono text-sm text-blue-700 mb-1">
-                    LN-2026-000008
-                  </div>
-                  <div className="text-xs text-gray-600">
-                    Rajesh Kumar - Home Loan
-                  </div>
-                </div>
-                <div className={`p-3 ${colorVariables.LIGHT_BG} rounded-lg`}>
-                  <div className="font-mono text-sm text-blue-700 mb-1">
-                    LN-2026-000007
-                  </div>
-                  <div className="text-xs text-gray-600">
-                    Amit Sharma - Personal Loan
-                  </div>
-                </div>
-                <div className={`p-3 ${colorVariables.LIGHT_BG} rounded-lg`}>
-                  <div className="font-mono text-sm text-blue-700 mb-1">
-                    LN-2026-000006
-                  </div>
-                  <div className="text-xs text-gray-600">
-                    Sunita Patel - Business Loan
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Footer Info */}
-          <div className="text-center mt-6">
-            <p className="text-sm text-gray-500">
-              Search by: <span className="font-medium">Loan Number</span>,{" "}
-              <span className="font-medium">Application Number</span>
+            <p className="text-slate-500 ml-12">
+              Real-time credit health & loan application insights
             </p>
           </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={refetch}
+              className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors text-slate-700"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Refresh
+            </button>
+          </div>
         </div>
-      </div>
-    );
-  }
 
-  // If application selected, show credit check dashboard
-  return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Application Selection Bar */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 mb-6">
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-            <div className="flex-1">
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={handleClearSearch}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                  title="Search another loan"
-                >
-                  <ArrowLeft size={20} className="text-gray-500" />
-                </button>
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    Currently Viewing
-                  </h2>
-                  <p className="text-sm text-gray-500">
-                    Loan number: {selectedApplication.loanNumber}
-                  </p>
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          {/* KPI Cards & Charts */}
+          <div className="p-5 border-b border-slate-200">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="p-4 bg-gradient-to-r from-white to-slate-50 rounded-xl border border-slate-100 shadow-sm">
+                <div className="text-sm text-slate-500">Total Applications</div>
+                <div className="text-2xl font-bold text-slate-800">{totalApplications}</div>
+              </div>
+              <div className="p-4 bg-gradient-to-r from-white to-slate-50 rounded-xl border border-slate-100 shadow-sm">
+                <div className="text-sm text-slate-500">Avg CIBIL Score</div>
+                <div className="text-2xl font-bold text-slate-800">{avgCibilScore}</div>
+              </div>
+              <div className="p-4 bg-gradient-to-r from-white to-slate-50 rounded-xl border border-slate-100 shadow-sm">
+                <div className="text-sm text-slate-500">Approvals</div>
+                <div className="text-2xl font-bold text-slate-800">{approvedCount}</div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="p-3 bg-white rounded-xl border border-slate-100 shadow-sm">
+                <div className="text-sm font-semibold mb-2">Monthly Applications</div>
+                <div style={{ width: "100%", height: 180 }}>
+                  <ResponsiveContainer width="100%" height={180}>
+                    <AreaChart data={monthlyTrends} margin={{ top: 0, right: 12, left: -12, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="colorApps" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2} />
+                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <XAxis dataKey="month" tick={{ fontSize: 12 }} />
+                      <YAxis tick={{ fontSize: 12 }} />
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <Tooltip />
+                      <Area type="monotone" dataKey="applications" stroke="#3b82f6" fillOpacity={1} fill="url(#colorApps)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              <div className="p-3 bg-white rounded-xl border border-slate-100 shadow-sm">
+                <div className="text-sm font-semibold mb-2">Score Distribution</div>
+                <div style={{ width: "100%", height: 180 }}>
+                  <ResponsiveContainer width="100%" height={180}>
+                    <PieChart>
+                      <Pie data={scoreDistribution} dataKey="count" nameKey="range" outerRadius={60} fill="#8884d8">
+                        {scoreDistribution.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              <div className="p-3 bg-white rounded-xl border border-slate-100 shadow-sm">
+                <div className="text-sm font-semibold mb-2">Loan Type Mix</div>
+                <div style={{ width: "100%", height: 180 }}>
+                  <ResponsiveContainer width="100%" height={180}>
+                    <BarChart data={loanTypeDistribution} margin={{ left: -20 }}>
+                      <XAxis dataKey="type" tick={{ fontSize: 12 }} />
+                      <YAxis tick={{ fontSize: 12 }} />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="count">
+                        {loanTypeDistribution.map((entry, idx) => (
+                          <Cell key={`bar-${idx}`} fill={entry.color} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
             </div>
-
-            <div className="flex items-center gap-3">
-              {/* Quick Search Input */}
-              <div className="w-80">
-                <SearchField
-                  value={loanNumberInput}
-                  onChange={(e) => setLoanNumberInput(e.target.value)}
-                  onSearch={handleLoanNumberSearch}
-                  onKeyPress={handleKeyPress}
-                  showResults={false}
-                  showButton
-                  buttonText="Go"
-                  isLoading={isSearching}
-                  placeholder="Search another loan..."
-                />
-              </div>
-            </div>
           </div>
-        </div>
-
-        {/* Loan & Applicant Summary Header */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-6">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Credit Check Management
-              </h1>
-              <p className="text-gray-600">
-                Review applicant's creditworthiness for loan approval
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="px-4 py-2 bg-blue-100 text-blue-700 text-sm font-medium rounded-full">
-                {selectedApplication.currentStage}
-              </span>
-              <Button className={colorVariables.PRIMARY_BUTTON_COLOR}>
-                <Download size={18} />
-                Export Report
-              </Button>
-            </div>
+          <div className="px-5 py-4 border-b border-slate-200 flex justify-between items-center">
+            <h3 className="font-semibold text-slate-800">Recent Loan Applications</h3>
+            <span className="text-xs text-slate-400">{applications.length} total</span>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <StatusCard
-              title="Loan Number"
-              value={selectedApplication.loanNumber}
-              subtext={selectedApplication.loanType}
-              icon={FileText}
-              variant="blue"
-            />
-            <StatusCard
-              title="Primary Applicant"
-              value={selectedApplication.applicantName}
-              subtext={selectedApplication.employmentType}
-              icon={User}
-              variant="purple"
-            />
-            <StatusCard
-              title="Loan Amount"
-              value={`₹${selectedApplication.loanAmount.toLocaleString("en-IN")}`}
-              subtext={`${selectedApplication.tenure} years`}
-              icon={Banknote}
-              variant="green"
-            />
-            <StatusCard
-              title="Branch"
-              value={selectedApplication.branchName}
-              subtext={selectedApplication.currentStage}
-              icon={Building}
-              variant="orange"
-            />
-          </div>
-
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="flex items-center gap-3">
-              <Users size={18} className="text-gray-400" />
-              <div>
-                <p className="text-sm text-gray-500">Co-applicant</p>
-                <p className="font-medium text-gray-900">
-                  {selectedApplication.coApplicantName || "Not Available"}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Home size={18} className="text-gray-400" />
-              <div>
-                <p className="text-sm text-gray-500">Loan Type</p>
-                <p className="font-medium text-gray-900">
-                  {selectedApplication.loanType}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Calendar size={18} className="text-gray-400" />
-              <div>
-                <p className="text-sm text-gray-500">Tenure</p>
-                <p className="font-medium text-gray-900">
-                  {selectedApplication.tenure} years
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Credit Scores & Applicant Info */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Credit Bureau Scores */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900">
-                  Credit Bureau Scores
-                </h2>
-                <span className="text-sm text-gray-500">
-                  Last updated: Today
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {currentCreditData?.creditScores.map((bureau, index) => (
-                  <div
-                    key={index}
-                    className="bg-gray-50 rounded-xl p-4 border border-gray-200"
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm font-medium text-gray-700">
-                        {bureau.bureau}
-                      </span>
-                      <span
-                        className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-${bureau.color}-100 text-${bureau.color}-700`}
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-slate-50">
+                <tr>
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-slate-600">Loan Number</th>
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-slate-600">Applicant</th>
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-slate-600">Loan Type</th>
+                  <th className="px-5 py-3 text-right text-xs font-semibold text-slate-600">Amount</th>
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-slate-600">Status</th>
+                  <th className="px-5 py-3 text-center text-xs font-semibold text-slate-600">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {isLoading ? (
+                  <tr><td colSpan={6} className="text-center py-8">Loading...</td></tr>
+                ) : applications.length === 0 ? (
+                  <tr><td colSpan={6} className="text-center py-8">No applications found.</td></tr>
+                ) : applications.map((app) => (
+                  <tr key={app.id} className="hover:bg-slate-50 transition-colors">
+                    <td className="px-5 py-3 font-mono text-sm text-slate-600">{app.loanNumber}</td>
+                    <td className="px-5 py-3 font-medium text-slate-800">{app.customer?.firstName} {app.customer?.lastName}</td>
+                    <td className="px-5 py-3 text-sm">{app.purpose || '-'}</td>
+                    <td className="px-5 py-3 text-right font-medium text-slate-800">₹{app.approvedAmount?.toLocaleString("en-IN")}</td>
+                    <td className="px-5 py-3 text-left text-xs">{app.status}</td>
+                    <td className="px-5 py-3 text-center">
+                      <button
+                        className="p-1.5 hover:bg-blue-50 rounded-lg transition-colors border border-blue-200 text-blue-600 text-xs font-semibold"
+                        onClick={() => handleCreditCheck(app)}
                       >
-                        {bureau.status}
-                      </span>
-                    </div>
-                    <div className="text-center">
-                      <div
-                        className={`text-3xl font-bold text-${bureau.color}-600 mb-1`}
-                      >
-                        {bureau.score}
-                      </div>
-                      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div
-                          className={`h-full bg-${bureau.color}-500 rounded-full`}
-                          style={{ width: `${(bureau.score / 900) * 100}%` }}
-                        />
-                      </div>
-                    </div>
-                  </div>
+                        Credit Check
+                      </button>
+                    </td>
+                  </tr>
                 ))}
-              </div>
-            </div>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
-            {/* Applicant & Co-Applicant Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Primary Applicant Card */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    Primary Applicant
-                  </h3>
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700`}
-                  >
-                    Low Risk
-                  </span>
+        {/* Modal for Credit Check */}
+        {modalOpen && selectedLoan && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 relative">
+              <button className="absolute top-3 right-3 p-2 rounded-full hover:bg-slate-100" onClick={() => setModalOpen(false)}>
+                <XCircle className="w-5 h-5 text-slate-400" />
+              </button>
+              <h2 className="text-xl font-bold mb-2">Credit Check</h2>
+              <div className="mb-4">
+                <div className="font-semibold mb-1">Person:</div>
+                <div className="flex gap-2 mb-2">
+                  <button
+                    className={`px-3 py-1.5 rounded-lg border ${selectedParty?.label === 'Applicant' ? 'bg-blue-600 text-white' : 'bg-white text-slate-700'}`}
+                    onClick={() => {
+                      const applicant = { id: selectedLoan.customer?.id, ...selectedLoan.customer };
+                      setSelectedParty({ ...applicant, label: 'Applicant' });
+                    }}
+                  >Applicant</button>
+                  {hasCoApplicant && (
+                    <button
+                      className={`px-3 py-1.5 rounded-lg border ${selectedParty?.label === 'Co-applicant' ? 'bg-blue-600 text-white' : 'bg-white text-slate-700'}`}
+                      onClick={() => {
+                        const party =
+                          (selectedLoan.coApplicants && selectedLoan.coApplicants[0]) ||
+                          (selectedLoan.coapplicants && selectedLoan.coapplicants[0]) ||
+                          selectedLoan.coApplicant || null;
+                        if (party) setSelectedParty({ ...party, label: 'Co-applicant' });
+                      }}
+                    >Co-applicant</button>
+                  )}
+                  {hasGuarantor && (
+                    <button
+                      className={`px-3 py-1.5 rounded-lg border ${selectedParty?.label === 'Guarantor' ? 'bg-blue-600 text-white' : 'bg-white text-slate-700'}`}
+                      onClick={() => {
+                        const party = (selectedLoan.guarantors && selectedLoan.guarantors[0]) || selectedLoan.guarantor || null;
+                        if (party) setSelectedParty({ ...party, label: 'Guarantor' });
+                      }}
+                    >Guarantor</button>
+                  )}
                 </div>
-
+              </div>
+              {selectedParty && (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Name</span>
-                    <span className="font-medium text-gray-900">
-                      {selectedApplication.applicantName}
-                    </span>
+                  <div className="p-3 rounded-xl border border-blue-200 bg-blue-50 flex items-center gap-2 text-blue-700">
+                    <User className="w-5 h-5" />
+                    <span className="font-semibold">{selectedParty.label}:</span>
+                    <span>{selectedParty.name || selectedParty.firstName || selectedParty.lastName}</span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">PAN Number</span>
-                    <span className="font-medium text-gray-900">
-                      {selectedApplication.panNumber}
-                    </span>
+                  <div>
+                    <div className="font-semibold mb-1">Eligibility Result:</div>
+                    {eligibility.isLoading ? (
+                      <div className="flex items-center gap-2 text-blue-600"><Loader2 className="w-4 h-4 animate-spin" /> Checking eligibility...</div>
+                    ) : eligibility.error ? (
+                      <div className="text-red-600">{eligibility.error?.message || 'Failed to fetch eligibility.'}</div>
+                    ) : eligibility.data ? (
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="p-3 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 max-w-[70%]">
+                          <div><strong>Status:</strong> {eligibility.data.status ?? eligibility.data.result ?? String(eligibility.data?.status ?? '')}</div>
+                          {eligibility.data.reason && <div className="text-sm text-emerald-800 mt-1">{Array.isArray(eligibility.data.reason) ? eligibility.data.reason.slice(0,3).join(', ') : String(eligibility.data.reason)}</div>}
+                        </div>
+                        <div className="flex-shrink-0">
+                          <button
+                            className="px-3 py-1.5 rounded-lg border bg-white text-slate-700 text-sm"
+                            onClick={() => {
+                              setModalOpen(false);
+                              navigate(`/admin/los/credit-report/${selectedLoan.id}?party=applicant`);
+                            }}
+                          >View Eligibility</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between">
+                        <div className="text-slate-400">No eligibility data.</div>
+                        <button
+                          className="px-3 py-1.5 rounded-lg border bg-white text-slate-700 text-sm"
+                          onClick={() => {
+                            setModalOpen(false);
+                            navigate(`/admin/los/credit-report/${selectedLoan.id}?party=applicant`);
+                          }}
+                        >View Eligibility</button>
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Date of Birth</span>
-                    <span className="font-medium text-gray-900">
-                      {selectedApplication.dob}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Mobile</span>
-                    <span className="font-medium text-gray-900">
-                      {selectedApplication.mobile}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Credit Score</span>
-                    <span className="text-lg font-bold text-emerald-600">
-                      {currentCreditData?.creditScores[0]?.score || "N/A"}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Employment</span>
-                    <span className="font-medium text-gray-900">
-                      {selectedApplication.employmentType}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Co-Applicant Card */}
-              {currentCreditData?.coApplicant && (
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Co-applicant
-                    </h3>
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700`}
-                    >
-                      Medium Risk
-                    </span>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">Name</span>
-                      <span className="font-medium text-gray-900">
-                        {currentCreditData.coApplicant.name}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">PAN Number</span>
-                      <span className="font-medium text-gray-900">
-                        {currentCreditData.coApplicant.panNumber}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">
-                        Date of Birth
-                      </span>
-                      <span className="font-medium text-gray-900">
-                        {currentCreditData.coApplicant.dob}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">Mobile</span>
-                      <span className="font-medium text-gray-900">
-                        {currentCreditData.coApplicant.mobile}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">
-                        Credit Score
-                      </span>
-                      <span className="text-lg font-bold text-blue-600">
-                        {currentCreditData.coApplicant.creditScore}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">Employment</span>
-                      <span className="font-medium text-gray-900">
-                        {currentCreditData.coApplicant.employmentType}
-                      </span>
-                    </div>
+                  <div>
+                    <div className="font-semibold mb-1">Credit Report:</div>
+                    {refreshReport.isLoading ? (
+                      <div className="flex items-center gap-2 text-blue-600"><Loader2 className="w-4 h-4 animate-spin" /> Loading credit report...</div>
+                    ) : refreshReport.isError ? (
+                      <div className="text-red-600">{refreshReport.error?.response?.data?.message || refreshReport.error?.message || 'Failed to fetch credit report.'}</div>
+                    ) : refreshReport.data ? (
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="p-3 rounded-xl border border-blue-200 bg-blue-50 text-blue-700 max-w-[70%]">
+                          <div className="text-sm"><strong>Report:</strong> {String((refreshReport.data.data && (refreshReport.data.data.score || refreshReport.data.data.cibilScore)) || (refreshReport.data.score ?? 'Available'))}</div>
+                        </div>
+                        <div className="flex-shrink-0 flex flex-col gap-2">
+                          <button
+                            className="px-3 py-1.5 rounded-lg border bg-white text-slate-700 text-sm"
+                            onClick={() => {
+                              setModalOpen(false);
+                              navigate(`/admin/los/credit-report/${selectedLoan.id}?party=applicant`);
+                            }}
+                          >View Applicant Report</button>
+                          {hasCoApplicant && (
+                            <button
+                              className="px-3 py-1.5 rounded-lg border bg-white text-slate-700 text-sm"
+                              onClick={() => {
+                                setModalOpen(false);
+                                const party =
+                                  (selectedLoan.coApplicants && selectedLoan.coApplicants[0]) ||
+                                  (selectedLoan.coapplicants && selectedLoan.coapplicants[0]) ||
+                                  selectedLoan.coApplicant;
+                                navigate(`/admin/los/credit-report/${selectedLoan.id}?party=coapplicant&partyId=${party?.id}`);
+                              }}
+                            >View Co-applicant Report</button>
+                          )}
+                          {hasGuarantor && (
+                            <button
+                              className="px-3 py-1.5 rounded-lg border bg-white text-slate-700 text-sm"
+                              onClick={() => {
+                                setModalOpen(false);
+                                const party =
+                                  (selectedLoan.guarantors && selectedLoan.guarantors[0]) ||
+                                  selectedLoan.guarantor;
+                                navigate(`/admin/los/credit-report/${selectedLoan.id}?party=guarantor&partyId=${party?.id}`);
+                              }}
+                            >View Guarantor Report</button>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between">
+                        <div className="text-slate-400">No credit report data.</div>
+                        <div>
+                          <button
+                            className="px-3 py-1.5 rounded-lg border bg-white text-slate-700 text-sm"
+                            onClick={() => {
+                              setModalOpen(false);
+                              navigate(`/admin/los/credit-report/${selectedLoan.id}?party=applicant`);
+                            }}
+                          >View Report</button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
             </div>
-
-            {/* Existing Loans Table */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900">
-                  Existing Loans & Liabilities
-                </h2>
-                <span className="text-sm text-gray-500">
-                  Total EMI: ₹{totalExistingEMI.toLocaleString("en-IN")}/month
-                </span>
-              </div>
-
-              <CreditCheckTable
-                loans={currentCreditData?.existingLoans ?? []}
-                loading={false}
-              />
-
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500">
-                      Total Existing Liabilities
-                    </p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      ₹
-                      {currentCreditData?.existingLoans
-                        .reduce((sum, loan) => sum + loan.outstandingAmount, 0)
-                        .toLocaleString("en-IN") || "0"}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm text-gray-500">
-                      Monthly EMI Commitment
-                    </p>
-                    <p
-                      className={`text-2xl font-bold ${colorVariables.PRIMARY_COLOR}`}
-                    >
-                      ₹{totalExistingEMI.toLocaleString("en-IN")}/month
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
-
-          {/* Right Column - Credit Analysis & Decision */}
-          <div className="space-y-8">
-            {/* Credit Analysis Card */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900">
-                  Credit Analysis
-                </h2>
-                <Calculator className="text-blue-500" size={24} />
-              </div>
-
-              <div className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">
-                      Monthly Income
-                    </span>
-                    <span className="font-bold text-gray-900">
-                      ₹
-                      {selectedApplication.monthlyIncome.toLocaleString(
-                        "en-IN",
-                      )}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">
-                      Total Existing EMI
-                    </span>
-                    <span className="font-bold text-rose-600">
-                      ₹{totalExistingEMI.toLocaleString("en-IN")}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">
-                      FOIR Percentage
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`font-bold ${foirPercentage > 50 ? "text-rose-600" : "text-emerald-600"}`}
-                      >
-                        {foirPercentage}%
-                      </span>
-                      <span
-                        className={`text-xs px-2 py-1 rounded ${foirPercentage > 50 ? "bg-rose-100 text-rose-700" : "bg-emerald-100 text-emerald-700"}`}
-                      >
-                        {foirPercentage > 50 ? "High Risk" : "Safe"}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="pt-2">
-                    <div className="flex items-center justify-between text-sm text-gray-500 mb-1">
-                      <span>FOIR Progress</span>
-                      <span>{foirPercentage}%</span>
-                    </div>
-                    <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full rounded-full ${foirPercentage > 50 ? "bg-rose-500" : foirPercentage > 40 ? "bg-amber-500" : "bg-emerald-500"}`}
-                        style={{ width: `${Math.min(foirPercentage, 100)}%` }}
-                      />
-                      <div className="flex justify-between text-xs text-gray-400 mt-1">
-                        <span>0%</span>
-                        <span
-                          className={`${foirPercentage > 40 ? "text-amber-600" : "text-emerald-600"} font-medium`}
-                        >
-                          40% Safe Limit
-                        </span>
-                        <span
-                          className={`${foirPercentage > 50 ? "text-rose-600" : "text-gray-400"} font-medium`}
-                        >
-                          50% Max Limit
-                        </span>
-                        <span>100%</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">
-                      Eligible EMI Capacity
-                    </span>
-                    <span className="font-bold text-emerald-600">
-                      ₹{eligibleEMICapacity.toLocaleString("en-IN")}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Risk Grade</span>
-                    <span className="px-3 py-1 rounded-full text-sm font-bold bg-emerald-100 text-emerald-700">
-                      {currentCreditData?.creditAnalysis.riskGrade}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-gray-200">
-                  <h4 className="font-medium text-gray-900 mb-3">
-                    Credit Remarks
-                  </h4>
-                  <p
-                    className={`text-sm text-gray-600 ${colorVariables.LIGHT_BG} rounded-lg p-3`}
-                  >
-                    {currentCreditData?.creditAnalysis.creditRemarks}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Credit Officer Decision Panel */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900">
-                  Credit Decision
-                </h2>
-                <div className="flex items-center gap-2">
-                  <Shield className="text-blue-500" size={20} />
-                  <span className="text-sm text-gray-500">
-                    {userRole.replace("_", " ")}
-                  </span>
-                </div>
-              </div>
-
-              <div className="space-y-6">
-                {/* Decision Type */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Decision Type
-                  </label>
-                  <div className="grid grid-cols-3 gap-3">
-                    <button
-                      onClick={() => handleDecisionChange("approve")}
-                      className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${
-                        currentDecision?.decisionType === "approve"
-                          ? "border-emerald-500 bg-emerald-50"
-                          : "border-gray-200 hover:border-emerald-200 hover:bg-emerald-50/50"
-                      }`}
-                      disabled={!canApprove}
-                    >
-                      <CheckCircle
-                        className={`${currentDecision?.decisionType === "approve" ? "text-emerald-600" : "text-gray-400"} mb-2`}
-                        size={24}
-                      />
-                      <span className="font-medium text-sm">Approve</span>
-                    </button>
-
-                    <button
-                      onClick={() => handleDecisionChange("conditional")}
-                      className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${
-                        currentDecision?.decisionType === "conditional"
-                          ? "border-amber-500 bg-amber-50"
-                          : "border-gray-200 hover:border-amber-200 hover:bg-amber-50/50"
-                      }`}
-                      disabled={!canApprove}
-                    >
-                      <AlertCircle
-                        className={`${currentDecision?.decisionType === "conditional" ? "text-amber-600" : "text-gray-400"} mb-2`}
-                        size={24}
-                      />
-                      <span className="font-medium text-sm">Conditional</span>
-                    </button>
-
-                    <button
-                      onClick={() => handleDecisionChange("reject")}
-                      className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${
-                        currentDecision?.decisionType === "reject"
-                          ? "border-rose-500 bg-rose-50"
-                          : "border-gray-200 hover:border-rose-200 hover:bg-rose-50/50"
-                      }`}
-                      disabled={!canApprove}
-                    >
-                      <XCircle
-                        className={`${currentDecision?.decisionType === "reject" ? "text-rose-600" : "text-gray-400"} mb-2`}
-                        size={24}
-                      />
-                      <span className="font-medium text-sm">Reject</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Recommendation Fields */}
-                <div className="space-y-4">
-                  <InputField
-                    type="number"
-                    label="Recommended Loan Amount"
-                    icon={IndianRupee}
-                    value={currentDecision?.recommendedAmount || ""}
-                    onChange={(e) => {
-                      if (!selectedApplication) return;
-                      setDecisions((prev) => ({
-                        ...prev,
-                        [selectedApplication.loanNumber]: {
-                          ...prev[selectedApplication.loanNumber],
-                          recommendedAmount: e.target.value,
-                        },
-                      }));
-                    }}
-                    isDisabled={!canEdit}
-                  />
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <InputField
-                      type="number"
-                      label="Tenure (Years)"
-                      value={currentDecision?.recommendedTenure || ""}
-                      onChange={(e) => {
-                        if (!selectedApplication) return;
-                        setDecisions((prev) => ({
-                          ...prev,
-                          [selectedApplication.loanNumber]: {
-                            ...prev[selectedApplication.loanNumber],
-                            recommendedTenure: e.target.value,
-                          },
-                        }));
-                      }}
-                      isDisabled={!canEdit}
-                    />
-
-                    <InputField
-                      type="number"
-                      step="0.1"
-                      label="Interest Rate %"
-                      icon={Percent}
-                      value={currentDecision?.interestRate || ""}
-                      onChange={(e) => {
-                        if (!selectedApplication) return;
-                        setDecisions((prev) => ({
-                          ...prev,
-                          [selectedApplication.loanNumber]: {
-                            ...prev[selectedApplication.loanNumber],
-                            interestRate: e.target.value,
-                          },
-                        }));
-                      }}
-                      isDisabled={!canEdit}
-                    />
-                  </div>
-
-                  <SelectField
-                    label="Risk Grade"
-                    options={riskGradeOptions}
-                    value={currentDecision?.riskGrade || ""}
-                    onChange={(value) => {
-                      if (!selectedApplication) return;
-                      setDecisions((prev) => ({
-                        ...prev,
-                        [selectedApplication.loanNumber]: {
-                          ...prev[selectedApplication.loanNumber],
-                          riskGrade: value,
-                        },
-                      }));
-                    }}
-                    isDisabled={!canEdit}
-                  />
-                </div>
-
-                {/* Remarks */}
-                <TextAreaField
-                  label="Credit Officer Remarks"
-                  value={currentDecision?.remarks || ""}
-                  onChange={(e) => {
-                    if (!selectedApplication) return;
-                    setDecisions((prev) => ({
-                      ...prev,
-                      [selectedApplication.loanNumber]: {
-                        ...prev[selectedApplication.loanNumber],
-                        remarks: e.target.value,
-                      },
-                    }));
-                  }}
-                  rows={4}
-                  placeholder="Enter detailed remarks about the credit decision..."
-                  isDisabled={!canApprove}
-                />
-
-                {/* Action Buttons */}
-                <div className="space-y-3">
-                  <Button
-                    onClick={handleSaveDecision}
-                    className={`w-full justify-center ${colorVariables.PRIMARY_BUTTON_COLOR}`}
-                    disabled={!canApprove}
-                  >
-                    <Save size={18} />
-                    Save Decision
-                  </Button>
-
-                  <Button
-                    onClick={handleApproveMove}
-                    className="w-full justify-center bg-emerald-600 hover:bg-emerald-700"
-                    disabled={
-                      !canApprove || currentDecision?.decisionType !== "approve"
-                    }
-                  >
-                    <Send size={18} />
-                    Approve & Move to Underwriting
-                  </Button>
-
-                  <Button
-                    onClick={handleRejectApplication}
-                    className="w-full justify-center bg-rose-600 hover:bg-rose-700"
-                    disabled={
-                      !canApprove || currentDecision?.decisionType !== "reject"
-                    }
-                  >
-                    <X size={18} />
-                    Reject Application
-                  </Button>
-                </div>
-
-                {/* Decision Info */}
-                {currentDecision && currentDecision.status !== "pending" && (
-                  <div className="pt-4 border-t border-gray-200">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">Officer</span>
-                      <span className="font-medium text-gray-900">
-                        {currentDecision.officerName || "N/A"}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm mt-1">
-                      <span className="text-gray-500">Decision Date</span>
-                      <span className="font-medium text-gray-900">
-                        {currentDecision.decisionDate || "N/A"}
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Risk Assessment Summary */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">
-                Risk Assessment Summary
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">
-                    Credit Score Risk
-                  </span>
-                  <span className="px-2 py-1 rounded text-xs font-medium bg-emerald-100 text-emerald-700">
-                    {currentCreditData?.creditScores[0]?.score >= 750
-                      ? "Low"
-                      : currentCreditData?.creditScores[0]?.score >= 650
-                        ? "Medium"
-                        : "High"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">FOIR Risk</span>
-                  <span
-                    className={`px-2 py-1 rounded text-xs font-medium ${
-                      foirPercentage > 50
-                        ? "bg-rose-100 text-rose-700"
-                        : foirPercentage > 40
-                          ? "bg-amber-100 text-amber-700"
-                          : "bg-emerald-100 text-emerald-700"
-                    }`}
-                  >
-                    {foirPercentage > 50
-                      ? "High"
-                      : foirPercentage > 40
-                        ? "Medium"
-                        : "Low"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">
-                    Existing Debt Risk
-                  </span>
-                  <span
-                    className={`px-2 py-1 rounded text-xs font-medium ${
-                      totalExistingEMI > selectedApplication.monthlyIncome * 0.4
-                        ? "bg-amber-100 text-amber-700"
-                        : totalExistingEMI >
-                            selectedApplication.monthlyIncome * 0.2
-                          ? "bg-blue-100 text-blue-700"
-                          : "bg-emerald-100 text-emerald-700"
-                    }`}
-                  >
-                    {totalExistingEMI > selectedApplication.monthlyIncome * 0.4
-                      ? "Medium"
-                      : totalExistingEMI >
-                          selectedApplication.monthlyIncome * 0.2
-                        ? "Low"
-                        : "Very Low"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">
-                    Overall Risk Grade
-                  </span>
-                  <span className="px-3 py-1 rounded-full text-sm font-bold bg-emerald-100 text-emerald-700">
-                    {currentCreditData?.creditAnalysis.riskGrade}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Status Bar */}
-        <div className="mt-8 bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <div
-                  className={`w-3 h-3 rounded-full ${
-                    currentCreditData?.creditScores[0]?.score >= 750
-                      ? "bg-emerald-500"
-                      : currentCreditData?.creditScores[0]?.score >= 650
-                        ? "bg-blue-500"
-                        : "bg-amber-500"
-                  }`}
-                ></div>
-                <span className="text-sm text-gray-600">
-                  Credit Score:{" "}
-                  {currentCreditData?.creditScores[0]?.score >= 750
-                    ? "Excellent"
-                    : currentCreditData?.creditScores[0]?.score >= 650
-                      ? "Good"
-                      : "Average"}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div
-                  className={`w-3 h-3 rounded-full ${
-                    foirPercentage > 50
-                      ? "bg-rose-500"
-                      : foirPercentage > 40
-                        ? "bg-amber-500"
-                        : "bg-emerald-500"
-                  }`}
-                ></div>
-                <span className="text-sm text-gray-600">
-                  FOIR: {foirPercentage}%
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div
-                  className={`w-3 h-3 rounded-full ${
-                    totalExistingEMI > selectedApplication.monthlyIncome * 0.4
-                      ? "bg-amber-500"
-                      : totalExistingEMI >
-                          selectedApplication.monthlyIncome * 0.2
-                        ? "bg-blue-500"
-                        : "bg-emerald-500"
-                  }`}
-                ></div>
-                <span className="text-sm text-gray-600">
-                  Existing Debt:{" "}
-                  {totalExistingEMI > selectedApplication.monthlyIncome * 0.4
-                    ? "High"
-                    : totalExistingEMI > selectedApplication.monthlyIncome * 0.2
-                      ? "Moderate"
-                      : "Low"}
-                </span>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-500">Application Status</p>
-              <p className={`font-medium ${colorVariables.PRIMARY_COLOR}`}>
-                {selectedApplication.currentStage}
-              </p>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
-}
+};
+
+export default CreditDashboard;

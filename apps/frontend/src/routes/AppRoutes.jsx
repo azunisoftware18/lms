@@ -89,6 +89,7 @@ import SalesTargetAndAchievementPage from "../app/dashboard/reports/SalesTargetA
 import DisbursCollectionPage from "../app/dashboard/reports/DisbursCollectionPage.jsx";
 import PermissionManagementPage from "../app/dashboard/PermissionManagementPage.jsx";
 import EligibilityPage from "../app/dashboard/LOS/EligibilityPage.jsx";
+import CreditReportView from "../app/dashboard/LOS/CreditReportView.jsx";
 
 export default function AppRoutes() {
   const dispatch = useDispatch();
@@ -227,6 +228,7 @@ export default function AppRoutes() {
         />
         <Route path="los/leads" element={<LeadsPage />} />
         <Route path="los/eligibility" element={<EligibilityPage />} />
+        <Route path="los/credit-report/:loanId" element={<CreditReportView />} />
         <Route path="loan-account-view/:loanId" element={<LoanAccountView />} />
         <Route
           path="system-setting/company-details"

@@ -116,13 +116,13 @@ export default function Sidebar() {
             //   permission: "VIEW_EMI_SCHEDULE"
             // },
             { name: "EMI Management", path: "/admin/lms/emi-management" },
-            // {
-            //   name: "Repayment Management",
-            //   path: currentUser?.role === "EMPLOYEE"
-            //     ? "/employee/lms/repayment-management"
-            //     : "/admin/lms/repayment-management",
-            //   permission: "VIEW_REPAYMENT_MANAGEMENT"
-            // },
+            {
+              name: "Repayment Management",
+              path: currentUser?.role === "EMPLOYEE"
+                ? "/employee/lms/repayment-management"
+                : "/admin/lms/repayment-management",
+              permission: "VIEW_REPAYMENT_MANAGEMENT"
+            },
 
             // // --- REPAYMENT (Dropdown) ---
             // {

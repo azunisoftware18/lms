@@ -537,6 +537,7 @@ export const getAllLoanApplicationsService = async (params: {
             id: true,
             firstName: true,
             lastName: true,
+            panNumber: true,
             dob: true,
             contactNumber: true,
             email: true,
@@ -568,7 +569,20 @@ export const getAllLoanApplicationsService = async (params: {
           },
         },
         coapplicants: {
-          select: { id: true },
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            panNumber: true,
+          },
+        },
+        guarantors: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            panNumber: true,
+          },
         },
       },
       orderBy: { createdAt: "desc" },
@@ -619,7 +633,30 @@ export const getAllLoanApplicationsService = async (params: {
       ? loan.kyc.documents.filter((d) => d.verificationStatus === "rejected")
           .length
       : 0,
-    coApplicantCount: loan.coapplicants?.length || 0,
+    coApplicant: {
+      id: loan.coapplicants[0]?.id || null,
+      firstName: loan.coapplicants[0]?.firstName || null,
+      lastName: loan.coapplicants[0]?.lastName || null,
+      panNumber: loan.coapplicants[0]?.panNumber || null,
+    },
+    guarantor: {
+      id: loan.guarantors[0]?.id || null,
+      firstName: loan.guarantors[0]?.firstName || null,
+      lastName: loan.guarantors[0]?.lastName || null,
+      panNumber: loan.guarantors[0]?.panNumber || null,
+    },
+    coApplicants: loan.coapplicants.map((c) => ({
+      id: c.id,
+      firstName: c.firstName,
+      lastName: c.lastName,
+      panNumber: c.panNumber,
+    })),
+    guarantors: loan.guarantors.map((g) => ({
+      id: g.id,
+      firstName: g.firstName,
+      lastName: g.lastName,
+      panNumber: g.panNumber,
+    })),
   }));
 
   // Compute total outstanding amount (approximate): use approvedAmount when available, else requestedAmount
