@@ -32,7 +32,8 @@
     "node-cron": "^4.2.1",
     "run": "^1.5.0",
     "winston": "^3.19.0",
-    "zod": "^4.2.1"
+    "zod": "^4.2.1",
+    "pdfkit": "^0.13.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
