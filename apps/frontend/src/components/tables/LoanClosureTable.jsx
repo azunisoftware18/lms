@@ -3,11 +3,10 @@ import { RotateCw, RefreshCw, Download } from "lucide-react";
 import TableShell from "./core/TableShell";
 import TableHead from "./core/TableHead";
 import TableBody from "./core/TableBody";
-import DateFilter from "../common/DateFilter";
 
 export default function LoanClosureTable({ data = [] }) {
   const [search, setSearch] = useState("");
-  const [dateFilter, setDateFilter] = useState("ALL");
+  const [dateValue, setDateValue] = useState("ALL");
 
   const columns = useMemo(
     () => [
@@ -46,11 +45,11 @@ export default function LoanClosureTable({ data = [] }) {
     const term = (search || "").toString().toLowerCase();
     return (data || [])
       .filter((r) => {
-        if (dateFilter && dateFilter !== "ALL") {
+        if (dateValue && dateValue !== "ALL") {
           // simple check: if closureDate is in same day/month/year
           const d = new Date(r.closureDate || r.date || 0);
           const now = new Date();
-          if (dateFilter === "TODAY") {
+          if (dateValue === "TODAY") {
             const s = new Date(
               now.getFullYear(),
               now.getMonth(),
@@ -75,7 +74,7 @@ export default function LoanClosureTable({ data = [] }) {
         closureDate: r.closureDate || r.date || "-",
         id: r.id || r.accountNumber || `${r.accountNumber}-${r.closureDate}`,
       }));
-  }, [data, search, dateFilter]);
+  }, [data, search, dateValue]);
 
   const countLabel = `${filtered.length} record${filtered.length === 1 ? "" : "s"}`;
 
@@ -114,17 +113,14 @@ export default function LoanClosureTable({ data = [] }) {
           title="Closed Loans"
           search={search}
           setSearch={setSearch}
+          dateValue={dateValue}
+          setDateValue={setDateValue}
           headerAction={
             <div className="flex items-center gap-2">
-              <DateFilter
-                value={dateFilter}
-                onChange={setDateFilter}
-                className="w-44"
-              />
               <button
                 onClick={() => {
                   setSearch("");
-                  setDateFilter("ALL");
+                  setDateValue("ALL");
                 }}
                 className="flex items-center gap-2 px-2.5 py-1.5 text-xs border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors"
               >

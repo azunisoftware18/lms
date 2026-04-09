@@ -4,7 +4,6 @@ import { RotateCw } from "lucide-react";
 import TableShell from "./core/TableShell";
 import TableHead from "./core/TableHead";
 import TableBody from "./core/TableBody";
-import DateFilter from "../common/DateFilter";
 
 const parseRecordDate = (value) => {
   if (!value) return null;
@@ -70,7 +69,7 @@ const isWithinDateRange = (date, range) => {
 export default function ForeClosureTable({ data = [] }) {
   const [search, setSearch] = useState("");
   const [filterValue, setFilterValue] = useState("");
-  const [dateFilter, setDateFilter] = useState("ALL");
+  const [dateValue, setDateValue] = useState("ALL");
 
   const columns = useMemo(
     () => [
@@ -158,7 +157,7 @@ export default function ForeClosureTable({ data = [] }) {
         }
 
         const recordDate = parseRecordDate(r.date);
-        if (!isWithinDateRange(recordDate, dateFilter)) return false;
+        if (!isWithinDateRange(recordDate, dateValue)) return false;
 
         if (!term) return true;
 
@@ -188,7 +187,7 @@ export default function ForeClosureTable({ data = [] }) {
           : r.date,
         id: r.loanNumber + "-" + r.date,
       }));
-  }, [data, search, filterValue, dateFilter]);
+  }, [data, search, filterValue, dateValue]);
 
   const countLabel = `${filtered.length} record${filtered.length === 1 ? "" : "s"}`;
 
@@ -234,18 +233,15 @@ export default function ForeClosureTable({ data = [] }) {
           filterValue={filterValue}
           setFilterValue={setFilterValue}
           filterOptions={filterOptions}
+          dateValue={dateValue}
+          setDateValue={setDateValue}
           headerAction={
             <div className="flex items-center gap-2">
-              <DateFilter
-                value={dateFilter}
-                onChange={setDateFilter}
-                className="w-44"
-              />
               <button
                 onClick={() => {
                   setSearch("");
                   setFilterValue("");
-                  setDateFilter("ALL");
+                  setDateValue("ALL");
                 }}
                 className="flex items-center gap-2 px-2.5 py-1.5 text-xs border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors"
               >

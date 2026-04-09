@@ -4,7 +4,6 @@ import { Eye, PenIcon } from "lucide-react";
 import { TableShell, TableHead, TableBody, TableLoader } from "./core";
 
 import Pagination from "../common/Pagination";
-import DateFilter from "../common/DateFilter";
 
 export default function ApplicationPageTable({
   applications = [],
@@ -92,11 +91,10 @@ export default function ApplicationPageTable({
         columns={columns}
         search={search}
         setSearch={setSearch}
+        dateValue={dateRange}
+        setDateValue={setDateRange}
         headerAction={
-          <div className="flex items-center gap-2">
-            {headerAction}
-            <DateFilter value={dateRange} onChange={setDateRange} />
-          </div>
+          <div className="flex items-center gap-2">{headerAction}</div>
         }
         onRefresh={onRefresh}
         refreshing={refreshing}

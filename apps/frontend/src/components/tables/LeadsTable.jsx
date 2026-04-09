@@ -1,5 +1,4 @@
 import { Mail, MapPin, Phone } from "lucide-react";
-import DateFilter from "../common/DateFilter";
 import Pagination from "../common/Pagination";
 import { TableShell, TableHead, TableBody, TableLoader } from "../tables/core";
 import { getLeadLoanTypeColor } from "../../lib/LOSDummyData";
@@ -91,12 +90,11 @@ export default function LeadsTable({
       render: (_, row) => (
         <div className="flex items-start gap-4">
           <div className="min-w-0">
-              <div className={` ${getLeadLoanTypeColor(row?.loanType?.name)}`}>
-                {row?.loanType?.name || "—"}
-              </div>
-              <div className="text-green-900">
-                ₹{" "}
-                {row?.loanAmount ? row.loanAmount.toLocaleString("en-IN") : "0"} 
+            <div className={` ${getLeadLoanTypeColor(row?.loanType?.name)}`}>
+              {row?.loanType?.name || "—"}
+            </div>
+            <div className="text-green-900">
+              ₹ {row?.loanAmount ? row.loanAmount.toLocaleString("en-IN") : "0"}
             </div>
           </div>
         </div>
@@ -131,11 +129,8 @@ export default function LeadsTable({
         filterValue={filterValue}
         setFilterValue={setFilterValue}
         filterOptions={filterOptions}
-        headerAction={
-          <div className="flex items-center gap-3">
-            <DateFilter value={dateRange} onChange={setDateRange} />
-          </div>
-        }
+        dateValue={dateRange}
+        setDateValue={setDateRange}
       />
 
       {/* BODY */}
