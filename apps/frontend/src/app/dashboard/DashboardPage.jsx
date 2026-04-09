@@ -9,7 +9,7 @@ export default function AdminDashboardPage() {
   const [interestRate, setInterestRate] = useState(10.5);
   const [tenure, setTenure] = useState(24);
   const [selectedPeriod, setSelectedPeriod] = useState("weekly");
-  const [selectedChart, setSelectedChart] = useState("disbursement");
+  const [selectedChart, setSelectedChart] = useState("both");
   const [selectedLoanType, setSelectedLoanType] = useState("all");
 
   /* EMI CALCULATION */
@@ -281,7 +281,7 @@ export default function AdminDashboardPage() {
                       onClick={() => setSelectedChart(chart)}
                       className={`px-3 py-1 text-xs font-medium rounded-lg transition-all ${
                         selectedChart === chart
-                          ? "bg-blue-600 text-white shadow-sm"
+                          ? "bg-green-600 text-white shadow-sm"
                           : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                       }`}
                     >
