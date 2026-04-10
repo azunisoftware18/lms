@@ -27,7 +27,11 @@ import Button from "../../../components/ui/Button";
 import StatusCard from "../../../components/common/StatusCard";
 import { LEAD_ACTION_DEFINITIONS } from "../../../lib/LOSDummyData";
 // import { colorVariables } from "../../../lib";
-import { useLead, useUpdateLeadStatus } from "../../../hooks/useLead";
+import {
+  useLead,
+  useUpdateLeadStatus,
+  useGetLead,
+} from "../../../hooks/useLead";
 import toast from "react-hot-toast";
 
 export default function LeadsPage() {
@@ -51,8 +55,39 @@ export default function LeadsPage() {
     transactionId: "",
   });
 
-  const [generatedFees, setGeneratedFees] = useState([]);
+  const [_generatedFees, setGeneratedFees] = useState([]);
   const [selectedFee, setSelectedFee] = useState(null);
+  const [showReceipt, setShowReceipt] = useState(false);
+
+  // hook to fetch single lead by id/number on demand
+  const leadQueryHook = useGetLead(formData.leadId, { enabled: false });
+
+  const fetchAndFillLead = async (idOrNumber) => {
+    if (!idOrNumber) return;
+    try {
+      const res = await leadQueryHook.refetch();
+      const data = res?.data ?? null;
+      if (!data) {
+        toast.error("Lead not found");
+        return;
+      }
+      // map lead fields into formData
+      const name = data.fullName || data.name || data.applicantName || "";
+      const mobile = data.contactNumber || data.mobile || data.phone || "";
+      const email = data.email || "";
+      const loanAmount = data.loanAmount ?? formData.loanAmount;
+      setFormData((f) => ({
+        ...f,
+        applicantName: name,
+        mobileNumber: String(mobile || ""),
+        email: email || "",
+        loanAmount,
+      }));
+      toast.success("Lead details loaded");
+    } catch (err) {
+      toast.error(err?.message || "Failed to load lead");
+    }
+  };
 
   // Status filter state
   const [statusFilter, setStatusFilter] = useState("");
@@ -114,6 +149,157 @@ export default function LeadsPage() {
         }
       },
     }));
+  };
+
+  // Fee calculations (live based on entered fee or selectedFee)
+  const feeAmountNum =
+    Number(formData.feeAmount) ||
+    (selectedFee?.amount ? Number(selectedFee.amount) : 0);
+  const gstAmount = Math.round(feeAmountNum * 0.18);
+  const totalAmount = feeAmountNum + gstAmount;
+  const formatINR = (n) => (typeof n === "number" ? `₹${n}` : "₹0");
+
+  const handleChargeFee = (e) => {
+    e.preventDefault();
+    const amount = Number(formData.feeAmount) || 0;
+    const uniqueNumber = `TXN-${Date.now()}`;
+    const newFee = {
+      id: `LF${Date.now()}`,
+      uniqueNumber,
+      applicantName: formData.applicantName,
+      mobile: formData.mobileNumber,
+      email: formData.email,
+      amount,
+      status: "pending",
+      date: new Date().toISOString().split("T")[0],
+      paymentMode: formData.paymentMode,
+      transactionId: formData.transactionId || "",
+      leadId: formData.leadId || `LD-${Date.now()}`,
+    };
+    setGeneratedFees((s) => [newFee, ...s]);
+    setSelectedFee(newFee);
+    setShowReceipt(true);
+    setFormData({
+      leadId: "",
+      applicantName: "",
+      mobileNumber: "",
+      email: "",
+      loanAmount: "",
+      feeAmount: "",
+      paymentMode: "online",
+      transactionId: "",
+    });
+    toast.success("Application fee recorded");
+  };
+
+  const ReceiptModal = () => {
+    if (!showReceipt || !selectedFee) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center">
+            <h3 className="text-xl font-bold text-gray-900">
+              Application Fee Receipt
+            </h3>
+            <button
+              onClick={() => setShowReceipt(false)}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <Icons.X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="p-6">
+            <div className="text-center mb-6">
+              <div className="inline-flex p-3 bg-blue-100 rounded-full mb-3">
+                <Icons.Receipt className="w-8 h-8 text-blue-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900">
+                Payment Receipt
+              </h2>
+              <p className="text-gray-500">Loan Application Fee</p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="bg-gray-50 rounded-xl p-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-xs text-gray-500">Application Number</p>
+                    <p className="font-semibold text-gray-900 mt-1">
+                      {selectedFee.uniqueNumber}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Date</p>
+                    <p className="font-semibold text-gray-900 mt-1">
+                      {selectedFee.date}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Applicant Name</p>
+                    <p className="font-semibold text-gray-900 mt-1">
+                      {selectedFee.applicantName}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Mobile Number</p>
+                    <p className="font-semibold text-gray-900 mt-1">
+                      {selectedFee.mobile}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Email ID</p>
+                    <p className="font-semibold text-gray-900 mt-1">
+                      {selectedFee.email}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Payment Mode</p>
+                    <p className="font-semibold text-gray-900 mt-1 capitalize">
+                      {selectedFee.paymentMode}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t border-b border-gray-200 py-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Application Fee</span>
+                  <span className="text-xl font-bold text-gray-900">
+                    ₹{selectedFee.amount}
+                  </span>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                  <Icons.Info className="w-5 h-5 text-blue-600 mt-0.5" />
+                  <div>
+                    <p className="text-sm text-blue-900 font-medium">
+                      Next Steps
+                    </p>
+                    <p className="text-xs text-blue-700 mt-1">
+                      Please use this Application Number to upload your
+                      documents. You will receive a confirmation email shortly.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 flex gap-3">
+              <button
+                onClick={() => window.print()}
+                className="px-4 py-2.5 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all"
+              >
+                <Icons.Download className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -343,57 +529,43 @@ export default function LeadsPage() {
                 </div>
               </div>
 
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const uniqueNumber = `TXN-${Date.now()}`;
-                  const newFee = {
-                    id: `LF${Date.now()}`,
-                    uniqueNumber,
-                    applicantName: formData.applicantName,
-                    mobile: formData.mobileNumber,
-                    email: formData.email,
-                    amount: formData.feeAmount,
-                    status: "pending",
-                    date: new Date().toISOString().split("T")[0],
-                    paymentMode: formData.paymentMode,
-                    transactionId: formData.transactionId || "",
-                    leadId: formData.leadId || `LD-${Date.now()}`,
-                  };
-                  setGeneratedFees([newFee, ...generatedFees]);
-                  setSelectedFee(newFee);
-                  setFormData({
-                    leadId: "",
-                    applicantName: "",
-                    mobileNumber: "",
-                    email: "",
-                    loanAmount: "",
-                    feeAmount: "",
-                    paymentMode: "online",
-                    transactionId: "",
-                  });
-                }}
-                className="space-y-5"
-              >
+              <form onSubmit={handleChargeFee} className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Lead ID <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
-                      name="leadId"
-                      value={formData.leadId}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          [e.target.name]: e.target.value,
-                        })
-                      }
-                      placeholder="Enter Lead ID"
-                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-                      required
-                    />
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        name="leadId"
+                        value={formData.leadId}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            [e.target.name]: e.target.value,
+                          })
+                        }
+                        onBlur={(e) => fetchAndFillLead(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.currentTarget.blur();
+                            fetchAndFillLead(e.currentTarget.value);
+                          }
+                        }}
+                        placeholder="Enter Lead ID"
+                        className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => fetchAndFillLead(formData.leadId)}
+                        className="inline-flex items-center px-3 py-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100"
+                        aria-label="Fetch lead"
+                      >
+                        <Icons.Search className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -549,11 +721,15 @@ export default function LeadsPage() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Application Fee</span>
-                  <span className="font-bold text-gray-900">{selectedFee}</span>
+                  <span className="font-bold text-gray-900">
+                    {formatINR(feeAmountNum)}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">GST (18%)</span>
-                  <span className="font-bold text-gray-900">₹90</span>
+                  <span className="font-bold text-gray-900">
+                    {formatINR(gstAmount)}
+                  </span>
                 </div>
                 <div className="border-t border-blue-200 pt-2">
                   <div className="flex justify-between items-center">
@@ -561,7 +737,7 @@ export default function LeadsPage() {
                       Total Amount
                     </span>
                     <span className="font-bold text-xl text-blue-600">
-                      ₹590
+                      {formatINR(totalAmount)}
                     </span>
                   </div>
                 </div>

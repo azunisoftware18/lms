@@ -38,15 +38,15 @@ export default function LeadsTable({
       accessor: "fullName",
       render: (_, row) => (
         <div className="flex items-center gap-4">
-          <div className="h-10 w-10 shrink-0 rounded-full bg-linear-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold">
+          <div className="h-6 w-6 shrink-0 rounded-full bg-linear-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold">
             {(row?.fullName || "").charAt(0).toUpperCase() || "U"}
           </div>
           <div className="min-w-0">
-            <div className="text-base font-semibold text-gray-900 truncate">
+            <div className=" text-sm font-semibold text-gray-900 truncate">
               {row?.fullName || "Unknown"}
             </div>
             <div
-              className={`text-xs font-medium ${colorVariables.PRIMARY_COLOR} ${colorVariables.LIGHT_BG} px-2 py-0.5 rounded-md inline-block mt-1`}
+              className={`text-xs  ${colorVariables.PRIMARY_COLOR} ${colorVariables.LIGHT_BG} px-1 py-0.5 rounded-md inline-block mt-1`}
             >
               {row?.leadNumber || "N/A"}
             </div>
