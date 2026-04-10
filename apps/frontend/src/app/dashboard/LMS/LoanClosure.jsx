@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import LoanClosureTable from "../../../components/tables/LoanClosureTable";
+import { useLoanApplications } from "../../../hooks/useLoanApplication";
 import {
   Search,
   CreditCard,
@@ -19,6 +20,7 @@ import {
   BadgeCheck,
   ChevronRight,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 const LoanClosure = () => {
   // State for active tab
@@ -37,14 +39,30 @@ const LoanClosure = () => {
     chargesCleared: false,
   });
 
-  // State for closed loans table
-  const [closedLoans, setClosedLoans] = useState([]);
+  // Local closed loans added client-side (keeps user additions)
+  const [localClosedLoans, setLocalClosedLoans] = useState([]);
+
+  const formatDateOnly = (value) => {
+    if (!value) return "-";
+    try {
+      const d = new Date(value);
+      if (!Number.isNaN(d.getTime())) {
+        return d.toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+    } catch (e) {
+      toast.error("Error parsing date: " + e.message);
+    }
+    return String(value).split("T")[0] || String(value);
+  };
 
   // State for NOC
   const [nocGenerated, setNocGenerated] = useState(false);
-  const [closureReference] = useState(
-    // "CLR" + Math.floor(Math.random() * 1000000),
-  );
+  const [closureReference] = useState();
+  // "CLR" + Math.floor(Math.random() * 1000000),
   const [closureDate] = useState(
     new Date().toLocaleDateString("en-IN", {
       day: "2-digit",
@@ -53,63 +71,57 @@ const LoanClosure = () => {
     }),
   );
 
-  // Mock loan database
-  const mockLoanDatabase = [
-    {
-      accountNumber: "LN-2024-001234",
-      customerName: "Rajesh Kumar Sharma",
-      loanAmount: "15,00,000",
-      interestRate: "8.5",
-      tenure: "60",
-      outstandingBalance: "12,45,678",
-      status: "ACTIVE",
-      totalEmiPaid: "12,45,678",
-      lateCharges: "5,250",
-      finalPayable: "2,59,572",
-    },
-    {
-      accountNumber: "LN-2024-005678",
-      customerName: "Priya Singh",
-      loanAmount: "25,00,000",
-      interestRate: "9.0",
-      tenure: "84",
-      outstandingBalance: "18,90,456",
-      status: "ACTIVE",
-      totalEmiPaid: "18,90,456",
-      lateCharges: "3,750",
-      finalPayable: "6,13,294",
-    },
-    {
-      accountNumber: "LN-2024-009012",
-      customerName: "Amit Patel",
-      loanAmount: "10,00,000",
-      interestRate: "8.0",
-      tenure: "36",
-      outstandingBalance: "7,34,890",
-      status: "ACTIVE",
-      totalEmiPaid: "7,34,890",
-      lateCharges: "0",
-      finalPayable: "2,65,110",
-    },
-  ];
+  // Fetch loan applications and show closed loans for NOC download
+  const loanQuery = useLoanApplications({ limit: 1000 });
+  const loansData = loanQuery?.data;
+  const refetchLoans = loanQuery?.refetch;
 
-  // Mock closed loans data
-  const mockClosedLoans = [
-    {
-      accountNumber: "LN-2023-004567",
-      customerName: "Sunita Reddy",
-      loanAmount: "12,00,000",
-      status: "CLOSED",
-      closureDate: "15 Mar 2024",
-    },
-    {
-      accountNumber: "LN-2023-008901",
-      customerName: "Vikram Mehta",
-      loanAmount: "8,50,000",
-      status: "CLOSED",
-      closureDate: "22 Feb 2024",
-    },
-  ];
+  // Derive closed loans from server response without setting state inside effect
+  const serverClosedLoans = useMemo(() => {
+    // Normalize possible response shapes
+    let list = [];
+    if (loansData?.data?.data && Array.isArray(loansData.data.data)) {
+      list = loansData.data.data;
+    } else if (loansData?.data && Array.isArray(loansData.data)) {
+      list = loansData.data;
+    } else if (Array.isArray(loansData)) {
+      list = loansData;
+    } else if (loansData?.data?.items && Array.isArray(loansData.data.items)) {
+      list = loansData.data.items;
+    }
+
+    return (list || [])
+      .filter((loan) => {
+        const st = (loan.status || "").toString().toLowerCase();
+        return st === "closed";
+      })
+      .map((loan) => ({
+        accountNumber: loan.loanNumber || loan.accountNumber || loan.id,
+        customerName:
+          loan.customer?.name ||
+          loan.customerName ||
+          `${loan.customer?.firstName || ""} ${loan.customer?.lastName || ""}`.trim() ||
+          "-",
+        loanAmount:
+          loan.approvedAmount || loan.requestedAmount || loan.loanAmount || 0,
+        status: loan.status || "closed",
+        closureDate: formatDateOnly(
+          loan.foreclosureDate ||
+            loan.closureDate ||
+            loan.updatedAt ||
+            loan.createdAt,
+        ),
+        id:
+          loan.id ||
+          loan.loanNumber ||
+          `${loan.loanNumber || loan.accountNumber}`,
+      }));
+  }, [loansData]);
+
+  const closedLoans = useMemo(() => {
+    // Merge local additions first, then server list
+    return [...localClosedLoans, ...serverClosedLoans];
+  }, [localClosedLoans, serverClosedLoans]);
 
   // Tabs configuration
   const tabs = [
@@ -120,7 +132,7 @@ const LoanClosure = () => {
   // Handle search loan
   const handleSearchLoan = () => {
     setSearchError("");
-    const foundLoan = mockLoanDatabase.find(
+    const foundLoan = closedLoans.find(
       (loan) => loan.accountNumber === searchLoanNumber,
     );
 
@@ -168,7 +180,7 @@ const LoanClosure = () => {
         }),
       };
 
-      setClosedLoans([closedLoan, ...closedLoans]);
+      setLocalClosedLoans((prev) => [closedLoan, ...prev]);
 
       // Update searched loan status
       setSearchedLoan({
@@ -734,10 +746,9 @@ const LoanClosure = () => {
 
       {/* Closed Loans Table moved to component */}
       <LoanClosureTable
-        data={[...closedLoans, ...mockClosedLoans]}
+        data={closedLoans}
         onRefresh={() => {
-          // placeholder refresh: in a real app we'd refetch from server
-          setClosedLoans((s) => [...s]);
+          if (typeof refetchLoans === "function") refetchLoans();
         }}
       />
     </div>
