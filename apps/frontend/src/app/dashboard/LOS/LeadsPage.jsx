@@ -19,6 +19,7 @@ import {
   DollarSign,
   Hourglass,
 } from "lucide-react";
+import * as Icons from "lucide-react";
 // SearchField removed from this view - only status cards shown
 import LeadsTable from "../../../components/tables/LeadsTable";
 import LeadFormModal from "../../../components/modals/LeadFormModal";
@@ -36,6 +37,22 @@ export default function LeadsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedLead, setSelectedLead] = useState(null);
+  const [activeTab, setActiveTab] = useState("track-leads");
+
+  // Charge fee form state (same as LoginFee)
+  const [formData, setFormData] = useState({
+    leadId: "",
+    applicantName: "",
+    mobileNumber: "",
+    email: "",
+    loanAmount: "",
+    feeAmount: "",
+    paymentMode: "online",
+    transactionId: "",
+  });
+
+  const [generatedFees, setGeneratedFees] = useState([]);
+  const [selectedFee, setSelectedFee] = useState(null);
 
   // Status filter state
   const [statusFilter, setStatusFilter] = useState("");
@@ -246,31 +263,337 @@ export default function LeadsPage() {
         </div>
       </div>
 
-      {/* Table Container */}
-      <LeadsTable
-        items={leads?.data || []}
-        loading={loading}
-        getActions={getActions}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-        search={searchTerm}
-        setSearch={(value) => {
-          setSearchTerm(value);
-          setCurrentPage(1);
-        }}
-        filterValue={statusFilter}
-        setFilterValue={(value) => {
-          setStatusFilter(value);
-          setCurrentPage(1);
-        }}
-        filterOptions={leadStatusOptions}
-        dateRange={dateRange}
-        setDateRange={(v) => {
-          setDateRange(v);
-          setCurrentPage(1);
-        }}
-      />
+      {/* Tabs */}
+      <div className="flex gap-2 mb-6 border-b border-gray-200">
+        {[
+          { id: "track-leads", label: "Track Leads", icon: "List" },
+          {
+            id: "charge-fee",
+            label: "Charge Application Fee",
+            icon: "CreditCard",
+          },
+        ].map((tab) => {
+          const IconComp = Icons[tab.icon];
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-6 py-3 text-sm font-medium transition-all relative ${
+                activeTab === tab.id
+                  ? "text-blue-600"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              <IconComp className="w-4 h-4 inline mr-2" />
+              {tab.label}
+              {activeTab === tab.id && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full"></div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Track Leads Tab */}
+      {activeTab === "track-leads" && (
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+          <LeadsTable
+            items={leads?.data || []}
+            loading={loading}
+            getActions={getActions}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            search={searchTerm}
+            setSearch={(value) => {
+              setSearchTerm(value);
+              setCurrentPage(1);
+            }}
+            filterValue={statusFilter}
+            setFilterValue={(value) => {
+              setStatusFilter(value);
+              setCurrentPage(1);
+            }}
+            filterOptions={leadStatusOptions}
+            dateRange={dateRange}
+            setDateRange={(v) => {
+              setDateRange(v);
+              setCurrentPage(1);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Charge Fee Tab */}
+      {activeTab === "charge-fee" && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl shadow-sm p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-blue-100 rounded-xl">
+                  <Icons.FileText className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Lead Application Details
+                  </h2>
+                  <p className="text-xs text-gray-500">
+                    Enter lead information to generate application fee
+                  </p>
+                </div>
+              </div>
+
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const uniqueNumber = `TXN-${Date.now()}`;
+                  const newFee = {
+                    id: `LF${Date.now()}`,
+                    uniqueNumber,
+                    applicantName: formData.applicantName,
+                    mobile: formData.mobileNumber,
+                    email: formData.email,
+                    amount: formData.feeAmount,
+                    status: "pending",
+                    date: new Date().toISOString().split("T")[0],
+                    paymentMode: formData.paymentMode,
+                    transactionId: formData.transactionId || "",
+                    leadId: formData.leadId || `LD-${Date.now()}`,
+                  };
+                  setGeneratedFees([newFee, ...generatedFees]);
+                  setSelectedFee(newFee);
+                  setFormData({
+                    leadId: "",
+                    applicantName: "",
+                    mobileNumber: "",
+                    email: "",
+                    loanAmount: "",
+                    feeAmount: "",
+                    paymentMode: "online",
+                    transactionId: "",
+                  });
+                }}
+                className="space-y-5"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Lead ID <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="leadId"
+                      value={formData.leadId}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                      placeholder="Enter Lead ID"
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Applicant Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="applicantName"
+                      value={formData.applicantName}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                      placeholder="Full Name"
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Mobile Number <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      name="mobileNumber"
+                      value={formData.mobileNumber}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                      placeholder="10-digit mobile number"
+                      pattern="[0-9]{10}"
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Email ID <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                      placeholder="email@example.com"
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Loan Amount
+                    </label>
+                    <input
+                      type="number"
+                      name="loanAmount"
+                      value={formData.loanAmount}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                      placeholder="Enter loan amount"
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Application Fee (₹)
+                    </label>
+                    <input
+                      type="number"
+                      name="feeAmount"
+                      value={formData.feeAmount}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Payment Mode <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      name="paymentMode"
+                      value={formData.paymentMode}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                      required
+                    >
+                      <option value="online">Online Payment</option>
+                      <option value="offline">Offline / Cash</option>
+                      <option value="bank_transfer">Bank Transfer</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Transaction ID
+                    </label>
+                    <input
+                      type="text"
+                      name="transactionId"
+                      value={formData.transactionId}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                      placeholder="Enter transaction reference"
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-all font-semibold flex items-center justify-center gap-2"
+                >
+                  <Icons.CreditCard className="w-5 h-5" />
+                  Charge Fee & Generate Application Number
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-linear-to-br from-blue-50 to-indigo-50 rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Icons.Info className="w-6 h-6 text-blue-600" />
+                <h3 className="font-semibold text-gray-900">Fee Information</h3>
+              </div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Application Fee</span>
+                  <span className="font-bold text-gray-900">{selectedFee}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">GST (18%)</span>
+                  <span className="font-bold text-gray-900">₹90</span>
+                </div>
+                <div className="border-t border-blue-200 pt-2">
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-gray-900">
+                      Total Amount
+                    </span>
+                    <span className="font-bold text-xl text-blue-600">
+                      ₹590
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-sm p-6">
+              <h3 className="font-semibold text-gray-900 mb-3">
+                Important Notes
+              </h3>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li className="flex items-start gap-2">
+                  <Icons.CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
+                  <span>Application fee is non-refundable</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Icons.CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
+                  <span>Unique number generated after fee payment</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Icons.CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
+                  <span>Use unique number for document upload</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Icons.AlertCircle className="w-4 h-4 text-yellow-500 mt-0.5" />
+                  <span>Valid for 30 days from generation</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

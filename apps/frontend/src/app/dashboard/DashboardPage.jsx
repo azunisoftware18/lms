@@ -211,7 +211,7 @@ export default function AdminDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
@@ -249,7 +249,7 @@ export default function AdminDashboardPage() {
                     <p className="text-xs text-gray-400 mt-1">{stat.subtext}</p>
                   </div>
                   <div
-                    className={`p-3 rounded-xl bg-gradient-to-br ${colorClasses[stat.color]} shadow-lg`}
+                    className={`p-3 rounded-xl bg-linear-to-br ${colorClasses[stat.color]} shadow-lg`}
                   >
                     <IconComponent className="w-5 h-5 text-white" />
                   </div>
@@ -697,7 +697,7 @@ export default function AdminDashboardPage() {
             </div>
 
             {/* EMI Calculator */}
-            <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-sm p-6 border border-gray-100">
+            <div className="bg-linear-to-br from-white to-gray-50 rounded-2xl shadow-sm p-6 border border-gray-100">
               <div className="flex items-center gap-2 mb-6">
                 <div className="p-2 bg-blue-100 rounded-xl">
                   <Icons.Calculator className="w-5 h-5 text-blue-600" />
@@ -775,7 +775,7 @@ export default function AdminDashboardPage() {
                 </div>
 
                 {/* Results */}
-                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-5 mt-4">
+                <div className="bg-linear-to-br from-blue-50 to-indigo-50 rounded-xl p-5 mt-4">
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-sm text-blue-700 font-medium">
                       Monthly EMI
@@ -831,24 +831,7 @@ export default function AdminDashboardPage() {
 
         {/* Recent Loans Table - Full Width */}
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <div>
-              <h2 className="font-semibold text-gray-900">All Active Loans</h2>
-              <p className="text-xs text-gray-500 mt-1">
-                Complete list of all loan accounts
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <button className="px-3 py-1.5 text-sm bg-gray-100 rounded-lg hover:bg-gray-200 transition-all">
-                <Icons.Filter className="w-4 h-4 inline mr-1" />
-                Filter
-              </button>
-              <button className="px-3 py-1.5 text-sm bg-gray-100 rounded-lg hover:bg-gray-200 transition-all">
-                <Icons.Search className="w-4 h-4 inline mr-1" />
-                Search
-              </button>
-            </div>
-          </div>
+          
           <DashboardTable loans={recentLoans} />
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { 
   Save, 
@@ -41,8 +41,8 @@ export default function RoleForm({ onClose, onSubmit, editingRole, modules = [] 
     }
   });
 
-  // Watch permissions for summary
-  const watchPermissions = watch('permissions');
+  // Watch permissions for summary (use useWatch for stable subscription)
+  const watchPermissions = useWatch({ control, name: 'permissions' }) || {};
 
   // Initialize form data when editing or opening
   useEffect(() => {
@@ -112,7 +112,7 @@ export default function RoleForm({ onClose, onSubmit, editingRole, modules = [] 
   // Handle form submission
   const onFormSubmit = (data) => {
     const activePermissions = Object.entries(data.permissions || {})
-      .filter(([_, isActive]) => isActive)
+      .filter(([, isActive]) => isActive)
       .map(([moduleId]) => moduleId);
 
     const submitData = {
@@ -274,7 +274,6 @@ export default function RoleForm({ onClose, onSubmit, editingRole, modules = [] 
             <div className="space-y-3 max-h-100 overflow-y-auto pr-2 border border-gray-200 rounded-lg p-4">
               {modules?.map(module => {
                 const Icon = getModuleIcon(module.id);
-                const isSelected = watchPermissions?.[module.id];
                 
                 return (
                   <Controller

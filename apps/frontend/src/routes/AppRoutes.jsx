@@ -90,6 +90,8 @@ import DisbursCollectionPage from "../app/dashboard/reports/DisbursCollectionPag
 import PermissionManagementPage from "../app/dashboard/PermissionManagementPage.jsx";
 import EligibilityPage from "../app/dashboard/LOS/EligibilityPage.jsx";
 import CreditReportView from "../app/dashboard/LOS/CreditReportView.jsx";
+import RoleManagement from "../app/dashboard/RoleManagement.jsx";
+import LoginFee from "../app/dashboard/LOS/LoginFee.jsx";
 
 export default function AppRoutes() {
   const dispatch = useDispatch();
@@ -165,8 +167,6 @@ export default function AppRoutes() {
         <Route path="welcome-to-finova" element={<WelcometoFinovaPage />} />
         <Route path="login" element={<LoginForm />} />
       </Route>
-
-      
       // Admin routes
       {/* Employee routes */}
       <Route
@@ -178,9 +178,11 @@ export default function AppRoutes() {
         }
       >
         <Route index element={<DashboardPage />} />
-        <Route path="lms/default-management" element={<DefaultManagementPage />} />
+        <Route
+          path="lms/default-management"
+          element={<DefaultManagementPage />}
+        />
       </Route>
-
       <Route
         path="/admin"
         element={
@@ -197,8 +199,10 @@ export default function AppRoutes() {
         />
         <Route path="lms/emi-management" element={<EMIManagementPage />} />
         <Route path="lms/view-emis" element={<ViewEMIs />} />
-        <Route path="lms/default-management" element={<DefaultManagementPage />} />
-        
+        <Route
+          path="lms/default-management"
+          element={<DefaultManagementPage />}
+        />
         <Route
           path="lms/repayment-management"
           element={<RepaymentManagement />}
@@ -214,6 +218,8 @@ export default function AppRoutes() {
         <Route path="lms/branch-management" element={<BranchManagement />} />
         <Route path="lms/branch-admin" element={<BranchAdmin />} />
         // LOS routes
+        <Route path="los/leads" element={<LeadsPage />} />
+        <Route path="los/login-fee" element={<LoginFee />} />
         <Route path="los/applications" element={<ApplicationPage />} />
         <Route path="los/documents" element={<DocumentPage />} />
         <Route path="los/kyc-verification" element={<KycVerificationPage />} />
@@ -226,9 +232,11 @@ export default function AppRoutes() {
           path="los/disbursement"
           element={<DisbursementManagementPage />}
         />
-        <Route path="los/leads" element={<LeadsPage />} />
         <Route path="los/eligibility" element={<EligibilityPage />} />
-        <Route path="los/credit-report/:loanId" element={<CreditReportView />} />
+        <Route
+          path="los/credit-report/:loanId"
+          element={<CreditReportView />}
+        />
         <Route path="loan-account-view/:loanId" element={<LoanAccountView />} />
         <Route
           path="system-setting/company-details"
@@ -252,6 +260,8 @@ export default function AppRoutes() {
         <Route path="branch-admin" element={<BranchAdmin />} />
         <Route path="employee" element={<EmployeeAddPage />} />
         <Route path="partner" element={<PartnerAddPage />} />
+        {/* Role management route */}
+        <Route path="role-management" element={<RoleManagement />} />
         {/* reports routes */}
         <Route path="due-list" element={<DueListPage />} />
         <Route path="reports/npa-reports" element={<NPAReportsPage />} />
