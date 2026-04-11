@@ -33,22 +33,61 @@ export const refreshCreditReportController = async (
       });
     }
 
-    // ✅ Search CUSTOMER by customer fields OR via loan application
+    // Normalize query
+    const qNorm = q.trim();
+
+    // ✅ Search CUSTOMER by customer fields
     let customer = await prisma.customer.findFirst({
       where: {
         OR: [
-          { panNumber: q },
-          { aadhaarNumber: q },
-          { contactNumber: q },
+          { panNumber: qNorm },
+          { aadhaarNumber: qNorm },
+          { contactNumber: qNorm },
         ],
       },
       select: { id: true },
     });
 
-    // If not found by customer fields, search by loan number
+    // If not found by customer, try CoApplicant (linked to a loan application)
+    if (!customer) {
+      const coapp = await prisma.coApplicant.findFirst({
+        where: {
+          OR: [
+            { panNumber: qNorm },
+            { aadhaarNumber: qNorm },
+            { contactNumber: qNorm },
+          ],
+        },
+        include: { loanApplication: { select: { customerId: true } } },
+      });
+
+      if (coapp?.loanApplication?.customerId) {
+        customer = { id: coapp.loanApplication.customerId };
+      }
+    }
+
+    // If still not found, try Guarantor (linked to a loan application)
+    if (!customer) {
+      const guarantor = await prisma.guarantor.findFirst({
+        where: {
+          OR: [
+            { panNumber: qNorm },
+            { aadhaarNumber: qNorm },
+            { contactNumber: qNorm },
+          ],
+        },
+        include: { loanApplication: { select: { customerId: true } } },
+      });
+
+      if (guarantor?.loanApplication?.customerId) {
+        customer = { id: guarantor.loanApplication.customerId };
+      }
+    }
+
+    // If still not found, try exact loan number lookup
     if (!customer) {
       const loanApplication = await prisma.loanApplication.findFirst({
-        where: { loanNumber: q },
+        where: { loanNumber: qNorm },
         select: { customerId: true },
       });
 
@@ -57,21 +96,40 @@ export const refreshCreditReportController = async (
       }
     }
 
-    if (!customer) {
-      return res.status(404).json({
-        message: "Customer not found for the search query (PAN, Aadhaar, Contact, or Loan Number)",
-      });
+    // If we have a direct customer id, use it. Otherwise fall back to service-level search by `q`.
+    let report;
+    try {
+      if (customer) {
+        report = await refreshCreditReportService(
+          { customerId: customer.id },
+          creditProvider,
+          {
+            requestedBy: req.user.id,
+            reason,
+            branchId: req.user.branchId,
+          },
+        );
+      } else {
+        // Let the service attempt to resolve `q` using existing reports/search helpers
+        report = await refreshCreditReportService(
+          { q: qNorm },
+          creditProvider,
+          {
+            requestedBy: req.user.id,
+            reason,
+            branchId: req.user.branchId,
+          },
+        );
+      }
+    } catch (err: any) {
+      // Convert service-level "Customer not found" into 404 for the client
+      if (err?.message && err.message.toLowerCase().includes("customer not found")) {
+        return res.status(404).json({
+          message: "Customer not found for the search query (PAN, Aadhaar, Contact, or Loan Number)",
+        });
+      }
+      throw err;
     }
-
-    const report = await refreshCreditReportService(
-      { customerId: customer.id }, // only customerId
-      creditProvider,
-      {
-        requestedBy: req.user.id,
-        reason,
-        branchId: req.user.branchId,
-      },
-    );
 
     return res.status(200).json({
       success: true,

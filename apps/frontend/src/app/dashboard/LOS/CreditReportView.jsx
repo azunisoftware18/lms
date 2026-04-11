@@ -142,108 +142,9 @@ const CreditReportView = () => {
         </div>
 
         {/* Two column layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid  gap-6">
           {/* ==================== ELIGIBILITY SECTION ==================== */}
-          <WhiteCard>
-            <div className="flex items-center gap-2 mb-4">
-              <FileText className="w-5 h-5 text-blue-600" />
-              <h2 className="text-lg font-semibold text-slate-800">Eligibility Assessment</h2>
-            </div>
-
-            {eligibility.isLoading || loanLoading ? (
-              <div className="flex items-center gap-2 text-slate-500">
-                <Loader2 className="w-4 h-4 animate-spin" /> Loading eligibility...
-              </div>
-            ) : eligibility.error ? (
-              <div className="text-red-600 flex items-center gap-2">
-                <AlertCircle className="w-4 h-4" /> {eligibility.error?.message || "Failed to load eligibility"}
-              </div>
-            ) : eligData && Object.keys(eligData).length > 0 ? (
-              <div className="space-y-5">
-                {/* Status Badge */}
-                <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${EligColor}`}>
-                  <EligIcon className="w-4 h-4" /> {EligLabel}
-                </div>
-
-                {/* Amounts */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-slate-50 rounded-xl p-3">
-                    <p className="text-xs text-slate-500">Max Eligible Amount</p>
-                    <p className="text-lg font-bold text-slate-800">{formatCurrency(eligData.maxEligibleAmount)}</p>
-                  </div>
-                  <div className="bg-slate-50 rounded-xl p-3">
-                    <p className="text-xs text-slate-500">Eligible EMI</p>
-                    <p className="text-lg font-bold text-slate-800">{formatCurrency(eligData.eligibleEmi)}</p>
-                  </div>
-                </div>
-
-                {/* Reasons */}
-                {eligData.reason && eligData.reason.length > 0 && (
-                  <div>
-                    <p className="text-sm font-medium text-slate-700 mb-2">Reasons</p>
-                    <ul className="space-y-1">
-                      {eligData.reason.map((r, idx) => (
-                        <li key={idx} className="text-sm text-slate-600 flex items-start gap-2">
-                          <AlertCircle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
-                          {r}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Rule Summary */}
-                {eligData.ruleSummary && (
-                  <div className="bg-slate-50 rounded-xl p-3">
-                    <p className="text-sm font-medium text-slate-700 mb-2">Rule Summary</p>
-                    <div className="flex justify-between text-sm">
-                      <span>Total Rules: <strong>{eligData.ruleSummary.totalRules}</strong></span>
-                      <span>Passed: <strong className="text-emerald-600">{eligData.ruleSummary.passedRules}</strong></span>
-                      <span>Failed: <strong className="text-red-600">{eligData.ruleSummary.failedRules}</strong></span>
-                    </div>
-                  </div>
-                )}
-
-                {/* Risk Assessment */}
-                {risk && Object.keys(risk).length > 0 && (
-                  <div className="border-t border-slate-100 pt-4">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Shield className="w-4 h-4 text-purple-600" />
-                      <p className="text-sm font-semibold text-slate-700">Risk Assessment</p>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3 mb-3">
-                      <div className="bg-purple-50 rounded-xl p-2 text-center">
-                        <p className="text-xs text-purple-600">Risk Grade</p>
-                        <p className="text-xl font-bold text-purple-700">{risk.grade || "N/A"}</p>
-                      </div>
-                      <div className="bg-purple-50 rounded-xl p-2 text-center">
-                        <p className="text-xs text-purple-600">Risk Score</p>
-                        <p className="text-xl font-bold text-purple-700">{risk.score ?? "N/A"}</p>
-                      </div>
-                    </div>
-                    {risk.reasons && risk.reasons.length > 0 && (
-                      <ul className="space-y-1">
-                        {risk.reasons.map((reason, idx) => (
-                          <li key={idx} className="text-xs text-slate-600 flex items-start gap-2">
-                            <AlertTriangle className="w-3 h-3 text-amber-500 mt-0.5" />
-                            {reason}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                )}
-
-                {/* Raw JSON (collapsible) */}
-                <details className="bg-slate-50 rounded-xl p-2 text-xs">
-                  <summary className="cursor-pointer font-medium text-slate-500">View raw eligibility data</summary>
-                  <pre className="whitespace-pre-wrap overflow-auto mt-2">{JSON.stringify(eligData, null, 2)}</pre>
-                </details>
-              </div>
-            ) : (
-              <div className="text-slate-400">No eligibility data available.</div>
-            )}
-          </WhiteCard>
+      
 
           {/* ==================== CREDIT REPORT SECTION ==================== */}
           <WhiteCard>
@@ -337,11 +238,6 @@ const CreditReportView = () => {
                   </div>
                 )}
 
-                {/* Raw JSON (collapsible) */}
-                <details className="bg-slate-50 rounded-xl p-2 text-xs">
-                  <summary className="cursor-pointer font-medium text-slate-500">View raw credit report</summary>
-                  <pre className="whitespace-pre-wrap overflow-auto mt-2">{JSON.stringify(creditData, null, 2)}</pre>
-                </details>
               </div>
             ) : (
               <div className="text-slate-400">No credit report available.</div>

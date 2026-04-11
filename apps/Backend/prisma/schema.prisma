@@ -78,6 +78,10 @@ model Admin {
 model Employee {
   id                 String        @id @default(cuid())
   userId             String        @unique
+  fullName           String
+  Email              String        @unique
+  contactNumber      String
+  reportingManagerId String?
   employeeId         String        @unique
   employeeRoleId     String?
   atlMobileNumber    String
@@ -102,7 +106,6 @@ model Employee {
   dateOfJoining DateTime
   experience    String
   workLocation  WorkLocation
-  salary        Float
   branchId      String
   branch        Branch        @relation(fields: [branchId], references: [id])
   employeeRole  EmployeeRole? @relation(fields: [employeeRoleId], references: [id])
@@ -120,8 +123,11 @@ model Employee {
 
 model EmployeeRole {
   id          String   @id @default(cuid())
-  name        String   @unique
+  roleTitle   String
+  roleName    String   @unique
   description String?
+  documentsRequired    String @default("") // Could be a URL or file   reference
+  documentsOptions     String?  // e.g., "Mandatory", "Optional", "None"
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

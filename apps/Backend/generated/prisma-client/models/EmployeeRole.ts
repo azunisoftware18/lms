@@ -26,8 +26,11 @@ export type AggregateEmployeeRole = {
 
 export type EmployeeRoleMinAggregateOutputType = {
   id: string | null
-  name: string | null
+  roleTitle: string | null
+  roleName: string | null
   description: string | null
+  documentsRequired: string | null
+  documentsOptions: string | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -35,8 +38,11 @@ export type EmployeeRoleMinAggregateOutputType = {
 
 export type EmployeeRoleMaxAggregateOutputType = {
   id: string | null
-  name: string | null
+  roleTitle: string | null
+  roleName: string | null
   description: string | null
+  documentsRequired: string | null
+  documentsOptions: string | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -44,8 +50,11 @@ export type EmployeeRoleMaxAggregateOutputType = {
 
 export type EmployeeRoleCountAggregateOutputType = {
   id: number
-  name: number
+  roleTitle: number
+  roleName: number
   description: number
+  documentsRequired: number
+  documentsOptions: number
   isActive: number
   createdAt: number
   updatedAt: number
@@ -55,8 +64,11 @@ export type EmployeeRoleCountAggregateOutputType = {
 
 export type EmployeeRoleMinAggregateInputType = {
   id?: true
-  name?: true
+  roleTitle?: true
+  roleName?: true
   description?: true
+  documentsRequired?: true
+  documentsOptions?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -64,8 +76,11 @@ export type EmployeeRoleMinAggregateInputType = {
 
 export type EmployeeRoleMaxAggregateInputType = {
   id?: true
-  name?: true
+  roleTitle?: true
+  roleName?: true
   description?: true
+  documentsRequired?: true
+  documentsOptions?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -73,8 +88,11 @@ export type EmployeeRoleMaxAggregateInputType = {
 
 export type EmployeeRoleCountAggregateInputType = {
   id?: true
-  name?: true
+  roleTitle?: true
+  roleName?: true
   description?: true
+  documentsRequired?: true
+  documentsOptions?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -155,8 +173,11 @@ export type EmployeeRoleGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 
 export type EmployeeRoleGroupByOutputType = {
   id: string
-  name: string
+  roleTitle: string
+  roleName: string
   description: string | null
+  documentsRequired: string
+  documentsOptions: string | null
   isActive: boolean
   createdAt: Date
   updatedAt: Date
@@ -185,8 +206,11 @@ export type EmployeeRoleWhereInput = {
   OR?: Prisma.EmployeeRoleWhereInput[]
   NOT?: Prisma.EmployeeRoleWhereInput | Prisma.EmployeeRoleWhereInput[]
   id?: Prisma.StringFilter<"EmployeeRole"> | string
-  name?: Prisma.StringFilter<"EmployeeRole"> | string
+  roleTitle?: Prisma.StringFilter<"EmployeeRole"> | string
+  roleName?: Prisma.StringFilter<"EmployeeRole"> | string
   description?: Prisma.StringNullableFilter<"EmployeeRole"> | string | null
+  documentsRequired?: Prisma.StringFilter<"EmployeeRole"> | string
+  documentsOptions?: Prisma.StringNullableFilter<"EmployeeRole"> | string | null
   isActive?: Prisma.BoolFilter<"EmployeeRole"> | boolean
   createdAt?: Prisma.DateTimeFilter<"EmployeeRole"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"EmployeeRole"> | Date | string
@@ -195,8 +219,11 @@ export type EmployeeRoleWhereInput = {
 
 export type EmployeeRoleOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  roleTitle?: Prisma.SortOrder
+  roleName?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  documentsRequired?: Prisma.SortOrder
+  documentsOptions?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -206,21 +233,27 @@ export type EmployeeRoleOrderByWithRelationInput = {
 
 export type EmployeeRoleWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  name?: string
+  roleName?: string
   AND?: Prisma.EmployeeRoleWhereInput | Prisma.EmployeeRoleWhereInput[]
   OR?: Prisma.EmployeeRoleWhereInput[]
   NOT?: Prisma.EmployeeRoleWhereInput | Prisma.EmployeeRoleWhereInput[]
+  roleTitle?: Prisma.StringFilter<"EmployeeRole"> | string
   description?: Prisma.StringNullableFilter<"EmployeeRole"> | string | null
+  documentsRequired?: Prisma.StringFilter<"EmployeeRole"> | string
+  documentsOptions?: Prisma.StringNullableFilter<"EmployeeRole"> | string | null
   isActive?: Prisma.BoolFilter<"EmployeeRole"> | boolean
   createdAt?: Prisma.DateTimeFilter<"EmployeeRole"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"EmployeeRole"> | Date | string
   employees?: Prisma.EmployeeListRelationFilter
-}, "id" | "name">
+}, "id" | "roleName">
 
 export type EmployeeRoleOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  roleTitle?: Prisma.SortOrder
+  roleName?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  documentsRequired?: Prisma.SortOrder
+  documentsOptions?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -234,8 +267,11 @@ export type EmployeeRoleScalarWhereWithAggregatesInput = {
   OR?: Prisma.EmployeeRoleScalarWhereWithAggregatesInput[]
   NOT?: Prisma.EmployeeRoleScalarWhereWithAggregatesInput | Prisma.EmployeeRoleScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"EmployeeRole"> | string
-  name?: Prisma.StringWithAggregatesFilter<"EmployeeRole"> | string
+  roleTitle?: Prisma.StringWithAggregatesFilter<"EmployeeRole"> | string
+  roleName?: Prisma.StringWithAggregatesFilter<"EmployeeRole"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"EmployeeRole"> | string | null
+  documentsRequired?: Prisma.StringWithAggregatesFilter<"EmployeeRole"> | string
+  documentsOptions?: Prisma.StringNullableWithAggregatesFilter<"EmployeeRole"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"EmployeeRole"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"EmployeeRole"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"EmployeeRole"> | Date | string
@@ -243,8 +279,11 @@ export type EmployeeRoleScalarWhereWithAggregatesInput = {
 
 export type EmployeeRoleCreateInput = {
   id?: string
-  name: string
+  roleTitle: string
+  roleName: string
   description?: string | null
+  documentsRequired?: string
+  documentsOptions?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -253,8 +292,11 @@ export type EmployeeRoleCreateInput = {
 
 export type EmployeeRoleUncheckedCreateInput = {
   id?: string
-  name: string
+  roleTitle: string
+  roleName: string
   description?: string | null
+  documentsRequired?: string
+  documentsOptions?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -263,8 +305,11 @@ export type EmployeeRoleUncheckedCreateInput = {
 
 export type EmployeeRoleUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  roleTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  roleName?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  documentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -273,8 +318,11 @@ export type EmployeeRoleUpdateInput = {
 
 export type EmployeeRoleUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  roleTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  roleName?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  documentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -283,8 +331,11 @@ export type EmployeeRoleUncheckedUpdateInput = {
 
 export type EmployeeRoleCreateManyInput = {
   id?: string
-  name: string
+  roleTitle: string
+  roleName: string
   description?: string | null
+  documentsRequired?: string
+  documentsOptions?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -292,8 +343,11 @@ export type EmployeeRoleCreateManyInput = {
 
 export type EmployeeRoleUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  roleTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  roleName?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  documentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -301,8 +355,11 @@ export type EmployeeRoleUpdateManyMutationInput = {
 
 export type EmployeeRoleUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  roleTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  roleName?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  documentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -321,8 +378,11 @@ export type EmployeeRoleOrderByRelevanceInput = {
 
 export type EmployeeRoleCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  roleTitle?: Prisma.SortOrder
+  roleName?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  documentsRequired?: Prisma.SortOrder
+  documentsOptions?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -330,8 +390,11 @@ export type EmployeeRoleCountOrderByAggregateInput = {
 
 export type EmployeeRoleMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  roleTitle?: Prisma.SortOrder
+  roleName?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  documentsRequired?: Prisma.SortOrder
+  documentsOptions?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -339,8 +402,11 @@ export type EmployeeRoleMaxOrderByAggregateInput = {
 
 export type EmployeeRoleMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  roleTitle?: Prisma.SortOrder
+  roleName?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  documentsRequired?: Prisma.SortOrder
+  documentsOptions?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -364,8 +430,11 @@ export type EmployeeRoleUpdateOneWithoutEmployeesNestedInput = {
 
 export type EmployeeRoleCreateWithoutEmployeesInput = {
   id?: string
-  name: string
+  roleTitle: string
+  roleName: string
   description?: string | null
+  documentsRequired?: string
+  documentsOptions?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -373,8 +442,11 @@ export type EmployeeRoleCreateWithoutEmployeesInput = {
 
 export type EmployeeRoleUncheckedCreateWithoutEmployeesInput = {
   id?: string
-  name: string
+  roleTitle: string
+  roleName: string
   description?: string | null
+  documentsRequired?: string
+  documentsOptions?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -398,8 +470,11 @@ export type EmployeeRoleUpdateToOneWithWhereWithoutEmployeesInput = {
 
 export type EmployeeRoleUpdateWithoutEmployeesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  roleTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  roleName?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  documentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -407,8 +482,11 @@ export type EmployeeRoleUpdateWithoutEmployeesInput = {
 
 export type EmployeeRoleUncheckedUpdateWithoutEmployeesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  roleTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  roleName?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
+  documentsOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -447,8 +525,11 @@ export type EmployeeRoleCountOutputTypeCountEmployeesArgs<ExtArgs extends runtim
 
 export type EmployeeRoleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  roleTitle?: boolean
+  roleName?: boolean
   description?: boolean
+  documentsRequired?: boolean
+  documentsOptions?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -460,14 +541,17 @@ export type EmployeeRoleSelect<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type EmployeeRoleSelectScalar = {
   id?: boolean
-  name?: boolean
+  roleTitle?: boolean
+  roleName?: boolean
   description?: boolean
+  documentsRequired?: boolean
+  documentsOptions?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type EmployeeRoleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["employeeRole"]>
+export type EmployeeRoleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "roleTitle" | "roleName" | "description" | "documentsRequired" | "documentsOptions" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["employeeRole"]>
 export type EmployeeRoleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   employees?: boolean | Prisma.EmployeeRole$employeesArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeRoleCountOutputTypeDefaultArgs<ExtArgs>
@@ -480,8 +564,11 @@ export type $EmployeeRolePayload<ExtArgs extends runtime.Types.Extensions.Intern
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    name: string
+    roleTitle: string
+    roleName: string
     description: string | null
+    documentsRequired: string
+    documentsOptions: string | null
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -856,8 +943,11 @@ export interface Prisma__EmployeeRoleClient<T, Null = never, ExtArgs extends run
  */
 export interface EmployeeRoleFieldRefs {
   readonly id: Prisma.FieldRef<"EmployeeRole", 'String'>
-  readonly name: Prisma.FieldRef<"EmployeeRole", 'String'>
+  readonly roleTitle: Prisma.FieldRef<"EmployeeRole", 'String'>
+  readonly roleName: Prisma.FieldRef<"EmployeeRole", 'String'>
   readonly description: Prisma.FieldRef<"EmployeeRole", 'String'>
+  readonly documentsRequired: Prisma.FieldRef<"EmployeeRole", 'String'>
+  readonly documentsOptions: Prisma.FieldRef<"EmployeeRole", 'String'>
   readonly isActive: Prisma.FieldRef<"EmployeeRole", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"EmployeeRole", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"EmployeeRole", 'DateTime'>

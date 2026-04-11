@@ -66,6 +66,7 @@ const CreditDashboard = () => {
     );
   };
 
+  console.log("Fetched applications:", selectedLoan);
   // Compute monthly trends and distributions from applications
   const monthlyMap = {};
   const scoreBuckets = [
@@ -182,11 +183,9 @@ const CreditDashboard = () => {
 
   // Derived KPI values
   const totalApplications = applications.length || 0;
-  const avgCibilScore = Math.round(
-    applications.reduce((s, a) => s + (getCibil(a) || 0), 0) /
-      (applications.filter((a) => typeof getCibil(a) === "number").length ||
-        1) || 0,
-  );
+  const avgCibilScore = applications.filter(
+    (a) => (a.status || "").toLowerCase() === "pending",
+  ).length;
   const approvedCount = applications.filter(
     (a) => (a.status || "").toLowerCase() === "approved",
   ).length;
@@ -197,9 +196,10 @@ const CreditDashboard = () => {
     const applicant = { id: loan.customer?.id, ...loan.customer };
     setSelectedParty({ ...applicant, label: "Applicant" });
     setModalOpen(true);
-    // Trigger initial fetch of credit report for the loan (backend accepts loanNumber as q)
+    // Trigger initial fetch of credit report using applicant PAN/contact or loanNumber fallback
     try {
-      refreshReport.mutate({ q: loan.loanNumber, reason: "manual-check" });
+      const q = loan.customer?.panNumber || loan.customer?.contactNumber || loan.loanNumber;
+      refreshReport.mutate({ q, reason: "manual-check" });
     } catch (err) {
       console.error("Failed to refresh credit report:", err);
     }
@@ -259,7 +259,7 @@ const CreditDashboard = () => {
                 </div>
               </div>
               <div className="p-4 bg-gradient-to-r from-white to-slate-50 rounded-xl border border-slate-100 shadow-sm">
-                <div className="text-sm text-slate-500">Avg CIBIL Score</div>
+                <div className="text-sm text-slate-500">Total Pending </div>
                 <div className="text-2xl font-bold text-slate-800">
                   {avgCibilScore}
                 </div>
@@ -485,8 +485,16 @@ const CreditDashboard = () => {
                             selectedLoan.coapplicants[0]) ||
                           selectedLoan.coApplicant ||
                           null;
-                        if (party)
+                        if (party) {
                           setSelectedParty({ ...party, label: "Co-applicant" });
+                          // trigger refresh using PAN/contact if available
+                          const q = party.panNumber || party.contactNumber || selectedLoan.loanNumber;
+                          try {
+                            refreshReport.mutate({ q, reason: "manual-check" });
+                          } catch (err) {
+                            console.error("Failed to refresh credit report:", err);
+                          }
+                        }
                       }}
                     >
                       Co-applicant
@@ -501,8 +509,15 @@ const CreditDashboard = () => {
                             selectedLoan.guarantors[0]) ||
                           selectedLoan.guarantor ||
                           null;
-                        if (party)
+                        if (party) {
                           setSelectedParty({ ...party, label: "Guarantor" });
+                          const q = party.panNumber || party.contactNumber || selectedLoan.loanNumber;
+                          try {
+                            refreshReport.mutate({ q, reason: "manual-check" });
+                          } catch (err) {
+                            console.error("Failed to refresh credit report:", err);
+                          }
+                        }
                       }}
                     >
                       Guarantor
@@ -560,7 +575,7 @@ const CreditDashboard = () => {
                             onClick={() => {
                               setModalOpen(false);
                               navigate(
-                                `/admin/los/credit-report/${selectedLoan.id}?party=applicant`,
+                                `/admin/los/eligibility?loanId=${selectedLoan.id}`,
                               );
                             }}
                           >
@@ -636,8 +651,9 @@ const CreditDashboard = () => {
                                   (selectedLoan.coapplicants &&
                                     selectedLoan.coapplicants[0]) ||
                                   selectedLoan.coApplicant;
+                                // Pass PAN/contact (fallback to id) so backend can resolve properly
                                 navigate(
-                                  `/admin/los/credit-report/${selectedLoan.id}?party=coapplicant&partyId=${party?.id}`,
+                                  `/admin/los/credit-report/${selectedLoan.id}?party=coapplicant&partyId=${party?.panNumber || party?.contactNumber || party?.id}`,
                                 );
                               }}
                             >
@@ -654,7 +670,7 @@ const CreditDashboard = () => {
                                     selectedLoan.guarantors[0]) ||
                                   selectedLoan.guarantor;
                                 navigate(
-                                  `/admin/los/credit-report/${selectedLoan.id}?party=guarantor&partyId=${party?.id}`,
+                                  `/admin/los/credit-report/${selectedLoan.id}?party=guarantor&partyId=${party?.panNumber || party?.contactNumber || party?.id}`,
                                 );
                               }}
                             >

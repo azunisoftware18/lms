@@ -4115,6 +4115,10 @@ export type AdminScalarFieldEnum = (typeof AdminScalarFieldEnum)[keyof typeof Ad
 export const EmployeeScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  fullName: 'fullName',
+  Email: 'Email',
+  contactNumber: 'contactNumber',
+  reportingManagerId: 'reportingManagerId',
   employeeId: 'employeeId',
   employeeRoleId: 'employeeRoleId',
   atlMobileNumber: 'atlMobileNumber',
@@ -4132,7 +4136,6 @@ export const EmployeeScalarFieldEnum = {
   dateOfJoining: 'dateOfJoining',
   experience: 'experience',
   workLocation: 'workLocation',
-  salary: 'salary',
   branchId: 'branchId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -4143,8 +4146,11 @@ export type EmployeeScalarFieldEnum = (typeof EmployeeScalarFieldEnum)[keyof typ
 
 export const EmployeeRoleScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  roleTitle: 'roleTitle',
+  roleName: 'roleName',
   description: 'description',
+  documentsRequired: 'documentsRequired',
+  documentsOptions: 'documentsOptions',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -5308,6 +5314,10 @@ export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 export const EmployeeOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
+  fullName: 'fullName',
+  Email: 'Email',
+  contactNumber: 'contactNumber',
+  reportingManagerId: 'reportingManagerId',
   employeeId: 'employeeId',
   employeeRoleId: 'employeeRoleId',
   atlMobileNumber: 'atlMobileNumber',
@@ -5327,8 +5337,11 @@ export type EmployeeOrderByRelevanceFieldEnum = (typeof EmployeeOrderByRelevance
 
 export const EmployeeRoleOrderByRelevanceFieldEnum = {
   id: 'id',
-  name: 'name',
-  description: 'description'
+  roleTitle: 'roleTitle',
+  roleName: 'roleName',
+  description: 'description',
+  documentsRequired: 'documentsRequired',
+  documentsOptions: 'documentsOptions'
 } as const
 
 export type EmployeeRoleOrderByRelevanceFieldEnum = (typeof EmployeeRoleOrderByRelevanceFieldEnum)[keyof typeof EmployeeRoleOrderByRelevanceFieldEnum]
@@ -6081,16 +6094,16 @@ export type EnumWorkLocationFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 
 
 /**
- * Reference to a field of type 'Float'
+ * Reference to a field of type 'CommissionType'
  */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+export type EnumCommissionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommissionType'>
     
 
 
 /**
- * Reference to a field of type 'CommissionType'
+ * Reference to a field of type 'Float'
  */
-export type EnumCommissionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommissionType'>
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 

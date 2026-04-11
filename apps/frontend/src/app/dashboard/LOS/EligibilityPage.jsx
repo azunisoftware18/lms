@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import {
   AlertCircle,
   CheckCircle2,
@@ -87,6 +88,24 @@ export default function EligibilityPage() {
     () => applications.find((app) => app.id === selectedApplicationId) || null,
     [applications, selectedApplicationId],
   );
+
+  // Auto-open modal when `loanId` query param is present
+  const location = useLocation();
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const loanId = params.get("loanId");
+    if (loanId) {
+      // If the provided loanId is the application id or loanNumber, try to resolve to id
+      const matched = applications.find(
+        (a) => a.id === loanId || a.loanNumber === loanId,
+      );
+      if (matched) {
+        setSelectedApplicationId(matched.id);
+        setIsModalOpen(true);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search, applications]);
 
   const checkedResults = React.useMemo(
     () => Object.values(eligibilityResults),

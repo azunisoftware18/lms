@@ -75,7 +75,7 @@ export default function Sidebar() {
             // {name:"Login Fee", path:"/admin/los/login-fee"},
             { name: "Applications", path: "/admin/los/applications" },
             { name: "Documents", path: "/admin/los/documents" },
-            { name: "Eligibility", path: "/admin/los/eligibility" },
+            // { name: "Eligibility", path: "/admin/los/eligibility" },
             // { name: "Kyc Verification", path: "/admin/los/kyc-verification" },
             { name: "Credit Check", path: "/admin/los/credit-check" },
             { name: "Technical Review", path: "/admin/los/technical-review" },

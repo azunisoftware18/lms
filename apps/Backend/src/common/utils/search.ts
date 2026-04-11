@@ -527,6 +527,42 @@ export const buildCreditReportSearch = (q?: string) => {
           },
         },
       },
+      // Match co-applicant fields on any loan for this customer
+      {
+        customer: {
+          loanApplications: {
+            some: {
+              coapplicants: {
+                some: {
+                  OR: [
+                    { panNumber: { contains: q } },
+                    { aadhaarNumber: { contains: q } },
+                    { contactNumber: { contains: q } },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+      // Match guarantor fields on any loan for this customer
+      {
+        customer: {
+          loanApplications: {
+            some: {
+              guarantors: {
+                some: {
+                  OR: [
+                    { panNumber: { contains: q } },
+                    { aadhaarNumber: { contains: q } },
+                    { contactNumber: { contains: q } },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
       {
         customer: {
           aadhaarNumber: {

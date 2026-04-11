@@ -600,6 +600,14 @@ export type PartnerCommissionUncheckedUpdateManyWithoutPartnerNestedInput = {
   deleteMany?: Prisma.PartnerCommissionScalarWhereInput | Prisma.PartnerCommissionScalarWhereInput[]
 }
 
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type EnumCommissionStatusFieldUpdateOperationsInput = {
   set?: $Enums.CommissionStatus
 }
