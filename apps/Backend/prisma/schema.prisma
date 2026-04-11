@@ -173,7 +173,6 @@ model Partner {
   accessType                 AccessType?
   assignedRelationshipManager String?
   branchMapping              String?
-  productAccess              String[]
   payoutFrequency            PayoutFrequency?
   payoutType                 PayoutType?
   gstApplicable              Boolean? @default(false)
@@ -2069,6 +2068,10 @@ enum LoanStatus {
   written_off
   defaulted
   application_in_progress
+  Foreclosure_PENDING
+  Foreclosure_APPROVED
+  Foreclosure_REJECTED
+  Foreclosure_CLOSED
 }
 
 enum ApprovalLevel {

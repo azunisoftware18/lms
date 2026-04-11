@@ -27,24 +27,42 @@ export type AggregatePartner = {
 }
 
 export type PartnerAvgAggregateOutputType = {
+  maxPayoutCap: number | null
   commissionValue: number | null
   establishedYear: number | null
   totalEmployees: number | null
   annualTurnover: number | null
   minimumPayout: number | null
   taxDeduction: number | null
+  totalLeadsSubmitted: number | null
+  loginToSanctionRatio: number | null
+  sanctionToDisbursementRatio: number | null
+  disbursementVolume: number | null
+  rejectionRate: number | null
+  fraudCasesCount: number | null
+  qualityScore: number | null
+  partnerRating: number | null
   totalReferrals: number | null
   activeReferrals: number | null
   commissionEarned: number | null
 }
 
 export type PartnerSumAggregateOutputType = {
+  maxPayoutCap: number | null
   commissionValue: number | null
   establishedYear: number | null
   totalEmployees: number | null
   annualTurnover: number | null
   minimumPayout: number | null
   taxDeduction: number | null
+  totalLeadsSubmitted: number | null
+  loginToSanctionRatio: number | null
+  sanctionToDisbursementRatio: number | null
+  disbursementVolume: number | null
+  rejectionRate: number | null
+  fraudCasesCount: number | null
+  qualityScore: number | null
+  partnerRating: number | null
   totalReferrals: number | null
   activeReferrals: number | null
   commissionEarned: number | null
@@ -59,7 +77,27 @@ export type PartnerMinAggregateOutputType = {
   contactPerson: string | null
   alternateNumber: string | null
   panNumber: string | null
+  partnerCode: string | null
+  constitutionType: $Enums.ConstitutionType | null
+  onboardingDate: Date | null
   gstNumber: string | null
+  aadhaarNumber: string | null
+  registrationNo: string | null
+  bankName: string | null
+  accountHolder: string | null
+  accountNo: string | null
+  ifsc: string | null
+  upiId: string | null
+  portalAccess: boolean | null
+  loginId: string | null
+  accessType: $Enums.AccessType | null
+  assignedRelationshipManager: string | null
+  branchMapping: string | null
+  payoutFrequency: $Enums.PayoutFrequency | null
+  payoutType: $Enums.PayoutType | null
+  gstApplicable: boolean | null
+  tdsApplicable: boolean | null
+  maxPayoutCap: number | null
   commissionType: $Enums.CommissionType | null
   commissionValue: number | null
   branchId: string | null
@@ -77,6 +115,14 @@ export type PartnerMinAggregateOutputType = {
   minimumPayout: number | null
   taxDeduction: number | null
   targetArea: string | null
+  totalLeadsSubmitted: number | null
+  loginToSanctionRatio: number | null
+  sanctionToDisbursementRatio: number | null
+  disbursementVolume: number | null
+  rejectionRate: number | null
+  fraudCasesCount: number | null
+  qualityScore: number | null
+  partnerRating: number | null
   totalReferrals: number | null
   activeReferrals: number | null
   commissionEarned: number | null
@@ -93,7 +139,27 @@ export type PartnerMaxAggregateOutputType = {
   contactPerson: string | null
   alternateNumber: string | null
   panNumber: string | null
+  partnerCode: string | null
+  constitutionType: $Enums.ConstitutionType | null
+  onboardingDate: Date | null
   gstNumber: string | null
+  aadhaarNumber: string | null
+  registrationNo: string | null
+  bankName: string | null
+  accountHolder: string | null
+  accountNo: string | null
+  ifsc: string | null
+  upiId: string | null
+  portalAccess: boolean | null
+  loginId: string | null
+  accessType: $Enums.AccessType | null
+  assignedRelationshipManager: string | null
+  branchMapping: string | null
+  payoutFrequency: $Enums.PayoutFrequency | null
+  payoutType: $Enums.PayoutType | null
+  gstApplicable: boolean | null
+  tdsApplicable: boolean | null
+  maxPayoutCap: number | null
   commissionType: $Enums.CommissionType | null
   commissionValue: number | null
   branchId: string | null
@@ -111,6 +177,14 @@ export type PartnerMaxAggregateOutputType = {
   minimumPayout: number | null
   taxDeduction: number | null
   targetArea: string | null
+  totalLeadsSubmitted: number | null
+  loginToSanctionRatio: number | null
+  sanctionToDisbursementRatio: number | null
+  disbursementVolume: number | null
+  rejectionRate: number | null
+  fraudCasesCount: number | null
+  qualityScore: number | null
+  partnerRating: number | null
   totalReferrals: number | null
   activeReferrals: number | null
   commissionEarned: number | null
@@ -127,7 +201,28 @@ export type PartnerCountAggregateOutputType = {
   contactPerson: number
   alternateNumber: number
   panNumber: number
+  partnerCode: number
+  constitutionType: number
+  onboardingDate: number
   gstNumber: number
+  aadhaarNumber: number
+  registrationNo: number
+  documents: number
+  bankName: number
+  accountHolder: number
+  accountNo: number
+  ifsc: number
+  upiId: number
+  portalAccess: number
+  loginId: number
+  accessType: number
+  assignedRelationshipManager: number
+  branchMapping: number
+  payoutFrequency: number
+  payoutType: number
+  gstApplicable: number
+  tdsApplicable: number
+  maxPayoutCap: number
   commissionType: number
   commissionValue: number
   branchId: number
@@ -145,6 +240,14 @@ export type PartnerCountAggregateOutputType = {
   minimumPayout: number
   taxDeduction: number
   targetArea: number
+  totalLeadsSubmitted: number
+  loginToSanctionRatio: number
+  sanctionToDisbursementRatio: number
+  disbursementVolume: number
+  rejectionRate: number
+  fraudCasesCount: number
+  qualityScore: number
+  partnerRating: number
   totalReferrals: number
   activeReferrals: number
   commissionEarned: number
@@ -155,24 +258,42 @@ export type PartnerCountAggregateOutputType = {
 
 
 export type PartnerAvgAggregateInputType = {
+  maxPayoutCap?: true
   commissionValue?: true
   establishedYear?: true
   totalEmployees?: true
   annualTurnover?: true
   minimumPayout?: true
   taxDeduction?: true
+  totalLeadsSubmitted?: true
+  loginToSanctionRatio?: true
+  sanctionToDisbursementRatio?: true
+  disbursementVolume?: true
+  rejectionRate?: true
+  fraudCasesCount?: true
+  qualityScore?: true
+  partnerRating?: true
   totalReferrals?: true
   activeReferrals?: true
   commissionEarned?: true
 }
 
 export type PartnerSumAggregateInputType = {
+  maxPayoutCap?: true
   commissionValue?: true
   establishedYear?: true
   totalEmployees?: true
   annualTurnover?: true
   minimumPayout?: true
   taxDeduction?: true
+  totalLeadsSubmitted?: true
+  loginToSanctionRatio?: true
+  sanctionToDisbursementRatio?: true
+  disbursementVolume?: true
+  rejectionRate?: true
+  fraudCasesCount?: true
+  qualityScore?: true
+  partnerRating?: true
   totalReferrals?: true
   activeReferrals?: true
   commissionEarned?: true
@@ -187,7 +308,27 @@ export type PartnerMinAggregateInputType = {
   contactPerson?: true
   alternateNumber?: true
   panNumber?: true
+  partnerCode?: true
+  constitutionType?: true
+  onboardingDate?: true
   gstNumber?: true
+  aadhaarNumber?: true
+  registrationNo?: true
+  bankName?: true
+  accountHolder?: true
+  accountNo?: true
+  ifsc?: true
+  upiId?: true
+  portalAccess?: true
+  loginId?: true
+  accessType?: true
+  assignedRelationshipManager?: true
+  branchMapping?: true
+  payoutFrequency?: true
+  payoutType?: true
+  gstApplicable?: true
+  tdsApplicable?: true
+  maxPayoutCap?: true
   commissionType?: true
   commissionValue?: true
   branchId?: true
@@ -205,6 +346,14 @@ export type PartnerMinAggregateInputType = {
   minimumPayout?: true
   taxDeduction?: true
   targetArea?: true
+  totalLeadsSubmitted?: true
+  loginToSanctionRatio?: true
+  sanctionToDisbursementRatio?: true
+  disbursementVolume?: true
+  rejectionRate?: true
+  fraudCasesCount?: true
+  qualityScore?: true
+  partnerRating?: true
   totalReferrals?: true
   activeReferrals?: true
   commissionEarned?: true
@@ -221,7 +370,27 @@ export type PartnerMaxAggregateInputType = {
   contactPerson?: true
   alternateNumber?: true
   panNumber?: true
+  partnerCode?: true
+  constitutionType?: true
+  onboardingDate?: true
   gstNumber?: true
+  aadhaarNumber?: true
+  registrationNo?: true
+  bankName?: true
+  accountHolder?: true
+  accountNo?: true
+  ifsc?: true
+  upiId?: true
+  portalAccess?: true
+  loginId?: true
+  accessType?: true
+  assignedRelationshipManager?: true
+  branchMapping?: true
+  payoutFrequency?: true
+  payoutType?: true
+  gstApplicable?: true
+  tdsApplicable?: true
+  maxPayoutCap?: true
   commissionType?: true
   commissionValue?: true
   branchId?: true
@@ -239,6 +408,14 @@ export type PartnerMaxAggregateInputType = {
   minimumPayout?: true
   taxDeduction?: true
   targetArea?: true
+  totalLeadsSubmitted?: true
+  loginToSanctionRatio?: true
+  sanctionToDisbursementRatio?: true
+  disbursementVolume?: true
+  rejectionRate?: true
+  fraudCasesCount?: true
+  qualityScore?: true
+  partnerRating?: true
   totalReferrals?: true
   activeReferrals?: true
   commissionEarned?: true
@@ -255,7 +432,28 @@ export type PartnerCountAggregateInputType = {
   contactPerson?: true
   alternateNumber?: true
   panNumber?: true
+  partnerCode?: true
+  constitutionType?: true
+  onboardingDate?: true
   gstNumber?: true
+  aadhaarNumber?: true
+  registrationNo?: true
+  documents?: true
+  bankName?: true
+  accountHolder?: true
+  accountNo?: true
+  ifsc?: true
+  upiId?: true
+  portalAccess?: true
+  loginId?: true
+  accessType?: true
+  assignedRelationshipManager?: true
+  branchMapping?: true
+  payoutFrequency?: true
+  payoutType?: true
+  gstApplicable?: true
+  tdsApplicable?: true
+  maxPayoutCap?: true
   commissionType?: true
   commissionValue?: true
   branchId?: true
@@ -273,6 +471,14 @@ export type PartnerCountAggregateInputType = {
   minimumPayout?: true
   taxDeduction?: true
   targetArea?: true
+  totalLeadsSubmitted?: true
+  loginToSanctionRatio?: true
+  sanctionToDisbursementRatio?: true
+  disbursementVolume?: true
+  rejectionRate?: true
+  fraudCasesCount?: true
+  qualityScore?: true
+  partnerRating?: true
   totalReferrals?: true
   activeReferrals?: true
   commissionEarned?: true
@@ -376,7 +582,28 @@ export type PartnerGroupByOutputType = {
   contactPerson: string
   alternateNumber: string | null
   panNumber: string
+  partnerCode: string | null
+  constitutionType: $Enums.ConstitutionType | null
+  onboardingDate: Date | null
   gstNumber: string | null
+  aadhaarNumber: string | null
+  registrationNo: string | null
+  documents: runtime.JsonValue | null
+  bankName: string | null
+  accountHolder: string | null
+  accountNo: string | null
+  ifsc: string | null
+  upiId: string | null
+  portalAccess: boolean | null
+  loginId: string | null
+  accessType: $Enums.AccessType | null
+  assignedRelationshipManager: string | null
+  branchMapping: string | null
+  payoutFrequency: $Enums.PayoutFrequency | null
+  payoutType: $Enums.PayoutType | null
+  gstApplicable: boolean | null
+  tdsApplicable: boolean | null
+  maxPayoutCap: number | null
   commissionType: $Enums.CommissionType
   commissionValue: number | null
   branchId: string
@@ -394,6 +621,14 @@ export type PartnerGroupByOutputType = {
   minimumPayout: number | null
   taxDeduction: number | null
   targetArea: string | null
+  totalLeadsSubmitted: number | null
+  loginToSanctionRatio: number | null
+  sanctionToDisbursementRatio: number | null
+  disbursementVolume: number | null
+  rejectionRate: number | null
+  fraudCasesCount: number | null
+  qualityScore: number | null
+  partnerRating: number | null
   totalReferrals: number | null
   activeReferrals: number | null
   commissionEarned: number | null
@@ -433,7 +668,28 @@ export type PartnerWhereInput = {
   contactPerson?: Prisma.StringFilter<"Partner"> | string
   alternateNumber?: Prisma.StringNullableFilter<"Partner"> | string | null
   panNumber?: Prisma.StringFilter<"Partner"> | string
+  partnerCode?: Prisma.StringNullableFilter<"Partner"> | string | null
+  constitutionType?: Prisma.EnumConstitutionTypeNullableFilter<"Partner"> | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.DateTimeNullableFilter<"Partner"> | Date | string | null
   gstNumber?: Prisma.StringNullableFilter<"Partner"> | string | null
+  aadhaarNumber?: Prisma.StringNullableFilter<"Partner"> | string | null
+  registrationNo?: Prisma.StringNullableFilter<"Partner"> | string | null
+  documents?: Prisma.JsonNullableFilter<"Partner">
+  bankName?: Prisma.StringNullableFilter<"Partner"> | string | null
+  accountHolder?: Prisma.StringNullableFilter<"Partner"> | string | null
+  accountNo?: Prisma.StringNullableFilter<"Partner"> | string | null
+  ifsc?: Prisma.StringNullableFilter<"Partner"> | string | null
+  upiId?: Prisma.StringNullableFilter<"Partner"> | string | null
+  portalAccess?: Prisma.BoolNullableFilter<"Partner"> | boolean | null
+  loginId?: Prisma.StringNullableFilter<"Partner"> | string | null
+  accessType?: Prisma.EnumAccessTypeNullableFilter<"Partner"> | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.StringNullableFilter<"Partner"> | string | null
+  branchMapping?: Prisma.StringNullableFilter<"Partner"> | string | null
+  payoutFrequency?: Prisma.EnumPayoutFrequencyNullableFilter<"Partner"> | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.EnumPayoutTypeNullableFilter<"Partner"> | $Enums.PayoutType | null
+  gstApplicable?: Prisma.BoolNullableFilter<"Partner"> | boolean | null
+  tdsApplicable?: Prisma.BoolNullableFilter<"Partner"> | boolean | null
+  maxPayoutCap?: Prisma.FloatNullableFilter<"Partner"> | number | null
   commissionType?: Prisma.EnumCommissionTypeFilter<"Partner"> | $Enums.CommissionType
   commissionValue?: Prisma.FloatNullableFilter<"Partner"> | number | null
   branchId?: Prisma.StringFilter<"Partner"> | string
@@ -451,6 +707,14 @@ export type PartnerWhereInput = {
   minimumPayout?: Prisma.FloatNullableFilter<"Partner"> | number | null
   taxDeduction?: Prisma.FloatNullableFilter<"Partner"> | number | null
   targetArea?: Prisma.StringNullableFilter<"Partner"> | string | null
+  totalLeadsSubmitted?: Prisma.IntNullableFilter<"Partner"> | number | null
+  loginToSanctionRatio?: Prisma.FloatNullableFilter<"Partner"> | number | null
+  sanctionToDisbursementRatio?: Prisma.FloatNullableFilter<"Partner"> | number | null
+  disbursementVolume?: Prisma.FloatNullableFilter<"Partner"> | number | null
+  rejectionRate?: Prisma.FloatNullableFilter<"Partner"> | number | null
+  fraudCasesCount?: Prisma.IntNullableFilter<"Partner"> | number | null
+  qualityScore?: Prisma.FloatNullableFilter<"Partner"> | number | null
+  partnerRating?: Prisma.FloatNullableFilter<"Partner"> | number | null
   totalReferrals?: Prisma.IntNullableFilter<"Partner"> | number | null
   activeReferrals?: Prisma.IntNullableFilter<"Partner"> | number | null
   commissionEarned?: Prisma.FloatNullableFilter<"Partner"> | number | null
@@ -475,7 +739,28 @@ export type PartnerOrderByWithRelationInput = {
   contactPerson?: Prisma.SortOrder
   alternateNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   panNumber?: Prisma.SortOrder
+  partnerCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  constitutionType?: Prisma.SortOrderInput | Prisma.SortOrder
+  onboardingDate?: Prisma.SortOrderInput | Prisma.SortOrder
   gstNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  aadhaarNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  registrationNo?: Prisma.SortOrderInput | Prisma.SortOrder
+  documents?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankName?: Prisma.SortOrderInput | Prisma.SortOrder
+  accountHolder?: Prisma.SortOrderInput | Prisma.SortOrder
+  accountNo?: Prisma.SortOrderInput | Prisma.SortOrder
+  ifsc?: Prisma.SortOrderInput | Prisma.SortOrder
+  upiId?: Prisma.SortOrderInput | Prisma.SortOrder
+  portalAccess?: Prisma.SortOrderInput | Prisma.SortOrder
+  loginId?: Prisma.SortOrderInput | Prisma.SortOrder
+  accessType?: Prisma.SortOrderInput | Prisma.SortOrder
+  assignedRelationshipManager?: Prisma.SortOrderInput | Prisma.SortOrder
+  branchMapping?: Prisma.SortOrderInput | Prisma.SortOrder
+  payoutFrequency?: Prisma.SortOrderInput | Prisma.SortOrder
+  payoutType?: Prisma.SortOrderInput | Prisma.SortOrder
+  gstApplicable?: Prisma.SortOrderInput | Prisma.SortOrder
+  tdsApplicable?: Prisma.SortOrderInput | Prisma.SortOrder
+  maxPayoutCap?: Prisma.SortOrderInput | Prisma.SortOrder
   commissionType?: Prisma.SortOrder
   commissionValue?: Prisma.SortOrderInput | Prisma.SortOrder
   branchId?: Prisma.SortOrder
@@ -493,6 +778,14 @@ export type PartnerOrderByWithRelationInput = {
   minimumPayout?: Prisma.SortOrderInput | Prisma.SortOrder
   taxDeduction?: Prisma.SortOrderInput | Prisma.SortOrder
   targetArea?: Prisma.SortOrderInput | Prisma.SortOrder
+  totalLeadsSubmitted?: Prisma.SortOrderInput | Prisma.SortOrder
+  loginToSanctionRatio?: Prisma.SortOrderInput | Prisma.SortOrder
+  sanctionToDisbursementRatio?: Prisma.SortOrderInput | Prisma.SortOrder
+  disbursementVolume?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectionRate?: Prisma.SortOrderInput | Prisma.SortOrder
+  fraudCasesCount?: Prisma.SortOrderInput | Prisma.SortOrder
+  qualityScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  partnerRating?: Prisma.SortOrderInput | Prisma.SortOrder
   totalReferrals?: Prisma.SortOrderInput | Prisma.SortOrder
   activeReferrals?: Prisma.SortOrderInput | Prisma.SortOrder
   commissionEarned?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -521,7 +814,28 @@ export type PartnerWhereUniqueInput = Prisma.AtLeast<{
   contactPerson?: Prisma.StringFilter<"Partner"> | string
   alternateNumber?: Prisma.StringNullableFilter<"Partner"> | string | null
   panNumber?: Prisma.StringFilter<"Partner"> | string
+  partnerCode?: Prisma.StringNullableFilter<"Partner"> | string | null
+  constitutionType?: Prisma.EnumConstitutionTypeNullableFilter<"Partner"> | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.DateTimeNullableFilter<"Partner"> | Date | string | null
   gstNumber?: Prisma.StringNullableFilter<"Partner"> | string | null
+  aadhaarNumber?: Prisma.StringNullableFilter<"Partner"> | string | null
+  registrationNo?: Prisma.StringNullableFilter<"Partner"> | string | null
+  documents?: Prisma.JsonNullableFilter<"Partner">
+  bankName?: Prisma.StringNullableFilter<"Partner"> | string | null
+  accountHolder?: Prisma.StringNullableFilter<"Partner"> | string | null
+  accountNo?: Prisma.StringNullableFilter<"Partner"> | string | null
+  ifsc?: Prisma.StringNullableFilter<"Partner"> | string | null
+  upiId?: Prisma.StringNullableFilter<"Partner"> | string | null
+  portalAccess?: Prisma.BoolNullableFilter<"Partner"> | boolean | null
+  loginId?: Prisma.StringNullableFilter<"Partner"> | string | null
+  accessType?: Prisma.EnumAccessTypeNullableFilter<"Partner"> | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.StringNullableFilter<"Partner"> | string | null
+  branchMapping?: Prisma.StringNullableFilter<"Partner"> | string | null
+  payoutFrequency?: Prisma.EnumPayoutFrequencyNullableFilter<"Partner"> | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.EnumPayoutTypeNullableFilter<"Partner"> | $Enums.PayoutType | null
+  gstApplicable?: Prisma.BoolNullableFilter<"Partner"> | boolean | null
+  tdsApplicable?: Prisma.BoolNullableFilter<"Partner"> | boolean | null
+  maxPayoutCap?: Prisma.FloatNullableFilter<"Partner"> | number | null
   commissionType?: Prisma.EnumCommissionTypeFilter<"Partner"> | $Enums.CommissionType
   commissionValue?: Prisma.FloatNullableFilter<"Partner"> | number | null
   branchId?: Prisma.StringFilter<"Partner"> | string
@@ -539,6 +853,14 @@ export type PartnerWhereUniqueInput = Prisma.AtLeast<{
   minimumPayout?: Prisma.FloatNullableFilter<"Partner"> | number | null
   taxDeduction?: Prisma.FloatNullableFilter<"Partner"> | number | null
   targetArea?: Prisma.StringNullableFilter<"Partner"> | string | null
+  totalLeadsSubmitted?: Prisma.IntNullableFilter<"Partner"> | number | null
+  loginToSanctionRatio?: Prisma.FloatNullableFilter<"Partner"> | number | null
+  sanctionToDisbursementRatio?: Prisma.FloatNullableFilter<"Partner"> | number | null
+  disbursementVolume?: Prisma.FloatNullableFilter<"Partner"> | number | null
+  rejectionRate?: Prisma.FloatNullableFilter<"Partner"> | number | null
+  fraudCasesCount?: Prisma.IntNullableFilter<"Partner"> | number | null
+  qualityScore?: Prisma.FloatNullableFilter<"Partner"> | number | null
+  partnerRating?: Prisma.FloatNullableFilter<"Partner"> | number | null
   totalReferrals?: Prisma.IntNullableFilter<"Partner"> | number | null
   activeReferrals?: Prisma.IntNullableFilter<"Partner"> | number | null
   commissionEarned?: Prisma.FloatNullableFilter<"Partner"> | number | null
@@ -563,7 +885,28 @@ export type PartnerOrderByWithAggregationInput = {
   contactPerson?: Prisma.SortOrder
   alternateNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   panNumber?: Prisma.SortOrder
+  partnerCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  constitutionType?: Prisma.SortOrderInput | Prisma.SortOrder
+  onboardingDate?: Prisma.SortOrderInput | Prisma.SortOrder
   gstNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  aadhaarNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  registrationNo?: Prisma.SortOrderInput | Prisma.SortOrder
+  documents?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankName?: Prisma.SortOrderInput | Prisma.SortOrder
+  accountHolder?: Prisma.SortOrderInput | Prisma.SortOrder
+  accountNo?: Prisma.SortOrderInput | Prisma.SortOrder
+  ifsc?: Prisma.SortOrderInput | Prisma.SortOrder
+  upiId?: Prisma.SortOrderInput | Prisma.SortOrder
+  portalAccess?: Prisma.SortOrderInput | Prisma.SortOrder
+  loginId?: Prisma.SortOrderInput | Prisma.SortOrder
+  accessType?: Prisma.SortOrderInput | Prisma.SortOrder
+  assignedRelationshipManager?: Prisma.SortOrderInput | Prisma.SortOrder
+  branchMapping?: Prisma.SortOrderInput | Prisma.SortOrder
+  payoutFrequency?: Prisma.SortOrderInput | Prisma.SortOrder
+  payoutType?: Prisma.SortOrderInput | Prisma.SortOrder
+  gstApplicable?: Prisma.SortOrderInput | Prisma.SortOrder
+  tdsApplicable?: Prisma.SortOrderInput | Prisma.SortOrder
+  maxPayoutCap?: Prisma.SortOrderInput | Prisma.SortOrder
   commissionType?: Prisma.SortOrder
   commissionValue?: Prisma.SortOrderInput | Prisma.SortOrder
   branchId?: Prisma.SortOrder
@@ -581,6 +924,14 @@ export type PartnerOrderByWithAggregationInput = {
   minimumPayout?: Prisma.SortOrderInput | Prisma.SortOrder
   taxDeduction?: Prisma.SortOrderInput | Prisma.SortOrder
   targetArea?: Prisma.SortOrderInput | Prisma.SortOrder
+  totalLeadsSubmitted?: Prisma.SortOrderInput | Prisma.SortOrder
+  loginToSanctionRatio?: Prisma.SortOrderInput | Prisma.SortOrder
+  sanctionToDisbursementRatio?: Prisma.SortOrderInput | Prisma.SortOrder
+  disbursementVolume?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectionRate?: Prisma.SortOrderInput | Prisma.SortOrder
+  fraudCasesCount?: Prisma.SortOrderInput | Prisma.SortOrder
+  qualityScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  partnerRating?: Prisma.SortOrderInput | Prisma.SortOrder
   totalReferrals?: Prisma.SortOrderInput | Prisma.SortOrder
   activeReferrals?: Prisma.SortOrderInput | Prisma.SortOrder
   commissionEarned?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -605,7 +956,28 @@ export type PartnerScalarWhereWithAggregatesInput = {
   contactPerson?: Prisma.StringWithAggregatesFilter<"Partner"> | string
   alternateNumber?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   panNumber?: Prisma.StringWithAggregatesFilter<"Partner"> | string
+  partnerCode?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  constitutionType?: Prisma.EnumConstitutionTypeNullableWithAggregatesFilter<"Partner"> | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Partner"> | Date | string | null
   gstNumber?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  aadhaarNumber?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  registrationNo?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  documents?: Prisma.JsonNullableWithAggregatesFilter<"Partner">
+  bankName?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  accountHolder?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  accountNo?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  ifsc?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  upiId?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  portalAccess?: Prisma.BoolNullableWithAggregatesFilter<"Partner"> | boolean | null
+  loginId?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  accessType?: Prisma.EnumAccessTypeNullableWithAggregatesFilter<"Partner"> | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  branchMapping?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  payoutFrequency?: Prisma.EnumPayoutFrequencyNullableWithAggregatesFilter<"Partner"> | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.EnumPayoutTypeNullableWithAggregatesFilter<"Partner"> | $Enums.PayoutType | null
+  gstApplicable?: Prisma.BoolNullableWithAggregatesFilter<"Partner"> | boolean | null
+  tdsApplicable?: Prisma.BoolNullableWithAggregatesFilter<"Partner"> | boolean | null
+  maxPayoutCap?: Prisma.FloatNullableWithAggregatesFilter<"Partner"> | number | null
   commissionType?: Prisma.EnumCommissionTypeWithAggregatesFilter<"Partner"> | $Enums.CommissionType
   commissionValue?: Prisma.FloatNullableWithAggregatesFilter<"Partner"> | number | null
   branchId?: Prisma.StringWithAggregatesFilter<"Partner"> | string
@@ -623,6 +995,14 @@ export type PartnerScalarWhereWithAggregatesInput = {
   minimumPayout?: Prisma.FloatNullableWithAggregatesFilter<"Partner"> | number | null
   taxDeduction?: Prisma.FloatNullableWithAggregatesFilter<"Partner"> | number | null
   targetArea?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  totalLeadsSubmitted?: Prisma.IntNullableWithAggregatesFilter<"Partner"> | number | null
+  loginToSanctionRatio?: Prisma.FloatNullableWithAggregatesFilter<"Partner"> | number | null
+  sanctionToDisbursementRatio?: Prisma.FloatNullableWithAggregatesFilter<"Partner"> | number | null
+  disbursementVolume?: Prisma.FloatNullableWithAggregatesFilter<"Partner"> | number | null
+  rejectionRate?: Prisma.FloatNullableWithAggregatesFilter<"Partner"> | number | null
+  fraudCasesCount?: Prisma.IntNullableWithAggregatesFilter<"Partner"> | number | null
+  qualityScore?: Prisma.FloatNullableWithAggregatesFilter<"Partner"> | number | null
+  partnerRating?: Prisma.FloatNullableWithAggregatesFilter<"Partner"> | number | null
   totalReferrals?: Prisma.IntNullableWithAggregatesFilter<"Partner"> | number | null
   activeReferrals?: Prisma.IntNullableWithAggregatesFilter<"Partner"> | number | null
   commissionEarned?: Prisma.FloatNullableWithAggregatesFilter<"Partner"> | number | null
@@ -637,7 +1017,28 @@ export type PartnerCreateInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   isActive?: boolean
@@ -654,6 +1055,14 @@ export type PartnerCreateInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -678,7 +1087,28 @@ export type PartnerUncheckedCreateInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   branchId: string
@@ -696,6 +1126,14 @@ export type PartnerUncheckedCreateInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -715,7 +1153,28 @@ export type PartnerUpdateInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -732,6 +1191,14 @@ export type PartnerUpdateInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -756,7 +1223,28 @@ export type PartnerUncheckedUpdateInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -774,6 +1262,14 @@ export type PartnerUncheckedUpdateInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -795,7 +1291,28 @@ export type PartnerCreateManyInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   branchId: string
@@ -813,6 +1330,14 @@ export type PartnerCreateManyInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -827,7 +1352,28 @@ export type PartnerUpdateManyMutationInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -844,6 +1390,14 @@ export type PartnerUpdateManyMutationInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -860,7 +1414,28 @@ export type PartnerUncheckedUpdateManyInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -878,6 +1453,14 @@ export type PartnerUncheckedUpdateManyInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -915,7 +1498,28 @@ export type PartnerCountOrderByAggregateInput = {
   contactPerson?: Prisma.SortOrder
   alternateNumber?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
+  partnerCode?: Prisma.SortOrder
+  constitutionType?: Prisma.SortOrder
+  onboardingDate?: Prisma.SortOrder
   gstNumber?: Prisma.SortOrder
+  aadhaarNumber?: Prisma.SortOrder
+  registrationNo?: Prisma.SortOrder
+  documents?: Prisma.SortOrder
+  bankName?: Prisma.SortOrder
+  accountHolder?: Prisma.SortOrder
+  accountNo?: Prisma.SortOrder
+  ifsc?: Prisma.SortOrder
+  upiId?: Prisma.SortOrder
+  portalAccess?: Prisma.SortOrder
+  loginId?: Prisma.SortOrder
+  accessType?: Prisma.SortOrder
+  assignedRelationshipManager?: Prisma.SortOrder
+  branchMapping?: Prisma.SortOrder
+  payoutFrequency?: Prisma.SortOrder
+  payoutType?: Prisma.SortOrder
+  gstApplicable?: Prisma.SortOrder
+  tdsApplicable?: Prisma.SortOrder
+  maxPayoutCap?: Prisma.SortOrder
   commissionType?: Prisma.SortOrder
   commissionValue?: Prisma.SortOrder
   branchId?: Prisma.SortOrder
@@ -933,6 +1537,14 @@ export type PartnerCountOrderByAggregateInput = {
   minimumPayout?: Prisma.SortOrder
   taxDeduction?: Prisma.SortOrder
   targetArea?: Prisma.SortOrder
+  totalLeadsSubmitted?: Prisma.SortOrder
+  loginToSanctionRatio?: Prisma.SortOrder
+  sanctionToDisbursementRatio?: Prisma.SortOrder
+  disbursementVolume?: Prisma.SortOrder
+  rejectionRate?: Prisma.SortOrder
+  fraudCasesCount?: Prisma.SortOrder
+  qualityScore?: Prisma.SortOrder
+  partnerRating?: Prisma.SortOrder
   totalReferrals?: Prisma.SortOrder
   activeReferrals?: Prisma.SortOrder
   commissionEarned?: Prisma.SortOrder
@@ -941,12 +1553,21 @@ export type PartnerCountOrderByAggregateInput = {
 }
 
 export type PartnerAvgOrderByAggregateInput = {
+  maxPayoutCap?: Prisma.SortOrder
   commissionValue?: Prisma.SortOrder
   establishedYear?: Prisma.SortOrder
   totalEmployees?: Prisma.SortOrder
   annualTurnover?: Prisma.SortOrder
   minimumPayout?: Prisma.SortOrder
   taxDeduction?: Prisma.SortOrder
+  totalLeadsSubmitted?: Prisma.SortOrder
+  loginToSanctionRatio?: Prisma.SortOrder
+  sanctionToDisbursementRatio?: Prisma.SortOrder
+  disbursementVolume?: Prisma.SortOrder
+  rejectionRate?: Prisma.SortOrder
+  fraudCasesCount?: Prisma.SortOrder
+  qualityScore?: Prisma.SortOrder
+  partnerRating?: Prisma.SortOrder
   totalReferrals?: Prisma.SortOrder
   activeReferrals?: Prisma.SortOrder
   commissionEarned?: Prisma.SortOrder
@@ -961,7 +1582,27 @@ export type PartnerMaxOrderByAggregateInput = {
   contactPerson?: Prisma.SortOrder
   alternateNumber?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
+  partnerCode?: Prisma.SortOrder
+  constitutionType?: Prisma.SortOrder
+  onboardingDate?: Prisma.SortOrder
   gstNumber?: Prisma.SortOrder
+  aadhaarNumber?: Prisma.SortOrder
+  registrationNo?: Prisma.SortOrder
+  bankName?: Prisma.SortOrder
+  accountHolder?: Prisma.SortOrder
+  accountNo?: Prisma.SortOrder
+  ifsc?: Prisma.SortOrder
+  upiId?: Prisma.SortOrder
+  portalAccess?: Prisma.SortOrder
+  loginId?: Prisma.SortOrder
+  accessType?: Prisma.SortOrder
+  assignedRelationshipManager?: Prisma.SortOrder
+  branchMapping?: Prisma.SortOrder
+  payoutFrequency?: Prisma.SortOrder
+  payoutType?: Prisma.SortOrder
+  gstApplicable?: Prisma.SortOrder
+  tdsApplicable?: Prisma.SortOrder
+  maxPayoutCap?: Prisma.SortOrder
   commissionType?: Prisma.SortOrder
   commissionValue?: Prisma.SortOrder
   branchId?: Prisma.SortOrder
@@ -979,6 +1620,14 @@ export type PartnerMaxOrderByAggregateInput = {
   minimumPayout?: Prisma.SortOrder
   taxDeduction?: Prisma.SortOrder
   targetArea?: Prisma.SortOrder
+  totalLeadsSubmitted?: Prisma.SortOrder
+  loginToSanctionRatio?: Prisma.SortOrder
+  sanctionToDisbursementRatio?: Prisma.SortOrder
+  disbursementVolume?: Prisma.SortOrder
+  rejectionRate?: Prisma.SortOrder
+  fraudCasesCount?: Prisma.SortOrder
+  qualityScore?: Prisma.SortOrder
+  partnerRating?: Prisma.SortOrder
   totalReferrals?: Prisma.SortOrder
   activeReferrals?: Prisma.SortOrder
   commissionEarned?: Prisma.SortOrder
@@ -995,7 +1644,27 @@ export type PartnerMinOrderByAggregateInput = {
   contactPerson?: Prisma.SortOrder
   alternateNumber?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
+  partnerCode?: Prisma.SortOrder
+  constitutionType?: Prisma.SortOrder
+  onboardingDate?: Prisma.SortOrder
   gstNumber?: Prisma.SortOrder
+  aadhaarNumber?: Prisma.SortOrder
+  registrationNo?: Prisma.SortOrder
+  bankName?: Prisma.SortOrder
+  accountHolder?: Prisma.SortOrder
+  accountNo?: Prisma.SortOrder
+  ifsc?: Prisma.SortOrder
+  upiId?: Prisma.SortOrder
+  portalAccess?: Prisma.SortOrder
+  loginId?: Prisma.SortOrder
+  accessType?: Prisma.SortOrder
+  assignedRelationshipManager?: Prisma.SortOrder
+  branchMapping?: Prisma.SortOrder
+  payoutFrequency?: Prisma.SortOrder
+  payoutType?: Prisma.SortOrder
+  gstApplicable?: Prisma.SortOrder
+  tdsApplicable?: Prisma.SortOrder
+  maxPayoutCap?: Prisma.SortOrder
   commissionType?: Prisma.SortOrder
   commissionValue?: Prisma.SortOrder
   branchId?: Prisma.SortOrder
@@ -1013,6 +1682,14 @@ export type PartnerMinOrderByAggregateInput = {
   minimumPayout?: Prisma.SortOrder
   taxDeduction?: Prisma.SortOrder
   targetArea?: Prisma.SortOrder
+  totalLeadsSubmitted?: Prisma.SortOrder
+  loginToSanctionRatio?: Prisma.SortOrder
+  sanctionToDisbursementRatio?: Prisma.SortOrder
+  disbursementVolume?: Prisma.SortOrder
+  rejectionRate?: Prisma.SortOrder
+  fraudCasesCount?: Prisma.SortOrder
+  qualityScore?: Prisma.SortOrder
+  partnerRating?: Prisma.SortOrder
   totalReferrals?: Prisma.SortOrder
   activeReferrals?: Prisma.SortOrder
   commissionEarned?: Prisma.SortOrder
@@ -1021,12 +1698,21 @@ export type PartnerMinOrderByAggregateInput = {
 }
 
 export type PartnerSumOrderByAggregateInput = {
+  maxPayoutCap?: Prisma.SortOrder
   commissionValue?: Prisma.SortOrder
   establishedYear?: Prisma.SortOrder
   totalEmployees?: Prisma.SortOrder
   annualTurnover?: Prisma.SortOrder
   minimumPayout?: Prisma.SortOrder
   taxDeduction?: Prisma.SortOrder
+  totalLeadsSubmitted?: Prisma.SortOrder
+  loginToSanctionRatio?: Prisma.SortOrder
+  sanctionToDisbursementRatio?: Prisma.SortOrder
+  disbursementVolume?: Prisma.SortOrder
+  rejectionRate?: Prisma.SortOrder
+  fraudCasesCount?: Prisma.SortOrder
+  qualityScore?: Prisma.SortOrder
+  partnerRating?: Prisma.SortOrder
   totalReferrals?: Prisma.SortOrder
   activeReferrals?: Prisma.SortOrder
   commissionEarned?: Prisma.SortOrder
@@ -1089,8 +1775,28 @@ export type PartnerUncheckedCreateNestedManyWithoutParentPartnerInput = {
   connect?: Prisma.PartnerWhereUniqueInput | Prisma.PartnerWhereUniqueInput[]
 }
 
-export type EnumCommissionTypeFieldUpdateOperationsInput = {
-  set?: $Enums.CommissionType
+export type NullableEnumConstitutionTypeFieldUpdateOperationsInput = {
+  set?: $Enums.ConstitutionType | null
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
+export type NullableBoolFieldUpdateOperationsInput = {
+  set?: boolean | null
+}
+
+export type NullableEnumAccessTypeFieldUpdateOperationsInput = {
+  set?: $Enums.AccessType | null
+}
+
+export type NullableEnumPayoutFrequencyFieldUpdateOperationsInput = {
+  set?: $Enums.PayoutFrequency | null
+}
+
+export type NullableEnumPayoutTypeFieldUpdateOperationsInput = {
+  set?: $Enums.PayoutType | null
 }
 
 export type NullableFloatFieldUpdateOperationsInput = {
@@ -1099,6 +1805,10 @@ export type NullableFloatFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type EnumCommissionTypeFieldUpdateOperationsInput = {
+  set?: $Enums.CommissionType
 }
 
 export type NullableIntFieldUpdateOperationsInput = {
@@ -1266,7 +1976,28 @@ export type PartnerCreateWithoutUserInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   isActive?: boolean
@@ -1283,6 +2014,14 @@ export type PartnerCreateWithoutUserInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -1305,7 +2044,28 @@ export type PartnerUncheckedCreateWithoutUserInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   branchId: string
@@ -1323,6 +2083,14 @@ export type PartnerUncheckedCreateWithoutUserInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -1358,7 +2126,28 @@ export type PartnerUpdateWithoutUserInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1375,6 +2164,14 @@ export type PartnerUpdateWithoutUserInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1397,7 +2194,28 @@ export type PartnerUncheckedUpdateWithoutUserInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1415,6 +2233,14 @@ export type PartnerUncheckedUpdateWithoutUserInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1434,7 +2260,28 @@ export type PartnerCreateWithoutChildPartnersInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   isActive?: boolean
@@ -1451,6 +2298,14 @@ export type PartnerCreateWithoutChildPartnersInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -1474,7 +2329,28 @@ export type PartnerUncheckedCreateWithoutChildPartnersInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   branchId: string
@@ -1492,6 +2368,14 @@ export type PartnerUncheckedCreateWithoutChildPartnersInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -1515,7 +2399,28 @@ export type PartnerCreateWithoutParentPartnerInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   isActive?: boolean
@@ -1532,6 +2437,14 @@ export type PartnerCreateWithoutParentPartnerInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -1554,7 +2467,28 @@ export type PartnerUncheckedCreateWithoutParentPartnerInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   branchId: string
@@ -1572,6 +2506,14 @@ export type PartnerUncheckedCreateWithoutParentPartnerInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -1612,7 +2554,28 @@ export type PartnerUpdateWithoutChildPartnersInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1629,6 +2592,14 @@ export type PartnerUpdateWithoutChildPartnersInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1652,7 +2623,28 @@ export type PartnerUncheckedUpdateWithoutChildPartnersInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1670,6 +2662,14 @@ export type PartnerUncheckedUpdateWithoutChildPartnersInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1709,7 +2709,28 @@ export type PartnerScalarWhereInput = {
   contactPerson?: Prisma.StringFilter<"Partner"> | string
   alternateNumber?: Prisma.StringNullableFilter<"Partner"> | string | null
   panNumber?: Prisma.StringFilter<"Partner"> | string
+  partnerCode?: Prisma.StringNullableFilter<"Partner"> | string | null
+  constitutionType?: Prisma.EnumConstitutionTypeNullableFilter<"Partner"> | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.DateTimeNullableFilter<"Partner"> | Date | string | null
   gstNumber?: Prisma.StringNullableFilter<"Partner"> | string | null
+  aadhaarNumber?: Prisma.StringNullableFilter<"Partner"> | string | null
+  registrationNo?: Prisma.StringNullableFilter<"Partner"> | string | null
+  documents?: Prisma.JsonNullableFilter<"Partner">
+  bankName?: Prisma.StringNullableFilter<"Partner"> | string | null
+  accountHolder?: Prisma.StringNullableFilter<"Partner"> | string | null
+  accountNo?: Prisma.StringNullableFilter<"Partner"> | string | null
+  ifsc?: Prisma.StringNullableFilter<"Partner"> | string | null
+  upiId?: Prisma.StringNullableFilter<"Partner"> | string | null
+  portalAccess?: Prisma.BoolNullableFilter<"Partner"> | boolean | null
+  loginId?: Prisma.StringNullableFilter<"Partner"> | string | null
+  accessType?: Prisma.EnumAccessTypeNullableFilter<"Partner"> | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.StringNullableFilter<"Partner"> | string | null
+  branchMapping?: Prisma.StringNullableFilter<"Partner"> | string | null
+  payoutFrequency?: Prisma.EnumPayoutFrequencyNullableFilter<"Partner"> | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.EnumPayoutTypeNullableFilter<"Partner"> | $Enums.PayoutType | null
+  gstApplicable?: Prisma.BoolNullableFilter<"Partner"> | boolean | null
+  tdsApplicable?: Prisma.BoolNullableFilter<"Partner"> | boolean | null
+  maxPayoutCap?: Prisma.FloatNullableFilter<"Partner"> | number | null
   commissionType?: Prisma.EnumCommissionTypeFilter<"Partner"> | $Enums.CommissionType
   commissionValue?: Prisma.FloatNullableFilter<"Partner"> | number | null
   branchId?: Prisma.StringFilter<"Partner"> | string
@@ -1727,6 +2748,14 @@ export type PartnerScalarWhereInput = {
   minimumPayout?: Prisma.FloatNullableFilter<"Partner"> | number | null
   taxDeduction?: Prisma.FloatNullableFilter<"Partner"> | number | null
   targetArea?: Prisma.StringNullableFilter<"Partner"> | string | null
+  totalLeadsSubmitted?: Prisma.IntNullableFilter<"Partner"> | number | null
+  loginToSanctionRatio?: Prisma.FloatNullableFilter<"Partner"> | number | null
+  sanctionToDisbursementRatio?: Prisma.FloatNullableFilter<"Partner"> | number | null
+  disbursementVolume?: Prisma.FloatNullableFilter<"Partner"> | number | null
+  rejectionRate?: Prisma.FloatNullableFilter<"Partner"> | number | null
+  fraudCasesCount?: Prisma.IntNullableFilter<"Partner"> | number | null
+  qualityScore?: Prisma.FloatNullableFilter<"Partner"> | number | null
+  partnerRating?: Prisma.FloatNullableFilter<"Partner"> | number | null
   totalReferrals?: Prisma.IntNullableFilter<"Partner"> | number | null
   activeReferrals?: Prisma.IntNullableFilter<"Partner"> | number | null
   commissionEarned?: Prisma.FloatNullableFilter<"Partner"> | number | null
@@ -1741,7 +2770,28 @@ export type PartnerCreateWithoutAddressesInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   isActive?: boolean
@@ -1758,6 +2808,14 @@ export type PartnerCreateWithoutAddressesInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -1781,7 +2839,28 @@ export type PartnerUncheckedCreateWithoutAddressesInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   branchId: string
@@ -1799,6 +2878,14 @@ export type PartnerUncheckedCreateWithoutAddressesInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -1833,7 +2920,28 @@ export type PartnerUpdateWithoutAddressesInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1850,6 +2958,14 @@ export type PartnerUpdateWithoutAddressesInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1873,7 +2989,28 @@ export type PartnerUncheckedUpdateWithoutAddressesInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1891,6 +3028,14 @@ export type PartnerUncheckedUpdateWithoutAddressesInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1909,7 +3054,28 @@ export type PartnerCreateWithoutCommissionInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   isActive?: boolean
@@ -1926,6 +3092,14 @@ export type PartnerCreateWithoutCommissionInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -1949,7 +3123,28 @@ export type PartnerUncheckedCreateWithoutCommissionInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   branchId: string
@@ -1967,6 +3162,14 @@ export type PartnerUncheckedCreateWithoutCommissionInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -2001,7 +3204,28 @@ export type PartnerUpdateWithoutCommissionInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2018,6 +3242,14 @@ export type PartnerUpdateWithoutCommissionInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2041,7 +3273,28 @@ export type PartnerUncheckedUpdateWithoutCommissionInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2059,6 +3312,14 @@ export type PartnerUncheckedUpdateWithoutCommissionInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2077,7 +3338,28 @@ export type PartnerCreateWithoutBranchInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   isActive?: boolean
@@ -2094,6 +3376,14 @@ export type PartnerCreateWithoutBranchInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -2117,7 +3407,28 @@ export type PartnerUncheckedCreateWithoutBranchInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   isActive?: boolean
@@ -2134,6 +3445,14 @@ export type PartnerUncheckedCreateWithoutBranchInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -2179,7 +3498,28 @@ export type PartnerCreateWithoutLeadsInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   isActive?: boolean
@@ -2196,6 +3536,14 @@ export type PartnerCreateWithoutLeadsInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -2219,7 +3567,28 @@ export type PartnerUncheckedCreateWithoutLeadsInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   branchId: string
@@ -2237,6 +3606,14 @@ export type PartnerUncheckedCreateWithoutLeadsInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -2271,7 +3648,28 @@ export type PartnerUpdateWithoutLeadsInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2288,6 +3686,14 @@ export type PartnerUpdateWithoutLeadsInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2311,7 +3717,28 @@ export type PartnerUncheckedUpdateWithoutLeadsInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2329,6 +3756,14 @@ export type PartnerUncheckedUpdateWithoutLeadsInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2347,7 +3782,28 @@ export type PartnerCreateWithoutLoanApplicationsInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   isActive?: boolean
@@ -2364,6 +3820,14 @@ export type PartnerCreateWithoutLoanApplicationsInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -2387,7 +3851,28 @@ export type PartnerUncheckedCreateWithoutLoanApplicationsInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   branchId: string
@@ -2405,6 +3890,14 @@ export type PartnerUncheckedCreateWithoutLoanApplicationsInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -2439,7 +3932,28 @@ export type PartnerUpdateWithoutLoanApplicationsInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2456,6 +3970,14 @@ export type PartnerUpdateWithoutLoanApplicationsInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2479,7 +4001,28 @@ export type PartnerUncheckedUpdateWithoutLoanApplicationsInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2497,6 +4040,14 @@ export type PartnerUncheckedUpdateWithoutLoanApplicationsInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2516,7 +4067,28 @@ export type PartnerCreateManyParentPartnerInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   branchId: string
@@ -2534,6 +4106,14 @@ export type PartnerCreateManyParentPartnerInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -2548,7 +4128,28 @@ export type PartnerUpdateWithoutParentPartnerInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2565,6 +4166,14 @@ export type PartnerUpdateWithoutParentPartnerInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2587,7 +4196,28 @@ export type PartnerUncheckedUpdateWithoutParentPartnerInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2605,6 +4235,14 @@ export type PartnerUncheckedUpdateWithoutParentPartnerInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2625,7 +4263,28 @@ export type PartnerUncheckedUpdateManyWithoutParentPartnerInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2643,6 +4302,14 @@ export type PartnerUncheckedUpdateManyWithoutParentPartnerInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2659,7 +4326,28 @@ export type PartnerCreateManyBranchInput = {
   contactPerson: string
   alternateNumber?: string | null
   panNumber: string
+  partnerCode?: string | null
+  constitutionType?: $Enums.ConstitutionType | null
+  onboardingDate?: Date | string | null
   gstNumber?: string | null
+  aadhaarNumber?: string | null
+  registrationNo?: string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: string | null
+  accountHolder?: string | null
+  accountNo?: string | null
+  ifsc?: string | null
+  upiId?: string | null
+  portalAccess?: boolean | null
+  loginId?: string | null
+  accessType?: $Enums.AccessType | null
+  assignedRelationshipManager?: string | null
+  branchMapping?: string | null
+  payoutFrequency?: $Enums.PayoutFrequency | null
+  payoutType?: $Enums.PayoutType | null
+  gstApplicable?: boolean | null
+  tdsApplicable?: boolean | null
+  maxPayoutCap?: number | null
   commissionType: $Enums.CommissionType
   commissionValue?: number | null
   isActive?: boolean
@@ -2676,6 +4364,14 @@ export type PartnerCreateManyBranchInput = {
   minimumPayout?: number | null
   taxDeduction?: number | null
   targetArea?: string | null
+  totalLeadsSubmitted?: number | null
+  loginToSanctionRatio?: number | null
+  sanctionToDisbursementRatio?: number | null
+  disbursementVolume?: number | null
+  rejectionRate?: number | null
+  fraudCasesCount?: number | null
+  qualityScore?: number | null
+  partnerRating?: number | null
   totalReferrals?: number | null
   activeReferrals?: number | null
   commissionEarned?: number | null
@@ -2690,7 +4386,28 @@ export type PartnerUpdateWithoutBranchInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2707,6 +4424,14 @@ export type PartnerUpdateWithoutBranchInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2730,7 +4455,28 @@ export type PartnerUncheckedUpdateWithoutBranchInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2747,6 +4493,14 @@ export type PartnerUncheckedUpdateWithoutBranchInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2768,7 +4522,28 @@ export type PartnerUncheckedUpdateManyWithoutBranchInput = {
   contactPerson?: Prisma.StringFieldUpdateOperationsInput | string
   alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  partnerCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constitutionType?: Prisma.NullableEnumConstitutionTypeFieldUpdateOperationsInput | $Enums.ConstitutionType | null
+  onboardingDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifsc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portalAccess?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  loginId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accessType?: Prisma.NullableEnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType | null
+  assignedRelationshipManager?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchMapping?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutFrequency?: Prisma.NullableEnumPayoutFrequencyFieldUpdateOperationsInput | $Enums.PayoutFrequency | null
+  payoutType?: Prisma.NullableEnumPayoutTypeFieldUpdateOperationsInput | $Enums.PayoutType | null
+  gstApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tdsApplicable?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  maxPayoutCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commissionType?: Prisma.EnumCommissionTypeFieldUpdateOperationsInput | $Enums.CommissionType
   commissionValue?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2785,6 +4560,14 @@ export type PartnerUncheckedUpdateManyWithoutBranchInput = {
   minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   taxDeduction?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   targetArea?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalLeadsSubmitted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loginToSanctionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sanctionToDisbursementRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  disbursementVolume?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  rejectionRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fraudCasesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  qualityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  partnerRating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   activeReferrals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   commissionEarned?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2868,7 +4651,28 @@ export type PartnerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   contactPerson?: boolean
   alternateNumber?: boolean
   panNumber?: boolean
+  partnerCode?: boolean
+  constitutionType?: boolean
+  onboardingDate?: boolean
   gstNumber?: boolean
+  aadhaarNumber?: boolean
+  registrationNo?: boolean
+  documents?: boolean
+  bankName?: boolean
+  accountHolder?: boolean
+  accountNo?: boolean
+  ifsc?: boolean
+  upiId?: boolean
+  portalAccess?: boolean
+  loginId?: boolean
+  accessType?: boolean
+  assignedRelationshipManager?: boolean
+  branchMapping?: boolean
+  payoutFrequency?: boolean
+  payoutType?: boolean
+  gstApplicable?: boolean
+  tdsApplicable?: boolean
+  maxPayoutCap?: boolean
   commissionType?: boolean
   commissionValue?: boolean
   branchId?: boolean
@@ -2886,6 +4690,14 @@ export type PartnerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   minimumPayout?: boolean
   taxDeduction?: boolean
   targetArea?: boolean
+  totalLeadsSubmitted?: boolean
+  loginToSanctionRatio?: boolean
+  sanctionToDisbursementRatio?: boolean
+  disbursementVolume?: boolean
+  rejectionRate?: boolean
+  fraudCasesCount?: boolean
+  qualityScore?: boolean
+  partnerRating?: boolean
   totalReferrals?: boolean
   activeReferrals?: boolean
   commissionEarned?: boolean
@@ -2913,7 +4725,28 @@ export type PartnerSelectScalar = {
   contactPerson?: boolean
   alternateNumber?: boolean
   panNumber?: boolean
+  partnerCode?: boolean
+  constitutionType?: boolean
+  onboardingDate?: boolean
   gstNumber?: boolean
+  aadhaarNumber?: boolean
+  registrationNo?: boolean
+  documents?: boolean
+  bankName?: boolean
+  accountHolder?: boolean
+  accountNo?: boolean
+  ifsc?: boolean
+  upiId?: boolean
+  portalAccess?: boolean
+  loginId?: boolean
+  accessType?: boolean
+  assignedRelationshipManager?: boolean
+  branchMapping?: boolean
+  payoutFrequency?: boolean
+  payoutType?: boolean
+  gstApplicable?: boolean
+  tdsApplicable?: boolean
+  maxPayoutCap?: boolean
   commissionType?: boolean
   commissionValue?: boolean
   branchId?: boolean
@@ -2931,6 +4764,14 @@ export type PartnerSelectScalar = {
   minimumPayout?: boolean
   taxDeduction?: boolean
   targetArea?: boolean
+  totalLeadsSubmitted?: boolean
+  loginToSanctionRatio?: boolean
+  sanctionToDisbursementRatio?: boolean
+  disbursementVolume?: boolean
+  rejectionRate?: boolean
+  fraudCasesCount?: boolean
+  qualityScore?: boolean
+  partnerRating?: boolean
   totalReferrals?: boolean
   activeReferrals?: boolean
   commissionEarned?: boolean
@@ -2938,7 +4779,7 @@ export type PartnerSelectScalar = {
   updatedAt?: boolean
 }
 
-export type PartnerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "partnerId" | "parentPartnerId" | "companyName" | "contactPerson" | "alternateNumber" | "panNumber" | "gstNumber" | "commissionType" | "commissionValue" | "branchId" | "isActive" | "establishedYear" | "partnerType" | "businessNature" | "designation" | "businessCategory" | "specialization" | "totalEmployees" | "annualTurnover" | "businessRegistrationNumber" | "paymentCycle" | "minimumPayout" | "taxDeduction" | "targetArea" | "totalReferrals" | "activeReferrals" | "commissionEarned" | "createdAt" | "updatedAt", ExtArgs["result"]["partner"]>
+export type PartnerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "partnerId" | "parentPartnerId" | "companyName" | "contactPerson" | "alternateNumber" | "panNumber" | "partnerCode" | "constitutionType" | "onboardingDate" | "gstNumber" | "aadhaarNumber" | "registrationNo" | "documents" | "bankName" | "accountHolder" | "accountNo" | "ifsc" | "upiId" | "portalAccess" | "loginId" | "accessType" | "assignedRelationshipManager" | "branchMapping" | "payoutFrequency" | "payoutType" | "gstApplicable" | "tdsApplicable" | "maxPayoutCap" | "commissionType" | "commissionValue" | "branchId" | "isActive" | "establishedYear" | "partnerType" | "businessNature" | "designation" | "businessCategory" | "specialization" | "totalEmployees" | "annualTurnover" | "businessRegistrationNumber" | "paymentCycle" | "minimumPayout" | "taxDeduction" | "targetArea" | "totalLeadsSubmitted" | "loginToSanctionRatio" | "sanctionToDisbursementRatio" | "disbursementVolume" | "rejectionRate" | "fraudCasesCount" | "qualityScore" | "partnerRating" | "totalReferrals" | "activeReferrals" | "commissionEarned" | "createdAt" | "updatedAt", ExtArgs["result"]["partner"]>
 export type PartnerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parentPartner?: boolean | Prisma.Partner$parentPartnerArgs<ExtArgs>
   childPartners?: boolean | Prisma.Partner$childPartnersArgs<ExtArgs>
@@ -2972,7 +4813,28 @@ export type $PartnerPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     contactPerson: string
     alternateNumber: string | null
     panNumber: string
+    partnerCode: string | null
+    constitutionType: $Enums.ConstitutionType | null
+    onboardingDate: Date | null
     gstNumber: string | null
+    aadhaarNumber: string | null
+    registrationNo: string | null
+    documents: runtime.JsonValue | null
+    bankName: string | null
+    accountHolder: string | null
+    accountNo: string | null
+    ifsc: string | null
+    upiId: string | null
+    portalAccess: boolean | null
+    loginId: string | null
+    accessType: $Enums.AccessType | null
+    assignedRelationshipManager: string | null
+    branchMapping: string | null
+    payoutFrequency: $Enums.PayoutFrequency | null
+    payoutType: $Enums.PayoutType | null
+    gstApplicable: boolean | null
+    tdsApplicable: boolean | null
+    maxPayoutCap: number | null
     commissionType: $Enums.CommissionType
     commissionValue: number | null
     branchId: string
@@ -2990,6 +4852,14 @@ export type $PartnerPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     minimumPayout: number | null
     taxDeduction: number | null
     targetArea: string | null
+    totalLeadsSubmitted: number | null
+    loginToSanctionRatio: number | null
+    sanctionToDisbursementRatio: number | null
+    disbursementVolume: number | null
+    rejectionRate: number | null
+    fraudCasesCount: number | null
+    qualityScore: number | null
+    partnerRating: number | null
     totalReferrals: number | null
     activeReferrals: number | null
     commissionEarned: number | null
@@ -3380,7 +5250,28 @@ export interface PartnerFieldRefs {
   readonly contactPerson: Prisma.FieldRef<"Partner", 'String'>
   readonly alternateNumber: Prisma.FieldRef<"Partner", 'String'>
   readonly panNumber: Prisma.FieldRef<"Partner", 'String'>
+  readonly partnerCode: Prisma.FieldRef<"Partner", 'String'>
+  readonly constitutionType: Prisma.FieldRef<"Partner", 'ConstitutionType'>
+  readonly onboardingDate: Prisma.FieldRef<"Partner", 'DateTime'>
   readonly gstNumber: Prisma.FieldRef<"Partner", 'String'>
+  readonly aadhaarNumber: Prisma.FieldRef<"Partner", 'String'>
+  readonly registrationNo: Prisma.FieldRef<"Partner", 'String'>
+  readonly documents: Prisma.FieldRef<"Partner", 'Json'>
+  readonly bankName: Prisma.FieldRef<"Partner", 'String'>
+  readonly accountHolder: Prisma.FieldRef<"Partner", 'String'>
+  readonly accountNo: Prisma.FieldRef<"Partner", 'String'>
+  readonly ifsc: Prisma.FieldRef<"Partner", 'String'>
+  readonly upiId: Prisma.FieldRef<"Partner", 'String'>
+  readonly portalAccess: Prisma.FieldRef<"Partner", 'Boolean'>
+  readonly loginId: Prisma.FieldRef<"Partner", 'String'>
+  readonly accessType: Prisma.FieldRef<"Partner", 'AccessType'>
+  readonly assignedRelationshipManager: Prisma.FieldRef<"Partner", 'String'>
+  readonly branchMapping: Prisma.FieldRef<"Partner", 'String'>
+  readonly payoutFrequency: Prisma.FieldRef<"Partner", 'PayoutFrequency'>
+  readonly payoutType: Prisma.FieldRef<"Partner", 'PayoutType'>
+  readonly gstApplicable: Prisma.FieldRef<"Partner", 'Boolean'>
+  readonly tdsApplicable: Prisma.FieldRef<"Partner", 'Boolean'>
+  readonly maxPayoutCap: Prisma.FieldRef<"Partner", 'Float'>
   readonly commissionType: Prisma.FieldRef<"Partner", 'CommissionType'>
   readonly commissionValue: Prisma.FieldRef<"Partner", 'Float'>
   readonly branchId: Prisma.FieldRef<"Partner", 'String'>
@@ -3398,6 +5289,14 @@ export interface PartnerFieldRefs {
   readonly minimumPayout: Prisma.FieldRef<"Partner", 'Float'>
   readonly taxDeduction: Prisma.FieldRef<"Partner", 'Float'>
   readonly targetArea: Prisma.FieldRef<"Partner", 'String'>
+  readonly totalLeadsSubmitted: Prisma.FieldRef<"Partner", 'Int'>
+  readonly loginToSanctionRatio: Prisma.FieldRef<"Partner", 'Float'>
+  readonly sanctionToDisbursementRatio: Prisma.FieldRef<"Partner", 'Float'>
+  readonly disbursementVolume: Prisma.FieldRef<"Partner", 'Float'>
+  readonly rejectionRate: Prisma.FieldRef<"Partner", 'Float'>
+  readonly fraudCasesCount: Prisma.FieldRef<"Partner", 'Int'>
+  readonly qualityScore: Prisma.FieldRef<"Partner", 'Float'>
+  readonly partnerRating: Prisma.FieldRef<"Partner", 'Float'>
   readonly totalReferrals: Prisma.FieldRef<"Partner", 'Int'>
   readonly activeReferrals: Prisma.FieldRef<"Partner", 'Int'>
   readonly commissionEarned: Prisma.FieldRef<"Partner", 'Float'>

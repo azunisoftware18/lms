@@ -428,6 +428,45 @@ export const PartnerType = {
 export type PartnerType = (typeof PartnerType)[keyof typeof PartnerType]
 
 
+export const ConstitutionType = {
+  INDIVIDUAL: 'INDIVIDUAL',
+  PROPRIETORSHIP: 'PROPRIETORSHIP',
+  PARTNERSHIP: 'PARTNERSHIP',
+  LLP: 'LLP',
+  PRIVATE_LIMITED: 'PRIVATE_LIMITED',
+  PUBLIC_LIMITED: 'PUBLIC_LIMITED',
+  OTHER: 'OTHER'
+} as const
+
+export type ConstitutionType = (typeof ConstitutionType)[keyof typeof ConstitutionType]
+
+
+export const AccessType = {
+  LEAD_UPLOAD: 'LEAD_UPLOAD',
+  FULL_LOS: 'FULL_LOS',
+  VIEW_ONLY: 'VIEW_ONLY'
+} as const
+
+export type AccessType = (typeof AccessType)[keyof typeof AccessType]
+
+
+export const PayoutType = {
+  FLAT: 'FLAT',
+  PERCENTAGE: 'PERCENTAGE',
+  SLAB: 'SLAB'
+} as const
+
+export type PayoutType = (typeof PayoutType)[keyof typeof PayoutType]
+
+
+export const PayoutFrequency = {
+  MONTHLY: 'MONTHLY',
+  CASE_WISE: 'CASE_WISE'
+} as const
+
+export type PayoutFrequency = (typeof PayoutFrequency)[keyof typeof PayoutFrequency]
+
+
 export const CommissionType = {
   FIXED: 'FIXED',
   PERCENTAGE: 'PERCENTAGE'
@@ -584,7 +623,11 @@ export const LoanStatus = {
   delinquent: 'delinquent',
   written_off: 'written_off',
   defaulted: 'defaulted',
-  application_in_progress: 'application_in_progress'
+  application_in_progress: 'application_in_progress',
+  Foreclosure_PENDING: 'Foreclosure_PENDING',
+  Foreclosure_APPROVED: 'Foreclosure_APPROVED',
+  Foreclosure_REJECTED: 'Foreclosure_REJECTED',
+  Foreclosure_CLOSED: 'Foreclosure_CLOSED'
 } as const
 
 export type LoanStatus = (typeof LoanStatus)[keyof typeof LoanStatus]
