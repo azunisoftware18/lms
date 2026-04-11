@@ -9,6 +9,14 @@
 * 🟢 You can import this file directly.
 */
 
+export const roleFor = {
+  Employee: 'Employee',
+  Partner: 'Partner'
+} as const
+
+export type roleFor = (typeof roleFor)[keyof typeof roleFor]
+
+
 export const KycStatus = {
   NOT_STARTED: 'NOT_STARTED',
   PENDING: 'PENDING',

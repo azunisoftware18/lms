@@ -252,6 +252,23 @@ export type EnumWorkLocationWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumWorkLocationFilter<$PrismaModel>
 }
 
+export type EnumroleForFilter<$PrismaModel = never> = {
+  equals?: $Enums.roleFor | Prisma.EnumroleForFieldRefInput<$PrismaModel>
+  in?: $Enums.roleFor[]
+  notIn?: $Enums.roleFor[]
+  not?: Prisma.NestedEnumroleForFilter<$PrismaModel> | $Enums.roleFor
+}
+
+export type EnumroleForWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.roleFor | Prisma.EnumroleForFieldRefInput<$PrismaModel>
+  in?: $Enums.roleFor[]
+  notIn?: $Enums.roleFor[]
+  not?: Prisma.NestedEnumroleForWithAggregatesFilter<$PrismaModel> | $Enums.roleFor
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumroleForFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumroleForFilter<$PrismaModel>
+}
+
 export type EnumCommissionTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.CommissionType | Prisma.EnumCommissionTypeFieldRefInput<$PrismaModel>
   in?: $Enums.CommissionType[]
@@ -1627,6 +1644,23 @@ export type NestedEnumWorkLocationWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumWorkLocationFilter<$PrismaModel>
   _max?: Prisma.NestedEnumWorkLocationFilter<$PrismaModel>
+}
+
+export type NestedEnumroleForFilter<$PrismaModel = never> = {
+  equals?: $Enums.roleFor | Prisma.EnumroleForFieldRefInput<$PrismaModel>
+  in?: $Enums.roleFor[]
+  notIn?: $Enums.roleFor[]
+  not?: Prisma.NestedEnumroleForFilter<$PrismaModel> | $Enums.roleFor
+}
+
+export type NestedEnumroleForWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.roleFor | Prisma.EnumroleForFieldRefInput<$PrismaModel>
+  in?: $Enums.roleFor[]
+  notIn?: $Enums.roleFor[]
+  not?: Prisma.NestedEnumroleForWithAggregatesFilter<$PrismaModel> | $Enums.roleFor
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumroleForFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumroleForFilter<$PrismaModel>
 }
 
 export type NestedEnumCommissionTypeFilter<$PrismaModel = never> = {

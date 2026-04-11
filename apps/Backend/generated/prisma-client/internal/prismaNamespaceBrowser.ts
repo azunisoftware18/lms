@@ -210,6 +210,7 @@ export type EmployeeScalarFieldEnum = (typeof EmployeeScalarFieldEnum)[keyof typ
 export const EmployeeRoleScalarFieldEnum = {
   id: 'id',
   roleTitle: 'roleTitle',
+  roleFor: 'roleFor',
   roleName: 'roleName',
   description: 'description',
   documentsRequired: 'documentsRequired',

@@ -27,6 +27,7 @@ export type AggregateEmployeeRole = {
 export type EmployeeRoleMinAggregateOutputType = {
   id: string | null
   roleTitle: string | null
+  roleFor: $Enums.roleFor | null
   roleName: string | null
   description: string | null
   documentsRequired: string | null
@@ -39,6 +40,7 @@ export type EmployeeRoleMinAggregateOutputType = {
 export type EmployeeRoleMaxAggregateOutputType = {
   id: string | null
   roleTitle: string | null
+  roleFor: $Enums.roleFor | null
   roleName: string | null
   description: string | null
   documentsRequired: string | null
@@ -51,6 +53,7 @@ export type EmployeeRoleMaxAggregateOutputType = {
 export type EmployeeRoleCountAggregateOutputType = {
   id: number
   roleTitle: number
+  roleFor: number
   roleName: number
   description: number
   documentsRequired: number
@@ -65,6 +68,7 @@ export type EmployeeRoleCountAggregateOutputType = {
 export type EmployeeRoleMinAggregateInputType = {
   id?: true
   roleTitle?: true
+  roleFor?: true
   roleName?: true
   description?: true
   documentsRequired?: true
@@ -77,6 +81,7 @@ export type EmployeeRoleMinAggregateInputType = {
 export type EmployeeRoleMaxAggregateInputType = {
   id?: true
   roleTitle?: true
+  roleFor?: true
   roleName?: true
   description?: true
   documentsRequired?: true
@@ -89,6 +94,7 @@ export type EmployeeRoleMaxAggregateInputType = {
 export type EmployeeRoleCountAggregateInputType = {
   id?: true
   roleTitle?: true
+  roleFor?: true
   roleName?: true
   description?: true
   documentsRequired?: true
@@ -174,6 +180,7 @@ export type EmployeeRoleGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 export type EmployeeRoleGroupByOutputType = {
   id: string
   roleTitle: string
+  roleFor: $Enums.roleFor
   roleName: string
   description: string | null
   documentsRequired: string
@@ -207,6 +214,7 @@ export type EmployeeRoleWhereInput = {
   NOT?: Prisma.EmployeeRoleWhereInput | Prisma.EmployeeRoleWhereInput[]
   id?: Prisma.StringFilter<"EmployeeRole"> | string
   roleTitle?: Prisma.StringFilter<"EmployeeRole"> | string
+  roleFor?: Prisma.EnumroleForFilter<"EmployeeRole"> | $Enums.roleFor
   roleName?: Prisma.StringFilter<"EmployeeRole"> | string
   description?: Prisma.StringNullableFilter<"EmployeeRole"> | string | null
   documentsRequired?: Prisma.StringFilter<"EmployeeRole"> | string
@@ -220,6 +228,7 @@ export type EmployeeRoleWhereInput = {
 export type EmployeeRoleOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   roleTitle?: Prisma.SortOrder
+  roleFor?: Prisma.SortOrder
   roleName?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   documentsRequired?: Prisma.SortOrder
@@ -238,6 +247,7 @@ export type EmployeeRoleWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.EmployeeRoleWhereInput[]
   NOT?: Prisma.EmployeeRoleWhereInput | Prisma.EmployeeRoleWhereInput[]
   roleTitle?: Prisma.StringFilter<"EmployeeRole"> | string
+  roleFor?: Prisma.EnumroleForFilter<"EmployeeRole"> | $Enums.roleFor
   description?: Prisma.StringNullableFilter<"EmployeeRole"> | string | null
   documentsRequired?: Prisma.StringFilter<"EmployeeRole"> | string
   documentsOptions?: Prisma.StringNullableFilter<"EmployeeRole"> | string | null
@@ -250,6 +260,7 @@ export type EmployeeRoleWhereUniqueInput = Prisma.AtLeast<{
 export type EmployeeRoleOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   roleTitle?: Prisma.SortOrder
+  roleFor?: Prisma.SortOrder
   roleName?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   documentsRequired?: Prisma.SortOrder
@@ -268,6 +279,7 @@ export type EmployeeRoleScalarWhereWithAggregatesInput = {
   NOT?: Prisma.EmployeeRoleScalarWhereWithAggregatesInput | Prisma.EmployeeRoleScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"EmployeeRole"> | string
   roleTitle?: Prisma.StringWithAggregatesFilter<"EmployeeRole"> | string
+  roleFor?: Prisma.EnumroleForWithAggregatesFilter<"EmployeeRole"> | $Enums.roleFor
   roleName?: Prisma.StringWithAggregatesFilter<"EmployeeRole"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"EmployeeRole"> | string | null
   documentsRequired?: Prisma.StringWithAggregatesFilter<"EmployeeRole"> | string
@@ -280,6 +292,7 @@ export type EmployeeRoleScalarWhereWithAggregatesInput = {
 export type EmployeeRoleCreateInput = {
   id?: string
   roleTitle: string
+  roleFor: $Enums.roleFor
   roleName: string
   description?: string | null
   documentsRequired?: string
@@ -293,6 +306,7 @@ export type EmployeeRoleCreateInput = {
 export type EmployeeRoleUncheckedCreateInput = {
   id?: string
   roleTitle: string
+  roleFor: $Enums.roleFor
   roleName: string
   description?: string | null
   documentsRequired?: string
@@ -306,6 +320,7 @@ export type EmployeeRoleUncheckedCreateInput = {
 export type EmployeeRoleUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   roleTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  roleFor?: Prisma.EnumroleForFieldUpdateOperationsInput | $Enums.roleFor
   roleName?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
@@ -319,6 +334,7 @@ export type EmployeeRoleUpdateInput = {
 export type EmployeeRoleUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   roleTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  roleFor?: Prisma.EnumroleForFieldUpdateOperationsInput | $Enums.roleFor
   roleName?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
@@ -332,6 +348,7 @@ export type EmployeeRoleUncheckedUpdateInput = {
 export type EmployeeRoleCreateManyInput = {
   id?: string
   roleTitle: string
+  roleFor: $Enums.roleFor
   roleName: string
   description?: string | null
   documentsRequired?: string
@@ -344,6 +361,7 @@ export type EmployeeRoleCreateManyInput = {
 export type EmployeeRoleUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   roleTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  roleFor?: Prisma.EnumroleForFieldUpdateOperationsInput | $Enums.roleFor
   roleName?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
@@ -356,6 +374,7 @@ export type EmployeeRoleUpdateManyMutationInput = {
 export type EmployeeRoleUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   roleTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  roleFor?: Prisma.EnumroleForFieldUpdateOperationsInput | $Enums.roleFor
   roleName?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
@@ -379,6 +398,7 @@ export type EmployeeRoleOrderByRelevanceInput = {
 export type EmployeeRoleCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   roleTitle?: Prisma.SortOrder
+  roleFor?: Prisma.SortOrder
   roleName?: Prisma.SortOrder
   description?: Prisma.SortOrder
   documentsRequired?: Prisma.SortOrder
@@ -391,6 +411,7 @@ export type EmployeeRoleCountOrderByAggregateInput = {
 export type EmployeeRoleMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   roleTitle?: Prisma.SortOrder
+  roleFor?: Prisma.SortOrder
   roleName?: Prisma.SortOrder
   description?: Prisma.SortOrder
   documentsRequired?: Prisma.SortOrder
@@ -403,6 +424,7 @@ export type EmployeeRoleMaxOrderByAggregateInput = {
 export type EmployeeRoleMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   roleTitle?: Prisma.SortOrder
+  roleFor?: Prisma.SortOrder
   roleName?: Prisma.SortOrder
   description?: Prisma.SortOrder
   documentsRequired?: Prisma.SortOrder
@@ -428,9 +450,14 @@ export type EmployeeRoleUpdateOneWithoutEmployeesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeRoleUpdateToOneWithWhereWithoutEmployeesInput, Prisma.EmployeeRoleUpdateWithoutEmployeesInput>, Prisma.EmployeeRoleUncheckedUpdateWithoutEmployeesInput>
 }
 
+export type EnumroleForFieldUpdateOperationsInput = {
+  set?: $Enums.roleFor
+}
+
 export type EmployeeRoleCreateWithoutEmployeesInput = {
   id?: string
   roleTitle: string
+  roleFor: $Enums.roleFor
   roleName: string
   description?: string | null
   documentsRequired?: string
@@ -443,6 +470,7 @@ export type EmployeeRoleCreateWithoutEmployeesInput = {
 export type EmployeeRoleUncheckedCreateWithoutEmployeesInput = {
   id?: string
   roleTitle: string
+  roleFor: $Enums.roleFor
   roleName: string
   description?: string | null
   documentsRequired?: string
@@ -471,6 +499,7 @@ export type EmployeeRoleUpdateToOneWithWhereWithoutEmployeesInput = {
 export type EmployeeRoleUpdateWithoutEmployeesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   roleTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  roleFor?: Prisma.EnumroleForFieldUpdateOperationsInput | $Enums.roleFor
   roleName?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
@@ -483,6 +512,7 @@ export type EmployeeRoleUpdateWithoutEmployeesInput = {
 export type EmployeeRoleUncheckedUpdateWithoutEmployeesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   roleTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  roleFor?: Prisma.EnumroleForFieldUpdateOperationsInput | $Enums.roleFor
   roleName?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentsRequired?: Prisma.StringFieldUpdateOperationsInput | string
@@ -526,6 +556,7 @@ export type EmployeeRoleCountOutputTypeCountEmployeesArgs<ExtArgs extends runtim
 export type EmployeeRoleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   roleTitle?: boolean
+  roleFor?: boolean
   roleName?: boolean
   description?: boolean
   documentsRequired?: boolean
@@ -542,6 +573,7 @@ export type EmployeeRoleSelect<ExtArgs extends runtime.Types.Extensions.Internal
 export type EmployeeRoleSelectScalar = {
   id?: boolean
   roleTitle?: boolean
+  roleFor?: boolean
   roleName?: boolean
   description?: boolean
   documentsRequired?: boolean
@@ -551,7 +583,7 @@ export type EmployeeRoleSelectScalar = {
   updatedAt?: boolean
 }
 
-export type EmployeeRoleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "roleTitle" | "roleName" | "description" | "documentsRequired" | "documentsOptions" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["employeeRole"]>
+export type EmployeeRoleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "roleTitle" | "roleFor" | "roleName" | "description" | "documentsRequired" | "documentsOptions" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["employeeRole"]>
 export type EmployeeRoleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   employees?: boolean | Prisma.EmployeeRole$employeesArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeRoleCountOutputTypeDefaultArgs<ExtArgs>
@@ -565,6 +597,7 @@ export type $EmployeeRolePayload<ExtArgs extends runtime.Types.Extensions.Intern
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     roleTitle: string
+    roleFor: $Enums.roleFor
     roleName: string
     description: string | null
     documentsRequired: string
@@ -944,6 +977,7 @@ export interface Prisma__EmployeeRoleClient<T, Null = never, ExtArgs extends run
 export interface EmployeeRoleFieldRefs {
   readonly id: Prisma.FieldRef<"EmployeeRole", 'String'>
   readonly roleTitle: Prisma.FieldRef<"EmployeeRole", 'String'>
+  readonly roleFor: Prisma.FieldRef<"EmployeeRole", 'roleFor'>
   readonly roleName: Prisma.FieldRef<"EmployeeRole", 'String'>
   readonly description: Prisma.FieldRef<"EmployeeRole", 'String'>
   readonly documentsRequired: Prisma.FieldRef<"EmployeeRole", 'String'>

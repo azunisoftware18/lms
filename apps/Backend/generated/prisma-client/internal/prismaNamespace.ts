@@ -4147,6 +4147,7 @@ export type EmployeeScalarFieldEnum = (typeof EmployeeScalarFieldEnum)[keyof typ
 export const EmployeeRoleScalarFieldEnum = {
   id: 'id',
   roleTitle: 'roleTitle',
+  roleFor: 'roleFor',
   roleName: 'roleName',
   description: 'description',
   documentsRequired: 'documentsRequired',
@@ -6090,6 +6091,13 @@ export type EnumRelationshipFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'WorkLocation'
  */
 export type EnumWorkLocationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkLocation'>
+    
+
+
+/**
+ * Reference to a field of type 'roleFor'
+ */
+export type EnumroleForFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'roleFor'>
     
 
 

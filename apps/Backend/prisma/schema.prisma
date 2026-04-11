@@ -124,6 +124,7 @@ model Employee {
 model EmployeeRole {
   id          String   @id @default(cuid())
   roleTitle   String
+  roleFor     roleFor
   roleName    String   @unique
   description String?
   documentsRequired    String @default("") // Could be a URL or file   reference
@@ -135,6 +136,10 @@ model EmployeeRole {
   employees Employee[]
 }
 
+enum roleFor {
+Employee
+Partner
+}
 model Partner {
   id     String @id @default(cuid())
   userId String @unique
