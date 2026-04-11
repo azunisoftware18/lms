@@ -20,6 +20,7 @@ import RoleForm from "../../components/forms/RoleForm";
 import RoleManagementTable from "../../components/tables/RoleManagementTable";
 // import { initialRoles, modules } from '../../lib/dumyData';
 import ConfirmationDialog from "../../components/common/ConfirmationDialog";
+import Modal from "../../components/modals/RoleModal";
 import Button from "../../components/ui/Button";
 
 export default function RoleManagement() {
@@ -162,19 +163,17 @@ export default function RoleManagement() {
         />
       </div>
 
-      {isModalOpen && (
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-slate-100">
-          <RoleForm
-            onClose={() => setIsModalOpen(false)}
-            onSubmit={async (data) => {
-              await handleRoleSubmit(data);
-              setIsModalOpen(false);
-            }}
-            editingRole={selectedRole}
-            modules={modules}
-          />
-        </div>
-      )}
+      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <RoleForm
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={async (data) => {
+            await handleRoleSubmit(data);
+            setIsModalOpen(false);
+          }}
+          editingRole={selectedRole}
+          modules={modules}
+        />
+      </Modal>
 
       {/* Roles Table */}
       <RoleManagementTable
