@@ -13,6 +13,7 @@ import { logAction } from "../../audit/audit.helper.js";
 import { generateUniqueLeadNumber } from "../../common/generateId/generateLeadNumber.js";
 import createLoanApplicationSchema from "../LoanApplication/loanApplication.schema.js";
 
+import { generateUniquePartnerCode } from "../../common/generateId/generatePartnerId.js";
 const buildPartnerAddressPayloads = (data: any) => {
   const currentAddressInput = data.addresses?.currentAddress;
   const permanentAddressInput = data.addresses?.permanentAddress;
@@ -97,6 +98,22 @@ export async function createPartnerService(partnerData: CreatePartner) {
     if (!branch || !branch.isActive) {
       throw new Error("Invalid or inactive branch");
     }
+    const partnerCodeNumber = await generateUniquePartnerCode();
+
+    // Merge KYC and auxiliary fields into documents JSON so they persist
+    const documentsPayload = {
+      ...(partnerData.documents || {}),
+      llpNumber: partnerData.llpNumber ?? null,
+      secondaryContactPerson: partnerData.secondaryContactPerson ?? null,
+      secondaryContactNumber: partnerData.secondaryContactNumber ?? null,
+      secondaryContactEmail: partnerData.secondaryContactEmail ?? null,
+      panVerificationStatus: partnerData.panVerificationStatus ?? null,
+      gstVerificationStatus: partnerData.gstVerificationStatus ?? null,
+      kycDocumentsUploaded:
+        typeof partnerData.kycDocumentsUploaded === "boolean"
+          ? partnerData.kycDocumentsUploaded
+          : undefined,
+    };
 
     const hashedPassword = await hashPassword(partnerData.password);
     const user = await prisma.user.create({
@@ -114,6 +131,12 @@ export async function createPartnerService(partnerData: CreatePartner) {
     // derive partner/user names and partnerId if not provided
     const derivedPartnerId = await generateUniquePartnerNumber();
 
+    const onboardingDate = partnerData.onboardingDate
+      ? typeof partnerData.onboardingDate === "string"
+        ? new Date(partnerData.onboardingDate)
+        : partnerData.onboardingDate
+      : null;
+
     const partner = await prisma.partner.create({
       data: {
         userId: user.id,
@@ -122,7 +145,31 @@ export async function createPartnerService(partnerData: CreatePartner) {
         contactPerson: partnerData.contactPerson ?? partnerData.fullName ?? "",
         alternateNumber: partnerData.alternateNumber ?? "",
         panNumber: partnerData.panNumber,
+        partnerCode: partnerCodeNumber,
+        constitutionType: (partnerData.constitutionType ?? undefined) as any,
+        onboardingDate: onboardingDate ?? null,
+        aadhaarNumber: partnerData.aadhaarNumber ?? null,
+        registrationNo: partnerData.registrationNo ?? null,
+        documents: documentsPayload ?? null,
         gstNumber: partnerData.gstNumber ?? null,
+        bankName: partnerData.bankName ?? null,
+        accountHolder: partnerData.accountHolder ?? null,
+        accountNo: partnerData.accountNo ?? null,
+        ifsc: partnerData.ifsc ?? null,
+        upiId: partnerData.upiId ?? null,
+        portalAccess: partnerData.portalAccess ?? false,
+        loginId: partnerData.loginId ?? null,
+        accessType: (partnerData.accessType ?? undefined) as any,
+        assignedRelationshipManager:
+          partnerData.assignedRelationshipManager ?? null,
+        branchMapping: partnerData.branchMapping ?? null,
+        productAccess: partnerData.productAccess ?? [],
+        payoutFrequency: (partnerData.payoutFrequency ?? undefined) as any,
+        payoutType: (partnerData.payoutType ?? undefined) as any,
+        gstApplicable: partnerData.gstApplicable ?? false,
+        tdsApplicable: partnerData.tdsApplicable ?? false,
+        maxPayoutCap: partnerData.maxPayoutCap ?? null,
+
         establishedYear: partnerData.establishedYear ?? null,
         partnerType: (partnerData.partnerType ?? "INDIVIDUAL") as any,
         businessNature: partnerData.businessNature ?? null,
@@ -305,11 +352,72 @@ export const updatePartnerService = async (id: string, updateData: any) => {
   if ((userUpdateData as any).role) delete (userUpdateData as any).role;
   if ((userUpdateData as any).userName) delete (userUpdateData as any).userName;
 
-  const partnerFields = ["partnerType", "experience", "targetArea"];
+  const partnerFields = [
+    "partnerType",
+    "experience",
+    "targetArea",
+    "partnerCode",
+    "constitutionType",
+    "onboardingDate",
+    "aadhaarNumber",
+    "registrationNo",
+    "documents",
+    "bankName",
+    "accountHolder",
+    "accountNo",
+    "ifsc",
+    "upiId",
+    "portalAccess",
+    "loginId",
+    "accessType",
+    "assignedRelationshipManager",
+    "branchMapping",
+    "productAccess",
+    "payoutFrequency",
+    "payoutType",
+    "gstApplicable",
+    "tdsApplicable",
+    "maxPayoutCap",
+    "gstNumber",
+    "minimumPayout",
+  ];
   for (const key of partnerFields) {
     if (Object.prototype.hasOwnProperty.call(updateData, key)) {
       (partnerUpdateData as any)[key] = (updateData as any)[key];
     }
+  }
+
+  // Merge any auxiliary KYC/contact fields into documents JSON on update
+  const auxFields = [
+    "secondaryContactPerson",
+    "secondaryContactNumber",
+    "secondaryContactEmail",
+    "llpNumber",
+    "panVerificationStatus",
+    "gstVerificationStatus",
+    "kycDocumentsUploaded",
+  ];
+  const hasAux = auxFields.some((f) => Object.prototype.hasOwnProperty.call(updateData, f));
+  if (hasAux) {
+    const existingDocs = (partner as any).documents || {};
+    const incomingDocs = updateData.documents || {};
+    const merged = { ...existingDocs, ...incomingDocs } as Record<string, any>;
+    for (const f of auxFields) {
+      if (Object.prototype.hasOwnProperty.call(updateData, f)) {
+        merged[f] = (updateData as any)[f];
+      }
+    }
+    (partnerUpdateData as any).documents = merged;
+  }
+
+  // Normalize onboardingDate if provided as string
+  if (
+    Object.prototype.hasOwnProperty.call(partnerUpdateData, "onboardingDate") &&
+    typeof (partnerUpdateData as any).onboardingDate === "string"
+  ) {
+    (partnerUpdateData as any).onboardingDate = new Date(
+      (partnerUpdateData as any).onboardingDate,
+    );
   }
 
   await prisma.user.update({
@@ -697,7 +805,32 @@ export const createChildPartnerService = async (
         contactPerson: data.contactPerson ?? data.fullName ?? "",
         alternateNumber: data.alternateNumber ?? "",
         panNumber: data.panNumber,
+        partnerCode: data.partnerCode ?? null,
+        constitutionType: (data.constitutionType ?? undefined) as any,
+        onboardingDate:
+          data.onboardingDate && typeof data.onboardingDate === "string"
+            ? new Date(data.onboardingDate)
+            : data.onboardingDate ?? null,
+        aadhaarNumber: data.aadhaarNumber ?? null,
+        registrationNo: data.registrationNo ?? null,
+        documents: data.documents ?? null,
         gstNumber: data.gstNumber ?? null,
+        bankName: data.bankName ?? null,
+        accountHolder: data.accountHolder ?? null,
+        accountNo: data.accountNo ?? null,
+        ifsc: data.ifsc ?? null,
+        upiId: data.upiId ?? null,
+        portalAccess: data.portalAccess ?? false,
+        loginId: data.loginId ?? null,
+        accessType: (data.accessType ?? undefined) as any,
+        assignedRelationshipManager: data.assignedRelationshipManager ?? null,
+        branchMapping: data.branchMapping ?? null,
+        productAccess: data.productAccess ?? [],
+        payoutFrequency: (data.payoutFrequency ?? undefined) as any,
+        payoutType: (data.payoutType ?? undefined) as any,
+        gstApplicable: data.gstApplicable ?? false,
+        tdsApplicable: data.tdsApplicable ?? false,
+        maxPayoutCap: data.maxPayoutCap ?? null,
         establishedYear: data.establishedYear ?? null,
         partnerType: (data.partnerType ?? "INDIVIDUAL") as any,
         businessNature: data.businessNature ?? null,

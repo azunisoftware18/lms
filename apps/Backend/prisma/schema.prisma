@@ -144,6 +144,7 @@ model Partner {
   id     String @id @default(cuid())
   userId String @unique
 
+
   partnerId String @unique
 
   parentPartnerId String?
@@ -155,7 +156,29 @@ model Partner {
   contactPerson              String
   alternateNumber            String?
   panNumber                  String
+  partnerCode                String?
+  constitutionType           ConstitutionType?
+  onboardingDate             DateTime?
   gstNumber                  String?
+  aadhaarNumber              String?
+  registrationNo             String?
+  documents                  Json?
+  bankName                   String?
+  accountHolder              String?
+  accountNo                  String?
+  ifsc                       String?
+  upiId                      String?
+  portalAccess               Boolean? @default(false)
+  loginId                    String?
+  accessType                 AccessType?
+  assignedRelationshipManager String?
+  branchMapping              String?
+  productAccess              String[]
+  payoutFrequency            PayoutFrequency?
+  payoutType                 PayoutType?
+  gstApplicable              Boolean? @default(false)
+  tdsApplicable              Boolean? @default(false)
+  maxPayoutCap               Float?
   commissionType             CommissionType
   commissionValue            Float?
   branchId                   String
@@ -177,6 +200,14 @@ model Partner {
   minimumPayout              Float?
   taxDeduction               Float?
   targetArea                 String?
+  totalLeadsSubmitted        Int?                @default(0)
+  loginToSanctionRatio       Float?
+  sanctionToDisbursementRatio Float?
+  disbursementVolume        Float?
+  rejectionRate             Float?
+  fraudCasesCount           Int?
+  qualityScore              Float?
+  partnerRating             Float?
   totalReferrals             Int?                @default(0)
   activeReferrals            Int?                @default(0)
   commissionEarned           Float?              @default(0)
@@ -1891,6 +1922,33 @@ enum PartnerType {
   INSTITUTION
   CORPORATE
   AGENCY
+}
+
+enum ConstitutionType {
+  INDIVIDUAL
+  PROPRIETORSHIP
+  PARTNERSHIP
+  LLP
+  PRIVATE_LIMITED
+  PUBLIC_LIMITED
+  OTHER
+}
+
+enum AccessType {
+  LEAD_UPLOAD
+  FULL_LOS
+  VIEW_ONLY
+}
+
+enum PayoutType {
+  FLAT
+  PERCENTAGE
+  SLAB
+}
+
+enum PayoutFrequency {
+  MONTHLY
+  CASE_WISE
 }
 
 enum CommissionType {

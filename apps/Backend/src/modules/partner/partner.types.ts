@@ -37,6 +37,16 @@ export interface CreatePartner {
   establishedYear?: number;
   partnerType: PartnerType;
   businessNature?: string;
+  partnerCode?: string;
+  constitutionType?:
+    | "INDIVIDUAL"
+    | "PROPRIETORSHIP"
+    | "PARTNERSHIP"
+    | "LLP"
+    | "PRIVATE_LIMITED"
+    | "PUBLIC_LIMITED"
+    | "OTHER";
+  onboardingDate?: Date | string;
 
   // business details
   fullAddress?: string;
@@ -55,10 +65,53 @@ export interface CreatePartner {
   commissionType?: CommissionType;
   commissionValue?: number;
   paymentCycle?: PaymentCycle;
+  payoutFrequency?: "MONTHLY" | "CASE_WISE";
+  payoutType?: "FLAT" | "PERCENTAGE" | "SLAB";
+  gstApplicable?: boolean;
+  tdsApplicable?: boolean;
+  maxPayoutCap?: number;
   minimumPayout?: number;
   taxDeduction?: number;
 
   targetArea?: string;
+  // KYC
+  aadhaarNumber?: string;
+  registrationNo?: string;
+  documents?: Record<string, string>;
+  llpNumber?: string;
+  panVerificationStatus?: "pending" | "verified" | "rejected";
+  gstVerificationStatus?: "pending" | "verified" | "rejected";
+  kycDocumentsUploaded?: boolean;
+
+  // Secondary contact
+  secondaryContactPerson?: string;
+  secondaryContactNumber?: string;
+  secondaryContactEmail?: string;
+
+  // Banking
+  bankName?: string;
+  accountHolder?: string;
+  accountNo?: string;
+  ifsc?: string;
+  upiId?: string;
+
+  // System access
+  portalAccess?: boolean;
+  loginId?: string;
+  accessType?: "LEAD_UPLOAD" | "FULL_LOS" | "VIEW_ONLY";
+  assignedRelationshipManager?: string;
+  branchMapping?: string;
+  productAccess?: string[];
+
+  // Performance metrics (optional)
+  totalLeadsSubmitted?: number;
+  loginToSanctionRatio?: number;
+  sanctionToDisbursementRatio?: number;
+  disbursementVolume?: number;
+  rejectionRate?: number;
+  fraudCasesCount?: number;
+  qualityScore?: number;
+  partnerRating?: number;
 }
 
 export interface UpdatePartner

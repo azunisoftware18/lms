@@ -22,4 +22,26 @@ const generateUniquePartnerNumber = async (): Promise<string> => {
   throw err;
 };
 
-export { generateUniquePartnerNumber };
+
+const generateUniquePartnerCode = async ():Promise<string> => {
+  let attempts = 0;
+
+  while (attempts < 5) {
+    const code = Math.floor(1000 + Math.random() * 9000); // 4-digit
+    const partnerCode = `PCODE-${code}`;
+    const exists = await prisma.partner.findUnique({
+      where: { partnerCode },
+      select: { id: true },
+    });
+
+    if (!exists) return partnerCode;
+    attempts++;
+  const err: any = new Error("Failed to generate unique partner code");
+  err.statusCode = 500;
+  throw err;
+};
+
+
+}
+    
+export { generateUniquePartnerNumber, generateUniquePartnerCode };
