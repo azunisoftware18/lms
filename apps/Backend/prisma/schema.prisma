@@ -124,7 +124,7 @@ model Employee {
 model EmployeeRole {
   id          String   @id @default(cuid())
   roleTitle   String
-  roleFor     roleFor
+  roleFor     roleFor  @default(Employee)
   roleName    String   @unique
   description String?
   documentsRequired    String @default("") // Could be a URL or file   reference
