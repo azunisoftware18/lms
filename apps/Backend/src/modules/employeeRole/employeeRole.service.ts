@@ -2,7 +2,8 @@ import { prisma } from "../../db/prismaService.js";
 import { AppError } from "../../common/utils/apiError.js";
 
 type CreateEmployeeRoleInput = {
-  name: string;
+  roleTitle: string;
+  roleName: string;
   description?: string;
   isActive?: boolean;
 };
@@ -10,14 +11,14 @@ type CreateEmployeeRoleInput = {
 export const createEmployeeRoleService = async (
   data: CreateEmployeeRoleInput,
 ) => {
-  const normalizedName = data.name.trim();
+  const normalizedName = data.roleName.trim();
 
   if (!normalizedName) {
-    throw AppError.badRequest("name is required");
+    throw AppError.badRequest("Role name is required");
   }
 
   const existingRole = await prisma.employeeRole.findFirst({
-    where: { name: normalizedName },
+    where: { roleName: normalizedName },
   });
 
   if (existingRole) {
@@ -26,7 +27,8 @@ export const createEmployeeRoleService = async (
 
   return prisma.employeeRole.create({
     data: {
-      name: normalizedName,
+      roleTitle: data.roleTitle.trim(),
+      roleName: normalizedName,
       description: data.description?.trim() || null,
       isActive: data.isActive ?? true,
     },
@@ -36,6 +38,6 @@ export const createEmployeeRoleService = async (
 export const getEmployeeRolesService = async (includeInactive = false) => {
   return prisma.employeeRole.findMany({
     where: includeInactive ? undefined : { isActive: true },
-    orderBy: { name: "asc" },
+    orderBy: { roleName: "asc" },
   });
 };
