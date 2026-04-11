@@ -5,6 +5,8 @@ type CreateEmployeeRoleInput = {
   roleTitle: string;
   roleName: string;
   description?: string;
+  documentsRequired: string;
+  documentsOptions?: string;
   isActive?: boolean;
 };
 
@@ -30,6 +32,8 @@ export const createEmployeeRoleService = async (
       roleTitle: data.roleTitle.trim(),
       roleName: normalizedName,
       description: data.description?.trim() || null,
+      documentsRequired:data.documentsRequired,
+      documentsOptions: data.documentsOptions?.trim() || null,
       isActive: data.isActive ?? true,
     },
   });
