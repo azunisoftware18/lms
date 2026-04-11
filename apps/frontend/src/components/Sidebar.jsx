@@ -72,6 +72,7 @@ export default function Sidebar() {
           subItems: [
 
             { name: "Leads", path: "/admin/los/leads" },
+            // {name:"Login Fee", path:"/admin/los/login-fee"},
             { name: "Applications", path: "/admin/los/applications" },
             { name: "Documents", path: "/admin/los/documents" },
             { name: "Eligibility", path: "/admin/los/eligibility" },
@@ -116,13 +117,13 @@ export default function Sidebar() {
             //   permission: "VIEW_EMI_SCHEDULE"
             // },
             { name: "EMI Management", path: "/admin/lms/emi-management" },
-            {
-              name: "Repayment Management",
-              path: currentUser?.role === "EMPLOYEE"
-                ? "/employee/lms/repayment-management"
-                : "/admin/lms/repayment-management",
-              permission: "VIEW_REPAYMENT_MANAGEMENT"
-            },
+            // {
+            //   name: "Repayment Management",
+            //   path: currentUser?.role === "EMPLOYEE"
+            //     ? "/employee/lms/repayment-management"
+            //     : "/admin/lms/repayment-management",
+            //   permission: "VIEW_REPAYMENT_MANAGEMENT"
+            // },
 
             // // --- REPAYMENT (Dropdown) ---
             // {
@@ -249,10 +250,13 @@ export default function Sidebar() {
         },
       ]
     },
+    
     {
       category: "Admin Control",
+      
       items: [
         // --- CONFIGURATION ---
+        { name: "Role Management", icon: <ShieldCheck size={20} />, path: "/admin/role-management" },
         {
           name: "Configuration",
           icon: <Sliders size={20} />,
@@ -270,7 +274,7 @@ export default function Sidebar() {
 
           ]
         },
-        { name: "Role Management", icon: <ShieldCheck size={20} />, path: "/admin/role-management" },
+        // { name: "Role Management", icon: <ShieldCheck size={20} />, path: "/admin/role-management" },
         { name: "Permission Management", icon: <ShieldCheck size={20} />, path: "/admin/permission-management" },
 
         {

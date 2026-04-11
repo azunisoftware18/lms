@@ -22,7 +22,13 @@ export const useLoanApplications = (params = {}) => {
 
   // GET all loans: /loan-applications/?page=1&q=LN-2026-000001
   return useQuery({
-    queryKey: ["loanApplications", normalizedParams],
+    queryKey: [
+      "loanApplications",
+      normalizedParams.page,
+      normalizedParams.limit,
+      normalizedParams.q,
+      normalizedParams.status,
+    ],
     queryFn: () => apiGet(`/loan-applications`, { params: normalizedParams }),
     keepPreviousData: true,
     onSuccess: (data) => {
