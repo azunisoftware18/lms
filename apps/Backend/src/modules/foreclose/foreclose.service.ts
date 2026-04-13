@@ -67,27 +67,42 @@ export const applyForecloseLoanService = async (
   createApplication = false,
 ) => {
   try {
-    const loan = await prisma.loanApplication.findUnique({ where: { id: loanId } });
+    const loan = await prisma.loanApplication.findUnique({
+      where: { id: loanId },
+    });
+
     if (!loan) throw AppError.notFound("Loan application not found");
 
+    //  Status validation
     if (loan.status !== "active" && loan.status !== "defaulted") {
       throw AppError.badRequest("Loan is not active or defaulted");
+    }
+
+    //  Prevent duplicate foreclosure applications
+    const existingApplication = await (prisma as any).foreClosure.findFirst({
+      where: {
+        loanApplicationId: loan.id,
+        approvalStatus: { in: ["PENDING", "APPROVED"] },
+      },
+    });
+
+    if (existingApplication) {
+      throw AppError.badRequest("Foreclosure already applied for this loan");
     }
 
     const summary = await forecloseLoanService(loan.id);
 
     if (createApplication && userId && branchId) {
-      await logAction({
-        entityType: "LOAN",
-        entityId: loan.id,
-        action: "APPLY_FORECLOSE",
-        performedBy: userId,
-        branchId,
-        oldValue: { status: loan.status },
-        newValue: { status: loan.status },
-        remarks: "Foreclose application submitted",
+
+      //  STEP 1: Update Loan Status
+      await prisma.loanApplication.update({
+        where: { id: loan.id },
+        data: {
+          status: "Foreclosure_PENDING", //  NEW STATUS
+        },
       });
-      // persist foreclosure application record
+
+      // STEP 2: Create foreclosure record
       const record = await (prisma as any).foreClosure.create({
         data: {
           loanApplicationId: loan.id,
@@ -103,10 +118,23 @@ export const applyForecloseLoanService = async (
         },
       });
 
+      // STEP 3: Log correct status change
+      await logAction({
+        entityType: "LOAN",
+        entityId: loan.id,
+        action: "APPLY_FORECLOSE",
+        performedBy: userId,
+        branchId,
+        oldValue: { status: loan.status },
+        newValue: { status: "Foreclosure_PENDING" }, 
+        remarks: "Foreclose application submitted",
+});
+
       return { summary, foreClosure: record };
     }
 
     return { summary };
+
   } catch (error: any) {
     if (error?.statusCode) throw error;
     throw AppError.internal(error.message || "Failed to apply for foreclose");
@@ -123,7 +151,7 @@ export const payforecloseLoanService = async (
     const loan = await prisma.loanApplication.findUnique({ where: { id: loanId } });
     if (!loan) throw AppError.notFound("Loan application not found");
 
-    if (loan.status !== "active" && loan.status !== "defaulted") {
+    if (loan.status !== "active" && loan.status !== "defaulted" && loan.status !== "Foreclosure_PENDING") {
       throw AppError.badRequest("Loan is not active");
     }
 
