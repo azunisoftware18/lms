@@ -5,6 +5,7 @@ import Button from "../../../components/ui/Button";
 import AddPartnerTable from "../../../components/tables/AddPartnerTable";
 import AddPartnerModal from "../../../components/modals/AddPartnerModal";
 import AddPartnerForm from "../../../components/forms/AddPartnerForm";
+import { useCreatePartner, useUpdatePartner } from "../../../hooks/usePartner";
 
 export default function PartnerAddPage() {
   const [showPartnerModal, setShowPartnerModal] = useState(false);
@@ -280,47 +281,26 @@ export default function PartnerAddPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+  const createPartner = useCreatePartner();
+  const updatePartner = useUpdatePartner();
 
-    const partnerPayload = {
-      id: isEditing ? editId : formData.partnerId,
-      ...formData,
-      annualTurnover: formData.annualTurnover
-        ? `₹${parseFloat(formData.annualTurnover).toLocaleString("en-IN")}`
-        : "",
-      monthlyTarget: formData.monthlyTarget
-        ? `₹${parseFloat(formData.monthlyTarget).toLocaleString("en-IN")}`
-        : "",
-      quarterlyTarget: formData.quarterlyTarget
-        ? `₹${(parseFloat(formData.quarterlyTarget) / 1000000).toFixed(1)} Cr`
-        : "",
-      annualTarget: formData.annualTarget
-        ? `₹${(parseFloat(formData.annualTarget) / 1000000).toFixed(1)} Cr`
-        : "",
-      minimumPayout: formData.minimumPayout
-        ? `₹${parseFloat(formData.minimumPayout).toLocaleString("en-IN")}`
-        : "",
-      commissionValue:
-        formData.commissionType === "Percentage"
-          ? `${formData.commissionValue}%`
-          : `₹${parseFloat(formData.commissionValue).toLocaleString("en-IN")}`,
-    };
-
-    if (isEditing) {
-      setPartners(
-        partners.map((partner) =>
-          partner.id === editId ? partnerPayload : partner,
-        ),
-      );
-      alert("Partner Updated Successfully!");
-    } else {
-      setPartners([...partners, partnerPayload]);
-      alert("Partner Added Successfully!");
+  const handleSubmit = async (submittedData) => {
+    // `submittedData` comes from AddPartnerForm (Zod-parsed) when available.
+    const payload = { ...formData, ...(submittedData || {}) };
+    try {
+      if (isEditing) {
+        await updatePartner.mutateAsync({ id: editId, data: payload });
+        alert("Partner Updated Successfully!");
+      } else {
+        await createPartner.mutateAsync(payload);
+        alert("Partner Added Successfully!");
+      }
+      setShowPartnerModal(false);
+      resetForm();
+    } catch (err) {
+      console.error("Failed to submit partner", err);
+      setErrors({ form: err?.message || "Submission failed" });
     }
-    setShowPartnerModal(false);
-    resetForm();
   };
 
   const closeModal = () => {

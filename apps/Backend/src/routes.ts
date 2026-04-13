@@ -10,7 +10,7 @@ import permissionRouter from "./modules/permission/permission.routes.js";
 import kycRouter from "./modules/kyc/kyc.routes.js";
 import emiRouter from "./modules/Emi/emi.router.js";
 import forecloseRouter from "./modules/foreclose/foreclose.router.js";
-import loanCloseRouter from "./modules/LoanClose/loanclose.routes.js";
+import loanCloseRouter from "./modules/loanClose/loanclose.routes.js";
 import loanTypeRouter from "./modules/loanTypes/loanTypes.routes.js";
 import jobsRouter from "./jobs/jobs.routes.js";
 import recoveryRouter from "./modules/recovery/recovery.routes.js";
@@ -30,7 +30,7 @@ import loanDisbursementRouter from "./modules/loanDisbursement/loanDisburesment.
 import nachRouter from "./modules/nach/nach.router.js";
 import guarantorRouter from "./modules/guarantor/guarantor.routes.js";
 import loanDraftRouter from "./modules/loanDraft/loanDraft.router.js";
-import sanctionRouter from "./modules/Sanction/sanction.router.js";
+import sanctionRouter from "./modules/sanction/sanction.router.js";
 
 const router = Router();
 

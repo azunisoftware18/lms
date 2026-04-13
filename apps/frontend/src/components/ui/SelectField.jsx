@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo, forwardRef } from "react";
+import { createPortal } from "react-dom";
 import {
   ChevronDown,
   X,
@@ -33,12 +34,15 @@ const SelectField = forwardRef(
     const containerRef = useRef(null);
     const dropdownRef = useRef(null);
     const triggerRef = useRef(null);
+    const [menuStyle, setMenuStyle] = useState({});
     const dropdownId = `dropdown-${Math.random().toString(36).substr(2, 9)}`;
 
     // 1. Click Outside Logic
     useEffect(() => {
       const handler = (e) => {
-        if (containerRef.current && !containerRef.current.contains(e.target)) {
+        const clickedInsideContainer = containerRef.current && containerRef.current.contains(e.target);
+        const clickedInsideDropdown = dropdownRef.current && dropdownRef.current.contains(e.target);
+        if (!clickedInsideContainer && !clickedInsideDropdown) {
           setIsOpen(false);
           setSearchTerm("");
           setFocusedIndex(-1);
@@ -124,6 +128,30 @@ const SelectField = forwardRef(
         setFocusedIndex(-1);
       }
     }, [isOpen]);
+
+      // 6. Compute portal menu position when open (to avoid parent overflow clipping)
+      useEffect(() => {
+        if (!isOpen || inlineMenu) return;
+        const compute = () => {
+          const trigger = triggerRef.current;
+          if (!trigger) return;
+          const rect = trigger.getBoundingClientRect();
+          setMenuStyle({
+            position: "absolute",
+            top: rect.bottom + window.scrollY + 8,
+            left: rect.left + window.scrollX,
+            width: rect.width,
+            zIndex: 9999,
+          });
+        };
+        compute();
+        window.addEventListener("resize", compute);
+        window.addEventListener("scroll", compute, true);
+        return () => {
+          window.removeEventListener("resize", compute);
+          window.removeEventListener("scroll", compute, true);
+        };
+      }, [isOpen, inlineMenu]);
 
     // 6. Selection Logic
     const handleSelect = (option) => {
@@ -245,47 +273,56 @@ const SelectField = forwardRef(
           </div>
 
           {/* Dropdown Menu */}
-          {isOpen && (
-            <div
-              ref={dropdownRef}
-              id={dropdownId}
-              role="listbox"
-              onKeyDown={handleDropdownKeyDown}
-              className={`${inlineMenu ? "relative z-10" : "absolute z-50"} w-full mt-2 bg-white border border-slate-200 rounded-lg shadow-xl max-h-60 overflow-y-auto animate-in fade-in zoom-in duration-150`}
-            >
-              {filteredOptions.length > 0 ? (
-                filteredOptions.map((opt, index) => {
-                  const isSelected = isMulti
-                    ? value?.includes(opt.value)
-                    : value === opt.value;
-                  const isFocused = index === focusedIndex;
-                  return (
-                    <div
-                      key={opt.value}
-                      id={getOptionId(index)}
-                      role="option"
-                      aria-selected={isSelected}
-                      onClick={() => {
-                        handleSelect(opt);
-                        setFocusedIndex(-1);
-                      }}
-                      onMouseEnter={() => setFocusedIndex(index)}
-                      className={`px-4 py-2.5 text-sm cursor-pointer flex items-center justify-between outline-none ${
-                        isFocused ? "bg-slate-100" : "hover:bg-slate-50"
-                      } ${isSelected ? "bg-blue-50 text-blue-700 font-medium" : "text-slate-700"}`}
-                    >
-                      {opt.label}
-                      {isSelected && <Check size={16} />}
-                    </div>
-                  );
-                })
-              ) : (
-                <div className="p-4 text-center text-slate-400 text-sm italic">
-                  No results found.
-                </div>
-              )}
-            </div>
-          )}
+          {isOpen && (() => {
+            const menu = (
+              <div
+                ref={dropdownRef}
+                id={dropdownId}
+                role="listbox"
+                onKeyDown={handleDropdownKeyDown}
+                className={`w-full mt-2 bg-white border border-slate-200 rounded-lg shadow-xl max-h-60 overflow-y-auto animate-in fade-in zoom-in duration-150`}
+                style={inlineMenu ? {} : menuStyle}
+              >
+                {filteredOptions.length > 0 ? (
+                  filteredOptions.map((opt, index) => {
+                    const isSelected = isMulti
+                      ? value?.includes(opt.value)
+                      : value === opt.value;
+                    const isFocused = index === focusedIndex;
+                    return (
+                      <div
+                        key={opt.value}
+                        id={getOptionId(index)}
+                        role="option"
+                        aria-selected={isSelected}
+                        onClick={() => {
+                          handleSelect(opt);
+                          setFocusedIndex(-1);
+                        }}
+                        onMouseEnter={() => setFocusedIndex(index)}
+                        className={`px-4 py-2.5 text-sm cursor-pointer flex items-center justify-between outline-none ${
+                          isFocused ? "bg-slate-100" : "hover:bg-slate-50"
+                        } ${isSelected ? "bg-blue-50 text-blue-700 font-medium" : "text-slate-700"}`}
+                      >
+                        {opt.label}
+                        {isSelected && <Check size={16} />}
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="p-4 text-center text-slate-400 text-sm italic">
+                    No results found.
+                  </div>
+                )}
+              </div>
+            );
+
+            return inlineMenu ? (
+              <div className="relative z-10 w-full">{menu}</div>
+            ) : (
+              createPortal(menu, document.body)
+            );
+          })()}
         </div>
 
         {/* Error / Hint */}
