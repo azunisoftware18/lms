@@ -10,7 +10,7 @@ export default function useEmployeeRoles() {
     setLoading(true);
     setError(null);
     try {
-      const res = await apiGet('/employee-roles');
+      const res = await apiGet('/employee-roles?includeInactive=true');
       const payload = res?.data ?? res;
       const list = payload?.data ?? payload ?? [];
       setRoles(list);

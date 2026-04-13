@@ -81,16 +81,53 @@ export default function RoleManagement() {
     );
   };
 
+  const getNormalizedStatus = (role) => {
+    const rawStatus =
+      role.isActive ??
+      role.active ??
+      role.is_active ??
+      role.status ??
+      role.roleStatus ??
+      role.state;
+
+    if (typeof rawStatus === "boolean") {
+      return rawStatus ? "active" : "inactive";
+    }
+
+    if (typeof rawStatus === "number") {
+      return rawStatus === 1 ? "active" : "inactive";
+    }
+
+    if (typeof rawStatus === "string") {
+      const normalized = rawStatus.trim().toLowerCase();
+      if (["active", "true", "1", "enabled", "yes"].includes(normalized)) {
+        return "active";
+      }
+      if (["pending", "awaiting", "in-review"].includes(normalized)) {
+        return "pending";
+      }
+      if (["inactive", "false", "0", "disabled", "no"].includes(normalized)) {
+        return "inactive";
+      }
+    }
+
+    return "inactive";
+  };
+
+  const activeRolesCount = roles.filter((role) => getNormalizedStatus(role) === "active").length;
+  const inactiveRolesCount = roles.filter((role) => getNormalizedStatus(role) === "inactive").length;
+  const pendingRolesCount = roles.filter((role) => getNormalizedStatus(role) === "pending").length;
+
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8">
       {/* Header */}
       <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
-            Admin Roles Management
+            Roles Management
           </h1>
           <p className="text-gray-500 mt-1">
-            Manage and assign permissions to different admin roles
+            Manage and assign permissions to different roles
           </p>
         </div>
         <Button
@@ -114,22 +151,22 @@ export default function RoleManagement() {
           bgClass="bg-blue-50"
         />
         <StatusCard
-          title="Active Users"
-          value={roles.reduce((acc, role) => acc + (role.userCount || 0), 0)}
+          title="Active Roles"
+          value={activeRolesCount}
           icon={Users}
           colorClass="text-green-600"
           bgClass="bg-green-50"
         />
         <StatusCard
-          title="Inactive Users"
-          value={roles.reduce((acc, role) => acc + (role.userCount || 0), 0)}
+          title="Inactive Roles"
+          value={inactiveRolesCount}
           icon={Users}
           colorClass="text-red-600"
           bgClass="bg-red-50"
         />
         <StatusCard
           title="Pending Users"
-          value={roles.reduce((acc, role) => acc + (role.userCount || 0), 0)}
+          value={pendingRolesCount}
           icon={Users}
           colorClass="text-yellow-600"
           bgClass="bg-yellow-50"
