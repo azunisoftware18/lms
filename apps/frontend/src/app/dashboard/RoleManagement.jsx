@@ -1,18 +1,8 @@
 import React, { useState } from "react";
+import useEmployeeRoles from "../../hooks/useEmployeeRoles";
 import {
   Plus,
-  Edit2,
-  Trash2,
-  Shield,
   Users,
-  FileText,
-  CreditCard,
-  BarChart2,
-  Settings,
-  Lock,
-  Mail,
-  User,
-  Building2,
 } from "lucide-react";
 import StatusCard from "../../components/common/StatusCard";
 import RoleForm from "../../components/forms/RoleForm";
@@ -24,7 +14,6 @@ import Modal from "../../components/modals/RoleModal";
 import Button from "../../components/ui/Button";
 
 export default function RoleManagement() {
-  const initialRoles = [];
   const modules = [
     { id: "dashboard", name: "Dashboard", description: "Overview and metrics" },
     { id: "customers", name: "Customers", description: "Customer management" },
@@ -42,9 +31,8 @@ export default function RoleManagement() {
     { id: "reports", name: "Reports", description: "Analytics and reports" },
   ];
   // State management
-  const [roles, setRoles] = useState(initialRoles);
+  const { roles, loading, createRole, updateRole, deleteRole } = useEmployeeRoles();
   const [roleToDelete, setRoleToDelete] = useState(null);
-  const [searchTerm, _setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
 
@@ -61,39 +49,23 @@ export default function RoleManagement() {
   // Handle role form submit (create or update)
   const handleRoleSubmit = async (data) => {
     if (selectedRole) {
-      // update existing
-      setRoles((prev) =>
-        prev.map((r) => (r.id === selectedRole.id ? { ...r, ...data } : r)),
-      );
+      await updateRole?.(selectedRole.id, data);
     } else {
-      // create new role
-      const newRole = {
-        id: `role-${Date.now()}`,
-        name: data.name,
-        email: data.email,
-        description: data.description || "",
-        permissions: data.permissions || [],
-        userCount: 0,
-      };
-      setRoles((prev) => [newRole, ...prev]);
+      await createRole?.(data);
     }
   };
 
   // Delete role
-  const handleDeleteRole = () => {
-    if (roleToDelete) {
-      setRoles(roles.filter((role) => role.id !== roleToDelete.id));
+  const handleDeleteRole = async () => {
+    if (!roleToDelete) return;
+    try {
+      await deleteRole?.(roleToDelete.id);
       setRoleToDelete(null);
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Error deleting role");
     }
   };
-
-  // Filter roles based on search
-  const filteredRoles = roles.filter(
-    (role) =>
-      role.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      role.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      role.email.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
 
   // Get module name by ID
   const getModuleName = (moduleId) => {
@@ -103,8 +75,9 @@ export default function RoleManagement() {
 
   // Handle login with role
   const handleLogin = (role) => {
+    const roleLabel = role.roleTitle || role.roleName || role.name || "Selected role";
     alert(
-      `Login Credentials:\nEmail: ${role.email}\nPassword: ${role.password}\n\nUse these credentials to login as ${role.name}`,
+      `Login Credentials:\nEmail: ${role.email || "N/A"}\nPassword: ${role.password || "N/A"}\n\nUse these credentials to login as ${roleLabel}`,
     );
   };
 
@@ -167,8 +140,13 @@ export default function RoleManagement() {
         <RoleForm
           onClose={() => setIsModalOpen(false)}
           onSubmit={async (data) => {
-            await handleRoleSubmit(data);
-            setIsModalOpen(false);
+            try {
+              await handleRoleSubmit(data);
+              setIsModalOpen(false);
+            } catch (err) {
+              console.error(err);
+              alert(err?.message || "Error saving role");
+            }
           }}
           editingRole={selectedRole}
           modules={modules}
@@ -177,8 +155,8 @@ export default function RoleManagement() {
 
       {/* Roles Table */}
       <RoleManagementTable
-        roles={filteredRoles}
-        loading={false}
+        roles={roles}
+        loading={loading}
         onEdit={handleEdit}
         onDelete={(role) => setRoleToDelete(role)}
         onLogin={handleLogin}
@@ -191,7 +169,7 @@ export default function RoleManagement() {
         title="Delete Role"
         description={
           roleToDelete
-            ? `Are you sure you want to delete the role "${roleToDelete.name}"? This will remove permissions for ${roleToDelete.userCount} user${roleToDelete.userCount !== 1 ? "s" : ""}.`
+            ? `Are you sure you want to delete the role "${roleToDelete.roleTitle || roleToDelete.roleName || roleToDelete.name || "-"}"? This will remove permissions for ${roleToDelete.userCount || 0} user${(roleToDelete.userCount || 0) !== 1 ? "s" : ""}.`
             : ""
         }
         confirmText="Delete Role"
@@ -204,7 +182,7 @@ export default function RoleManagement() {
         {roleToDelete && (
           <div className="text-sm text-slate-600">
             <p className="font-medium">Role:</p>
-            <p>{roleToDelete.name}</p>
+            <p>{roleToDelete.roleTitle || roleToDelete.roleName || roleToDelete.name || "-"}</p>
           </div>
         )}
       </ConfirmationDialog>

@@ -439,6 +439,10 @@ export type LoanQuestionnaireUncheckedUpdateOneWithoutLoanApplicationNestedInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.LoanQuestionnaireUpdateToOneWithWhereWithoutLoanApplicationInput, Prisma.LoanQuestionnaireUpdateWithoutLoanApplicationInput>, Prisma.LoanQuestionnaireUncheckedUpdateWithoutLoanApplicationInput>
 }
 
+export type NullableBoolFieldUpdateOperationsInput = {
+  set?: boolean | null
+}
+
 export type LoanQuestionnaireCreateWithoutLoanApplicationInput = {
   id?: string
   legalPropertyClear?: boolean | null

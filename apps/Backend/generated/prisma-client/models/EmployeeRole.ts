@@ -292,7 +292,7 @@ export type EmployeeRoleScalarWhereWithAggregatesInput = {
 export type EmployeeRoleCreateInput = {
   id?: string
   roleTitle: string
-  roleFor: $Enums.roleFor
+  roleFor?: $Enums.roleFor
   roleName: string
   description?: string | null
   documentsRequired?: string
@@ -306,7 +306,7 @@ export type EmployeeRoleCreateInput = {
 export type EmployeeRoleUncheckedCreateInput = {
   id?: string
   roleTitle: string
-  roleFor: $Enums.roleFor
+  roleFor?: $Enums.roleFor
   roleName: string
   description?: string | null
   documentsRequired?: string
@@ -348,7 +348,7 @@ export type EmployeeRoleUncheckedUpdateInput = {
 export type EmployeeRoleCreateManyInput = {
   id?: string
   roleTitle: string
-  roleFor: $Enums.roleFor
+  roleFor?: $Enums.roleFor
   roleName: string
   description?: string | null
   documentsRequired?: string
@@ -457,7 +457,7 @@ export type EnumroleForFieldUpdateOperationsInput = {
 export type EmployeeRoleCreateWithoutEmployeesInput = {
   id?: string
   roleTitle: string
-  roleFor: $Enums.roleFor
+  roleFor?: $Enums.roleFor
   roleName: string
   description?: string | null
   documentsRequired?: string
@@ -470,7 +470,7 @@ export type EmployeeRoleCreateWithoutEmployeesInput = {
 export type EmployeeRoleUncheckedCreateWithoutEmployeesInput = {
   id?: string
   roleTitle: string
-  roleFor: $Enums.roleFor
+  roleFor?: $Enums.roleFor
   roleName: string
   description?: string | null
   documentsRequired?: string

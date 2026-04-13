@@ -19,20 +19,6 @@ export const paymentCycleEnum = z.enum([
   "PER_TRANSACTION",
 ]);
 
-export const constitutionEnum = z.enum([
-  "INDIVIDUAL",
-  "PROPRIETORSHIP",
-  "PARTNERSHIP",
-  "LLP",
-  "PRIVATE_LIMITED",
-  "PUBLIC_LIMITED",
-  "OTHER",
-]);
-
-export const accessTypeEnum = z.enum(["LEAD_UPLOAD", "FULL_LOS", "VIEW_ONLY"]);
-
-export const payoutTypeEnum = z.enum(["FLAT", "PERCENTAGE", "SLAB"]);
-
 const partnerAddressSchema = z.object({
   addressLine1: z.string().trim().min(1),
   addressLine2: z.string().trim().optional(),
@@ -62,7 +48,8 @@ export const createPartnerSchema = z
 
     isActive: z.coerce.boolean().optional(),
 
-    
+    // Partner-specific
+    partnerId: z.string().trim().optional(), // allow client to provide custom partnerId or let system generate
     companyName: z.string().trim().optional(),
     contactPerson: z.string().trim().optional(),
     panNumber: z.string().trim().min(1, "panNumber is required"),
@@ -70,9 +57,6 @@ export const createPartnerSchema = z
     establishedYear: z.coerce.number().int().min(1800).optional(),
     partnerType: partnerTypeEnum.optional(),
     businessNature: z.string().trim().optional(),
-    partnerCode: z.string().trim().optional(),
-    constitutionType: constitutionEnum.optional(),
-    onboardingDate: z.coerce.date().optional(),
 
     // Business details
     fullAddress: z.string().trim().optional(),
@@ -104,73 +88,10 @@ export const createPartnerSchema = z
     commissionType: commissionTypeEnum.optional(),
     commissionValue: z.coerce.number().min(0).optional(),
     paymentCycle: paymentCycleEnum.optional(),
-    payoutFrequency: z.enum(["MONTHLY", "CASE_WISE"]).optional(),
-    payoutType: payoutTypeEnum.optional(),
-    gstApplicable: z.coerce.boolean().optional(),
-    tdsApplicable: z.coerce.boolean().optional(),
-    maxPayoutCap: z.coerce.number().optional(),
     minimumPayout: z.coerce.number().min(0).optional(),
     taxDeduction: z.coerce.number().min(0).optional(),
 
     targetArea: z.string().trim().optional(),
-    // KYC / Verification
-    aadhaarNumber: z.string().trim().optional(),
-    registrationNo: z.string().trim().optional(), // CIN / company reg
-    // Document uploads and URLs
-    documents: z
-      .object({
-        partnerAgreementUrl: z.string().trim().optional(),
-        panCopyUrl: z.string().trim().optional(),
-        gstCertUrl: z.string().trim().optional(),
-        incorporationCertUrl: z.string().trim().optional(),
-        registrationCertificateUrl: z.string().trim().optional(),
-        bankProofUrl: z.string().trim().optional(),
-        addressProofUrl: z.string().trim().optional(),
-        boardResolutionUrl: z.string().trim().optional(),
-        authorizationLetterUrl: z.string().trim().optional(),
-        agreementUrl: z.string().trim().optional(),
-        agreementValidityDate: z.coerce.date().optional(),
-        ndaUrl: z.string().trim().optional(),
-        commercialCibilUrl: z.string().trim().optional(),
-        cibilCheckUrl: z.string().trim().optional(),
-        directorCibilUrl: z.string().trim().optional(),
-      })
-      .optional(),
-
-    // Verification status fields
-    panVerificationStatus: z.enum(["pending", "verified", "rejected"]).optional(),
-    gstVerificationStatus: z.enum(["pending", "verified", "rejected"]).optional(),
-    kycDocumentsUploaded: z.coerce.boolean().optional(),
-
-    // Banking
-    bankName: z.string().trim().optional(),
-    accountHolder: z.string().trim().optional(),
-    accountNo: z.string().trim().optional(),
-    ifsc: z.string().trim().optional(),
-    upiId: z.string().trim().optional(),
-
-    // System access & mapping
-    portalAccess: z.coerce.boolean().optional(),
-    loginId: z.string().trim().optional(),
-    accessType: accessTypeEnum.optional(),
-    assignedRelationshipManager: z.string().trim().optional(),
-    branchMapping: z.string().trim().optional(),
-    productAccess: z.array(z.string()).optional(),
-
-    // Secondary contact
-    secondaryContactPerson: z.string().trim().optional(),
-    secondaryContactNumber: z.string().trim().optional(),
-    secondaryContactEmail: z.string().trim().email().optional(),
-
-    // Partner performance metrics (readonly at create, optional)
-    totalLeadsSubmitted: z.coerce.number().optional(),
-    loginToSanctionRatio: z.coerce.number().optional(),
-    sanctionToDisbursementRatio: z.coerce.number().optional(),
-    disbursementVolume: z.coerce.number().optional(),
-    rejectionRate: z.coerce.number().optional(),
-    fraudCasesCount: z.coerce.number().optional(),
-    qualityScore: z.coerce.number().optional(),
-    partnerRating: z.coerce.number().optional(),
   })
   .strict();
 

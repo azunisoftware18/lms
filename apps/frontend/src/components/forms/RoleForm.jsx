@@ -1,25 +1,17 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Save,
   Shield,
-  Mail,
-  Lock,
-  Users,
-  FileText,
-  CreditCard,
-  BarChart2,
-  Settings,
-  User,
-  Building2,
   X,
 } from "lucide-react";
 import { roleSchema } from "../../validations/RoleValidation";
-import InputField from "../ui/InputField";
-import TextAreaField from "../ui/TextAreaField";
-import ToggleSwitch from "../ui/ToggleSwitch";
 import Button from "../ui/Button";
+import { DOCUMENT_OPTIONS } from "../../constants/loanType";
+import SelectField from "../ui/SelectField";
+import { useWatch } from "react-hook-form";
+import ToggleSwitch from "../ui/ToggleSwitch";
 
 export default function RoleForm({
   onClose,
@@ -31,74 +23,80 @@ export default function RoleForm({
     control,
     handleSubmit,
     reset,
-    formState: { errors, isValid, isDirty },
+    setValue,
+    formState: { errors, isValid, isDirty, isSubmitted },
   } = useForm({
     resolver: zodResolver(roleSchema),
     mode: "onChange",
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      description: "",
-      permissions: {},
+      roleTitle: "",
+      roleName: "",
+      documentsRequired: [],
+      documentsOptions: [],
+      isActive: true,
     },
   });
+
+  const toMachineName = (str) => {
+    if (!str) return "";
+    return str
+      .replace(/\s+/g, "_")
+      .replace(/[^A-Za-z0-9_]/g, "_")
+      .replace(/__+/g, "_")
+      .replace(/^_+|_+$/g, "")
+      .toUpperCase();
+  };
+ 
+  const documentsRequiredWatch = useWatch({ control, name: "documentsRequired" }) || [];
+  const documentsOptionsWatch = useWatch({ control, name: "documentsOptions" }) || [];
+  const roleTitleWatch = useWatch({ control, name: "roleTitle" }) || "";
+
 
   // (removed unused watchPermissions)
 
   // Initialize form data when editing or opening
   useEffect(() => {
-    if (modules.length === 0) return; // Don't initialize if no modules
-
     if (editingRole) {
-      const permissionObject = modules.reduce(
-        (acc, module) => ({
-          ...acc,
-          [module.id]: editingRole.permissions?.includes(module.id) || false,
-        }),
-        {},
-      );
-
       reset({
-        name: editingRole.name || "",
-        email: editingRole.email || "",
-        password: "", // Don't pre-fill password for security
-        description: editingRole.description || "",
-        permissions: permissionObject,
+        roleTitle: editingRole.roleTitle || "",
+        roleName: editingRole.roleName || "",
+        documentsRequired: editingRole.documentsRequired
+          ? String(editingRole.documentsRequired).split(",").filter(Boolean)
+          : [],
+        documentsOptions: editingRole.documentsOptions
+          ? String(editingRole.documentsOptions).split(",").filter(Boolean)
+          : [],
+        isActive: editingRole.isActive ?? true,
       });
     } else {
-      // Initialize with all permissions false
       reset({
-        name: "",
-        email: "",
-        password: "",
-        description: "",
-        permissions: modules.reduce(
-          (acc, module) => ({
-            ...acc,
-            [module.id]: false,
-          }),
-          {},
-        ),
+        roleTitle: "",
+        roleName: "",
+        documentsRequired: [],
+        documentsOptions: [],
+        isActive: true,
       });
     }
-  }, [editingRole, modules, reset]);
+  }, [editingRole, reset]);
 
-  // Handle form submission
+  
+
   const onFormSubmit = (data) => {
-    const activePermissions = Object.entries(data.permissions || {})
-      .filter(([, isActive]) => isActive)
-      .map(([moduleId]) => moduleId);
-
-    const submitData = {
-      name: data.name.trim(),
-      email: data.email.trim().toLowerCase(),
-      description: data.description?.trim() || "",
-      permissions: activePermissions,
-      ...(data.password ? { password: data.password } : {}),
+    const payload = {
+      roleTitle: data.roleTitle?.trim(),
+      roleName: data.roleName?.trim() || toMachineName(data.roleTitle),
+      roleFor: editingRole?.roleFor || "Employee",
+      // serialize arrays into comma-separated string (backend expects string fields)
+      documentsRequired: (data.documentsRequired || []).join(","),
+      documentsOptions: (data.documentsOptions || []).length
+        ? (data.documentsOptions || []).join(",")
+        : undefined,
+      isActive: data.isActive ?? true,
     };
 
-    onSubmit(submitData);
+    console.log("RoleForm submit payload:", payload);
+
+    onSubmit(payload);
   };
 
   // Grouped role options (organization structure)
@@ -211,183 +209,26 @@ export default function RoleForm({
     },
   ];
 
-  // Custom select component for grouped roles
-  function RoleSelect({ field, error }) {
-    const [openGroup, setOpenGroup] = useState(false);
-    const [openRole, setOpenRole] = useState(false);
-    const [selectedGroupId, setSelectedGroupId] = useState(null);
-    const [selectedRole, setSelectedRole] = useState(field.value || "");
-    const [isCustomRole, setIsCustomRole] = useState(false);
-    const [customRole, setCustomRole] = useState("");
-    const containerRef = useRef(null);
+  const titleOptions = roleGroups.map((g) => ({
+    label: g.title,
+    value: String(g.id),
+  }));
 
-    useEffect(() => {
-      // initialize selected group from field value if possible
-      if (field && field.value) {
-        const found = roleGroups.find((g) => g.roles.includes(field.value));
-        if (found) {
-          setSelectedGroupId(found.id);
-          setSelectedRole(field.value);
-          setIsCustomRole(false);
-          setCustomRole("");
-        } else {
-          // treat as custom role
-          setIsCustomRole(true);
-          setCustomRole(field.value);
-          setSelectedRole(field.value);
-        }
-      }
+  const selectedGroupId =
+    roleGroups.find((g) => g.title === roleTitleWatch)?.id?.toString() || null;
+  const selectedGroup = roleGroups.find((g) => String(g.id) === selectedGroupId);
+  const roleNameOptions = selectedGroup
+    ? selectedGroup.roles.map((r) => ({
+        label: r,
+        value: toMachineName(r),
+      }))
+    : [];
 
-      function handleClickOutside(e) {
-        if (containerRef.current && !containerRef.current.contains(e.target)) {
-          setOpenGroup(false);
-          setOpenRole(false);
-        }
-      }
-      document.addEventListener("mousedown", handleClickOutside);
-      return () =>
-        document.removeEventListener("mousedown", handleClickOutside);
-    }, [field]);
-
-    useEffect(() => {
-      // keep field value in sync when selectedRole changes
-      if (selectedRole && !isCustomRole && field && field.onChange)
-        field.onChange(selectedRole);
-    }, [selectedRole, field, isCustomRole]);
-
-    useEffect(() => {
-      // keep field value in sync when customRole changes
-      if (isCustomRole && customRole && field && field.onChange)
-        field.onChange(customRole);
-    }, [customRole, isCustomRole, field]);
-
-    const groupsList = roleGroups;
-    const rolesForSelected = selectedGroupId
-      ? roleGroups.find((g) => g.id === selectedGroupId)?.roles || []
-      : [];
-
-    return (
-      <div className="relative" ref={containerRef}>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Role Title
-        </label>
-
-        <div className="flex gap-3">
-          <div className="w-1/2 relative">
-            <button
-              type="button"
-              onClick={() => {
-                setOpenGroup((s) => !s);
-                setOpenRole(false);
-              }}
-              className="w-full text-left bg-white border border-gray-200 rounded-md px-3 py-2 flex items-center justify-between"
-            >
-              <span
-                className={selectedGroupId ? "text-slate-800" : "text-gray-400"}
-              >
-                {selectedGroupId
-                  ? roleGroups.find((g) => g.id === selectedGroupId).title
-                  : "Select title"}
-              </span>
-              <span className="text-gray-500">▾</span>
-            </button>
-
-            {openGroup && (
-              <div className="absolute z-40 mt-2 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
-                {groupsList.map((g) => (
-                  <button
-                    key={g.id}
-                    type="button"
-                    onClick={() => {
-                      setSelectedGroupId(g.id);
-                      setOpenGroup(false);
-                    }}
-                    className="w-full text-left px-3 py-2 hover:bg-gray-50 text-sm"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-7 h-7 flex items-center justify-center rounded bg-blue-100 text-blue-700 font-semibold">
-                        {g.id}
-                      </div>
-                      <div>{g.title}</div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="w-1/2 relative">
-            <label className="sr-only">Role</label>
-            <button
-              type="button"
-              onClick={() => selectedGroupId && setOpenRole((s) => !s)}
-              disabled={!selectedGroupId}
-              className={`w-full text-left bg-white border ${selectedGroupId ? "border-gray-200" : "border-gray-100"} rounded-md px-3 py-2 flex items-center justify-between ${!selectedGroupId ? "opacity-60 cursor-not-allowed" : ""}`}
-            >
-              <span
-                className={selectedRole ? "text-slate-800" : "text-gray-400"}
-              >
-                {selectedRole ||
-                  (selectedGroupId ? "Select role" : "Choose title first")}
-              </span>
-              <span className="text-gray-500">▾</span>
-            </button>
-
-            {openRole && (
-              <div className="absolute z-40 mt-2 right-0 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
-                {rolesForSelected.map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => {
-                      setSelectedRole(r);
-                      setIsCustomRole(false);
-                      setCustomRole("");
-                      setOpenRole(false);
-                    }}
-                    className="w-full text-left px-3 py-2 hover:bg-gray-50 text-sm"
-                  >
-                    {r}
-                  </button>
-                ))}
-
-                {/* Other option */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsCustomRole(true);
-                    setCustomRole("");
-                    setOpenRole(false);
-                    setSelectedRole("");
-                  }}
-                  className="w-full text-left px-3 py-2 hover:bg-gray-50 text-sm font-medium border-t mt-2 pt-2"
-                >
-                  Other (custom)
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {isCustomRole && (
-          <div className="mt-3">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Custom Role
-            </label>
-            <input
-              type="text"
-              value={customRole}
-              onChange={(e) => setCustomRole(e.target.value)}
-              placeholder="Enter custom role"
-              className="w-full border border-gray-200 rounded-md px-3 py-2"
-            />
-          </div>
-        )}
-
-        {error && <p className="text-xs text-red-600 mt-2">{error}</p>}
-      </div>
-    );
-  }
+  const getOptionValue = (v) => {
+    if (v == null) return v;
+    if (typeof v === "object" && v !== null && "value" in v) return v.value;
+    return v;
+  };
 
   // Don't render if no modules
   if (modules.length === 0) {
@@ -437,35 +278,112 @@ export default function RoleForm({
       {/* Form */}
       <form onSubmit={handleSubmit(onFormSubmit)} className="p-6">
         <div className="grid grid-cols-1  gap-8">
-          {/* Left Column - Role Details */}
+          
           <div className="space-y-6">
-            <h3 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">
-              Role Information
-            </h3>
 
-            {/* Role Name */}
+           
             <Controller
-              name="name"
+              name="roleTitle"
               control={control}
               render={({ field }) => (
-                <RoleSelect field={field} error={errors.name?.message} />
-              )}
-            />
-
-            {/* Description */}
-            <Controller
-              name="description"
-              control={control}
-              render={({ field }) => (
-                <TextAreaField
-                  label="Description"
-                  placeholder="Describe the role's responsibilities..."
-                  rows={4}
-                  error={errors.description?.message}
-                  {...field}
+                <SelectField
+                  label="Role Title"
+                  options={titleOptions}
+                  value={selectedGroupId || null}
+                  onChange={(value) => {
+                    const val = getOptionValue(value);
+                    const group = roleGroups.find((g) => String(g.id) === String(val));
+                    field.onChange(group?.title || "");
+                    setValue("roleName", "", {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    });
+                  }}
+                  isSearchable
+                  inlineMenu
+                  placeholder="Choose title"
+                  error={isSubmitted ? errors.roleTitle?.message : undefined}
                 />
               )}
             />
+
+            {/* Role Name (roles of selected title) */}
+            <Controller
+              name="roleName"
+              control={control}
+              render={({ field }) => (
+                <SelectField
+                  label="Role Name"
+                  options={roleNameOptions}
+                  value={field.value || ""}
+                  onChange={(value) => field.onChange(getOptionValue(value) || "")}
+                  isSearchable
+                  isDisabled={!selectedGroupId}
+                  inlineMenu
+                  placeholder={selectedGroupId ? "Choose role" : "Choose title first"}
+                  error={errors.roleName?.message}
+                />
+              )}
+            />
+
+            
+
+            {/* Documents Required (select from predefined options) */}
+            <Controller
+              name="documentsRequired"
+              control={control}
+              render={({ field }) => (
+                <SelectField
+                  label="Documents Required"
+                  options={DOCUMENT_OPTIONS.filter(
+                    (opt) => !documentsOptionsWatch.includes(opt.value)
+                  )}
+                  value={field.value || []}
+                  onChange={(value) => field.onChange(value || [])}
+                  isMulti
+                  isSearchable
+                  placeholder="Select required documents"
+                  error={errors.documentsRequired?.message}
+                />
+              )}
+            />
+
+            {/* Documents Options (optional) */}
+            <Controller
+              name="documentsOptions"
+              control={control}
+              render={({ field }) => (
+                <SelectField
+                  label="Documents Options (optional)"
+                  options={DOCUMENT_OPTIONS.filter(
+                    (opt) => !documentsRequiredWatch.includes(opt.value)
+                  )}
+                  value={field.value || []}
+                  onChange={(value) => field.onChange(value || [])}
+                  isMulti
+                  isSearchable
+                  placeholder="Select optional documents"
+                  error={errors.documentsOptions?.message}
+                />
+              )}
+            />
+
+            {/* Active Toggle */}
+            <Controller
+              name="isActive"
+              control={control}
+              render={({ field }) => (
+                <div className="rounded-lg border border-slate-200 px-3 py-2">
+                  <ToggleSwitch
+                    checked={!!field.value}
+                    onChange={(checked) => field.onChange(checked)}
+                    label={field.value ? "Active" : "Inactive"}
+                  />
+                </div>
+              )}
+            />
+
+            
           </div>
         </div>
 

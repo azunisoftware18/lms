@@ -232,28 +232,7 @@ export const PartnerScalarFieldEnum = {
   contactPerson: 'contactPerson',
   alternateNumber: 'alternateNumber',
   panNumber: 'panNumber',
-  partnerCode: 'partnerCode',
-  constitutionType: 'constitutionType',
-  onboardingDate: 'onboardingDate',
   gstNumber: 'gstNumber',
-  aadhaarNumber: 'aadhaarNumber',
-  registrationNo: 'registrationNo',
-  documents: 'documents',
-  bankName: 'bankName',
-  accountHolder: 'accountHolder',
-  accountNo: 'accountNo',
-  ifsc: 'ifsc',
-  upiId: 'upiId',
-  portalAccess: 'portalAccess',
-  loginId: 'loginId',
-  accessType: 'accessType',
-  assignedRelationshipManager: 'assignedRelationshipManager',
-  branchMapping: 'branchMapping',
-  payoutFrequency: 'payoutFrequency',
-  payoutType: 'payoutType',
-  gstApplicable: 'gstApplicable',
-  tdsApplicable: 'tdsApplicable',
-  maxPayoutCap: 'maxPayoutCap',
   commissionType: 'commissionType',
   commissionValue: 'commissionValue',
   branchId: 'branchId',
@@ -271,14 +250,6 @@ export const PartnerScalarFieldEnum = {
   minimumPayout: 'minimumPayout',
   taxDeduction: 'taxDeduction',
   targetArea: 'targetArea',
-  totalLeadsSubmitted: 'totalLeadsSubmitted',
-  loginToSanctionRatio: 'loginToSanctionRatio',
-  sanctionToDisbursementRatio: 'sanctionToDisbursementRatio',
-  disbursementVolume: 'disbursementVolume',
-  rejectionRate: 'rejectionRate',
-  fraudCasesCount: 'fraudCasesCount',
-  qualityScore: 'qualityScore',
-  partnerRating: 'partnerRating',
   totalReferrals: 'totalReferrals',
   activeReferrals: 'activeReferrals',
   commissionEarned: 'commissionEarned',
@@ -1348,19 +1319,19 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const NullableJsonNullValueInput = {
   DbNull: DbNull,
   JsonNull: JsonNull
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
-
-
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const UserOrderByRelevanceFieldEnum = {
@@ -1440,23 +1411,6 @@ export const EmployeeRoleOrderByRelevanceFieldEnum = {
 export type EmployeeRoleOrderByRelevanceFieldEnum = (typeof EmployeeRoleOrderByRelevanceFieldEnum)[keyof typeof EmployeeRoleOrderByRelevanceFieldEnum]
 
 
-export const JsonNullValueFilter = {
-  DbNull: DbNull,
-  JsonNull: JsonNull,
-  AnyNull: AnyNull
-} as const
-
-export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-} as const
-
-export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
-
-
 export const PartnerOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -1466,18 +1420,7 @@ export const PartnerOrderByRelevanceFieldEnum = {
   contactPerson: 'contactPerson',
   alternateNumber: 'alternateNumber',
   panNumber: 'panNumber',
-  partnerCode: 'partnerCode',
   gstNumber: 'gstNumber',
-  aadhaarNumber: 'aadhaarNumber',
-  registrationNo: 'registrationNo',
-  bankName: 'bankName',
-  accountHolder: 'accountHolder',
-  accountNo: 'accountNo',
-  ifsc: 'ifsc',
-  upiId: 'upiId',
-  loginId: 'loginId',
-  assignedRelationshipManager: 'assignedRelationshipManager',
-  branchMapping: 'branchMapping',
   branchId: 'branchId',
   businessNature: 'businessNature',
   designation: 'designation',
@@ -1544,6 +1487,23 @@ export const LeadsOrderByRelevanceFieldEnum = {
 } as const
 
 export type LeadsOrderByRelevanceFieldEnum = (typeof LeadsOrderByRelevanceFieldEnum)[keyof typeof LeadsOrderByRelevanceFieldEnum]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
 export const LoanApplicationDraftOrderByRelevanceFieldEnum = {
