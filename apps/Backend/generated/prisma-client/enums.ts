@@ -226,6 +226,19 @@ export const recovery_stage = {
 export type recovery_stage = (typeof recovery_stage)[keyof typeof recovery_stage]
 
 
+export const ConstitutionType = {
+  INDIVIDUAL: 'INDIVIDUAL',
+  PROPRIETORSHIP: 'PROPRIETORSHIP',
+  PARTNERSHIP: 'PARTNERSHIP',
+  LLP: 'LLP',
+  PRIVATE_LTD: 'PRIVATE_LTD',
+  PUBLIC_LTD: 'PUBLIC_LTD',
+  OTHER: 'OTHER'
+} as const
+
+export type ConstitutionType = (typeof ConstitutionType)[keyof typeof ConstitutionType]
+
+
 export const recovery_status = {
   ONGOING: 'ONGOING',
   IN_PROGRESS: 'IN_PROGRESS',
@@ -236,6 +249,16 @@ export const recovery_status = {
 } as const
 
 export type recovery_status = (typeof recovery_status)[keyof typeof recovery_status]
+
+
+export const PartnerStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  BLACKLISTED: 'BLACKLISTED'
+} as const
+
+export type PartnerStatus = (typeof PartnerStatus)[keyof typeof PartnerStatus]
 
 
 export const BranchType = {
@@ -418,11 +441,12 @@ export type LeadStatus = (typeof LeadStatus)[keyof typeof LeadStatus]
 
 
 export const PartnerType = {
-  INDIVIDUAL: 'INDIVIDUAL',
-  COMPANY: 'COMPANY',
-  INSTITUTION: 'INSTITUTION',
-  CORPORATE: 'CORPORATE',
-  AGENCY: 'AGENCY'
+  DSA: 'DSA',
+  BROKER: 'BROKER',
+  Connector: 'Connector',
+  Fintech: 'Fintech',
+  Builder: 'Builder',
+  Aggregator: 'Aggregator'
 } as const
 
 export type PartnerType = (typeof PartnerType)[keyof typeof PartnerType]
@@ -445,6 +469,24 @@ export const PaymentCycle = {
 } as const
 
 export type PaymentCycle = (typeof PaymentCycle)[keyof typeof PaymentCycle]
+
+
+export const PayoutType = {
+  FLAT: 'FLAT',
+  PERCENTAGE: 'PERCENTAGE',
+  SLAB: 'SLAB'
+} as const
+
+export type PayoutType = (typeof PayoutType)[keyof typeof PayoutType]
+
+
+export const PayoutFrequency = {
+  MONTHLY: 'MONTHLY',
+  CASE_WISE: 'CASE_WISE',
+  ON_DISBURSEMENT: 'ON_DISBURSEMENT'
+} as const
+
+export type PayoutFrequency = (typeof PayoutFrequency)[keyof typeof PayoutFrequency]
 
 
 export const Title = {

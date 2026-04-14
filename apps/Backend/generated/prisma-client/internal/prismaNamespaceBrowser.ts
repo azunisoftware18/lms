@@ -227,18 +227,54 @@ export const PartnerScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   partnerId: 'partnerId',
-  parentPartnerId: 'parentPartnerId',
-  companyName: 'companyName',
-  contactPerson: 'contactPerson',
-  alternateNumber: 'alternateNumber',
+  legalName: 'legalName',
+  tradeName: 'tradeName',
+  partnerType: 'partnerType',
+  constitutionType: 'constitutionType',
+  dateOfOnboarding: 'dateOfOnboarding',
+  Status: 'Status',
+  contactPersonName: 'contactPersonName',
+  contactNumber: 'contactNumber',
+  email: 'email',
+  alternatePersonName: 'alternatePersonName',
+  alternateContactNumber: 'alternateContactNumber',
+  officeAddressId: 'officeAddressId',
   panNumber: 'panNumber',
+  AadhaarNumber: 'AadhaarNumber',
+  cinNumber: 'cinNumber',
+  gstinNumber: 'gstinNumber',
+  llpinNumber: 'llpinNumber',
+  panVerificationStatus: 'panVerificationStatus',
+  gstVerificationStatus: 'gstVerificationStatus',
+  kycDocumentsUploaded: 'kycDocumentsUploaded',
+  commercialCibilUploaded: 'commercialCibilUploaded',
+  cibilCheckUploaded: 'cibilCheckUploaded',
+  panDocumentId: 'panDocumentId',
+  gstDocumentId: 'gstDocumentId',
+  commercialCibilDocumentId: 'commercialCibilDocumentId',
+  cibilCheckDocumentId: 'cibilCheckDocumentId',
+  cancelledChequeDocumentId: 'cancelledChequeDocumentId',
+  natureOfBusiness: 'natureOfBusiness',
+  yearsInBusiness: 'yearsInBusiness',
+  productExpertise: 'productExpertise',
+  monthlySourcingVolume: 'monthlySourcingVolume',
+  geographicCoverage: 'geographicCoverage',
+  existingLenderRelationships: 'existingLenderRelationships',
+  officeStrength: 'officeStrength',
+  digitalApiIntegration: 'digitalApiIntegration',
+  payoutBankName: 'payoutBankName',
+  payoutAccountHolderName: 'payoutAccountHolderName',
+  payoutAccountNumber: 'payoutAccountNumber',
+  payoutIfscCode: 'payoutIfscCode',
+  payoutUpiId: 'payoutUpiId',
+  bankVerificationStatus: 'bankVerificationStatus',
+  companyName: 'companyName',
   gstNumber: 'gstNumber',
   commissionType: 'commissionType',
   commissionValue: 'commissionValue',
   branchId: 'branchId',
   isActive: 'isActive',
   establishedYear: 'establishedYear',
-  partnerType: 'partnerType',
   businessNature: 'businessNature',
   designation: 'designation',
   businessCategory: 'businessCategory',
@@ -253,8 +289,31 @@ export const PartnerScalarFieldEnum = {
   totalReferrals: 'totalReferrals',
   activeReferrals: 'activeReferrals',
   commissionEarned: 'commissionEarned',
+  totalLeadsSubmitted: 'totalLeadsSubmitted',
+  loginToSanctionRatio: 'loginToSanctionRatio',
+  sanctionToDisbursementRatio: 'sanctionToDisbursementRatio',
+  disbursementVolume: 'disbursementVolume',
+  rejectionRate: 'rejectionRate',
+  fraudCasesCount: 'fraudCasesCount',
+  qualityScore: 'qualityScore',
+  partnerRating: 'partnerRating',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  payoutType: 'payoutType',
+  productPayoutRates: 'productPayoutRates',
+  roiProcessingShare: 'roiProcessingShare',
+  payoutFrequency: 'payoutFrequency',
+  gstApplicable: 'gstApplicable',
+  tdsApplicable: 'tdsApplicable',
+  incentiveSchemes: 'incentiveSchemes',
+  clawbackTerms: 'clawbackTerms',
+  maxPayoutCap: 'maxPayoutCap',
+  loginId: 'loginId',
+  assignedRmId: 'assignedRmId',
+  branchMapping: 'branchMapping',
+  productAccess: 'productAccess',
+  apiKey: 'apiKey',
+  integrationId: 'integrationId'
 } as const
 
 export type PartnerScalarFieldEnum = (typeof PartnerScalarFieldEnum)[keyof typeof PartnerScalarFieldEnum]
@@ -862,6 +921,7 @@ export const DocumentScalarFieldEnum = {
   loanApplicationId: 'loanApplicationId',
   coApplicantId: 'coApplicantId',
   guarantorId: 'guarantorId',
+  partnerId: 'partnerId',
   documentType: 'documentType',
   documentPath: 'documentPath',
   verificationStatus: 'verificationStatus',
@@ -1319,19 +1379,19 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
-
-
 export const NullableJsonNullValueInput = {
   DbNull: DbNull,
   JsonNull: JsonNull
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const UserOrderByRelevanceFieldEnum = {
@@ -1411,15 +1471,55 @@ export const EmployeeRoleOrderByRelevanceFieldEnum = {
 export type EmployeeRoleOrderByRelevanceFieldEnum = (typeof EmployeeRoleOrderByRelevanceFieldEnum)[keyof typeof EmployeeRoleOrderByRelevanceFieldEnum]
 
 
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
 export const PartnerOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
   partnerId: 'partnerId',
-  parentPartnerId: 'parentPartnerId',
-  companyName: 'companyName',
-  contactPerson: 'contactPerson',
-  alternateNumber: 'alternateNumber',
+  legalName: 'legalName',
+  tradeName: 'tradeName',
+  contactPersonName: 'contactPersonName',
+  contactNumber: 'contactNumber',
+  email: 'email',
+  alternatePersonName: 'alternatePersonName',
+  alternateContactNumber: 'alternateContactNumber',
+  officeAddressId: 'officeAddressId',
   panNumber: 'panNumber',
+  AadhaarNumber: 'AadhaarNumber',
+  cinNumber: 'cinNumber',
+  gstinNumber: 'gstinNumber',
+  llpinNumber: 'llpinNumber',
+  panDocumentId: 'panDocumentId',
+  gstDocumentId: 'gstDocumentId',
+  commercialCibilDocumentId: 'commercialCibilDocumentId',
+  cibilCheckDocumentId: 'cibilCheckDocumentId',
+  cancelledChequeDocumentId: 'cancelledChequeDocumentId',
+  natureOfBusiness: 'natureOfBusiness',
+  productExpertise: 'productExpertise',
+  geographicCoverage: 'geographicCoverage',
+  existingLenderRelationships: 'existingLenderRelationships',
+  payoutBankName: 'payoutBankName',
+  payoutAccountHolderName: 'payoutAccountHolderName',
+  payoutAccountNumber: 'payoutAccountNumber',
+  payoutIfscCode: 'payoutIfscCode',
+  payoutUpiId: 'payoutUpiId',
+  companyName: 'companyName',
   gstNumber: 'gstNumber',
   branchId: 'branchId',
   businessNature: 'businessNature',
@@ -1427,7 +1527,12 @@ export const PartnerOrderByRelevanceFieldEnum = {
   businessCategory: 'businessCategory',
   specialization: 'specialization',
   businessRegistrationNumber: 'businessRegistrationNumber',
-  targetArea: 'targetArea'
+  targetArea: 'targetArea',
+  clawbackTerms: 'clawbackTerms',
+  loginId: 'loginId',
+  assignedRmId: 'assignedRmId',
+  apiKey: 'apiKey',
+  integrationId: 'integrationId'
 } as const
 
 export type PartnerOrderByRelevanceFieldEnum = (typeof PartnerOrderByRelevanceFieldEnum)[keyof typeof PartnerOrderByRelevanceFieldEnum]
@@ -1487,23 +1592,6 @@ export const LeadsOrderByRelevanceFieldEnum = {
 } as const
 
 export type LeadsOrderByRelevanceFieldEnum = (typeof LeadsOrderByRelevanceFieldEnum)[keyof typeof LeadsOrderByRelevanceFieldEnum]
-
-
-export const JsonNullValueFilter = {
-  DbNull: DbNull,
-  JsonNull: JsonNull,
-  AnyNull: AnyNull
-} as const
-
-export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-} as const
-
-export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
 export const LoanApplicationDraftOrderByRelevanceFieldEnum = {
@@ -1820,6 +1908,7 @@ export const DocumentOrderByRelevanceFieldEnum = {
   loanApplicationId: 'loanApplicationId',
   coApplicantId: 'coApplicantId',
   guarantorId: 'guarantorId',
+  partnerId: 'partnerId',
   documentType: 'documentType',
   documentPath: 'documentPath',
   rejectionReason: 'rejectionReason',

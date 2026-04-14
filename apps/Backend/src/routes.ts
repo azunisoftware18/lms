@@ -8,7 +8,7 @@ import { leadRouter } from "./modules/lead/lead.routes.js";
 import loanApplicationRouter from "./modules/LoanApplication/loanApplication.routes.js";
 import permissionRouter from "./modules/permission/permission.routes.js";
 import kycRouter from "./modules/kyc/kyc.routes.js";
-import emiRouter from "./modules/Emi/emi.router.js";
+import emiRouter from "./modules/emi/emi.router.js";
 import forecloseRouter from "./modules/foreclose/foreclose.router.js";
 import loanCloseRouter from "./modules/loanClose/loanclose.routes.js";
 import loanTypeRouter from "./modules/loanTypes/loanTypes.routes.js";
@@ -22,7 +22,7 @@ import technicalReportRouter from "./modules/reports/technicalReport/technical.r
 import legalReportRouter from "./modules/reports/legalReport/legal.routes.js";
 import coApplicantRouter from "./modules/coApplicants/coApplicant.routes.js";
 import loanAssignmentRouter from "./modules/loanAssignment/loanAssignment.routes.js";
-import branchRouter from "./modules/Branch/branch.router.js";
+import branchRouter from "./modules/branch/branch.router.js";
 import branchAdminRouter from "./modules/branchAdmin/branchAdmin.router.js";
 import slaRouter from "./modules/sla/sla.router.js";
 import { superAdminRouter } from "./modules/superAdmin/dashboard.routers.js";
@@ -31,6 +31,7 @@ import nachRouter from "./modules/nach/nach.router.js";
 import guarantorRouter from "./modules/guarantor/guarantor.routes.js";
 import loanDraftRouter from "./modules/loanDraft/loanDraft.router.js";
 import sanctionRouter from "./modules/sanction/sanction.router.js";
+import aadhaarRouter from "./modules/aadhaar/aadhaar.routes.js";
 
 const router = Router();
 
@@ -70,5 +71,5 @@ router.use("/guarantor", guarantorRouter);
 router.use("/loan-drafts", loanDraftRouter);
 router.use("/sanctions", sanctionRouter);
 router.use("/foreclose", forecloseRouter);
-
+router.use("/aadhaar",aadhaarRouter);
 export default router;

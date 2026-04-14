@@ -4,14 +4,23 @@ import {
   CreditAccount,
 } from "./creditProvider.interface.js";
 
-export class MockCreditProvider implements CreditProvider {
-  async fetchCreditReport(input: {
+function hashString(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash);
+}
+
+export async function fetchMockCreditReport(input: {
     customerId: string;
     pan?: string;
     aadhar?: string;
-  }): Promise<CreditReportResult> {
+}): Promise<CreditReportResult> {
     // Generate realistic mock data based on customerId hash
-    const hash = this.hashString(input.customerId);
+    const hash = hashString(input.customerId);
     const scenario = hash % 5; // 5 different credit profiles
 
     let accounts: CreditAccount[] = [];
@@ -281,16 +290,8 @@ export class MockCreditProvider implements CreditProvider {
         ][scenario],
       },
     };
-  }
-
-  // Simple hash function to generate consistent data for same customerId
-  private hashString(str: string): number {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    return Math.abs(hash);
-  }
 }
+
+export const mockCreditProvider: CreditProvider = {
+  fetchCreditReport: fetchMockCreditReport,
+};
