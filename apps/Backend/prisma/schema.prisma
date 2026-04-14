@@ -122,66 +122,147 @@ model Employee {
 }
 
 model EmployeeRole {
-  id          String   @id @default(cuid())
-  roleTitle   String
-  roleFor     roleFor  @default(Employee)
-  roleName    String   @unique
-  description String?
-  documentsRequired    String @default("") // Could be a URL or file   reference
-  documentsOptions     String?  // e.g., "Mandatory", "Optional", "None"
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                String   @id @default(cuid())
+  roleTitle         String
+  roleFor           roleFor  @default(Employee)
+  roleName          String   @unique
+  description       String?
+  documentsRequired String   @default("") // Could be a URL or file   reference
+  documentsOptions  String? // e.g., "Mandatory", "Optional", "None"
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   employees Employee[]
 }
 
 enum roleFor {
-Employee
-Partner
+  Employee
+  Partner
 }
+
 model Partner {
-  id     String @id @default(cuid())
-  userId String @unique
+  id               String           @id @default(cuid())
+  userId           String           @unique
+  partnerId        String           @unique
+  legalName        String
+  tradeName        String?
+  partnerType      PartnerType
+  constitutionType ConstitutionType
+  dateOfOnboarding DateTime
+  Status           PartnerStatus
 
-  partnerId String @unique
+  //Contact Details
+  contactPersonName      String
+  contactNumber          String
+  email                  String?
+  alternatePersonName    String?
+  alternateContactNumber String?
+  //address details
+  addresses              Address[] @relation("PartnerAddresses")
+  //Office Address
+  officeAddressId        String?   @unique
+  officeAddress          Address?  @relation("PartnerOfficeAddress", fields: [officeAddressId], references: [id])
 
-  parentPartnerId String?
-  parentPartner   Partner? @relation("PartnerHierarchy", fields: [parentPartnerId], references: [id])
+  //KYC & Entity Verification Details
+  panNumber     String
+  AadhaarNumber String
+  cinNumber     String?
+  gstinNumber   String?
+  llpinNumber   String?
 
-  childPartners Partner[] @relation("PartnerHierarchy")
+  // Verification & document tracking
+  panVerificationStatus   VerificationStatus? @default(pending)
+  gstVerificationStatus   VerificationStatus? @default(pending)
+  kycDocumentsUploaded    Boolean             @default(false)
+  commercialCibilUploaded Boolean             @default(false)
+  cibilCheckUploaded      Boolean             @default(false)
 
-  companyName                String
-  contactPerson              String
-  alternateNumber            String?
-  panNumber                  String
-  gstNumber                  String?
-  commissionType             CommissionType
-  commissionValue            Float?
-  branchId                   String
-  branch                     Branch              @relation(fields: [branchId], references: [id])
-  leads                      Leads[]             @relation("PartnerLeads")
-  isActive                   Boolean             @default(true)
-  commission                 PartnerCommission[]
-  establishedYear            Int?
-  partnerType                PartnerType
-  businessNature             String?
-  addresses                  Address[]           @relation("PartnerAddresses")
-  designation                String?
-  businessCategory           String?
-  specialization             String?
-  totalEmployees             Int?
-  annualTurnover             Float?
-  businessRegistrationNumber String?
-  paymentCycle               PaymentCycle
-  minimumPayout              Float?
-  taxDeduction               Float?
-  targetArea                 String?
-  totalReferrals             Int?                @default(0)
-  activeReferrals            Int?                @default(0)
-  commissionEarned           Float?              @default(0)
-  createdAt                  DateTime            @default(now())
-  updatedAt                  DateTime            @updatedAt
+  // Pointers to important partner documents (store Document.id)
+  panDocumentId             String?
+  gstDocumentId             String?
+  commercialCibilDocumentId String?
+  cibilCheckDocumentId      String?
+  cancelledChequeDocumentId String?
+
+  //document details
+  documents Document[]
+
+  // Business profile & sourcing details
+  natureOfBusiness            String?
+  yearsInBusiness             Int?
+  productExpertise            String? // comma-separated list (e.g., "PL, LAP, HL")
+  monthlySourcingVolume       Int? // expected per month
+  geographicCoverage          String? // cities/states/zone
+  existingLenderRelationships String?
+  officeStrength              Int? // number of employees at partner office
+  digitalApiIntegration       Boolean @default(false)
+
+  // Banking / Payout details
+  payoutBankName          String?
+  payoutAccountHolderName String?
+  payoutAccountNumber     String?
+  payoutIfscCode          String?
+  payoutUpiId             String?
+  bankVerificationStatus  VerificationStatus? @default(pending)
+
+  companyName String
+
+  gstNumber                   String?
+  commissionType              CommissionType
+  commissionValue             Float?
+  branchId                    String
+  branch                      Branch              @relation(fields: [branchId], references: [id])
+  leads                       Leads[]             @relation("PartnerLeads")
+  isActive                    Boolean             @default(true)
+  commission                  PartnerCommission[]
+  establishedYear             Int?
+  businessNature              String?
+  designation                 String?
+  businessCategory            String?
+  specialization              String?
+  totalEmployees              Int?
+  annualTurnover              Float?
+  businessRegistrationNumber  String?
+  paymentCycle                PaymentCycle
+  minimumPayout               Float?
+  taxDeduction                Float?
+  targetArea                  String?
+  totalReferrals              Int?                @default(0)
+  activeReferrals             Int?                @default(0)
+  commissionEarned            Float?              @default(0)
+  // Performance tracking (Partner dashboard)
+  totalLeadsSubmitted         Int?                @default(0)
+  loginToSanctionRatio        Float? // e.g., 0.25 = 25%
+  sanctionToDisbursementRatio Float?
+  disbursementVolume          Float? // total disbursed amount
+  rejectionRate               Float? // percent (0-100)
+  fraudCasesCount             Int?                @default(0)
+  qualityScore                Float? // 0-100
+  partnerRating               Float?              @default(0)
+  createdAt                   DateTime            @default(now())
+  updatedAt                   DateTime            @updatedAt
+
+  // Commission / Payout structure (NBFC)
+  payoutType         PayoutType? // FLAT | PERCENTAGE | SLAB
+  productPayoutRates Json? // product -> rate mapping (e.g. {"PL":1000, "HL":0.01})
+  roiProcessingShare Float? // share of ROI/processing fee (absolute or percent)
+  payoutFrequency    PayoutFrequency?
+  gstApplicable      Boolean          @default(true)
+  tdsApplicable      Boolean          @default(false)
+  incentiveSchemes   Json? // structured incentive definitions
+  clawbackTerms      String?
+  maxPayoutCap       Float?
+
+  // System access & role mapping
+  loginId String?
+
+  assignedRmId String?
+
+  branchMapping Json? // list of branch ids or mapping metadata
+  productAccess Json? // product permissions (e.g., {"PL":true, "HL":false})
+  apiKey        String?
+  integrationId String?
 
   // Relations
   loanApplications LoanApplication[]
@@ -201,21 +282,22 @@ model Address {
   phoneNumber  String? // With STD Code
 
   // Relations to Customer and CoApplicant (can have multiple addresses)
-  customerId          String?
-  customer            Customer?             @relation(fields: [customerId], references: [id])
-  coApplicantId       String?
-  coApplicant         CoApplicant?          @relation(fields: [coApplicantId], references: [id])
-  guarantorId         String?
-  guarantor           Guarantor?            @relation(fields: [guarantorId], references: [id])
-  partnerId           String?
-  partner             Partner?              @relation("PartnerAddresses", fields: [partnerId], references: [id])
-  occupationalDetails OccupationalDetails[] // For office/business addresses
+  customerId    String?
+  customer      Customer?    @relation(fields: [customerId], references: [id])
+  coApplicantId String?
+  coApplicant   CoApplicant? @relation(fields: [coApplicantId], references: [id])
+  guarantorId   String?
+  guarantor     Guarantor?   @relation(fields: [guarantorId], references: [id])
+  partnerId     String?
+  partner       Partner?     @relation("PartnerAddresses", fields: [partnerId], references: [id])
+  partnerOffice Partner?     @relation("PartnerOfficeAddress")
 
+  occupationalDetails OccupationalDetails[] // For office/business addresses
   // Relations to other entities (one address per entity)
-  employee        Employee?        @relation("EmployeeAddress")
-  lead            Leads?           @relation("LeadAddress")
-  technicalReport TechnicalReport? @relation("TechnicalReportAddress")
-  properties      Property[]
+  employee            Employee?             @relation("EmployeeAddress")
+  lead                Leads?                @relation("LeadAddress")
+  technicalReport     TechnicalReport?      @relation("TechnicalReportAddress")
+  properties          Property[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -267,7 +349,7 @@ model Branch {
   loanRecoveries        LoanRecovery[]
   technicalReports      TechnicalReport[]
   legalReports          LegalReport[]
-  sanction               Sanction[]
+  sanction              Sanction[]
   documents             Document[]
   loanApplicationDrafts LoanApplicationDraft[]
 
@@ -996,6 +1078,7 @@ model Document {
   loanApplicationId  String?
   coApplicantId      String?
   guarantorId        String?
+  partnerId          String?
   documentType       String
   documentPath       String
   verificationStatus VerificationStatus @default(pending)
@@ -1012,10 +1095,12 @@ model Document {
   loanApplication    LoanApplication?   @relation(fields: [loanApplicationId], references: [id])
   coApplicant        CoApplicant?       @relation(fields: [coApplicantId], references: [id])
   guarantor          Guarantor?         @relation(fields: [guarantorId], references: [id])
+  partner            Partner?           @relation(fields: [partnerId], references: [id])
   branch             Branch             @relation(fields: [branchId], references: [id])
 
   @@unique([coApplicantId, documentType]) // ✅ prevents duplicate uploads per co-applicant
   @@unique([guarantorId, documentType]) // ✅ prevents duplicate uploads per guarantor
+  @@unique([partnerId, documentType]) // ✅ prevents duplicate uploads per partner
   @@index([loanApplicationId, documentType]) // supports loan-level queries without forcing cross-party uniqueness
 }
 
@@ -1057,12 +1142,12 @@ enum KycStatus {
 }
 
 model LoanEmiSchedule {
-  id                String @id @default(cuid())
+  id                String    @id @default(cuid())
   loanApplicationId String
-  loanNumber      String
-  emiNo        Int
-  emiStartDate DateTime? // EMI cycle start date
-  dueDate      DateTime // EMI due date
+  loanNumber        String
+  emiNo             Int
+  emiStartDate      DateTime? // EMI cycle start date
+  dueDate           DateTime // EMI due date
 
   openingBalance     Float
   principalAmount    Float
@@ -1247,8 +1332,8 @@ model LoanType {
 
   //SLA & WorkFlow 
   estimatedProcessingTimeDays Int? //turnaround time
-  otherDocumentsRequired           String //list of documents /comma separated 
-  otherDocumentsOptions            String? // any optional documents that can help in faster processing
+  otherDocumentsRequired      String //list of documents /comma separated 
+  otherDocumentsOptions       String? // any optional documents that can help in faster processing
 
   // Applicant documents
   applicantDocumentsRequired String  @default("") // required docs for primary applicant (comma-separated)
@@ -1277,36 +1362,35 @@ model foreClosure {
   loanApplicationId String
   loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
   // Application metadata
-  appliedBy             String?         // user id who applied
-  appliedAt             DateTime?       // when application was created
-  applicationNote       String?         // optional note provided by applicant
+  appliedBy         String? // user id who applied
+  appliedAt         DateTime? // when application was created
+  applicationNote   String? // optional note provided by applicant
 
   // Computed breakup at time of application
-  principalOutstanding  Float?          // outstanding principal at time of application
-  interestAccrued       Float?          // accrued interest
-  unpaidEmiCharges      Float?          // outstanding EMI charges (late / bounce)
-  penalty               Float?          // foreclosure penalty amount (absolute)
-  totalPayable          Float?          // sum of components (principal + interest + penalty + charges)
+  principalOutstanding Float? // outstanding principal at time of application
+  interestAccrued      Float? // accrued interest
+  unpaidEmiCharges     Float? // outstanding EMI charges (late / bounce)
+  penalty              Float? // foreclosure penalty amount (absolute)
+  totalPayable         Float? // sum of components (principal + interest + penalty + charges)
 
   // Approval & settlement
   approvalStatus        ForeclosureStatus @default(PENDING)
-  foreclosureAmount     Float?          // final approved foreclosure amount
-  foreclosureApprovedBy String?         // user id who approved
+  foreclosureAmount     Float? // final approved foreclosure amount
+  foreclosureApprovedBy String? // user id who approved
   foreclosureApprovedAt DateTime?
 
-  settledAmount         Float?
-  settledAt             DateTime?
-  settlementReference   String?         // txn id / receipt reference
-  paymentMode           PaymentMode?
-  settlementReceiptUrl  String?
-  approvedBy              String?         // user id who approved the settlement
-  approvedAt              DateTime?
-  rejectedBy              String?         // user id who rejected the application
-  rejectedAt              DateTime?
-  
+  settledAmount        Float?
+  settledAt            DateTime?
+  settlementReference  String? // txn id / receipt reference
+  paymentMode          PaymentMode?
+  settlementReceiptUrl String?
+  approvedBy           String? // user id who approved the settlement
+  approvedAt           DateTime?
+  rejectedBy           String? // user id who rejected the application
+  rejectedAt           DateTime?
 
   // Administrative
-  reason                String?         // reason for rejection/notes
+  reason String? // reason for rejection/notes
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1489,65 +1573,63 @@ model SLABreachLog {
 }
 
 model LoanDisbursement {
-  id                   String             @id @default(cuid())
+  id String @id @default(cuid())
 
   // 🔗 Loan Reference
-  loanNumber           String             @unique
-  loanApplication      LoanApplication    @relation(fields: [loanNumber], references: [id])
+  loanNumber      String          @unique
+  loanApplication LoanApplication @relation(fields: [loanNumber], references: [id])
 
   // 💰 Financial Details
-  amount               Float
-  principalAmount      Float            // optional breakup
-  interestAmount       Float            // optional breakup
-  chargesAmount        Float?            // processing / fees
+  amount          Float
+  principalAmount Float // optional breakup
+  interestAmount  Float // optional breakup
+  chargesAmount   Float? // processing / fees
 
-  currency             String             @default("INR")
+  currency String @default("INR")
 
   // 🏦 Disbursement Details
-  disbursementMode     DisbursementMode
-  disbursementStatus   DisbursementStatus @default(PENDING)
-  disbursementDate     DateTime           @default(now())
-  valueDate            DateTime?          // bank settlement date
+  disbursementMode   DisbursementMode
+  disbursementStatus DisbursementStatus @default(PENDING)
+  disbursementDate   DateTime           @default(now())
+  valueDate          DateTime? // bank settlement date
 
   // 🔁 Transaction Details
-  transactionReference String             @unique
-  externalTxnId        String?            // from payment gateway / bank
-  utrNumber            String            // UTR for NEFT/RTGS/IMPS
+  transactionReference String  @unique
+  externalTxnId        String? // from payment gateway / bank
+  utrNumber            String // UTR for NEFT/RTGS/IMPS
 
   // 🏛️ Bank Details
-  bankName             String
-  bankAccountNumber    String
-  ifscCode             String
-  accountHolderName    String
+  bankName          String
+  bankAccountNumber String
+  ifscCode          String
+  accountHolderName String
 
   // 🧾 Internal Tracking
-  processedBy          String
-  approvedBy           String?            // maker-checker system
-  rejectedBy           String?
-  rejectionReason      String?
+  processedBy     String
+  approvedBy      String? // maker-checker system
+  rejectedBy      String?
+  rejectionReason String?
 
   // 🔐 Compliance & Audit
-  isReversed           Boolean            @default(false)
-  reversedAt           DateTime?
-  reversalReason       String?
+  isReversed     Boolean   @default(false)
+  reversedAt     DateTime?
+  reversalReason String?
 
   // 📝 Remarks
-  remarks              String?
+  remarks String?
 
   // 📊 Metadata
-  metadata             Json?
+  metadata Json?
 
   // ⏱️ Timestamps
-  createdAt            DateTime           @default(now())
-  updatedAt            DateTime           @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // 📌 Indexes
   @@index([loanNumber])
   @@index([transactionReference])
   @@index([disbursementStatus])
 }
-
-
 
 model NachMandate {
   id                String          @id @default(cuid())
@@ -1588,16 +1670,16 @@ model NachDebit {
 }
 
 model Sanction {
-  id                String   @id @default(cuid())
+  id                    String          @id @default(cuid())
   loanApplicationNumber String
-  loanApplication   LoanApplication @relation(fields: [loanApplicationNumber], references: [loanNumber])
+  loanApplication       LoanApplication @relation(fields: [loanApplicationNumber], references: [loanNumber])
 
-  sanctionedAmount  Float
-  currency          String   @default("INR")
-  approvedBy        String?
-  approvedAt        DateTime?
-  status            SanctionStatus @default(PENDING)
-  remarks           String?
+  sanctionedAmount Float
+  currency         String         @default("INR")
+  approvedBy       String?
+  approvedAt       DateTime?
+  status           SanctionStatus @default(PENDING)
+  remarks          String?
 
   // documents links or json metadata
   documents Json?
@@ -1640,14 +1722,12 @@ enum InterestOption {
   VARIABLE
 }
 
-
 enum DisbursementStatus {
   PENDING
   COMPLETED
   FAILED
   REVERSED
 }
-
 
 enum LoanPurpose {
   HOME
@@ -1748,6 +1828,16 @@ enum recovery_stage {
   CLOSED
 }
 
+enum ConstitutionType {
+  INDIVIDUAL
+  PROPRIETORSHIP
+  PARTNERSHIP
+  LLP
+  PRIVATE_LTD
+  PUBLIC_LTD
+  OTHER
+}
+
 enum recovery_status {
   ONGOING
   IN_PROGRESS
@@ -1755,6 +1845,13 @@ enum recovery_status {
   WRITE_OFF
   SETTLED
   COMPLETED
+}
+
+enum PartnerStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  BLACKLISTED
 }
 
 enum BranchType {
@@ -1886,11 +1983,12 @@ enum LeadStatus {
 }
 
 enum PartnerType {
-  INDIVIDUAL
-  COMPANY
-  INSTITUTION
-  CORPORATE
-  AGENCY
+  DSA
+  BROKER
+  Connector
+  Fintech
+  Builder
+  Aggregator
 }
 
 enum CommissionType {
@@ -1904,6 +2002,18 @@ enum PaymentCycle {
   HALF_YEARLY
   YEARLY
   PER_TRANSACTION
+}
+
+enum PayoutType {
+  FLAT
+  PERCENTAGE
+  SLAB
+}
+
+enum PayoutFrequency {
+  MONTHLY
+  CASE_WISE
+  ON_DISBURSEMENT
 }
 
 enum Title {

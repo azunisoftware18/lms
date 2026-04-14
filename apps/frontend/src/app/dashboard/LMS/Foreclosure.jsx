@@ -30,7 +30,6 @@ import {
 import toast from "react-hot-toast";
 import ForeClosureTable from "../../../components/tables/ForeClosureTable";
 import { useLoanApplications } from "../../../hooks/useLoanApplication";
-import StatusCard from "../../../components/common/StatusCard";
 
 const PrepaymentForeclosure = () => {
   // State for loan search
@@ -41,6 +40,7 @@ const PrepaymentForeclosure = () => {
   const [foreclosureRecord, setForeclosureRecord] = useState(null);
   const [approvalStatus, setApprovalStatus] = useState(null);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState("");
   const [paymentDetails, setPaymentDetails] = useState({
     paymentMode: "BANK_TRANSFER",
     settlementReference: "TXN" + Math.floor(Math.random() * 1000000),
@@ -54,6 +54,7 @@ const PrepaymentForeclosure = () => {
 
   // Get the loan number for API calls
   const loanNumber = searchedLoan?.loanNumber;
+  const loanId = searchedLoan?.id;
 
   // Use hooks
   const {
@@ -61,7 +62,7 @@ const PrepaymentForeclosure = () => {
     isLoading: isSummaryLoading,
     refetch: refetchSummary,
     isFetching: isSummaryFetching,
-  } = useForecloseSummary(searchedLoan?.id);
+  } = useForecloseSummary(loanId);
 
   const applyForecloseMut = useApplyForeclose();
   const approveForecloseMut = useApproveForeclose();
@@ -69,11 +70,12 @@ const PrepaymentForeclosure = () => {
 
   // Auto-update when summary arrives
   useEffect(() => {
-    if (forecloseSummary?.data?.foreClosure) {
+    if (forecloseSummary?.foreClosure) {
+      const fc = forecloseSummary.foreClosure;
+      setForeclosureRecord(fc);
+      setApprovalStatus(fc.approvalStatus);
+    } else if (forecloseSummary?.data?.foreClosure) {
       const fc = forecloseSummary.data.foreClosure;
-
-      console.log("FORECLOSURE DATA:", fc); // 👈 ADD
-
       setForeclosureRecord(fc);
       setApprovalStatus(fc.approvalStatus);
     }
@@ -96,8 +98,8 @@ const PrepaymentForeclosure = () => {
     if (!Array.isArray(list) || list.length === 0) return [];
 
     return list.map((loan) => ({
-      id: loan.id || loan._id || loan.loanNumber || loan.loanId,
-      loanNumber: loan.loanNumber || loan.accountNumber || loan.id,
+      id: loan.id || loan._id,
+      loanNumber: loan.loanNumber || loan.accountNumber,
       customerName:
         loan.customer?.name ||
         loan.customerName ||
@@ -143,6 +145,8 @@ const PrepaymentForeclosure = () => {
     setShowCalculation(false);
     setForeclosureRecord(null);
     setApprovalStatus(null);
+    
+    setTimeout(() => refetchSummary(), 100);
   };
 
   // Handle apply foreclosure - Step 1: Submit application
@@ -163,8 +167,10 @@ const PrepaymentForeclosure = () => {
         data: {}
       });
       
-      if (result?.data?.foreClosure || result?.data) {
-        const foreClosureData = result?.data?.foreClosure || result?.data;
+      const responseData = result?.data || result;
+      
+      if (responseData?.foreClosure || responseData?.data?.foreClosure) {
+        const foreClosureData = responseData?.foreClosure || responseData?.data?.foreClosure;
         setForeclosureRecord(foreClosureData);
         setApprovalStatus("PENDING");
         setShowCalculation(true);
@@ -175,7 +181,7 @@ const PrepaymentForeclosure = () => {
       }
     } catch (error) {
       console.error("Error applying for foreclosure:", error);
-      toast.error(error?.message || "Failed to submit foreclosure application");
+      toast.error(error?.response?.data?.message || error?.message || "Failed to submit foreclosure application");
     }
   };
 
@@ -189,7 +195,8 @@ const PrepaymentForeclosure = () => {
     try {
       const result = await approveForecloseMut.mutateAsync({
         loanNumber: loanNumber,
-        approve: true
+        approve: true,
+        rejectionReason: undefined
       });
       
       if (result?.data) {
@@ -206,7 +213,7 @@ const PrepaymentForeclosure = () => {
       }
     } catch (error) {
       console.error("Error approving foreclosure:", error);
-      toast.error(error?.message || "Failed to approve foreclosure");
+      toast.error(error?.response?.data?.message || error?.message || "Failed to approve foreclosure");
     }
   };
 
@@ -217,25 +224,33 @@ const PrepaymentForeclosure = () => {
       return;
     }
 
+    if (!rejectionReason) {
+      toast.error("Please provide a reason for rejection");
+      return;
+    }
+
     try {
       const result = await approveForecloseMut.mutateAsync({
         loanNumber: loanNumber,
-        approve: false
+        approve: false,
+        rejectionReason: rejectionReason
       });
       
       if (result?.data) {
         setApprovalStatus("REJECTED");
         setForeclosureRecord(prev => ({
           ...prev,
-          approvalStatus: "REJECTED"
+          approvalStatus: "REJECTED",
+          reason: rejectionReason
         }));
         toast.error("Foreclosure application rejected");
         setShowApprovalModal(false);
+        setRejectionReason("");
         await refetchSummary();
       }
     } catch (error) {
       console.error("Error rejecting foreclosure:", error);
-      toast.error(error?.message || "Failed to reject foreclosure");
+      toast.error(error?.response?.data?.message || error?.message || "Failed to reject foreclosure");
     }
   };
 
@@ -251,8 +266,8 @@ const PrepaymentForeclosure = () => {
       return;
     }
 
-    const totalPayable = forecloseSummary?.data?.totalPayable || 
-                         forecloseSummary?.totalPayable;
+    const summaryData = forecloseSummary?.data || forecloseSummary || {};
+    const totalPayable = summaryData.totalPayable;
 
     if (!totalPayable || Number(totalPayable) <= 0) {
       toast.error("Invalid payable amount");
@@ -273,24 +288,19 @@ const PrepaymentForeclosure = () => {
       });
       
       if (result?.data) {
-  toast.success("Loan foreclosed successfully!");
-
-  await refetchLoans();
-  await refetchSummary();
-
-  // 👇 IMPORTANT: updated loan set karo
-  const updatedLoan = loans.find(
-    (l) => l.loanNumber === loanNumber
-  );
-
-  if (updatedLoan) {
-    setSearchedLoan(updatedLoan);
-    setLoanStatus(updatedLoan.status);
-  }
-}
+        toast.success("Loan foreclosed successfully!");
+        await refetchLoans();
+        await refetchSummary();
+        
+        setLoanStatus("closed");
+        setSearchedLoan(prev => ({ ...prev, status: "closed" }));
+        setApprovalStatus(null);
+        setForeclosureRecord(null);
+        setShowCalculation(false);
+      }
     } catch (err) {
       console.error(err);
-      toast.error(err?.message || "Failed to process foreclosure");
+      toast.error(err?.response?.data?.message || err?.message || "Failed to process foreclosure");
     }
   };
 
@@ -300,7 +310,7 @@ const PrepaymentForeclosure = () => {
   const activeLoansCount = useMemo(() => {
     if (!Array.isArray(loans)) return 0;
     return loans.filter((l) =>
-      ["active", "ACTIVE", "approved", "Approved", "running", "RUNNING"].includes((l.status || "").toString())
+      ["active", "ACTIVE", "approved", "Approved", "running", "RUNNING", "FORECLOSURE_PENDING"].includes((l.status || "").toString())
     ).length;
   }, [loans]);
 
@@ -313,7 +323,7 @@ const PrepaymentForeclosure = () => {
     if (loanStatus === "CLOSED" || loanStatus === "closed") return "closed";
     if (!showCalculation) return "apply";
     if (!foreclosureRecord) return "apply";
-    if (!approvalStatus) return "approve";
+    if (approvalStatus === "PENDING") return "approve";
     if (approvalStatus === "APPROVED") return "pay";
     if (approvalStatus === "REJECTED") return "rejected";
     return "apply";
@@ -323,219 +333,260 @@ const PrepaymentForeclosure = () => {
 
   // Approval Modal Component
   const ApprovalModal = () => {
+    const [localRejectionReason, setLocalRejectionReason] = useState("");
+    const [showRejectConfirm, setShowRejectConfirm] = useState(false);
+
     if (!showApprovalModal) return null;
 
+    const handleRejectClick = () => {
+      if (!localRejectionReason.trim()) {
+        toast.error("Please provide a reason for rejection");
+        return;
+      }
+      setRejectionReason(localRejectionReason);
+      setShowRejectConfirm(true);
+    };
+
+    const confirmReject = async () => {
+      setShowRejectConfirm(false);
+      await handleRejectForeclosure();
+    };
+
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={() => setShowApprovalModal(false)}>
-        <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-          <div className="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <FileCheck className="w-5 h-5 text-blue-600" />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-slate-800">Review Foreclosure Application</h2>
-                <p className="text-sm text-slate-500">Please review all details before making a decision</p>
-              </div>
-            </div>
-            <button
-              onClick={() => setShowApprovalModal(false)}
-              className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
-            >
-              <X className="w-5 h-5 text-slate-500" />
-            </button>
-          </div>
-
-          <div className="p-6 space-y-6">
-            {/* Customer Information */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-5">
-              <h3 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                <User className="w-5 h-5 text-blue-600" />
-                Customer Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center gap-3">
-                  <User className="w-4 h-4 text-slate-400" />
-                  <div>
-                    <p className="text-xs text-slate-500">Full Name</p>
-                    <p className="font-medium text-slate-800">{searchedLoan?.customerName}</p>
-                  </div>
+      <>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={() => setShowApprovalModal(false)}>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <FileCheck className="w-5 h-5 text-blue-600" />
                 </div>
-                {searchedLoan?.customerEmail && (
-                  <div className="flex items-center gap-3">
-                    <Mail className="w-4 h-4 text-slate-400" />
-                    <div>
-                      <p className="text-xs text-slate-500">Email</p>
-                      <p className="font-medium text-slate-800">{searchedLoan.customerEmail}</p>
-                    </div>
-                  </div>
-                )}
-                {searchedLoan?.customerPhone && (
-                  <div className="flex items-center gap-3">
-                    <Phone className="w-4 h-4 text-slate-400" />
-                    <div>
-                      <p className="text-xs text-slate-500">Phone</p>
-                      <p className="font-medium text-slate-800">{searchedLoan.customerPhone}</p>
-                    </div>
-                  </div>
-                )}
-                <div className="flex items-center gap-3">
-                  <Building className="w-4 h-4 text-slate-400" />
-                  <div>
-                    <p className="text-xs text-slate-500">Bank</p>
-                    <p className="font-medium text-slate-800">{searchedLoan?.bank}</p>
-                  </div>
+                <div>
+                  <h2 className="text-xl font-bold text-slate-800">Review Foreclosure Application</h2>
+                  <p className="text-sm text-slate-500">Please review all details before making a decision</p>
                 </div>
               </div>
+              <button
+                onClick={() => setShowApprovalModal(false)}
+                className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-slate-500" />
+              </button>
             </div>
 
-            {/* Loan Information */}
-            <div className="bg-white border border-slate-200 rounded-xl p-5">
-              <h3 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-blue-600" />
-                Loan Information
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div>
-                  <p className="text-xs text-slate-500">Loan Number</p>
-                  <p className="font-semibold text-slate-800">{searchedLoan?.loanNumber}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-slate-500">Loan Amount</p>
-                  <p className="font-semibold text-slate-800">₹{searchedLoan?.loanAmount?.toLocaleString("en-IN")}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-slate-500">Interest Rate</p>
-                  <p className="font-semibold text-slate-800">{searchedLoan?.interestRate}%</p>
-                </div>
-                <div>
-                  <p className="text-xs text-slate-500">Tenure</p>
-                  <p className="font-semibold text-slate-800">{searchedLoan?.tenure} months</p>
-                </div>
-                <div>
-                  <p className="text-xs text-slate-500">Monthly EMI</p>
-                  <p className="font-semibold text-slate-800">₹{searchedLoan?.emiAmount?.toLocaleString("en-IN") || "N/A"}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-slate-500">Outstanding Balance</p>
-                  <p className="font-semibold text-orange-600">₹{displayOutstanding.toLocaleString("en-IN")}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Foreclosure Calculation */}
-            <div className="bg-slate-50 rounded-xl p-5">
-              <h3 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                <Calculator className="w-5 h-5 text-blue-600" />
-                Foreclosure Calculation Breakdown
-              </h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center py-2 border-b border-slate-200">
-                  <span className="text-slate-600">Remaining Principal</span>
-                  <span className="font-medium">₹{(summaryData.remainingPrincipal || 0).toLocaleString("en-IN")}</span>
-                </div>
-                <div className="flex justify-between items-center py-2 border-b border-slate-200">
-                  <span className="text-slate-600">Accrued Interest</span>
-                  <span className="font-medium">₹{(summaryData.accruedInterest || 0).toLocaleString("en-IN")}</span>
-                </div>
-                <div className="flex justify-between items-center py-2 border-b border-slate-200">
-                  <span className="text-slate-600">Foreclosure Penalty ({summaryData.penaltyPercentage || 2}%)</span>
-                  <span className="font-medium text-orange-600">₹{(summaryData.foreclosurePenalty || 0).toLocaleString("en-IN")}</span>
-                </div>
-                <div className="flex justify-between items-center py-2 border-b border-slate-200">
-                  <span className="text-slate-600">Unpaid EMI Charges</span>
-                  <span className="font-medium">₹{(summaryData.unpaidEmiCharges || 0).toLocaleString("en-IN")}</span>
-                </div>
-                {summaryData.processingFee && (
-                  <div className="flex justify-between items-center py-2 border-b border-slate-200">
-                    <span className="text-slate-600">Processing Fee</span>
-                    <span className="font-medium">₹{(summaryData.processingFee || 0).toLocaleString("en-IN")}</span>
-                  </div>
-                )}
-                <div className="flex justify-between items-center pt-4 mt-2 border-t-2 border-slate-300">
-                  <span className="font-bold text-slate-800 text-lg">Total Payable Amount</span>
-                  <span className="text-2xl font-bold text-blue-600">₹{(summaryData.totalPayable || 0).toLocaleString("en-IN")}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* EMI Savings Information */}
-            {summaryData.remainingEmis && (
-              <div className="bg-green-50 rounded-xl p-5">
-                <h3 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
-                  <Receipt className="w-5 h-5 text-green-600" />
-                  Benefit of Foreclosure
+            <div className="p-6 space-y-6">
+              {/* Customer Information */}
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-5">
+                <h3 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                  <User className="w-5 h-5 text-blue-600" />
+                  Customer Information
                 </h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-xs text-slate-500">Remaining EMIs</p>
-                    <p className="font-bold text-slate-800 text-lg">{summaryData.remainingEmis}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex items-center gap-3">
+                    <User className="w-4 h-4 text-slate-400" />
+                    <div>
+                      <p className="text-xs text-slate-500">Full Name</p>
+                      <p className="font-medium text-slate-800">{searchedLoan?.customerName}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs text-slate-500">Total Interest Saved</p>
-                    <p className="font-bold text-green-600 text-lg">₹{(summaryData.interestSaved || 0).toLocaleString("en-IN")}</p>
+                  {searchedLoan?.customerEmail && (
+                    <div className="flex items-center gap-3">
+                      <Mail className="w-4 h-4 text-slate-400" />
+                      <div>
+                        <p className="text-xs text-slate-500">Email</p>
+                        <p className="font-medium text-slate-800">{searchedLoan.customerEmail}</p>
+                      </div>
+                    </div>
+                  )}
+                  {searchedLoan?.customerPhone && (
+                    <div className="flex items-center gap-3">
+                      <Phone className="w-4 h-4 text-slate-400" />
+                      <div>
+                        <p className="text-xs text-slate-500">Phone</p>
+                        <p className="font-medium text-slate-800">{searchedLoan.customerPhone}</p>
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-3">
+                    <Building className="w-4 h-4 text-slate-400" />
+                    <div>
+                      <p className="text-xs text-slate-500">Bank</p>
+                      <p className="font-medium text-slate-800">{searchedLoan?.bank}</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            )}
 
-            {/* Application Timeline */}
-            {foreclosureRecord && (
+              {/* Loan Information */}
               <div className="bg-white border border-slate-200 rounded-xl p-5">
-                <h3 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-blue-600" />
-                  Application Timeline
+                <h3 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                  <CreditCard className="w-5 h-5 text-blue-600" />
+                  Loan Information
                 </h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Applied On:</span>
-                    <span className="font-medium">{new Date(foreclosureRecord.appliedAt).toLocaleString()}</span>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <div>
+                    <p className="text-xs text-slate-500">Loan Number</p>
+                    <p className="font-semibold text-slate-800">{searchedLoan?.loanNumber}</p>
                   </div>
-                  {foreclosureRecord.foreclosureApprovedAt && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-500">Approved On:</span>
-                      <span className="font-medium text-green-600">{new Date(foreclosureRecord.foreclosureApprovedAt).toLocaleString()}</span>
-                    </div>
-                  )}
-                  {foreclosureRecord.foreclosureApprovedBy && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-500">Approved By:</span>
-                      <span className="font-medium">{foreclosureRecord.foreclosureApprovedBy}</span>
-                    </div>
-                  )}
+                  <div>
+                    <p className="text-xs text-slate-500">Loan Amount</p>
+                    <p className="font-semibold text-slate-800">₹{searchedLoan?.loanAmount?.toLocaleString("en-IN")}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500">Interest Rate</p>
+                    <p className="font-semibold text-slate-800">{searchedLoan?.interestRate}%</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500">Tenure</p>
+                    <p className="font-semibold text-slate-800">{searchedLoan?.tenure} months</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500">Monthly EMI</p>
+                    <p className="font-semibold text-slate-800">₹{searchedLoan?.emiAmount?.toLocaleString("en-IN") || "N/A"}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500">Outstanding Balance</p>
+                    <p className="font-semibold text-orange-600">₹{displayOutstanding.toLocaleString("en-IN")}</p>
+                  </div>
                 </div>
               </div>
-            )}
 
-            {/* Action Buttons */}
-            <div className="flex gap-4 pt-4 border-t border-slate-200">
-              <button
-                onClick={handleApproveForeclosure}
-                disabled={approveForecloseMut.isLoading}
-                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
-              >
-                <ThumbsUp className="w-5 h-5" />
-                {approveForecloseMut.isLoading ? "Processing..." : "Approve Foreclosure"}
-              </button>
-              <button
-                onClick={handleRejectForeclosure}
-                disabled={approveForecloseMut.isLoading}
-                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
-              >
-                <ThumbsDown className="w-5 h-5" />
-                {approveForecloseMut.isLoading ? "Processing..." : "Reject Foreclosure"}
-              </button>
-            </div>
+              {/* Foreclosure Calculation */}
+              <div className="bg-slate-50 rounded-xl p-5">
+                <h3 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                  <Calculator className="w-5 h-5 text-blue-600" />
+                  Foreclosure Calculation Breakdown
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center py-2 border-b border-slate-200">
+                    <span className="text-slate-600">Remaining Principal</span>
+                    <span className="font-medium">₹{(summaryData.remainingPrincipal || 0).toLocaleString("en-IN")}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-slate-200">
+                    <span className="text-slate-600">Accrued Interest</span>
+                    <span className="font-medium">₹{(summaryData.accruedInterest || 0).toLocaleString("en-IN")}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-slate-200">
+                    <span className="text-slate-600">Foreclosure Charges</span>
+                    <span className="font-medium text-orange-600">₹{(summaryData.foreclosureCharges || 0).toLocaleString("en-IN")}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-slate-200">
+                    <span className="text-slate-600">Unpaid EMI Charges</span>
+                    <span className="font-medium">₹{(summaryData.unpaidEmiCharges || 0).toLocaleString("en-IN")}</span>
+                  </div>
+                  <div className="flex justify-between items-center pt-4 mt-2 border-t-2 border-slate-300">
+                    <span className="font-bold text-slate-800 text-lg">Total Payable Amount</span>
+                    <span className="text-2xl font-bold text-blue-600">₹{(summaryData.totalPayable || 0).toLocaleString("en-IN")}</span>
+                  </div>
+                </div>
+              </div>
 
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
-              <p className="text-xs text-amber-700 flex items-start gap-2">
-                <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span><strong>Important Note:</strong> Please verify all customer details and loan information before approving. This action will initiate the foreclosure process and cannot be reversed.</span>
-              </p>
+              {/* Application Timeline */}
+              {foreclosureRecord && (
+                <div className="bg-white border border-slate-200 rounded-xl p-5">
+                  <h3 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-blue-600" />
+                    Application Timeline
+                  </h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-500">Applied On:</span>
+                      <span className="font-medium">{new Date(foreclosureRecord.appliedAt).toLocaleString()}</span>
+                    </div>
+                    {foreclosureRecord.foreclosureApprovedAt && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-500">Approved On:</span>
+                        <span className="font-medium text-green-600">{new Date(foreclosureRecord.foreclosureApprovedAt).toLocaleString()}</span>
+                      </div>
+                    )}
+                    {foreclosureRecord.foreclosureApprovedBy && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-500">Approved By:</span>
+                        <span className="font-medium">{foreclosureRecord.foreclosureApprovedBy}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Rejection Reason Input */}
+              <div className="border-t border-slate-200 pt-4">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Rejection Reason (if rejecting)
+                </label>
+                <textarea
+                  value={localRejectionReason}
+                  onChange={(e) => setLocalRejectionReason(e.target.value)}
+                  placeholder="Please provide a reason for rejection..."
+                  className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200"
+                  rows={3}
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-4 pt-4">
+                <button
+                  onClick={handleApproveForeclosure}
+                  disabled={approveForecloseMut.isLoading}
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+                >
+                  <ThumbsUp className="w-5 h-5" />
+                  {approveForecloseMut.isLoading ? "Processing..." : "Approve Foreclosure"}
+                </button>
+                <button
+                  onClick={handleRejectClick}
+                  disabled={approveForecloseMut.isLoading}
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+                >
+                  <ThumbsDown className="w-5 h-5" />
+                  {approveForecloseMut.isLoading ? "Processing..." : "Reject Foreclosure"}
+                </button>
+              </div>
+
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                <p className="text-xs text-amber-700 flex items-start gap-2">
+                  <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                  <span><strong>Important Note:</strong> Please verify all customer details and loan information before approving. This action will initiate the foreclosure process and cannot be reversed.</span>
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+
+        {/* Rejection Confirmation Modal */}
+        {showRejectConfirm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <AlertCircle className="w-8 h-8 text-red-600" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-800 mb-2">Confirm Rejection</h3>
+                <p className="text-slate-600 mb-4">
+                  Are you sure you want to reject this foreclosure application?
+                </p>
+                <p className="text-sm text-red-600 mb-6 bg-red-50 p-3 rounded-lg">
+                  Reason: {localRejectionReason}
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setShowRejectConfirm(false)}
+                    className="flex-1 px-4 py-2 border-2 border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmReject}
+                    className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                  >
+                    Confirm Rejection
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
     );
   };
 
@@ -689,10 +740,12 @@ const PrepaymentForeclosure = () => {
                   ? "bg-green-100 text-green-700"
                   : loanStatus === "CLOSED" || loanStatus === "closed" || loanStatus === "settled"
                   ? "bg-gray-100 text-gray-700"
+                  : loanStatus === "FORECLOSURE_PENDING"
+                  ? "bg-purple-100 text-purple-700"
                   : "bg-yellow-100 text-yellow-700"
               }`}
             >
-              {loanStatus?.toUpperCase() || "ACTIVE"}
+              {displayLoanStatus}
             </span>
           </div>
 
@@ -864,8 +917,8 @@ const PrepaymentForeclosure = () => {
                       <span className="font-medium">₹{(summaryData.accruedInterest || 0).toLocaleString("en-IN")}</span>
                     </div>
                     <div className="flex justify-between py-2 border-t border-slate-200">
-                      <span className="text-slate-600">Foreclosure Penalty</span>
-                      <span className="font-medium text-orange-600">₹{(summaryData.foreclosurePenalty || 0).toLocaleString("en-IN")}</span>
+                      <span className="text-slate-600">Foreclosure Charges</span>
+                      <span className="font-medium text-orange-600">₹{(summaryData.foreclosureCharges || 0).toLocaleString("en-IN")}</span>
                     </div>
                     <div className="flex justify-between py-2 border-t border-slate-200">
                       <span className="text-slate-600">Unpaid EMI Charges</span>
@@ -915,8 +968,8 @@ const PrepaymentForeclosure = () => {
                     <span className="font-medium">₹{(summaryData.accruedInterest || 0).toLocaleString("en-IN")}</span>
                   </div>
                   <div className="flex justify-between py-2 border-t border-slate-200">
-                    <span className="text-slate-600">Foreclosure Penalty</span>
-                    <span className="font-medium text-orange-600">₹{(summaryData.foreclosurePenalty || 0).toLocaleString("en-IN")}</span>
+                    <span className="text-slate-600">Foreclosure Charges</span>
+                    <span className="font-medium text-orange-600">₹{(summaryData.foreclosureCharges || 0).toLocaleString("en-IN")}</span>
                   </div>
                   <div className="flex justify-between py-2 border-t border-slate-200">
                     <span className="text-slate-600">Unpaid EMI Charges</span>
@@ -968,6 +1021,13 @@ const PrepaymentForeclosure = () => {
                   </div>
                 </div>
 
+                <div className="bg-blue-50 rounded-xl p-4 mb-6">
+                  <p className="text-sm text-blue-800 flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4" />
+                    Amount to Pay: <strong className="text-lg">₹{(summaryData.totalPayable || 0).toLocaleString("en-IN")}</strong>
+                  </p>
+                </div>
+
                 <div className="flex flex-wrap gap-4">
                   <button
                     onClick={handleConfirmForeclosure}
@@ -1001,7 +1061,10 @@ const PrepaymentForeclosure = () => {
               </div>
               <h3 className="text-xl font-bold text-red-800 mb-2">Application Rejected</h3>
               <p className="text-red-600 mb-4">
-                Your foreclosure application has been rejected. Please contact support for more information.
+                Your foreclosure application has been rejected.
+                {foreclosureRecord?.reason && (
+                  <span className="block mt-2 text-sm">Reason: {foreclosureRecord.reason}</span>
+                )}
               </p>
               <button
                 onClick={() => {

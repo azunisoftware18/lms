@@ -15,6 +15,10 @@ const ENV = {
     | `${number}${"s" | "m" | "h" | "d"}`
     | number,
   CREDIT_PROVIDER: process.env.CREDIT_PROVIDER,
+  AADHAAR_API: process.env.AADHAAR_API_BASE_URL,
+  AADHAAR_API_KEY: process.env.AADHAAR_API_KEY,
+  CIBIL_API: process.env.CIBIL_API_BASE_URL,
+  CIBIL_API_KEY: process.env.CIBIL_API_KEY,
 };
 
 export default ENV;

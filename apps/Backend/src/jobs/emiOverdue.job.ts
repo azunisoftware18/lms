@@ -1,5 +1,5 @@
 import cron from "node-cron";
-import { processOverdueEmis } from "../modules/Emi/emi.service.js";
+import { processOverdueEmis } from "../modules/emi/emi.service.js";
 
 export const startEmiOverdueJob = () => {
   // run every 1 minute  ("*/1 * * * *") for testing,

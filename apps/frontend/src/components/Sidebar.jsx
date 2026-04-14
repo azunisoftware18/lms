@@ -72,7 +72,7 @@ export default function Sidebar() {
           subItems: [
 
             { name: "Leads", path: "/admin/los/leads" },
-            // {name:"Login Fee", path:"/admin/los/login-fee"},
+            {name:"Login Fee", path:"/admin/los/login-fee"},
             { name: "Applications", path: "/admin/los/applications" },
             { name: "Documents", path: "/admin/los/documents" },
             // { name: "Eligibility", path: "/admin/los/eligibility" },

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { processOverdueEmis } from "../modules/Emi/emi.service.js";
+import { processOverdueEmis } from "../modules/emi/emi.service.js";
 import { checkAndMarkLoanDefault } from "../modules/loanDefault/loanDefault.service.js";
 import { prisma } from "../db/prismaService.js";
 

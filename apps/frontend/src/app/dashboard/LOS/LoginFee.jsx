@@ -1,7 +1,20 @@
 import { useState } from "react";
+import {
+  Edit,
+  Trash2,
+  User,
+  Plus,
+  CalendarDays,
+  Clock,
+  XCircle,
+  DollarSign,
+  Hourglass,
+} from "lucide-react";
 import * as Icons from "lucide-react";
+
 import LeadsTable from "../../../components/tables/LeadsTable";
-import { useLead } from "../../../hooks/useLead";
+import { useLead, getLeadByIdOrNumber } from "../../../hooks/useLead";
+import toast from "react-hot-toast";
 import StatusCard from "../../../components/common/StatusCard";
 
 import LeadFormModal from "../../../components/modals/LeadFormModal";
@@ -183,7 +196,7 @@ export default function LoginFee() {
 
               <div className="border-t border-b border-gray-200 py-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Application Fee</span>
+                  <span className="text-gray-600">Applicationlogin Fee</span>
                   <span className="text-xl font-bold text-gray-900">
                     ₹{selectedFee.amount}
                   </span>
@@ -220,6 +233,62 @@ export default function LoginFee() {
     );
   };
 
+  // Formatter and computed amounts for the Fee Information panel
+  const formatINR = (amount) => {
+    const num = Number(amount) || 0;
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 2,
+    }).format(num);
+  };
+
+  const feeAmountNum = Number(formData.feeAmount) || 0;
+  const gstAmount = Math.round(feeAmountNum * 0.18 * 100) / 100;
+  const totalAmount = Math.round((feeAmountNum + gstAmount) * 100) / 100;
+
+  // Populate form fields by searching local leads first, then calling API
+  const fetchAndFillLead = async (leadId) => {
+    if (!leadId) return;
+    // Try local cache first
+    const foundLocal = (leads?.data || []).find(
+      (l) => l.id === leadId || l.leadId === leadId || l.uniqueId === leadId,
+    );
+    if (foundLocal) {
+      setFormData((prev) => ({
+        ...prev,
+        leadId: foundLocal.LeadNumber || leadNumber,
+        applicantName:
+          foundLocal.fullName || foundLocal.name || foundLocal.applicantName || prev.applicantName || "",
+        mobileNumber: foundLocal.contactNumber || foundLocal.mobile || foundLocal.mobileNumber || prev.mobileNumber || "",
+        email: foundLocal.email || prev.email || "",
+        loanAmount: foundLocal.loanAmount || prev.loanAmount || "",
+      }));
+      toast.success("Lead loaded from cache");
+      return;
+    }
+
+    // Fallback: call API to fetch lead by id or lead number
+    try {
+      const data = await getLeadByIdOrNumber(leadId);
+      if (!data) {
+        toast.error("Lead not found");
+        return;
+      }
+      setFormData((prev) => ({
+        ...prev,
+        leadId: data.leadNumber || leadNumber,
+        applicantName: data.fullName || data.name || data.applicantName || prev.applicantName || "",
+        mobileNumber: data.contactNumber || data.mobile || data.phone || prev.mobileNumber || "",
+        email: data.email || prev.email || "",
+        loanAmount: data.loanAmount || prev.loanAmount || "",
+      }));
+      toast.success("Lead loaded");
+    } catch (err) {
+      toast.error(err?.message || "Failed to fetch lead");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -227,10 +296,10 @@ export default function LoginFee() {
         <div className="mb-8 flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              User Lead Management
+              Login Fee Management
             </h1>
             <p className="text-gray-600">
-              Manage and view all loan application details
+              Manage and view all login fee details
             </p>
           </div>
 
@@ -332,11 +401,10 @@ export default function LoginFee() {
 
         {/* Tabs */}
         <div className="flex gap-2 mb-6 border-b border-gray-200">
-          {[
-            { id: "track-leads", label: "Track Leads", icon: "List" },
+          {[  
             {
               id: "charge-fee",
-              label: "Charge Application Fee",
+              label: "Charge Login Fee",
               icon: "CreditCard",
             },
           ].map((tab) => {
@@ -373,7 +441,8 @@ export default function LoginFee() {
               onPageChange={setCurrentPage}
               search={searchTerm}
               setSearch={(value) => {
-                setSearchTerm(value);
+                const v = typeof value === "string" ? value : value?.target?.value ?? "";
+                setSearchTerm(v);
                 setCurrentPage(1);
               }}
               filterValue={statusFilter}
@@ -393,214 +462,266 @@ export default function LoginFee() {
 
         {/* Charge Fee Tab */}
         {activeTab === "charge-fee" && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Application Form */}
-            <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl shadow-sm p-6">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2 bg-blue-100 rounded-xl">
-                    <Icons.FileText className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-900">
-                      Lead Application Details
-                    </h2>
-                    <p className="text-xs text-gray-500">
-                      Enter lead information to generate application fee
-                    </p>
-                  </div>
+           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl shadow-sm p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-blue-100 rounded-xl">
+                  <Icons.FileText className="w-5 h-5 text-blue-600" />
                 </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Lead Application Details
+                  </h2>
+                  <p className="text-xs text-gray-500">
+                    Enter lead information to generate application fee
+                  </p>
+                </div>
+              </div>
 
-                <form onSubmit={handleChargeFee} className="space-y-5">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Lead ID <span className="text-red-500">*</span>
-                      </label>
+              <form onSubmit={handleChargeFee} className="space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Lead ID <span className="text-red-500">*</span>
+                    </label>
+                    <div className="flex gap-2">
                       <input
                         type="text"
                         name="leadId"
                         value={formData.leadId}
-                        onChange={handleInputChange}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            [e.target.name]: e.target.value,
+                          })
+                        }
+                        onBlur={(e) => fetchAndFillLead(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.currentTarget.blur();
+                            fetchAndFillLead(e.currentTarget.value);
+                          }
+                        }}
                         placeholder="Enter Lead ID"
-                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                        className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
                         required
                       />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Applicant Name <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="applicantName"
-                        value={formData.applicantName}
-                        onChange={handleInputChange}
-                        placeholder="Full Name"
-                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Mobile Number <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="tel"
-                        name="mobileNumber"
-                        value={formData.mobileNumber}
-                        onChange={handleInputChange}
-                        placeholder="10-digit mobile number"
-                        pattern="[0-9]{10}"
-                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Email ID <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        placeholder="email@example.com"
-                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Loan Amount
-                      </label>
-                      <input
-                        type="number"
-                        name="loanAmount"
-                        value={formData.loanAmount}
-                        onChange={handleInputChange}
-                        placeholder="Enter loan amount"
-                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Application Fee (₹)
-                      </label>
-                      <input
-                        type="number"
-                        name="feeAmount"
-                        value={formData.feeAmount}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Payment Mode <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        name="paymentMode"
-                        value={formData.paymentMode}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-                        required
+                      <button
+                        type="button"
+                        onClick={() => fetchAndFillLead(formData.leadId)}
+                        className="inline-flex items-center px-3 py-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100"
+                        aria-label="Fetch lead"
                       >
-                        <option value="online">Online Payment</option>
-                        <option value="offline">Offline / Cash</option>
-                        <option value="bank_transfer">Bank Transfer</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Transaction ID
-                      </label>
-                      <input
-                        type="text"
-                        name="transactionId"
-                        value={formData.transactionId}
-                        onChange={handleInputChange}
-                        placeholder="Enter transaction reference"
-                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-                      />
+                        <Icons.Search className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
-
-                  <button
-                    type="submit"
-                    className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-all font-semibold flex items-center justify-center gap-2"
-                  >
-                    <Icons.CreditCard className="w-5 h-5" />
-                    Charge Fee & Generate Application Number
-                  </button>
-                </form>
-              </div>
-            </div>
-
-            {/* Information Card */}
-            <div className="space-y-6">
-              <div className="bg-linear-to-br from-blue-50 to-indigo-50 rounded-2xl p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <Icons.Info className="w-6 h-6 text-blue-600" />
-                  <h3 className="font-semibold text-gray-900">
-                    Fee Information
-                  </h3>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Applicant Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="applicantName"
+                      value={formData.applicantName}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                      placeholder="Full Name"
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Mobile Number <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      name="mobileNumber"
+                      value={formData.mobileNumber}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                      placeholder="10-digit mobile number"
+                      pattern="[0-9]{10}"
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Email ID <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                      placeholder="email@example.com"
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Loan Amount
+                    </label>
+                    <input
+                      type="number"
+                      name="loanAmount"
+                      value={formData.loanAmount}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                      placeholder="Enter loan amount"
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Login Fee (₹)
+                    </label>
+                    <input
+                      type="number"
+                      name="feeAmount"
+                      value={formData.feeAmount}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Payment Mode <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      name="paymentMode"
+                      value={formData.paymentMode}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                      required
+                    >
+                      <option value="online">Online Payment</option>
+                      <option value="offline">Offline / Cash</option>
+                      <option value="bank_transfer">Bank Transfer</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Transaction ID
+                    </label>
+                    <input
+                      type="text"
+                      name="transactionId"
+                      value={formData.transactionId}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                      placeholder="Enter transaction reference"
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
                 </div>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">
-                      Application Fee
-                    </span>
-                    <span className="font-bold text-gray-900">
-                      {selectedFee}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">GST (18%)</span>
-                    <span className="font-bold text-gray-900">₹90</span>
-                  </div>
-                  <div className="border-t border-blue-200 pt-2">
-                    <div className="flex justify-between items-center">
-                      <span className="font-semibold text-gray-900">
-                        Total Amount
-                      </span>
-                      <span className="font-bold text-xl text-blue-600">
-                        ₹590
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              <div className="bg-white rounded-2xl shadow-sm p-6">
-                <h3 className="font-semibold text-gray-900 mb-3">
-                  Important Notes
-                </h3>
-                <ul className="space-y-2 text-sm text-gray-600">
-                  <li className="flex items-start gap-2">
-                    <Icons.CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
-                    <span>Application fee is non-refundable</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Icons.CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
-                    <span>Unique number generated after fee payment</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Icons.CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
-                    <span>Use unique number for document upload</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Icons.AlertCircle className="w-4 h-4 text-yellow-500 mt-0.5" />
-                    <span>Valid for 30 days from generation</span>
-                  </li>
-                </ul>
-              </div>
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-all font-semibold flex items-center justify-center gap-2"
+                >
+                  <Icons.CreditCard className="w-5 h-5" />
+                  Charge Fee & Generate Application Number
+                </button>
+              </form>
             </div>
           </div>
+
+          <div className="space-y-6">
+            <div className="bg-linear-to-br from-blue-50 to-indigo-50 rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Icons.Info className="w-6 h-6 text-blue-600" />
+                <h3 className="font-semibold text-gray-900">Fee Information</h3>
+              </div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Application Fee</span>
+                  <span className="font-bold text-gray-900">
+                    {formatINR(feeAmountNum)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">GST (18%)</span>
+                  <span className="font-bold text-gray-900">
+                    {formatINR(gstAmount)}
+                  </span>
+                </div>
+                <div className="border-t border-blue-200 pt-2">
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-gray-900">
+                      Total Amount
+                    </span>
+                    <span className="font-bold text-xl text-blue-600">
+                      {formatINR(totalAmount)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-sm p-6">
+              <h3 className="font-semibold text-gray-900 mb-3">
+                Important Notes
+              </h3>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li className="flex items-start gap-2">
+                  <Icons.CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
+                  <span>Application fee is non-refundable</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Icons.CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
+                  <span>Unique number generated after fee payment</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Icons.CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
+                  <span>Use unique number for document upload</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Icons.AlertCircle className="w-4 h-4 text-yellow-500 mt-0.5" />
+                  <span>Valid for 30 days from generation</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
         )}
-        {/* Receipt Modal */}
-        {/* <ReceiptModal /> */}
       </div>
     </div>
   );
 }
+ 

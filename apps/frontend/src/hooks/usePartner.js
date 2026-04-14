@@ -46,7 +46,7 @@ export const useCreatePartner = () => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: (payload) => apiPost("/partners", payload),
+    mutationFn: (payload) => apiPost("/partner", payload),
     onMutate: () => {
       dispatch(setLoading(true));
     },

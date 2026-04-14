@@ -37,8 +37,15 @@ const toPublicLead = (lead: any) => {
           id: lead.loanType.id,
           name: lead.loanType.name,
           isActive: lead.loanType.isActive,
+          minLoginCharges: lead.loanType.minLoginCharges ?? null,
+          maxLoginCharges: lead.loanType.maxLoginCharges ?? null,
         }
       : null,
+    // expose top-level login charge bounds if present on the lead object
+    minLoginCharges:
+      lead.minLoginCharges ?? lead.loanType?.minLoginCharges ?? null,
+    maxLoginCharges:
+      lead.maxLoginCharges ?? lead.loanType?.maxLoginCharges ?? null,
     address: addressLine,
     city,
     state,

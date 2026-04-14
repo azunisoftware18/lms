@@ -30,7 +30,7 @@ export const createLeadService = async (leadData: CreateLead) => {
     leadData.address || leadData.city || leadData.state || leadData.pinCode,
   );
 
-  return await prisma.leads.create({
+  const created = await prisma.leads.create({
     data: {
       fullName: leadData.fullName,
       contactNumber: leadData.contactNumber,
@@ -76,7 +76,15 @@ export const createLeadService = async (leadData: CreateLead) => {
       createdAt: true,
       updatedAt: true,
       loanTypeId: true,
-      loanType: true,
+      loanType: {
+        select: {
+          id: true,
+          name: true,
+          minLoginCharges: true,
+          maxLoginCharges: true,
+          isActive: true,
+        },
+      },
       address: {
         select: {
           addressLine1: true,
@@ -87,6 +95,16 @@ export const createLeadService = async (leadData: CreateLead) => {
       },
     },
   });
+
+  return {
+    ...created,
+    address: created.address?.addressLine1 ?? null,
+    city: created.address?.city ?? null,
+    state: created.address?.state ?? null,
+    pinCode: created.address?.pinCode ?? null,
+    minLoginCharges: created.loanType?.minLoginCharges ?? null,
+    maxLoginCharges: created.loanType?.maxLoginCharges ?? null,
+  };
 };
 
 export const getAllLeadsService = async (params: {
@@ -119,8 +137,14 @@ export const getAllLeadsService = async (params: {
         convertedLoanApplicationId: true,
         createdAt: true,
         updatedAt: true,
-        loanTypeId: true,
-        loanType: true,
+        loanType: {
+          select: {
+            id: true,
+            name: true,
+            minLoginCharges: true,
+            maxLoginCharges: true,
+          }
+        },
         address: {
           select: {
             addressLine1: true,
@@ -142,6 +166,9 @@ export const getAllLeadsService = async (params: {
     city: lead.address?.city ?? null,
     state: lead.address?.state ?? null,
     pinCode: lead.address?.pinCode ?? null,
+    // expose loan type login charge bounds at top-level for callers
+    minLoginCharges: lead.loanType?.minLoginCharges ?? null,
+    maxLoginCharges: lead.loanType?.maxLoginCharges ?? null,
   }));
 
   return {
@@ -172,8 +199,14 @@ export const getLeadByIdService = async (id: string) => {
       convertedLoanApplicationId: true,
       createdAt: true,
       updatedAt: true,
-      loanTypeId: true,
-      loanType: true,
+      loanType: {
+        select: {
+          id: true,
+          name: true,
+          minLoginCharges: true,
+          maxLoginCharges: true,
+        },
+      },
       address: {
         select: {
           addressLine1: true,
@@ -191,6 +224,8 @@ export const getLeadByIdService = async (id: string) => {
       city: lead.address?.city ?? null,
       state: lead.address?.state ?? null,
       pinCode: lead.address?.pinCode ?? null,
+      minLoginCharges: lead.loanType?.minLoginCharges ?? null,
+      maxLoginCharges: lead.loanType?.maxLoginCharges ?? null,
     };
   }
 
@@ -212,8 +247,14 @@ export const getLeadByIdService = async (id: string) => {
       convertedLoanApplicationId: true,
       createdAt: true,
       updatedAt: true,
-      loanTypeId: true,
-      loanType: true,
+      loanType: {
+        select: {
+          id: true,
+          name: true,
+          minLoginCharges: true,
+          maxLoginCharges: true,
+        },
+      },
       address: {
         select: {
           addressLine1: true,
@@ -232,6 +273,8 @@ export const getLeadByIdService = async (id: string) => {
       city: byLeadNumber.address?.city ?? null,
       state: byLeadNumber.address?.state ?? null,
       pinCode: byLeadNumber.address?.pinCode ?? null,
+      minLoginCharges: byLeadNumber.loanType?.minLoginCharges ?? null,
+      maxLoginCharges: byLeadNumber.loanType?.maxLoginCharges ?? null,
     };
   }
 
@@ -301,6 +344,8 @@ export const updateLeadStatusService = async (id: string, status: string) => {
       city: updatedLead.address?.city ?? null,
       state: updatedLead.address?.state ?? null,
       pinCode: updatedLead.address?.pinCode ?? null,
+      minLoginCharges: updatedLead.loanType?.minLoginCharges ?? null,
+      maxLoginCharges: updatedLead.loanType?.maxLoginCharges ?? null,
     };
   } catch (error: unknown) {
     const eAny = error as any;
@@ -338,8 +383,14 @@ export const assignLeadService = async (
         convertedLoanApplicationId: true,
         createdAt: true,
         updatedAt: true,
-        loanTypeId: true,
-        loanType: true,
+        loanType: {
+          select: {
+            id: true,
+            name: true,
+            minLoginCharges: true,
+            maxLoginCharges: true,
+          }
+        },
         address: {
           select: {
             addressLine1: true,
@@ -370,6 +421,8 @@ export const assignLeadService = async (
       city: updated.address?.city ?? null,
       state: updated.address?.state ?? null,
       pinCode: updated.address?.pinCode ?? null,
+      minLoginCharges: updated.loanType?.minLoginCharges ?? null,
+      maxLoginCharges: updated.loanType?.maxLoginCharges ?? null,
     };
   } catch (error: unknown) {
     const eAny = error as any;

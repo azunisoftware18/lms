@@ -33,21 +33,5 @@ export interface CreditProvider {
 }
 
 
-// export type CreditReportPayload = {
-//   bureauReferenceId?: string;
-//   creditScore: number | null;
-//   accounts: CreditAccount[];
 
-//   // Aggregates (MANDATORY)
-//   totalActiveAccounts: number;
-//   totalClosedAccounts: number;
-//   totalOutstanding: number;
-//   totalMonthlyEmi: number;
 
-//   maxDPD: number;
-//   overdueAccounts: number;
-//   writtenOffCount: number;
-//   settledCount: number;
-
-//   rawReport: any;
-// };
