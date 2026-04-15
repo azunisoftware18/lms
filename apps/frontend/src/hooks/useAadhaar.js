@@ -20,16 +20,24 @@ const validateOtp = (otp) => {
 	return normalized;
 };
 
+const validateRefId = (refId) => {
+	const normalized = String(refId ?? "").trim();
+	if (!normalized) {
+		throw new Error("Invalid reference id. Expected ref_id from send OTP response.");
+	}
+	return normalized;
+};
+
 const sendAadhaarOtp = ({ aadhaarNumber }) => {
 	const normalizedAadhaar = validateAadhaarNumber(aadhaarNumber);
 	return apiPost("/aadhaar/send-otp", { aadhaarNumber: normalizedAadhaar });
 };
 
-const verifyAadhaarOtp = ({ aadhaarNumber, otp }) => {
-	const normalizedAadhaar = validateAadhaarNumber(aadhaarNumber);
+const verifyAadhaarOtp = ({ ref_id, otp }) => {
+	const normalizedRefId = validateRefId(ref_id);
 	const normalizedOtp = validateOtp(otp);
 	return apiPost("/aadhaar/verify-otp", {
-		aadhaarNumber: normalizedAadhaar,
+		ref_id: normalizedRefId,
 		otp: normalizedOtp,
 	});
 };

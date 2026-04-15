@@ -40,6 +40,7 @@ export default function CoApplicantSection({
 }) {
   const [aadhaarQueries, setAadhaarQueries] = useState({});
   const [otpMap, setOtpMap] = useState({});
+  const [refIdMap, setRefIdMap] = useState({});
   const [otpSentMap, setOtpSentMap] = useState({});
   const [otpVerifiedMap, setOtpVerifiedMap] = useState({});
   const [showOtpModalMap, setShowOtpModalMap] = useState({});
@@ -78,6 +79,8 @@ export default function CoApplicantSection({
       setSearchingMap((s) => ({ ...s, [index]: true }));
       const res = await sendOtp.mutateAsync({ aadhaarNumber: q });
       console.log(`[Aadhaar][Co-Applicant ${index + 1}] Send OTP response:`, res);
+      const refId = res?.data?.ref_id || res?.data?.data?.ref_id || res?.ref_id || "";
+      setRefIdMap((s) => ({ ...s, [index]: refId }));
       setOtpSentMap((s) => ({ ...s, [index]: true }));
       setOtpVerifiedMap((s) => ({ ...s, [index]: false }));
       setOtpMap((s) => ({ ...s, [index]: "" }));
@@ -109,11 +112,12 @@ export default function CoApplicantSection({
     if (aadhaar.length !== 12) return showInfo("Enter valid 12-digit Aadhaar");
     if (otp.length !== 6) return showInfo("Enter valid 6-digit OTP");
     if (isOtpExpired(index)) return showInfo("OTP expired. Please resend OTP.");
+    if (!refIdMap[index]) return showInfo("Missing ref_id. Please send OTP again.");
 
     try {
       setSearchingMap((s) => ({ ...s, [index]: true }));
       const res = await verifyOtp.mutateAsync({
-        aadhaarNumber: aadhaar,
+        ref_id: refIdMap[index],
         otp,
       });
       console.log(`[Aadhaar][Co-Applicant ${index + 1}] Verify OTP response:`, res);

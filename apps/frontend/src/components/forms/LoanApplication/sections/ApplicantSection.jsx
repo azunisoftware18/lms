@@ -55,6 +55,7 @@ export default function ApplicantSection({
   const [aadhaarOtp, setAadhaarOtp] = useState("");
   const [aadhaarOtpSent, setAadhaarOtpSent] = useState(false);
   const [aadhaarVerified, setAadhaarVerified] = useState(false);
+  const [aadhaarRefId, setAadhaarRefId] = useState("");
   const [showAadhaarOtpModal, setShowAadhaarOtpModal] = useState(false);
   const [otpExpiresAt, setOtpExpiresAt] = useState(null);
   const [otpSecondsLeft, setOtpSecondsLeft] = useState(0);
@@ -210,6 +211,12 @@ export default function ApplicantSection({
         aadhaarNumber: val,
       });
       console.log("[Aadhaar] Send OTP response:", res);
+      const refId =
+        res?.data?.ref_id ||
+        res?.data?.data?.ref_id ||
+        res?.ref_id ||
+        "";
+      setAadhaarRefId(refId);
       setAadhaarOtpSent(true);
       setAadhaarVerified(false);
       setAadhaarOtp("");
@@ -234,10 +241,11 @@ export default function ApplicantSection({
     if (val.length !== 12) return showInfo("Enter valid 12-digit Aadhaar");
     if (otp.length !== 6) return showInfo("Enter valid 6-digit OTP");
     if (isOtpExpired) return showInfo("OTP expired. Please resend OTP.");
+    if (!aadhaarRefId) return showInfo("Missing ref_id. Please send OTP again.");
 
     try {
       const res = await verifyOtp.mutateAsync({
-        aadhaarNumber: val,
+        ref_id: aadhaarRefId,
         otp,
       });
       console.log("[Aadhaar] Verify OTP response:", res);
@@ -290,6 +298,7 @@ export default function ApplicantSection({
                     setAadhaarOtp("");
                     setAadhaarOtpSent(false);
                     setAadhaarVerified(false);
+                    setAadhaarRefId("");
                     setOtpExpiresAt(null);
                     setOtpSecondsLeft(0);
                     setShowAadhaarOtpModal(false);
