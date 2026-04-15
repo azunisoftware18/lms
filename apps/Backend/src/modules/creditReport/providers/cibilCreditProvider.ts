@@ -1,77 +1,52 @@
-import {
-  CreditProvider,
-  CreditReportResult,
-} from "./creditProvider.interface.js";
+import axios from "axios";
+import logger from "../../../common/logger.js";
+import ENV from "../../../common/config/env.js";
+import { prisma } from "../../../db/prismaService.js";
 
-export class CibilCreditProvider implements CreditProvider {
-  async fetchCreditReport(input: {
-    customerId: string;
-    pan?: string;
-    aadhar?: string;
-  }): Promise<CreditReportResult> {
-    // 🔒 Call actual CIBIL API here
-    const response = await fetch("https://cibil.api/credit-report", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.CIBIL_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        customerId: input.customerId,
-        pan: input.pan,
-        aadhar: input.aadhar,
-      }),
-    });
 
-    if (!response.ok) {
-      throw new Error(
-        `CIBIL API request failed with status ${response.status}`,
-      );
+const CIBIL_API_URL = ENV.CIBIL_API || "https://api.bulkpe.in/client/getCibil";
+const CIBIL_API_KEY = ENV.CIBIL_API_KEY || "";
+
+if (!CIBIL_API_KEY) {
+  logger.warn("CIBIL_API_KEY is not set. Requests to CIBIL API may fail.");
+}
+
+const cibilClient = axios.create({
+  timeout: 15000,
+  headers: {
+    "Content-Type": "application/json",
+    ...(CIBIL_API_KEY ? { Authorization: `Bearer ${CIBIL_API_KEY}` } : {}),
+  },
+});
+
+
+function handleAxiosError(res: Response, error: unknown) {
+  if (axios.isAxiosError(error)) {
+    const status = error.response?.status ?? 502;
+    const data = error.response?.data ?? { message: error.message };
+    logger.error("CIBIL API error:", data);
+    return res.status(status).json({ success: false, error: data });
+  }
+  logger.error("Unexpected error:", error);
+  return res.status(500).json({ success: false, error: (error as Error).message || "Internal error" });
+}
+
+
+export const cibilCreditProvider = async (req: Request, res: Response) => {
+  try {
+   const {firstName,lastName,phone,pan} = req.body;
+
+    if (!pan || !firstName || !lastName || !phone) {
+      return res.status(400).json({ success: false, message: "Missing required fields: pan, firstName, lastName, phone" });
     }
-
-    const data = await response.json();
-
-    const accounts = (data.accounts ?? []).map((a: any) => ({
-      lenderName: a.memberName,
-      accountType: a.accountType,
-      emiAmount: a.emiAmount,
-      outstanding: a.currentBalance,
-      accountStatus: a.status,
-      sanctionedAmount: a.sanctionedAmount,
-      outstandingAmount: a.outstandingAmount,
-      dpd: a.dpd,
-    }));
-
-    // Return only the `CreditReportResult` shape expected by the interface
-    return {
-      bureauReferenceId: data.controlNumber,
-      creditScore: data.score,
-      accounts,
-      totalActiveLoans: accounts.filter(
-        (a: any) => a.accountStatus === "ACTIVE",
-      ).length,
-      totalClosedLoans: accounts.filter(
-        (a: any) => a.accountStatus === "CLOSED",
-      ).length,
-      totalOutstanding: accounts.reduce(
-        (sum: number, a: any) => sum + (a.outstanding || 0),
-        0,
-      ),
-
-      totalMonthlyEmi: accounts.reduce(
-        (sum: number, a: any) => sum + (a.emiAmount ?? 0),
-        0,
-      ),
-
-      maxDPD: Math.max(...accounts.map((a: any) => a.dpd ?? 0), 0),
-      overdueAccounts: accounts.filter((a: any) => (a.dpd ?? 0) > 0).length,
-      writtenOffCount: accounts.filter(
-        (a: any) => a.accountStatus === "WRITTEN_OFF",
-      ).length,
-      settledCount: accounts.filter((a: any) => a.accountStatus === "SETTLED")
-        .length,
-
-      rawReport: data,
-    };
+    const response = await cibilClient.post(CIBIL_API_URL, {
+      pan,
+      firstName,
+      lastName,
+      phone
+    });
+    return response.data;
+  } catch (error) {
+    return handleAxiosError(res, error);
   }
 }
