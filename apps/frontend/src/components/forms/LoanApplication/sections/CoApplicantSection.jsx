@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Users, Trash2, Plus, UserCheck, TrendingUp } from "lucide-react";
 
 import Button from "../../../ui/Button";
 import InputField from "../../../ui/InputField";
-import { apiGet, apiPost } from "../../../../lib/api/apiClient";
+import { apiGet } from "../../../../lib/api/apiClient";
 import {
   showError,
   showInfo,
   showSuccess,
 } from "../../../../lib/utils/toastService";
+import { useAadhaar } from "../../../../hooks/useAadhaar";
 import {
   SectionCard,
   PersonPersonalFields,
@@ -16,6 +17,17 @@ import {
   PersonFinancialFields,
 } from "../sharedFields";
 import { personDefaults, fillPerson } from "../sharedUtils";
+
+const OTP_TIMER_SECONDS = 10 * 60;
+
+const formatSeconds = (seconds) => {
+  const safeSeconds = Math.max(0, Number(seconds) || 0);
+  const mins = Math.floor(safeSeconds / 60)
+    .toString()
+    .padStart(2, "0");
+  const secs = (safeSeconds % 60).toString().padStart(2, "0");
+  return `${mins}:${secs}`;
+};
 
 export default function CoApplicantSection({
   control,
@@ -30,9 +42,33 @@ export default function CoApplicantSection({
   const [otpMap, setOtpMap] = useState({});
   const [otpSentMap, setOtpSentMap] = useState({});
   const [otpVerifiedMap, setOtpVerifiedMap] = useState({});
-  const [sessionMap, setSessionMap] = useState({});
-  const [fallbackOtpMap, setFallbackOtpMap] = useState({});
+  const [showOtpModalMap, setShowOtpModalMap] = useState({});
+  const [otpExpiresAtMap, setOtpExpiresAtMap] = useState({});
+  const [otpSecondsLeftMap, setOtpSecondsLeftMap] = useState({});
   const [searchingMap, setSearchingMap] = useState({});
+  const { sendOtp, verifyOtp, isLoading: aadhaarLoading } = useAadhaar();
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setOtpSecondsLeftMap((prev) => {
+        const next = {};
+        Object.keys(otpExpiresAtMap).forEach((key) => {
+          const expiresAt = otpExpiresAtMap[key];
+          if (!expiresAt) {
+            next[key] = 0;
+            return;
+          }
+          next[key] = Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000));
+        });
+        return next;
+      });
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [otpExpiresAtMap]);
+
+  const isOtpExpired = (index) =>
+    !!otpSentMap[index] && (otpSecondsLeftMap[index] || 0) === 0;
 
   const handleSendOtp = async (index) => {
     const q = (aadhaarQueries[index] || "").replace(/\D/g, "").slice(0, 12);
@@ -40,22 +76,29 @@ export default function CoApplicantSection({
 
     try {
       setSearchingMap((s) => ({ ...s, [index]: true }));
-      const res = await apiPost("/customers/aadhaar/send-otp", { aadhaar: q });
-      const sid = res?.data?.sessionId || res?.sessionId || "";
-      setSessionMap((s) => ({ ...s, [index]: String(sid || "") }));
+      const res = await sendOtp.mutateAsync({ aadhaarNumber: q });
+      console.log(`[Aadhaar][Co-Applicant ${index + 1}] Send OTP response:`, res);
       setOtpSentMap((s) => ({ ...s, [index]: true }));
       setOtpVerifiedMap((s) => ({ ...s, [index]: false }));
-      setFallbackOtpMap((s) => ({ ...s, [index]: "" }));
-      showSuccess("OTP sent successfully");
-    } catch {
-      setSessionMap((s) => ({ ...s, [index]: "" }));
-      setOtpSentMap((s) => ({ ...s, [index]: true }));
-      setOtpVerifiedMap((s) => ({ ...s, [index]: false }));
-      setFallbackOtpMap((s) => ({ ...s, [index]: "123456" }));
-      showInfo("OTP service unavailable. Use OTP 123456 for now.");
+      setOtpMap((s) => ({ ...s, [index]: "" }));
+      setOtpExpiresAtMap((s) => ({
+        ...s,
+        [index]: Date.now() + OTP_TIMER_SECONDS * 1000,
+      }));
+      setShowOtpModalMap((s) => ({ ...s, [index]: true }));
+    } catch (err) {
+      showError(err?.message || "Failed to send OTP");
     } finally {
       setSearchingMap((s) => ({ ...s, [index]: false }));
     }
+  };
+
+  const handleAadhaarButtonClick = (index) => {
+    if (otpSentMap[index] && !otpVerifiedMap[index]) {
+      setShowOtpModalMap((s) => ({ ...s, [index]: true }));
+      return;
+    }
+    handleSendOtp(index);
   };
 
   const handleVerifyOtp = async (index) => {
@@ -65,33 +108,21 @@ export default function CoApplicantSection({
     const otp = (otpMap[index] || "").replace(/\D/g, "").slice(0, 6);
     if (aadhaar.length !== 12) return showInfo("Enter valid 12-digit Aadhaar");
     if (otp.length !== 6) return showInfo("Enter valid 6-digit OTP");
+    if (isOtpExpired(index)) return showInfo("OTP expired. Please resend OTP.");
 
     try {
       setSearchingMap((s) => ({ ...s, [index]: true }));
-      if (sessionMap[index]) {
-        await apiPost("/customers/aadhaar/verify-otp", {
-          aadhaar,
-          otp,
-          sessionId: sessionMap[index],
-        });
-        setOtpVerifiedMap((s) => ({ ...s, [index]: true }));
-        showSuccess("OTP verified successfully");
-        return;
-      }
-
-      if (fallbackOtpMap[index] && otp === fallbackOtpMap[index]) {
-        setOtpVerifiedMap((s) => ({ ...s, [index]: true }));
-        showSuccess("OTP verified successfully");
-      } else {
-        showError("Invalid OTP");
-      }
+      const res = await verifyOtp.mutateAsync({
+        aadhaarNumber: aadhaar,
+        otp,
+      });
+      console.log(`[Aadhaar][Co-Applicant ${index + 1}] Verify OTP response:`, res);
+      setOtpVerifiedMap((s) => ({ ...s, [index]: true }));
+      setShowOtpModalMap((s) => ({ ...s, [index]: false }));
+      await handleCoApplicantAadhaarSearch(index);
+      showSuccess("OTP verified and customer details loaded");
     } catch (err) {
-      if (fallbackOtpMap[index] && otp === fallbackOtpMap[index]) {
-        setOtpVerifiedMap((s) => ({ ...s, [index]: true }));
-        showSuccess("OTP verified successfully");
-      } else {
-        showError(err?.message || "OTP verification failed");
-      }
+      showError(err?.message || "OTP verification failed");
     } finally {
       setSearchingMap((s) => ({ ...s, [index]: false }));
     }
@@ -174,33 +205,33 @@ export default function CoApplicantSection({
               <div className="mt-6 flex items-center gap-2">
                 <Button
                   type="button"
-                  onClick={() => handleSendOtp(index)}
+                  onClick={() => handleAadhaarButtonClick(index)}
                   disabled={
                     !!searchingMap[index] ||
+                    aadhaarLoading ||
                     (aadhaarQueries[index] || "").length !== 12
                   }
                 >
-                  {searchingMap[index]
-                    ? "Sending..."
-                    : otpSentMap[index]
-                      ? "Resend OTP"
-                      : "Send OTP"}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => handleCoApplicantAadhaarSearch(index)}
-                  disabled={!!searchingMap[index] || !otpVerifiedMap[index]}
-                >
-                  {searchingMap[index] ? "Fetching..." : "Fetch"}
+                  {sendOtp.isPending ? "Sending..." : "Send OTP"}
                 </Button>
               </div>
             </div>
+          </div>
 
-            {(aadhaarQueries[index] || "").length === 12 && (
-              <div className="flex items-end gap-3 mb-4">
-                <div className="flex-1 sm:max-w-xs">
+          {showOtpModalMap[index] && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+              <div className="w-full max-w-md rounded-lg bg-white p-4 shadow-xl">
+                <h3 className="text-base font-semibold">Enter Aadhaar OTP</h3>
+                <p className="mt-1 text-sm text-gray-600">
+                  OTP has been sent to the Aadhaar-linked mobile number.
+                </p>
+                <p className="mt-1 text-xs text-gray-500">
+                  OTP expires in {formatSeconds(otpSecondsLeftMap[index] || 0)}
+                </p>
+
+                <div className="mt-4">
                   <InputField
-                    label="Enter OTP"
+                    label="OTP"
                     value={otpMap[index] || ""}
                     onChange={(e) =>
                       setOtpMap((s) => ({
@@ -208,25 +239,48 @@ export default function CoApplicantSection({
                         [index]: e.target.value.replace(/\D/g, "").slice(0, 6),
                       }))
                     }
-                    placeholder="Enter 6-digit OTP"
+                    placeholder="Enter 4-6 digit OTP"
                   />
                 </div>
-                <div className="mt-6">
+
+                <div className="mt-4 flex items-center justify-end gap-2">
+                  <Button
+                    type="button"
+                    onClick={() => handleSendOtp(index)}
+                    disabled={
+                      sendOtp.isPending || (otpSecondsLeftMap[index] || 0) > 0
+                    }
+                  >
+                    {sendOtp.isPending
+                      ? "Resending..."
+                      : (otpSecondsLeftMap[index] || 0) > 0
+                        ? `Resend in ${formatSeconds(otpSecondsLeftMap[index])}`
+                        : "Resend OTP"}
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() =>
+                      setShowOtpModalMap((s) => ({ ...s, [index]: false }))
+                    }
+                    disabled={verifyOtp.isPending}
+                  >
+                    Cancel
+                  </Button>
                   <Button
                     type="button"
                     onClick={() => handleVerifyOtp(index)}
                     disabled={
-                      !!searchingMap[index] ||
-                      !!otpVerifiedMap[index] ||
-                      (otpMap[index] || "").length !== 6
+                      verifyOtp.isPending ||
+                      (otpMap[index] || "").length !== 6 ||
+                      isOtpExpired(index)
                     }
                   >
-                    {otpVerifiedMap[index] ? "Verified" : "Verify OTP"}
+                    {verifyOtp.isPending ? "Verifying..." : "Verify OTP"}
                   </Button>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
           <SectionCard
             title={`Co-Applicant ${index + 1} — Personal Details`}
