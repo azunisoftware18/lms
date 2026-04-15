@@ -1,20 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Plus, Download } from "lucide-react";
-import AddEmployeeFormModal from "../../../components/modals/AddEmployeeFormModal";
+import { Plus } from "lucide-react";
+import AddEmployeeForm from "../../../components/forms/AddEmployeeForm";
 import EmployeeDetailsModal from "../../../components/modals/EmployeeDetailsModal";
 import EmployeeAccessModal from "../../../components/modals/EmployeeAccessModal";
 import Button from "../../../components/ui/Button";
-import SearchField from "../../../components/ui/SearchField";
-import FilterDropdown from "../../../components/ui/FilterDropdown";
 import EmployeeAddTable from "../../../components/tables/EmployeeAddTable";
-import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
-import Pagination from "../../../components/common/Pagination";
 import {
   useEmployees,
   useCreateEmployee,
   useUpdateEmployee,
-  useDeleteEmployee,
 } from "../../../hooks/useEmployee";
+import { useEmployee } from "../../../hooks/useEmployee";
 import {
   showError,
   showInfo,
@@ -38,6 +34,8 @@ const INITIAL_FORM_STATE = {
   employeeId: "",
   department: "Sales",
   designation: "Executive",
+  roleTitle: "",
+  employeeRoleId: "",
   dateOfJoining: "",
   experience: "",
   reportingManager: "",
@@ -66,13 +64,7 @@ const INITIAL_FORM_STATE = {
   taxDeduction: "",
   status: "Active",
   leaveBalance: "12",
-  permissions: {
-    addCustomer: false,
-    viewCustomer: false,
-    processLoan: false,
-    manageLeads: false,
-    generateReports: false,
-  },
+  permissions: {},
 };
 
 const INITIAL_PRESENTATION_FORM = {
@@ -83,63 +75,48 @@ const INITIAL_PRESENTATION_FORM = {
   attachments: null,
 };
 
-const DEPARTMENTS = [
-  "All",
-  "Sales",
-  "Marketing",
-  "Operations",
-  "HR",
-  "Finance",
-  "IT",
-  "Customer Service",
-  "Management",
-];
-
-const STATUS_OPTIONS = ["All", "Active", "Inactive", "On Leave", "Probation"];
-
 export default function EmployeeAddPage() {
-  const [view] = useState("list");
+  const [view, setView] = useState("list");
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [showEmployeeModal, setShowEmployeeModal] = useState(false);
 
-  // --- VIEW MODAL STATE ---
   const [showViewModal, setShowViewModal] = useState(false);
   const [viewData, setViewData] = useState(null);
 
-  // --- PRESENTATION MODAL STATE ---
   const [showPresentationModal, setShowPresentationModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [presentations, setPresentations] = useState([]);
 
-  // --- SEARCH & FILTER STATE ---
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
   const [filterStatus, setFilterStatus] = useState("All");
-  const [filterDepartment, setFilterDepartment] = useState("All");
-  const [deleteCandidate, setDeleteCandidate] = useState(null);
+
   const createEmployeeMutation = useCreateEmployee();
   const updateEmployeeMutation = useUpdateEmployee();
-  const deleteEmployeeMutation = useDeleteEmployee();
+  // queryClient no longer needed here (using `useEmployee` hook instead)
+  const [fetchId, setFetchId] = useState(null);
+  const [fetchMode, setFetchMode] = useState(null); // 'view' | 'edit' | null
+  const {
+    data: fetchedEmployeeRaw,
+    error: fetchedEmployeeError,
+    isLoading: fetchedEmployeeLoading,
+  } = useEmployee(fetchId || undefined);
 
   const [formData, setFormData] = useState(INITIAL_FORM_STATE);
-
-  // Presentation Form State
   const [presentationForm, setPresentationForm] = useState(
     INITIAL_PRESENTATION_FORM,
   );
 
-  // Page Access State for each employee
   const [employeePageAccess, setEmployeePageAccess] = useState({});
 
   const {
     employees: employeeList = [],
-    meta,
     loading: employeesLoading,
     isFetching: employeesFetching,
     refetch,
+    rawResponse,
   } = useEmployees({
     page: currentPage,
     limit: rowsPerPage,
@@ -151,19 +128,30 @@ export default function EmployeeAddPage() {
       setDebouncedSearchQuery(searchQuery.trim());
       setCurrentPage(1);
     }, 350);
-
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
   const employees = useMemo(() => {
-    if (!Array.isArray(employeeList)) return [];
+    const sourceEmployees =
+      Array.isArray(employeeList) && employeeList.length > 0
+        ? employeeList
+        : Array.isArray(employeeList?.data?.data)
+          ? employeeList.data.data
+          : Array.isArray(employeeList?.data)
+            ? employeeList.data
+            : // fallback to rawResponse from query (axios response)
+              Array.isArray(rawResponse?.data?.data)
+              ? rawResponse.data.data
+              : Array.isArray(rawResponse?.data)
+                ? rawResponse.data
+                : [];
 
-    return employeeList.map((employee) => ({
+    return sourceEmployees.map((employee) => ({
       ...employee,
       id: employee.id,
       employeeId: employee.employeeId,
       fullName: employee.fullName ?? employee.user?.fullName ?? "",
-      email: employee.email ?? employee.user?.email ?? "",
+      email: employee.email ?? employee.Email ?? employee.user?.email ?? "",
       phone:
         employee.phone ??
         employee.contactNumber ??
@@ -188,7 +176,9 @@ export default function EmployeeAddPage() {
       branchId: employee.branchId ?? employee.user?.branchId ?? "",
       permissions: employee.permissions ?? {},
     }));
-  }, [employeeList]);
+  }, [employeeList, rawResponse]);
+
+  // debug logs removed
 
   const defaultPageAccessByEmployee = useMemo(() => {
     return employees.reduce((acc, employee) => {
@@ -206,13 +196,9 @@ export default function EmployeeAddPage() {
     }, {});
   }, [employees]);
 
-  // --- FILTERED DATA LOGIC ---
   const filteredEmployees = Array.isArray(employees)
     ? employees.filter((employee) => {
         const q = searchQuery.toLowerCase();
-        const matchDepartment =
-          filterDepartment === "All" ||
-          employee.department === filterDepartment;
         const matchStatus =
           filterStatus === "All" || employee.status === filterStatus;
         const matchSearch =
@@ -222,11 +208,11 @@ export default function EmployeeAddPage() {
           employee.employeeId?.toLowerCase().includes(q) ||
           employee.department?.toLowerCase().includes(q);
 
-        return matchSearch && matchDepartment && matchStatus;
+        return matchSearch && matchStatus;
       })
     : [];
 
-  const totalPages = Math.max(1, Number(meta?.totalPages || meta?.pages || 1));
+  // totalPages is now computed inside EmployeeAddTable
 
   const selectedEmployeePresentations = useMemo(() => {
     if (!selectedEmployee?.employeeId) return [];
@@ -235,42 +221,325 @@ export default function EmployeeAddPage() {
     );
   }, [presentations, selectedEmployee]);
 
-  // Get page access for selected employee
-  const getEmployeePageAccess = (employeeId) => {
+  const getEmployeePageAccess = (employeeId) => ({
+    ...(defaultPageAccessByEmployee[employeeId] || {}),
+    ...(employeePageAccess[employeeId] || {}),
+  });
+
+  const toDateInput = (value) => {
+    if (!value) return "";
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return "";
+    return d.toISOString().split("T")[0];
+  };
+
+  const toNum = (value) => {
+    if (value == null || value === "") return 0;
+    const num = Number(String(value).replace(/[^0-9.-]+/g, ""));
+    return Number.isFinite(num) ? num : 0;
+  };
+
+  const buildTotalSalary = (salaryDetails = {}) => {
+    const basicSalary = toNum(salaryDetails.basicSalary);
+    const conveyance = toNum(salaryDetails.conveyance);
+    const medicalAllowance = toNum(salaryDetails.medicalAllowance);
+    const otherAllowances = toNum(salaryDetails.otherAllowances);
+    const pfDeduction = toNum(salaryDetails.pfDeduction);
+    const taxDeduction = toNum(salaryDetails.taxDeduction);
+
+    return (
+      basicSalary +
+      conveyance +
+      medicalAllowance +
+      otherAllowances -
+      pfDeduction -
+      taxDeduction
+    );
+  };
+
+  const normalizeEmployeeDetail = (payload) => {
+    const source = payload?.employee ? payload.employee : payload;
+    const user = payload?.user || source?.user || {};
+    const employeeRole = source?.employeeRole || payload?.employeeRole || null;
+    const employeeAddress = source?.address || payload?.address || null;
+
+    const documents = payload?.documents || source?.documents || [];
+    const docValue = (type) =>
+      Array.isArray(documents)
+        ? documents.find((d) => d?.documentType === type)?.documentPath
+        : undefined;
+
+    const accountDetails = payload?.accountDetails || {
+      accountHolder: docValue("EMP_ACCOUNT_HOLDER") || "",
+      bankName: docValue("EMP_BANK_NAME") || "",
+      bankAccountNo: docValue("EMP_BANK_ACCOUNT_NO") || "",
+      ifsc: docValue("EMP_IFSC") || "",
+      upiId: docValue("EMP_UPI_ID") || "",
+    };
+
+    const salaryDetails = payload?.salaryDetails || {
+      basicSalary: toNum(docValue("EMP_SALARY_BASIC")),
+      conveyance: toNum(docValue("EMP_SALARY_CONVEYANCE")),
+      medicalAllowance: toNum(docValue("EMP_SALARY_MEDICAL_ALLOWANCE")),
+      otherAllowances: toNum(docValue("EMP_SALARY_OTHER_ALLOWANCES")),
+      pfDeduction: toNum(docValue("EMP_SALARY_PF_DEDUCTION")),
+      taxDeduction: toNum(docValue("EMP_SALARY_TAX_DEDUCTION")),
+    };
+
+    const totalSalary = buildTotalSalary(salaryDetails);
+
     return {
-      ...(defaultPageAccessByEmployee[employeeId] || {}),
-      ...(employeePageAccess[employeeId] || {}),
+      ...source,
+      user,
+      employeeRole,
+      addressDetail: employeeAddress,
+      branch: source?.branch || payload?.branch || null,
+      documents,
+      accountDetails,
+      salaryDetails,
+      id: source?.id,
+      employeeId: source?.employeeId,
+      fullName: source?.fullName || user?.fullName || "",
+      email: source?.Email || source?.email || user?.email || "",
+      phone: source?.contactNumber || user?.contactNumber || "",
+      contactNumber: source?.contactNumber || user?.contactNumber || "",
+      altPhone: source?.atlMobileNumber || "",
+      userName: user?.userName || source?.userName || "",
+      username: user?.userName || source?.userName || "",
+      dob: toDateInput(source?.dob),
+      dateOfJoining: toDateInput(source?.dateOfJoining),
+      gender: source?.gender || "MALE",
+      maritalStatus: source?.maritalStatus || "SINGLE",
+      designation: source?.designation || "",
+      department: source?.department || employeeRole?.roleTitle || "",
+      roleTitle: employeeRole?.roleTitle || source?.roleTitle || "",
+      roleName: employeeRole?.roleName || source?.roleName || "",
+      roleFor: employeeRole?.roleFor || source?.roleFor || "",
+      employeeRoleId: source?.employeeRoleId || employeeRole?.id || "",
+      reportingManager:
+        source?.reportingManagerId || source?.reportingManager || "",
+      reportingManagerId:
+        source?.reportingManagerId || source?.reportingManager || "",
+      workLocation: source?.workLocation || "OFFICE",
+      city: employeeAddress?.city || source?.city || "",
+      state: employeeAddress?.state || source?.state || "",
+      pinCode: employeeAddress?.pinCode || source?.pinCode || "",
+      pincode: employeeAddress?.pinCode || source?.pinCode || "",
+      addressLine1: employeeAddress?.addressLine1 || "",
+      addressLine2: employeeAddress?.addressLine2 || "",
+      address:
+        [employeeAddress?.addressLine1, employeeAddress?.addressLine2]
+          .filter(Boolean)
+          .join(", ") ||
+        source?.address ||
+        "",
+      emergencyContact: source?.emergencyContact || "",
+      emergencyRelationship: source?.emergencyRelationship || "",
+      emergencyRelation: source?.emergencyRelationship || "",
+      aadhaarNo:
+        docValue("AADHAAR_FRONT") ||
+        docValue("AADHAAR_BACK") ||
+        docValue("AADHAR_FRONT") ||
+        docValue("AADHAR_BACK") ||
+        source?.aadhaarNo ||
+        "",
+      panNo: docValue("PAN_FILE") || source?.panNo || "",
+      branchId: source?.branchId || user?.branchId || "",
+      branchCode:
+        source?.branch?.code ||
+        payload?.branch?.code ||
+        source?.branchCode ||
+        "",
+      branchName:
+        source?.branch?.name ||
+        payload?.branch?.name ||
+        source?.branchName ||
+        "",
+      status:
+        source?.status ||
+        (typeof user?.isActive === "boolean"
+          ? user.isActive
+            ? "Active"
+            : "Inactive"
+          : "Active"),
+      accountHolder: accountDetails?.accountHolder || "",
+      bankName: accountDetails?.bankName || "",
+      bankAccountNo: accountDetails?.bankAccountNo || "",
+      ifsc: accountDetails?.ifsc || "",
+      upiId: accountDetails?.upiId || "",
+      basicSalary: toNum(salaryDetails?.basicSalary),
+      conveyance: toNum(salaryDetails?.conveyance),
+      medicalAllowance: toNum(salaryDetails?.medicalAllowance),
+      otherAllowances: toNum(salaryDetails?.otherAllowances),
+      pfDeduction: toNum(salaryDetails?.pfDeduction),
+      taxDeduction: toNum(salaryDetails?.taxDeduction),
+      totalSalary: `Rs ${totalSalary.toLocaleString()}`,
     };
   };
 
-  // --- EXPORT HANDLER (CSV for Excel) ---
-  const handleExport = () => {
-    let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent +=
-      "Employee ID,Name,Email,Phone,Department,Designation,Salary,Status,Leave Balance\n";
+  const mapEmployeeToForm = (employee) => ({
+    fullName: employee.fullName || employee.user?.fullName || "",
+    email: employee.email || employee.Email || employee.user?.email || "",
+    contactNumber:
+      employee.phone ||
+      employee.contactNumber ||
+      employee.user?.contactNumber ||
+      "",
+    atlMobileNumber: employee.atlMobileNumber || employee.altPhone || "",
+    dob: toDateInput(employee.dob),
+    gender: (employee.gender || "MALE").toUpperCase(),
+    maritalStatus: (employee.maritalStatus || "SINGLE").toUpperCase(),
+    userName: employee.userName || employee.user?.userName || "",
+    password: "",
+    address: employee.address || employee.addressLine1 || "",
+    city: employee.city || employee.addressDetail?.city || "",
+    state: employee.state || employee.addressDetail?.state || "",
+    pinCode:
+      employee.pinCode ||
+      employee.pincode ||
+      employee.addressDetail?.pinCode ||
+      "",
+    emergencyContact: employee.emergencyContact || "",
+    emergencyRelationship: (
+      employee.emergencyRelation ||
+      employee.emergencyRelationship ||
+      "FATHER"
+    ).toUpperCase(),
+    department: employee.department || employee.roleTitle || "",
+    designation: employee.designation || "",
+    roleTitle: employee.employeeRole?.roleTitle || employee.roleTitle || "",
+    employeeRoleId: employee.employeeRoleId || employee.employeeRole?.id || "",
+    reportingManager:
+      employee.reportingManager || employee.reportingManagerId || "",
+    branchCode: employee.branchCode || employee.branch?.code || "",
+    dateOfJoining: toDateInput(employee.dateOfJoining),
+    experience: employee.experience || "",
+    workLocation: (employee.workLocation || "OFFICE").toUpperCase(),
+    aadhaarNo: employee.aadhaarNo || "",
+    panNo: employee.panNo || "",
+    accountHolder:
+      employee.accountHolder || employee.accountDetails?.accountHolder || "",
+    bankName: employee.bankName || employee.accountDetails?.bankName || "",
+    bankAccountNo:
+      employee.bankAccountNo || employee.accountDetails?.bankAccountNo || "",
+    ifsc: employee.ifsc || employee.accountDetails?.ifsc || "",
+    upiId: employee.upiId || employee.accountDetails?.upiId || "",
+    basicSalary:
+      (employee.basicSalary ?? employee.salaryDetails?.basicSalary) != null
+        ? String(
+            employee.basicSalary ?? employee.salaryDetails?.basicSalary,
+          ).replace(/[^0-9]/g, "")
+        : "",
+    hra: employee.hra ? String(employee.hra).replace(/[^0-9]/g, "") : "",
+    conveyance:
+      (employee.conveyance ?? employee.salaryDetails?.conveyance) != null
+        ? String(
+            employee.conveyance ?? employee.salaryDetails?.conveyance,
+          ).replace(/[^0-9]/g, "")
+        : "",
+    medicalAllowance:
+      (employee.medicalAllowance ?? employee.salaryDetails?.medicalAllowance) !=
+      null
+        ? String(
+            employee.medicalAllowance ??
+              employee.salaryDetails?.medicalAllowance,
+          ).replace(/[^0-9]/g, "")
+        : "",
+    otherAllowances:
+      (employee.otherAllowances ?? employee.salaryDetails?.otherAllowances) !=
+      null
+        ? String(
+            employee.otherAllowances ?? employee.salaryDetails?.otherAllowances,
+          ).replace(/[^0-9]/g, "")
+        : "",
+    pfDeduction:
+      (employee.pfDeduction ?? employee.salaryDetails?.pfDeduction) != null
+        ? String(
+            employee.pfDeduction ?? employee.salaryDetails?.pfDeduction,
+          ).replace(/[^0-9]/g, "")
+        : "",
+    taxDeduction:
+      (employee.taxDeduction ?? employee.salaryDetails?.taxDeduction) != null
+        ? String(
+            employee.taxDeduction ?? employee.salaryDetails?.taxDeduction,
+          ).replace(/[^0-9]/g, "")
+        : "",
+    status: employee.status || (employee.isActive ? "Active" : "Inactive"),
+    permissions: {
+      canAddCustomer:
+        employee.permissions?.canAddCustomer ||
+        employee.permissions?.addCustomer ||
+        false,
+      canViewAllCustomers:
+        employee.permissions?.canViewAllCustomers ||
+        employee.permissions?.viewCustomer ||
+        false,
+      canProcessLoans:
+        employee.permissions?.canProcessLoans ||
+        employee.permissions?.processLoan ||
+        false,
+      canManageLeads:
+        employee.permissions?.canManageLeads ||
+        employee.permissions?.manageLeads ||
+        false,
+      canGenerateReports:
+        employee.permissions?.canGenerateReports ||
+        employee.permissions?.generateReports ||
+        false,
+    },
+    employeeId: employee.employeeId,
+    leaveBalance: employee.leaveBalance || "12",
+    salaryType: "Monthly",
+    documents: employee.documents || [],
+  });
 
-    filteredEmployees.forEach((emp) => {
-      const row = `${emp.employeeId},"${emp.fullName}","${emp.email}","${emp.phone}","${emp.department}","${emp.designation}","${emp.totalSalary}","${emp.status}","${emp.leaveBalance}"`;
-      csvContent += row + "\n";
-    });
+  useEffect(() => {
+    if (!fetchId) return;
+    if (fetchedEmployeeLoading) return;
+    if (fetchedEmployeeError) {
+      showError(
+        fetchedEmployeeError?.message || "Failed to load employee details",
+      );
+      setFetchId(null);
+      setFetchMode(null);
+      return;
+    }
 
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "employees_list.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    showSuccess("Employees exported successfully");
-  };
+    const payload = fetchedEmployeeRaw?.data ?? fetchedEmployeeRaw;
+    const employee = normalizeEmployeeDetail(payload);
 
-  // --- VIEW HANDLER ---
-  const handleView = (employee) => {
-    setViewData(employee);
+    if (fetchMode === "view") {
+      setViewData(employee);
+      setShowViewModal(true);
+    } else if (fetchMode === "edit") {
+      setFormData(mapEmployeeToForm(employee));
+      setEditId(employee.id);
+      setIsEditing(true);
+      setView("form");
+    }
+
+    setFetchId(null);
+    setFetchMode(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    fetchedEmployeeRaw,
+    fetchedEmployeeError,
+    fetchedEmployeeLoading,
+    fetchId,
+    fetchMode,
+  ]);
+
+  const handleView = (employeeOrId) => {
+    if (typeof employeeOrId === "string") {
+      setFetchMode("view");
+      setFetchId(employeeOrId);
+      return;
+    }
+
+    setViewData(employeeOrId);
     setShowViewModal(true);
   };
 
-  // --- PRESENTATION HANDLERS ---
   const handlePresentationClick = (employee) => {
     setSelectedEmployee(employee);
     setShowPresentationModal(true);
@@ -289,25 +558,18 @@ export default function EmployeeAddPage() {
 
   const handlePresentationAttachmentChange = (e) => {
     const file = e.target.files?.[0] || null;
-    setPresentationForm((prev) => ({
-      ...prev,
-      attachments: file,
-    }));
+    setPresentationForm((prev) => ({ ...prev, attachments: file }));
   };
 
   const handlePageAccessChange = (employeeId, pageId, checked) => {
     setEmployeePageAccess((prev) => ({
       ...prev,
-      [employeeId]: {
-        ...prev[employeeId],
-        [pageId]: checked,
-      },
+      [employeeId]: { ...prev[employeeId], [pageId]: checked },
     }));
   };
 
   const handleAssignPresentation = (e) => {
     e.preventDefault();
-
     if (
       !presentationForm.title ||
       !presentationForm.description ||
@@ -332,7 +594,6 @@ export default function EmployeeAddPage() {
     };
 
     setPresentations((prev) => [...prev, newPresentation]);
-
     showSuccess(
       `Presentation assigned to ${selectedEmployee.fullName} successfully!`,
     );
@@ -363,10 +624,8 @@ export default function EmployeeAddPage() {
     }
   };
 
-  // --- DOWNLOAD SINGLE PROFILE (CSV for Excel) ---
   const handleDownloadProfile = () => {
     if (!viewData) return;
-
     const rows = [
       ["Field", "Value"],
       ["Employee ID", viewData.employeeId],
@@ -419,108 +678,34 @@ export default function EmployeeAddPage() {
     showSuccess("Employee profile exported successfully");
   };
 
-  // --- FORM HANDLERS ---
-
   const resetForm = () => {
     setFormData(INITIAL_FORM_STATE);
     setIsEditing(false);
     setEditId(null);
-    setShowEmployeeModal(false);
+    setView("list");
   };
 
   const handleAddNew = () => {
     setIsEditing(false);
     setEditId(null);
     setFormData(INITIAL_FORM_STATE);
-    setShowEmployeeModal(true);
+    setView("form");
   };
 
-  const handleEdit = (employee) => {
-    setFormData({
-      fullName: employee.fullName || "",
-      email: employee.email || "",
-      contactNumber: employee.phone || employee.contactNumber || "",
-      atlMobileNumber: employee.altPhone || "",
-      dob: employee.dob || "",
-      gender: (employee.gender || "MALE").toUpperCase(),
-      maritalStatus: (employee.maritalStatus || "SINGLE").toUpperCase(),
-      userName: employee.username || employee.userName || "",
-      password: employee.password || "",
-      address: employee.address || "",
-      city: employee.city || "",
-      state: employee.state || "",
-      pinCode: employee.pincode || employee.pinCode || "",
-      emergencyContact: employee.emergencyContact || "",
-      emergencyRelationship: (
-        employee.emergencyRelation ||
-        employee.emergencyRelationship ||
-        "FATHER"
-      ).toUpperCase(),
-      department: employee.department || "Sales",
-      designation: employee.designation || "",
-      dateOfJoining: employee.dateOfJoining || "",
-      experience: employee.experience || "",
-      workLocation: (employee.workLocation || "OFFICE").toUpperCase(),
-      aadhaarNo: employee.aadhaarNo || "",
-      panNo: employee.panNo || "",
-      accountHolder: employee.accountHolder || "",
-      bankName: employee.bankName || "",
-      bankAccountNo: employee.bankAccountNo || "",
-      ifsc: employee.ifsc || "",
-      upiId: employee.upiId || "",
-      basicSalary: employee.basicSalary
-        ? String(employee.basicSalary).replace(/[^0-9]/g, "")
-        : "",
-      hra: employee.hra ? String(employee.hra).replace(/[^0-9]/g, "") : "",
-      conveyance: employee.conveyance
-        ? String(employee.conveyance).replace(/[^0-9]/g, "")
-        : "",
-      medicalAllowance: employee.medicalAllowance
-        ? String(employee.medicalAllowance).replace(/[^0-9]/g, "")
-        : "",
-      otherAllowances: employee.otherAllowances
-        ? String(employee.otherAllowances).replace(/[^0-9]/g, "")
-        : "",
-      pfDeduction: employee.pfDeduction
-        ? String(employee.pfDeduction).replace(/[^0-9]/g, "")
-        : "",
-      taxDeduction: employee.taxDeduction
-        ? String(employee.taxDeduction).replace(/[^0-9]/g, "")
-        : "",
-      status: employee.status || "Active",
-      permissions: {
-        canAddCustomer:
-          employee.permissions?.canAddCustomer ||
-          employee.permissions?.addCustomer ||
-          false,
-        canViewAllCustomers:
-          employee.permissions?.canViewAllCustomers ||
-          employee.permissions?.viewCustomer ||
-          false,
-        canProcessLoans:
-          employee.permissions?.canProcessLoans ||
-          employee.permissions?.processLoan ||
-          false,
-        canManageLeads:
-          employee.permissions?.canManageLeads ||
-          employee.permissions?.manageLeads ||
-          false,
-        canGenerateReports:
-          employee.permissions?.canGenerateReports ||
-          employee.permissions?.generateReports ||
-          false,
-      },
-      employeeId: employee.employeeId,
-      leaveBalance: employee.leaveBalance || "12",
-      salaryType: "Monthly",
-    });
+  const handleEdit = (employeeOrId) => {
+    if (typeof employeeOrId === "string") {
+      setFetchMode("edit");
+      setFetchId(employeeOrId);
+      return;
+    }
 
-    setEditId(employee.id);
+    setFormData(mapEmployeeToForm(employeeOrId));
+    setEditId(employeeOrId.id);
     setIsEditing(true);
-    setShowEmployeeModal(true);
+    setView("form");
   };
 
-  const handleEmployeeFormSuccess = async (payload) => {
+  const handleEmployeeFormSuccess = async (payload, extras = {}) => {
     const userRaw = localStorage.getItem("user");
     const user = userRaw ? JSON.parse(userRaw) : {};
 
@@ -538,15 +723,14 @@ export default function EmployeeAddPage() {
 
     const commonPayload = {
       ...payload,
+      ...extras,
       role: "EMPLOYEE",
       employeeRoleId: defaultEmployeeRoleId,
     };
 
     try {
       if (isEditing && editId) {
-        const updatePayload = {
-          ...commonPayload,
-        };
+        const updatePayload = { ...commonPayload };
         delete updatePayload.branchId;
 
         await updateEmployeeMutation.mutateAsync({
@@ -573,20 +757,6 @@ export default function EmployeeAddPage() {
     }
   };
 
-  const handleDelete = async () => {
-    if (!deleteCandidate) return;
-
-    try {
-      await deleteEmployeeMutation.mutateAsync(deleteCandidate.id);
-      setDeleteCandidate(null);
-      await refetch();
-      showInfo("Employee deleted successfully");
-    } catch (error) {
-      showError(error?.message || "Failed to delete employee");
-    }
-  };
-
-  // Get status color
   const getStatusColor = (status) => {
     switch (status) {
       case "Completed":
@@ -602,7 +772,6 @@ export default function EmployeeAddPage() {
     }
   };
 
-  // Get priority color
   const getPriorityColor = (priority) => {
     switch (priority) {
       case "High":
@@ -643,7 +812,6 @@ export default function EmployeeAddPage() {
         getStatusColor={getStatusColor}
       />
 
-      {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-800">
@@ -661,110 +829,43 @@ export default function EmployeeAddPage() {
         ) : (
           <Button
             onClick={resetForm}
-            className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2.5"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5"
           >
             Cancel & View List
           </Button>
         )}
       </div>
 
-      <AddEmployeeFormModal
-        isOpen={showEmployeeModal}
-        onClose={resetForm}
-        isEditing={isEditing}
-        editId={editId}
-        initialFormState={formData}
-        onSuccess={handleEmployeeFormSuccess}
-      />
-
-      {/* --- VIEW: EMPLOYEE LIST --- */}
       {view === "list" && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-in fade-in duration-300">
-          {/* Toolbar */}
-          <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-gray-50/50">
-            <div className="w-full sm:w-96">
-              <SearchField
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onClear={() => setSearchQuery("")}
-                showResults={false}
-                placeholder="Search by name, employee ID, or department..."
-              />
-            </div>
-
-            <div className="flex gap-2 relative flex-wrap justify-end w-full sm:w-auto">
-              <FilterDropdown
-                value={filterDepartment}
-                onChange={(value) => {
-                  setFilterDepartment(value);
-                  setCurrentPage(1);
-                }}
-                placeholder="Department"
-                options={DEPARTMENTS.map((dept) => ({
-                  value: dept,
-                  label: dept === "All" ? "All Departments" : dept,
-                }))}
-                className="min-w-45"
-              />
-
-              <FilterDropdown
-                value={filterStatus}
-                onChange={(value) => {
-                  setFilterStatus(value);
-                  setCurrentPage(1);
-                }}
-                placeholder="Filter Status"
-                options={STATUS_OPTIONS.map((status) => ({
-                  value: status,
-                  label: status,
-                }))}
-                className="min-w-42.5"
-              />
-
-              <Button
-                onClick={handleExport}
-                className="px-4 py-2.5 bg-blue-600 text-white hover:bg-blue-700 shadow-md shadow-blue-200"
-              >
-                <Download size={16} /> Export
-              </Button>
-            </div>
-          </div>
-
-          <EmployeeAddTable
-            employees={filteredEmployees}
-            presentations={presentations}
-            onPermission={handlePresentationClick}
-            onView={handleView}
-            onEdit={handleEdit}
-            onDelete={setDeleteCandidate}
-          />
-
-          <div className="border-t border-gray-100 px-4 sm:px-6 py-3 bg-gray-50/70">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-            {(employeesLoading || employeesFetching) && (
-              <p className="text-xs text-slate-500 text-center mt-1">
-                Loading employees...
-              </p>
-            )}
-          </div>
-        </div>
+        <EmployeeAddTable
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          filterStatus={filterStatus}
+          setFilterStatus={setFilterStatus}
+          employees={filteredEmployees}
+          presentations={presentations}
+          onPermission={handlePresentationClick}
+          onView={handleView}
+          onEdit={handleEdit}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          employeesLoading={employeesLoading}
+          employeesFetching={employeesFetching}
+          rowsPerPage={rowsPerPage}
+        />
       )}
 
-      <ConfirmationDialog
-        open={Boolean(deleteCandidate)}
-        title="Delete employee"
-        description={`Are you sure you want to delete ${deleteCandidate?.fullName || "this employee"}? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
-        variant="danger"
-        isPopup
-        onConfirm={handleDelete}
-        onCancel={() => setDeleteCandidate(null)}
-      />
+      {view === "form" && (
+        <div className="bg-white rounded-2xl shadow-sm border-none  overflow-hidden animate-in fade-in duration-300">
+          <AddEmployeeForm
+            initialFormState={isEditing ? formData : undefined}
+            isEditing={isEditing}
+            editId={editId}
+            onCancel={resetForm}
+            onSuccess={handleEmployeeFormSuccess}
+          />
+        </div>
+      )}
     </div>
   );
 }
