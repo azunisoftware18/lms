@@ -30,8 +30,8 @@ export const getAccessibleBranchIds = async (user: {
       throw new Error("User's branch not found");
     }
 
-    // If main branch, include all sub-branches; if sub-branch, only that branch
-    if (userBranch.type === "MAIN") {
+    // If this is a top-level branch (no parent), include all sub-branches; otherwise only that branch
+    if (userBranch.parentBranchId == null) {
       const subBranchIds = userBranch.subBranches.map((sb) => sb.id);
       return [user.branchId, ...subBranchIds];
     }
@@ -65,7 +65,7 @@ export const getAccessibleBranchIds = async (user: {
     throw new Error("User's branch not found");
   }
 
-  if (userBranch.type === "MAIN") {
+  if (userBranch.parentBranchId == null) {
     const subBranchIds = userBranch.subBranches.map((sb) => sb.id);
     return [user.branchId, ...subBranchIds];
   }
