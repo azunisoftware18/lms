@@ -7,30 +7,10 @@ const strongPasswordSchema = z
   .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
   .regex(/[a-z]/, "Password must contain at least one lowercase letter")
   .regex(/[0-9]/, "Password must contain at least one number")
-  .regex(/[^A-Za-z0-9]/, "Password must contain at least one special character");
-
-const emergencyRelationshipSchema = z
-  .string()
-  .trim()
-  .transform((s) => s.toUpperCase())
-  .refine(
-    (v) =>
-      [
-        "FATHER",
-        "MOTHER",
-        "SPOUSE",
-        "SIBLING",
-        "FRIEND",
-        "OTHER",
-        "BROTHER",
-        "SISTER",
-      ].includes(v),
-    {
-      message:
-        'Invalid emergencyRelationship: expected one of "FATHER"|"MOTHER"|"SPOUSE"|"SIBLING"|"FRIEND"|"OTHER" (aliases: "BROTHER" and "SISTER" map to "SIBLING")',
-    },
-  )
-  .transform((v) => (v === "BROTHER" || v === "SISTER" ? "SIBLING" : v));
+  .regex(
+    /[^A-Za-z0-9]/,
+    "Password must contain at least one special character",
+  );
 
 const employeeAddressSchema = z.object({
   addressLine1: z.string().trim().min(1),
@@ -47,21 +27,24 @@ const employeeAddressSchema = z.object({
 
 export const createEmployeeSchema = z
   .object({
-    // allow top-level user fields commonly sent with employee creation
     fullName: z.string().trim().min(1),
     email: z.string().trim().email(),
     password: strongPasswordSchema,
     role: z.nativeEnum(Role).optional(),
     contactNumber: z.string().trim().min(10).max(15),
-    isActive: z.coerce.boolean(),
     userName: z.string().trim().min(1),
-    atlMobileNumber: z.string().min(10),
+    atlMobileNumber: z.string().trim().optional(),
     dob: z.coerce.date(),
     gender: z.enum(["MALE", "FEMALE", "OTHER"]),
     maritalStatus: z.enum(["SINGLE", "MARRIED", "DIVORCED", "WIDOWED"]),
     designation: z.string().min(1),
-    emergencyContact: z.string().min(10),
-    emergencyRelationship: emergencyRelationshipSchema,
+    roleTitle: z.string().trim().optional(),
+    employeeRoleId: z.string().trim().min(1),
+    gradeBand: z.string().trim().optional(),
+    reportingManager: z.string().trim().min(1),
+    branchCode: z.string().trim().min(1),
+    regionZone: z.string().trim().optional(),
+    dateOfJoining: z.coerce.date().optional(),
     experience: z
       .union([z.string().min(1), z.number().nonnegative()])
       .optional(),
@@ -73,41 +56,46 @@ export const createEmployeeSchema = z
         message: 'Invalid option: expected one of "OFFICE"|"REMOTE"|"HYBRID"',
       })
       .optional(),
-    department: z.string().min(1),
-    dateOfJoining: z.string().optional(),
+    city: z.string().trim().min(1),
+    state: z.string().trim().min(1),
+    pinCode: z
+      .string()
+      .trim()
+      .regex(/^\d{6}$/),
+    accountHolder: z.string().trim().min(1),
+    bankName: z.string().trim().min(1),
+    bankAccountNo: z.string().trim().min(1),
+    ifsc: z.string().trim().min(1),
+    upiId: z.string().trim().optional(),
+    basicSalary: z.coerce.number().positive(),
+    conveyance: z.coerce.number().min(0).optional(),
+    medicalAllowance: z.coerce.number().min(0).optional(),
+    otherAllowances: z.coerce.number().min(0).optional(),
+    pfDeduction: z.coerce.number().min(0).optional(),
+    taxDeduction: z.coerce.number().min(0).optional(),
+    status: z.enum(["Active", "Inactive"]).optional(),
+    isActive: z.coerce.boolean().optional(),
     salary: z.number().positive().optional(),
-    employeeRoleId: z.string().min(1, "Employee role is required"),
-    address: z.string().min(1).optional(),
-    city: z.string().min(1).optional(),
-    state: z.string().min(1).optional(),
-    pinCode: z.string().min(6).optional(),
+    branchId: z.string().min(1).optional(),
+    roleDocuments: z
+      .record(
+        z.string(),
+        z.record(
+          z.string(),
+          z.object({
+            name: z.string().min(1),
+            type: z.string().optional(),
+            size: z.number().optional(),
+          }),
+        ),
+      )
+      .optional(),
     addresses: z
       .object({
         currentAddress: employeeAddressSchema.optional(),
         permanentAddress: employeeAddressSchema.optional(),
       })
       .optional(),
-    branchId: z.string().min(1, "Branch assignment is required"),
-  })
-  .superRefine((data, ctx) => {
-    const hasLegacyAddress = !!(
-      data.address &&
-      data.city &&
-      data.state &&
-      data.pinCode
-    );
-    const hasNestedAddress = !!(
-      data.addresses?.currentAddress || data.addresses?.permanentAddress
-    );
-
-    if (!hasLegacyAddress && !hasNestedAddress) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["addresses"],
-        message:
-          "Provide address fields using either legacy address/city/state/pinCode or addresses.currentAddress/permanentAddress",
-      });
-    }
   })
   .strict();
 
@@ -122,16 +110,20 @@ export const updateEmployeeSchema = z
     contactNumber: z.string().trim().min(10).max(15).optional(),
     isActive: z.coerce.boolean().optional(),
     userName: z.string().trim().min(1).optional(),
-    mobileNumber: z.string().min(10).optional(),
-    atlMobileNumber: z.string().min(10).optional(),
+    atlMobileNumber: z.string().trim().optional(),
     dob: z.coerce.date().optional(),
     gender: z.enum(["MALE", "FEMALE", "OTHER"]).optional(),
     maritalStatus: z
       .enum(["SINGLE", "MARRIED", "DIVORCED", "WIDOWED"])
       .optional(),
     designation: z.string().min(1).optional(),
-    emergencyContact: z.string().min(10).optional(),
-    emergencyRelationship: emergencyRelationshipSchema.optional(),
+    roleTitle: z.string().trim().optional(),
+    employeeRoleId: z.string().min(1).optional(),
+    
+    reportingManager: z.string().trim().min(1).optional(),
+    branchCode: z.string().trim().min(1).optional(),
+    regionZone: z.string().trim().optional(),
+    dateOfJoining: z.coerce.date().optional(),
     experience: z
       .union([z.string().min(1), z.number().nonnegative()])
       .optional(),
@@ -143,14 +135,40 @@ export const updateEmployeeSchema = z
         message: 'Invalid option: expected one of "OFFICE"|"REMOTE"|"HYBRID"',
       })
       .optional(),
-    department: z.string().min(1).optional(),
-    dateOfJoining: z.string().optional(),
+    city: z.string().trim().min(1).optional(),
+    state: z.string().trim().min(1).optional(),
+    pinCode: z
+      .string()
+      .trim()
+      .regex(/^\d{6}$/)
+      .optional(),
+    accountHolder: z.string().trim().min(1).optional(),
+    bankName: z.string().trim().min(1).optional(),
+    bankAccountNo: z.string().trim().min(1).optional(),
+    ifsc: z.string().trim().min(1).optional(),
+    upiId: z.string().trim().optional(),
+    basicSalary: z.coerce.number().positive().optional(),
+    conveyance: z.coerce.number().min(0).optional(),
+    medicalAllowance: z.coerce.number().min(0).optional(),
+    otherAllowances: z.coerce.number().min(0).optional(),
+    pfDeduction: z.coerce.number().min(0).optional(),
+    taxDeduction: z.coerce.number().min(0).optional(),
+    status: z.enum(["Active", "Inactive"]).optional(),
     salary: z.number().positive().optional(),
-    employeeRoleId: z.string().min(1).optional(),
-    address: z.string().min(1).optional(),
-    city: z.string().min(1).optional(),
-    state: z.string().min(1).optional(),
-    pinCode: z.string().min(6).optional(),
+    branchId: z.string().min(1).optional(),
+    roleDocuments: z
+      .record(
+        z.string(),
+        z.record(
+          z.string(),
+          z.object({
+            name: z.string().min(1),
+            type: z.string().optional(),
+            size: z.number().optional(),
+          }),
+        ),
+      )
+      .optional(),
     addresses: z
       .object({
         currentAddress: employeeAddressSchema.optional(),

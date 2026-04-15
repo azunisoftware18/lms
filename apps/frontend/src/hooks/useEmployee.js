@@ -35,11 +35,34 @@ export const useEmployees = (params = {}) => {
     queryFn: () =>
       apiGet("/employee/all", {
         params: normalizedParams,
+        // prevent intermediate 304 responses by bypassing cache
+        headers: { "Cache-Control": "no-cache" },
       }),
     keepPreviousData: true,
     onSuccess: (response) => {
-      const payload = response?.data ?? response;
-      dispatch(setEmployees(payload));
+      // debug logs removed
+
+      const raw = response?.data ?? response;
+      const employeesArray = Array.isArray(raw)
+        ? raw
+        : Array.isArray(raw?.data?.data)
+          ? raw.data.data
+          : Array.isArray(raw?.data)
+            ? raw.data
+            : Array.isArray(raw?.data?.employees)
+              ? raw.data.employees
+              : [];
+
+      const meta = raw?.data?.meta ?? raw?.meta ?? null;
+
+      if (!Array.isArray(employeesArray)) {
+        dispatch(clearError());
+        return;
+      }
+
+      const normalizedPayload = { data: { data: employeesArray, meta } };
+      // dispatch normalized payload
+      dispatch(setEmployees(normalizedPayload));
       dispatch(clearError());
     },
     onError: (queryError) => {
@@ -57,6 +80,7 @@ export const useEmployees = (params = {}) => {
     error: error || query.error,
     isFetching: query.isFetching,
     refetch: query.refetch,
+    rawResponse: query.data,
   };
 };
 
