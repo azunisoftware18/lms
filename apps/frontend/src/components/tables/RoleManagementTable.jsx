@@ -3,15 +3,13 @@ import { TableHead, TableBody, TableLoader, TableShell } from "./core";
 
 import Pagination from "../common/Pagination";
 
-import { Shield, Mail, Users, User, Edit2, Trash2 } from "lucide-react";
+import { Shield, Edit2, Trash2 } from "lucide-react";
 
 export default function RoleManagementTable({
   roles = [],
   loading = false,
   onEdit,
   onDelete,
-  onLogin,
-  getModuleName,
 }) {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,14 +42,37 @@ export default function RoleManagementTable({
     currentPage * itemsPerPage,
   );
 
+  const isRoleActive = (row) => {
+    const rawStatus =
+      row.isActive ??
+      row.active ??
+      row.is_active ??
+      row.status ??
+      row.roleStatus ??
+      row.state;
+
+    if (typeof rawStatus === "boolean") return rawStatus;
+    if (typeof rawStatus === "number") return rawStatus === 1;
+
+    if (typeof rawStatus === "string") {
+      const normalized = rawStatus.trim().toLowerCase();
+      return ["active", "true", "1", "enabled", "yes"].includes(
+        normalized,
+      );
+    }
+
+    return false;
+  };
+
   /* ---------------- Columns ---------------- */
 
   const columns = [
     {
-      header: "Role",
+      header: "Role Title / Role",
       accessor: "roleTitle",
       render: (_value, row) => {
-        const title = row.roleTitle || row.roleName || row.name || "-";
+        const title = row.roleTitle || row.name || "-";
+        const roleName = row.roleName || "-";
         const colorClass = (row.color || "bg-gray-100 text-gray-700").split(
           " ",
         )[0];
@@ -63,7 +84,7 @@ export default function RoleManagementTable({
 
             <div>
               <p className="font-semibold text-slate-800">{title}</p>
-              <p className="text-xs text-slate-500">{row.description || ""}</p>
+              <p className="text-xs text-slate-500">{roleName}</p>
             </div>
           </div>
         );
@@ -71,75 +92,51 @@ export default function RoleManagementTable({
     },
 
     {
-      header: "Login",
-      accessor: "email",
+      header: "Status",
+      accessor: "isActive",
       render: (_value, row) => {
-        const email = row.email || row.loginEmail || "-";
+        const isActive = isRoleActive(row);
         return (
-          <div className="flex flex-col gap-1">
-            <span className="flex items-center gap-1 text-sm">
-              <Mail size={14} /> {email}
-            </span>
-
-            <button
-              onClick={() => onLogin?.(row)}
-              className="text-xs text-blue-600 hover:underline flex items-center gap-1"
-            >
-              <User size={12} />
-              View Login
-            </button>
-          </div>
+          <span
+            className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
+              isActive
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {isActive ? "Active" : "Inactive"}
+          </span>
         );
       },
     },
 
     {
-      header: "Permissions",
-      accessor: "permissions",
-      render: (value = [], row) => {
-        const perms = Array.isArray(value) ? value : row.permissions || [];
-        return (
-          <div className="flex flex-wrap gap-1 max-w-55">
-            {perms.slice(0, 3).map((p) => (
-              <span
-                key={p}
-                className="px-2 py-1 text-xs rounded bg-blue-50 text-blue-700"
-              >
-                {getModuleName?.(p)}
-              </span>
-            ))}
+      header: "Date",
+      accessor: "createdAt",
+      render: (_value, row) => {
+        const rawDate =
+          row.createdAt || row.createdDate || row.date || row.updatedAt || null;
+        if (!rawDate) return <span>-</span>;
 
-            {perms.length > 3 && (
-              <span className="px-2 py-1 text-xs rounded bg-gray-100 text-gray-600">
-                +{perms.length - 3}
-              </span>
-            )}
-          </div>
+        const date = new Date(rawDate);
+        if (Number.isNaN(date.getTime())) return <span>-</span>;
+
+        return (
+          <span className="text-sm text-slate-700">
+            {date.toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })}
+          </span>
         );
       },
-    },
-
-    {
-      header: "Users",
-      accessor: "userCount",
-      render: (value) => (
-        <div className="flex items-center gap-1">
-          <Users size={14} />
-          <span className="font-semibold">{value}</span>
-        </div>
-      ),
     },
   ];
 
   /* ---------------- Actions ---------------- */
 
   const actions = [
-    {
-      label: "Login",
-      icon: User,
-      onClick: (row) => onLogin?.(row),
-    },
-
     {
       label: "Edit",
       icon: Edit2,

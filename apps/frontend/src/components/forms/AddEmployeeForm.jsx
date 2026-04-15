@@ -1,29 +1,17 @@
-import { useState, useRef } from "react";
+import { useMemo, useState } from "react";
 import { useForm, Controller, useWatch } from "react-hook-form";
-import {
-  User,
-  MapPin,
-  Briefcase,
-  FileText,
-  Landmark,
-  Key,
-  ShieldCheck,
-  ChevronRight,
-  ChevronLeft,
-  UploadCloud,
-  DollarSign,
-  Phone,
-  Mail,
-} from "lucide-react";
+import { User, MapPin, Briefcase, Key, Phone, Mail } from "lucide-react";
+import { z } from "zod";
 
 import Button from "../ui/Button";
 import InputField from "../ui/InputField";
 import SelectField from "../ui/SelectField";
-import ToggleSwitch from "../ui/ToggleSwitch";
-import TextAreaField from "../ui/TextAreaField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { employeeSchema } from "../../validations/EmployeeValidation";
 import { showError, showSuccess } from "../../lib/utils/toastService";
+import useEmployeeRoles from "../../hooks/useEmployeeRoles";
+import { useBranches } from "../../hooks/useBranches";
+import { useBranchAdmins } from "../../hooks/useBranchAdmin";
 
 export default function AddEmployeeForm({
   initialFormState,
@@ -31,21 +19,24 @@ export default function AddEmployeeForm({
   onCancel,
   onSuccess,
 }) {
-  // Refs for file inputs
-  const aadhaarFrontRef = useRef(null);
-  const aadhaarBackRef = useRef(null);
-  const panRef = useRef(null);
-  const photoRef = useRef(null);
-  const resumeRef = useRef(null);
+  const formSchema = isEditing
+    ? employeeSchema.extend({
+        password: z.union([employeeSchema.shape.password, z.literal("")]),
+      })
+    : employeeSchema;
 
-  const [currentStep, setCurrentStep] = useState(1);
-  const [files, setFiles] = useState({
-    aadhaarFrontImg: null,
-    aadhaarBackImg: null,
-    panImg: null,
-    profilePhoto: null,
-    resume: null,
+  const { roles: employeeRoles = [], loading: rolesLoading } =
+    useEmployeeRoles();
+  const { branches = [], loading: branchesLoading } = useBranches({
+    page: 1,
+    limit: 500,
   });
+  const { branchAdmins = [], loading: branchAdminsLoading } = useBranchAdmins({
+    page: 1,
+    limit: 500,
+  });
+
+  const [documentUploads, setDocumentUploads] = useState({});
 
   // React Hook Form setup
   const {
@@ -55,9 +46,8 @@ export default function AddEmployeeForm({
     setValue,
     getValues,
     formState: { errors, isSubmitting, isValid },
-    trigger,
   } = useForm({
-    resolver: zodResolver(employeeSchema),
+    resolver: zodResolver(formSchema),
     mode: "onChange",
     defaultValues: initialFormState || {
       fullName: "",
@@ -69,20 +59,20 @@ export default function AddEmployeeForm({
       maritalStatus: "SINGLE",
       userName: "",
       password: "",
-
       address: "",
       city: "",
       state: "",
       pinCode: "",
-      emergencyContact: "",
-      emergencyRelationship: "FATHER",
-
-      department: "Sales",
       designation: "",
+      roleTitle: "",
+      employeeRoleId: "",
+      gradeBand: "",
+      reportingManager: "",
+      branchCode: "",
+      regionZone: "",
       dateOfJoining: "",
       experience: "",
       workLocation: "OFFICE",
-
       aadhaarNo: "",
       panNo: "",
       accountHolder: "",
@@ -90,101 +80,19 @@ export default function AddEmployeeForm({
       bankAccountNo: "",
       ifsc: "",
       upiId: "",
-
       basicSalary: "",
-      hra: "",
       conveyance: "",
       medicalAllowance: "",
       otherAllowances: "",
       pfDeduction: "",
       taxDeduction: "",
-
       status: "Active",
-      permissions: {
-        canAddCustomer: false,
-        canViewAllCustomers: false,
-        canProcessLoans: false,
-        canManageLeads: false,
-        canGenerateReports: false,
-      },
     },
   });
 
-  const [
-    basicSalaryValue = 0,
-    hraValue = 0,
-    conveyanceValue = 0,
-    medicalAllowanceValue = 0,
-    otherAllowancesValue = 0,
-    pfDeductionValue = 0,
-    taxDeductionValue = 0,
-  ] =
-    useWatch({
-      control,
-      name: [
-        "basicSalary",
-        "hra",
-        "conveyance",
-        "medicalAllowance",
-        "otherAllowances",
-        "pfDeduction",
-        "taxDeduction",
-      ],
-    }) || [];
-
-  // Validation schemas for each step
-  const validateStep = async (step) => {
-    let fieldsToValidate = [];
-
-    switch (step) {
-      case 1:
-        fieldsToValidate = ["fullName", "email", "contactNumber"];
-        break;
-      case 2:
-        fieldsToValidate = [
-          "address",
-          "city",
-          "state",
-          "pinCode",
-          "department",
-          "designation",
-        ];
-        break;
-      case 3:
-        fieldsToValidate = [
-          "aadhaarNo",
-          "panNo",
-          "accountHolder",
-          "bankName",
-          "bankAccountNo",
-          "ifsc",
-        ];
-        break;
-      case 4:
-        fieldsToValidate = ["basicSalary"];
-        break;
-      default:
-        return true;
-    }
-
-    const isValid = await trigger(fieldsToValidate);
-    return isValid;
-  };
-
-  const handleNext = async () => {
-    const isValid = await validateStep(currentStep);
-    if (isValid) {
-      setCurrentStep((prev) => Math.min(prev + 1, 4));
-    }
-  };
-
-  const handleFileChange = (e, fieldName) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFiles((prev) => ({ ...prev, [fieldName]: file }));
-      setValue(fieldName, file);
-    }
-  };
+  const roleTitleValue = useWatch({ control, name: "roleTitle" }) || "";
+  const selectedRoleId = useWatch({ control, name: "employeeRoleId" }) || "";
+  const selectedBranchCode = useWatch({ control, name: "branchCode" }) || "";
 
   const generateCredentials = () => {
     const fullName = getValues("fullName");
@@ -203,53 +111,220 @@ export default function AddEmployeeForm({
     }
   };
 
-  const calculateTotalSalary = () => {
-    const basic = Number(basicSalaryValue) || 0;
-    const hra = Number(hraValue) || 0;
-    const conveyance = Number(conveyanceValue) || 0;
-    const medical = Number(medicalAllowanceValue) || 0;
-    const other = Number(otherAllowancesValue) || 0;
-    const pf = Number(pfDeductionValue) || 0;
-    const tax = Number(taxDeductionValue) || 0;
-
-    const gross = basic + hra + conveyance + medical + other;
-    const net = gross - pf - tax;
-
-    return { gross, net };
+  const getOptionValue = (v) => {
+    if (v == null) return v;
+    if (typeof v === "object" && v !== null && "value" in v) return v.value;
+    return v;
   };
 
+  const activeRoles = employeeRoles.filter((r) => r.isActive ?? true);
+  const roleTitleOptions = Array.from(
+    new Set(activeRoles.map((r) => r.roleTitle).filter(Boolean)),
+  ).map((title) => ({ label: title, value: title }));
+
+  const roleOptions = activeRoles
+    .filter((r) => !roleTitleValue || r.roleTitle === roleTitleValue)
+    .map((r) => ({
+      label: r.roleName || r.name || "-",
+      value: r.id,
+    }));
+
+  const branchCodeOptions = Array.isArray(branches)
+    ? branches
+        .filter((b) => b?.code)
+        .map((b) => ({
+          value: b.code,
+          label: b.name ? `${b.code} - ${b.name}` : b.code,
+        }))
+    : [];
+
+  const selectedBranch = Array.isArray(branches)
+    ? branches.find((b) => b?.code === selectedBranchCode)
+    : null;
+
+  const allowedBranchIds = (() => {
+    if (!selectedBranch?.id) return [];
+    const visited = new Set();
+    const result = [];
+    let current = selectedBranch;
+
+    while (current?.id && !visited.has(current.id)) {
+      visited.add(current.id);
+      result.push(current.id);
+
+      const parentId = current.parentBranchId || current.parentBranch?.id;
+      if (!parentId) break;
+      current = branches.find((b) => b.id === parentId);
+    }
+
+    return result;
+  })();
+
+  const reportingManagerOptions = Array.isArray(branchAdmins)
+    ? branchAdmins
+        .filter((admin) => {
+          if (!allowedBranchIds.length) return false;
+          const adminBranchId = admin?.branchId || admin?.branch?.id;
+          return adminBranchId && allowedBranchIds.includes(adminBranchId);
+        })
+        .map((admin) => ({
+          value: admin?.id || "",
+          label:
+            admin?.fullName || admin?.name || admin?.email || "Unknown Admin",
+        }))
+        .filter((opt) => opt.value)
+    : [];
+
+  const selectedRole = activeRoles.find((r) => r.id === selectedRoleId);
+  const requiredDocuments = (selectedRole?.documentsRequired || "")
+    .split(",")
+    .map((doc) => doc.trim())
+    .filter(Boolean);
+  const optionalDocuments = (selectedRole?.documentsOptions || "")
+    .split(",")
+    .map((doc) => doc.trim())
+    .filter(Boolean);
+
+  const toDocKey = (doc) =>
+    String(doc || "")
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "");
+
+  const isAadhaarDocument = (doc) => {
+    const key = toDocKey(doc);
+    return (
+      key.includes("aadhaar") ||
+      key.includes("aadhar") ||
+      key.includes("adhaar")
+    );
+  };
+
+  const handleRoleDocumentUpload = (doc, side, file) => {
+    if (!file) return;
+    const key = toDocKey(doc);
+    setDocumentUploads((prev) => ({
+      ...prev,
+      [key]: {
+        ...(prev[key] || {}),
+        [side]: file,
+      },
+    }));
+  };
+
+  const existingDocumentUploads = useMemo(() => {
+    if (!isEditing) return {};
+
+    const docs = Array.isArray(initialFormState?.documents)
+      ? initialFormState.documents
+      : [];
+    if (!docs.length) return {};
+
+    return docs.reduce((acc, doc) => {
+      const docType = String(doc?.documentType || "").toUpperCase();
+      if (!docType || docType.startsWith("EMP_")) return acc;
+
+      const parts = docType.split("_");
+      const maybeSide = parts[parts.length - 1];
+      const side =
+        maybeSide === "FRONT" || maybeSide === "BACK" || maybeSide === "FILE"
+          ? maybeSide.toLowerCase()
+          : "file";
+
+      const baseType =
+        side === "file" ? parts.join("_") : parts.slice(0, -1).join("_");
+      const key = toDocKey(baseType);
+      if (!key) return acc;
+
+      acc[key] = {
+        ...(acc[key] || {}),
+        [side]: {
+          name: doc?.documentPath || `${baseType}_${side}`,
+          type: "existing",
+          size: 0,
+          isExisting: true,
+        },
+      };
+
+      return acc;
+    }, {});
+  }, [isEditing, initialFormState]);
+
+  const mergedDocumentUploads = useMemo(
+    () => ({ ...existingDocumentUploads, ...documentUploads }),
+    [existingDocumentUploads, documentUploads],
+  );
+
   const onSubmit = async (data) => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const branchId = user?.branchId || user?.employee?.branchId || "";
+    const serializedRoleDocuments = Object.entries(documentUploads).reduce(
+      (acc, [docKey, docSides]) => {
+        acc[docKey] = Object.entries(docSides || {}).reduce(
+          (sideAcc, [sideKey, file]) => {
+            if (file?.name && !file?.isExisting) {
+              sideAcc[sideKey] = {
+                name: file.name,
+                type: file.type || "",
+                size: file.size || 0,
+              };
+            }
+            return sideAcc;
+          },
+          {},
+        );
+        return acc;
+      },
+      {},
+    );
 
     const payload = {
       fullName: data.fullName,
       email: data.email,
-      password: data.password,
+      password: data.password || undefined,
       role: "EMPLOYEE",
       contactNumber: data.contactNumber,
-      atlMobileNumber: data.atlMobileNumber || data.contactNumber,
+      atlMobileNumber: data.atlMobileNumber || "",
       userName: data.userName,
       dob: data.dob,
-      dateOfJoining: data.dateOfJoining,
       gender: data.gender,
       maritalStatus: data.maritalStatus,
       designation: data.designation,
-      department: data.department,
-      emergencyContact: data.emergencyContact,
-      emergencyRelationship: data.emergencyRelationship,
-      address: data.address,
+      roleTitle: data.roleTitle,
+      employeeRoleId: data.employeeRoleId,
+      gradeBand: data.gradeBand || "",
+      reportingManager: data.reportingManager,
+      branchCode: data.branchCode,
+      regionZone: data.regionZone || "",
+      dateOfJoining: data.dateOfJoining,
+      experience: data.experience || "",
+      workLocation: data.workLocation,
       city: data.city,
       state: data.state,
       pinCode: data.pinCode,
+      accountHolder: data.accountHolder,
+      bankName: data.bankName,
+      bankAccountNo: data.bankAccountNo,
+      ifsc: data.ifsc,
+      upiId: data.upiId || "",
+      basicSalary: Number(data.basicSalary || 0),
+      conveyance: Number(data.conveyance || 0),
+      medicalAllowance: Number(data.medicalAllowance || 0),
+      otherAllowances: Number(data.otherAllowances || 0),
+      pfDeduction: Number(data.pfDeduction || 0),
+      taxDeduction: Number(data.taxDeduction || 0),
+      status: data.status || "Active",
       isActive: data.status === "Active",
-      workLocation: data.workLocation,
-      salary: Number(data.basicSalary),
-      branchId,
+      salary: Number(data.basicSalary || 0),
+      branchId: selectedBranch?.id || "",
+      roleDocuments: serializedRoleDocuments,
     };
 
+    if (isEditing && !payload.password) {
+      delete payload.password;
+    }
+
     if (onSuccess) {
-      onSuccess(payload, files);
+      onSuccess(payload);
     }
   };
 
@@ -274,765 +349,618 @@ export default function AddEmployeeForm({
           className="hidden"
           tabIndex={-1}
         />
-        {/* Step 1: Personal Info */}
-        {currentStep === 1 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="md:col-span-3 pb-2 border-b border-gray-100 mb-2">
-              <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                <User size={18} className="text-blue-500" /> Personal
-                Information
-              </h3>
-            </div>
-
-            <InputField
-              label="Full Name"
-              {...register("fullName")}
-              error={errors.fullName?.message}
-              isRequired
-              icon={User}
-              placeholder="e.g. Rahul Sharma"
-            />
-
-            <InputField
-              label="Email Address"
-              type="email"
-              {...register("email")}
-              error={errors.email?.message}
-              isRequired
-              icon={Mail}
-              placeholder="rahul@company.com"
-            />
-
-            <InputField
-              label="Phone Number"
-              type="tel"
-              {...register("contactNumber")}
-              error={errors.contactNumber?.message}
-              isRequired
-              icon={Phone}
-              placeholder="9876543210"
-            />
-
-            <InputField
-              label="Alternate Phone"
-              type="tel"
-              {...register("atlMobileNumber")}
-              icon={Phone}
-              placeholder="Optional"
-            />
-
-            <InputField
-              label="Date of Birth"
-              type="date"
-              {...register("dob")}
-            />
-
-            <Controller
-              name="gender"
-              control={control}
-              render={({ field }) => (
-                <SelectField
-                  label="Gender"
-                  options={[
-                    { value: "MALE", label: "Male" },
-                    { value: "FEMALE", label: "Female" },
-                    { value: "OTHER", label: "Other" },
-                  ]}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-
-            <Controller
-              name="maritalStatus"
-              control={control}
-              render={({ field }) => (
-                <SelectField
-                  label="Marital Status"
-                  options={[
-                    { value: "SINGLE", label: "Single" },
-                    { value: "MARRIED", label: "Married" },
-                    { value: "DIVORCED", label: "Divorced" },
-                    { value: "WIDOWED", label: "Widowed" },
-                  ]}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-
-            <div className="md:col-span-3 pb-2 border-b border-gray-100 mb-2 mt-4">
-              <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                <Key size={18} className="text-blue-500" /> Login Credentials
-              </h3>
-            </div>
-
-            <InputField
-              label="Username"
-              {...register("userName")}
-              error={errors.userName?.message}
-              icon={User}
-              placeholder="Create username"
-              autoComplete="off"
-            />
-
-            <InputField
-              label="Password"
-              type="password"
-              {...register("password")}
-              error={errors.password?.message}
-              icon={Key}
-              placeholder="••••••••"
-              autoComplete="new-password"
-            />
-
-            <div className="flex items-end">
-              <Button
-                type="button"
-                onClick={generateCredentials}
-                className="w-full"
-              >
-                <Key size={16} /> Auto Generate
-              </Button>
-            </div>
+        {/* Personal Info */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="md:col-span-3 pb-2 border-b border-gray-100 mb-2">
+            <h3 className="font-bold text-gray-800 flex items-center gap-2">
+              <User size={18} className="text-blue-500" /> Personal Information
+            </h3>
           </div>
-        )}
 
-        {/* Step 2: Professional Details */}
-        {currentStep === 2 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="md:col-span-3 pb-2 border-b border-gray-100 mb-2">
-              <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                <MapPin size={18} className="text-blue-500" /> Address & Contact
-              </h3>
-            </div>
+          <InputField
+            label="Full Name"
+            {...register("fullName")}
+            error={errors.fullName?.message}
+            isRequired
+            icon={User}
+            placeholder="e.g. Rahul Sharma"
+          />
 
-            <div className="md:col-span-3">
-              <TextAreaField
-                label="Full Address"
-                {...register("address")}
-                error={errors.address?.message}
-                rows={2}
-                placeholder="Complete address..."
+          <InputField
+            label="Email Address"
+            type="email"
+            {...register("email")}
+            error={errors.email?.message}
+            isRequired
+            icon={Mail}
+            placeholder="rahul@company.com"
+          />
+
+          <InputField
+            label="Phone Number"
+            type="tel"
+            {...register("contactNumber")}
+            error={errors.contactNumber?.message}
+            isRequired
+            icon={Phone}
+            placeholder="9876543210"
+          />
+
+          <InputField
+            label="Alternate Phone"
+            type="tel"
+            {...register("atlMobileNumber")}
+            icon={Phone}
+            placeholder="Optional"
+          />
+
+          <InputField
+            label="Date of Birth"
+            type="date"
+            {...register("dob")}
+            isRequired
+          />
+
+          <Controller
+            name="gender"
+            control={control}
+            render={({ field }) => (
+              <SelectField
+                label="Gender"
+                options={[
+                  { value: "MALE", label: "Male" },
+                  { value: "FEMALE", label: "Female" },
+                  { value: "OTHER", label: "Other" },
+                ]}
+                value={field.value}
+                onChange={field.onChange}
+                isRequired
               />
-            </div>
+            )}
+          />
 
-            <InputField
-              label="City"
-              {...register("city")}
-              error={errors.city?.message}
-            />
+          <Controller
+            name="maritalStatus"
+            control={control}
+            render={({ field }) => (
+              <SelectField
+                label="Marital Status"
+                options={[
+                  { value: "SINGLE", label: "Single" },
+                  { value: "MARRIED", label: "Married" },
+                  { value: "DIVORCED", label: "Divorced" },
+                  { value: "WIDOWED", label: "Widowed" },
+                ]}
+                value={field.value}
+                onChange={field.onChange}
+                isRequired
+              />
+            )}
+          />
 
-            <Controller
-              name="state"
-              control={control}
-              render={({ field }) => (
-                <SelectField
-                  label="State"
-                  options={[
-                    { value: "Delhi", label: "Delhi" },
-                    { value: "Maharashtra", label: "Maharashtra" },
-                    { value: "Karnataka", label: "Karnataka" },
-                    { value: "Tamil Nadu", label: "Tamil Nadu" },
-                    { value: "Uttar Pradesh", label: "Uttar Pradesh" },
-                    { value: "Gujarat", label: "Gujarat" },
-                    { value: "Rajasthan", label: "Rajasthan" },
-                  ]}
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors.state?.message}
-                  isRequired
-                />
-              )}
-            />
+          {/* Professional Details */}
 
-            <InputField
-              label="Pin Code"
-              {...register("pinCode")}
-              error={errors.pinCode?.message}
-            />
+          <InputField
+            label="City"
+            {...register("city")}
+            error={errors.city?.message}
+            isRequired
+            icon={MapPin}
+            placeholder="e.g. Ajmer"
+          />
 
-            <div className="md:col-span-3 pb-2 border-b border-gray-100 mb-2 mt-4">
-              <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                <Phone size={18} className="text-blue-500" /> Emergency Contact
-              </h3>
-            </div>
+          <Controller
+            name="state"
+            control={control}
+            render={({ field }) => (
+              <SelectField
+                label="State"
+                options={[
+                  { value: "Delhi", label: "Delhi" },
+                  { value: "Maharashtra", label: "Maharashtra" },
+                  { value: "Karnataka", label: "Karnataka" },
+                  { value: "Tamil Nadu", label: "Tamil Nadu" },
+                  { value: "Uttar Pradesh", label: "Uttar Pradesh" },
+                  { value: "Gujarat", label: "Gujarat" },
+                  { value: "Rajasthan", label: "Rajasthan" },
+                ]}
+                value={field.value}
+                onChange={field.onChange}
+                error={errors.state?.message}
+                isRequired
+              />
+            )}
+          />
 
-            <InputField
-              label="Emergency Contact"
-              {...register("emergencyContact")}
-              error={errors.emergencyContact?.message}
-              placeholder="Emergency phone number"
-            />
+          <InputField
+            label="Pin Code"
+            {...register("pinCode")}
+            error={errors.pinCode?.message}
+            isRequired
+            placeholder="e.g. 123456"
+          />
 
-            <Controller
-              name="emergencyRelationship"
-              control={control}
-              render={({ field }) => (
-                <SelectField
-                  label="Relationship"
-                  options={[
-                    { value: "FATHER", label: "Father" },
-                    { value: "MOTHER", label: "Mother" },
-                    { value: "SPOUSE", label: "Spouse" },
-                    { value: "SIBLING", label: "Sibling" },
-                    { value: "FRIEND", label: "Friend" },
-                    { value: "OTHER", label: "Other" },
-                  ]}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-
-            <div className="md:col-span-3 pb-2 border-b border-gray-100 mb-2 mt-4">
-              <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                <Briefcase size={18} className="text-blue-500" /> Professional
-                Details
-              </h3>
-            </div>
-
-            <Controller
-              name="department"
-              control={control}
-              render={({ field }) => (
-                <SelectField
-                  label="Department"
-                  options={[
-                    { value: "Sales", label: "Sales" },
-                    { value: "Marketing", label: "Marketing" },
-                    { value: "Operations", label: "Operations" },
-                    { value: "HR", label: "HR" },
-                    { value: "Finance", label: "Finance" },
-                    { value: "IT", label: "IT" },
-                    { value: "Customer Service", label: "Customer Service" },
-                  ]}
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors.department?.message}
-                  isRequired
-                />
-              )}
-            />
-
-            <InputField
-              label="Designation"
-              {...register("designation")}
-              error={errors.designation?.message}
-              placeholder="e.g. Sales Executive"
-            />
-
-            <InputField
-              label="Date of Joining"
-              type="date"
-              {...register("dateOfJoining")}
-            />
-
-            <InputField
-              label="Experience"
-              {...register("experience")}
-              placeholder="e.g. 3 Years"
-            />
-
-            <Controller
-              name="workLocation"
-              control={control}
-              render={({ field }) => (
-                <SelectField
-                  label="Work Location"
-                  options={[
-                    { value: "OFFICE", label: "Office" },
-                    { value: "REMOTE", label: "Remote" },
-                    { value: "HYBRID", label: "Hybrid" },
-                  ]}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            />
+          <div className="md:col-span-3 pb-2 border-b border-gray-100 mb-2 mt-4">
+            <h3 className="font-bold text-gray-800 flex items-center gap-2">
+              <Briefcase size={18} className="text-blue-500" /> Professional
+              Details
+            </h3>
           </div>
-        )}
 
-        {/* Step 3: KYC & Banking */}
-        {currentStep === 3 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* KYC Section */}
-            <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
-              <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <FileText size={18} className="text-blue-500" /> KYC Documents
-              </h3>
+          <Controller
+            name="roleTitle"
+            control={control}
+            render={({ field }) => (
+              <SelectField
+                label="Role Title"
+                options={roleTitleOptions}
+                value={field.value || ""}
+                onChange={(value) => {
+                  const nextTitle = getOptionValue(value) || "";
+                  field.onChange(nextTitle);
+                  setValue("employeeRoleId", "", {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  });
+                }}
+                isSearchable
+                placeholder={
+                  rolesLoading ? "Loading role titles..." : "Choose role title"
+                }
+                error={errors.roleTitle?.message}
+                isRequired
+              />
+            )}
+          />
 
-              <div className="space-y-4">
-                <div>
-                  <InputField
-                    label="Aadhaar Number"
-                    {...register("aadhaarNo")}
-                    error={errors.aadhaarNo?.message}
-                    placeholder="12 Digit Number"
-                  />
+          <Controller
+            name="employeeRoleId"
+            control={control}
+            render={({ field }) => (
+              <SelectField
+                label="Role"
+                options={roleOptions}
+                value={field.value || ""}
+                onChange={(value) =>
+                  field.onChange(getOptionValue(value) || "")
+                }
+                isSearchable
+                isDisabled={!roleTitleValue}
+                placeholder={
+                  roleTitleValue ? "Choose role" : "Choose role title first"
+                }
+                error={errors.employeeRoleId?.message}
+                isRequired
+              />
+            )}
+          />
+          <InputField
+            label="Designation"
+            {...register("designation")}
+            error={errors.designation?.message}
+            placeholder="e.g. Sales Executive"
+          />
 
-                  <div className="flex gap-2 mt-2">
-                    {/* Aadhaar Front Upload */}
-                    <div
-                      onClick={() => aadhaarFrontRef.current?.click()}
-                      className={`flex-1 border-2 border-dashed rounded-lg h-24 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 transition relative overflow-hidden ${
-                        files.aadhaarFrontImg
-                          ? "border-green-400 bg-green-50"
-                          : "border-gray-300"
-                      }`}
-                    >
-                      <input
-                        type="file"
-                        ref={aadhaarFrontRef}
-                        onChange={(e) => handleFileChange(e, "aadhaarFrontImg")}
-                        className="hidden"
-                        accept="image/*"
-                      />
-                      {files.aadhaarFrontImg ? (
-                        <img
-                          src={URL.createObjectURL(files.aadhaarFrontImg)}
-                          alt="Front"
-                          className="w-full h-full object-cover rounded-lg"
-                        />
-                      ) : (
-                        <>
-                          <UploadCloud size={20} className="text-gray-400" />
-                          <span className="text-[10px] text-gray-500">
-                            Front Image
-                          </span>
-                        </>
-                      )}
-                    </div>
+          <Controller
+            name="branchCode"
+            control={control}
+            render={({ field }) => (
+              <SelectField
+                label="Branch Code"
+                options={branchCodeOptions}
+                value={field.value || ""}
+                onChange={(value) => {
+                  field.onChange(getOptionValue(value) || "");
+                  setValue("reportingManager", "", {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  });
+                }}
+                isSearchable
+                isLoading={branchesLoading}
+                placeholder={
+                  branchesLoading ? "Loading branches..." : "Select branch code"
+                }
+                error={errors.branchCode?.message}
+                isRequired
+              />
+            )}
+          />
+          <Controller
+            name="reportingManager"
+            control={control}
+            render={({ field }) => (
+              <SelectField
+                label="Reporting Manager"
+                options={reportingManagerOptions}
+                value={field.value || ""}
+                onChange={(value) =>
+                  field.onChange(getOptionValue(value) || "")
+                }
+                isSearchable
+                isLoading={branchAdminsLoading}
+                placeholder={
+                  branchAdminsLoading
+                    ? "Loading admins..."
+                    : "Select reporting manager"
+                }
+                isRequired
+                error={errors.reportingManager?.message}
+              />
+            )}
+          />
+          <InputField
+            label="Date of Joining"
+            type="date"
+            {...register("dateOfJoining")}
+          />
 
-                    {/* Aadhaar Back Upload */}
-                    <div
-                      onClick={() => aadhaarBackRef.current?.click()}
-                      className={`flex-1 border-2 border-dashed rounded-lg h-24 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 transition relative overflow-hidden ${
-                        files.aadhaarBackImg
-                          ? "border-green-400 bg-green-50"
-                          : "border-gray-300"
-                      }`}
-                    >
-                      <input
-                        type="file"
-                        ref={aadhaarBackRef}
-                        onChange={(e) => handleFileChange(e, "aadhaarBackImg")}
-                        className="hidden"
-                        accept="image/*"
-                      />
-                      {files.aadhaarBackImg ? (
-                        <img
-                          src={URL.createObjectURL(files.aadhaarBackImg)}
-                          alt="Back"
-                          className="w-full h-full object-cover rounded-lg"
-                        />
-                      ) : (
-                        <>
-                          <UploadCloud size={20} className="text-gray-400" />
-                          <span className="text-[10px] text-gray-500">
-                            Back Image
-                          </span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
+          <InputField
+            label="Experience"
+            {...register("experience")}
+            placeholder="e.g. 3 Years"
+          />
 
-                <div>
-                  <InputField
-                    label="PAN Number"
-                    {...register("panNo")}
-                    error={errors.panNo?.message}
-                    placeholder="ABCDE1234F"
-                  />
+          <Controller
+            name="workLocation"
+            control={control}
+            render={({ field }) => (
+              <SelectField
+                label="Work Location/Branch"
+                options={[
+                  { value: "OFFICE", label: "Office" },
+                  { value: "REMOTE", label: "Remote" },
+                  { value: "HYBRID", label: "Hybrid" },
+                ]}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
+          />
 
-                  <div
-                    onClick={() => panRef.current?.click()}
-                    className={`mt-2 w-full border-2 border-dashed rounded-lg h-24 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 transition relative overflow-hidden ${
-                      files.panImg
-                        ? "border-green-400 bg-green-50"
-                        : "border-gray-300"
-                    }`}
-                  >
-                    <input
-                      type="file"
-                      ref={panRef}
-                      onChange={(e) => handleFileChange(e, "panImg")}
-                      className="hidden"
-                      accept="image/*"
-                    />
-                    {files.panImg ? (
-                      <img
-                        src={URL.createObjectURL(files.panImg)}
-                        alt="PAN"
-                        className="w-full h-full object-cover rounded-lg"
-                      />
-                    ) : (
-                      <>
-                        <UploadCloud size={20} className="text-gray-400" />
-                        <span className="text-[10px] text-gray-500">
-                          Upload PAN Card
-                        </span>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-xs font-semibold text-gray-500 uppercase block mb-1">
-                    Resume (Optional)
-                  </label>
-                  <div
-                    onClick={() => resumeRef.current?.click()}
-                    className={`w-full border-2 border-dashed rounded-lg h-24 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 transition ${
-                      files.resume
-                        ? "border-blue-400 bg-blue-50"
-                        : "border-gray-300"
-                    }`}
-                  >
-                    <input
-                      type="file"
-                      ref={resumeRef}
-                      onChange={(e) => handleFileChange(e, "resume")}
-                      className="hidden"
-                      accept=".pdf,.doc,.docx"
-                    />
-                    {files.resume ? (
-                      <div className="text-center">
-                        <FileText size={20} className="text-blue-500 mx-auto" />
-                        <span className="text-[10px] text-blue-600">
-                          {files.resume.name}
-                        </span>
-                      </div>
-                    ) : (
-                      <>
-                        <UploadCloud size={20} className="text-gray-400" />
-                        <span className="text-[10px] text-gray-500">
-                          Upload Resume
-                        </span>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
+          <div className="md:col-span-3 rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
+            <div className="flex items-center justify-between gap-3 border-b border-slate-100 pb-3 mb-4">
+              <p className="text-sm font-semibold text-slate-800">
+                Documents Based On Selected Role
+              </p>
+              {selectedRole && (
+                <span className="text-xs rounded-full bg-blue-50 text-blue-700 px-2.5 py-1 font-medium">
+                  {selectedRole.roleName || "Selected Role"}
+                </span>
+              )}
             </div>
 
-            {/* Banking Section */}
-            <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
-              <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <Landmark size={18} className="text-blue-500" /> Banking Details
-              </h3>
-
-              <div className="space-y-3">
-                <InputField
-                  label="Account Holder Name"
-                  {...register("accountHolder")}
-                  error={errors.accountHolder?.message}
-                />
-
-                <InputField
-                  label="Bank Name"
-                  {...register("bankName", {
-                    required: "Bank name is required",
-                  })}
-                  error={errors.bankName?.message}
-                />
-
-                <InputField
-                  label="Account Number"
-                  {...register("bankAccountNo")}
-                  error={errors.bankAccountNo?.message}
-                />
-
-                <InputField
-                  label="IFSC Code"
-                  {...register("ifsc")}
-                  error={errors.ifsc?.message}
-                  placeholder="e.g. HDFC0001234"
-                />
-
-                <InputField
-                  label="UPI ID (Optional)"
-                  {...register("upiId")}
-                  placeholder="username@bank"
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Step 4: Salary & Access */}
-        {currentStep === 4 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Salary Section */}
-            <div>
-              <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <DollarSign size={18} className="text-blue-500" /> Salary
-                Structure
-              </h3>
-
-              <div className="bg-green-50 p-6 rounded-xl border border-green-100">
-                <div className="space-y-3">
-                  <InputField
-                    label="Basic Salary"
-                    type="number"
-                    {...register("basicSalary", { valueAsNumber: true })}
-                    error={errors.basicSalary?.message}
-                    isRequired
-                    placeholder="e.g. 45000"
-                  />
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <InputField
-                      label="HRA"
-                      type="number"
-                      {...register("hra")}
-                      placeholder="e.g. 9000"
-                    />
-
-                    <InputField
-                      label="Conveyance"
-                      type="number"
-                      {...register("conveyance")}
-                      placeholder="e.g. 1600"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <InputField
-                      label="Medical Allowance"
-                      type="number"
-                      {...register("medicalAllowance")}
-                      placeholder="e.g. 1250"
-                    />
-
-                    <InputField
-                      label="Other Allowances"
-                      type="number"
-                      {...register("otherAllowances")}
-                      placeholder="e.g. 5000"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <InputField
-                      label="PF Deduction"
-                      type="number"
-                      {...register("pfDeduction")}
-                      placeholder="e.g. 1800"
-                    />
-
-                    <InputField
-                      label="Tax Deduction"
-                      type="number"
-                      {...register("taxDeduction")}
-                      placeholder="e.g. 2000"
-                    />
-                  </div>
-
-                  {/* Salary Preview */}
-                  <div className="mt-4 p-3 bg-green-100 rounded-lg">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-semibold text-gray-700">
-                        Total Salary Preview:
-                      </span>
-                      <span className="text-lg font-bold text-green-700">
-                        ₹{calculateTotalSalary().net.toLocaleString()}
-                      </span>
+            {!selectedRole ? (
+              <p className="text-sm text-slate-500 bg-slate-50 border border-dashed border-slate-300 rounded-xl p-3">
+                Choose Role Title and Role to view required and optional
+                documents.
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="rounded-xl border border-red-100 bg-red-50/50 p-3">
+                  <p className="text-xs font-bold uppercase text-slate-500 mb-2">
+                    Required Documents
+                  </p>
+                  {requiredDocuments.length ? (
+                    <div className="flex flex-wrap gap-2">
+                      {requiredDocuments.map((doc) => (
+                        <span
+                          key={`req-${doc}`}
+                          className="rounded-full bg-red-100 text-red-700 px-2.5 py-1 text-xs font-medium"
+                        >
+                          {doc}
+                        </span>
+                      ))}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1 text-right">
-                      Gross: ₹{calculateTotalSalary().gross.toLocaleString()} |
-                      Net: ₹{calculateTotalSalary().net.toLocaleString()}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Status & Permissions */}
-            <div>
-              <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <ShieldCheck size={18} className="text-blue-500" /> Status &
-                Permissions
-              </h3>
-
-              <div className="space-y-4">
-                <Controller
-                  name="status"
-                  control={control}
-                  render={({ field }) => (
-                    <SelectField
-                      label="Account Status"
-                      options={[
-                        { value: "Active", label: "Active" },
-                        { value: "Inactive", label: "Inactive" },
-                        { value: "On Leave", label: "On Leave" },
-                        { value: "Probation", label: "Probation" },
-                      ]}
-                      value={field.value}
-                      onChange={field.onChange}
-                    />
+                  ) : (
+                    <p className="text-xs text-slate-500">
+                      No required documents.
+                    </p>
                   )}
-                />
-
-                {/* Permissions */}
-                <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                  <label className="text-xs font-bold text-gray-500 uppercase block mb-3">
-                    System Permissions
-                  </label>
-
-                  <div className="space-y-2">
-                    <Controller
-                      name="permissions.canAddCustomer"
-                      control={control}
-                      render={({ field }) => (
-                        <ToggleSwitch
-                          checked={field.value}
-                          onChange={field.onChange}
-                          label="Can Add Customer"
-                          size="sm"
-                        />
-                      )}
-                    />
-
-                    <Controller
-                      name="permissions.canViewAllCustomers"
-                      control={control}
-                      render={({ field }) => (
-                        <ToggleSwitch
-                          checked={field.value}
-                          onChange={field.onChange}
-                          label="Can View All Customers"
-                          size="sm"
-                        />
-                      )}
-                    />
-
-                    <Controller
-                      name="permissions.canProcessLoans"
-                      control={control}
-                      render={({ field }) => (
-                        <ToggleSwitch
-                          checked={field.value}
-                          onChange={field.onChange}
-                          label="Can Process Loans"
-                          size="sm"
-                        />
-                      )}
-                    />
-
-                    <Controller
-                      name="permissions.canManageLeads"
-                      control={control}
-                      render={({ field }) => (
-                        <ToggleSwitch
-                          checked={field.value}
-                          onChange={field.onChange}
-                          label="Can Manage Leads"
-                          size="sm"
-                        />
-                      )}
-                    />
-
-                    <Controller
-                      name="permissions.canGenerateReports"
-                      control={control}
-                      render={({ field }) => (
-                        <ToggleSwitch
-                          checked={field.value}
-                          onChange={field.onChange}
-                          label="Can Generate Reports"
-                          size="sm"
-                        />
-                      )}
-                    />
-                  </div>
                 </div>
 
-                {/* Profile Photo */}
-                <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                  <label className="text-xs font-bold text-gray-500 uppercase block mb-3">
-                    Profile Photo
-                  </label>
-
-                  <div
-                    onClick={() => photoRef.current?.click()}
-                    className={`w-32 h-32 mx-auto border-2 border-dashed rounded-full flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 transition relative overflow-hidden ${
-                      files.profilePhoto
-                        ? "border-blue-400 bg-blue-50"
-                        : "border-gray-300"
-                    }`}
-                  >
-                    <input
-                      type="file"
-                      ref={photoRef}
-                      onChange={(e) => handleFileChange(e, "profilePhoto")}
-                      className="hidden"
-                      accept="image/*"
-                    />
-                    {files.profilePhoto ? (
-                      <img
-                        src={URL.createObjectURL(files.profilePhoto)}
-                        alt="Profile"
-                        className="w-full h-full object-cover rounded-full"
-                      />
-                    ) : (
-                      <>
-                        <User size={32} className="text-gray-400" />
-                        <span className="text-[10px] text-gray-500 mt-1">
-                          Upload Photo
+                <div className="rounded-xl border border-amber-100 bg-amber-50/50 p-3">
+                  <p className="text-xs font-bold uppercase text-slate-500 mb-2">
+                    Optional Documents
+                  </p>
+                  {optionalDocuments.length ? (
+                    <div className="flex flex-wrap gap-2">
+                      {optionalDocuments.map((doc) => (
+                        <span
+                          key={`opt-${doc}`}
+                          className="rounded-full bg-amber-100 text-amber-700 px-2.5 py-1 text-xs font-medium"
+                        >
+                          {doc}
                         </span>
-                      </>
-                    )}
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-slate-500">
+                      No optional documents.
+                    </p>
+                  )}
                 </div>
               </div>
-            </div>
+            )}
+
+            {selectedRole && (
+              <div className="mt-5 border-t border-slate-200 pt-4">
+                <p className="text-xs font-bold uppercase text-slate-500 mb-3">
+                  Upload Role Documents
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[...requiredDocuments, ...optionalDocuments].map((doc) => {
+                    const key = toDocKey(doc);
+                    const upload = mergedDocumentUploads[key] || {};
+                    const needsFrontBack = isAadhaarDocument(doc);
+
+                    return (
+                      <div
+                        key={`upload-${key}`}
+                        className="rounded-xl border border-slate-200 bg-slate-50 p-4"
+                      >
+                        <p className="text-sm font-medium text-slate-700 mb-2">
+                          {doc}
+                        </p>
+
+                        {needsFrontBack ? (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                              <label className="text-xs text-slate-500 block mb-1">
+                                Front
+                              </label>
+                              <input
+                                type="file"
+                                accept="image/*,.pdf"
+                                onChange={(e) =>
+                                  handleRoleDocumentUpload(
+                                    doc,
+                                    "front",
+                                    e.target.files?.[0],
+                                  )
+                                }
+                                className="block w-full text-xs text-slate-600 file:mr-2 file:rounded-md file:border-0 file:bg-blue-100 file:px-2.5 file:py-1.5 file:text-xs file:font-medium file:text-blue-700 hover:file:bg-blue-200"
+                              />
+                              {upload.front?.name && (
+                                <p className="text-[11px] text-green-700 mt-1 truncate">
+                                  {upload.front.name}
+                                </p>
+                              )}
+                            </div>
+                            <div>
+                              <label className="text-xs text-slate-500 block mb-1">
+                                Back
+                              </label>
+                              <input
+                                type="file"
+                                accept="image/*,.pdf"
+                                onChange={(e) =>
+                                  handleRoleDocumentUpload(
+                                    doc,
+                                    "back",
+                                    e.target.files?.[0],
+                                  )
+                                }
+                                className="block w-full text-xs text-slate-600 file:mr-2 file:rounded-md file:border-0 file:bg-blue-100 file:px-2.5 file:py-1.5 file:text-xs file:font-medium file:text-blue-700 hover:file:bg-blue-200"
+                              />
+                              {upload.back?.name && (
+                                <p className="text-[11px] text-green-700 mt-1 truncate">
+                                  {upload.back.name}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        ) : (
+                          <div>
+                            <label className="text-xs text-slate-500 block mb-1">
+                              Upload
+                            </label>
+                            <input
+                              type="file"
+                              accept="image/*,.pdf,.doc,.docx"
+                              onChange={(e) =>
+                                handleRoleDocumentUpload(
+                                  doc,
+                                  "file",
+                                  e.target.files?.[0],
+                                )
+                              }
+                              className="block w-full text-xs text-slate-600 file:mr-2 file:rounded-md file:border-0 file:bg-blue-100 file:px-2.5 file:py-1.5 file:text-xs file:font-medium file:text-blue-700 hover:file:bg-blue-200"
+                            />
+                            {upload.file?.name && (
+                              <p className="text-[11px] text-green-700 mt-1 truncate">
+                                {upload.file.name}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
-        )}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+          <div className="md:col-span-3 pb-2 border-b border-gray-100 mb-2">
+            <h3 className="font-bold text-gray-800 flex items-center gap-2">
+              Account Details
+            </h3>
+          </div>
 
-        {/* Navigation Buttons */}
+          <InputField
+            label="Account Holder Name"
+            {...register("accountHolder")}
+            error={errors.accountHolder?.message}
+            placeholder="e.g. Rahul Sharma"
+            isRequired
+          />
+
+          <InputField
+            label="Bank Name"
+            {...register("bankName")}
+            error={errors.bankName?.message}
+            placeholder="e.g. HDFC Bank"
+            isRequired
+          />
+
+          <InputField
+            label="Bank Account Number"
+            {...register("bankAccountNo")}
+            error={errors.bankAccountNo?.message}
+            placeholder="e.g. 123456789012"
+            isRequired
+          />
+
+          <InputField
+            label="IFSC Code"
+            {...register("ifsc")}
+            error={errors.ifsc?.message}
+            placeholder="e.g. HDFC0001234"
+            isRequired
+          />
+
+          <InputField
+            label="UPI ID"
+            {...register("upiId")}
+            error={errors.upiId?.message}
+            placeholder="e.g. rahul@hdfc"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+          <div className="md:col-span-3 pb-2 border-b border-gray-100 mb-2">
+            <h3 className="font-bold text-gray-800 flex items-center gap-2">
+              Salary Details
+            </h3>
+          </div>
+
+          <InputField
+            label="Basic Salary"
+            type="number"
+            {...register("basicSalary")}
+            error={errors.basicSalary?.message}
+            placeholder="e.g. 25000"
+            isRequired
+          />
+
+          <InputField
+            label="Conveyance"
+            type="number"
+            {...register("conveyance")}
+            error={errors.conveyance?.message}
+            placeholder="e.g. 1600"
+          />
+
+          <InputField
+            label="Medical Allowance"
+            type="number"
+            {...register("medicalAllowance")}
+            error={errors.medicalAllowance?.message}
+            placeholder="e.g. 1250"
+          />
+
+          <InputField
+            label="Other Allowances"
+            type="number"
+            {...register("otherAllowances")}
+            error={errors.otherAllowances?.message}
+            placeholder="e.g. 1000"
+          />
+
+          <InputField
+            label="PF Deduction"
+            type="number"
+            {...register("pfDeduction")}
+            error={errors.pfDeduction?.message}
+            placeholder="e.g. 1800"
+          />
+
+          <InputField
+            label="Tax Deduction"
+            type="number"
+            {...register("taxDeduction")}
+            error={errors.taxDeduction?.message}
+            placeholder="e.g. 2000"
+          />
+
+          <Controller
+            name="status"
+            control={control}
+            render={({ field }) => (
+              <SelectField
+                label="Status"
+                options={[
+                  { value: "Active", label: "Active" },
+                  { value: "Inactive", label: "Inactive" },
+                ]}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
+          />
+        </div>
+
+        <div className="pb-2 border-b border-gray-100 mb-2 mt-8">
+          <h3 className="font-bold text-gray-800 flex items-center gap-2">
+            <Key size={18} className="text-blue-500" /> Login Credentials
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <InputField
+            label="Username"
+            {...register("userName")}
+            error={errors.userName?.message}
+            icon={User}
+            placeholder="Create username"
+            autoComplete="off"
+          />
+
+          <InputField
+            label="Password"
+            type="password"
+            {...register("password")}
+            error={errors.password?.message}
+            icon={Key}
+            placeholder="••••••••"
+            autoComplete="new-password"
+          />
+
+          <div className="flex items-end">
+            <Button
+              type="button"
+              onClick={generateCredentials}
+              className="w-full"
+            >
+              <Key size={16} /> Auto Generate
+            </Button>
+          </div>
+        </div>
+
+        {/* Form Actions */}
         <div className="mt-8 flex justify-between pt-6 border-t border-gray-100">
-          {currentStep === 1 ? (
-            <Button
-              type="button"
-              onClick={onCancel}
-              className="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 shadow-none"
-            >
-              <span className="text-blue-700">Cancel</span>
-            </Button>
-          ) : (
-            <Button
-              type="button"
-              onClick={() => setCurrentStep((prev) => Math.max(prev - 1, 1))}
-              className="bg-gray-100 hover:bg-gray-200 text-gray-600"
-            >
-              <ChevronLeft size={18} /> Back
-            </Button>
-          )}
+          <Button
+            type="button"
+            onClick={onCancel}
+            className="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 shadow-none"
+          >
+            <span className="text-blue-700">Cancel</span>
+          </Button>
 
-          {currentStep < 4 ? (
-            <Button
-              type="button"
-              onClick={handleNext}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              Next Step <ChevronRight size={18} />
-            </Button>
-          ) : (
-            <Button
-              type="submit"
-              disabled={!isValid || isSubmitting}
-              className="bg-green-600 hover:bg-green-700 text-white"
-            >
-              {isSubmitting ? (
-                <>Processing...</>
-              ) : (
-                <>{isEditing ? "Update Employee" : "Submit Employee"}</>
-              )}
-            </Button>
-          )}
+          <Button
+            type="submit"
+            disabled={!isValid || isSubmitting}
+            className="bg-green-600 hover:bg-green-700 text-white"
+          >
+            {isSubmitting ? (
+              <>Processing...</>
+            ) : (
+              <>{isEditing ? "Update Employee" : "Submit Employee"}</>
+            )}
+          </Button>
         </div>
       </form>
     </div>
