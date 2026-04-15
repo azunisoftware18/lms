@@ -573,6 +573,7 @@ export const getAllLoanApplicationsService = async (params: {
             id: true,
             firstName: true,
             lastName: true,
+            contactNumber: true,
             panNumber: true,
           },
         },
@@ -581,6 +582,7 @@ export const getAllLoanApplicationsService = async (params: {
             id: true,
             firstName: true,
             lastName: true,
+            contactNumber: true,
             panNumber: true,
           },
         },
@@ -614,6 +616,7 @@ export const getAllLoanApplicationsService = async (params: {
       dob: loan.customer.dob,
       gender: loan.customer.gender,
       maritalStatus: loan.customer.maritalStatus,
+      panNumber: loan.customer.panNumber,
       nationality: loan.customer.nationality,
       category: loan.customer.category,
       alternateNumber: loan.customer.alternateNumber,
@@ -638,24 +641,29 @@ export const getAllLoanApplicationsService = async (params: {
       firstName: loan.coapplicants[0]?.firstName || null,
       lastName: loan.coapplicants[0]?.lastName || null,
       panNumber: loan.coapplicants[0]?.panNumber || null,
+      contactNumber: loan.coapplicants[0]?.contactNumber || null,
     },
     guarantor: {
       id: loan.guarantors[0]?.id || null,
       firstName: loan.guarantors[0]?.firstName || null,
       lastName: loan.guarantors[0]?.lastName || null,
       panNumber: loan.guarantors[0]?.panNumber || null,
+      contactNumber: loan.guarantors[0]?.contactNumber || null,
     },
     coApplicants: loan.coapplicants.map((c) => ({
       id: c.id,
       firstName: c.firstName,
       lastName: c.lastName,
       panNumber: c.panNumber,
+      contactNumber: c.contactNumber,
     })),
     guarantors: loan.guarantors.map((g) => ({
       id: g.id,
       firstName: g.firstName,
       lastName: g.lastName,
       panNumber: g.panNumber,
+      contactNumber: g.contactNumber,
+
     })),
   }));
 
