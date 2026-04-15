@@ -8,7 +8,7 @@ import {
 } from "./rules/index.js";
 import { EligibilityResult } from "./ruleEngine.types.js";
 import { calculateRiskScore } from "./risk/riskScoring.service.js";
-import { MockCreditProvider } from "../creditReport/providers/mockCreditProvider.js";
+import { mockCreditProvider } from "../creditReport/providers/mockCreditProvider.js";
 import { calculateExistingEmi } from "./helpers/existingEmi.helper.js";
 
 export const evaluateEligibilityService = async (
@@ -31,7 +31,7 @@ export const evaluateEligibilityService = async (
 
   // TODO
   // 🔁 Switch later
-  const creditProvider = new MockCreditProvider();
+  const creditProvider = mockCreditProvider;
 
   const existingEmi = await calculateExistingEmi(
     creditProvider,
