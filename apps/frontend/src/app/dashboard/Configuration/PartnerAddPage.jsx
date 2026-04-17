@@ -6,6 +6,7 @@ import AddPartnerTable from "../../../components/tables/AddPartnerTable";
 import AddPartnerModal from "../../../components/modals/AddPartnerModal";
 import AddPartnerForm from "../../../components/forms/AddPartnerForm";
 import { useCreatePartner, useUpdatePartner } from "../../../hooks/usePartner";
+import toast from "react-hot-toast";
 
 export default function PartnerAddPage() {
   const [showPartnerModal, setShowPartnerModal] = useState(false);

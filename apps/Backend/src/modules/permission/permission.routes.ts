@@ -3,6 +3,7 @@ const permissionRouter = Router();
 
 import {
   assignPermissionsController,
+  unassignPermissionsController,
   assignPermissionGroupsController,
   assignRolePermissionsController,
   assignRolePermissionGroupsController,
@@ -93,6 +94,14 @@ permissionRouter.get(
   authMiddleware,
   checkPermissionMiddleware("VIEW_ALL_PERMISSIONS"),
   getAllPermissionGroupsController,
+);
+
+permissionRouter.post(
+  "/unassign",
+  authMiddleware,
+  validate(assignPermissionsSchema),
+  checkPermissionMiddleware("ASSIGN_PERMISSIONS"),
+  unassignPermissionsController,
 );
 
 export default permissionRouter;

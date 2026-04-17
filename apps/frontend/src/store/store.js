@@ -13,6 +13,7 @@ import employeeReducer from "./slices/employeeSlice";
 import technicalReportReducer from "./slices/technicalReportSlice";
 import disbursementReducer from "./slices/disbursementSlice";
 import loanDefaultReducer from "./slices/loanDefultslice";
+import permissionReducer from "./slices/permissionSlice";
 
 export const store = configureStore({
   reducer: {
@@ -30,6 +31,7 @@ export const store = configureStore({
     technicalReport: technicalReportReducer,
     disbursement: disbursementReducer,
     loanDefault: loanDefaultReducer,
+    permission: permissionReducer,
   },
 });
 

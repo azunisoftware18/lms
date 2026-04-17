@@ -3,11 +3,15 @@ export default function Button({
   onClick,
   type = "button",
   className = "",
+  disabled = false,
+  ...rest
 }) {
   return (
     <button
       type={type}
       onClick={onClick}
+      disabled={disabled}
+      {...rest}
       className={`inline-flex items-center gap-2
         bg-blue-600 text-white
         px-5 py-2.5

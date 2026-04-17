@@ -21,8 +21,11 @@ const StatusCard = ({
         </p>
 
         <div className="mt-2 md:mt-3 flex items-center justify-between gap-2">
-          <div>
-            <h3 className="text-xl md:text-2xl font-bold text-gray-800 leading-tight">
+          <div className="min-w-0">
+            <h3
+              title={String(value || "")}
+              className="text-xl md:text-2xl font-bold text-gray-800 leading-tight truncate"
+            >
               {value}
             </h3>
             {typeof percent === "number" && (
@@ -37,7 +40,7 @@ const StatusCard = ({
             )}
           </div>
           <div className={`p-1.5 md:p-2 rounded-lg shrink-0 ${bgClass}`}>
-            <Icon size={18} className={colorClass} />
+            {Icon && <Icon size={18} className={colorClass} />}
           </div>
         </div>
       </div>
