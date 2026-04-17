@@ -6,7 +6,8 @@ const permissionSlice = createSlice({
   initialState: {
     selectedUserId: null,
     permissions: [],
-    userPermissions: null,
+    userPermissions: [],
+    users: [],
     loading: false,
     error: null,
   },
@@ -39,7 +40,15 @@ const permissionSlice = createSlice({
     },
 
     setUserPermissions: (state, action) => {
-      state.userPermissions = action.payload;
+      state.userPermissions = Array.isArray(action.payload)
+        ? action.payload
+        : [];
+      state.loading = false;
+      state.error = null;
+    },
+
+    setUsers: (state, action) => {
+      state.users = Array.isArray(action.payload) ? action.payload : [];
       state.loading = false;
       state.error = null;
     },
@@ -60,6 +69,7 @@ export const {
   clearError,
   setPermissions,
   setUserPermissions,
+  setUsers,
   addPermission,
 } = permissionSlice.actions;
 

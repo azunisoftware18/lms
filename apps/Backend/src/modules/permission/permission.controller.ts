@@ -1,5 +1,6 @@
 import {
   assignPermissionsService,
+  unassignPermissionsService,
   assignPermissionGroupsService,
   assignRolePermissionsService,
   assignRolePermissionGroupsService,
@@ -237,5 +238,29 @@ export const getAllPermissionGroupsController = async (
       message: "Failed to fetch permission groups",
       error: error.message || "INTERNAL_SERVER_ERROR",
     });
+  }
+};
+
+export const unassignPermissionsController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { userId, permissions } = req.body;
+    if (!userId || !permissions) {
+      return res.status(400).json({ success: false, message: "userId and permissions are required" });
+    }
+    if (!Array.isArray(permissions)) {
+      return res.status(400).json({ success: false, message: "permissions must be an array of permission codes" });
+    }
+
+    await unassignPermissionsService(userId, permissions);
+    res.status(200).json({ success: true, message: "Permissions unassigned successfully" });
+  } catch (error: any) {
+    if (error.message && error.message.includes("not found")) {
+      return res.status(404).json({ success: false, message: error.message });
+    }
+
+    res.status(500).json({ success: false, message: "Failed to unassign permissions", error: "INTERNAL_SERVER_ERROR" });
   }
 };
