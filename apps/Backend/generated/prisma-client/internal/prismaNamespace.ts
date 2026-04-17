@@ -4137,6 +4137,17 @@ export const EmployeeScalarFieldEnum = {
   experience: 'experience',
   workLocation: 'workLocation',
   branchId: 'branchId',
+  accountHolder: 'accountHolder',
+  bankName: 'bankName',
+  bankAccountNo: 'bankAccountNo',
+  ifsc: 'ifsc',
+  upiId: 'upiId',
+  basicSalary: 'basicSalary',
+  conveyance: 'conveyance',
+  medicalAllowance: 'medicalAllowance',
+  otherAllowances: 'otherAllowances',
+  pfDeduction: 'pfDeduction',
+  taxDeduction: 'taxDeduction',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -4163,22 +4174,23 @@ export type EmployeeRoleScalarFieldEnum = (typeof EmployeeRoleScalarFieldEnum)[k
 export const PartnerScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  partnerId: 'partnerId',
   legalName: 'legalName',
   tradeName: 'tradeName',
   partnerType: 'partnerType',
   constitutionType: 'constitutionType',
   dateOfOnboarding: 'dateOfOnboarding',
-  status: 'status',
+  Status: 'Status',
   contactPersonName: 'contactPersonName',
   contactNumber: 'contactNumber',
   email: 'email',
   alternatePersonName: 'alternatePersonName',
   alternateContactNumber: 'alternateContactNumber',
-  alternateEmail: 'alternateEmail',
   officeAddressId: 'officeAddressId',
   panNumber: 'panNumber',
-  aadhaarNumber: 'aadhaarNumber',
+  AadhaarNumber: 'AadhaarNumber',
   cinNumber: 'cinNumber',
+  gstinNumber: 'gstinNumber',
   llpinNumber: 'llpinNumber',
   panVerificationStatus: 'panVerificationStatus',
   gstVerificationStatus: 'gstVerificationStatus',
@@ -4196,7 +4208,7 @@ export const PartnerScalarFieldEnum = {
   monthlySourcingVolume: 'monthlySourcingVolume',
   geographicCoverage: 'geographicCoverage',
   existingLenderRelationships: 'existingLenderRelationships',
-  totalEmployees: 'totalEmployees',
+  officeStrength: 'officeStrength',
   digitalApiIntegration: 'digitalApiIntegration',
   payoutBankName: 'payoutBankName',
   payoutAccountHolderName: 'payoutAccountHolderName',
@@ -4204,18 +4216,23 @@ export const PartnerScalarFieldEnum = {
   payoutIfscCode: 'payoutIfscCode',
   payoutUpiId: 'payoutUpiId',
   bankVerificationStatus: 'bankVerificationStatus',
+  companyName: 'companyName',
   gstNumber: 'gstNumber',
   commissionType: 'commissionType',
   commissionValue: 'commissionValue',
-  paymentCycle: 'paymentCycle',
-  minimumPayout: 'minimumPayout',
-  taxDeduction: 'taxDeduction',
   branchId: 'branchId',
   isActive: 'isActive',
   establishedYear: 'establishedYear',
+  businessNature: 'businessNature',
+  designation: 'designation',
+  businessCategory: 'businessCategory',
   specialization: 'specialization',
+  totalEmployees: 'totalEmployees',
   annualTurnover: 'annualTurnover',
   businessRegistrationNumber: 'businessRegistrationNumber',
+  paymentCycle: 'paymentCycle',
+  minimumPayout: 'minimumPayout',
+  taxDeduction: 'taxDeduction',
   targetArea: 'targetArea',
   totalReferrals: 'totalReferrals',
   activeReferrals: 'activeReferrals',
@@ -4238,7 +4255,13 @@ export const PartnerScalarFieldEnum = {
   tdsApplicable: 'tdsApplicable',
   incentiveSchemes: 'incentiveSchemes',
   clawbackTerms: 'clawbackTerms',
-  maxPayoutCap: 'maxPayoutCap'
+  maxPayoutCap: 'maxPayoutCap',
+  loginId: 'loginId',
+  assignedRmId: 'assignedRmId',
+  branchMapping: 'branchMapping',
+  productAccess: 'productAccess',
+  apiKey: 'apiKey',
+  integrationId: 'integrationId'
 } as const
 
 export type PartnerScalarFieldEnum = (typeof PartnerScalarFieldEnum)[keyof typeof PartnerScalarFieldEnum]
@@ -4846,6 +4869,7 @@ export const DocumentScalarFieldEnum = {
   loanApplicationId: 'loanApplicationId',
   coApplicantId: 'coApplicantId',
   guarantorId: 'guarantorId',
+  employeeId: 'employeeId',
   partnerId: 'partnerId',
   documentType: 'documentType',
   documentPath: 'documentPath',
@@ -5378,7 +5402,12 @@ export const EmployeeOrderByRelevanceFieldEnum = {
   emergencyRelationshipOther: 'emergencyRelationshipOther',
   department: 'department',
   experience: 'experience',
-  branchId: 'branchId'
+  branchId: 'branchId',
+  accountHolder: 'accountHolder',
+  bankName: 'bankName',
+  bankAccountNo: 'bankAccountNo',
+  ifsc: 'ifsc',
+  upiId: 'upiId'
 } as const
 
 export type EmployeeOrderByRelevanceFieldEnum = (typeof EmployeeOrderByRelevanceFieldEnum)[keyof typeof EmployeeOrderByRelevanceFieldEnum]
@@ -5416,6 +5445,7 @@ export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 export const PartnerOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
+  partnerId: 'partnerId',
   legalName: 'legalName',
   tradeName: 'tradeName',
   contactPersonName: 'contactPersonName',
@@ -5423,11 +5453,11 @@ export const PartnerOrderByRelevanceFieldEnum = {
   email: 'email',
   alternatePersonName: 'alternatePersonName',
   alternateContactNumber: 'alternateContactNumber',
-  alternateEmail: 'alternateEmail',
   officeAddressId: 'officeAddressId',
   panNumber: 'panNumber',
-  aadhaarNumber: 'aadhaarNumber',
+  AadhaarNumber: 'AadhaarNumber',
   cinNumber: 'cinNumber',
+  gstinNumber: 'gstinNumber',
   llpinNumber: 'llpinNumber',
   panDocumentId: 'panDocumentId',
   gstDocumentId: 'gstDocumentId',
@@ -5443,12 +5473,20 @@ export const PartnerOrderByRelevanceFieldEnum = {
   payoutAccountNumber: 'payoutAccountNumber',
   payoutIfscCode: 'payoutIfscCode',
   payoutUpiId: 'payoutUpiId',
+  companyName: 'companyName',
   gstNumber: 'gstNumber',
   branchId: 'branchId',
+  businessNature: 'businessNature',
+  designation: 'designation',
+  businessCategory: 'businessCategory',
   specialization: 'specialization',
   businessRegistrationNumber: 'businessRegistrationNumber',
   targetArea: 'targetArea',
-  clawbackTerms: 'clawbackTerms'
+  clawbackTerms: 'clawbackTerms',
+  loginId: 'loginId',
+  assignedRmId: 'assignedRmId',
+  apiKey: 'apiKey',
+  integrationId: 'integrationId'
 } as const
 
 export type PartnerOrderByRelevanceFieldEnum = (typeof PartnerOrderByRelevanceFieldEnum)[keyof typeof PartnerOrderByRelevanceFieldEnum]
@@ -5824,6 +5862,7 @@ export const DocumentOrderByRelevanceFieldEnum = {
   loanApplicationId: 'loanApplicationId',
   coApplicantId: 'coApplicantId',
   guarantorId: 'guarantorId',
+  employeeId: 'employeeId',
   partnerId: 'partnerId',
   documentType: 'documentType',
   documentPath: 'documentPath',
@@ -6163,6 +6202,13 @@ export type EnumWorkLocationFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 
 
 /**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
  * Reference to a field of type 'roleFor'
  */
 export type EnumroleForFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'roleFor'>
@@ -6201,13 +6247,6 @@ export type EnumVerificationStatusFieldRefInput<$PrismaModel> = FieldRefInputTyp
  * Reference to a field of type 'CommissionType'
  */
 export type EnumCommissionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommissionType'>
-    
-
-
-/**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 
