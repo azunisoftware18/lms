@@ -13,6 +13,9 @@ import { AppError } from "../../common/utils/apiError.js";
 const buildSafeEmployeeResponse = (payload: any) => {
   const user = payload?.user ?? null;
   const employee = payload?.employee ?? null;
+  const documents = payload?.documents ?? [];
+  const accountDetails = payload?.accountDetails ?? null;
+  const salaryDetails = payload?.salaryDetails ?? null;
 
   return {
     user: user
@@ -27,19 +30,10 @@ const buildSafeEmployeeResponse = (payload: any) => {
           isActive: user.isActive,
         }
       : null,
-    employee: employee
-      ? {
-          id: employee.id,
-          userId: employee.userId,
-          employeeId: employee.employeeId,
-          employeeRoleId: employee.employeeRoleId,
-          designation: employee.designation,
-          department: employee.department,
-          branchId: employee.branchId,
-          createdAt: employee.createdAt,
-          updatedAt: employee.updatedAt,
-        }
-      : null,
+    employee: employee || null,
+    documents,
+    accountDetails,
+    salaryDetails,
   };
 };
 
@@ -49,7 +43,11 @@ export const createEmployeeController = async (
   next: NextFunction,
 ) => {
   try {
-    const result = await createEmployeeService(req.body, req.user?.role);
+    const result = await createEmployeeService(
+      req.body,
+      req.user?.role,
+      req.user?.id,
+    );
     const { user, employee } = result as any;
     const { password: _pw, ...safeUser } = user;
 
@@ -83,7 +81,10 @@ export const createEmployeeController = async (
     res.status(201).json({
       success: true,
       message: "Employee created successfully",
-      data: buildSafeEmployeeResponse({ user: safeUser, employee }),
+      data: buildSafeEmployeeResponse({
+        ...(result as any),
+        user: safeUser,
+      }),
     });
   } catch (error) {
     next(error);
@@ -103,7 +104,7 @@ export const getAllEmployeesController = async (
       {
         page: Number(req.query.page),
         limit: Number(req.query.limit),
-        q: typeof req.query.q === 'string' ? req.query.q : undefined,
+        q: typeof req.query.q === "string" ? req.query.q : undefined,
       },
       {
         id: req.user.id,
@@ -126,7 +127,8 @@ export const getEmployeeByIdController = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const id = typeof req.params.id === 'string' ? req.params.id : req.params.id[0];
+  const id =
+    typeof req.params.id === "string" ? req.params.id : req.params.id[0];
   try {
     const employee = await getEmployeeByIdService(id);
     res.status(200).json({
@@ -144,7 +146,8 @@ export const updateEmployeeController = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const id = typeof req.params.id === 'string' ? req.params.id : req.params.id[0];
+  const id =
+    typeof req.params.id === "string" ? req.params.id : req.params.id[0];
   const updateData = req.body;
 
   try {

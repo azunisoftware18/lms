@@ -36,6 +36,8 @@ const CreditDashboard = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState(null);
   const [selectedParty, setSelectedParty] = useState(null);
+  const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [reportTarget, setReportTarget] = useState(null);
 
   // Fetch real loan applications
   const { data, isLoading, refetch } = useLoanApplications();
@@ -189,6 +191,181 @@ const CreditDashboard = () => {
   const approvedCount = applications.filter(
     (a) => (a.status || "").toLowerCase() === "approved",
   ).length;
+
+  const getValueByPath = (obj, path) => {
+    if (!obj || !path) return undefined;
+    return path
+      .split(".")
+      .reduce((acc, key) => (acc == null ? undefined : acc[key]), obj);
+  };
+
+  const pickFirstValue = (sources, paths) => {
+    for (const source of sources) {
+      if (!source) continue;
+      for (const path of paths) {
+        const value = getValueByPath(source, path);
+        if (value !== undefined && value !== null && String(value).trim() !== "") {
+          return String(value).trim();
+        }
+      }
+    }
+    return "";
+  };
+
+  const getLookupValue = (target) => {
+    if (!target) return "";
+    return (
+      target.pan?.trim() ||
+      target.phone?.trim() ||
+      target.loanNumber?.trim() ||
+      target.reference?.trim() ||
+      ""
+    );
+  };
+
+  const normalizePartyData = (loan, party, label) => {
+    if (!loan || !party) return null;
+
+    const sources = [
+      party,
+      party.user,
+      party.customer,
+      party.details,
+      party.personalInfo,
+      party.kyc,
+      party.identity,
+      party.profile,
+    ];
+
+    const nameText = pickFirstValue(sources, ["name", "fullName", "full_name"]);
+
+    const firstName =
+      pickFirstValue(sources, [
+        "firstName",
+        "firstname",
+        "first_name",
+        "personalInfo.firstName",
+      ]) || nameText.split(" ")?.[0] || "";
+
+    const lastName =
+      pickFirstValue(sources, [
+        "lastName",
+        "lastname",
+        "last_name",
+        "surname",
+        "personalInfo.lastName",
+      ]) || (nameText ? nameText.split(" ").slice(1).join(" ") : "");
+
+    const phone = pickFirstValue(sources, [
+      "phone",
+      "phoneNumber",
+      "phone_number",
+      "contactNumber",
+      "contact_number",
+      "mobile",
+      "mobileNumber",
+      "mobile_number",
+      "whatsappNumber",
+      "whatsapp_number",
+      "personalInfo.phone",
+      "personalInfo.mobile",
+    ]);
+
+    const pan = pickFirstValue(sources, [
+      "pan",
+      "panNumber",
+      "pan_number",
+      "panNo",
+      "pan_no",
+      "panCard",
+      "pancard",
+      "kyc.pan",
+      "identity.pan",
+      "personalInfo.pan",
+    ]).toUpperCase();
+
+    const reference =
+      loan.reference || loan.loanNumber || loan.loan_number || party.reference || `LOAN-${loan.id}`;
+
+    const loanNumber = loan.loanNumber || loan.loan_number || "";
+
+    return {
+      label,
+      reference,
+      loanNumber,
+      firstName,
+      lastName,
+      phone,
+      pan,
+    };
+  };
+
+  const getCoApplicantParty = (loan) => {
+    if (!loan) return null;
+    return (
+      (loan.coApplicants && loan.coApplicants[0]) ||
+      (loan.coapplicants && loan.coapplicants[0]) ||
+      loan.coApplicant ||
+      null
+    );
+  };
+
+  const getGuarantorParty = (loan) => {
+    if (!loan) return null;
+    return (
+      (loan.guarantors && loan.guarantors[0]) || loan.guarantor || null
+    );
+  };
+
+  const openReportModal = (partyType) => {
+    if (!selectedLoan) return;
+
+    let party = null;
+    let label = "Applicant";
+    let reportPath = `/admin/los/credit-report/${selectedLoan.id}?party=applicant`;
+
+    if (partyType === "coapplicant") {
+      party = getCoApplicantParty(selectedLoan);
+      label = "Co-applicant";
+      reportPath = `/admin/los/credit-report/${selectedLoan.id}?party=coapplicant&partyId=${party?.panNumber || party?.contactNumber || party?.id || ""}`;
+    } else if (partyType === "guarantor") {
+      party = getGuarantorParty(selectedLoan);
+      label = "Guarantor";
+      reportPath = `/admin/los/credit-report/${selectedLoan.id}?party=guarantor&partyId=${party?.panNumber || party?.contactNumber || party?.id || ""}`;
+    } else {
+      party = { id: selectedLoan.customer?.id, ...selectedLoan.customer };
+    }
+
+    const data = normalizePartyData(selectedLoan, party, label);
+    if (!data) return;
+
+    setReportTarget({
+      ...data,
+      reportPath,
+    });
+    setReportModalOpen(true);
+  };
+
+  const handleRequestReport = () => {
+    const q = getLookupValue(reportTarget);
+    if (!q) return;
+
+    refreshReport.mutate(
+      {
+        q,
+        reason: `manual-${(reportTarget.label || "party").toLowerCase()}-check`,
+      },
+      {
+        onSuccess: () => {
+          setReportModalOpen(false);
+          setModalOpen(false);
+          if (reportTarget.reportPath) {
+            navigate(reportTarget.reportPath);
+          }
+        },
+      },
+    );
+  };
 
   // Helper to open modal and select applicant only
   const handleCreditCheck = (loan) => {
@@ -631,31 +808,14 @@ const CreditDashboard = () => {
                         <div className="flex-shrink-0 flex flex-col gap-2">
                           <button
                             className="px-3 py-1.5 rounded-lg border bg-white text-slate-700 text-sm"
-                            onClick={() => {
-                              setModalOpen(false);
-                              navigate(
-                                `/admin/los/credit-report/${selectedLoan.id}?party=applicant`,
-                              );
-                            }}
+                            onClick={() => openReportModal("applicant")}
                           >
                             View Applicant Report
                           </button>
                           {hasCoApplicant && (
                             <button
                               className="px-3 py-1.5 rounded-lg border bg-white text-slate-700 text-sm"
-                              onClick={() => {
-                                setModalOpen(false);
-                                const party =
-                                  (selectedLoan.coApplicants &&
-                                    selectedLoan.coApplicants[0]) ||
-                                  (selectedLoan.coapplicants &&
-                                    selectedLoan.coapplicants[0]) ||
-                                  selectedLoan.coApplicant;
-                                // Pass PAN/contact (fallback to id) so backend can resolve properly
-                                navigate(
-                                  `/admin/los/credit-report/${selectedLoan.id}?party=coapplicant&partyId=${party?.panNumber || party?.contactNumber || party?.id}`,
-                                );
-                              }}
+                              onClick={() => openReportModal("coapplicant")}
                             >
                               View Co-applicant Report
                             </button>
@@ -663,16 +823,7 @@ const CreditDashboard = () => {
                           {hasGuarantor && (
                             <button
                               className="px-3 py-1.5 rounded-lg border bg-white text-slate-700 text-sm"
-                              onClick={() => {
-                                setModalOpen(false);
-                                const party =
-                                  (selectedLoan.guarantors &&
-                                    selectedLoan.guarantors[0]) ||
-                                  selectedLoan.guarantor;
-                                navigate(
-                                  `/admin/los/credit-report/${selectedLoan.id}?party=guarantor&partyId=${party?.panNumber || party?.contactNumber || party?.id}`,
-                                );
-                              }}
+                              onClick={() => openReportModal("guarantor")}
                             >
                               View Guarantor Report
                             </button>
@@ -702,6 +853,122 @@ const CreditDashboard = () => {
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {reportModalOpen && reportTarget && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 px-4">
+            <div className="w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
+                <h3 className="text-lg font-semibold text-slate-800">
+                  {reportTarget.label} Report Request
+                </h3>
+                <button
+                  className="p-1.5 rounded-full hover:bg-slate-100"
+                  onClick={() => setReportModalOpen(false)}
+                >
+                  <XCircle className="w-5 h-5 text-slate-400" />
+                </button>
+              </div>
+
+              <div className="px-5 py-4 space-y-3">
+                <p className="text-sm text-slate-500">
+                  Please confirm details before fetching credit report.
+                </p>
+
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-2 text-sm">
+                  <div className="flex justify-between gap-3">
+                    <span className="text-slate-500">reference</span>
+                    <input
+                      value={reportTarget.reference || ""}
+                      onChange={(e) =>
+                        setReportTarget((prev) => ({
+                          ...prev,
+                          reference: e.target.value,
+                        }))
+                      }
+                      className="w-56 text-right font-medium text-slate-800 bg-white border border-slate-200 rounded px-2 py-1"
+                    />
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <span className="text-slate-500">firstName</span>
+                    <input
+                      value={reportTarget.firstName || ""}
+                      onChange={(e) =>
+                        setReportTarget((prev) => ({
+                          ...prev,
+                          firstName: e.target.value,
+                        }))
+                      }
+                      className="w-56 text-right font-medium text-slate-800 bg-white border border-slate-200 rounded px-2 py-1"
+                    />
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <span className="text-slate-500">lastName</span>
+                    <input
+                      value={reportTarget.lastName || ""}
+                      onChange={(e) =>
+                        setReportTarget((prev) => ({
+                          ...prev,
+                          lastName: e.target.value,
+                        }))
+                      }
+                      className="w-56 text-right font-medium text-slate-800 bg-white border border-slate-200 rounded px-2 py-1"
+                    />
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <span className="text-slate-500">phone</span>
+                    <input
+                      value={reportTarget.phone || ""}
+                      onChange={(e) =>
+                        setReportTarget((prev) => ({
+                          ...prev,
+                          phone: e.target.value,
+                        }))
+                      }
+                      className="w-56 text-right font-medium text-slate-800 bg-white border border-slate-200 rounded px-2 py-1"
+                      placeholder="Enter phone"
+                    />
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <span className="text-slate-500">pan</span>
+                    <input
+                      value={reportTarget.pan || ""}
+                      onChange={(e) =>
+                        setReportTarget((prev) => ({
+                          ...prev,
+                          pan: e.target.value.toUpperCase(),
+                        }))
+                      }
+                      className="w-56 text-right font-medium text-slate-800 bg-white border border-slate-200 rounded px-2 py-1"
+                      placeholder="Enter PAN"
+                    />
+                  </div>
+                </div>
+
+                {!getLookupValue(reportTarget) && (
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 text-amber-700 px-3 py-2 text-xs">
+                    PAN/phone not available for this party. Please update at least one value.
+                  </div>
+                )}
+              </div>
+
+              <div className="px-5 py-4 border-t border-slate-200 flex items-center justify-end gap-2">
+                <button
+                  className="px-3 py-1.5 rounded-lg border bg-white text-slate-700 text-sm"
+                  onClick={() => setReportModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-sm disabled:bg-slate-300"
+                  onClick={handleRequestReport}
+                  disabled={!getLookupValue(reportTarget) || refreshReport.isLoading}
+                >
+                  {refreshReport.isLoading ? "Fetching..." : "Get Report"}
+                </button>
+              </div>
             </div>
           </div>
         )}

@@ -1,5 +1,7 @@
 import React from "react";
 import { Download, X, Phone, Check } from "lucide-react";
+import { useBranchAdminById } from "../../hooks/useBranchAdmin";
+import { useEmployee } from "../../hooks/useEmployee";
 
 const PERMISSION_LABELS = [
   { key: "addCustomer", label: "Can Add Customer" },
@@ -15,7 +17,133 @@ export default function EmployeeDetailsModal({
   onClose,
   onDownloadProfile,
 }) {
+  // safe to compute managerId even if employee is undefined
+  const managerId =
+    employee?.reportingManagerId ||
+    (typeof employee?.reportingManager === "string"
+      ? employee.reportingManager
+      : null);
+  const managerQuery = useBranchAdminById(managerId);
+  const managerData = managerQuery?.data?.data || managerQuery?.data || null;
+  const managerEmployeeQuery = useEmployee(managerId);
+  const managerEmployeeData =
+    managerEmployeeQuery?.data?.data || managerEmployeeQuery?.data || null;
+
   if (!isOpen || !employee) return null;
+
+  const show = (value) => {
+    if (value == null) return "-";
+    const str = String(value).trim();
+    return str.length ? str : "-";
+  };
+
+  const statusClass = (() => {
+    const s = employee?.status;
+    if (s === "Active") return "bg-green-100 text-green-700";
+    if (s === "On Leave") return "bg-yellow-100 text-yellow-700";
+    if (s) return "bg-red-100 text-red-700";
+    return "bg-gray-100 text-gray-700";
+  })();
+
+  const leaveBalanceDisplay =
+    employee?.leaveBalance != null ? `${employee.leaveBalance} days` : "-";
+
+  const formatDate = (value) => {
+    if (!value) return "-";
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return String(value);
+    return d.toLocaleDateString();
+  };
+
+  const toNum = (v) => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+
+  const computedTotalSalary = (() => {
+    if (employee == null) return null;
+    if (
+      employee.totalSalary != null &&
+      String(employee.totalSalary).trim().length
+    )
+      return employee.totalSalary;
+    const sum =
+      toNum(employee.basicSalary) +
+      toNum(employee.hra) +
+      toNum(employee.conveyance) +
+      toNum(employee.medicalAllowance) +
+      toNum(employee.otherAllowances) -
+      toNum(employee.pfDeduction) -
+      toNum(employee.taxDeduction);
+    return sum || null;
+  })();
+
+  const uploadedDocs = Array.isArray(employee.documents)
+    ? employee.documents
+    : [];
+  const kycs = Array.isArray(employee.kycs) ? employee.kycs : [];
+
+  const getDocLabel = (documentType) =>
+    String(documentType || "-")
+      .replace(/^EMP_/, "")
+      .replace(/_/g, " ")
+      .toLowerCase()
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+
+  const getReportingManagerName = () => {
+    const rm = employee.reportingManager;
+    if (!rm && !employee.reportingManagerId) return null;
+    if (typeof rm === "object" && rm !== null) {
+      return rm.fullName || rm.name || rm.username || rm.email || rm.id || null;
+    }
+    if (typeof rm === "string") {
+      // prefer fetched manager data (branch-admin) first
+      if (managerData)
+        return (
+          managerData.fullName ||
+          managerData.name ||
+          managerData.username ||
+          managerData.email ||
+          managerData.id
+        );
+      // then prefer employee lookup
+      if (managerEmployeeData)
+        return (
+          managerEmployeeData.fullName ||
+          managerEmployeeData.name ||
+          managerEmployeeData.username ||
+          managerEmployeeData.email ||
+          managerEmployeeData.id
+        );
+      // if the string looks like a human name (contains space), return it
+      if (/\s/.test(rm)) return rm;
+      // otherwise fallback to id
+      return employee.reportingManagerId || rm || null;
+    }
+    // final fallback: prefer fetched names, then ids
+    if (managerData)
+      return (
+        managerData.fullName ||
+        managerData.name ||
+        managerData.username ||
+        managerData.email ||
+        managerData.id
+      );
+    if (managerEmployeeData)
+      return (
+        managerEmployeeData.fullName ||
+        managerEmployeeData.name ||
+        managerEmployeeData.username ||
+        managerEmployeeData.email ||
+        managerEmployeeData.id
+      );
+    return (
+      employee.reportingManagerName ||
+      employee.reportingManagerFullName ||
+      employee.reportingManagerId ||
+      null
+    );
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
@@ -30,8 +158,8 @@ export default function EmployeeDetailsModal({
                 {employee.fullName}
               </h2>
               <p className="text-sm text-gray-500">
-                {employee.designation} • {employee.department} • ID:{" "}
-                {employee.employeeId}
+                {show(employee.designation)} • {show(employee.department)} • ID:{" "}
+                {show(employee.employeeId)}
               </p>
             </div>
           </div>
@@ -62,57 +190,38 @@ export default function EmployeeDetailsModal({
                   <div>
                     <span className="text-gray-500 block">Email</span>
                     <span className="font-medium text-gray-800">
-                      {employee.email}
+                      {show(employee.email)}
                     </span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">Phone</span>
                     <span className="font-medium text-gray-800">
-                      {employee.phone}
+                      {show(employee.phone)}
                     </span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">Alt Phone</span>
                     <span className="font-medium text-gray-800">
-                      {employee.altPhone || "-"}
+                      {show(employee.altPhone)}
                     </span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">Gender</span>
                     <span className="font-medium text-gray-800">
-                      {employee.gender}
+                      {show(employee.gender)}
                     </span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">DOB</span>
                     <span className="font-medium text-gray-800">
-                      {employee.dob || "-"}
+                      {formatDate(employee.dob)}
                     </span>
                   </div>
                   <div>
                     <span className="text-gray500 block">Marital Status</span>
                     <span className="font-medium text-gray-800">
-                      {employee.maritalStatus || "-"}
+                      {show(employee.maritalStatus)}
                     </span>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider border-b pb-2 mb-4">
-                  Emergency Contact
-                </h3>
-                <div className="bg-gray-50 p-4 rounded-xl">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="font-medium text-gray-800">
-                        {employee.emergencyContact || "Not provided"}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        {employee.emergencyRelation}
-                      </p>
-                    </div>
-                    <Phone size={18} className="text-gray-400" />
                   </div>
                 </div>
               </div>
@@ -127,37 +236,37 @@ export default function EmployeeDetailsModal({
                   <div>
                     <span className="text-gray-500 block">Employee ID</span>
                     <span className="font-bold text-blue-600">
-                      {employee.employeeId}
+                      {show(employee.employeeId)}
                     </span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">Department</span>
                     <span className="font-medium text-gray-800">
-                      {employee.department}
+                      {show(employee.department)}
                     </span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">Designation</span>
                     <span className="font-medium text-gray-800">
-                      {employee.designation}
+                      {show(employee.designation)}
                     </span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">Experience</span>
                     <span className="font-medium text-gray-800">
-                      {employee.experience || "-"}
+                      {show(employee.experience)}
                     </span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">Date of Joining</span>
                     <span className="font-medium text-gray-800">
-                      {employee.dateOfJoining || "-"}
+                      {formatDate(employee.dateOfJoining)}
                     </span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">Work Location</span>
                     <span className="font-medium text-gray-800">
-                      {employee.workLocation || "Office"}
+                      {show(employee.workLocation)}
                     </span>
                   </div>
                   <div className="col-span-2">
@@ -165,7 +274,35 @@ export default function EmployeeDetailsModal({
                       Reporting Manager
                     </span>
                     <span className="font-medium text-gray-800">
-                      {employee.reportingManager || "-"}
+                      {show(getReportingManagerName())}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 block">Branch Code</span>
+                    <span className="font-medium text-gray-800">
+                      {show(employee.branchCode || employee.branch?.code)}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 block">Branch Name</span>
+                    <span className="font-medium text-gray-800">
+                      {show(employee.branchName || employee.branch?.name)}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 block">Branch Type</span>
+                    <span className="font-medium text-gray-800">
+                      {show(employee.branch?.type)}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 block">
+                      Role Title / Name
+                    </span>
+                    <span className="font-medium text-gray-800">
+                      {show(
+                        `${employee.employeeRole?.roleTitle || employee.roleTitle || "-"} / ${employee.employeeRole?.roleName || employee.roleName || "-"}`,
+                      )}
                     </span>
                   </div>
                 </div>
@@ -177,10 +314,11 @@ export default function EmployeeDetailsModal({
                 </h3>
                 <div className="text-sm">
                   <p className="font-medium text-gray-800">
-                    {employee.address}
+                    {show(employee.address)}
                   </p>
                   <p className="text-gray-600">
-                    {employee.city}, {employee.state} - {employee.pincode}
+                    {show(employee.city)}, {show(employee.state)} -{" "}
+                    {show(employee.pincode || employee.pinCode)}
                   </p>
                 </div>
               </div>
@@ -195,32 +333,32 @@ export default function EmployeeDetailsModal({
                   <div className="flex justify-between">
                     <span>Bank Name:</span>
                     <span className="font-bold text-gray-800">
-                      {employee.bankName}
+                      {show(employee.bankName)}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Account No:</span>
                     <span className="font-mono text-gray-800">
-                      {employee.bankAccountNo || employee.accountNo}
+                      {show(employee.bankAccountNo || employee.accountNo)}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span>IFSC Code:</span>
                     <span className="font-mono text-gray-800">
-                      {employee.ifsc}
+                      {show(employee.ifsc)}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Account Holder:</span>
                     <span className="font-medium text-gray-800">
-                      {employee.accountHolder}
+                      {show(employee.accountHolder)}
                     </span>
                   </div>
-                  {employee.upiId && (
+                  {show(employee.upiId) !== "-" && (
                     <div className="flex justify-between">
                       <span>UPI ID:</span>
                       <span className="font-medium text-blue-600">
-                        {employee.upiId}
+                        {show(employee.upiId)}
                       </span>
                     </div>
                   )}
@@ -236,23 +374,49 @@ export default function EmployeeDetailsModal({
                     <div className="flex justify-between">
                       <span>Basic Salary:</span>
                       <span className="font-bold text-gray-800">
-                        {employee.basicSalary}
+                        {show(employee.basicSalary)}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span>HRA:</span>
-                      <span className="text-gray-700">{employee.hra}</span>
+                      <span className="text-gray-700">
+                        {show(employee.hra)}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span>Conveyance:</span>
                       <span className="text-gray-700">
-                        {employee.conveyance}
+                        {show(employee.conveyance)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Medical Allowance:</span>
+                      <span className="text-gray-700">
+                        {show(employee.medicalAllowance)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Other Allowances:</span>
+                      <span className="text-gray-700">
+                        {show(employee.otherAllowances)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>PF Deduction:</span>
+                      <span className="text-gray-700">
+                        {show(employee.pfDeduction)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Tax Deduction:</span>
+                      <span className="text-gray-700">
+                        {show(employee.taxDeduction)}
                       </span>
                     </div>
                     <div className="border-t border-green-200 pt-2 mt-2">
                       <div className="flex justify-between font-bold text-green-700">
                         <span>Total Salary:</span>
-                        <span>{employee.totalSalary}</span>
+                        <span>{show(computedTotalSalary)}</span>
                       </div>
                     </div>
                   </div>
@@ -269,36 +433,101 @@ export default function EmployeeDetailsModal({
                   <div>
                     <span className="text-gray-500 block">Aadhaar</span>
                     <span className="font-mono text-gray-800">
-                      {employee.aadhaarNo}
+                      {show(employee.aadhaarNo)}
                     </span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">PAN</span>
                     <span className="font-mono text-gray-800">
-                      {employee.panNo}
+                      {show(employee.panNo)}
                     </span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">Username</span>
                     <span className="font-medium text-gray-800">
-                      {employee.username}
+                      {show(employee.username)}
                     </span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">Leave Balance</span>
                     <span className="font-bold text-blue-600">
-                      {employee.leaveBalance} days
+                      {leaveBalanceDisplay}
                     </span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">Status</span>
                     <span
-                      className={`px-2 py-0.5 rounded text-xs font-bold ${employee.status === "Active" ? "bg-green-100 text-green-700" : employee.status === "On Leave" ? "bg-yellow-100 text-yellow-700" : "bg-red-100 text-red-700"}`}
+                      className={`px-2 py-0.5 rounded text-xs font-bold ${statusClass}`}
                     >
-                      {employee.status}
+                      {show(employee.status)}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 block">KYC Status</span>
+                    <span className="font-medium text-gray-800">
+                      {show(employee.user?.kycStatus ?? kycs[0]?.status)}
                     </span>
                   </div>
                 </div>
+              </div>
+
+              {kycs.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider border-b pb-2 mb-4">
+                    KYC Records
+                  </h3>
+                  <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
+                    {kycs.map((kyc) => (
+                      <div
+                        key={kyc.id}
+                        className="border border-gray-100 rounded-lg p-3 bg-gray-50"
+                      >
+                        <p className="text-xs text-gray-500">{show(kyc.id)}</p>
+                        <div className="flex items-center justify-between mt-1">
+                          <span className="text-sm font-medium text-gray-700">
+                            Status: {show(kyc.status)}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {formatDate(kyc.createdAt)}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider border-b pb-2 mb-4">
+                  Uploaded Documents
+                </h3>
+                {uploadedDocs.length === 0 ? (
+                  <p className="text-sm text-gray-500">No uploaded documents</p>
+                ) : (
+                  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                    {uploadedDocs.map((doc) => (
+                      <div
+                        key={doc.id}
+                        className="border border-gray-100 rounded-lg p-3 bg-gray-50"
+                      >
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
+                            {getDocLabel(doc.documentType)}
+                          </p>
+                          <span className="text-[11px] text-gray-500">
+                            {show(doc.verificationStatus)}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-800 break-all mt-1">
+                          {show(doc.documentPath)}
+                        </p>
+                        <p className="text-[11px] text-gray-500 mt-1">
+                          Uploaded: {formatDate(doc.createdAt)}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div>

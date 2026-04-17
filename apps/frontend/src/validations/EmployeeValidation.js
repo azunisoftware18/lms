@@ -1,22 +1,22 @@
 import { z } from "zod";
 
 export const employeeSchema = z.object({
+  fullName: z.string().trim().min(1, "Full name is required"),
 
-  fullName: z
-    .string()
-    .trim()
-    .min(1, "Full name is required"),
-
-  email: z
-    .string()
-    .trim()
-    .email("Invalid email address"),
+  email: z.string().trim().email("Invalid email address"),
 
   password: z
     .string()
-    .min(8, "Password must be at least 8 characters"),
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/[0-9]/, "Password must contain at least one number")
+    .regex(
+      /[^A-Za-z0-9]/,
+      "Password must contain at least one special character",
+    ),
 
-  role: z.enum(["ADMIN", "EMPLOYEE", "PARTNER"]),
+  role: z.enum(["ADMIN", "EMPLOYEE", "PARTNER"]).optional(),
 
   contactNumber: z
     .string()
@@ -25,87 +25,72 @@ export const employeeSchema = z.object({
 
   atlMobileNumber: z
     .string()
-    .min(10, "Alternate phone must be at least 10 digits"),
+    .refine((value) => !value || value.length >= 10, {
+      message: "Alternate phone must be at least 10 digits",
+    })
+    .optional(),
 
-  userName: z
-    .string()
-    .trim()
-    .min(1, "Username is required"),
+  userName: z.string().trim().min(1, "Username is required"),
 
-  isActive: z.coerce.boolean(),
+  isActive: z.coerce.boolean().optional(),
 
   dob: z.coerce.date({
-    errorMap: () => ({ message: "Date of birth is required" })
+    errorMap: () => ({ message: "Date of birth is required" }),
   }),
 
   gender: z.enum(["MALE", "FEMALE", "OTHER"], {
-    required_error: "Gender is required"
+    required_error: "Gender is required",
   }),
 
-  maritalStatus: z.enum([
-    "SINGLE",
-    "MARRIED",
-    "DIVORCED",
-    "WIDOWED"
-  ]),
+  maritalStatus: z.enum(["SINGLE", "MARRIED", "DIVORCED", "WIDOWED"]),
 
-  designation: z
-    .string()
-    .min(1, "Designation is required"),
+  designation: z.string().min(1, "Designation is required"),
 
-  emergencyContact: z
-    .string()
-    .min(10, "Emergency contact must be at least 10 digits"),
+  roleTitle: z.string().trim().optional(),
 
-  emergencyRelationship: z
-    .string()
-    .min(1, "Emergency relationship is required"),
+  employeeRoleId: z.string().trim().min(1, "Role is required"),
+
+  gradeBand: z.string().trim().optional(),
+
+  reportingManager: z.string().trim().min(1, "Reporting manager is required"),
+
+  branchCode: z.string().trim().min(1, "Branch code is required"),
+
+  regionZone: z.string().trim().optional(),
 
   experience: z
-    .union([
-      z.string().min(1),
-      z.coerce.number().nonnegative()
-    ])
+    .union([z.string().min(1), z.coerce.number().nonnegative()])
     .optional(),
 
-  reportingManagerId: z.string().optional(),
-
-  workLocation: z.enum([
-    "OFFICE",
-    "REMOTE",
-    "HYBRID"
-  ]).optional(),
-
-  department: z
-    .string()
-    .min(1, "Department is required"),
+  workLocation: z.enum(["OFFICE", "REMOTE", "HYBRID"]).optional(),
 
   dateOfJoining: z.string().optional(),
 
-  salary: z
-    .coerce
-    .number()
-    .positive("Salary must be positive")
-    .optional(),
+  city: z.string().min(1, "City is required"),
 
-  address: z
-    .string()
-    .min(1, "Address is required"),
+  state: z.string().min(1, "State is required"),
 
-  city: z
-    .string()
-    .min(1, "City is required"),
+  pinCode: z.string().regex(/^\d{6}$/, "Pin code must be 6 digits"),
 
-  state: z
-    .string()
-    .min(1, "State is required"),
+  accountHolder: z.string().trim().min(1, "Account holder name is required"),
 
-  pinCode: z
-    .string()
-    .min(6, "Pin code must be 6 digits"),
+  bankName: z.string().trim().min(1, "Bank name is required"),
 
-  branchId: z
-    .string()
-    .min(1, "Branch assignment is required")
+  bankAccountNo: z.string().trim().min(1, "Bank account number is required"),
 
+  ifsc: z.string().trim().min(1, "IFSC code is required"),
+
+  upiId: z.string().trim().optional(),
+
+  basicSalary: z.coerce.number().positive("Basic salary must be positive"),
+
+  conveyance: z.coerce.number().min(0).optional(),
+  medicalAllowance: z.coerce.number().min(0).optional(),
+  otherAllowances: z.coerce.number().min(0).optional(),
+  pfDeduction: z.coerce.number().min(0).optional(),
+  taxDeduction: z.coerce.number().min(0).optional(),
+
+  status: z.enum(["Active", "Inactive"]).optional(),
+
+  branchId: z.string().optional(),
 });

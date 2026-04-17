@@ -1,5 +1,4 @@
 import { prisma } from "../../db/prismaService.js";
-import { hashPassword } from "../../common/utils/utils.js";
 import { CreateEmployee } from "./employee.types.js";
 import {
   getPagination,
@@ -41,7 +40,6 @@ export async function createEmployeeService(
      throw AppError.conflict("Employee with this username already exists");
   }
 
-  const hashedPassword = await hashPassword(data.password);
 
   // Add validation for branchId
   if (!data.branchId) {
@@ -79,12 +77,13 @@ export async function createEmployeeService(
         : data.dateOfJoining
       : null;
 
-    const { user, employee } = await prisma.$transaction(async (tx) => {
+    const { employee } = await prisma.$transaction(async (tx) => {
       const currentAddress = data.addresses?.currentAddress;
       const permanentAddress = data.addresses?.permanentAddress;
       const selectedAddress = currentAddress ?? permanentAddress;
 
-      const employeeAddress = selectedAddress || data.address
+      const legacyAddress = (data as any).address ?? null;
+      const employeeAddress = selectedAddress || legacyAddress
         ? await tx.address.create({
             data: {
               addressType: currentAddress
@@ -92,7 +91,7 @@ export async function createEmployeeService(
                 : permanentAddress
                   ? "PERMANENT"
                   : "CURRENT_RESIDENTIAL",
-              addressLine1: selectedAddress?.addressLine1 ?? data.address ?? "",
+              addressLine1: selectedAddress?.addressLine1 ?? legacyAddress ?? "",
               addressLine2: selectedAddress?.addressLine2 ?? null,
               city: selectedAddress?.city ?? data.city ?? "",
               district:
@@ -108,34 +107,24 @@ export async function createEmployeeService(
           })
         : null;
 
-      const createdUser = await tx.user.create({
-        data: {
-          fullName: data.fullName,
-          email: data.email,
-          userName: data.userName,
-          password: hashedPassword,
-          role: requestedRole,
-          contactNumber: data.contactNumber,
-          branchId: data.branchId,
-          isActive: typeof data.isActive === "boolean" ? data.isActive : true,
-        },
-      });
+      
 
       const createdEmployee = await (tx as any).employee.create({
         data: {
-          userId: createdUser.id,
+          
           employeeId,
           employeeRoleId: data.employeeRoleId,
+          fullName: data.fullName,
+          Email: data.email,
+          contactNumber: data.contactNumber || "",
           atlMobileNumber: data.atlMobileNumber ?? "",
           dob: dobVal ?? new Date(),
           gender: (data.gender ?? "OTHER") as any,
           maritalStatus: (data.maritalStatus ?? "SINGLE") as any,
           designation: data.designation ?? "",
-          emergencyContact: data.emergencyContact ?? "",
-          emergencyRelationship: (data.emergencyRelationship ?? "OTHER") as any,
           experience: data.experience ?? "",
           workLocation: (data.workLocation ?? "OFFICE") as any,
-          department: data.department ?? "",
+          
           dateOfJoining: dojVal ?? new Date(),
           salary: typeof data.salary === "number" ? data.salary : 0,
           addressId: employeeAddress?.id,
@@ -146,11 +135,11 @@ export async function createEmployeeService(
         },
       });
 
-      return { user: createdUser, employee: createdEmployee };
+      return {  employee: createdEmployee };
     });
 
     // hide password before returning
-    const { password: _pw, ...safeUser } = user as any;
+    const { password: _pw, ...safeUser } = employee as any;
     return { user: safeUser, employee };
   } catch (error: unknown) {
     const eAny = error as any;
@@ -259,11 +248,9 @@ export async function updateEmployeeService(
     const currentAddress = updateData.addresses?.currentAddress;
     const permanentAddress = updateData.addresses?.permanentAddress;
     const selectedAddress = currentAddress ?? permanentAddress;
-    const hasLegacyAddressInput = !!(
-      updateData.address ||
-      updateData.city ||
-      updateData.state ||
-      updateData.pinCode
+    const legacyAddressInput = (updateData as any).address ?? null;
+    const hasLegacyAddressInput = Boolean(
+      legacyAddressInput || updateData.city || updateData.state || updateData.pinCode,
     );
 
     let normalizedAddressPayload:
@@ -287,7 +274,7 @@ export async function updateEmployeeService(
           : permanentAddress
             ? "PERMANENT"
             : "CURRENT_RESIDENTIAL",
-        addressLine1: selectedAddress?.addressLine1 ?? updateData.address ?? "",
+        addressLine1: selectedAddress?.addressLine1 ?? legacyAddressInput ?? "",
         addressLine2: selectedAddress?.addressLine2 ?? null,
         city: selectedAddress?.city ?? updateData.city ?? "",
         district:
@@ -341,9 +328,7 @@ export async function updateEmployeeService(
       );
     }
 
-    if (userUpdateData.password) {
-      userUpdateData.password = await hashPassword(userUpdateData.password);
-    }
+    
 
     if (userUpdateData.email && userUpdateData.email !== existing.user?.email) {
       const emailInUse = await prisma.user.findFirst({
