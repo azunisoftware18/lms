@@ -158,129 +158,143 @@ enum roleFor {
 model Partner {
   id               String           @id @default(cuid())
   userId           String           @unique
-  partnerId        String           @unique
+  
+  // ==================== BASIC PARTNER INFORMATION ====================
+  partnerCode      String           @unique // Unique identifier like PRT-001, DSA-JOHN-001
   legalName        String
   tradeName        String?
   partnerType      PartnerType
   constitutionType ConstitutionType
   dateOfOnboarding DateTime
   Status           PartnerStatus
+  isActive         Boolean          @default(true)
 
-  //Contact Details
+  // ==================== CONTACT DETAILS ====================
+  // Primary Contact
   contactPersonName      String
   contactNumber          String
   email                  String?
+  // Secondary Contact
   alternatePersonName    String?
   alternateContactNumber String?
-  //address details
-  addresses              Address[] @relation("PartnerAddresses")
-  //Office Address
-  officeAddressId        String?   @unique
-  officeAddress          Address?  @relation("PartnerOfficeAddress", fields: [officeAddressId], references: [id])
 
-  //KYC & Entity Verification Details
-  panNumber     String
-  AadhaarNumber String
-  cinNumber     String?
-  gstinNumber   String?
-  llpinNumber   String?
+  // ==================== ADDRESS DETAILS ====================
+  // Registered Address Relations
+  addresses              Address[]    @relation("PartnerAddresses")
+  // Office Address
+  officeAddressId        String?      @unique
+  officeAddress          Address?     @relation("PartnerOfficeAddress", fields: [officeAddressId], references: [id])
 
-  // Verification & document tracking
-  panVerificationStatus   VerificationStatus? @default(pending)
-  gstVerificationStatus   VerificationStatus? @default(pending)
-  kycDocumentsUploaded    Boolean             @default(false)
-  commercialCibilUploaded Boolean             @default(false)
-  cibilCheckUploaded      Boolean             @default(false)
+  // ==================== KYC & ENTITY VERIFICATION ====================
+  // Individual / Proprietor Documents
+  panNumber              String
+  aadhaarNumber          String
+  // Entity Documents
+  cinNumber              String?
+  gstinNumber            String?
+  gstNumber              String?
+  llpinNumber            String?
+  registrationCertificate String? // Path to registration certificate
 
-  // Pointers to important partner documents (store Document.id)
-  panDocumentId             String?
-  gstDocumentId             String?
-  commercialCibilDocumentId String?
-  cibilCheckDocumentId      String?
-  cancelledChequeDocumentId String?
+  // Verification Status Fields
+  panVerificationStatus  VerificationStatus  @default(pending)
+  gstVerificationStatus  VerificationStatus  @default(pending)
+  bankVerificationStatus VerificationStatus  @default(pending)
 
-  //document details
-  documents Document[]
+  // Document Upload Tracking
+  kycDocumentsUploaded       Boolean  @default(false)
+  commercialCibilUploaded    Boolean  @default(false)
+  cibilCheckUploaded         Boolean  @default(false)
+  partnerAgreementUploaded   Boolean  @default(false)
+  ndaUploaded                Boolean  @default(false)
 
-  // Business profile & sourcing details
-  natureOfBusiness            String?
+  // Document Relations - using existing Document model
+  documents                  Document[]
+
+  // ==================== BANKING DETAILS ====================
+  // Payout Bank Account
+  payoutBankName             String?
+  payoutAccountHolderName    String?
+  payoutAccountNumber        String?
+  payoutIfscCode             String?
+  payoutUpiId                String?
+  cancelledChequeUploadPath  String? // Path to cancelled cheque document
+
+  // ==================== BUSINESS PROFILE & SOURCING DETAILS ====================
+  companyName                 String?
+  businessNature              String?
   yearsInBusiness             Int?
+  establishedYear             Int?
   productExpertise            String? // comma-separated list (e.g., "PL, LAP, HL")
   monthlySourcingVolume       Int? // expected per month
   geographicCoverage          String? // cities/states/zone
   existingLenderRelationships String?
   officeStrength              Int? // number of employees at partner office
   digitalApiIntegration       Boolean @default(false)
-
-  // Banking / Payout details
-  payoutBankName          String?
-  payoutAccountHolderName String?
-  payoutAccountNumber     String?
-  payoutIfscCode          String?
-  payoutUpiId             String?
-  bankVerificationStatus  VerificationStatus? @default(pending)
-
-  companyName String
-
-  gstNumber                   String?
-  commissionType              CommissionType
-  commissionValue             Float?
-  branchId                    String
-  branch                      Branch              @relation(fields: [branchId], references: [id])
-  leads                       Leads[]             @relation("PartnerLeads")
-  isActive                    Boolean             @default(true)
-  commission                  PartnerCommission[]
-  establishedYear             Int?
-  businessNature              String?
+  businessRegistrationNumber  String?
+  annualTurnover              Float?
   designation                 String?
   businessCategory            String?
   specialization              String?
   totalEmployees              Int?
-  annualTurnover              Float?
-  businessRegistrationNumber  String?
-  paymentCycle                PaymentCycle
-  minimumPayout               Float?
-  taxDeduction                Float?
   targetArea                  String?
-  totalReferrals              Int?                @default(0)
-  activeReferrals             Int?                @default(0)
-  commissionEarned            Float?              @default(0)
-  // Performance tracking (Partner dashboard)
-  totalLeadsSubmitted         Int?                @default(0)
-  loginToSanctionRatio        Float? // e.g., 0.25 = 25%
+
+  // ==================== AGREEMENT & COMPLIANCE ====================
+  agreementValidityDate      DateTime? // When the partner agreement expires
+  ndaValidityDate            DateTime? // NDA expiration date
+  agreementRemarks           String?   // Notes about the agreement
+
+  // ==================== SYSTEM ACCESS & ROLE MAPPING ====================
+  loginId                    String?   // Portal login ID if access given
+  assignedRmId               String?   // Relationship Manager ID
+  branchMapping              Json?     // Branch access mapping
+  productAccess              Json?     // Product permissions (e.g., {"PL":true, "HL":false})
+  apiKey                     String?
+  integrationId              String?
+
+  // ==================== COMMISSION & PAYOUT STRUCTURE ====================
+  commissionType             CommissionType
+  commissionValue            Float?
+  paymentCycle               PaymentCycle
+  minimumPayout              Float?
+  taxDeduction               Float?
+  payoutType                 PayoutType?      // FLAT | PERCENTAGE | SLAB
+  productPayoutRates         Json?            // product -> rate mapping (e.g. {"PL":1000, "HL":0.01})
+  roiProcessingShare         Float?           // share of ROI/processing fee
+  payoutFrequency            PayoutFrequency?
+  gstApplicable              Boolean          @default(true)
+  tdsApplicable              Boolean          @default(false)
+  incentiveSchemes           Json?            // structured incentive definitions
+  clawbackTerms              String?          // Clawback terms in case of early closure/NPA
+  maxPayoutCap               Float?
+
+  // ==================== PERFORMANCE TRACKING ====================
+  totalLeadsSubmitted        Int?    @default(0)
+  totalReferrals             Int?    @default(0)
+  activeReferrals            Int?    @default(0)
+  commissionEarned           Float?  @default(0)
+  loginToSanctionRatio       Float?  // e.g., 0.25 = 25%
   sanctionToDisbursementRatio Float?
-  disbursementVolume          Float? // total disbursed amount
-  rejectionRate               Float? // percent (0-100)
-  fraudCasesCount             Int?                @default(0)
-  qualityScore                Float? // 0-100
-  partnerRating               Float?              @default(0)
-  createdAt                   DateTime            @default(now())
-  updatedAt                   DateTime            @updatedAt
+  disbursementVolume         Float?  // total disbursed amount
+  rejectionRate              Float?  // percent (0-100)
+  fraudCasesCount            Int?    @default(0)
+  qualityScore               Float?  // 0-100
+  partnerRating              Float?  @default(0)
 
-  // Commission / Payout structure (NBFC)
-  payoutType         PayoutType? // FLAT | PERCENTAGE | SLAB
-  productPayoutRates Json? // product -> rate mapping (e.g. {"PL":1000, "HL":0.01})
-  roiProcessingShare Float? // share of ROI/processing fee (absolute or percent)
-  payoutFrequency    PayoutFrequency?
-  gstApplicable      Boolean          @default(true)
-  tdsApplicable      Boolean          @default(false)
-  incentiveSchemes   Json? // structured incentive definitions
-  clawbackTerms      String?
-  maxPayoutCap       Float?
+  // ==================== RELATIONS ====================
+  branch                     Branch              @relation(fields: [branchId], references: [id])
+  branchId                   String
+  user                       User                @relation(fields: [userId], references: [id])
+  leads                      Leads[]             @relation("PartnerLeads")
+  commission                 PartnerCommission[]
+  loanApplications           LoanApplication[]
 
-  // System access & role mapping
-  loginId String?
+  // ==================== AUDIT FIELDS ====================
+  createdAt                  DateTime            @default(now())
+  updatedAt                  DateTime            @updatedAt
 
-  assignedRmId String?
-
-  branchMapping Json? // list of branch ids or mapping metadata
-  productAccess Json? // product permissions (e.g., {"PL":true, "HL":false})
-  apiKey        String?
-  integrationId String?
-
-  // Relations
-  loanApplications LoanApplication[]
-  user             User              @relation(fields: [userId], references: [id])
+  @@index([branchId])
+  @@index([Status])
 }
 
 model Address {

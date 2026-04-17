@@ -5,9 +5,21 @@ import {
   getAllPartnersController,
   getPartnerByIdController,
   updatePartnerController,
+  getPartnerByCodeController,
   createPartnerLoanApplicationController,
   createChildPartnerController,
+  uploadPartnerDocumentController,
+  getPartnerDocumentsController,
+  updateDocumentVerificationController,
+  deletePartnerDocumentController,
+  checkDocumentCompletionController,
+  generateKYCReportController,
+  approvePartnerKYCController,
+  rejectPartnerKYCController,
+  updatePartnerPerformanceController,
+  getPartnerDashboardController,
 } from "./partner.controller.js";
+import multer from "multer";
 import { validate } from "../../common/middlewares/zod.middleware.js";
 import {
   createPartnerSchema,
@@ -21,28 +33,37 @@ import { createLoanApplicationSchema } from "../LoanApplication/loanApplication.
 
 const partnerRouter = Router();
 
-// Define partner routes here
-// Protect all routes defined after this middleware
+// Multer setup for partner document uploads
+const upload = multer({ dest: "public/uploads/partners" });
+
+// ==================== BASIC PARTNER MANAGEMENT ====================
+
+// Protect all routes
 partnerRouter.use(authMiddleware);
 
 partnerRouter.post(
   "/",
-  authMiddleware,
-  validate(createPartnerSchema),
+  // Accept multipart/form-data with an optional `data` JSON field and files under `documents`
+  upload.array("documents"),
   checkPermissionMiddleware("CREATE_PARTNER"),
   createPartnerController,
 );
 
 partnerRouter.get(
   "/all",
-  authMiddleware,
   checkPermissionMiddleware("VIEW_ALL_PARTNERS"),
   getAllPartnersController,
 );
 
 partnerRouter.get(
+  "/code/:code",
+  validate(partnerIdParamSchema, "params"),
+  checkPermissionMiddleware("VIEW_PARTNER_DETAILS"),
+  getPartnerByCodeController,
+);
+
+partnerRouter.get(
   "/:id",
-  authMiddleware,
   validate(partnerIdParamSchema, "params"),
   checkPermissionMiddleware("VIEW_PARTNER_DETAILS"),
   getPartnerByIdController,
@@ -50,16 +71,90 @@ partnerRouter.get(
 
 partnerRouter.patch(
   "/:id",
-  authMiddleware,
   validate(partnerIdParamSchema, "params"),
   validate(updatePartnerSchema),
   checkPermissionMiddleware("UPDATE_PARTNER"),
   updatePartnerController,
 );
 
+// ==================== PARTNER DOCUMENT MANAGEMENT ====================
+
+partnerRouter.post(
+  "/:partnerId/documents/upload",
+  validate(partnerIdParamSchema, "params"),
+  checkPermissionMiddleware("UPLOAD_PARTNER_DOCUMENT"),
+  uploadPartnerDocumentController,
+);
+
+partnerRouter.get(
+  "/:partnerId/documents",
+  validate(partnerIdParamSchema, "params"),
+  checkPermissionMiddleware("VIEW_PARTNER_DOCUMENTS"),
+  getPartnerDocumentsController,
+);
+
+partnerRouter.patch(
+  "/documents/:documentId/verify",
+  checkPermissionMiddleware("VERIFY_PARTNER_DOCUMENT"),
+  updateDocumentVerificationController,
+);
+
+partnerRouter.delete(
+  "/documents/:documentId",
+  checkPermissionMiddleware("DELETE_PARTNER_DOCUMENT"),
+  deletePartnerDocumentController,
+);
+
+partnerRouter.get(
+  "/:partnerId/documents/completion",
+  validate(partnerIdParamSchema, "params"),
+  checkPermissionMiddleware("VIEW_PARTNER_DOCUMENTS"),
+  checkDocumentCompletionController,
+);
+
+// ==================== PARTNER VERIFICATION & KYC ====================
+
+partnerRouter.get(
+  "/:partnerId/kyc/report",
+  validate(partnerIdParamSchema, "params"),
+  checkPermissionMiddleware("VERIFY_PARTNER_KYC"),
+  generateKYCReportController,
+);
+
+partnerRouter.post(
+  "/:partnerId/kyc/approve",
+  validate(partnerIdParamSchema, "params"),
+  checkPermissionMiddleware("APPROVE_PARTNER_KYC"),
+  approvePartnerKYCController,
+);
+
+partnerRouter.post(
+  "/:partnerId/kyc/reject",
+  validate(partnerIdParamSchema, "params"),
+  checkPermissionMiddleware("REJECT_PARTNER_KYC"),
+  rejectPartnerKYCController,
+);
+
+// ==================== PARTNER PERFORMANCE & METRICS ====================
+
+partnerRouter.patch(
+  "/:partnerId/performance",
+  validate(partnerIdParamSchema, "params"),
+  checkPermissionMiddleware("UPDATE_PARTNER_PERFORMANCE"),
+  updatePartnerPerformanceController,
+);
+
+partnerRouter.get(
+  "/:partnerId/dashboard",
+  validate(partnerIdParamSchema, "params"),
+  checkPermissionMiddleware("VIEW_PARTNER_DASHBOARD"),
+  getPartnerDashboardController,
+);
+
+// ==================== PARTNER LEADS & APPLICATIONS ====================
+
 partnerRouter.post(
   "/create-lead",
-  authMiddleware,
   validate(createLeadSchema),
   checkPermissionMiddleware("CREATE_LEAD"),
   createPartnerLeadController,
@@ -67,7 +162,6 @@ partnerRouter.post(
 
 partnerRouter.post(
   "/create-loan-application",
-  authMiddleware,
   validate(createLoanApplicationSchema),
   checkPermissionMiddleware("CREATE_LOAN_APPLICATION"),
   createPartnerLoanApplicationController,
@@ -75,11 +169,9 @@ partnerRouter.post(
 
 partnerRouter.post(
   "/create-child-partner",
-  authMiddleware,
   validate(createPartnerSchema),
   checkPermissionMiddleware("CREATE_CHILD_PARTNER"),
   createChildPartnerController,
 );
-//todo: add delete route if needed
 
 export default partnerRouter;

@@ -892,10 +892,6 @@ export type DocumentUncheckedUpdateManyWithoutGuarantorNestedInput = {
   deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[]
 }
 
-export type EnumVerificationStatusFieldUpdateOperationsInput = {
-  set?: $Enums.VerificationStatus
-}
-
 export type DocumentCreateNestedManyWithoutKycInput = {
   create?: Prisma.XOR<Prisma.DocumentCreateWithoutKycInput, Prisma.DocumentUncheckedCreateWithoutKycInput> | Prisma.DocumentCreateWithoutKycInput[] | Prisma.DocumentUncheckedCreateWithoutKycInput[]
   connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutKycInput | Prisma.DocumentCreateOrConnectWithoutKycInput[]

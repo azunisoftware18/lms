@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { User, Building2, Phone, Mail, MapPin, Briefcase, CreditCard, Key, FileText, Banknote, TrendingUp, Shield } from "lucide-react";
 import { z } from "zod";
@@ -111,6 +112,7 @@ const partnerSchema = z.object({
 
   // Login Credentials
   loginId: z.string().min(1, "Username is required"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
 
   // Business Profile
   natureOfBusiness: z.string().optional(),
@@ -156,12 +158,15 @@ export default function AddPartnerForm({
   onCancel,
   onSuccess,
 }) {
+  const [documentFiles, setDocumentFiles] = useState({});
+
   const {
     register,
     handleSubmit,
     control,
     setValue,
     getValues,
+    watch,
     formState: { errors, isSubmitting, isValid },
   } = useForm({
     resolver: zodResolver(partnerSchema),
@@ -204,6 +209,7 @@ export default function AddPartnerForm({
       payoutUpiId: "",
       // Login Credentials
       loginId: "",
+      password: "",
       // Business Profile
       natureOfBusiness: "",
       yearsInBusiness: "",
@@ -239,6 +245,30 @@ export default function AddPartnerForm({
     },
   });
 
+  const selectedConstitutionType = watch("constitutionType");
+
+  const requiredDocumentTypes = useMemo(() => {
+    const map = {
+      INDIVIDUAL: ["PAN", "AADHAAR", "ADDRESS_PROOF", "BANK_PROOF"],
+      PROPRIETORSHIP: ["PAN", "AADHAAR", "REGISTRATION_CERTIFICATE", "GST_CERTIFICATE", "BANK_PROOF"],
+      PARTNERSHIP: ["PAN", "REGISTRATION_CERTIFICATE", "PARTNERSHIP_AGREEMENT", "GSTIN", "BANK_PROOF", "BOARD_RESOLUTION"],
+      LLP: ["PAN", "LLPIN", "CIN", "INCORPORATION_CERTIFICATE", "GSTIN", "BANK_PROOF"],
+      PRIVATE_LTD: ["PAN", "CIN", "INCORPORATION_CERTIFICATE", "GSTIN", "BOARD_RESOLUTION", "BANK_PROOF"],
+      PUBLIC_LTD: ["PAN", "CIN", "INCORPORATION_CERTIFICATE", "GSTIN", "BOARD_RESOLUTION", "BANK_PROOF"],
+      OTHER: ["PAN", "ADDRESS_PROOF", "BANK_PROOF"],
+    };
+
+    return map[selectedConstitutionType] || map.INDIVIDUAL;
+  }, [selectedConstitutionType]);
+
+  const onDocumentChange = (documentType, event) => {
+    const selectedFile = event.target.files?.[0] || null;
+    setDocumentFiles((prev) => ({
+      ...prev,
+      [documentType]: selectedFile,
+    }));
+  };
+
   const generatePartnerCredentials = () => {
     const legalName = getValues("legalName");
     if (legalName) {
@@ -251,42 +281,44 @@ export default function AddPartnerForm({
   };
 
   const onSubmit = async (data) => {
-    const userId = typeof window !== "undefined" ? localStorage.getItem("userId") || "" : "";
-    if (!userId) {
-      showError("User not logged in");
+    const missingDocuments = requiredDocumentTypes.filter((docType) => !documentFiles[docType]);
+    if (!isEditing && missingDocuments.length > 0) {
+      showError(`Please upload required documents: ${missingDocuments.join(", ")}`);
       return;
     }
 
     const payload = {
-      // Basic Info
-      userId,
-      partnerId: `PRT_${Date.now()}`, // Auto-generate partner ID
+      // Required user fields
+      fullName: data.contactPersonName,
+      email: data.email,
+      password: data.password,
+      userName: data.loginId,
+      branchId: data.branchId,
+
+      // Basic partner fields
       legalName: data.legalName,
+      companyName: data.legalName,
       tradeName: data.tradeName || null,
       partnerType: data.partnerType,
       constitutionType: data.constitutionType,
-      dateOfOnboarding: new Date(data.dateOfOnboarding),
+      dateOfOnboarding: data.dateOfOnboarding,
       status: data.status,
       
       // Contact Details
       contactPersonName: data.contactPersonName,
       contactNumber: data.contactNumber,
-      email: data.email,
       alternatePersonName: data.alternatePersonName || null,
       alternateContactNumber: data.alternateContactNumber || null,
       
-      // Address - Create address object
-      addresses: {
-        create: [{
-          addressType: data.addressType,
-          addressLine: `${data.addressLine1} ${data.addressLine2 || ""}`.trim(),
-          city: data.city,
-          state: data.state,
-          pinCode: data.pinCode,
-          country: "India",
-          isPrimary: true,
-        }]
-      },
+      // Address details
+      currentAddressLine1: data.addressLine1,
+      currentCity: data.city,
+      currentState: data.state,
+      currentPinCode: data.pinCode,
+      permanentAddressLine1: data.addressLine1,
+      permanentCity: data.city,
+      permanentState: data.state,
+      permanentPinCode: data.pinCode,
       
       // KYC & Verification
       panNumber: data.panNumber,
@@ -297,6 +329,7 @@ export default function AddPartnerForm({
       // Verification Status (defaults)
       panVerificationStatus: "pending",
       gstVerificationStatus: "pending",
+      bankVerificationStatus: "pending",
       kycDocumentsUploaded: false,
       commercialCibilUploaded: false,
       cibilCheckUploaded: false,
@@ -307,7 +340,6 @@ export default function AddPartnerForm({
       payoutAccountNumber: data.payoutAccountNumber,
       payoutIfscCode: data.payoutIfscCode,
       payoutUpiId: data.payoutUpiId || null,
-      bankVerificationStatus: "pending",
       
       // Login Credentials
       loginId: data.loginId,
@@ -374,14 +406,20 @@ export default function AddPartnerForm({
       partnerRating: 0,
       
       // Organization
-      branchId: data.branchId,
       isActive: true,
     };
 
     console.log("Submitting payload:", payload);
-    
+
+    const selectedDocumentTypes = requiredDocumentTypes.filter((docType) => !!documentFiles[docType]);
+    const documents = selectedDocumentTypes.map((docType) => documentFiles[docType]);
+
     if (onSuccess) {
-      onSuccess(payload);
+      onSuccess({
+        partnerData: payload,
+        documents,
+        documentTypes: selectedDocumentTypes,
+      });
     }
   };
 
@@ -747,6 +785,16 @@ export default function AddPartnerForm({
             autoComplete="off"
           />
 
+          <InputField
+            label="Password"
+            type="password"
+            {...register("password")}
+            error={errors.password?.message}
+            isRequired
+            placeholder="Minimum 8 characters"
+            autoComplete="new-password"
+          />
+
           <div className="md:col-span-2 flex items-end">
             <Button
               type="button"
@@ -756,6 +804,35 @@ export default function AddPartnerForm({
               <Key size={16} className="mr-2" /> Generate Username
             </Button>
           </div>
+        </div>
+
+        {/* Required Document Upload Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+          <div className="md:col-span-3 pb-2 border-b border-gray-100 mb-2">
+            <h3 className="font-bold text-gray-800 flex items-center gap-2">
+              <FileText size={18} className="text-blue-500" /> Required Documents Upload
+            </h3>
+            <p className="text-xs text-gray-500 mt-1">
+              Upload all required documents based on selected constitution type.
+            </p>
+          </div>
+
+          {requiredDocumentTypes.map((docType) => (
+            <div key={docType}>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {docType.replace(/_/g, " ")}
+              </label>
+              <input
+                type="file"
+                accept=".pdf,.jpg,.jpeg,.png"
+                onChange={(event) => onDocumentChange(docType, event)}
+                className="block w-full text-sm text-gray-700 file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
+              {documentFiles[docType] ? (
+                <p className="text-xs text-green-600 mt-1">{documentFiles[docType].name}</p>
+              ) : null}
+            </div>
+          ))}
         </div>
 
         {/* Business Profile Section */}
