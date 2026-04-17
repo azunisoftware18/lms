@@ -1,53 +1,55 @@
-import { useEffect } from "react";
+import React from "react";
 import { X } from "lucide-react";
+import AddPartnerForm from "../forms/AddPartnerForm";
 
 export default function AddPartnerModal({
   isOpen,
   onClose,
-  title = "Add Partner",
-  children,
+  isEditing,
+  editId,
+  initialFormState,
+  onSuccess,
 }) {
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isOpen]);
-
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm px-4 py-8"
-      onClick={onClose}
-    >
-      <div className="flex min-h-full items-center justify-center">
-        <div
-          className="relative w-full max-w-5xl bg-white rounded-2xl shadow-2xl"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="flex items-center justify-between p-5 border-b border-slate-200 bg-slate-50 rounded-t-2xl">
-            <h2 className="text-lg sm:text-xl font-bold text-slate-800">
-              {title}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"
+        onClick={onClose}
+      />
+
+      {/* Modal Container */}
+      <div className="relative w-full max-w-6xl bg-white rounded-2xl shadow-2xl z-10 my-8">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-slate-50 rounded-t-2xl">
+          <div>
+            <h2 className="text-xl font-bold text-slate-800">
+              {isEditing ? "Edit Partner" : "Add New Partner"}
             </h2>
-
-            <button
-              onClick={onClose}
-              className="p-2 rounded-full text-slate-400 hover:text-slate-600 hover:bg-white transition-colors"
-              aria-label="Close modal"
-            >
-              <X size={20} />
-            </button>
+            <p className="text-sm text-slate-500">
+              Fill partner details to register
+            </p>
           </div>
 
-          <div className="p-5 sm:p-6 max-h-[82vh] overflow-y-auto">
-            {children}
-          </div>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-white rounded-full text-slate-400 hover:text-red-500"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* Form */}
+        <div className="p-6 md:p-8 max-h-[85vh] overflow-y-auto">
+          <AddPartnerForm
+            initialFormState={isEditing ? initialFormState : undefined}
+            isEditing={isEditing}
+            editId={editId}
+            onCancel={onClose}
+            onSuccess={onSuccess || onClose}
+          />
         </div>
       </div>
     </div>

@@ -19,6 +19,7 @@ export type LoanStatus =
   | "closed"
   | "written_off"
   | "defaulted"
+  | "FORECLOSURE_PENDING"
   | "application_in_progress";
 
 export type Title = "MR" | "MRS" | "MS" | "DR" | "PROF";

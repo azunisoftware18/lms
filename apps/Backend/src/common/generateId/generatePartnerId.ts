@@ -4,7 +4,7 @@ const generateUniquePartnerNumber = async (): Promise<string> => {
   let attempts = 0;
 
   while (attempts < 5) {
-    const number = Math.floor(10000 + Math.random() * 90000); // 4-digit
+    const number = Math.floor(10000 + Math.random() * 90000); // 4-digit-
     const partnerNumber = `PRT-${number}`;
 
     const exists = await prisma.partner.findUnique({

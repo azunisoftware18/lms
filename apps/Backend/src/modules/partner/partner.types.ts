@@ -30,10 +30,21 @@ export interface CreatePartner {
   isActive?: boolean;
 
   // partner-specific
+  partnerId?: string;
+  legalName?: string;
   companyName?: string;
   contactPerson?: string;
+  contactPersonName?: string;
+  tradeName?: string;
+  constitutionType?: string;
+  dateOfOnboarding?: Date;
+  status?: string;
+  alternatePersonName?: string;
   panNumber: string;
   gstNumber?: string;
+  aadhaarNumber?: string;
+  cinNumber?: string;
+  llpinNumber?: string;
   establishedYear?: number;
   partnerType: PartnerType;
   businessNature?: string;
@@ -43,6 +54,10 @@ export interface CreatePartner {
   city?: string;
   state?: string;
   pinCode?: string;
+
+  // contact details
+  alternateContactNumber?: string;
+  alternateEmail?: string;
 
   designation?: string;
   businessCategory?: string;
@@ -73,14 +88,23 @@ export interface PartnerModel {
   userId: string;
   userName?: string | null;
   partnerId?: string | null;
+  legalName?: string | null;
   companyName?: string | null;
   contactPerson?: string | null;
-  alternateNumber?: string | null;
+  contactPersonName?: string | null;
+  contactNumber?: string | null;
+  alternateContactNumber?: string | null;
+  alternateEmail?: string | null;
+  tradeName?: string | null;
   panNumber?: string | null;
+  aadhaarNumber?: string | null;
   gstNumber?: string | null;
+  cinNumber?: string | null;
+  llpinNumber?: string | null;
   branchId?: string | null;
   establishedYear?: number | null;
   partnerType?: PartnerType | null;
+  constitutionType?: string | null;
   businessNature?: string | null;
   fullAddress?: string | null;
   city?: string | null;
