@@ -241,9 +241,7 @@ export default function UserPermissionsModal({
                             // swallow any synchronous errors from caller
                             console.error("UserPermissionsModal: onSelectUser threw", err);
                           }
-                          // If this component is rendered as a modal, close it after selection.
-                          // When rendered as a full page (`isPage`), navigation should be handled
-                          // by the `onSelectUser` implementation itself, so avoid calling navigate(-1).
+                          
                           if (!isPage) onClose();
                         }}
                         className="px-3 py-1.5 rounded-md bg-blue-600 text-white text-sm hover:bg-blue-700"
