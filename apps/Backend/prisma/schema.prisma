@@ -110,8 +110,22 @@ model Employee {
   branch        Branch        @relation(fields: [branchId], references: [id])
   employeeRole  EmployeeRole? @relation(fields: [employeeRoleId], references: [id])
 
+  // Payroll / banking details
+  accountHolder     String?
+  bankName          String?
+  bankAccountNo     String?
+  ifsc              String?
+  upiId             String?
+  basicSalary       Float?
+  conveyance        Float?
+  medicalAllowance  Float?
+  otherAllowances   Float?
+  pfDeduction       Float?
+  taxDeduction      Float?
+
   // Optional username if separate from `User`
   loanAssignments LoanAssignment[]
+  documents       Document[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1078,6 +1092,7 @@ model Document {
   loanApplicationId  String?
   coApplicantId      String?
   guarantorId        String?
+  employeeId         String?
   partnerId          String?
   documentType       String
   documentPath       String
@@ -1095,6 +1110,7 @@ model Document {
   loanApplication    LoanApplication?   @relation(fields: [loanApplicationId], references: [id])
   coApplicant        CoApplicant?       @relation(fields: [coApplicantId], references: [id])
   guarantor          Guarantor?         @relation(fields: [guarantorId], references: [id])
+  employee           Employee?          @relation(fields: [employeeId], references: [id])
   partner            Partner?           @relation(fields: [partnerId], references: [id])
   branch             Branch             @relation(fields: [branchId], references: [id])
 
@@ -1102,6 +1118,7 @@ model Document {
   @@unique([guarantorId, documentType]) // ✅ prevents duplicate uploads per guarantor
   @@unique([partnerId, documentType]) // ✅ prevents duplicate uploads per partner
   @@index([loanApplicationId, documentType]) // supports loan-level queries without forcing cross-party uniqueness
+  @@index([employeeId, documentType])
 }
 
 model Kyc {

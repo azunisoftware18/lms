@@ -36,7 +36,11 @@ export interface CreateEmployee {
   roleTitle?: string;
   employeeRoleId: string;
   gradeBand?: string;
-  reportingManager: string;
+  reportingManager?: string;
+  emergencyContact?: string;
+  emergencyRelationship?: "FATHER" | "MOTHER" | "SPOUSE" | "SIBLING" | "FRIEND" | "OTHER";
+  emergencyRelation?: string;
+  department?: string;
   branchCode: string;
   regionZone?: string;
   dateOfJoining?: string | Date;

@@ -4137,6 +4137,17 @@ export const EmployeeScalarFieldEnum = {
   experience: 'experience',
   workLocation: 'workLocation',
   branchId: 'branchId',
+  accountHolder: 'accountHolder',
+  bankName: 'bankName',
+  bankAccountNo: 'bankAccountNo',
+  ifsc: 'ifsc',
+  upiId: 'upiId',
+  basicSalary: 'basicSalary',
+  conveyance: 'conveyance',
+  medicalAllowance: 'medicalAllowance',
+  otherAllowances: 'otherAllowances',
+  pfDeduction: 'pfDeduction',
+  taxDeduction: 'taxDeduction',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -4858,6 +4869,7 @@ export const DocumentScalarFieldEnum = {
   loanApplicationId: 'loanApplicationId',
   coApplicantId: 'coApplicantId',
   guarantorId: 'guarantorId',
+  employeeId: 'employeeId',
   partnerId: 'partnerId',
   documentType: 'documentType',
   documentPath: 'documentPath',
@@ -5390,7 +5402,12 @@ export const EmployeeOrderByRelevanceFieldEnum = {
   emergencyRelationshipOther: 'emergencyRelationshipOther',
   department: 'department',
   experience: 'experience',
-  branchId: 'branchId'
+  branchId: 'branchId',
+  accountHolder: 'accountHolder',
+  bankName: 'bankName',
+  bankAccountNo: 'bankAccountNo',
+  ifsc: 'ifsc',
+  upiId: 'upiId'
 } as const
 
 export type EmployeeOrderByRelevanceFieldEnum = (typeof EmployeeOrderByRelevanceFieldEnum)[keyof typeof EmployeeOrderByRelevanceFieldEnum]
@@ -5845,6 +5862,7 @@ export const DocumentOrderByRelevanceFieldEnum = {
   loanApplicationId: 'loanApplicationId',
   coApplicantId: 'coApplicantId',
   guarantorId: 'guarantorId',
+  employeeId: 'employeeId',
   partnerId: 'partnerId',
   documentType: 'documentType',
   documentPath: 'documentPath',
@@ -6184,6 +6202,13 @@ export type EnumWorkLocationFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 
 
 /**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
  * Reference to a field of type 'roleFor'
  */
 export type EnumroleForFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'roleFor'>
@@ -6222,13 +6247,6 @@ export type EnumVerificationStatusFieldRefInput<$PrismaModel> = FieldRefInputTyp
  * Reference to a field of type 'CommissionType'
  */
 export type EnumCommissionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommissionType'>
-    
-
-
-/**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 

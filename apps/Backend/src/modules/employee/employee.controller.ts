@@ -9,13 +9,33 @@ import {
 import { prisma } from "../../db/prismaService.js";
 import { logAction } from "../../audit/audit.helper.js";
 import { AppError } from "../../common/utils/apiError.js";
+import { cleanupFiles } from "../../common/utils/cleanup.js";
 
 const buildSafeEmployeeResponse = (payload: any) => {
   const user = payload?.user ?? null;
   const employee = payload?.employee ?? null;
   const documents = payload?.documents ?? [];
-  const accountDetails = payload?.accountDetails ?? null;
-  const salaryDetails = payload?.salaryDetails ?? null;
+
+  const accountDetails = payload?.accountDetails ?? (employee
+    ? {
+        accountHolder: employee.accountHolder ?? "",
+        bankName: employee.bankName ?? "",
+        bankAccountNo: employee.bankAccountNo ?? "",
+        ifsc: employee.ifsc ?? "",
+        upiId: employee.upiId ?? "",
+      }
+    : null);
+
+  const salaryDetails = payload?.salaryDetails ?? (employee
+    ? {
+        basicSalary: employee.basicSalary ?? 0,
+        conveyance: employee.conveyance ?? 0,
+        medicalAllowance: employee.medicalAllowance ?? 0,
+        otherAllowances: employee.otherAllowances ?? 0,
+        pfDeduction: employee.pfDeduction ?? 0,
+        taxDeduction: employee.taxDeduction ?? 0,
+      }
+    : null);
 
   return {
     user: user
@@ -42,11 +62,13 @@ export const createEmployeeController = async (
   res: Response,
   next: NextFunction,
 ) => {
+  const uploadedFiles = (req.files as Express.Multer.File[]) || [];
   try {
     const result = await createEmployeeService(
       req.body,
       req.user?.role,
       req.user?.id,
+      uploadedFiles,
     );
     const { user, employee } = result as any;
     const { password: _pw, ...safeUser } = user;
@@ -87,6 +109,9 @@ export const createEmployeeController = async (
       }),
     });
   } catch (error) {
+    if (uploadedFiles.length > 0) {
+      cleanupFiles(uploadedFiles);
+    }
     next(error);
   }
 };
@@ -149,6 +174,7 @@ export const updateEmployeeController = async (
   const id =
     typeof req.params.id === "string" ? req.params.id : req.params.id[0];
   const updateData = req.body;
+  const uploadedFiles = (req.files as Express.Multer.File[]) || [];
 
   try {
     const updatedEmployee = await updateEmployeeService(
@@ -157,6 +183,7 @@ export const updateEmployeeController = async (
       req.user?.id,
       req.user?.branchId,
       req.user?.role,
+      uploadedFiles,
     );
 
     res.status(200).json({
@@ -165,6 +192,9 @@ export const updateEmployeeController = async (
       data: buildSafeEmployeeResponse(updatedEmployee),
     });
   } catch (error) {
+    if (uploadedFiles.length > 0) {
+      cleanupFiles(uploadedFiles);
+    }
     next(error);
   }
 };

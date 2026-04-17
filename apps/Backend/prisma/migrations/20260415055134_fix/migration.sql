@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `loanapplication` MODIFY `status` ENUM('draft', 'submitted', 'kyc_pending', 'credit_check', 'under_review', 'TECHNICAL_PENDING', 'TECHNICAL_APPROVED', 'TECHNICAL_REJECTED', 'LEGAL_PENDING', 'LEGAL_APPROVED', 'LEGAL_REJECTED', 'LOANRULES_APPROVED', 'LOANRULES_REJECTED', 'approved', 'SANCTIONED', 'Ready_for_disbursement', 'rejected', 'disbursed', 'active', 'closed', 'delinquent', 'written_off', 'defaulted', 'FORECLOSURE_PENDING', 'application_in_progress') NOT NULL DEFAULT 'application_in_progress';

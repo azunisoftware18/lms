@@ -98,7 +98,7 @@ export const applyForecloseLoanService = async (
       await prisma.loanApplication.update({
         where: { id: loan.id },
         data: {
-          status: "Foreclosure_PENDING", //  NEW STATUS
+          status: "FORECLOSURE_PENDING", //  NEW STATUS
         },
       });
 
@@ -126,7 +126,7 @@ export const applyForecloseLoanService = async (
         performedBy: userId,
         branchId,
         oldValue: { status: loan.status },
-        newValue: { status: "Foreclosure_PENDING" }, 
+        newValue: { status: "FORECLOSURE_PENDING" }, 
         remarks: "Foreclose application submitted",
 });
 
@@ -151,7 +151,7 @@ export const payforecloseLoanService = async (
     const loan = await prisma.loanApplication.findUnique({ where: { id: loanId } });
     if (!loan) throw AppError.notFound("Loan application not found");
 
-    if (loan.status !== "active" && loan.status !== "defaulted" && loan.status !== "Foreclosure_PENDING") {
+    if (loan.status !== "active" && loan.status !== "defaulted" && loan.status !== "FORECLOSURE_PENDING") {
       throw AppError.badRequest("Loan is not active");
     }
 

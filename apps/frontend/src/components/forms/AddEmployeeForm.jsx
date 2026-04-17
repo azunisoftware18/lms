@@ -192,6 +192,13 @@ export default function AddEmployeeForm({
       .replace(/[^a-z0-9]+/g, "_")
       .replace(/^_+|_+$/g, "");
 
+  const toDocType = (doc) =>
+    String(doc || "")
+      .trim()
+      .toUpperCase()
+      .replace(/[^A-Z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "");
+
   const isAadhaarDocument = (doc) => {
     const key = toDocKey(doc);
     return (
@@ -256,7 +263,23 @@ export default function AddEmployeeForm({
     [existingDocumentUploads, documentUploads],
   );
 
+  const uploadableDocuments = useMemo(
+    () =>
+      Array.from(new Set([...requiredDocuments, ...optionalDocuments])).filter(
+        Boolean,
+      ),
+    [requiredDocuments, optionalDocuments],
+  );
+
   const onSubmit = async (data) => {
+    const serializeFormValue = (value) => {
+      if (value instanceof Date) {
+        return value.toISOString();
+      }
+
+      return value;
+    };
+
     const serializedRoleDocuments = Object.entries(documentUploads).reduce(
       (acc, [docKey, docSides]) => {
         acc[docKey] = Object.entries(docSides || {}).reduce(
@@ -285,7 +308,7 @@ export default function AddEmployeeForm({
       contactNumber: data.contactNumber,
       atlMobileNumber: data.atlMobileNumber || "",
       userName: data.userName,
-      dob: data.dob,
+      dob: serializeFormValue(data.dob),
       gender: data.gender,
       maritalStatus: data.maritalStatus,
       designation: data.designation,
@@ -319,12 +342,41 @@ export default function AddEmployeeForm({
       roleDocuments: serializedRoleDocuments,
     };
 
+    const documentFiles = uploadableDocuments.flatMap((doc) => {
+      const key = toDocKey(doc);
+      const uploads = documentUploads[key] || {};
+      const normalizedDocType = toDocType(doc);
+
+      if (isAadhaarDocument(doc)) {
+        return ["front", "back"]
+          .map((side) => {
+            const file = uploads[side];
+            if (!(file instanceof File)) return null;
+            return {
+              documentType: `${normalizedDocType}_${side.toUpperCase()}`,
+              file,
+            };
+          })
+          .filter(Boolean);
+      }
+
+      const file = uploads.file;
+      if (!(file instanceof File)) return [];
+
+      return [
+        {
+          documentType: `${normalizedDocType}_FILE`,
+          file,
+        },
+      ];
+    });
+
     if (isEditing && !payload.password) {
       delete payload.password;
     }
 
     if (onSuccess) {
-      onSuccess(payload);
+      onSuccess(payload, { documentFiles });
     }
   };
 
@@ -562,7 +614,7 @@ export default function AddEmployeeForm({
                   branchesLoading ? "Loading branches..." : "Select branch code"
                 }
                 error={errors.branchCode?.message}
-                isRequired
+                
               />
             )}
           />
@@ -584,7 +636,7 @@ export default function AddEmployeeForm({
                     ? "Loading admins..."
                     : "Select reporting manager"
                 }
-                isRequired
+                
                 error={errors.reportingManager?.message}
               />
             )}
@@ -690,7 +742,7 @@ export default function AddEmployeeForm({
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[...requiredDocuments, ...optionalDocuments].map((doc) => {
+                  {uploadableDocuments.map((doc) => {
                     const key = toDocKey(doc);
                     const upload = mergedDocumentUploads[key] || {};
                     const needsFrontBack = isAadhaarDocument(doc);

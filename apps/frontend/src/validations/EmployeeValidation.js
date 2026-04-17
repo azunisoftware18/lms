@@ -52,7 +52,7 @@ export const employeeSchema = z.object({
 
   gradeBand: z.string().trim().optional(),
 
-  reportingManager: z.string().trim().min(1, "Reporting manager is required"),
+  reportingManager: z.string().trim().optional(),
 
   branchCode: z.string().trim().min(1, "Branch code is required"),
 

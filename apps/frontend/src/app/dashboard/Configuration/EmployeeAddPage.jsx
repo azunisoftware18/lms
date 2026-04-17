@@ -262,6 +262,29 @@ export default function EmployeeAddPage() {
     const user = payload?.user || source?.user || {};
     const employeeRole = source?.employeeRole || payload?.employeeRole || null;
     const employeeAddress = source?.address || payload?.address || null;
+    const reportingManagerRaw = source?.reportingManager ?? payload?.reportingManager;
+
+    const reportingManagerId =
+      source?.reportingManagerId ||
+      payload?.reportingManagerId ||
+      (typeof reportingManagerRaw === "object" && reportingManagerRaw !== null
+        ? reportingManagerRaw.id || ""
+        : typeof reportingManagerRaw === "string"
+          ? reportingManagerRaw
+          : "");
+
+    const reportingManagerName =
+      source?.reportingManagerName ||
+      source?.reportingManagerFullName ||
+      payload?.reportingManagerName ||
+      payload?.reportingManagerFullName ||
+      (typeof reportingManagerRaw === "object" && reportingManagerRaw !== null
+        ? reportingManagerRaw.fullName ||
+          reportingManagerRaw.name ||
+          reportingManagerRaw.username ||
+          reportingManagerRaw.email ||
+          ""
+        : "");
 
     const documents = payload?.documents || source?.documents || [];
     const docValue = (type) =>
@@ -269,21 +292,52 @@ export default function EmployeeAddPage() {
         ? documents.find((d) => d?.documentType === type)?.documentPath
         : undefined;
 
-    const accountDetails = payload?.accountDetails || {
-      accountHolder: docValue("EMP_ACCOUNT_HOLDER") || "",
-      bankName: docValue("EMP_BANK_NAME") || "",
-      bankAccountNo: docValue("EMP_BANK_ACCOUNT_NO") || "",
-      ifsc: docValue("EMP_IFSC") || "",
-      upiId: docValue("EMP_UPI_ID") || "",
+    const accountDetails = payload?.accountDetails || source?.accountDetails || {
+      accountHolder:
+        source?.accountHolder ||
+        payload?.accountHolder ||
+        docValue("EMP_ACCOUNT_HOLDER") ||
+        "",
+      bankName:
+        source?.bankName || payload?.bankName || docValue("EMP_BANK_NAME") || "",
+      bankAccountNo:
+        source?.bankAccountNo ||
+        payload?.bankAccountNo ||
+        docValue("EMP_BANK_ACCOUNT_NO") ||
+        "",
+      ifsc: source?.ifsc || payload?.ifsc || docValue("EMP_IFSC") || "",
+      upiId: source?.upiId || payload?.upiId || docValue("EMP_UPI_ID") || "",
     };
 
-    const salaryDetails = payload?.salaryDetails || {
-      basicSalary: toNum(docValue("EMP_SALARY_BASIC")),
-      conveyance: toNum(docValue("EMP_SALARY_CONVEYANCE")),
-      medicalAllowance: toNum(docValue("EMP_SALARY_MEDICAL_ALLOWANCE")),
-      otherAllowances: toNum(docValue("EMP_SALARY_OTHER_ALLOWANCES")),
-      pfDeduction: toNum(docValue("EMP_SALARY_PF_DEDUCTION")),
-      taxDeduction: toNum(docValue("EMP_SALARY_TAX_DEDUCTION")),
+    const salaryDetails = payload?.salaryDetails || source?.salaryDetails || {
+      basicSalary: toNum(
+        source?.basicSalary ?? payload?.basicSalary ?? docValue("EMP_SALARY_BASIC"),
+      ),
+      conveyance: toNum(
+        source?.conveyance ??
+          payload?.conveyance ??
+          docValue("EMP_SALARY_CONVEYANCE"),
+      ),
+      medicalAllowance: toNum(
+        source?.medicalAllowance ??
+          payload?.medicalAllowance ??
+          docValue("EMP_SALARY_MEDICAL_ALLOWANCE"),
+      ),
+      otherAllowances: toNum(
+        source?.otherAllowances ??
+          payload?.otherAllowances ??
+          docValue("EMP_SALARY_OTHER_ALLOWANCES"),
+      ),
+      pfDeduction: toNum(
+        source?.pfDeduction ??
+          payload?.pfDeduction ??
+          docValue("EMP_SALARY_PF_DEDUCTION"),
+      ),
+      taxDeduction: toNum(
+        source?.taxDeduction ??
+          payload?.taxDeduction ??
+          docValue("EMP_SALARY_TAX_DEDUCTION"),
+      ),
     };
 
     const totalSalary = buildTotalSalary(salaryDetails);
@@ -316,10 +370,9 @@ export default function EmployeeAddPage() {
       roleName: employeeRole?.roleName || source?.roleName || "",
       roleFor: employeeRole?.roleFor || source?.roleFor || "",
       employeeRoleId: source?.employeeRoleId || employeeRole?.id || "",
-      reportingManager:
-        source?.reportingManagerId || source?.reportingManager || "",
-      reportingManagerId:
-        source?.reportingManagerId || source?.reportingManager || "",
+      reportingManager: reportingManagerRaw || reportingManagerId || "",
+      reportingManagerId,
+      reportingManagerName,
       workLocation: source?.workLocation || "OFFICE",
       city: employeeAddress?.city || source?.city || "",
       state: employeeAddress?.state || source?.state || "",
@@ -410,7 +463,13 @@ export default function EmployeeAddPage() {
     roleTitle: employee.employeeRole?.roleTitle || employee.roleTitle || "",
     employeeRoleId: employee.employeeRoleId || employee.employeeRole?.id || "",
     reportingManager:
-      employee.reportingManager || employee.reportingManagerId || "",
+      employee.reportingManagerId ||
+      (typeof employee.reportingManager === "object" &&
+      employee.reportingManager !== null
+        ? employee.reportingManager.id || ""
+        : typeof employee.reportingManager === "string"
+          ? employee.reportingManager
+          : ""),
     branchCode: employee.branchCode || employee.branch?.code || "",
     dateOfJoining: toDateInput(employee.dateOfJoining),
     experience: employee.experience || "",
@@ -536,7 +595,14 @@ export default function EmployeeAddPage() {
       return;
     }
 
-    setViewData(employeeOrId);
+    const id = employeeOrId?.id || employeeOrId?.employeeId;
+    if (id) {
+      setFetchMode("view");
+      setFetchId(id);
+      return;
+    }
+
+    setViewData(normalizeEmployeeDetail(employeeOrId));
     setShowViewModal(true);
   };
 
@@ -626,42 +692,74 @@ export default function EmployeeAddPage() {
 
   const handleDownloadProfile = () => {
     if (!viewData) return;
+
+    const pick = (...values) =>
+      values.find((value) => value != null && String(value).trim().length) ?? "N/A";
+
+    const reportManager =
+      viewData.reportingManagerName ||
+      viewData.reportingManagerFullName ||
+      (typeof viewData.reportingManager === "object" && viewData.reportingManager !== null
+        ? pick(
+            viewData.reportingManager.fullName,
+            viewData.reportingManager.name,
+            viewData.reportingManager.username,
+            viewData.reportingManager.email,
+            viewData.reportingManager.id,
+          )
+        : pick(viewData.reportingManager, viewData.reportingManagerId));
+
     const rows = [
       ["Field", "Value"],
-      ["Employee ID", viewData.employeeId],
-      ["Full Name", viewData.fullName],
-      ["Email", viewData.email],
-      ["Phone", viewData.phone],
-      ["Alt Phone", viewData.altPhone || "N/A"],
-      ["Department", viewData.department],
-      ["Designation", viewData.designation],
-      ["Status", viewData.status],
-      ["DOB", viewData.dob || "N/A"],
-      ["Gender", viewData.gender],
-      ["Marital Status", viewData.maritalStatus],
+      ["Employee ID", pick(viewData.employeeId)],
+      ["Full Name", pick(viewData.fullName, viewData.user?.fullName)],
+      ["Email", pick(viewData.email, viewData.Email, viewData.user?.email)],
+      [
+        "Phone",
+        pick(viewData.phone, viewData.contactNumber, viewData.user?.contactNumber),
+      ],
+      ["Alt Phone", pick(viewData.altPhone, viewData.atlMobileNumber)],
+      ["Department", pick(viewData.department)],
+      ["Designation", pick(viewData.designation)],
+      ["Status", pick(viewData.status)],
+      ["DOB", pick(viewData.dob)],
+      ["Gender", pick(viewData.gender)],
+      ["Marital Status", pick(viewData.maritalStatus)],
       [
         "Address",
-        `"${viewData.address}, ${viewData.city}, ${viewData.state} - ${viewData.pincode}"`,
+        `"${pick(viewData.address, viewData.addressLine1)}, ${pick(viewData.city)}, ${pick(viewData.state)} - ${pick(viewData.pincode, viewData.pinCode)}"`,
       ],
-      ["Date of Joining", viewData.dateOfJoining],
-      ["Experience", viewData.experience],
-      ["Reporting Manager", viewData.reportingManager],
-      ["Work Location", viewData.workLocation],
-      ["Emergency Contact", viewData.emergencyContact || "N/A"],
-      ["Emergency Relation", viewData.emergencyRelation],
-      ["Aadhaar No", `'${viewData.aadhaarNo}`],
-      ["PAN No", viewData.panNo],
-      ["Bank Name", viewData.bankName],
-      ["Account No", `'${viewData.bankAccountNo}`],
-      ["IFSC Code", viewData.ifsc],
-      ["UPI ID", viewData.upiId || "N/A"],
-      ["Basic Salary", viewData.basicSalary],
-      ["HRA", viewData.hra],
-      ["Conveyance", viewData.conveyance],
-      ["Total Salary", viewData.totalSalary],
-      ["Leave Balance", viewData.leaveBalance],
-      ["Username", viewData.username],
-      ["Password", viewData.password],
+      ["Date of Joining", pick(viewData.dateOfJoining)],
+      ["Experience", pick(viewData.experience)],
+      ["Reporting Manager", reportManager],
+      ["Work Location", pick(viewData.workLocation)],
+      ["Emergency Contact", pick(viewData.emergencyContact)],
+      [
+        "Emergency Relation",
+        pick(viewData.emergencyRelation, viewData.emergencyRelationship),
+      ],
+      ["Aadhaar No", `'${pick(viewData.aadhaarNo)}`],
+      ["PAN No", pick(viewData.panNo)],
+      ["Bank Name", pick(viewData.bankName, viewData.accountDetails?.bankName)],
+      [
+        "Account No",
+        `'${pick(viewData.bankAccountNo, viewData.accountDetails?.bankAccountNo)}`,
+      ],
+      ["IFSC Code", pick(viewData.ifsc, viewData.accountDetails?.ifsc)],
+      ["UPI ID", pick(viewData.upiId, viewData.accountDetails?.upiId)],
+      [
+        "Basic Salary",
+        pick(viewData.basicSalary, viewData.salaryDetails?.basicSalary, "0"),
+      ],
+      ["HRA", pick(viewData.hra, "0")],
+      [
+        "Conveyance",
+        pick(viewData.conveyance, viewData.salaryDetails?.conveyance, "0"),
+      ],
+      ["Total Salary", pick(viewData.totalSalary, "0")],
+      ["Leave Balance", pick(viewData.leaveBalance)],
+      ["Username", pick(viewData.username, viewData.userName, viewData.user?.userName)],
+      ["Password", pick(viewData.password)],
     ];
 
     let csvContent = "data:text/csv;charset=utf-8,";
@@ -699,8 +797,16 @@ export default function EmployeeAddPage() {
       return;
     }
 
-    setFormData(mapEmployeeToForm(employeeOrId));
-    setEditId(employeeOrId.id);
+    const id = employeeOrId?.id || employeeOrId?.employeeId;
+    if (id) {
+      setFetchMode("edit");
+      setFetchId(id);
+      return;
+    }
+
+    const normalized = normalizeEmployeeDetail(employeeOrId);
+    setFormData(mapEmployeeToForm(normalized));
+    setEditId(normalized.id);
     setIsEditing(true);
     setView("form");
   };
@@ -728,14 +834,46 @@ export default function EmployeeAddPage() {
       employeeRoleId: defaultEmployeeRoleId,
     };
 
+    const buildEmployeeFormData = (data, documentFiles = []) => {
+      const formData = new FormData();
+
+      Object.entries(data).forEach(([key, value]) => {
+        if (key === "documentFiles") return;
+        if (value === undefined || value === null) return;
+
+        if (value instanceof Date) {
+          formData.append(key, value.toISOString());
+          return;
+        }
+
+        if (typeof value === "object") {
+          return;
+        }
+
+        formData.append(key, String(value));
+      });
+
+      documentFiles.forEach((entry) => {
+        if (!entry?.documentType || !entry?.file) return;
+        formData.append(entry.documentType, entry.file);
+      });
+
+      return formData;
+    };
+
     try {
       if (isEditing && editId) {
         const updatePayload = { ...commonPayload };
         delete updatePayload.branchId;
 
+        const updateFormData = buildEmployeeFormData(
+          updatePayload,
+          extras?.documentFiles || [],
+        );
+
         await updateEmployeeMutation.mutateAsync({
           id: editId,
-          data: updatePayload,
+          data: updateFormData,
         });
       } else {
         if (!branchId) {
@@ -743,10 +881,15 @@ export default function EmployeeAddPage() {
           return;
         }
 
-        await createEmployeeMutation.mutateAsync({
-          ...commonPayload,
-          branchId,
-        });
+        const createFormData = buildEmployeeFormData(
+          {
+            ...commonPayload,
+            branchId,
+          },
+          extras?.documentFiles || [],
+        );
+
+        await createEmployeeMutation.mutateAsync(createFormData);
       }
 
       await refetch();

@@ -44,6 +44,8 @@ export const createPartnerSchema = z
     // Contact
     contactNumber: z.string().trim().min(1, "contactNumber is required"),
     alternateNumber: z.string().trim().optional(),
+    // some clients may send this key; accept it to avoid strict-schema rejection
+    alternateContactNumber: z.string().trim().optional(),
     address: z.string().trim().optional(),
 
     isActive: z.coerce.boolean().optional(),
@@ -53,6 +55,7 @@ export const createPartnerSchema = z
     companyName: z.string().trim().optional(),
     contactPerson: z.string().trim().optional(),
     panNumber: z.string().trim().min(1, "panNumber is required"),
+    aadhaarNumber: z.string().trim().optional(),
     gstNumber: z.string().trim().optional(),
     establishedYear: z.coerce.number().int().min(1800).optional(),
     partnerType: partnerTypeEnum.optional(),

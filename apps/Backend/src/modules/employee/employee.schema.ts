@@ -23,6 +23,19 @@ const employeeAddressSchema = z.object({
   phoneNumber: z.string().trim().optional(),
 });
 
+const multipartDateSchema = z.preprocess((value) => {
+  if (value instanceof Date) {
+    return value;
+  }
+
+  if (typeof value === "string" || typeof value === "number") {
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? value : parsed;
+  }
+
+  return value;
+}, z.date());
+
 /* ================= CREATE ================= */
 
 export const createEmployeeSchema = z
@@ -34,17 +47,23 @@ export const createEmployeeSchema = z
     contactNumber: z.string().trim().min(10).max(15),
     userName: z.string().trim().min(1),
     atlMobileNumber: z.string().trim().optional(),
-    dob: z.coerce.date(),
+    dob: multipartDateSchema,
     gender: z.enum(["MALE", "FEMALE", "OTHER"]),
     maritalStatus: z.enum(["SINGLE", "MARRIED", "DIVORCED", "WIDOWED"]),
     designation: z.string().min(1),
     roleTitle: z.string().trim().optional(),
     employeeRoleId: z.string().trim().min(1),
     gradeBand: z.string().trim().optional(),
-    reportingManager: z.string().trim().min(1),
+    reportingManager: z.string().trim().optional(),
+    emergencyContact: z.string().trim().optional(),
+    emergencyRelationship: z
+      .enum(["FATHER", "MOTHER", "SPOUSE", "SIBLING", "FRIEND", "OTHER"])
+      .optional(),
+    emergencyRelation: z.string().trim().optional(),
+    department: z.string().trim().optional(),
     branchCode: z.string().trim().min(1),
     regionZone: z.string().trim().optional(),
-    dateOfJoining: z.coerce.date().optional(),
+    dateOfJoining: multipartDateSchema.optional(),
     experience: z
       .union([z.string().min(1), z.number().nonnegative()])
       .optional(),
@@ -75,7 +94,7 @@ export const createEmployeeSchema = z
     taxDeduction: z.coerce.number().min(0).optional(),
     status: z.enum(["Active", "Inactive"]).optional(),
     isActive: z.coerce.boolean().optional(),
-    salary: z.number().positive().optional(),
+    salary: z.coerce.number().positive().optional(),
     branchId: z.string().min(1).optional(),
     roleDocuments: z
       .record(
@@ -111,7 +130,7 @@ export const updateEmployeeSchema = z
     isActive: z.coerce.boolean().optional(),
     userName: z.string().trim().min(1).optional(),
     atlMobileNumber: z.string().trim().optional(),
-    dob: z.coerce.date().optional(),
+    dob: multipartDateSchema.optional(),
     gender: z.enum(["MALE", "FEMALE", "OTHER"]).optional(),
     maritalStatus: z
       .enum(["SINGLE", "MARRIED", "DIVORCED", "WIDOWED"])
@@ -121,9 +140,15 @@ export const updateEmployeeSchema = z
     employeeRoleId: z.string().min(1).optional(),
     
     reportingManager: z.string().trim().min(1).optional(),
+    emergencyContact: z.string().trim().optional(),
+    emergencyRelationship: z
+      .enum(["FATHER", "MOTHER", "SPOUSE", "SIBLING", "FRIEND", "OTHER"])
+      .optional(),
+    emergencyRelation: z.string().trim().optional(),
+    department: z.string().trim().optional(),
     branchCode: z.string().trim().min(1).optional(),
     regionZone: z.string().trim().optional(),
-    dateOfJoining: z.coerce.date().optional(),
+    dateOfJoining: multipartDateSchema.optional(),
     experience: z
       .union([z.string().min(1), z.number().nonnegative()])
       .optional(),
@@ -154,7 +179,7 @@ export const updateEmployeeSchema = z
     pfDeduction: z.coerce.number().min(0).optional(),
     taxDeduction: z.coerce.number().min(0).optional(),
     status: z.enum(["Active", "Inactive"]).optional(),
-    salary: z.number().positive().optional(),
+    salary: z.coerce.number().positive().optional(),
     branchId: z.string().min(1).optional(),
     roleDocuments: z
       .record(

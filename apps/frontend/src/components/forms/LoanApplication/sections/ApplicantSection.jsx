@@ -41,6 +41,58 @@ const formatSeconds = (seconds) => {
   return `${mins}:${secs}`;
 };
 
+const parseProviderDateToIso = (value) => {
+  if (!value) return "";
+
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    const ddmmyyyy = /^(\d{2})-(\d{2})-(\d{4})$/.exec(trimmed);
+    if (ddmmyyyy) {
+      const [, dd, mm, yyyy] = ddmmyyyy;
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    const direct = new Date(trimmed);
+    if (!Number.isNaN(direct.getTime())) {
+      return direct.toISOString().split("T")[0];
+    }
+
+    return "";
+  }
+
+  const fromDate = new Date(value);
+  return Number.isNaN(fromDate.getTime())
+    ? ""
+    : fromDate.toISOString().split("T")[0];
+};
+
+const normalizeGenderValue = (gender) => {
+  const g = String(gender || "").trim().toUpperCase();
+  if (g === "M" || g === "MALE") return "MALE";
+  if (g === "F" || g === "FEMALE") return "FEMALE";
+  if (g === "O" || g === "OTHER") return "OTHER";
+  return "";
+};
+
+const extractVerifyProfile = (response) => {
+  const root = response?.data?.data ?? response?.data ?? response;
+  const profile = root?.data && typeof root?.data === "object" ? root.data : root;
+
+  if (!profile || typeof profile !== "object") return null;
+
+  if (
+    profile.name ||
+    profile.dob ||
+    profile.gender ||
+    profile.address ||
+    profile.split_address
+  ) {
+    return profile;
+  }
+
+  return null;
+};
+
 export default function ApplicantSection({
   control,
   errors,
@@ -80,6 +132,61 @@ export default function ApplicantSection({
   }, [otpExpiresAt]);
 
   const isOtpExpired = aadhaarOtpSent && otpSecondsLeft === 0;
+  const isAadhaarDataLocked = aadhaarVerified;
+
+  const applyAadhaarProfile = (profile, aadhaarNumber) => {
+    if (!profile) return;
+
+    const setField = (path, value) => {
+      setValue(path, value ?? "", {
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    };
+
+    const splitAddress = profile.split_address || {};
+    const fullName = String(profile.name || "").trim();
+
+    if (fullName) {
+      const parts = fullName.split(/\s+/);
+      setField("applicant.firstName", parts.shift() || "");
+      setField(
+        "applicant.middleName",
+        parts.length > 1 ? parts.slice(0, -1).join(" ") : "",
+      );
+      setField("applicant.lastName", parts.length ? parts.slice(-1).join(" ") : "");
+    }
+
+    const dob = parseProviderDateToIso(profile.dob);
+    if (dob) setField("applicant.dob", dob);
+
+    const gender = normalizeGenderValue(profile.gender);
+    if (gender) setField("applicant.gender", gender);
+
+    if (profile.email) setField("applicant.email", profile.email);
+    if (profile.care_of) setField("applicant.fatherName", profile.care_of);
+
+    setField("applicant.aadhaarNumber", String(aadhaarNumber || ""));
+
+    const addressLine1 =
+      [splitAddress.house, splitAddress.street].filter(Boolean).join(", ") ||
+      profile.address ||
+      "";
+    const city = splitAddress.vtc || splitAddress.po || splitAddress.dist || "";
+
+    setField("sameAsCurrent", false);
+    setField("addresses.permanentAddress.addressLine1", addressLine1);
+    setField(
+      "addresses.permanentAddress.addressLine2",
+      splitAddress.locality || "",
+    );
+    setField("addresses.permanentAddress.city", city);
+    setField("addresses.permanentAddress.district", splitAddress.dist || "");
+    setField("addresses.permanentAddress.state", splitAddress.state || "");
+    setField("addresses.permanentAddress.pinCode", splitAddress.pincode || "");
+    setField("addresses.permanentAddress.landmark", splitAddress.landmark || "");
+  };
+
   const fillApplicant = (data) => {
     if (!data) return;
     const m = (path, val) => setValue(path, val);
@@ -249,9 +356,13 @@ export default function ApplicantSection({
         otp,
       });
       console.log("[Aadhaar] Verify OTP response:", res);
+      const profile = extractVerifyProfile(res);
+      if (profile) {
+        applyAadhaarProfile(profile, val);
+      }
       setAadhaarVerified(true);
       setShowAadhaarOtpModal(false);
-      showSuccess("OTP verified successfully");
+      showSuccess("OTP verified and Aadhaar data applied");
     } catch (err) {
       showError(err?.message || "OTP verification failed");
     }
@@ -354,6 +465,7 @@ export default function ApplicantSection({
                       label="Title"
                       isRequired
                       options={TITLE_OPTIONS}
+                      isDisabled={isAadhaarDataLocked}
                       value={field.value}
                       onChange={field.onChange}
                       error={errors.applicant?.title?.message}
@@ -367,6 +479,7 @@ export default function ApplicantSection({
                     <InputField
                       label="First Name"
                       isRequired
+                      isDisabled={isAadhaarDataLocked}
                       {...field}
                       error={errors.applicant?.firstName?.message}
                     />
@@ -376,7 +489,11 @@ export default function ApplicantSection({
                   name="applicant.middleName"
                   control={control}
                   render={({ field }) => (
-                    <InputField label="Middle Name" {...field} />
+                    <InputField
+                      label="Middle Name"
+                      isDisabled={isAadhaarDataLocked}
+                      {...field}
+                    />
                   )}
                 />
               </Grid>
@@ -389,6 +506,7 @@ export default function ApplicantSection({
                     <InputField
                       label="Last Name"
                       isRequired
+                      isDisabled={isAadhaarDataLocked}
                       {...field}
                       error={errors.applicant?.lastName?.message}
                     />
@@ -401,6 +519,7 @@ export default function ApplicantSection({
                     <InputField
                       label="Father's Name"
                       isRequired
+                      isDisabled={isAadhaarDataLocked}
                       {...field}
                       error={errors.applicant?.fatherName?.message}
                     />
@@ -435,6 +554,7 @@ export default function ApplicantSection({
                       label="Date of Birth"
                       type="date"
                       isRequired
+                      isDisabled={isAadhaarDataLocked}
                       {...field}
                       error={errors.applicant?.dob?.message}
                     />
@@ -448,6 +568,7 @@ export default function ApplicantSection({
                       label="Gender"
                       isRequired
                       options={GENDER_OPTIONS}
+                      isDisabled={isAadhaarDataLocked}
                       value={field.value}
                       onChange={field.onChange}
                       error={errors.applicant?.gender?.message}
@@ -545,6 +666,7 @@ export default function ApplicantSection({
                     <InputField
                       label="Aadhaar Number"
                       isRequired
+                      isDisabled={isAadhaarDataLocked}
                       {...field}
                       onChange={(e) =>
                         field.onChange(
@@ -615,6 +737,7 @@ export default function ApplicantSection({
                   <InputField
                     label="Email Address"
                     type="email"
+                      isDisabled={isAadhaarDataLocked}
                     {...field}
                     error={errors.applicant?.email?.message}
                   />
@@ -699,6 +822,7 @@ export default function ApplicantSection({
             errors={errors}
             watch={watch}
             setValue={setValue}
+            isAadhaarLocked={isAadhaarDataLocked}
           />
 
           <PersonEmploymentFields
