@@ -40,8 +40,10 @@ export async function createCoApplicants(
       data: {
         loanApplicationId: loanId,
         firstName: co.firstName,
-        lastName: co.lastName ?? "",
+        lastName: co.lastName ,
         middleName: co.middleName,
+        aadhaarProvider: co.aadhaarProvider || null,
+        panProvider: co.panProvider || null,
         fatherName: co.fatherName,
         motherName: co.motherName,
         woname: co.woname,

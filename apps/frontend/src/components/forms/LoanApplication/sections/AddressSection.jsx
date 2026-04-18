@@ -42,24 +42,24 @@ export default function AddressSection({
             name="addresses.currentAddress.addressLine1"
             control={control}
             render={({ field }) => (
-              <InputField
-                label="Address Line 1"
-                isRequired
-                isDisabled={isAadhaarLocked}
-                {...field}
-                error={errors.addresses?.currentAddress?.addressLine1?.message}
-              />
+                <InputField
+                  label="Address Line 1"
+                  isRequired
+                  isDisabled={isAadhaarLocked && Boolean(field.value)}
+                  {...field}
+                  error={errors.addresses?.currentAddress?.addressLine1?.message}
+                />
             )}
           />
           <Controller
             name="addresses.currentAddress.addressLine2"
             control={control}
             render={({ field }) => (
-              <InputField
-                label="Address Line 2"
-                isDisabled={isAadhaarLocked}
-                {...field}
-              />
+                <InputField
+                  label="Address Line 2"
+                  isDisabled={isAadhaarLocked && Boolean(field.value)}
+                  {...field}
+                />
             )}
           />
           <Grid>
@@ -70,7 +70,7 @@ export default function AddressSection({
                 <InputField
                   label="City / Town"
                   isRequired
-                  isDisabled={isAadhaarLocked}
+                  isDisabled={isAadhaarLocked && Boolean(field.value)}
                   {...field}
                   error={errors.addresses?.currentAddress?.city?.message}
                 />
@@ -83,7 +83,7 @@ export default function AddressSection({
                 <InputField
                   label="District"
                   isRequired
-                  isDisabled={isAadhaarLocked}
+                  isDisabled={isAadhaarLocked && Boolean(field.value)}
                   {...field}
                   error={errors.addresses?.currentAddress?.district?.message}
                 />
@@ -99,7 +99,7 @@ export default function AddressSection({
                   label="State"
                   isRequired
                   isSearchable
-                  isDisabled={isAadhaarLocked}
+                  isDisabled={isAadhaarLocked && Boolean(field.value)}
                   options={INDIAN_STATES}
                   value={field.value}
                   onChange={field.onChange}
@@ -114,7 +114,7 @@ export default function AddressSection({
                 <InputField
                   label="Pin Code"
                   isRequired
-                  isDisabled={isAadhaarLocked}
+                  isDisabled={isAadhaarLocked && Boolean(field.value)}
                   {...field}
                   onChange={(e) =>
                     field.onChange(
@@ -133,7 +133,7 @@ export default function AddressSection({
               render={({ field }) => (
                   <InputField
                     label="Land Mark"
-                    isDisabled={isAadhaarLocked}
+                    isDisabled={isAadhaarLocked && Boolean(field.value)}
                     {...field}
                   />
               )}
@@ -144,7 +144,7 @@ export default function AddressSection({
               render={({ field }) => (
                   <InputField
                     label="Phone No. (With STD Code)"
-                    isDisabled={isAadhaarLocked}
+                    isDisabled={isAadhaarLocked && Boolean(field.value)}
                     {...field}
                   />
               )}
@@ -184,26 +184,26 @@ export default function AddressSection({
             name="addresses.permanentAddress.addressLine1"
             control={control}
             render={({ field }) => (
-              <InputField
-                label="Address Line 1"
-                isRequired
-                isDisabled={isAadhaarLocked}
-                {...field}
-                error={
-                  errors?.addresses?.permanentAddress?.addressLine1?.message
-                }
-              />
+                <InputField
+                  label="Address Line 1"
+                  isRequired
+                  isDisabled={isAadhaarLocked && Boolean(field.value)}
+                  {...field}
+                  error={
+                    errors?.addresses?.permanentAddress?.addressLine1?.message
+                  }
+                />
             )}
           />
           <Controller
             name="addresses.permanentAddress.addressLine2"
             control={control}
             render={({ field }) => (
-              <InputField
-                label="Address Line 2"
-                isDisabled={isAadhaarLocked}
-                {...field}
-              />
+                <InputField
+                  label="Address Line 2"
+                  isDisabled={isAadhaarLocked && Boolean(field.value)}
+                  {...field}
+                />
             )}
           />
           <Grid>
@@ -213,7 +213,7 @@ export default function AddressSection({
               render={({ field }) => (
                 <InputField
                   label="City / Town"
-                  isDisabled={isAadhaarLocked}
+                  isDisabled={isAadhaarLocked && Boolean(field.value)}
                   {...field}
                 />
               )}
@@ -224,7 +224,7 @@ export default function AddressSection({
               render={({ field }) => (
                 <InputField
                   label="District"
-                  isDisabled={isAadhaarLocked}
+                  isDisabled={isAadhaarLocked && Boolean(field.value)}
                   {...field}
                 />
               )}
@@ -238,7 +238,7 @@ export default function AddressSection({
                 <SelectField
                   label="State"
                   isSearchable
-                  isDisabled={isAadhaarLocked}
+                  isDisabled={isAadhaarLocked && Boolean(field.value)}
                   options={INDIAN_STATES}
                   value={field.value}
                   onChange={field.onChange}
@@ -251,7 +251,7 @@ export default function AddressSection({
               render={({ field }) => (
                 <InputField
                   label="Pin Code"
-                  isDisabled={isAadhaarLocked}
+                  isDisabled={isAadhaarLocked && Boolean(field.value)}
                   {...field}
                   onChange={(e) =>
                     field.onChange(
@@ -268,7 +268,7 @@ export default function AddressSection({
             render={({ field }) => (
               <InputField
                 label="Land Mark"
-                isDisabled={isAadhaarLocked}
+                isDisabled={isAadhaarLocked && Boolean(field.value)}
                 {...field}
               />
             )}

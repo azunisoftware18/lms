@@ -196,6 +196,9 @@ export interface FullLoanApplicationInput {
     motherName: string;
     woname?: string;
     dob: Date;
+    aadhaarProvider?:JSON;
+    panProvider?: JSON;
+
     gender: Enums.Gender;
     genderOther?: string;
     maritalStatus: Enums.MaritalStatus;
@@ -324,8 +327,11 @@ export interface CoApplicantInput {
   firstName: string;
   middleName?: string;
   lastName: string;
-  fatherName?: string;
-  motherName?: string;
+  aadhaarProvider?: JSON;
+  panProvider?: JSON;
+
+  fatherName: string;
+  motherName: string;
   woname?: string;
   relation: Enums.CoApplicantRelation;
   relationOther?: string;
@@ -358,8 +364,11 @@ export interface GuarantorInput {
   firstName: string;
   middleName?: string;
   lastName: string;
-  fatherName?: string;
-  motherName?: string;
+  aadhaarProvider?: JSON;
+  panProvider?: JSON;
+  
+  fatherName: string;
+  motherName: string;
   woname?: string;
   dob?: Date | string;
   contactNumber?: string;

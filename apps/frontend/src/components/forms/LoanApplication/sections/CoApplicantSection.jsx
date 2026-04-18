@@ -39,6 +39,7 @@ export default function CoApplicantSection({
   requiredPaths = new Set(),
 }) {
   const [aadhaarQueries, setAadhaarQueries] = useState({});
+  const [aadhaarApiResponses, setAadhaarApiResponses] = useState({});
   const [otpMap, setOtpMap] = useState({});
   const [refIdMap, setRefIdMap] = useState({});
   const [otpSentMap, setOtpSentMap] = useState({});
@@ -121,6 +122,12 @@ export default function CoApplicantSection({
         otp,
       });
       console.log(`[Aadhaar][Co-Applicant ${index + 1}] Verify OTP response:`, res);
+      setAadhaarApiResponses((s) => ({ ...s, [index]: res }));
+      try {
+        setValue(`coApplicants.${index}.aadhaarProvider`, res?.data ?? res);
+      } catch (e) {
+        console.error(`Failed to set coApplicants.${index}.aadhaarProvider on form:`, e);
+      }
       setOtpVerifiedMap((s) => ({ ...s, [index]: true }));
       setShowOtpModalMap((s) => ({ ...s, [index]: false }));
       await handleCoApplicantAadhaarSearch(index);

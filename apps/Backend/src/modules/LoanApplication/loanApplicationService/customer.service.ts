@@ -53,6 +53,9 @@ export async function createCustomer(
         middleName: data.applicant.middleName,
         lastName: data.applicant.lastName,
         fatherName: data.applicant.fatherName,
+        aadhaarProvider: data.applicant.aadhaarProvider || null,
+        panProvider: data.applicant.panProvider || null,
+
         motherName: data.applicant.motherName,
         woname: data.applicant.woname,
         dob: data.applicant.dob,

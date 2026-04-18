@@ -127,6 +127,7 @@ export default function AddLoanTypesForm({ onClose, editData }) {
       minProcessingFee: "",
       maxProcessingFee: "",
       minLoginCharges: "",
+      defaultLoginCharges: "",
       maxLoginCharges: "",
       gstApplicable: false,
       gstPercentage: "",
@@ -249,6 +250,7 @@ export default function AddLoanTypesForm({ onClose, editData }) {
         minProcessingFee: editData.minProcessingFee || "",
         maxProcessingFee: editData.maxProcessingFee || "",
         minLoginCharges: editData.minLoginCharges || "",
+        defaultLoginCharges: editData.defaultLoginCharges || "",
         maxLoginCharges: editData.maxLoginCharges || "",
         gstApplicable: editData.gstApplicable || false,
         gstPercentage: editData.gstPercentage || "",
@@ -386,6 +388,10 @@ export default function AddLoanTypesForm({ onClose, editData }) {
       minLoginCharges: data.minLoginCharges
         ? Number(data.minLoginCharges)
         : undefined,
+        defaultLoginCharges: data.defaultLoginCharges
+          ? Number(data.defaultLoginCharges)
+          : undefined,
+
       maxLoginCharges: data.maxLoginCharges
         ? Number(data.maxLoginCharges)
         : undefined,
@@ -849,6 +855,20 @@ export default function AddLoanTypesForm({ onClose, editData }) {
                     type="number"
                     placeholder="0.00"
                     error={errors.minLoginCharges?.message}
+                    icon={IndianRupee}
+                    {...field}
+                  />
+                )}
+              />
+              <Controller
+                name="defaultLoginCharges"
+                control={control}
+                render={({ field }) => (
+                  <InputField
+                    label="Default Login Charges"
+                    type="number"
+                    placeholder="0.00"
+                    error={errors.defaultLoginCharges?.message}
                     icon={IndianRupee}
                     {...field}
                   />

@@ -121,6 +121,11 @@ export default function GuarantorSection({
         otp,
       });
       console.log(`[Aadhaar][Guarantor ${index + 1}] Verify OTP response:`, res);
+      try {
+        setValue(`guarantors.${index}.aadhaarProvider`, res?.data ?? res);
+      } catch (e) {
+        console.error(`Failed to set guarantors.${index}.aadhaarProvider on form:`, e);
+      }
       setOtpVerifiedMap((s) => ({ ...s, [index]: true }));
       setShowOtpModalMap((s) => ({ ...s, [index]: false }));
       await handleGuarantorAadhaarSearch(index);

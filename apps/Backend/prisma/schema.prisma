@@ -111,17 +111,17 @@ model Employee {
   employeeRole  EmployeeRole? @relation(fields: [employeeRoleId], references: [id])
 
   // Payroll / banking details
-  accountHolder     String?
-  bankName          String?
-  bankAccountNo     String?
-  ifsc              String?
-  upiId             String?
-  basicSalary       Float?
-  conveyance        Float?
-  medicalAllowance  Float?
-  otherAllowances   Float?
-  pfDeduction       Float?
-  taxDeduction      Float?
+  accountHolder    String?
+  bankName         String?
+  bankAccountNo    String?
+  ifsc             String?
+  upiId            String?
+  basicSalary      Float?
+  conveyance       Float?
+  medicalAllowance Float?
+  otherAllowances  Float?
+  pfDeduction      Float?
+  taxDeduction     Float?
 
   // Optional username if separate from `User`
   loanAssignments LoanAssignment[]
@@ -156,9 +156,9 @@ enum roleFor {
 }
 
 model Partner {
-  id               String           @id @default(cuid())
-  userId           String           @unique
-  
+  id     String @id @default(cuid())
+  userId String @unique
+
   // ==================== BASIC PARTNER INFORMATION ====================
   partnerCode      String           @unique // Unique identifier like PRT-001, DSA-JOHN-001
   legalName        String
@@ -180,45 +180,45 @@ model Partner {
 
   // ==================== ADDRESS DETAILS ====================
   // Registered Address Relations
-  addresses              Address[]    @relation("PartnerAddresses")
+  addresses       Address[] @relation("PartnerAddresses")
   // Office Address
-  officeAddressId        String?      @unique
-  officeAddress          Address?     @relation("PartnerOfficeAddress", fields: [officeAddressId], references: [id])
+  officeAddressId String?   @unique
+  officeAddress   Address?  @relation("PartnerOfficeAddress", fields: [officeAddressId], references: [id])
 
   // ==================== KYC & ENTITY VERIFICATION ====================
   // Individual / Proprietor Documents
-  panNumber              String
-  aadhaarNumber          String
+  panNumber               String
+  aadhaarNumber           String
   // Entity Documents
-  cinNumber              String?
-  gstinNumber            String?
-  gstNumber              String?
-  llpinNumber            String?
+  cinNumber               String?
+  gstinNumber             String?
+  gstNumber               String?
+  llpinNumber             String?
   registrationCertificate String? // Path to registration certificate
 
   // Verification Status Fields
-  panVerificationStatus  VerificationStatus  @default(pending)
-  gstVerificationStatus  VerificationStatus  @default(pending)
-  bankVerificationStatus VerificationStatus  @default(pending)
+  panVerificationStatus  VerificationStatus @default(pending)
+  gstVerificationStatus  VerificationStatus @default(pending)
+  bankVerificationStatus VerificationStatus @default(pending)
 
   // Document Upload Tracking
-  kycDocumentsUploaded       Boolean  @default(false)
-  commercialCibilUploaded    Boolean  @default(false)
-  cibilCheckUploaded         Boolean  @default(false)
-  partnerAgreementUploaded   Boolean  @default(false)
-  ndaUploaded                Boolean  @default(false)
+  kycDocumentsUploaded     Boolean @default(false)
+  commercialCibilUploaded  Boolean @default(false)
+  cibilCheckUploaded       Boolean @default(false)
+  partnerAgreementUploaded Boolean @default(false)
+  ndaUploaded              Boolean @default(false)
 
   // Document Relations - using existing Document model
-  documents                  Document[]
+  documents Document[]
 
   // ==================== BANKING DETAILS ====================
   // Payout Bank Account
-  payoutBankName             String?
-  payoutAccountHolderName    String?
-  payoutAccountNumber        String?
-  payoutIfscCode             String?
-  payoutUpiId                String?
-  cancelledChequeUploadPath  String? // Path to cancelled cheque document
+  payoutBankName            String?
+  payoutAccountHolderName   String?
+  payoutAccountNumber       String?
+  payoutIfscCode            String?
+  payoutUpiId               String?
+  cancelledChequeUploadPath String? // Path to cancelled cheque document
 
   // ==================== BUSINESS PROFILE & SOURCING DETAILS ====================
   companyName                 String?
@@ -240,58 +240,58 @@ model Partner {
   targetArea                  String?
 
   // ==================== AGREEMENT & COMPLIANCE ====================
-  agreementValidityDate      DateTime? // When the partner agreement expires
-  ndaValidityDate            DateTime? // NDA expiration date
-  agreementRemarks           String?   // Notes about the agreement
+  agreementValidityDate DateTime? // When the partner agreement expires
+  ndaValidityDate       DateTime? // NDA expiration date
+  agreementRemarks      String? // Notes about the agreement
 
   // ==================== SYSTEM ACCESS & ROLE MAPPING ====================
-  loginId                    String?   // Portal login ID if access given
-  assignedRmId               String?   // Relationship Manager ID
-  branchMapping              Json?     // Branch access mapping
-  productAccess              Json?     // Product permissions (e.g., {"PL":true, "HL":false})
-  apiKey                     String?
-  integrationId              String?
+  loginId       String? // Portal login ID if access given
+  assignedRmId  String? // Relationship Manager ID
+  branchMapping Json? // Branch access mapping
+  productAccess Json? // Product permissions (e.g., {"PL":true, "HL":false})
+  apiKey        String?
+  integrationId String?
 
   // ==================== COMMISSION & PAYOUT STRUCTURE ====================
-  commissionType             CommissionType
-  commissionValue            Float?
-  paymentCycle               PaymentCycle
-  minimumPayout              Float?
-  taxDeduction               Float?
-  payoutType                 PayoutType?      // FLAT | PERCENTAGE | SLAB
-  productPayoutRates         Json?            // product -> rate mapping (e.g. {"PL":1000, "HL":0.01})
-  roiProcessingShare         Float?           // share of ROI/processing fee
-  payoutFrequency            PayoutFrequency?
-  gstApplicable              Boolean          @default(true)
-  tdsApplicable              Boolean          @default(false)
-  incentiveSchemes           Json?            // structured incentive definitions
-  clawbackTerms              String?          // Clawback terms in case of early closure/NPA
-  maxPayoutCap               Float?
+  commissionType     CommissionType
+  commissionValue    Float?
+  paymentCycle       PaymentCycle
+  minimumPayout      Float?
+  taxDeduction       Float?
+  payoutType         PayoutType? // FLAT | PERCENTAGE | SLAB
+  productPayoutRates Json? // product -> rate mapping (e.g. {"PL":1000, "HL":0.01})
+  roiProcessingShare Float? // share of ROI/processing fee
+  payoutFrequency    PayoutFrequency?
+  gstApplicable      Boolean          @default(true)
+  tdsApplicable      Boolean          @default(false)
+  incentiveSchemes   Json? // structured incentive definitions
+  clawbackTerms      String? // Clawback terms in case of early closure/NPA
+  maxPayoutCap       Float?
 
   // ==================== PERFORMANCE TRACKING ====================
-  totalLeadsSubmitted        Int?    @default(0)
-  totalReferrals             Int?    @default(0)
-  activeReferrals            Int?    @default(0)
-  commissionEarned           Float?  @default(0)
-  loginToSanctionRatio       Float?  // e.g., 0.25 = 25%
+  totalLeadsSubmitted         Int?   @default(0)
+  totalReferrals              Int?   @default(0)
+  activeReferrals             Int?   @default(0)
+  commissionEarned            Float? @default(0)
+  loginToSanctionRatio        Float? // e.g., 0.25 = 25%
   sanctionToDisbursementRatio Float?
-  disbursementVolume         Float?  // total disbursed amount
-  rejectionRate              Float?  // percent (0-100)
-  fraudCasesCount            Int?    @default(0)
-  qualityScore               Float?  // 0-100
-  partnerRating              Float?  @default(0)
+  disbursementVolume          Float? // total disbursed amount
+  rejectionRate               Float? // percent (0-100)
+  fraudCasesCount             Int?   @default(0)
+  qualityScore                Float? // 0-100
+  partnerRating               Float? @default(0)
 
   // ==================== RELATIONS ====================
-  branch                     Branch              @relation(fields: [branchId], references: [id])
-  branchId                   String
-  user                       User                @relation(fields: [userId], references: [id])
-  leads                      Leads[]             @relation("PartnerLeads")
-  commission                 PartnerCommission[]
-  loanApplications           LoanApplication[]
+  branch           Branch              @relation(fields: [branchId], references: [id])
+  branchId         String
+  user             User                @relation(fields: [userId], references: [id])
+  leads            Leads[]             @relation("PartnerLeads")
+  commission       PartnerCommission[]
+  loanApplications LoanApplication[]
 
   // ==================== AUDIT FIELDS ====================
-  createdAt                  DateTime            @default(now())
-  updatedAt                  DateTime            @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([branchId])
   @@index([Status])
@@ -537,6 +537,8 @@ model CoApplicant {
   // Personal Details
   firstName                 String
   lastName                  String
+  aadhaarProvider           Json? // e.g., {"uidai": true, "digilocker": false}
+  panProvider               Json? // e.g., {"nsdl": true, "uidaan": false}
   middleName                String?
   fatherName                String?
   motherName                String?
@@ -616,6 +618,8 @@ model Customer {
   id                           String                     @id @default(cuid())
   title                        Title
   firstName                    String
+  aadhaarProvider              Json? // e.g., {"uidai": true, "digilocker": false}
+  panProvider                  Json? // e.g., {"nsdl": true, "uidaan": false}
   lastName                     String
   middleName                   String?
   fatherName                   String
@@ -778,13 +782,14 @@ model Guarantor {
   loanApplicationId String
   loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
 
-  firstName  String
-  middleName String?
-  lastName   String
-
-  fatherName String?
-  motherName String?
-  woname     String?
+  firstName       String
+  middleName      String?
+  lastName        String
+  aadhaarProvider Json? // e.g., {"uidai": true, "digilocker": false}
+  panProvider     Json? // e.g., {"nsdl": true, "uidaan": false}
+  fatherName      String?
+  motherName      String?
+  woname          String?
 
   dob DateTime?
 
@@ -1324,8 +1329,9 @@ model LoanType {
   maxProcessingFee Float // amount or %
 
   //login charges
-  minLoginCharges Float? // amount or %
-  maxLoginCharges Float? // amount or %
+  minLoginCharges     Float? // amount or %
+  defaultLoginCharges Float? // amount or %
+  maxLoginCharges     Float? // amount or %
 
   gstApplicable Boolean @default(true)
   gstPercentage Float? //usually 18%

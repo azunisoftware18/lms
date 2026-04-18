@@ -31,6 +31,7 @@ const loanTypeBaseSchema = z.object({
   minProcessingFee: z.number().min(0),
   maxProcessingFee: z.number().min(0),
   minLoginCharges: z.number().min(0),
+  defaultLoginCharges: z.number().min(0),
   maxLoginCharges: z.number().min(0),
   gstApplicable: z.boolean().default(true),
   gstPercentage: z.number().min(0).max(100).optional(),

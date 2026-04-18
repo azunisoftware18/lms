@@ -71,6 +71,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
   const sameAddress = watch(`${prefix}.sameAsCurrent`) ?? false;
   const isCoApplicant = prefix.startsWith("coApplicants.");
   const isGuarantor = prefix.startsWith("guarantors.");
+  const isAadhaarLocked = Boolean(watch(`${prefix}.aadhaarProvider`));
 
   const copyCurrentAddress = useCallback(() => {
     [
@@ -100,13 +101,24 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
           name={`${prefix}.firstName`}
           control={control}
           render={({ field }) => (
-            <InputField label="First Name" isRequired {...field} />
+            <InputField
+              label="First Name"
+              isRequired
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              {...field}
+            />
           )}
         />
         <Controller
           name={`${prefix}.middleName`}
           control={control}
-          render={({ field }) => <InputField label="Middle Name" {...field} />}
+          render={({ field }) => (
+            <InputField
+              label="Middle Name"
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              {...field}
+            />
+          )}
         />
         <Controller
           name={`${prefix}.lastName`}
@@ -115,6 +127,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
             <InputField
               label="Last Name"
               isRequired={isCoApplicant || isGuarantor}
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
               {...field}
             />
           )}
@@ -129,6 +142,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
             <InputField
               label="Father's Name"
               isRequired={isCoApplicant || isGuarantor}
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
               {...field}
             />
           )}
@@ -140,6 +154,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
             <InputField
               label="Mother's Name"
               isRequired={isCoApplicant || isGuarantor}
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
               {...field}
             />
           )}
@@ -147,7 +162,13 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
         <Controller
           name={`${prefix}.woname`}
           control={control}
-          render={({ field }) => <InputField label="W/o" {...field} />}
+          render={({ field }) => (
+            <InputField
+              label="W/o"
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              {...field}
+            />
+          )}
         />
       </Grid>
 
@@ -181,9 +202,9 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
               label="Email Address"
               type="email"
               isRequired={false}
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
               {...field}
               onBlur={() => {
-                // Only validate/show toasts for co-applicants (not guarantors or applicants)
                 if (!isCoApplicant || isGuarantor) return;
                 const v = field.value || "";
                 if (!v) return;
@@ -227,6 +248,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
               label="Date of Birth"
               isRequired={isCoApplicant || isGuarantor}
               type="date"
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
               value={
                 field.value
                   ? new Date(field.value).toISOString().split("T")[0]
@@ -274,6 +296,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
               label="Mobile Number"
               type="tel"
               isRequired={isCoApplicant || isGuarantor}
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
               {...field}
               onChange={(e) =>
                 field.onChange(e.target.value.replace(/\D/g, "").slice(0, 10))
@@ -412,19 +435,37 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
       <Controller
         name={`${prefix}.currentAddress.addressLine1`}
         control={control}
-        render={({ field }) => <InputField label="Address Line 1" {...field} />}
+        render={({ field }) => (
+          <InputField
+            label="Address Line 1"
+            isDisabled={isAadhaarLocked && Boolean(field.value)}
+            {...field}
+          />
+        )}
       />
 
       <Grid cols={3}>
         <Controller
           name={`${prefix}.currentAddress.city`}
           control={control}
-          render={({ field }) => <InputField label="City / Town" {...field} />}
+          render={({ field }) => (
+            <InputField
+              label="City / Town"
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              {...field}
+            />
+          )}
         />
         <Controller
           name={`${prefix}.currentAddress.district`}
           control={control}
-          render={({ field }) => <InputField label="District" {...field} />}
+          render={({ field }) => (
+            <InputField
+              label="District"
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              {...field}
+            />
+          )}
         />
         <Controller
           name={`${prefix}.currentAddress.state`}
@@ -448,6 +489,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
           render={({ field }) => (
             <InputField
               label="Pin Code"
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
               {...field}
               onChange={(e) =>
                 field.onChange(e.target.value.replace(/\D/g, "").slice(0, 6))
@@ -458,13 +500,23 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
         <Controller
           name={`${prefix}.currentAddress.landmark`}
           control={control}
-          render={({ field }) => <InputField label="Land Mark" {...field} />}
+          render={({ field }) => (
+            <InputField
+              label="Land Mark"
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              {...field}
+            />
+          )}
         />
         <Controller
           name={`${prefix}.currentAddress.phoneWithStd`}
           control={control}
           render={({ field }) => (
-            <InputField label="Phone No. (With STD Code)" {...field} />
+            <InputField
+              label="Phone No. (With STD Code)"
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              {...field}
+            />
           )}
         />
       </Grid>
@@ -493,18 +545,36 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
       <Controller
         name={`${prefix}.permanentAddress.addressLine1`}
         control={control}
-        render={({ field }) => <InputField label="Address Line 1" {...field} />}
+        render={({ field }) => (
+          <InputField
+            label="Address Line 1"
+            isDisabled={isAadhaarLocked && Boolean(field.value)}
+            {...field}
+          />
+        )}
       />
       <Grid cols={3}>
         <Controller
           name={`${prefix}.permanentAddress.city`}
           control={control}
-          render={({ field }) => <InputField label="City / Town" {...field} />}
+          render={({ field }) => (
+            <InputField
+              label="City / Town"
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              {...field}
+            />
+          )}
         />
         <Controller
           name={`${prefix}.permanentAddress.district`}
           control={control}
-          render={({ field }) => <InputField label="District" {...field} />}
+          render={({ field }) => (
+            <InputField
+              label="District"
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              {...field}
+            />
+          )}
         />
         <Controller
           name={`${prefix}.permanentAddress.state`}
@@ -527,6 +597,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
           render={({ field }) => (
             <InputField
               label="Pin Code"
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
               {...field}
               onChange={(e) =>
                 field.onChange(e.target.value.replace(/\D/g, "").slice(0, 6))
@@ -537,7 +608,13 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
         <Controller
           name={`${prefix}.permanentAddress.landmark`}
           control={control}
-          render={({ field }) => <InputField label="Land Mark" {...field} />}
+          render={({ field }) => (
+            <InputField
+              label="Land Mark"
+              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              {...field}
+            />
+          )}
         />
       </Grid>
 

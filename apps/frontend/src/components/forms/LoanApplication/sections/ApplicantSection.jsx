@@ -103,6 +103,7 @@ export default function ApplicantSection({
   requiredPaths = new Set(),
 }) {
   const [leadQuery, setLeadQuery] = useState("");
+  const [aadhaarApiResponse, setAadhaarApiResponse] = useState(null);
   const [aadhaarQuery, setAadhaarQuery] = useState("");
   const [aadhaarOtp, setAadhaarOtp] = useState("");
   const [aadhaarOtpSent, setAadhaarOtpSent] = useState(false);
@@ -356,6 +357,12 @@ export default function ApplicantSection({
         otp,
       });
       console.log("[Aadhaar] Verify OTP response:", res);
+      setAadhaarApiResponse(res);
+      try {
+        setValue("applicant.aadhaarProvider", res?.data ?? res);
+      } catch (e) {
+        console.error("Failed to set applicant.aadhaarProvider on form:", e);
+      }
       const profile = extractVerifyProfile(res);
       if (profile) {
         applyAadhaarProfile(profile, val);
@@ -432,26 +439,7 @@ export default function ApplicantSection({
               </div>
             </div>
 
-            {/* {aadhaarOtpSent && (
-              <div className="flex items-end gap-3">
-                <div className="mt-6 flex items-center gap-2">
-                  <Button
-                    type="button"
-                    onClick={() => setShowAadhaarOtpModal(true)}
-                    disabled={searching || aadhaarLoading || aadhaarVerified}
-                  >
-                    {aadhaarVerified ? "Verified" : "Verify OTP"}
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={handleAadhaarSearch}
-                    disabled={searching || aadhaarLoading || !aadhaarVerified}
-                  >
-                    {searching ? "Fetching..." : "Fetch"}
-                  </Button>
-                </div>
-              </div>
-            )} */}
+           
           </div>
 
           <SectionCard title="Personal Information" icon={User}>
@@ -465,7 +453,7 @@ export default function ApplicantSection({
                       label="Title"
                       isRequired
                       options={TITLE_OPTIONS}
-                      isDisabled={isAadhaarDataLocked}
+                      isDisabled={isAadhaarDataLocked && Boolean(field.value)}
                       value={field.value}
                       onChange={field.onChange}
                       error={errors.applicant?.title?.message}
@@ -479,7 +467,7 @@ export default function ApplicantSection({
                     <InputField
                       label="First Name"
                       isRequired
-                      isDisabled={isAadhaarDataLocked}
+                      isDisabled={isAadhaarDataLocked && Boolean(field.value)}
                       {...field}
                       error={errors.applicant?.firstName?.message}
                     />
@@ -491,7 +479,7 @@ export default function ApplicantSection({
                   render={({ field }) => (
                     <InputField
                       label="Middle Name"
-                      isDisabled={isAadhaarDataLocked}
+                      isDisabled={isAadhaarDataLocked && Boolean(field.value)}
                       {...field}
                     />
                   )}
@@ -506,7 +494,7 @@ export default function ApplicantSection({
                     <InputField
                       label="Last Name"
                       isRequired
-                      isDisabled={isAadhaarDataLocked}
+                      isDisabled={isAadhaarDataLocked && Boolean(field.value)}
                       {...field}
                       error={errors.applicant?.lastName?.message}
                     />
@@ -519,7 +507,7 @@ export default function ApplicantSection({
                     <InputField
                       label="Father's Name"
                       isRequired
-                      isDisabled={isAadhaarDataLocked}
+                      isDisabled={isAadhaarDataLocked && Boolean(field.value)}
                       {...field}
                       error={errors.applicant?.fatherName?.message}
                     />
@@ -554,7 +542,7 @@ export default function ApplicantSection({
                       label="Date of Birth"
                       type="date"
                       isRequired
-                      isDisabled={isAadhaarDataLocked}
+                      isDisabled={isAadhaarDataLocked && Boolean(field.value)}
                       {...field}
                       error={errors.applicant?.dob?.message}
                     />
@@ -568,7 +556,7 @@ export default function ApplicantSection({
                       label="Gender"
                       isRequired
                       options={GENDER_OPTIONS}
-                      isDisabled={isAadhaarDataLocked}
+                      isDisabled={isAadhaarDataLocked && Boolean(field.value)}
                       value={field.value}
                       onChange={field.onChange}
                       error={errors.applicant?.gender?.message}
@@ -666,7 +654,7 @@ export default function ApplicantSection({
                     <InputField
                       label="Aadhaar Number"
                       isRequired
-                      isDisabled={isAadhaarDataLocked}
+                      isDisabled={isAadhaarDataLocked && Boolean(field.value)}
                       {...field}
                       onChange={(e) =>
                         field.onChange(
@@ -737,7 +725,7 @@ export default function ApplicantSection({
                   <InputField
                     label="Email Address"
                     type="email"
-                      isDisabled={isAadhaarDataLocked}
+                    isDisabled={isAadhaarDataLocked && Boolean(field.value)}
                     {...field}
                     error={errors.applicant?.email?.message}
                   />

@@ -41,6 +41,13 @@ export const loanTypeSchema = z
       const parsed = Number(value);
       return Number.isNaN(parsed) ? value : parsed;
     }, z.number().min(0).optional()),
+    defaultLoginCharges: z.preprocess((value) => {
+      if (value === "" || value === null || value === undefined)
+        return undefined;
+      const parsed = Number(value);
+      return Number.isNaN(parsed) ? value : parsed;
+    }, z.number().min(0).optional()),
+  
 
     maxLoginCharges: z.preprocess((value) => {
       if (value === "" || value === null || value === undefined)
