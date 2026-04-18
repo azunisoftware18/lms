@@ -82,6 +82,8 @@ partnerRouter.patch(
 partnerRouter.post(
   "/:partnerId/documents/upload",
   validate(partnerIdParamSchema, "params"),
+  // accept multipart/form-data files under the `documents` field
+  upload.array("documents"),
   checkPermissionMiddleware("UPLOAD_PARTNER_DOCUMENT"),
   uploadPartnerDocumentController,
 );

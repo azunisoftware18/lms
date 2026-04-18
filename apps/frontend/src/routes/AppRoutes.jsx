@@ -79,6 +79,7 @@ import BranchManagement from "../app/dashboard/Configuration/BranchManagement.js
 import BranchAdmin from "../app/dashboard/Configuration/BranchAdmin.jsx";
 import EmployeeAddPage from "../app/dashboard/Configuration/EmployeeAddPage.jsx";
 import PartnerAddPage from "../app/dashboard/Configuration/PartnerAddPage.jsx";
+import PartnerCreatePage from "../app/dashboard/Configuration/PartnerCreatePage.jsx";
 
 // Reports pages
 import DueListPage from "../app/dashboard/reports/DueListPage.jsx";
@@ -261,6 +262,7 @@ export default function AppRoutes() {
         <Route path="branch-admin" element={<BranchAdmin />} />
         <Route path="employee" element={<EmployeeAddPage />} />
         <Route path="partner" element={<PartnerAddPage />} />
+        <Route path="partner/add" element={<PartnerCreatePage />} />
         {/* Role management route */}
         <Route path="role-management" element={<RoleManagement />} />
         {/* reports routes */}

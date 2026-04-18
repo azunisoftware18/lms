@@ -42,6 +42,39 @@ function toSingleParam(value: string | string[] | undefined): string {
   return value || "";
 }
 
+function parseDocumentTypes(raw: unknown): string[] {
+  if (Array.isArray(raw)) {
+    return raw.flatMap((item) => parseDocumentTypes(item));
+  }
+
+  if (typeof raw === "string") {
+    const value = raw.trim();
+    if (!value) return [];
+
+    if (value.startsWith("[") && value.endsWith("]")) {
+      try {
+        const parsed = JSON.parse(value);
+        if (Array.isArray(parsed)) {
+          return parsed.map((item) => String(item).trim()).filter(Boolean);
+        }
+      } catch {
+        // fall through and treat as plain string
+      }
+    }
+
+    if (value.includes(",")) {
+      return value
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
+
+    return [value];
+  }
+
+  return [];
+}
+
 // ==================== BASIC PARTNER MANAGEMENT ====================
 
 export const createPartnerController = async (req: Request, res: Response) => {
@@ -61,7 +94,13 @@ export const createPartnerController = async (req: Request, res: Response) => {
     try {
       bodyData = createPartnerSchema.parse(bodyData);
     } catch (zerr: any) {
-      return res.status(400).json({ success: false, message: "Invalid request data", errors: zerr.errors || zerr.message });
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Invalid request data",
+          errors: zerr.errors || zerr.message,
+        });
     }
 
     const { user, partner } = await createPartnerService(bodyData);
@@ -71,13 +110,18 @@ export const createPartnerController = async (req: Request, res: Response) => {
     // inside the `data` payload with key `documentTypes` where each entry corresponds to the file index.
     const files = (req.files as Express.Multer.File[]) || [];
     const rawDocumentTypes = req.body?.documentTypes;
-    let documentTypes: string[] = [];
+    const documentTypes = parseDocumentTypes(rawDocumentTypes);
 
-    if (Array.isArray(rawDocumentTypes)) {
-      documentTypes = rawDocumentTypes;
-    } else if (typeof rawDocumentTypes === "string") {
-      // Multer can send single repeated field as string
-      documentTypes = [rawDocumentTypes];
+    if (
+      files.length > 0 &&
+      documentTypes.length > 0 &&
+      documentTypes.length !== files.length
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid documentTypes payload",
+        errors: `Expected ${files.length} documentTypes, received ${documentTypes.length}`,
+      });
     }
 
     const uploadedDocuments = [] as any[];
@@ -96,14 +140,21 @@ export const createPartnerController = async (req: Request, res: Response) => {
         uploadedDocuments.push(doc);
       } catch (err) {
         // Log and continue with other files
-        logger.error("upload during partner creation failed", sanitizeError(err));
+        logger.error(
+          "upload during partner creation failed",
+          sanitizeError(err),
+        );
       }
     }
 
     res.status(201).json({
       success: true,
       message: "Partner created successfully",
-      data: { user: safeUser, partner, uploadedDocuments },
+      data: {
+        user: safeUser,
+        partner,
+        uploadedDocuments,
+      },
     });
   } catch (error: any) {
     if (error.message && error.message.includes("already exists")) {
@@ -142,7 +193,8 @@ export const getAllPartnersController = async (req: Request, res: Response) => {
 
 export const getPartnerByIdController = async (req: Request, res: Response) => {
   try {
-    const id = typeof req.params.id === "string" ? req.params.id : req.params.id[0];
+    const id =
+      typeof req.params.id === "string" ? req.params.id : req.params.id[0];
     const partner = await getPartnerByIdService(id);
     res.status(200).json({
       success: true,
@@ -162,7 +214,10 @@ export const getPartnerByIdController = async (req: Request, res: Response) => {
   }
 };
 
-export const getPartnerByCodeController = async (req: Request, res: Response) => {
+export const getPartnerByCodeController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const code = toSingleParam(req.params.code);
     const partner = await getPartnerByCodeService(code);
@@ -185,7 +240,8 @@ export const getPartnerByCodeController = async (req: Request, res: Response) =>
 };
 
 export const updatePartnerController = async (req: Request, res: Response) => {
-  const id = typeof req.params.id === "string" ? req.params.id : req.params.id[0];
+  const id =
+    typeof req.params.id === "string" ? req.params.id : req.params.id[0];
   const updateData = req.body;
   try {
     const updatedPartner = await updatePartnerService(id, updateData);
@@ -209,15 +265,69 @@ export const updatePartnerController = async (req: Request, res: Response) => {
 
 // ==================== PARTNER DOCUMENT MANAGEMENT ====================
 
-export const uploadPartnerDocumentController = async (req: Request, res: Response) => {
+export const uploadPartnerDocumentController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
-    const { partnerId, documentType, documentPath } = req.body;
+    const partnerId =
+      toSingleParam(req.params.partnerId) || req.body?.partnerId;
+    const { documentType, documentPath } = req.body;
     const userId = req.user?.id;
+    const files = (req.files as Express.Multer.File[]) || [];
+    const documentTypes = parseDocumentTypes(
+      req.body?.documentTypes ?? documentType,
+    );
 
     if (!userId) {
       return res.status(401).json({
         success: false,
         message: "Unauthorized: User not authenticated",
+      });
+    }
+
+    if (!partnerId) {
+      return res.status(400).json({
+        success: false,
+        message: "Partner ID is required",
+      });
+    }
+
+    if (
+      files.length > 0 &&
+      documentTypes.length > 0 &&
+      documentTypes.length !== files.length
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid documentTypes payload",
+        errors: `Expected ${files.length} documentTypes, received ${documentTypes.length}`,
+      });
+    }
+
+    if (files.length > 0) {
+      const uploadedDocuments = [] as any[];
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const mappedType = documentTypes[i] || "KYC_DOCUMENT";
+
+        const uploaded = await uploadPartnerDocumentService({
+          partnerId,
+          documentType: mappedType,
+          documentPath: file.path,
+          uploadedBy: userId,
+          branchId: req.user?.branchId || "",
+        });
+
+        uploadedDocuments.push(uploaded);
+      }
+
+      return res.status(201).json({
+        success: true,
+        message: "Documents uploaded successfully",
+        data: uploadedDocuments,
+        uploadedDocuments,
       });
     }
 
@@ -247,7 +357,10 @@ export const uploadPartnerDocumentController = async (req: Request, res: Respons
   }
 };
 
-export const getPartnerDocumentsController = async (req: Request, res: Response) => {
+export const getPartnerDocumentsController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const partnerId = toSingleParam(req.params.partnerId);
     const documents = await getPartnerDocumentsService(partnerId);
@@ -266,7 +379,10 @@ export const getPartnerDocumentsController = async (req: Request, res: Response)
   }
 };
 
-export const updateDocumentVerificationController = async (req: Request, res: Response) => {
+export const updateDocumentVerificationController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const documentId = toSingleParam(req.params.documentId);
     const { verificationStatus, rejectionReason } = req.body;
@@ -285,7 +401,10 @@ export const updateDocumentVerificationController = async (req: Request, res: Re
       data: document,
     });
   } catch (error: any) {
-    logger.error("updateDocumentVerificationController error", sanitizeError(error));
+    logger.error(
+      "updateDocumentVerificationController error",
+      sanitizeError(error),
+    );
     res.status(500).json({
       success: false,
       message: "Failed to update document verification",
@@ -294,7 +413,10 @@ export const updateDocumentVerificationController = async (req: Request, res: Re
   }
 };
 
-export const deletePartnerDocumentController = async (req: Request, res: Response) => {
+export const deletePartnerDocumentController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const documentId = toSingleParam(req.params.documentId);
     await deletePartnerDocumentService(documentId);
@@ -312,7 +434,10 @@ export const deletePartnerDocumentController = async (req: Request, res: Respons
   }
 };
 
-export const checkDocumentCompletionController = async (req: Request, res: Response) => {
+export const checkDocumentCompletionController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const partnerId = toSingleParam(req.params.partnerId);
     const completion = await checkPartnerDocumentCompletionService(partnerId);
@@ -322,7 +447,10 @@ export const checkDocumentCompletionController = async (req: Request, res: Respo
       data: completion,
     });
   } catch (error: any) {
-    logger.error("checkDocumentCompletionController error", sanitizeError(error));
+    logger.error(
+      "checkDocumentCompletionController error",
+      sanitizeError(error),
+    );
     res.status(500).json({
       success: false,
       message: "Failed to check document completion",
@@ -333,10 +461,16 @@ export const checkDocumentCompletionController = async (req: Request, res: Respo
 
 // ==================== PARTNER VERIFICATION & KYC ====================
 
-export const generateKYCReportController = async (req: Request, res: Response) => {
+export const generateKYCReportController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const partnerId = toSingleParam(req.params.partnerId);
-    const report = await generateKYCVerificationReportService(partnerId, req.user?.id);
+    const report = await generateKYCVerificationReportService(
+      partnerId,
+      req.user?.id,
+    );
     res.status(200).json({
       success: true,
       message: "KYC report generated successfully",
@@ -352,7 +486,10 @@ export const generateKYCReportController = async (req: Request, res: Response) =
   }
 };
 
-export const approvePartnerKYCController = async (req: Request, res: Response) => {
+export const approvePartnerKYCController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const partnerId = toSingleParam(req.params.partnerId);
     const userId = req.user?.id;
@@ -380,7 +517,10 @@ export const approvePartnerKYCController = async (req: Request, res: Response) =
   }
 };
 
-export const rejectPartnerKYCController = async (req: Request, res: Response) => {
+export const rejectPartnerKYCController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const partnerId = toSingleParam(req.params.partnerId);
     const { rejectionReason } = req.body;
@@ -393,7 +533,11 @@ export const rejectPartnerKYCController = async (req: Request, res: Response) =>
       });
     }
 
-    const partner = await rejectPartnerKYCService(partnerId, rejectionReason, userId);
+    const partner = await rejectPartnerKYCService(
+      partnerId,
+      rejectionReason,
+      userId,
+    );
     res.status(200).json({
       success: true,
       message: "Partner KYC rejected successfully",
@@ -411,18 +555,27 @@ export const rejectPartnerKYCController = async (req: Request, res: Response) =>
 
 // ==================== PARTNER PERFORMANCE & METRICS ====================
 
-export const updatePartnerPerformanceController = async (req: Request, res: Response) => {
+export const updatePartnerPerformanceController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const partnerId = toSingleParam(req.params.partnerId);
     const metrics = req.body;
-    const updated = await updatePartnerPerformanceMetricsService(partnerId, metrics);
+    const updated = await updatePartnerPerformanceMetricsService(
+      partnerId,
+      metrics,
+    );
     res.status(200).json({
       success: true,
       message: "Partner performance metrics updated successfully",
       data: updated,
     });
   } catch (error: any) {
-    logger.error("updatePartnerPerformanceController error", sanitizeError(error));
+    logger.error(
+      "updatePartnerPerformanceController error",
+      sanitizeError(error),
+    );
     res.status(500).json({
       success: false,
       message: "Failed to update partner performance metrics",
@@ -431,7 +584,10 @@ export const updatePartnerPerformanceController = async (req: Request, res: Resp
   }
 };
 
-export const getPartnerDashboardController = async (req: Request, res: Response) => {
+export const getPartnerDashboardController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const partnerId = toSingleParam(req.params.partnerId);
     const dashboard = await getPartnerDashboardService(partnerId);
@@ -452,7 +608,10 @@ export const getPartnerDashboardController = async (req: Request, res: Response)
 
 // ==================== PARTNER LEADS & APPLICATIONS ====================
 
-export const createPartnerLeadController = async (req: Request, res: Response) => {
+export const createPartnerLeadController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const userId = req.user?.id;
     if (!userId) {
@@ -476,21 +635,30 @@ export const createPartnerLeadController = async (req: Request, res: Response) =
   }
 };
 
-export const createPartnerLoanApplicationController = async (req: Request, res: Response) => {
+export const createPartnerLoanApplicationController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     if (!req.user)
       return res.status(401).json({ success: false, message: "Unauthorized" });
-    const loanApplication = await createPartnerLoanApplicationService(req.body, {
-      id: req.user.id,
-      role: req.user.role as Enums.Role,
-    });
+    const loanApplication = await createPartnerLoanApplicationService(
+      req.body,
+      {
+        id: req.user.id,
+        role: req.user.role as Enums.Role,
+      },
+    );
     res.status(201).json({
       success: true,
       message: "Loan application created successfully",
       data: loanApplication,
     });
   } catch (error: any) {
-    logger.error("createPartnerLoanApplicationController error", sanitizeError(error));
+    logger.error(
+      "createPartnerLoanApplicationController error",
+      sanitizeError(error),
+    );
     res.status(500).json({
       success: false,
       message: "Failed to create loan application",
@@ -499,7 +667,10 @@ export const createPartnerLoanApplicationController = async (req: Request, res: 
   }
 };
 
-export const createChildPartnerController = async (req: Request, res: Response) => {
+export const createChildPartnerController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     if (!req.user) {
       return res.status(401).json({ success: false, message: "Unauthorized" });

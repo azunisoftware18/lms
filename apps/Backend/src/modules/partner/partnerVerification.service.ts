@@ -1,5 +1,5 @@
 import { prisma } from "../../db/prismaService.js";
-import type { Partner } from "../../../generated/prisma-client/index.js";
+import type { Partner } from "../../../generated/prisma-client/client.js";
 
 // ==================== VERIFICATION STATUS DEFINITIONS ====================
 
@@ -52,7 +52,8 @@ export function validateAadhaarFormat(aadhaarNumber: string): boolean {
  */
 export function validateGSTINFormat(gstin: string): boolean {
   // GSTIN format: 15 characters
-  const gstinRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+  const gstinRegex =
+    /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
   return gstinRegex.test(gstin.toUpperCase());
 }
 
@@ -80,7 +81,7 @@ export function validateLLPINFormat(llpin: string): boolean {
 export async function verifyPANService(
   partnerId: string,
   panNumber: string,
-  verifiedBy?: string
+  verifiedBy?: string,
 ): Promise<VerificationResult> {
   // Check basic format
   if (!validatePANFormat(panNumber)) {
@@ -131,7 +132,7 @@ export async function verifyPANService(
 export async function verifyGSTINService(
   partnerId: string,
   gstin: string,
-  verifiedBy?: string
+  verifiedBy?: string,
 ): Promise<VerificationResult> {
   if (!validateGSTINFormat(gstin)) {
     return {
@@ -145,10 +146,7 @@ export async function verifyGSTINService(
   // Check for duplicates
   const existingPartner = await prisma.partner.findFirst({
     where: {
-      OR: [
-        { gstinNumber: gstin },
-        { gstNumber: gstin },
-      ],
+      OR: [{ gstinNumber: gstin }, { gstNumber: gstin }],
       id: { not: partnerId },
     },
   });
@@ -186,7 +184,7 @@ export async function verifyBankDetailsService(
   bankName: string,
   accountNumber: string,
   ifscCode: string,
-  verifiedBy?: string
+  verifiedBy?: string,
 ): Promise<VerificationResult> {
   // Validate IFSC code format (4 letters + 0 + 6 characters)
   const ifscRegex = /^[A-Z]{4}0[A-Z0-9]{6}$/;
@@ -235,7 +233,9 @@ export async function verifyBankDetailsService(
 /**
  * Check KYC document completion
  */
-export async function checkKYCDocumentCompletionService(partnerId: string): Promise<VerificationResult> {
+export async function checkKYCDocumentCompletionService(
+  partnerId: string,
+): Promise<VerificationResult> {
   const partner = await prisma.partner.findUnique({
     where: { id: partnerId },
   });
@@ -259,7 +259,8 @@ export async function checkKYCDocumentCompletionService(partnerId: string): Prom
     PUBLIC_LTD: ["PAN", "CIN", "INCORPORATION_CERTIFICATE", "BANK_PROOF"],
   };
 
-  const required = requiredDocuments[partner.constitutionType] || requiredDocuments.INDIVIDUAL;
+  const required =
+    requiredDocuments[partner.constitutionType] || requiredDocuments.INDIVIDUAL;
 
   const uploadedDocs = await prisma.document.count({
     where: {
@@ -285,7 +286,7 @@ export async function checkKYCDocumentCompletionService(partnerId: string): Prom
  */
 export async function generateKYCVerificationReportService(
   partnerId: string,
-  verifiedBy?: string
+  verifiedBy?: string,
 ): Promise<KYCVerificationReport> {
   const partner = await prisma.partner.findUnique({
     where: { id: partnerId },
@@ -310,26 +311,27 @@ export async function generateKYCVerificationReportService(
         timestamp: new Date(),
       };
 
-  const gstVerification = partner.gstinNumber || partner.gstNumber
-    ? validateGSTINFormat(partner.gstinNumber || partner.gstNumber || "")
-      ? {
-          isValid: true,
-          status: partner.gstVerificationStatus,
-          message: "GSTIN format valid",
-          timestamp: new Date(),
-        }
+  const gstVerification =
+    partner.gstinNumber || partner.gstNumber
+      ? validateGSTINFormat(partner.gstinNumber || partner.gstNumber || "")
+        ? {
+            isValid: true,
+            status: partner.gstVerificationStatus,
+            message: "GSTIN format valid",
+            timestamp: new Date(),
+          }
+        : {
+            isValid: false,
+            status: "INVALID_FORMAT",
+            message: "GSTIN format invalid",
+            timestamp: new Date(),
+          }
       : {
-          isValid: false,
-          status: "INVALID_FORMAT",
-          message: "GSTIN format invalid",
+          isValid: true,
+          status: VerificationStatus.PENDING,
+          message: "GSTIN not provided",
           timestamp: new Date(),
-        }
-    : {
-        isValid: true,
-        status: VerificationStatus.PENDING,
-        message: "GSTIN not provided",
-        timestamp: new Date(),
-      };
+        };
 
   const bankVerification = partner.payoutAccountNumber
     ? {
@@ -348,7 +350,8 @@ export async function generateKYCVerificationReportService(
   const documentCompletion = await checkKYCDocumentCompletionService(partnerId);
 
   // Determine overall status
-  let overallStatus: "PENDING" | "VERIFIED" | "REJECTED" | "PARTIAL" = "PENDING";
+  let overallStatus: "PENDING" | "VERIFIED" | "REJECTED" | "PARTIAL" =
+    "PENDING";
 
   if (
     panVerification.status === VerificationStatus.VERIFIED &&
@@ -388,7 +391,7 @@ export async function generateKYCVerificationReportService(
  */
 export async function approvePartnerKYCService(
   partnerId: string,
-  approvedBy: string
+  approvedBy: string,
 ): Promise<Partner> {
   const partner = await prisma.partner.update({
     where: { id: partnerId },
@@ -409,7 +412,7 @@ export async function approvePartnerKYCService(
 export async function rejectPartnerKYCService(
   partnerId: string,
   rejectionReason: string,
-  rejectedBy: string
+  rejectedBy: string,
 ): Promise<Partner> {
   const partner = await prisma.partner.update({
     where: { id: partnerId },

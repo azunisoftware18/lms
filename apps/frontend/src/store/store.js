@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
 import loanTypeReducer from "./slices/loanTypeSlice";
 import branchReducer from "./slices/branchSlice";
+import partnerReducer from "./slices/partnerSlice";
 import branchAdminReducer from "./slices/branchAdminSlice";
 import coApplicationReducer from "./slices/coApplicationSlice";
 import creditReportReducer from "./slices/creditReportSlice";
@@ -20,6 +21,7 @@ export const store = configureStore({
     auth: authReducer,
     loanTypes: loanTypeReducer,
     branch: branchReducer,
+    partner: partnerReducer,
     branchAdmin: branchAdminReducer,
     coApplication: coApplicationReducer,
     creditReport: creditReportReducer,

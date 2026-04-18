@@ -1,19 +1,12 @@
 import { useMemo, useState } from "react";
 import { Edit, Trash2, Download } from "lucide-react";
-import { TableShell, TableBody } from "./core";
+import { TableShell, TableBody, TableHead } from "./core";
 import Pagination from "../common/Pagination";
 import Button from "../ui/Button";
 import SearchField from "../ui/SearchField";
 import FilterDropdown from "../ui/FilterDropdown";
 
-const partnerTypes = [
-  { value: "All", label: "All Types" },
-  { value: "Individual", label: "Individual" },
-  { value: "Company", label: "Company" },
-  { value: "Institution", label: "Institution" },
-  { value: "Corporate", label: "Corporate" },
-  { value: "Agency", label: "Agency" },
-];
+// partnerTypes removed (unused)
 
 const statusOptions = [
   { value: "", label: "All Status" },
@@ -36,7 +29,7 @@ const getPerformanceColor = (rating) => {
 export default function AddPartnerTable({ partners = [], onEdit, onDelete }) {
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
-  const [filterType, setFilterType] = useState("All");
+  const [filterType] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -62,6 +55,8 @@ export default function AddPartnerTable({ partners = [], onEdit, onDelete }) {
       return matchesSearch && matchesStatus && matchesType;
     });
   }, [partners, search, filterStatus, filterType]);
+
+  // table data calculations
 
   const totalPages = Math.max(
     1,
@@ -101,10 +96,7 @@ export default function AddPartnerTable({ partners = [], onEdit, onDelete }) {
     setFilterStatus(value);
   };
 
-  const handleTypeFilterChange = (value) => {
-    setCurrentPage(1);
-    setFilterType(value);
-  };
+  
 
   const columns = [
     {
@@ -227,65 +219,22 @@ export default function AddPartnerTable({ partners = [], onEdit, onDelete }) {
 
   return (
     <TableShell>
-      <thead className="bg-white border-b border-slate-200">
-        <tr>
-          <th colSpan={columns.length + 1} className="px-4 sm:px-6 py-4">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
-              <h2 className="text-sm sm:text-base font-semibold text-slate-700">
-                Partners
-              </h2>
-
-              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 items-stretch sm:items-center">
-                <div className="w-full sm:w-72">
-                  <SearchField
-                    value={search}
-                    onChange={handleSearchChange}
-                    placeholder="Search by company, contact, or ID..."
-                    showResults={false}
-                  />
-                </div>
-
-                <FilterDropdown
-                  value={filterType}
-                  onChange={handleTypeFilterChange}
-                  options={partnerTypes}
-                  placeholder="All Types"
-                  className="w-full sm:w-44"
-                />
-
-                <FilterDropdown
-                  value={filterStatus}
-                  onChange={handleStatusFilterChange}
-                  options={statusOptions}
-                  placeholder="All Status"
-                  className="w-full sm:w-44"
-                />
-
-                <Button
-                  onClick={exportPartners}
-                  className="justify-center whitespace-nowrap"
-                >
-                  <Download size={16} /> Export
-                </Button>
-              </div>
-            </div>
-          </th>
-        </tr>
-
-        <tr className="bg-slate-50 border-t border-slate-200">
-          {columns.map((column) => (
-            <th
-              key={column.accessor}
-              className="px-4 sm:px-6 py-3 sm:py-4 font-semibold text-slate-500 uppercase tracking-wider text-[10px] sm:text-[11px] whitespace-nowrap"
-            >
-              {column.header}
-            </th>
-          ))}
-          <th className="px-4 sm:px-6 py-3 sm:py-4 font-semibold text-slate-500 uppercase tracking-wider text-[10px] sm:text-[11px] text-right whitespace-nowrap">
-            Actions
-          </th>
-        </tr>
-      </thead>
+      <TableHead
+        columns={columns}
+        title="Partners"
+        search={search}
+        setSearch={(e) => handleSearchChange({ target: { value: e } })}
+        filterValue={filterStatus}
+        setFilterValue={handleStatusFilterChange}
+        filterOptions={statusOptions}
+        headerAction={
+          <div className="flex items-center gap-2">
+            <Button onClick={exportPartners} className="justify-center whitespace-nowrap">
+              <Download size={16} /> Export
+            </Button>
+          </div>
+        }
+      />
 
       <TableBody
         columns={columns}

@@ -1,5 +1,5 @@
 import { prisma } from "../../db/prismaService.js";
-import type { Document } from "../../../generated/prisma-client/index.js";
+import type { Document } from "../../../generated/prisma-client/client.js";
 
 // ==================== DOCUMENT TYPE DEFINITIONS ====================
 export enum PartnerDocumentType {
@@ -48,7 +48,9 @@ export interface UpdateDocumentVerificationInput {
 /**
  * Upload a partner document
  */
-export async function uploadPartnerDocumentService(input: UploadPartnerDocumentInput): Promise<Document> {
+export async function uploadPartnerDocumentService(
+  input: UploadPartnerDocumentInput,
+): Promise<Document> {
   // Check if partner exists
   const partner = await prisma.partner.findUnique({
     where: { id: input.partnerId },
@@ -67,7 +69,9 @@ export async function uploadPartnerDocumentService(input: UploadPartnerDocumentI
   });
 
   if (existingDocument) {
-    throw new Error(`Document of type ${input.documentType} already exists for this partner`);
+    throw new Error(
+      `Document of type ${input.documentType} already exists for this partner`,
+    );
   }
 
   // Create new document
@@ -83,7 +87,10 @@ export async function uploadPartnerDocumentService(input: UploadPartnerDocumentI
   });
 
   // Update partner document upload tracking based on document type
-  await updatePartnerDocumentTrackingStatus(input.partnerId, input.documentType);
+  await updatePartnerDocumentTrackingStatus(
+    input.partnerId,
+    input.documentType,
+  );
 
   return document;
 }
@@ -91,7 +98,9 @@ export async function uploadPartnerDocumentService(input: UploadPartnerDocumentI
 /**
  * Get all documents for a partner
  */
-export async function getPartnerDocumentsService(partnerId: string): Promise<Document[]> {
+export async function getPartnerDocumentsService(
+  partnerId: string,
+): Promise<Document[]> {
   const partner = await prisma.partner.findUnique({
     where: { id: partnerId },
   });
@@ -113,7 +122,9 @@ export async function getPartnerDocumentsService(partnerId: string): Promise<Doc
 /**
  * Get a specific document by ID
  */
-export async function getPartnerDocumentByIdService(documentId: string): Promise<Document> {
+export async function getPartnerDocumentByIdService(
+  documentId: string,
+): Promise<Document> {
   const document = await prisma.document.findUnique({
     where: { id: documentId },
   });
@@ -129,7 +140,7 @@ export async function getPartnerDocumentByIdService(documentId: string): Promise
  * Update document verification status
  */
 export async function updateDocumentVerificationService(
-  input: UpdateDocumentVerificationInput
+  input: UpdateDocumentVerificationInput,
 ): Promise<Document> {
   const document = await prisma.document.findUnique({
     where: { id: input.documentId },
@@ -156,7 +167,9 @@ export async function updateDocumentVerificationService(
 /**
  * Delete a partner document
  */
-export async function deletePartnerDocumentService(documentId: string): Promise<void> {
+export async function deletePartnerDocumentService(
+  documentId: string,
+): Promise<void> {
   const document = await prisma.document.findUnique({
     where: { id: documentId },
   });
@@ -229,7 +242,7 @@ export function getRequiredDocuments(constitutionType: string): string[] {
  * Check document completion status for partner
  */
 export async function checkPartnerDocumentCompletionService(
-  partnerId: string
+  partnerId: string,
 ): Promise<{
   requiredDocuments: string[];
   uploadedDocuments: string[];
@@ -258,10 +271,14 @@ export async function checkPartnerDocumentCompletionService(
     })
     .then((docs) => docs.map((d) => d.documentType));
 
-  const missingDocuments = requiredDocuments.filter((doc) => !uploadedDocuments.includes(doc));
+  const missingDocuments = requiredDocuments.filter(
+    (doc) => !uploadedDocuments.includes(doc),
+  );
 
   const completionPercentage =
-    requiredDocuments.length > 0 ? Math.round((uploadedDocuments.length / requiredDocuments.length) * 100) : 100;
+    requiredDocuments.length > 0
+      ? Math.round((uploadedDocuments.length / requiredDocuments.length) * 100)
+      : 100;
 
   return {
     requiredDocuments,
@@ -274,7 +291,10 @@ export async function checkPartnerDocumentCompletionService(
 /**
  * Update partner document tracking status
  */
-async function updatePartnerDocumentTrackingStatus(partnerId: string, documentType: string): Promise<void> {
+async function updatePartnerDocumentTrackingStatus(
+  partnerId: string,
+  documentType: string,
+): Promise<void> {
   const partner = await prisma.partner.findUnique({
     where: { id: partnerId },
   });
@@ -323,7 +343,7 @@ async function updatePartnerDocumentTrackingStatus(partnerId: string, documentTy
  */
 export async function bulkUploadPartnerDocumentsService(
   partnerId: string,
-  documents: UploadPartnerDocumentInput[]
+  documents: UploadPartnerDocumentInput[],
 ): Promise<Document[]> {
   const uploadedDocuments: Document[] = [];
 
