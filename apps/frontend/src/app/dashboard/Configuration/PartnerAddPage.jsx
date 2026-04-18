@@ -92,7 +92,11 @@ export default function PartnerAddPage() {
         const documents = submittedData.documents || [];
         const documentTypes = submittedData.documentTypes || [];
 
-        if (partner?.id && documents.length > 0 && uploadedDocuments.length === 0) {
+        if (
+          partner?.id &&
+          documents.length > 0 &&
+          uploadedDocuments.length === 0
+        ) {
           const form = new FormData();
           documents.forEach((file) => form.append("documents", file));
           if (documentTypes && documentTypes.length > 0) {

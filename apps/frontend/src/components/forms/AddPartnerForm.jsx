@@ -622,7 +622,10 @@ export default function AddPartnerForm({
           documents.forEach((file) => {
             formData.append("documents", file);
           });
-          formData.append("documentTypes", JSON.stringify(selectedDocumentTypes));
+          formData.append(
+            "documentTypes",
+            JSON.stringify(selectedDocumentTypes),
+          );
           result = await createPartner.mutateAsync(formData);
         } else {
           result = await createPartner.mutateAsync(payload);
