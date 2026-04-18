@@ -75,7 +75,9 @@ export async function createPartnerService(body: CreatePartner) {
 
   if (existingUser) {
     if (existingUser.partner) {
-      throw new Error("User with this email already exists and is already a partner");
+      throw new Error(
+        "User with this email already exists and is already a partner",
+      );
     }
 
     user = await prisma.user.update({
@@ -90,7 +92,8 @@ export async function createPartnerService(body: CreatePartner) {
   } else {
     user = await prisma.user.create({
       data: {
-        fullName: body.fullName || body.contactPersonName || body.companyName || "",
+        fullName:
+          body.fullName || body.contactPersonName || body.companyName || "",
         userName: body.userName || body.email.split("@")[0],
         email: body.email,
         password: body.password,
@@ -102,7 +105,8 @@ export async function createPartnerService(body: CreatePartner) {
   }
 
   // Generate partner code if not provided
-  const partnerCode = body.partnerCode || generatePartnerCode(body.partnerType);
+  const partnerCode =
+    body.partnerCode || generatePartnerCode(body.partnerType || "DSA");
 
   const partnerData: Prisma.PartnerCreateInput = {
     user: { connect: { id: user.id } },
@@ -112,11 +116,14 @@ export async function createPartnerService(body: CreatePartner) {
     tradeName: body.tradeName,
     partnerType: (body.partnerType as any) || "DSA",
     constitutionType: (body.constitutionType as any) || "INDIVIDUAL",
-    dateOfOnboarding: body.dateOfOnboarding ? new Date(body.dateOfOnboarding) : new Date(),
+    dateOfOnboarding: body.dateOfOnboarding
+      ? new Date(body.dateOfOnboarding)
+      : new Date(),
     Status: (body.status as any) || "ACTIVE",
 
     // Contact Details
-    contactPersonName: body.contactPersonName || body.contactPerson || user.fullName,
+    contactPersonName:
+      body.contactPersonName || body.contactPerson || user.fullName,
     contactNumber: body.contactNumber || user.contactNumber || "",
     email: body.email,
     alternatePersonName: body.alternatePersonName,
@@ -186,10 +193,10 @@ export async function createPartnerService(body: CreatePartner) {
     paymentCycle: (body.paymentCycle as any) || "MONTHLY",
     minimumPayout: body.minimumPayout,
     taxDeduction: body.taxDeduction,
-    payoutType: (body.payoutType as any),
+    payoutType: body.payoutType as any,
     productPayoutRates: body.productPayoutRates,
     roiProcessingShare: body.roiProcessingShare,
-    payoutFrequency: (body.payoutFrequency as any),
+    payoutFrequency: body.payoutFrequency as any,
     gstApplicable: body.gstApplicable ?? true,
     tdsApplicable: body.tdsApplicable ?? false,
     incentiveSchemes: body.incentiveSchemes,
@@ -219,7 +226,7 @@ export async function createPartnerService(body: CreatePartner) {
     // Don't fail partner creation if addresses fail
   }
 
-  return { user, partner };
+  return { user, partner, };
 }
 
 export async function getAllPartnerService(options: {
@@ -253,6 +260,7 @@ export async function getAllPartnerService(options: {
       addresses: true,
       commission: true,
       branch: true,
+      documents: true,
     },
     orderBy: { createdAt: "desc" },
   });
@@ -293,7 +301,10 @@ export async function getPartnerByCodeService(partnerCode: string) {
   return partner;
 }
 
-export async function updatePartnerService(id: string, updateData: UpdatePartner) {
+export async function updatePartnerService(
+  id: string,
+  updateData: UpdatePartner,
+) {
   // Extract nested user update if provided
   const { user: userUpdate, ...partnerUpdate } = updateData as any;
 
@@ -334,7 +345,7 @@ export async function updatePartnerPerformanceMetricsService(
     fraudCasesCount?: number;
     qualityScore?: number;
     partnerRating?: number;
-  }
+  },
 ) {
   const updated = await prisma.partner.update({
     where: { id },
@@ -359,6 +370,7 @@ export async function createPartnerLeadService(body: any, userId: string) {
         city: body.city || "",
         state: body.state || "",
         pinCode: body.pinCode || "",
+        district: body.district || body.city || "",
       },
     });
     addressId = address.id;
@@ -383,11 +395,17 @@ export async function createPartnerLeadService(body: any, userId: string) {
   return lead;
 }
 
-export async function createPartnerLoanApplicationService(_body: any, _user: { id: string; role: any }) {
+export async function createPartnerLoanApplicationService(
+  _body: any,
+  _user: { id: string; role: any },
+) {
   throw new Error("createPartnerLoanApplicationService not implemented yet");
 }
 
-export async function createChildPartnerService(parentUserId: string, body: CreatePartner) {
+export async function createChildPartnerService(
+  parentUserId: string,
+  body: CreatePartner,
+) {
   const { user, partner } = await createPartnerService(body);
   return { user, partner, parentUserId };
 }
@@ -443,4 +461,3 @@ export async function getPartnerDashboardService(partnerId: string) {
     },
   };
 }
- 

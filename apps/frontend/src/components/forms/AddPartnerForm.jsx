@@ -1,6 +1,25 @@
-import { useMemo, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { User, Building2, Phone, Mail, MapPin, Briefcase, CreditCard, Key, FileText, Banknote, TrendingUp, Shield } from "lucide-react";
+import { useState } from "react";
+import { useForm, Controller, useWatch } from "react-hook-form";
+import {
+  User,
+  Building2,
+  Phone,
+  Mail,
+  MapPin,
+  Briefcase,
+  CreditCard,
+  Key,
+  FileText,
+  Banknote,
+  TrendingUp,
+  Shield,
+  ChevronDown,
+  ChevronUp,
+  Trash2,
+  CheckCircle,
+  XCircle,
+  Image,
+} from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -8,6 +27,7 @@ import InputField from "../ui/InputField";
 import SelectField from "../ui/SelectField";
 import Button from "../ui/Button";
 import { showSuccess, showError } from "../../lib/utils/toastService";
+import { useCreatePartner, useUpdatePartner } from "../../hooks/usePartner";
 
 // Enums from Prisma model
 const PartnerTypeEnum = {
@@ -73,8 +93,23 @@ const partnerSchema = z.object({
   // Basic Info
   legalName: z.string().min(1, "Legal Name is required"),
   tradeName: z.string().optional(),
-  partnerType: z.enum(["DSA", "BROKER", "Connector", "Fintech", "Builder", "Aggregator"]),
-  constitutionType: z.enum(["INDIVIDUAL", "PROPRIETORSHIP", "PARTNERSHIP", "LLP", "PRIVATE_LTD", "PUBLIC_LTD", "OTHER"]),
+  partnerType: z.enum([
+    "DSA",
+    "BROKER",
+    "Connector",
+    "Fintech",
+    "Builder",
+    "Aggregator",
+  ]),
+  constitutionType: z.enum([
+    "INDIVIDUAL",
+    "PROPRIETORSHIP",
+    "PARTNERSHIP",
+    "LLP",
+    "PRIVATE_LTD",
+    "PUBLIC_LTD",
+    "OTHER",
+  ]),
   dateOfOnboarding: z.string().min(1, "Date of Onboarding is required"),
   status: z.enum(["ACTIVE", "INACTIVE", "SUSPENDED", "BLACKLISTED"]),
   branchId: z.string().min(1, "Branch is required"),
@@ -87,7 +122,9 @@ const partnerSchema = z.object({
   alternateContactNumber: z.string().optional(),
 
   // Address
-  addressType: z.enum(["CURRENT_RESIDENTIAL", "PERMANENT", "CORRESPONDENCE", "OFFICE"]).default("OFFICE"),
+  addressType: z
+    .enum(["CURRENT_RESIDENTIAL", "PERMANENT", "CORRESPONDENCE", "OFFICE"])
+    .default("OFFICE"),
   addressLine1: z.string().min(1, "Address Line 1 is required"),
   addressLine2: z.string().optional(),
   landmark: z.string().optional(),
@@ -130,13 +167,21 @@ const partnerSchema = z.object({
   // Commission / Payout
   commissionType: z.enum(["FIXED", "PERCENTAGE"]),
   commissionValue: z.string().optional(),
-  paymentCycle: z.enum(["MONTHLY", "QUARTERLY", "HALF_YEARLY", "YEARLY", "PER_TRANSACTION"]),
+  paymentCycle: z.enum([
+    "MONTHLY",
+    "QUARTERLY",
+    "HALF_YEARLY",
+    "YEARLY",
+    "PER_TRANSACTION",
+  ]),
   minimumPayout: z.string().optional(),
   taxDeduction: z.string().optional(),
   payoutType: z.enum(["FLAT", "PERCENTAGE", "SLAB"]).optional(),
   productPayoutRates: z.string().optional(),
   roiProcessingShare: z.string().optional(),
-  payoutFrequency: z.enum(["MONTHLY", "CASE_WISE", "ON_DISBURSEMENT"]).optional(),
+  payoutFrequency: z
+    .enum(["MONTHLY", "CASE_WISE", "ON_DISBURSEMENT"])
+    .optional(),
   gstApplicable: z.boolean().default(true),
   tdsApplicable: z.boolean().default(false),
   incentiveSchemes: z.string().optional(),
@@ -154,9 +199,9 @@ const partnerSchema = z.object({
 export default function AddPartnerForm({
   initialFormState,
   isEditing,
-  editId,
   onCancel,
   onSuccess,
+  branchOptions = [],
 }) {
   const [documentFiles, setDocumentFiles] = useState({});
 
@@ -166,7 +211,6 @@ export default function AddPartnerForm({
     control,
     setValue,
     getValues,
-    watch,
     formState: { errors, isSubmitting, isValid },
   } = useForm({
     resolver: zodResolver(partnerSchema),
@@ -245,34 +289,147 @@ export default function AddPartnerForm({
     },
   });
 
-  const selectedConstitutionType = watch("constitutionType");
+  const selectedConstitutionType =
+    useWatch({ control, name: "constitutionType" }) || "INDIVIDUAL";
 
-  const requiredDocumentTypes = useMemo(() => {
+  const createPartner = useCreatePartner();
+  const updatePartner = useUpdatePartner();
+
+  const requiredDocumentTypes = (() => {
     const map = {
       INDIVIDUAL: ["PAN", "AADHAAR", "ADDRESS_PROOF", "BANK_PROOF"],
-      PROPRIETORSHIP: ["PAN", "AADHAAR", "REGISTRATION_CERTIFICATE", "GST_CERTIFICATE", "BANK_PROOF"],
-      PARTNERSHIP: ["PAN", "REGISTRATION_CERTIFICATE", "PARTNERSHIP_AGREEMENT", "GSTIN", "BANK_PROOF", "BOARD_RESOLUTION"],
-      LLP: ["PAN", "LLPIN", "CIN", "INCORPORATION_CERTIFICATE", "GSTIN", "BANK_PROOF"],
-      PRIVATE_LTD: ["PAN", "CIN", "INCORPORATION_CERTIFICATE", "GSTIN", "BOARD_RESOLUTION", "BANK_PROOF"],
-      PUBLIC_LTD: ["PAN", "CIN", "INCORPORATION_CERTIFICATE", "GSTIN", "BOARD_RESOLUTION", "BANK_PROOF"],
+      PROPRIETORSHIP: [
+        "PAN",
+        "AADHAAR",
+        "REGISTRATION_CERTIFICATE",
+        "GST_CERTIFICATE",
+        "BANK_PROOF",
+      ],
+      PARTNERSHIP: [
+        "PAN",
+        "REGISTRATION_CERTIFICATE",
+        "PARTNERSHIP_AGREEMENT",
+        "GSTIN",
+        "BANK_PROOF",
+        "BOARD_RESOLUTION",
+      ],
+      LLP: [
+        "PAN",
+        "LLPIN",
+        "CIN",
+        "INCORPORATION_CERTIFICATE",
+        "GSTIN",
+        "BANK_PROOF",
+      ],
+      PRIVATE_LTD: [
+        "PAN",
+        "CIN",
+        "INCORPORATION_CERTIFICATE",
+        "GSTIN",
+        "BOARD_RESOLUTION",
+        "BANK_PROOF",
+      ],
+      PUBLIC_LTD: [
+        "PAN",
+        "CIN",
+        "INCORPORATION_CERTIFICATE",
+        "GSTIN",
+        "BOARD_RESOLUTION",
+        "BANK_PROOF",
+      ],
       OTHER: ["PAN", "ADDRESS_PROOF", "BANK_PROOF"],
     };
 
     return map[selectedConstitutionType] || map.INDIVIDUAL;
-  }, [selectedConstitutionType]);
+  })();
+
+  const allDocumentTypes = [
+    "PAN",
+    "AADHAAR",
+    "GSTIN",
+    "CIN",
+    "LLPIN",
+    "REGISTRATION_CERTIFICATE",
+    "PARTNERSHIP_AGREEMENT",
+    "KYC_DOCUMENT",
+    "GST_CERTIFICATE",
+    "INCORPORATION_CERTIFICATE",
+    "PAN_COPY",
+    "ADDRESS_PROOF",
+    "BANK_PROOF",
+    "CANCELLED_CHEQUE",
+    "BOARD_RESOLUTION",
+    "AUTHORIZATION_LETTER",
+    "AGREEMENT",
+    "NDA",
+    "COMMERCIAL_CIBIL",
+    "CIBIL_CHECK",
+  ];
+
+  // Optional documents (all defined types minus required for the selected constitution)
+  const optionalDocumentTypes = allDocumentTypes.filter(
+    (d) => !requiredDocumentTypes.includes(d),
+  );
+  const [optionalCollapsed, setOptionalCollapsed] = useState(true);
+
+  const [previews, setPreviews] = useState({});
+  const [fileErrors, setFileErrors] = useState({});
+
+  const validateFile = (file) => {
+    if (!file) return { ok: false, error: "No file" };
+    const allowedTypes = [
+      "application/pdf",
+      "image/png",
+      "image/jpeg",
+      "image/jpg",
+    ];
+    if (!allowedTypes.includes(file.type))
+      return { ok: false, error: "Unsupported file type" };
+    const maxBytes = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxBytes)
+      return { ok: false, error: "File too large (max 5MB)" };
+    return { ok: true };
+  };
+
+  const removeDocument = (docType) => {
+    setDocumentFiles((prev) => {
+      const copy = { ...prev };
+      delete copy[docType];
+      return copy;
+    });
+  };
 
   const onDocumentChange = (documentType, event) => {
     const selectedFile = event.target.files?.[0] || null;
-    setDocumentFiles((prev) => ({
+    const res = validateFile(selectedFile);
+    setFileErrors((prev) => ({
       ...prev,
-      [documentType]: selectedFile,
+      [documentType]: res.ok ? null : res.error,
     }));
+    setDocumentFiles((prev) => ({ ...prev, [documentType]: selectedFile }));
+    if (selectedFile && selectedFile.type.startsWith("image/")) {
+      const url = URL.createObjectURL(selectedFile);
+      setPreviews((p) => ({ ...p, [documentType]: url }));
+    } else {
+      setPreviews((p) => ({ ...p, [documentType]: null }));
+    }
+  };
+
+  const onDrop = (documentType, e) => {
+    e.preventDefault();
+    const file = e.dataTransfer?.files?.[0];
+    if (file) {
+      const mockEvent = { target: { files: [file] } };
+      onDocumentChange(documentType, mockEvent);
+    }
   };
 
   const generatePartnerCredentials = () => {
     const legalName = getValues("legalName");
     if (legalName) {
-      const loginId = legalName.toLowerCase().replace(/\s+/g, ".") + Math.floor(Math.random() * 1000);
+      const loginId =
+        legalName.toLowerCase().replace(/\s+/g, ".") +
+        Math.floor(Math.random() * 1000);
       setValue("loginId", loginId);
       showSuccess("Username generated!");
     } else {
@@ -281,13 +438,38 @@ export default function AddPartnerForm({
   };
 
   const onSubmit = async (data) => {
-    const missingDocuments = requiredDocumentTypes.filter((docType) => !documentFiles[docType]);
+    const sanitizeNulls = (value) => {
+      if (value === null) return undefined;
+      if (Array.isArray(value)) {
+        return value
+          .map((item) => sanitizeNulls(item))
+          .filter((item) => item !== undefined);
+      }
+      if (value && typeof value === "object") {
+        const out = {};
+        Object.entries(value).forEach(([k, v]) => {
+          const cleaned = sanitizeNulls(v);
+          if (cleaned !== undefined) {
+            out[k] = cleaned;
+          }
+        });
+        return out;
+      }
+      return value;
+    };
+
+    const missingDocuments = requiredDocumentTypes.filter(
+      (docType) => !documentFiles[docType],
+    );
+
     if (!isEditing && missingDocuments.length > 0) {
-      showError(`Please upload required documents: ${missingDocuments.join(", ")}`);
+      showError(
+        `Please upload required documents: ${missingDocuments.join(", ")}`,
+      );
       return;
     }
 
-    const payload = {
+    const rawPayload = {
       // Required user fields
       fullName: data.contactPersonName,
       email: data.email,
@@ -303,13 +485,13 @@ export default function AddPartnerForm({
       constitutionType: data.constitutionType,
       dateOfOnboarding: data.dateOfOnboarding,
       status: data.status,
-      
+
       // Contact Details
       contactPersonName: data.contactPersonName,
       contactNumber: data.contactNumber,
       alternatePersonName: data.alternatePersonName || null,
       alternateContactNumber: data.alternateContactNumber || null,
-      
+
       // Address details
       currentAddressLine1: data.addressLine1,
       currentCity: data.city,
@@ -319,13 +501,13 @@ export default function AddPartnerForm({
       permanentCity: data.city,
       permanentState: data.state,
       permanentPinCode: data.pinCode,
-      
+
       // KYC & Verification
       panNumber: data.panNumber,
       aadhaarNumber: data.aadhaarNumber,
       cinNumber: data.cinNumber || null,
       llpinNumber: data.llpinNumber || null,
-      
+
       // Verification Status (defaults)
       panVerificationStatus: "pending",
       gstVerificationStatus: "pending",
@@ -333,122 +515,210 @@ export default function AddPartnerForm({
       kycDocumentsUploaded: false,
       commercialCibilUploaded: false,
       cibilCheckUploaded: false,
-      
+
       // Banking
       payoutBankName: data.payoutBankName,
       payoutAccountHolderName: data.payoutAccountHolderName,
       payoutAccountNumber: data.payoutAccountNumber,
       payoutIfscCode: data.payoutIfscCode,
       payoutUpiId: data.payoutUpiId || null,
-      
+
       // Login Credentials
       loginId: data.loginId,
-      
-      // Business Profile
-      natureOfBusiness: data.natureOfBusiness || null,
-      yearsInBusiness: data.yearsInBusiness ? parseInt(data.yearsInBusiness) : null,
+
+      // Business Profile (map to backend field names)
+      businessNature: data.natureOfBusiness || null,
+      yearsInBusiness: data.yearsInBusiness
+        ? parseInt(data.yearsInBusiness)
+        : null,
       productExpertise: data.productExpertise || null,
-      monthlySourcingVolume: data.monthlySourcingVolume ? parseInt(data.monthlySourcingVolume) : null,
+      monthlySourcingVolume: data.monthlySourcingVolume
+        ? parseInt(data.monthlySourcingVolume)
+        : null,
       geographicCoverage: data.geographicCoverage || null,
       existingLenderRelationships: data.existingLenderRelationships || null,
-      totalEmployees: data.totalEmployees ? parseInt(data.totalEmployees) : null,
+      totalEmployees: data.totalEmployees
+        ? parseInt(data.totalEmployees)
+        : null,
       digitalApiIntegration: data.digitalApiIntegration,
-      
+
       // GST
       gstNumber: data.gstNumber || null,
-      
+
       // Commission / Payout
       commissionType: data.commissionType,
-      commissionValue: data.commissionValue ? parseFloat(data.commissionValue) : null,
+      commissionValue: data.commissionValue
+        ? parseFloat(data.commissionValue)
+        : null,
       paymentCycle: data.paymentCycle,
       minimumPayout: data.minimumPayout ? parseFloat(data.minimumPayout) : null,
       taxDeduction: data.taxDeduction ? parseFloat(data.taxDeduction) : null,
       payoutType: data.payoutType || null,
       productPayoutRates: (() => {
         try {
-          return data.productPayoutRates ? JSON.parse(data.productPayoutRates) : null;
+          return data.productPayoutRates
+            ? JSON.parse(data.productPayoutRates)
+            : null;
         } catch {
           return null;
         }
       })(),
-      roiProcessingShare: data.roiProcessingShare ? parseFloat(data.roiProcessingShare) : null,
+      roiProcessingShare: data.roiProcessingShare
+        ? parseFloat(data.roiProcessingShare)
+        : null,
       payoutFrequency: data.payoutFrequency || null,
       gstApplicable: data.gstApplicable,
       tdsApplicable: data.tdsApplicable,
       incentiveSchemes: (() => {
         try {
-          return data.incentiveSchemes ? JSON.parse(data.incentiveSchemes) : null;
+          return data.incentiveSchemes
+            ? JSON.parse(data.incentiveSchemes)
+            : null;
         } catch {
           return null;
         }
       })(),
       clawbackTerms: data.clawbackTerms || null,
       maxPayoutCap: data.maxPayoutCap ? parseFloat(data.maxPayoutCap) : null,
-      
+
       // Business Metrics
-      establishedYear: data.establishedYear ? parseInt(data.establishedYear) : null,
+      establishedYear: data.establishedYear
+        ? parseInt(data.establishedYear)
+        : null,
       specialization: data.specialization || null,
-      annualTurnover: data.annualTurnover ? parseFloat(data.annualTurnover) : null,
+      annualTurnover: data.annualTurnover
+        ? parseFloat(data.annualTurnover)
+        : null,
       businessRegistrationNumber: data.businessRegistrationNumber || null,
       targetArea: data.targetArea || null,
-      
-      // Performance Tracking (defaults)
-      totalReferrals: 0,
-      activeReferrals: 0,
-      commissionEarned: 0,
-      totalLeadsSubmitted: 0,
-      loginToSanctionRatio: null,
-      sanctionToDisbursementRatio: null,
-      disbursementVolume: 0,
-      rejectionRate: null,
-      fraudCasesCount: 0,
-      qualityScore: null,
-      partnerRating: 0,
-      
+
+      // Performance Tracking: omitted — backend calculates these
+
       // Organization
       isActive: true,
     };
 
+    const payload = sanitizeNulls(rawPayload);
+
     console.log("Submitting payload:", payload);
 
-    const selectedDocumentTypes = requiredDocumentTypes.filter((docType) => !!documentFiles[docType]);
-    const documents = selectedDocumentTypes.map((docType) => documentFiles[docType]);
+    const selectedDocumentTypes = Object.keys(documentFiles).filter(
+      (docType) => !!documentFiles[docType],
+    );
+    const documents = selectedDocumentTypes.map(
+      (docType) => documentFiles[docType],
+    );
 
-    if (onSuccess) {
-      onSuccess({
-        partnerData: payload,
-        documents,
-        documentTypes: selectedDocumentTypes,
-      });
+    try {
+      let result;
+
+      if (isEditing) {
+        const id = initialFormState?.id || initialFormState?.partnerId;
+        result = await updatePartner.mutateAsync({ id, data: payload });
+      } else {
+        if (documents.length > 0) {
+          const formData = new FormData();
+          formData.append("data", JSON.stringify(payload));
+          documents.forEach((file) => {
+            formData.append("documents", file);
+          });
+          formData.append("documentTypes", JSON.stringify(selectedDocumentTypes));
+          result = await createPartner.mutateAsync(formData);
+        } else {
+          result = await createPartner.mutateAsync(payload);
+        }
+      }
+
+      if (onSuccess) {
+        const partnerPayload =
+          result?.data?.partner || result?.data || result || payload;
+        onSuccess({
+          partnerData: partnerPayload,
+          documents: documents,
+          documentTypes: selectedDocumentTypes,
+          uploadedDocuments: result?.data?.uploadedDocuments || [],
+        });
+      }
+    } catch (err) {
+      const message = err?.message || "Failed to save partner";
+      showError(message);
+      return;
     }
   };
 
-  const partnerTypeOptions = Object.entries(PartnerTypeEnum).map(([key, value]) => ({ value, label: value.charAt(0) + value.slice(1).toLowerCase() }));
-  const constitutionTypeOptions = Object.entries(ConstitutionTypeEnum).map(([key, value]) => ({ 
-    value, 
-    label: value === "PRIVATE_LTD" ? "Private Limited" : 
-           value === "PUBLIC_LTD" ? "Public Limited" :
-           value === "PROPRIETORSHIP" ? "Proprietorship" :
-           value === "PARTNERSHIP" ? "Partnership" :
-           value === "LLP" ? "LLP" :
-           value === "INDIVIDUAL" ? "Individual" :
-           value === "OTHER" ? "Other" : value
+  const partnerTypeOptions = Object.entries(PartnerTypeEnum).map(
+    ([, value]) => ({
+      value,
+      label: value.charAt(0) + value.slice(1).toLowerCase(),
+    }),
+  );
+  const constitutionTypeOptions = Object.entries(ConstitutionTypeEnum).map(
+    ([, value]) => ({
+      value,
+      label:
+        value === "PRIVATE_LTD"
+          ? "Private Limited"
+          : value === "PUBLIC_LTD"
+            ? "Public Limited"
+            : value === "PROPRIETORSHIP"
+              ? "Proprietorship"
+              : value === "PARTNERSHIP"
+                ? "Partnership"
+                : value === "LLP"
+                  ? "LLP"
+                  : value === "INDIVIDUAL"
+                    ? "Individual"
+                    : value === "OTHER"
+                      ? "Other"
+                      : value,
+    }),
+  );
+  const statusOptions = Object.entries(PartnerStatusEnum).map(([, value]) => ({
+    value,
+    label: value
+      .replace("_", " ")
+      .toLowerCase()
+      .replace(/\b\w/g, (l) => l.toUpperCase()),
   }));
-  const statusOptions = Object.entries(PartnerStatusEnum).map(([key, value]) => ({ value, label: value.replace("_", " ").toLowerCase().replace(/\b\w/g, l => l.toUpperCase()) }));
-  const commissionTypeOptions = Object.entries(CommissionTypeEnum).map(([key, value]) => ({ value, label: value.charAt(0) + value.slice(1).toLowerCase() }));
-  const paymentCycleOptions = Object.entries(PaymentCycleEnum).map(([key, value]) => ({ value, label: value.replace("_", " ").toLowerCase().replace(/\b\w/g, l => l.toUpperCase()) }));
-  const payoutTypeOptions = Object.entries(PayoutTypeEnum).map(([key, value]) => ({ value, label: value.charAt(0) + value.slice(1).toLowerCase() }));
-  const payoutFrequencyOptions = Object.entries(PayoutFrequencyEnum).map(([key, value]) => ({ value, label: value.charAt(0) + value.slice(1).toLowerCase() }));
+  const commissionTypeOptions = Object.entries(CommissionTypeEnum).map(
+    ([, value]) => ({
+      value,
+      label: value.charAt(0) + value.slice(1).toLowerCase(),
+    }),
+  );
+  const paymentCycleOptions = Object.entries(PaymentCycleEnum).map(
+    ([, value]) => ({
+      value,
+      label: value
+        .replace("_", " ")
+        .toLowerCase()
+        .replace(/\b\w/g, (l) => l.toUpperCase()),
+    }),
+  );
+  const payoutTypeOptions = Object.entries(PayoutTypeEnum).map(([, value]) => ({
+    value,
+    label: value.charAt(0) + value.slice(1).toLowerCase(),
+  }));
+  const payoutFrequencyOptions = Object.entries(PayoutFrequencyEnum).map(
+    ([, value]) => ({
+      value,
+      label: value.charAt(0) + value.slice(1).toLowerCase(),
+    }),
+  );
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-      <form onSubmit={handleSubmit(onSubmit)} className="p-8" autoComplete="off">
-        
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="p-8"
+        autoComplete="off"
+      >
         {/* Basic Information Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="md:col-span-3 pb-2 border-b border-gray-100 mb-2">
             <h3 className="font-bold text-gray-800 flex items-center gap-2">
-              <Building2 size={18} className="text-blue-500" /> Basic Information
+              <Building2 size={18} className="text-blue-500" /> Basic
+              Information
             </h3>
           </div>
 
@@ -517,13 +787,29 @@ export default function AddPartnerForm({
             )}
           />
 
-          <InputField
-            label="Branch ID"
-            {...register("branchId")}
-            error={errors.branchId?.message}
-            isRequired
-            placeholder="Enter branch ID"
-          />
+          {Array.isArray(branchOptions) && branchOptions.length > 0 ? (
+            <Controller
+              name="branchId"
+              control={control}
+              render={({ field }) => (
+                <SelectField
+                  label="Branch"
+                  options={branchOptions}
+                  value={field.value}
+                  onChange={field.onChange}
+                  isRequired
+                />
+              )}
+            />
+          ) : (
+            <InputField
+              label="Branch Name"
+              {...register("branchId")}
+              error={errors.branchId?.message}
+              isRequired
+              placeholder="Enter branch name"
+            />
+          )}
         </div>
 
         {/* Contact Details Section */}
@@ -590,7 +876,13 @@ export default function AddPartnerForm({
             render={({ field }) => (
               <SelectField
                 label="Address Type"
-                options={Object.entries(AddressTypeEnum).map(([key, value]) => ({ value, label: value.replace(/_/g, " ").toLowerCase().replace(/\b\w/g, l => l.toUpperCase()) }))}
+                options={Object.entries(AddressTypeEnum).map(([, value]) => ({
+                  value,
+                  label: value
+                    .replace(/_/g, " ")
+                    .toLowerCase()
+                    .replace(/\b\w/g, (l) => l.toUpperCase()),
+                }))}
                 value={field.value}
                 onChange={field.onChange}
                 isRequired
@@ -767,72 +1059,178 @@ export default function AddPartnerForm({
           />
         </div>
 
-        {/* Login Credentials Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-          <div className="md:col-span-3 pb-2 border-b border-gray-100 mb-2">
-            <h3 className="font-bold text-gray-800 flex items-center gap-2">
-              <Key size={18} className="text-blue-500" /> Login Credentials
-            </h3>
-          </div>
-
-          <InputField
-            label="Username"
-            {...register("loginId")}
-            error={errors.loginId?.message}
-            isRequired
-            placeholder="Create username"
-            icon={User}
-            autoComplete="off"
-          />
-
-          <InputField
-            label="Password"
-            type="password"
-            {...register("password")}
-            error={errors.password?.message}
-            isRequired
-            placeholder="Minimum 8 characters"
-            autoComplete="new-password"
-          />
-
-          <div className="md:col-span-2 flex items-end">
-            <Button
-              type="button"
-              onClick={generatePartnerCredentials}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              <Key size={16} className="mr-2" /> Generate Username
-            </Button>
-          </div>
-        </div>
+        {/* Login Credentials Section (moved later) */}
 
         {/* Required Document Upload Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
           <div className="md:col-span-3 pb-2 border-b border-gray-100 mb-2">
             <h3 className="font-bold text-gray-800 flex items-center gap-2">
-              <FileText size={18} className="text-blue-500" /> Required Documents Upload
+              <FileText size={18} className="text-blue-500" /> Required
+              Documents Upload
+              <span className="ml-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium bg-blue-50 text-blue-700 rounded">
+                {requiredDocumentTypes.length} required
+              </span>
             </h3>
             <p className="text-xs text-gray-500 mt-1">
-              Upload all required documents based on selected constitution type.
+              Upload all required and Optional documents based on selected
+              constitution type.
             </p>
+
+            {/* <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3"> 
+              {requiredDocumentTypes.map((d) => (
+                <div key={d} className="flex items-center gap-2 text-sm">
+                  {documentFiles[d] ? <CheckCircle className="text-green-500" size={16} /> : <XCircle className="text-slate-300" size={16} />}
+                  <span className="text-sm">{d.replace(/_/g, " ")}</span>
+                </div>
+              ))}
+            </div> */}
+          </div>
+          {/* Required documents grid */}
+          <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {requiredDocumentTypes.map((docType) => {
+              return (
+                <div
+                  key={docType}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => onDrop(docType, e)}
+                  className="border border-red-300 bg-red-50/40  p-3 rounded-md"
+                >
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {docType.replace(/_/g, " ")}{" "}
+                    <span className="text-red-500">*</span>
+                  </label>
+
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="file"
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      onChange={(event) => onDocumentChange(docType, event)}
+                      className="block w-full text-sm text-gray-700 file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                    />
+                    {previews[docType] ? (
+                      <img
+                        src={previews[docType]}
+                        alt="preview"
+                        className="w-12 h-12 object-cover rounded"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 bg-slate-50 rounded flex items-center justify-center text-slate-400">
+                        <Image size={20} />
+                      </div>
+                    )}
+                  </div>
+
+                  {fileErrors[docType] ? (
+                    <p className="text-xs text-red-600 mt-2">
+                      {fileErrors[docType]}
+                    </p>
+                  ) : null}
+
+                  {documentFiles[docType] ? (
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="text-xs text-green-600">
+                        {documentFiles[docType].name}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="text-green-500" size={14} />
+                        <button
+                          type="button"
+                          onClick={() => removeDocument(docType)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
           </div>
 
-          {requiredDocumentTypes.map((docType) => (
-            <div key={docType}>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {docType.replace(/_/g, " ")}
-              </label>
-              <input
-                type="file"
-                accept=".pdf,.jpg,.jpeg,.png"
-                onChange={(event) => onDocumentChange(docType, event)}
-                className="block w-full text-sm text-gray-700 file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-              />
-              {documentFiles[docType] ? (
-                <p className="text-xs text-green-600 mt-1">{documentFiles[docType].name}</p>
-              ) : null}
+          {/* Optional documents grid */}
+          <div className="md:col-span-3 mt-6">
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="text-md font-semibold text-gray-700">
+                Optional Documents
+              </h4>
+              <button
+                type="button"
+                onClick={() => setOptionalCollapsed((s) => !s)}
+                className="flex items-center gap-2 text-lg px-2 rounded py-1 bg-blue-600 "
+              >
+                <span className="  rounded  bg-blue-600 ">
+                  {optionalDocumentTypes.length} optional
+                </span>
+                {optionalCollapsed ? (
+                  <ChevronDown size={16} />
+                ) : (
+                  <ChevronUp size={16} />
+                )}
+              </button>
             </div>
-          ))}
+
+            {!optionalCollapsed && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+                {optionalDocumentTypes.map((docType) => (
+                  <div
+                    key={docType}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={(e) => onDrop(docType, e)}
+                    className="border border-blue-400 p-3 rounded-md bg-blue-100"
+                  >
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      {docType.replace(/_/g, " ")}{" "}
+                      <span className="text-xs text-gray-500"></span>
+                    </label>
+                    <div className="flex items-center gap-3 ">
+                      <input
+                        type="file"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        onChange={(event) => onDocumentChange(docType, event)}
+                        className="block w-full text-sm text-gray-700 file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-slate-50 file:text-slate-700 hover:file:bg-slate-100"
+                      />
+                      {previews[docType] ? (
+                        <img
+                          src={previews[docType]}
+                          alt="preview"
+                          className="w-12 h-12 object-cover rounded"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 bg-slate-50 rounded flex items-center justify-center text-slate-400">
+                          <Image size={20} />
+                        </div>
+                      )}
+                    </div>
+
+                    {fileErrors[docType] ? (
+                      <p className="text-xs text-red-600 mt-2">
+                        {fileErrors[docType]}
+                      </p>
+                    ) : null}
+
+                    {documentFiles[docType] ? (
+                      <div className="flex items-center justify-between mt-2">
+                        <p className="text-xs text-green-600">
+                          {documentFiles[docType].name}
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="text-green-500" size={14} />
+                          <button
+                            type="button"
+                            onClick={() => removeDocument(docType)}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Business Profile Section */}
@@ -895,7 +1293,9 @@ export default function AddPartnerForm({
                 {...register("digitalApiIntegration")}
                 className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
               />
-              <span className="text-sm text-gray-700">Digital API Integration Available</span>
+              <span className="text-sm text-gray-700">
+                Digital API Integration Available
+              </span>
             </label>
           </div>
         </div>
@@ -904,7 +1304,8 @@ export default function AddPartnerForm({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
           <div className="md:col-span-3 pb-2 border-b border-gray-100 mb-2">
             <h3 className="font-bold text-gray-800 flex items-center gap-2">
-              <TrendingUp size={18} className="text-blue-500" /> Business Metrics
+              <TrendingUp size={18} className="text-blue-500" /> Business
+              Metrics
             </h3>
           </div>
 
@@ -946,7 +1347,8 @@ export default function AddPartnerForm({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
           <div className="md:col-span-3 pb-2 border-b border-gray-100 mb-2">
             <h3 className="font-bold text-gray-800 flex items-center gap-2">
-              <Banknote size={18} className="text-blue-500" /> Commission & Payout
+              <Banknote size={18} className="text-blue-500" /> Commission &
+              Payout
             </h3>
           </div>
 
@@ -1016,12 +1418,6 @@ export default function AddPartnerForm({
           />
 
           <InputField
-            label="Product Payout Rates (JSON)"
-            {...register("productPayoutRates")}
-            placeholder='{"HL": 0.5, "PL": 0.3}'
-          />
-
-          <InputField
             label="ROI Processing Share (%)"
             {...register("roiProcessingShare")}
             type="number"
@@ -1064,12 +1460,6 @@ export default function AddPartnerForm({
           </div>
 
           <InputField
-            label="Incentive Schemes (JSON)"
-            {...register("incentiveSchemes")}
-            placeholder='{"scheme1": 1000, "scheme2": 2000}'
-          />
-
-          <InputField
             label="Clawback Terms"
             {...register("clawbackTerms")}
             placeholder="e.g. 6 months clawback period"
@@ -1084,22 +1474,71 @@ export default function AddPartnerForm({
         </div>
 
         {/* Form Actions */}
-        <div className="mt-8 flex justify-between pt-6 border-t border-gray-100">
-          <Button
-            type="button"
-            onClick={onCancel}
-            className="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 shadow-none"
-          >
-            Cancel
-          </Button>
+        <div className="mt-8 pt-6 border-t border-gray-100">
+          {/* Login Credentials Section (moved here) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+            <div className="md:col-span-3 pb-2 border-b border-gray-100 mb-2">
+              <h3 className="font-bold text-gray-800 flex items-center gap-2">
+                <Key size={18} className="text-blue-500" /> Login Credentials
+              </h3>
+            </div>
 
-          <Button
-            type="submit"
-            disabled={!isValid || isSubmitting}
-            className="bg-green-600 hover:bg-green-700 text-white"
-          >
-            {isSubmitting ? "Processing..." : (isEditing ? "Update Partner" : "Add Partner")}
-          </Button>
+            <div className="md:col-span-1">
+              <InputField
+                label="Username"
+                {...register("loginId")}
+                error={errors.loginId?.message}
+                isRequired
+                placeholder="Create username"
+                icon={User}
+                autoComplete="off"
+              />
+            </div>
+
+            <div className="md:col-span-1">
+              <InputField
+                label="Password"
+                type="password"
+                {...register("password")}
+                error={errors.password?.message}
+                isRequired
+                placeholder="Minimum 8 characters"
+                autoComplete="new-password"
+              />
+            </div>
+
+            <div className="md:col-span-1 flex items-end">
+              <Button
+                type="button"
+                onClick={generatePartnerCredentials}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <Key size={16} className="mr-2" /> Generate Username
+              </Button>
+            </div>
+          </div>
+
+          <div className="mt-6 flex justify-end gap-4">
+            <Button
+              type="button"
+              onClick={onCancel}
+              className="bg-red-600 border border-slate-300 text-slate-700 hover:bg-red-700 shadow-none"
+            >
+              Cancel
+            </Button>
+
+            <Button
+              type="submit"
+              disabled={!isValid || isSubmitting}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              {isSubmitting
+                ? "Processing..."
+                : isEditing
+                  ? "Update Partner"
+                  : "Add Partner"}
+            </Button>
+          </div>
         </div>
       </form>
     </div>

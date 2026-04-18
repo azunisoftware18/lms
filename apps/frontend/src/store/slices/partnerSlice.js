@@ -33,14 +33,23 @@ const partnerSlice = createSlice({
     },
 
     setPartners: (state, action) => {
-      if (Array.isArray(action.payload)) {
-        state.partners = action.payload;
+      const payload = action.payload;
+      // Normalize possible response shapes and guard against undefined (e.g., 304 responses)
+      if (!payload) {
+        state.partners = [];
         state.meta = null;
-      } else if (action.payload?.data) {
-        state.partners = action.payload.data;
-        state.meta = action.payload.meta || null;
+      } else if (Array.isArray(payload)) {
+        state.partners = payload;
+        state.meta = null;
+      } else if (Array.isArray(payload.data)) {
+        state.partners = payload.data;
+        state.meta = payload.meta || null;
+      } else if (Array.isArray(payload?.data?.data)) {
+        // handle double-wrapped payloads
+        state.partners = payload.data.data;
+        state.meta = payload.data.meta || null;
       } else {
-        state.partners = action.payload;
+        state.partners = [];
         state.meta = null;
       }
       state.loading = false;

@@ -35,7 +35,7 @@ export interface CreatePartner {
   contactPerson?: string;
   contactPersonName?: string;
   contactNumber: string;
-  email: string;
+  
 
   // Secondary Contact
   alternatePersonName?: string;

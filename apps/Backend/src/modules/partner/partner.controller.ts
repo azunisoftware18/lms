@@ -42,6 +42,41 @@ function toSingleParam(value: string | string[] | undefined): string {
   return value || "";
 }
 
+function parseDocumentTypes(raw: unknown): string[] {
+  if (Array.isArray(raw)) {
+    return raw.flatMap((item) => parseDocumentTypes(item));
+  }
+
+  if (typeof raw === "string") {
+    const value = raw.trim();
+    if (!value) return [];
+
+    if (value.startsWith("[") && value.endsWith("]")) {
+      try {
+        const parsed = JSON.parse(value);
+        if (Array.isArray(parsed)) {
+          return parsed
+            .map((item) => String(item).trim())
+            .filter(Boolean);
+        }
+      } catch {
+        // fall through and treat as plain string
+      }
+    }
+
+    if (value.includes(",")) {
+      return value
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
+
+    return [value];
+  }
+
+  return [];
+}
+
 // ==================== BASIC PARTNER MANAGEMENT ====================
 
 export const createPartnerController = async (req: Request, res: Response) => {
@@ -71,13 +106,18 @@ export const createPartnerController = async (req: Request, res: Response) => {
     // inside the `data` payload with key `documentTypes` where each entry corresponds to the file index.
     const files = (req.files as Express.Multer.File[]) || [];
     const rawDocumentTypes = req.body?.documentTypes;
-    let documentTypes: string[] = [];
+    const documentTypes = parseDocumentTypes(rawDocumentTypes);
 
-    if (Array.isArray(rawDocumentTypes)) {
-      documentTypes = rawDocumentTypes;
-    } else if (typeof rawDocumentTypes === "string") {
-      // Multer can send single repeated field as string
-      documentTypes = [rawDocumentTypes];
+    if (
+      files.length > 0 &&
+      documentTypes.length > 0 &&
+      documentTypes.length !== files.length
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid documentTypes payload",
+        errors: `Expected ${files.length} documentTypes, received ${documentTypes.length}`,
+      });
     }
 
     const uploadedDocuments = [] as any[];
@@ -103,7 +143,12 @@ export const createPartnerController = async (req: Request, res: Response) => {
     res.status(201).json({
       success: true,
       message: "Partner created successfully",
-      data: { user: safeUser, partner, uploadedDocuments },
+      data: {
+        user: safeUser,
+        partner,
+        uploadedDocuments,
+       
+      },
     });
   } catch (error: any) {
     if (error.message && error.message.includes("already exists")) {
@@ -211,13 +256,61 @@ export const updatePartnerController = async (req: Request, res: Response) => {
 
 export const uploadPartnerDocumentController = async (req: Request, res: Response) => {
   try {
-    const { partnerId, documentType, documentPath } = req.body;
+    const partnerId = toSingleParam(req.params.partnerId) || req.body?.partnerId;
+    const { documentType, documentPath } = req.body;
     const userId = req.user?.id;
+    const files = (req.files as Express.Multer.File[]) || [];
+    const documentTypes = parseDocumentTypes(req.body?.documentTypes ?? documentType);
 
     if (!userId) {
       return res.status(401).json({
         success: false,
         message: "Unauthorized: User not authenticated",
+      });
+    }
+
+    if (!partnerId) {
+      return res.status(400).json({
+        success: false,
+        message: "Partner ID is required",
+      });
+    }
+
+    if (
+      files.length > 0 &&
+      documentTypes.length > 0 &&
+      documentTypes.length !== files.length
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid documentTypes payload",
+        errors: `Expected ${files.length} documentTypes, received ${documentTypes.length}`,
+      });
+    }
+
+    if (files.length > 0) {
+      const uploadedDocuments = [] as any[];
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const mappedType = documentTypes[i] || "KYC_DOCUMENT";
+
+        const uploaded = await uploadPartnerDocumentService({
+          partnerId,
+          documentType: mappedType,
+          documentPath: file.path,
+          uploadedBy: userId,
+          branchId: req.user?.branchId || "",
+        });
+
+        uploadedDocuments.push(uploaded);
+      }
+
+      return res.status(201).json({
+        success: true,
+        message: "Documents uploaded successfully",
+        data: uploadedDocuments,
+        uploadedDocuments,
       });
     }
 
