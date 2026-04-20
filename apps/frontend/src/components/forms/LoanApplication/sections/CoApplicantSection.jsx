@@ -10,6 +10,7 @@ import {
   showSuccess,
 } from "../../../../lib/utils/toastService";
 import { useAadhaar } from "../../../../hooks/useAadhaar";
+import { usePanDetails } from "../../../../hooks/usePan";
 import {
   SectionCard,
   PersonPersonalFields,
@@ -74,6 +75,66 @@ const extractVerifyProfile = (response) => {
   return null;
 };
 
+const splitFullName = (value) => {
+  const parts = String(value || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+
+  return {
+    firstName: parts[0] || "",
+    middleName: parts.length > 2 ? parts.slice(1, -1).join(" ") : "",
+    lastName: parts.length > 1 ? parts[parts.length - 1] : "",
+  };
+};
+
+const normalizePanProfile = (response) => {
+  const root = response?.data?.data ?? response?.data ?? response;
+  const data = root?.data && typeof root?.data === "object" ? root.data : root;
+  if (!data || typeof data !== "object") return null;
+
+  const address = [
+    data.buildingName,
+    data.streetName,
+    data.locality,
+    data.city,
+    data.state,
+    data.pinCode,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  const providerName = String(
+    data.registered_name ||
+      data.name_pan_card ||
+      data.name ||
+      [data.firstName, data.middleName, data.lastName].filter(Boolean).join(" ") ||
+      "",
+  ).trim();
+  const parsedName = splitFullName(providerName);
+
+  return {
+    ...data,
+    name: providerName,
+    firstName: data.firstName || parsedName.firstName,
+    middleName: data.middleName || parsedName.middleName,
+    lastName: data.lastName || parsedName.lastName,
+    dob: data.dob,
+    gender: data.gender,
+    email: data.email,
+    panNumber: data.pan,
+    address,
+    split_address: {
+      house: data.buildingName || "",
+      street: data.streetName || "",
+      locality: data.locality || "",
+      city: data.city || "",
+      state: data.state || "",
+      pincode: data.pinCode || "",
+    },
+  };
+};
+
 const applyAadhaarProfileToCoApplicant = (profile, aadhaarNumber, index, setValue) => {
   if (!profile) return;
   const setField = (path, value) => {
@@ -123,6 +184,57 @@ const applyAadhaarProfileToCoApplicant = (profile, aadhaarNumber, index, setValu
   setField("permanentAddress.landmark", splitAddress.landmark || "");
 };
 
+const applyPanProfileToCoApplicant = (profile, index, setValue) => {
+  if (!profile) return;
+  const setField = (path, value) => {
+    setValue(`coApplicants.${index}.${path}`, value ?? "", {
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
+
+  const splitAddress = profile.split_address || {};
+  const firstName = String(profile.firstName || "").trim();
+  const middleName = String(profile.middleName || "").trim();
+  const lastName = String(profile.lastName || "").trim();
+  const fullName = String(profile.name || "").trim();
+
+  if (firstName || middleName || lastName) {
+    setField("firstName", firstName);
+    setField("middleName", middleName);
+    setField("lastName", lastName);
+  } else if (fullName) {
+    const parts = fullName.split(/\s+/);
+    setField("firstName", parts.shift() || "");
+    setField("middleName", parts.length > 1 ? parts.slice(0, -1).join(" ") : "");
+    setField("lastName", parts.length ? parts.slice(-1).join(" ") : "");
+  }
+
+  const dob = parseProviderDateToIso(profile.dob);
+  if (dob) setField("dob", dob);
+
+  const gender = normalizeGenderValue(profile.gender);
+  if (gender) setField("gender", gender);
+
+  if (profile.email) setField("email", profile.email);
+  if (profile.panNumber) setField("panNumber", profile.panNumber);
+
+  const addressLine1 =
+    [splitAddress.house, splitAddress.street].filter(Boolean).join(", ") ||
+    profile.address ||
+    "";
+  const city = splitAddress.city || splitAddress.vtc || splitAddress.po || "";
+
+  setField("sameAsCurrent", false);
+  setField("permanentAddress.addressLine1", addressLine1);
+  setField("permanentAddress.addressLine2", splitAddress.locality || "");
+  setField("permanentAddress.city", city);
+  setField("permanentAddress.district", splitAddress.dist || "");
+  setField("permanentAddress.state", splitAddress.state || "");
+  setField("permanentAddress.pinCode", splitAddress.pincode || "");
+  setField("permanentAddress.landmark", splitAddress.landmark || "");
+};
+
 export default function CoApplicantSection({
   control,
   watch,
@@ -139,10 +251,13 @@ export default function CoApplicantSection({
   const [otpSentMap, setOtpSentMap] = useState({});
   const [otpVerifiedMap, setOtpVerifiedMap] = useState({});
   const [showOtpModalMap, setShowOtpModalMap] = useState({});
+  const [identityMethodMap, setIdentityMethodMap] = useState({});
+  const [panQueryMap, setPanQueryMap] = useState({});
   const [otpExpiresAtMap, setOtpExpiresAtMap] = useState({});
   const [otpSecondsLeftMap, setOtpSecondsLeftMap] = useState({});
   const [searchingMap, setSearchingMap] = useState({});
   const { sendOtp, verifyOtp, isLoading: aadhaarLoading } = useAadhaar();
+  const { mutateAsync: verifyPanDetails, isPending: panLoading } = usePanDetails();
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -192,11 +307,38 @@ export default function CoApplicantSection({
   };
 
   const handleAadhaarButtonClick = (index) => {
-    if (otpSentMap[index] && !otpVerifiedMap[index]) {
-      setShowOtpModalMap((s) => ({ ...s, [index]: true }));
-      return;
+    setIdentityMethodMap((s) => ({ ...s, [index]: "AADHAAR" }));
+    setShowOtpModalMap((s) => ({ ...s, [index]: true }));
+  };
+
+  const handlePanFetch = async (index) => {
+    const normalizedPan = String(panQueryMap[index] || "").trim().toUpperCase();
+    if (!/^[A-Z]{5}\d{4}[A-Z]$/.test(normalizedPan)) {
+      return showInfo("Enter valid PAN (ABCDE1234F)");
     }
-    handleSendOtp(index);
+
+    try {
+      setSearchingMap((s) => ({ ...s, [index]: true }));
+      const res = await verifyPanDetails({ panNumber: normalizedPan });
+      const payload = res?.data ?? res;
+      setValue(`coApplicants.${index}.panProvider`, payload);
+      const profile = normalizePanProfile(res);
+      const seedStatus = String(profile?.aadhaar_seeding_status || "").toUpperCase();
+      if (seedStatus && seedStatus !== "Y") {
+        showError(profile?.aadhaar_seeding_status_desc || "Aadhaar is not linked to PAN");
+        return;
+      }
+      if (profile) {
+        applyPanProfileToCoApplicant(profile, index, setValue);
+      }
+      setOtpVerifiedMap((s) => ({ ...s, [index]: true }));
+      setShowOtpModalMap((s) => ({ ...s, [index]: false }));
+      showSuccess("PAN details loaded");
+    } catch (err) {
+      showError(err?.message || "Failed to fetch PAN details");
+    } finally {
+      setSearchingMap((s) => ({ ...s, [index]: false }));
+    }
   };
 
   const handleVerifyOtp = async (index) => {
@@ -205,7 +347,7 @@ export default function CoApplicantSection({
       .slice(0, 12);
     const otp = (otpMap[index] || "").replace(/\D/g, "").slice(0, 6);
     if (aadhaar.length !== 12) return showInfo("Enter valid 12-digit Aadhaar");
-    if (otp.length !== 6) return showInfo("Enter valid 6-digit OTP");
+    if (otp.length < 4) return showInfo("Enter valid 4-6 digit OTP");
     if (isOtpExpired(index)) return showInfo("OTP expired. Please resend OTP.");
     if (!refIdMap[index]) return showInfo("Missing ref_id. Please send OTP again.");
 
@@ -300,96 +442,182 @@ export default function CoApplicantSection({
             </Button>
           </div>
 
-          <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="flex items-end gap-3">
-              <div className="flex-1">
-                <InputField
-                  label={`Fetch Aadhaar — Co-Applicant ${index + 1}`}
-                  value={aadhaarQueries[index] || ""}
-                  onChange={(e) =>
-                    setAadhaarQueries((s) => ({
-                      ...s,
-                      [index]: e.target.value.replace(/\D/g, "").slice(0, 12),
-                    }))
-                  }
-                  placeholder="Enter 12-digit Aadhaar"
-                />
-              </div>
-              <div className="mt-6 flex items-center gap-2">
-                <Button
-                  type="button"
-                  onClick={() => handleAadhaarButtonClick(index)}
-                  disabled={
-                    !!searchingMap[index] ||
-                    aadhaarLoading ||
-                    (aadhaarQueries[index] || "").length !== 12
-                  }
-                >
-                  {sendOtp.isPending ? "Sending..." : "Send OTP"}
-                </Button>
-              </div>
-            </div>
+          <div className="mb-4 flex justify-end">
+            <Button
+              type="button"
+              onClick={() => handleAadhaarButtonClick(index)}
+              disabled={!!searchingMap[index] || aadhaarLoading}
+            >
+              Use Aadhaar / PAN Identity
+            </Button>
           </div>
 
           {showOtpModalMap[index] && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
               <div className="w-full max-w-md rounded-lg bg-white p-4 shadow-xl">
-                <h3 className="text-base font-semibold">Enter Aadhaar OTP</h3>
+                <h3 className="text-base font-semibold">Fetch Identity</h3>
                 <p className="mt-1 text-sm text-gray-600">
-                  OTP has been sent to the Aadhaar-linked mobile number.
-                </p>
-                <p className="mt-1 text-xs text-gray-500">
-                  OTP expires in {formatSeconds(otpSecondsLeftMap[index] || 0)}
+                  Choose Aadhaar OTP or PAN lookup.
                 </p>
 
-                <div className="mt-4">
-                  <InputField
-                    label="OTP"
-                    value={otpMap[index] || ""}
-                    onChange={(e) =>
-                      setOtpMap((s) => ({
-                        ...s,
-                        [index]: e.target.value.replace(/\D/g, "").slice(0, 6),
-                      }))
-                    }
-                    placeholder="Enter 4-6 digit OTP"
-                  />
-                </div>
-
-                <div className="mt-4 flex items-center justify-end gap-2">
+                <div className="mt-4 flex gap-2">
                   <Button
                     type="button"
-                    onClick={() => handleSendOtp(index)}
-                    disabled={
-                      sendOtp.isPending || (otpSecondsLeftMap[index] || 0) > 0
+                    onClick={() =>
+                      setIdentityMethodMap((s) => ({ ...s, [index]: "AADHAAR" }))
+                    }
+                    className={
+                      identityMethodMap[index] === "PAN"
+                        ? ""
+                        : "bg-blue-600 text-white"
                     }
                   >
-                    {sendOtp.isPending
-                      ? "Resending..."
-                      : (otpSecondsLeftMap[index] || 0) > 0
-                        ? `Resend in ${formatSeconds(otpSecondsLeftMap[index])}`
-                        : "Resend OTP"}
+                    Aadhaar
                   </Button>
                   <Button
                     type="button"
                     onClick={() =>
-                      setShowOtpModalMap((s) => ({ ...s, [index]: false }))
+                      setIdentityMethodMap((s) => ({ ...s, [index]: "PAN" }))
                     }
-                    disabled={verifyOtp.isPending}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={() => handleVerifyOtp(index)}
-                    disabled={
-                      verifyOtp.isPending ||
-                      (otpMap[index] || "").length !== 6 ||
-                      isOtpExpired(index)
+                    className={
+                      identityMethodMap[index] === "PAN"
+                        ? "bg-blue-600 text-white"
+                        : ""
                     }
                   >
-                    {verifyOtp.isPending ? "Verifying..." : "Verify OTP"}
+                    PAN
                   </Button>
+                </div>
+
+                {(identityMethodMap[index] || "AADHAAR") === "AADHAAR" ? (
+                  <>
+                    <div className="mt-4">
+                      <InputField
+                        label="Aadhaar"
+                        value={aadhaarQueries[index] || ""}
+                        onChange={(e) => {
+                          const sanitized = e.target.value.replace(/\D/g, "").slice(0, 12);
+                          setAadhaarQueries((s) => ({ ...s, [index]: sanitized }));
+                          setOtpMap((s) => ({ ...s, [index]: "" }));
+                          setOtpSentMap((s) => ({ ...s, [index]: false }));
+                          setOtpVerifiedMap((s) => ({ ...s, [index]: false }));
+                          setRefIdMap((s) => ({ ...s, [index]: "" }));
+                          setOtpExpiresAtMap((s) => ({ ...s, [index]: 0 }));
+                        }}
+                        placeholder="Enter 12-digit Aadhaar"
+                      />
+                    </div>
+                    {otpSentMap[index] && (
+                      <>
+                        <p className="mt-1 text-xs text-gray-500">
+                          OTP expires in {formatSeconds(otpSecondsLeftMap[index] || 0)}
+                        </p>
+                        <div className="mt-4">
+                          <InputField
+                            label="OTP"
+                            value={otpMap[index] || ""}
+                            onChange={(e) =>
+                              setOtpMap((s) => ({
+                                ...s,
+                                [index]: e.target.value.replace(/\D/g, "").slice(0, 6),
+                              }))
+                            }
+                            placeholder="Enter 4-6 digit OTP"
+                          />
+                        </div>
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <div className="mt-4">
+                    <InputField
+                      label="PAN"
+                      value={panQueryMap[index] || ""}
+                      onChange={(e) =>
+                        setPanQueryMap((s) => ({
+                          ...s,
+                          [index]: e.target.value.toUpperCase().slice(0, 10),
+                        }))
+                      }
+                      placeholder="ABCDE1234F"
+                    />
+                  </div>
+                )}
+
+                <div className="mt-4 flex items-center justify-end gap-2">
+                  {(identityMethodMap[index] || "AADHAAR") === "AADHAAR" ? (
+                    <>
+                      <Button
+                        type="button"
+                        onClick={() =>
+                          setShowOtpModalMap((s) => ({ ...s, [index]: false }))
+                        }
+                        disabled={verifyOtp.isPending}
+                      >
+                        Cancel
+                      </Button>
+                      {!otpSentMap[index] ? (
+                        <Button
+                          type="button"
+                          onClick={() => handleSendOtp(index)}
+                          disabled={
+                            sendOtp.isPending ||
+                            (aadhaarQueries[index] || "").length !== 12
+                          }
+                        >
+                          {sendOtp.isPending ? "Sending..." : "Send OTP"}
+                        </Button>
+                      ) : (
+                        <>
+                          <Button
+                            type="button"
+                            onClick={() => handleSendOtp(index)}
+                            disabled={
+                              sendOtp.isPending ||
+                              (otpSecondsLeftMap[index] || 0) > 0 ||
+                              (aadhaarQueries[index] || "").length !== 12
+                            }
+                          >
+                            {sendOtp.isPending
+                              ? "Resending..."
+                              : (otpSecondsLeftMap[index] || 0) > 0
+                                ? `Resend in ${formatSeconds(otpSecondsLeftMap[index])}`
+                                : "Resend OTP"}
+                          </Button>
+                          <Button
+                            type="button"
+                            onClick={() => handleVerifyOtp(index)}
+                            disabled={
+                              verifyOtp.isPending ||
+                              (otpMap[index] || "").length < 4 ||
+                              isOtpExpired(index) ||
+                              !refIdMap[index]
+                            }
+                          >
+                            {verifyOtp.isPending ? "Verifying..." : "Verify OTP"}
+                          </Button>
+                        </>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        type="button"
+                        onClick={() =>
+                          setShowOtpModalMap((s) => ({ ...s, [index]: false }))
+                        }
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={() => handlePanFetch(index)}
+                        disabled={panLoading || !/^[A-Z]{5}\d{4}[A-Z]$/.test(String(panQueryMap[index] || "").trim().toUpperCase())}
+                      >
+                        {panLoading ? "Fetching..." : "Fetch PAN"}
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

@@ -13,6 +13,7 @@ import {
 } from "../../../../lib/utils/toastService";
 import { useGetLead } from "../../../../hooks/useLead";
 import { useAadhaar } from "../../../../hooks/useAadhaar";
+import { usePanDetails } from "../../../../hooks/usePan";
 import {
   SectionCard,
   Grid,
@@ -93,6 +94,67 @@ const extractVerifyProfile = (response) => {
   return null;
 };
 
+const splitFullName = (value) => {
+  const parts = String(value || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+
+  return {
+    firstName: parts[0] || "",
+    middleName: parts.length > 2 ? parts.slice(1, -1).join(" ") : "",
+    lastName: parts.length > 1 ? parts[parts.length - 1] : "",
+  };
+};
+
+const normalizePanProfile = (response) => {
+  const root = response?.data?.data ?? response?.data ?? response;
+  const data = root?.data && typeof root?.data === "object" ? root.data : root;
+
+  if (!data || typeof data !== "object") return null;
+
+  const address = [
+    data.buildingName,
+    data.streetName,
+    data.locality,
+    data.city,
+    data.state,
+    data.pinCode,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  const providerName = String(
+    data.registered_name ||
+      data.name_pan_card ||
+      data.name ||
+      [data.firstName, data.middleName, data.lastName].filter(Boolean).join(" ") ||
+      "",
+  ).trim();
+  const parsedName = splitFullName(providerName);
+
+  return {
+    ...data,
+    name: providerName,
+    firstName: data.firstName || parsedName.firstName,
+    middleName: data.middleName || parsedName.middleName,
+    lastName: data.lastName || parsedName.lastName,
+    dob: data.dob,
+    gender: data.gender,
+    email: data.email,
+    panNumber: data.pan,
+    address,
+    split_address: {
+      house: data.buildingName || "",
+      street: data.streetName || "",
+      locality: data.locality || "",
+      city: data.city || "",
+      state: data.state || "",
+      pincode: data.pinCode || "",
+    },
+  };
+};
+
 export default function ApplicantSection({
   control,
   errors,
@@ -105,6 +167,8 @@ export default function ApplicantSection({
   const [leadQuery, setLeadQuery] = useState("");
   const [aadhaarApiResponse, setAadhaarApiResponse] = useState(null);
   const [aadhaarQuery, setAadhaarQuery] = useState("");
+  const [identityMethod, setIdentityMethod] = useState("AADHAAR");
+  const [panQuery, setPanQuery] = useState("");
   const [aadhaarOtp, setAadhaarOtp] = useState("");
   const [aadhaarOtpSent, setAadhaarOtpSent] = useState(false);
   const [aadhaarVerified, setAadhaarVerified] = useState(false);
@@ -115,6 +179,7 @@ export default function ApplicantSection({
   const [searching, setSearching] = useState(false);
   const leadQueryHook = useGetLead(leadQuery, { enabled: false });
   const { sendOtp, verifyOtp, isLoading: aadhaarLoading } = useAadhaar();
+  const { mutateAsync: verifyPanDetails, isPending: panLoading } = usePanDetails();
 
   useEffect(() => {
     if (!otpExpiresAt) {
@@ -133,11 +198,52 @@ export default function ApplicantSection({
   }, [otpExpiresAt]);
 
   const isOtpExpired = aadhaarOtpSent && otpSecondsLeft === 0;
-  const isAadhaarDataLocked = aadhaarVerified;
   const aadhaarProvider = watch("applicant.aadhaarProvider");
-  const aadhaarProviderEmail = (
-    aadhaarProvider?.data?.email ?? aadhaarProvider?.email ?? ""
-  ).toString().trim();
+  const panProvider = watch("applicant.panProvider");
+  const applicantAadhaarNumber = watch("applicant.aadhaarNumber");
+  const providerSources = [aadhaarProvider, panProvider].filter(Boolean);
+  const getApplicantProviderValue = (...keys) => {
+    for (const source of providerSources) {
+      const sourcesToCheck = [source, source?.data, source?.data?.data].filter(Boolean);
+      for (const item of sourcesToCheck) {
+        for (const key of keys) {
+          const value = key.split(".").reduce((acc, part) => acc?.[part], item);
+          if (value !== undefined && value !== null && String(value).trim()) {
+            return String(value).trim();
+          }
+        }
+      }
+    }
+    return "";
+  };
+
+  const providerFirstName = getApplicantProviderValue("firstName", "name");
+  const providerMiddleName = getApplicantProviderValue("middleName");
+  const providerLastName = getApplicantProviderValue("lastName", "name");
+  const providerFatherName = getApplicantProviderValue("care_of", "fatherName");
+  const providerDob = getApplicantProviderValue("dob");
+  const providerGender = getApplicantProviderValue("gender");
+  const providerEmail = getApplicantProviderValue("email");
+  const providerAadhaar = getApplicantProviderValue(
+    "aadhaarNumber",
+    "aadhaar",
+    "uid",
+    "uidNumber",
+  );
+  const isApplicantAadhaarLocked =
+    Boolean(providerAadhaar) ||
+    (Boolean(aadhaarProvider) && Boolean(applicantAadhaarNumber));
+  const providerPan = getApplicantProviderValue("pan", "panNumber");
+
+  const addressLockFields = {
+    addressLine1: Boolean(getApplicantProviderValue("split_address.house", "address", "buildingName", "streetName")),
+    addressLine2: Boolean(getApplicantProviderValue("split_address.locality", "locality")),
+    city: Boolean(getApplicantProviderValue("split_address.vtc", "split_address.po", "city")),
+    district: Boolean(getApplicantProviderValue("split_address.dist", "district")),
+    state: Boolean(getApplicantProviderValue("split_address.state", "state")),
+    pinCode: Boolean(getApplicantProviderValue("split_address.pincode", "pinCode")),
+    landmark: Boolean(getApplicantProviderValue("split_address.landmark", "landmark")),
+  };
 
   const applyAadhaarProfile = (profile, aadhaarNumber) => {
     if (!profile) return;
@@ -185,6 +291,61 @@ export default function ApplicantSection({
       "addresses.permanentAddress.addressLine2",
       splitAddress.locality || "",
     );
+    setField("addresses.permanentAddress.city", city);
+    setField("addresses.permanentAddress.district", splitAddress.dist || "");
+    setField("addresses.permanentAddress.state", splitAddress.state || "");
+    setField("addresses.permanentAddress.pinCode", splitAddress.pincode || "");
+    setField("addresses.permanentAddress.landmark", splitAddress.landmark || "");
+  };
+
+  const applyPanProfile = (profile) => {
+    if (!profile) return;
+
+    const setField = (path, value) => {
+      setValue(path, value ?? "", {
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    };
+
+    const splitAddress = profile.split_address || {};
+    const firstName = String(profile.firstName || "").trim();
+    const middleName = String(profile.middleName || "").trim();
+    const lastName = String(profile.lastName || "").trim();
+    const fullName = String(profile.name || "").trim();
+
+    if (firstName || middleName || lastName) {
+      setField("applicant.firstName", firstName);
+      setField("applicant.middleName", middleName);
+      setField("applicant.lastName", lastName);
+    } else if (fullName) {
+      const parts = fullName.split(/\s+/);
+      setField("applicant.firstName", parts.shift() || "");
+      setField(
+        "applicant.middleName",
+        parts.length > 1 ? parts.slice(0, -1).join(" ") : "",
+      );
+      setField("applicant.lastName", parts.length ? parts.slice(-1).join(" ") : "");
+    }
+
+    const dob = parseProviderDateToIso(profile.dob);
+    if (dob) setField("applicant.dob", dob);
+
+    const gender = normalizeGenderValue(profile.gender);
+    if (gender) setField("applicant.gender", gender);
+
+    if (profile.email) setField("applicant.email", profile.email);
+    if (profile.panNumber) setField("applicant.panNumber", profile.panNumber);
+
+    const addressLine1 =
+      [splitAddress.house, splitAddress.street].filter(Boolean).join(", ") ||
+      profile.address ||
+      "";
+    const city = splitAddress.city || splitAddress.vtc || splitAddress.po || "";
+
+    setField("sameAsCurrent", false);
+    setField("addresses.permanentAddress.addressLine1", addressLine1);
+    setField("addresses.permanentAddress.addressLine2", splitAddress.locality || "");
     setField("addresses.permanentAddress.city", city);
     setField("addresses.permanentAddress.district", splitAddress.dist || "");
     setField("addresses.permanentAddress.state", splitAddress.state || "");
@@ -340,18 +501,45 @@ export default function ApplicantSection({
   };
 
   const handleAadhaarButtonClick = () => {
-    if (aadhaarOtpSent && !aadhaarVerified) {
-      setShowAadhaarOtpModal(true);
-      return;
+    setIdentityMethod("AADHAAR");
+    setShowAadhaarOtpModal(true);
+  };
+
+  const handlePanFetch = async () => {
+    const normalizedPan = String(panQuery || "").trim().toUpperCase();
+    if (!/^[A-Z]{5}\d{4}[A-Z]$/.test(normalizedPan)) {
+      return showInfo("Enter valid PAN (ABCDE1234F)");
     }
-    handleSendAadhaarOtp();
+
+    try {
+      setSearching(true);
+      const res = await verifyPanDetails({ panNumber: normalizedPan });
+      const payload = res?.data ?? res;
+      setValue("applicant.panProvider", payload);
+      const profile = normalizePanProfile(res);
+      const seedStatus = String(profile?.aadhaar_seeding_status || "").toUpperCase();
+      if (seedStatus && seedStatus !== "Y") {
+        showError(profile?.aadhaar_seeding_status_desc || "Aadhaar is not linked to PAN");
+        return;
+      }
+      if (profile) {
+        applyPanProfile(profile);
+      }
+      setAadhaarVerified(true);
+      showSuccess("PAN details loaded");
+      setShowAadhaarOtpModal(false);
+    } catch (err) {
+      showError(err?.message || "Failed to fetch PAN details");
+    } finally {
+      setSearching(false);
+    }
   };
 
   const handleVerifyAadhaarOtp = async () => {
     const val = aadhaarQuery.replace(/\D/g, "").slice(0, 12);
     const otp = aadhaarOtp.replace(/\D/g, "").slice(0, 6);
     if (val.length !== 12) return showInfo("Enter valid 12-digit Aadhaar");
-    if (otp.length !== 6) return showInfo("Enter valid 6-digit OTP");
+    if (otp.length < 4) return showInfo("Enter valid 4-6 digit OTP");
     if (isOtpExpired) return showInfo("OTP expired. Please resend OTP.");
     if (!aadhaarRefId) return showInfo("Missing ref_id. Please send OTP again.");
 
@@ -407,38 +595,14 @@ export default function ApplicantSection({
 
             {/* /// Aadhaar fetch section is moved to the personal information section for better UX, so leaving this space blank for now. */}
 
-            <div className="flex items-end gap-3">
-              <div className="flex-1">
-                <InputField
-                  label="Fetch by Aadhaar"
-                  value={aadhaarQuery}
-                  onChange={(e) => {
-                    const sanitized = e.target.value
-                      .replace(/\D/g, "")
-                      .slice(0, 12);
-                    setAadhaarQuery(sanitized);
-                    setAadhaarOtp("");
-                    setAadhaarOtpSent(false);
-                    setAadhaarVerified(false);
-                    setAadhaarRefId("");
-                    setOtpExpiresAt(null);
-                    setOtpSecondsLeft(0);
-                    setShowAadhaarOtpModal(false);
-                  }}
-                  placeholder="Enter 12-digit Aadhaar"
-                />
-              </div>
+            <div className="flex items-end justify-end">
               <div className="mt-6">
                 <Button
                   type="button"
                   onClick={handleAadhaarButtonClick}
-                  disabled={
-                    searching ||
-                    aadhaarLoading ||
-                    aadhaarQuery.length !== 12
-                  }
+                  disabled={searching || aadhaarLoading}
                 >
-                  {sendOtp.isPending ? "Sending..." : "Send OTP"}
+                  Use Aadhaar / PAN Identity
                 </Button>
               </div>
             </div>
@@ -457,7 +621,6 @@ export default function ApplicantSection({
                       label="Title"
                       isRequired
                       options={TITLE_OPTIONS}
-                      isDisabled={isAadhaarDataLocked && Boolean(field.value)}
                       value={field.value}
                       onChange={field.onChange}
                       error={errors.applicant?.title?.message}
@@ -471,7 +634,7 @@ export default function ApplicantSection({
                     <InputField
                       label="First Name"
                       isRequired
-                      isDisabled={isAadhaarDataLocked && Boolean(field.value)}
+                      isDisabled={Boolean(providerFirstName)}
                       {...field}
                       error={errors.applicant?.firstName?.message}
                     />
@@ -483,7 +646,7 @@ export default function ApplicantSection({
                   render={({ field }) => (
                     <InputField
                       label="Middle Name"
-                      isDisabled={isAadhaarDataLocked && Boolean(field.value)}
+                      isDisabled={Boolean(providerMiddleName)}
                       {...field}
                     />
                   )}
@@ -498,7 +661,7 @@ export default function ApplicantSection({
                     <InputField
                       label="Last Name"
                       isRequired
-                      isDisabled={isAadhaarDataLocked && Boolean(field.value)}
+                      isDisabled={Boolean(providerLastName)}
                       {...field}
                       error={errors.applicant?.lastName?.message}
                     />
@@ -511,7 +674,7 @@ export default function ApplicantSection({
                     <InputField
                       label="Father's Name"
                       isRequired
-                      isDisabled={isAadhaarDataLocked && Boolean(field.value)}
+                      isDisabled={Boolean(providerFatherName)}
                       {...field}
                       error={errors.applicant?.fatherName?.message}
                     />
@@ -546,7 +709,7 @@ export default function ApplicantSection({
                       label="Date of Birth"
                       type="date"
                       isRequired
-                      isDisabled={isAadhaarDataLocked && Boolean(field.value)}
+                      isDisabled={Boolean(providerDob)}
                       {...field}
                       error={errors.applicant?.dob?.message}
                     />
@@ -560,7 +723,7 @@ export default function ApplicantSection({
                       label="Gender"
                       isRequired
                       options={GENDER_OPTIONS}
-                      isDisabled={isAadhaarDataLocked && Boolean(field.value)}
+                      isDisabled={Boolean(providerGender)}
                       value={field.value}
                       onChange={field.onChange}
                       error={errors.applicant?.gender?.message}
@@ -658,7 +821,7 @@ export default function ApplicantSection({
                     <InputField
                       label="Aadhaar Number"
                       isRequired
-                      isDisabled={isAadhaarDataLocked && Boolean(field.value)}
+                      isDisabled={isApplicantAadhaarLocked}
                       {...field}
                       onChange={(e) =>
                         field.onChange(
@@ -729,7 +892,7 @@ export default function ApplicantSection({
                   <InputField
                     label="Email Address"
                     type="email"
-                    isDisabled={isAadhaarDataLocked && Boolean(aadhaarProviderEmail)}
+                    isDisabled={Boolean(providerEmail)}
                     {...field}
                     error={errors.applicant?.email?.message}
                   />
@@ -788,6 +951,7 @@ export default function ApplicantSection({
                     <InputField
                       label="PAN No."
                       isRequired
+                      isDisabled={Boolean(providerPan)}
                       {...field}
                       onChange={(e) =>
                         field.onChange(
@@ -814,7 +978,8 @@ export default function ApplicantSection({
             errors={errors}
             watch={watch}
             setValue={setValue}
-            isAadhaarLocked={isAadhaarDataLocked}
+            isAadhaarLocked={Object.values(addressLockFields).some(Boolean)}
+            lockFields={addressLockFields}
           />
 
           <PersonEmploymentFields
@@ -845,53 +1010,135 @@ export default function ApplicantSection({
           {showAadhaarOtpModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
               <div className="w-full max-w-md rounded-lg bg-white p-4 shadow-xl">
-                <h3 className="text-base font-semibold">Enter Aadhaar OTP</h3>
+                <h3 className="text-base font-semibold">Fetch Identity</h3>
                 <p className="mt-1 text-sm text-gray-600">
-                  OTP has been sent to the Aadhaar-linked mobile number.
-                </p>
-                <p className="mt-1 text-xs text-gray-500">
-                  OTP expires in {formatSeconds(otpSecondsLeft)}
+                  Choose Aadhaar OTP or PAN lookup.
                 </p>
 
-                <div className="mt-4">
-                  <InputField
-                    label="OTP"
-                    value={aadhaarOtp}
-                    onChange={(e) =>
-                      setAadhaarOtp(
-                        e.target.value.replace(/\D/g, "").slice(0, 6),
-                      )
-                    }
-                    placeholder="Enter 4-6 digit OTP"
-                  />
+                <div className="mt-4 flex gap-2">
+                  <Button
+                    type="button"
+                    onClick={() => setIdentityMethod("AADHAAR")}
+                    className={identityMethod === "AADHAAR" ? "bg-blue-600 text-white" : ""}
+                  >
+                    Aadhaar
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => setIdentityMethod("PAN")}
+                    className={identityMethod === "PAN" ? "bg-blue-600 text-white" : ""}
+                  >
+                    PAN
+                  </Button>
                 </div>
 
+                {identityMethod === "AADHAAR" ? (
+                  <>
+                    <div className="mt-4">
+                      <InputField
+                        label="Aadhaar"
+                        value={aadhaarQuery}
+                        onChange={(e) => {
+                          const sanitized = e.target.value.replace(/\D/g, "").slice(0, 12);
+                          setAadhaarQuery(sanitized);
+                          setAadhaarOtp("");
+                          setAadhaarOtpSent(false);
+                          setAadhaarVerified(false);
+                          setAadhaarRefId("");
+                          setOtpExpiresAt(null);
+                          setOtpSecondsLeft(0);
+                        }}
+                        placeholder="Enter 12-digit Aadhaar"
+                      />
+                    </div>
+                    {aadhaarOtpSent && (
+                      <>
+                        <p className="mt-3 text-xs text-gray-500">
+                          OTP expires in {formatSeconds(otpSecondsLeft)}
+                        </p>
+                        <div className="mt-4">
+                          <InputField
+                            label="OTP"
+                            value={aadhaarOtp}
+                            onChange={(e) =>
+                              setAadhaarOtp(
+                                e.target.value.replace(/\D/g, "").slice(0, 6),
+                              )
+                            }
+                            placeholder="Enter 4-6 digit OTP"
+                          />
+                        </div>
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <div className="mt-4">
+                    <InputField
+                      label="PAN"
+                      value={panQuery}
+                      onChange={(e) =>
+                        setPanQuery(e.target.value.toUpperCase().slice(0, 10))
+                      }
+                      placeholder="ABCDE1234F"
+                    />
+                  </div>
+                )}
+
                 <div className="mt-4 flex items-center justify-end gap-2">
-                  <Button
-                    type="button"
-                    onClick={handleSendAadhaarOtp}
-                    disabled={sendOtp.isPending || otpSecondsLeft > 0}
-                  >
-                    {sendOtp.isPending
-                      ? "Resending..."
-                      : otpSecondsLeft > 0
-                        ? `Resend in ${formatSeconds(otpSecondsLeft)}`
-                        : "Resend OTP"}
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={() => setShowAadhaarOtpModal(false)}
-                    disabled={verifyOtp.isPending}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={handleVerifyAadhaarOtp}
-                    disabled={verifyOtp.isPending || aadhaarOtp.length < 4 || isOtpExpired}
-                  >
-                    {verifyOtp.isPending ? "Verifying..." : "Verify OTP"}
-                  </Button>
+                  {identityMethod === "AADHAAR" ? (
+                    <>
+                      <Button
+                        type="button"
+                        onClick={() => setShowAadhaarOtpModal(false)}
+                        disabled={verifyOtp.isPending}
+                      >
+                        Cancel
+                      </Button>
+                      {!aadhaarOtpSent ? (
+                        <Button
+                          type="button"
+                          onClick={handleSendAadhaarOtp}
+                          disabled={sendOtp.isPending || aadhaarQuery.length !== 12}
+                        >
+                          {sendOtp.isPending ? "Sending..." : "Send OTP"}
+                        </Button>
+                      ) : (
+                        <>
+                          <Button
+                            type="button"
+                            onClick={handleSendAadhaarOtp}
+                            disabled={sendOtp.isPending || otpSecondsLeft > 0 || aadhaarQuery.length !== 12}
+                          >
+                            {sendOtp.isPending
+                              ? "Resending..."
+                              : otpSecondsLeft > 0
+                                ? `Resend in ${formatSeconds(otpSecondsLeft)}`
+                                : "Resend OTP"}
+                          </Button>
+                          <Button
+                            type="button"
+                            onClick={handleVerifyAadhaarOtp}
+                            disabled={verifyOtp.isPending || aadhaarOtp.length < 4 || isOtpExpired || !aadhaarRefId}
+                          >
+                            {verifyOtp.isPending ? "Verifying..." : "Verify OTP"}
+                          </Button>
+                        </>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <Button type="button" onClick={() => setShowAadhaarOtpModal(false)}>
+                        Cancel
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={handlePanFetch}
+                        disabled={panLoading || searching || !/^[A-Z]{5}\d{4}[A-Z]$/.test(String(panQuery || "").trim().toUpperCase())}
+                      >
+                        {panLoading ? "Fetching..." : "Fetch PAN"}
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

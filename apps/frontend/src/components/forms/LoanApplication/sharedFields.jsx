@@ -72,38 +72,55 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
   const isCoApplicant = prefix.startsWith("coApplicants.");
   const isGuarantor = prefix.startsWith("guarantors.");
   const aadhaarProvider = watch(`${prefix}.aadhaarProvider`);
-  const providerEmail = (
-    aadhaarProvider?.data?.email ?? aadhaarProvider?.email ?? ""
-  ).toString().trim();
-  const isAadhaarLocked = Boolean(aadhaarProvider && Object.keys(aadhaarProvider).length);
-  const providerMother = (
-    aadhaarProvider?.data?.motherName ??
-    aadhaarProvider?.motherName ??
-    aadhaarProvider?.mother ??
-    aadhaarProvider?.data?.mother ??
-    ""
-  ).toString().trim();
-  const providerAadhaar = (() => {
-    if (!aadhaarProvider) return "";
-    const pick =
-      aadhaarProvider?.data?.aadhaarNumber ||
-      aadhaarProvider?.aadhaarNumber ||
-      aadhaarProvider?.data?.aadhaar ||
-      aadhaarProvider?.aadhaar ||
-      aadhaarProvider?.data?.uid ||
-      aadhaarProvider?.uid ||
-      aadhaarProvider?.data?.uidNumber ||
-      aadhaarProvider?.uidNumber ||
-      "";
-    if (pick) return String(pick).toString().trim();
-    try {
-      const s = JSON.stringify(aadhaarProvider || "");
-      const m = s.match(/\d{12}/);
-      return m ? m[0] : "";
-    } catch (e) {
-      return "";
+  const panProvider = watch(`${prefix}.panProvider`);
+  const currentAadhaarNumber = watch(`${prefix}.aadhaarNumber`);
+  const providerSources = [aadhaarProvider, panProvider].filter(Boolean);
+  const getProviderValue = (...keys) => {
+    for (const source of providerSources) {
+      const sourcesToCheck = [source, source?.data, source?.data?.data].filter(Boolean);
+      for (const item of sourcesToCheck) {
+        for (const key of keys) {
+          const value = key.split(".").reduce((acc, part) => acc?.[part], item);
+          if (value !== undefined && value !== null && String(value).trim()) {
+            return String(value).trim();
+          }
+        }
+      }
     }
-  })();
+    return "";
+  };
+  const providerFirstName = getProviderValue("firstName", "name");
+  const providerMiddleName = getProviderValue("middleName");
+  const providerLastName = getProviderValue("lastName", "name");
+  const providerFatherName = getProviderValue("fatherName", "care_of");
+  const providerDob = getProviderValue("dob");
+  const providerContactNumber = getProviderValue("contactNumber", "mobile", "phone");
+  const providerAddressLine1 = getProviderValue("split_address.house", "address", "buildingName", "streetName");
+  const providerAddressCity = getProviderValue("split_address.vtc", "split_address.po", "city");
+  const providerAddressDistrict = getProviderValue("split_address.dist", "district");
+  const providerAddressPin = getProviderValue("split_address.pincode", "pinCode");
+  const providerAddressLandmark = getProviderValue("split_address.landmark", "landmark");
+  const providerEmail = getProviderValue("data.email", "email");
+  const providerMother = getProviderValue(
+    "data.motherName",
+    "motherName",
+    "mother",
+    "data.mother",
+  );
+  const providerAadhaar = getProviderValue(
+    "data.aadhaarNumber",
+    "aadhaarNumber",
+    "data.aadhaar",
+    "aadhaar",
+    "data.uid",
+    "uid",
+    "data.uidNumber",
+    "uidNumber",
+  );
+  const isAadhaarNumberLocked =
+    Boolean(providerAadhaar) ||
+    (Boolean(aadhaarProvider) && Boolean(currentAadhaarNumber));
+  const providerPan = getProviderValue("data.pan", "panNumber", "pan");
 
   const copyCurrentAddress = useCallback(() => {
     [
@@ -136,7 +153,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
             <InputField
               label="First Name"
               isRequired
-              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              isDisabled={Boolean(providerFirstName)}
               {...field}
             />
           )}
@@ -147,7 +164,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
           render={({ field }) => (
             <InputField
               label="Middle Name"
-              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              isDisabled={Boolean(providerMiddleName)}
               {...field}
             />
           )}
@@ -159,7 +176,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
             <InputField
               label="Last Name"
               isRequired={isCoApplicant || isGuarantor}
-              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              isDisabled={Boolean(providerLastName)}
               {...field}
             />
           )}
@@ -174,7 +191,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
             <InputField
               label="Father's Name"
               isRequired={isCoApplicant || isGuarantor}
-              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              isDisabled={Boolean(providerFatherName)}
               {...field}
             />
           )}
@@ -197,7 +214,6 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
           render={({ field }) => (
             <InputField
               label="W/o"
-              isDisabled={isAadhaarLocked && Boolean(field.value)}
               {...field}
             />
           )}
@@ -265,6 +281,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
             <InputField
               label="PAN No."
               isRequired={isCoApplicant || isGuarantor}
+              isDisabled={Boolean(providerPan)}
               {...field}
             />
           )}
@@ -280,7 +297,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
               label="Date of Birth"
               isRequired={isCoApplicant || isGuarantor}
               type="date"
-              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              isDisabled={Boolean(providerDob)}
               value={
                 field.value
                   ? new Date(field.value).toISOString().split("T")[0]
@@ -328,7 +345,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
               label="Mobile Number"
               type="tel"
               isRequired={isCoApplicant || isGuarantor}
-              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              isDisabled={Boolean(providerContactNumber)}
               {...field}
               onChange={(e) =>
                 field.onChange(e.target.value.replace(/\D/g, "").slice(0, 10))
@@ -392,7 +409,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
             <InputField
               label="Aadhaar Card No."
               isRequired={isCoApplicant || isGuarantor}
-              isDisabled={Boolean(providerAadhaar)}
+              isDisabled={isAadhaarNumberLocked}
               {...field}
             />
           )}
@@ -575,7 +592,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
         render={({ field }) => (
           <InputField
             label="Address Line 1"
-            isDisabled={isAadhaarLocked && Boolean(field.value)}
+            isDisabled={Boolean(providerAddressLine1)}
             {...field}
           />
         )}
@@ -587,7 +604,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
           render={({ field }) => (
             <InputField
               label="City / Town"
-              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              isDisabled={Boolean(providerAddressCity)}
               {...field}
             />
           )}
@@ -598,7 +615,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
           render={({ field }) => (
             <InputField
               label="District"
-              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              isDisabled={Boolean(providerAddressDistrict)}
               {...field}
             />
           )}
@@ -624,7 +641,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
           render={({ field }) => (
             <InputField
               label="Pin Code"
-              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              isDisabled={Boolean(providerAddressPin)}
               {...field}
               onChange={(e) =>
                 field.onChange(e.target.value.replace(/\D/g, "").slice(0, 6))
@@ -638,7 +655,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
           render={({ field }) => (
             <InputField
               label="Land Mark"
-              isDisabled={isAadhaarLocked && Boolean(field.value)}
+              isDisabled={Boolean(providerAddressLandmark)}
               {...field}
             />
           )}
