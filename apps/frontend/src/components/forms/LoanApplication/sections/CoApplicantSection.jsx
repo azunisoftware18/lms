@@ -29,6 +29,100 @@ const formatSeconds = (seconds) => {
   return `${mins}:${secs}`;
 };
 
+const parseProviderDateToIso = (value) => {
+  if (!value) return "";
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    const ddmmyyyy = /^(\d{2})-(\d{2})-(\d{4})$/.exec(trimmed);
+    if (ddmmyyyy) {
+      const [, dd, mm, yyyy] = ddmmyyyy;
+      return `${yyyy}-${mm}-${dd}`;
+    }
+    const direct = new Date(trimmed);
+    if (!Number.isNaN(direct.getTime())) {
+      return direct.toISOString().split("T")[0];
+    }
+    return "";
+  }
+  const fromDate = new Date(value);
+  return Number.isNaN(fromDate.getTime())
+    ? ""
+    : fromDate.toISOString().split("T")[0];
+};
+
+const normalizeGenderValue = (gender) => {
+  const g = String(gender || "").trim().toUpperCase();
+  if (g === "M" || g === "MALE") return "MALE";
+  if (g === "F" || g === "FEMALE") return "FEMALE";
+  if (g === "O" || g === "OTHER") return "OTHER";
+  return "";
+};
+
+const extractVerifyProfile = (response) => {
+  const root = response?.data?.data ?? response?.data ?? response;
+  const profile = root?.data && typeof root?.data === "object" ? root.data : root;
+  if (!profile || typeof profile !== "object") return null;
+  if (
+    profile.name ||
+    profile.dob ||
+    profile.gender ||
+    profile.address ||
+    profile.split_address
+  ) {
+    return profile;
+  }
+  return null;
+};
+
+const applyAadhaarProfileToCoApplicant = (profile, aadhaarNumber, index, setValue) => {
+  if (!profile) return;
+  const setField = (path, value) => {
+    setValue(`coApplicants.${index}.${path}`, value ?? "", {
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
+
+  const splitAddress = profile.split_address || {};
+  const fullName = String(profile.name || "").trim();
+
+  if (fullName) {
+    const parts = fullName.split(/\s+/);
+    setField("firstName", parts.shift() || "");
+    setField(
+      "middleName",
+      parts.length > 1 ? parts.slice(0, -1).join(" ") : "",
+    );
+    setField("lastName", parts.length ? parts.slice(-1).join(" ") : "");
+  }
+
+  const dob = parseProviderDateToIso(profile.dob);
+  if (dob) setField("dob", dob);
+
+  const gender = normalizeGenderValue(profile.gender);
+  if (gender) setField("gender", gender);
+
+  if (profile.email) setField("email", profile.email);
+  if (profile.care_of) setField("fatherName", profile.care_of);
+
+  setField("aadhaarNumber", String(aadhaarNumber || ""));
+
+  const addressLine1 =
+    [splitAddress.house, splitAddress.street].filter(Boolean).join(", ") ||
+    profile.address ||
+    "";
+  const city = splitAddress.vtc || splitAddress.po || splitAddress.dist || "";
+
+  setField("sameAsCurrent", false);
+  setField("permanentAddress.addressLine1", addressLine1);
+  setField("permanentAddress.addressLine2", splitAddress.locality || "");
+  setField("permanentAddress.city", city);
+  setField("permanentAddress.district", splitAddress.dist || "");
+  setField("permanentAddress.state", splitAddress.state || "");
+  setField("permanentAddress.pinCode", splitAddress.pincode || "");
+  setField("permanentAddress.landmark", splitAddress.landmark || "");
+};
+
 export default function CoApplicantSection({
   control,
   watch,
@@ -127,6 +221,14 @@ export default function CoApplicantSection({
         setValue(`coApplicants.${index}.aadhaarProvider`, res?.data ?? res);
       } catch (e) {
         console.error(`Failed to set coApplicants.${index}.aadhaarProvider on form:`, e);
+      }
+      try {
+        const profile = extractVerifyProfile(res);
+        if (profile) {
+          applyAadhaarProfileToCoApplicant(profile, aadhaar, index, setValue);
+        }
+      } catch (e) {
+        console.error(`Failed to apply Aadhaar profile to coApplicants.${index}:`, e);
       }
       setOtpVerifiedMap((s) => ({ ...s, [index]: true }));
       setShowOtpModalMap((s) => ({ ...s, [index]: false }));

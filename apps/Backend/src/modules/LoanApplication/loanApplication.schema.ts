@@ -348,6 +348,8 @@ export const createCoApplicantSchema = z.object({
   firstName: z.string().trim().min(1),
   lastName: optionalNonEmptyString,
   middleName: optionalNonEmptyString,
+  aadhaarProvider: z.unknown().optional(),
+  panProvider: z.unknown().optional(),
   fatherName: optionalNonEmptyString,
   motherName: optionalNonEmptyString,
   woname: optionalNonEmptyString,
@@ -385,6 +387,8 @@ const guarantorSchema = z.object({
   firstName: z.string().trim().min(1),
   middleName: optionalNonEmptyString,
   lastName: z.string().trim().min(1),
+  aadhaarProvider: z.unknown().optional(),
+  panProvider: z.unknown().optional(),
   fatherName: optionalNonEmptyString,
   motherName: optionalNonEmptyString,
   woname: optionalNonEmptyString,
@@ -527,6 +531,9 @@ export const createFullLoanApplicationSchema = z.object({
     nationality: z.string(),
     category: z.enum(["GENERAL", "SC", "ST", "NT", "OBC", "OTHER"]),
     categoryOther: z.string().optional(),
+
+    aadhaarProvider: z.unknown().optional(),
+    panProvider: z.unknown().optional(),
 
     aadhaarNumber: z.string(),
     panNumber: z.string(),

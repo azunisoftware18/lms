@@ -134,6 +134,10 @@ export default function ApplicantSection({
 
   const isOtpExpired = aadhaarOtpSent && otpSecondsLeft === 0;
   const isAadhaarDataLocked = aadhaarVerified;
+  const aadhaarProvider = watch("applicant.aadhaarProvider");
+  const aadhaarProviderEmail = (
+    aadhaarProvider?.data?.email ?? aadhaarProvider?.email ?? ""
+  ).toString().trim();
 
   const applyAadhaarProfile = (profile, aadhaarNumber) => {
     if (!profile) return;
@@ -725,7 +729,7 @@ export default function ApplicantSection({
                   <InputField
                     label="Email Address"
                     type="email"
-                    isDisabled={isAadhaarDataLocked && Boolean(field.value)}
+                    isDisabled={isAadhaarDataLocked && Boolean(aadhaarProviderEmail)}
                     {...field}
                     error={errors.applicant?.email?.message}
                   />

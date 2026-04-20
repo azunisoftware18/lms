@@ -91,6 +91,20 @@ export async function createCustomer(
     });
   }
 
+  // If a matching customer was found and the payload includes aadhaarProvider,
+  // persist/update it on the existing record so provider JSON is not lost.
+  if (customer && data.applicant?.aadhaarProvider) {
+    try {
+      await tx.customer.update({
+        where: { id: customer.id },
+        data: { aadhaarProvider: data.applicant.aadhaarProvider },
+      });
+    } catch (e) {
+      // non-fatal: log and continue
+      console.error("Failed to update existing customer aadhaarProvider:", e);
+    }
+  }
+
   return customer;
 }
 
