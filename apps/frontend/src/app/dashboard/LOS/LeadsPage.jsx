@@ -23,6 +23,7 @@ import * as Icons from "lucide-react";
 // SearchField removed from this view - only status cards shown
 import LeadsTable from "../../../components/tables/LeadsTable";
 import LeadFormModal from "../../../components/modals/LeadFormModal";
+import UpdateLoginChargesModal from "../../../components/modals/UpdateLoginChargesModal";
 import Button from "../../../components/ui/Button";
 import StatusCard from "../../../components/common/StatusCard";
 import { LEAD_ACTION_DEFINITIONS } from "../../../lib/LOSDummyData";
@@ -31,15 +32,18 @@ import {
   useLead,
   useUpdateLeadStatus,
   useGetLead,
+  useUpdateLeadLoginCharges,
 } from "../../../hooks/useLead";
 import toast from "react-hot-toast";
 
 export default function LeadsPage() {
   const updateLeadStatus = useUpdateLeadStatus();
+  const updateLoginCharges = useUpdateLeadLoginCharges();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [updateChargesModalOpen, setUpdateChargesModalOpen] = useState(false);
   const [selectedLead, setSelectedLead] = useState(null);
   const [activeTab, setActiveTab] = useState("track-leads");
 
@@ -123,10 +127,12 @@ export default function LeadsPage() {
     const iconMap = {
       Edit: <Edit size={16} />,
       Trash2: <Trash2 size={16} />,
+      DollarSign: <DollarSign size={16} />,
     };
 
     const defaultDefs = [
       { key: "edit", label: "Edit", icon: "Edit" },
+      { key: "charges", label: "Edit Login Fee", icon: "DollarSign" },
       { key: "delete", label: "Delete", icon: "Trash2" },
     ];
 
@@ -143,6 +149,10 @@ export default function LeadsPage() {
         if (action.key === "edit") {
           setSelectedLead(item);
           setEditDialogOpen(true);
+        }
+        if (action.key === "charges") {
+          setSelectedLead(item);
+          setUpdateChargesModalOpen(true);
         }
         if (action.key === "delete") {
           console.log("Delete clicked", item.id);
@@ -337,6 +347,19 @@ export default function LeadsPage() {
               },
             },
           );
+        }}
+      />
+
+      {/* Update Login Charges Modal */}
+      <UpdateLoginChargesModal
+        isOpen={updateChargesModalOpen}
+        lead={selectedLead}
+        onClose={() => {
+          setUpdateChargesModalOpen(false);
+          setSelectedLead(null);
+        }}
+        onSuccess={() => {
+          refetch();
         }}
       />
 

@@ -36,6 +36,7 @@ export interface LoanTypeDTO {
   maxProcessingFee: number;
 
   minLoginCharges: number;
+  defaultLoginCharges: number;
   maxLoginCharges: number;
 
   gstApplicable: boolean;

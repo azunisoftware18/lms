@@ -1844,6 +1844,16 @@ export const LEAD_ACTION_DEFINITIONS = [
     label: "Edit",
     icon: "Edit",
   },
+  {
+    key: "charges",
+    label: "Edit Login Fee",
+    icon: "DollarSign",
+  },
+  {
+    key: "delete",
+    label: "Delete",
+    icon: "Trash2",
+  },
 ];
 
 export const LEADS_DUMMY_DATA = [

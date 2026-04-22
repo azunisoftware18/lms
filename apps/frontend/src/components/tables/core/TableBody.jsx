@@ -19,8 +19,28 @@ export default function TableBody({
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  if (!data.length) {
-    return <TableEmpty colSpan={columns.length + 1} />;
+  const isArray = Array.isArray(data);
+
+  if (!isArray || data.length === 0) {
+    return (
+      <>
+        <TableEmpty colSpan={columns.length + 1} />
+        <tbody>
+          <tr>
+            <td colSpan={columns.length + 1} className="px-6 py-4">
+              <div className="bg-yellow-50 border border-yellow-200 p-3 rounded text-xs text-slate-700">
+                <div className="font-medium mb-1">
+                  Debug: table received no rows
+                </div>
+                <pre className="whitespace-pre-wrap text-[11px] max-h-48 overflow-auto">
+                  {JSON.stringify(data, null, 2)}
+                </pre>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </>
+    );
   }
 
   // Mobile: render rows as stacked cards for better readability

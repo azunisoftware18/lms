@@ -6,6 +6,7 @@ import {
   updateLeadStatusSchema,
   leadStatusParamSchema,
   leadAssigedSchema,
+  editLeadLoginChargesSchema,
 } from "./lead.schema.js";
 import { validate } from "../../common/middlewares/zod.middleware.js";
 import { authMiddleware } from "../../common/middlewares/auth.middleware.js";
@@ -16,6 +17,7 @@ import {
   getAllLeadsController,
   getLeadByIdController,
   updateLeadStatusController,
+  editLogginChargesController
 } from "./lead.controller.js";
 export const leadRouter = Router();
 import { checkPermissionMiddleware } from "../../common/middlewares/permission.middleware.js";
@@ -56,4 +58,12 @@ leadRouter.get(
   // checkPermissionMiddleware("Convert_Lead_To_Loan"),
   convertLeadToLoanController
 ); // Convert lead to loan application route requires auth
+
+leadRouter.post(
+  "/edit-login-charges/:id",
+  validate(leadIdParamSchema, "params"),
+  validate(editLeadLoginChargesSchema),
+  checkPermissionMiddleware("EDIT_LEAD_LOGIN_CHARGES"),
+  editLogginChargesController
+)
 export default leadRouter;

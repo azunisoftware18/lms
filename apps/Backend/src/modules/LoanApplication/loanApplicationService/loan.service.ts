@@ -263,6 +263,8 @@ export async function createGuarantors(
         firstName: g.firstName,
         middleName: g.middleName,
         lastName: g.lastName,
+        aadhaarProvider: g.aadhaarProvider || null,
+        panProvider: g.panProvider || null,
         fatherName: g.fatherName,
         motherName: g.motherName,
         woname: g.woname,

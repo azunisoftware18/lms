@@ -53,6 +53,9 @@ export async function createCustomer(
         middleName: data.applicant.middleName,
         lastName: data.applicant.lastName,
         fatherName: data.applicant.fatherName,
+        aadhaarProvider: data.applicant.aadhaarProvider || null,
+        panProvider: data.applicant.panProvider || null,
+
         motherName: data.applicant.motherName,
         woname: data.applicant.woname,
         dob: data.applicant.dob,
@@ -86,6 +89,20 @@ export async function createCustomer(
         employmentType: toPrismaEmploymentType(data.applicant.employmentType),
       },
     });
+  }
+
+  // If a matching customer was found and the payload includes aadhaarProvider,
+  // persist/update it on the existing record so provider JSON is not lost.
+  if (customer && data.applicant?.aadhaarProvider) {
+    try {
+      await tx.customer.update({
+        where: { id: customer.id },
+        data: { aadhaarProvider: data.applicant.aadhaarProvider },
+      });
+    } catch (e) {
+      // non-fatal: log and continue
+      console.error("Failed to update existing customer aadhaarProvider:", e);
+    }
   }
 
   return customer;

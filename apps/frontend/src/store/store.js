@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
 import loanTypeReducer from "./slices/loanTypeSlice";
 import branchReducer from "./slices/branchSlice";
+import partnerReducer from "./slices/partnerSlice";
 import branchAdminReducer from "./slices/branchAdminSlice";
 import coApplicationReducer from "./slices/coApplicationSlice";
 import creditReportReducer from "./slices/creditReportSlice";
@@ -13,12 +14,14 @@ import employeeReducer from "./slices/employeeSlice";
 import technicalReportReducer from "./slices/technicalReportSlice";
 import disbursementReducer from "./slices/disbursementSlice";
 import loanDefaultReducer from "./slices/loanDefultslice";
+import permissionReducer from "./slices/permissionSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     loanTypes: loanTypeReducer,
     branch: branchReducer,
+    partner: partnerReducer,
     branchAdmin: branchAdminReducer,
     coApplication: coApplicationReducer,
     creditReport: creditReportReducer,
@@ -30,6 +33,7 @@ export const store = configureStore({
     technicalReport: technicalReportReducer,
     disbursement: disbursementReducer,
     loanDefault: loanDefaultReducer,
+    permission: permissionReducer,
   },
 });
 

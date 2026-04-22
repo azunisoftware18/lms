@@ -79,6 +79,7 @@ import BranchManagement from "../app/dashboard/Configuration/BranchManagement.js
 import BranchAdmin from "../app/dashboard/Configuration/BranchAdmin.jsx";
 import EmployeeAddPage from "../app/dashboard/Configuration/EmployeeAddPage.jsx";
 import PartnerAddPage from "../app/dashboard/Configuration/PartnerAddPage.jsx";
+import PartnerCreatePage from "../app/dashboard/Configuration/PartnerCreatePage.jsx";
 
 // Reports pages
 import DueListPage from "../app/dashboard/reports/DueListPage.jsx";
@@ -88,6 +89,7 @@ import CustomerAndBookingListPage from "../app/dashboard/reports/CustomerAndBook
 import SalesTargetAndAchievementPage from "../app/dashboard/reports/SalesTargetAndAchievementPage.jsx";
 import DisbursCollectionPage from "../app/dashboard/reports/DisbursCollectionPage.jsx";
 import PermissionManagementPage from "../app/dashboard/PermissionManagementPage.jsx";
+import UserPermissionPage from "../app/dashboard/UserPermission.jsx";
 import EligibilityPage from "../app/dashboard/LOS/EligibilityPage.jsx";
 import CreditReportView from "../app/dashboard/LOS/CreditReportView.jsx";
 import RoleManagement from "../app/dashboard/RoleManagement.jsx";
@@ -260,6 +262,7 @@ export default function AppRoutes() {
         <Route path="branch-admin" element={<BranchAdmin />} />
         <Route path="employee" element={<EmployeeAddPage />} />
         <Route path="partner" element={<PartnerAddPage />} />
+        <Route path="partner/add" element={<PartnerCreatePage />} />
         {/* Role management route */}
         <Route path="role-management" element={<RoleManagement />} />
         {/* reports routes */}
@@ -282,6 +285,10 @@ export default function AppRoutes() {
         <Route
           path="permission-management"
           element={<PermissionManagementPage />}
+        />
+        <Route
+          path="permission-management/user/:userId"
+          element={<UserPermissionPage />}
         />
       </Route>
     </Routes>

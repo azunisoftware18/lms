@@ -124,6 +124,8 @@ export type CustomerCountAggregateOutputType = {
   id: number
   title: number
   firstName: number
+  aadhaarProvider: number
+  panProvider: number
   lastName: number
   middleName: number
   fatherName: number
@@ -261,6 +263,8 @@ export type CustomerCountAggregateInputType = {
   id?: true
   title?: true
   firstName?: true
+  aadhaarProvider?: true
+  panProvider?: true
   lastName?: true
   middleName?: true
   fatherName?: true
@@ -389,6 +393,8 @@ export type CustomerGroupByOutputType = {
   id: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider: runtime.JsonValue | null
+  panProvider: runtime.JsonValue | null
   lastName: string
   middleName: string | null
   fatherName: string
@@ -453,6 +459,8 @@ export type CustomerWhereInput = {
   id?: Prisma.StringFilter<"Customer"> | string
   title?: Prisma.EnumTitleFilter<"Customer"> | $Enums.Title
   firstName?: Prisma.StringFilter<"Customer"> | string
+  aadhaarProvider?: Prisma.JsonNullableFilter<"Customer">
+  panProvider?: Prisma.JsonNullableFilter<"Customer">
   lastName?: Prisma.StringFilter<"Customer"> | string
   middleName?: Prisma.StringNullableFilter<"Customer"> | string | null
   fatherName?: Prisma.StringFilter<"Customer"> | string
@@ -502,6 +510,8 @@ export type CustomerOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
+  aadhaarProvider?: Prisma.SortOrderInput | Prisma.SortOrder
+  panProvider?: Prisma.SortOrderInput | Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrderInput | Prisma.SortOrder
   fatherName?: Prisma.SortOrder
@@ -555,6 +565,8 @@ export type CustomerWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.CustomerWhereInput | Prisma.CustomerWhereInput[]
   title?: Prisma.EnumTitleFilter<"Customer"> | $Enums.Title
   firstName?: Prisma.StringFilter<"Customer"> | string
+  aadhaarProvider?: Prisma.JsonNullableFilter<"Customer">
+  panProvider?: Prisma.JsonNullableFilter<"Customer">
   lastName?: Prisma.StringFilter<"Customer"> | string
   middleName?: Prisma.StringNullableFilter<"Customer"> | string | null
   fatherName?: Prisma.StringFilter<"Customer"> | string
@@ -604,6 +616,8 @@ export type CustomerOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
+  aadhaarProvider?: Prisma.SortOrderInput | Prisma.SortOrder
+  panProvider?: Prisma.SortOrderInput | Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrderInput | Prisma.SortOrder
   fatherName?: Prisma.SortOrder
@@ -653,6 +667,8 @@ export type CustomerScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Customer"> | string
   title?: Prisma.EnumTitleWithAggregatesFilter<"Customer"> | $Enums.Title
   firstName?: Prisma.StringWithAggregatesFilter<"Customer"> | string
+  aadhaarProvider?: Prisma.JsonNullableWithAggregatesFilter<"Customer">
+  panProvider?: Prisma.JsonNullableWithAggregatesFilter<"Customer">
   lastName?: Prisma.StringWithAggregatesFilter<"Customer"> | string
   middleName?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   fatherName?: Prisma.StringWithAggregatesFilter<"Customer"> | string
@@ -694,6 +710,8 @@ export type CustomerCreateInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -743,6 +761,8 @@ export type CustomerUncheckedCreateInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -792,6 +812,8 @@ export type CustomerUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -841,6 +863,8 @@ export type CustomerUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -890,6 +914,8 @@ export type CustomerCreateManyInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -931,6 +957,8 @@ export type CustomerUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -972,6 +1000,8 @@ export type CustomerUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1029,6 +1059,8 @@ export type CustomerCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
+  aadhaarProvider?: Prisma.SortOrder
+  panProvider?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrder
   fatherName?: Prisma.SortOrder
@@ -1290,6 +1322,8 @@ export type CustomerCreateWithoutAddressesInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -1338,6 +1372,8 @@ export type CustomerUncheckedCreateWithoutAddressesInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -1402,6 +1438,8 @@ export type CustomerUpdateWithoutAddressesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1450,6 +1488,8 @@ export type CustomerUncheckedUpdateWithoutAddressesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1498,6 +1538,8 @@ export type CustomerCreateWithoutLoanApplicationsInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -1546,6 +1588,8 @@ export type CustomerUncheckedCreateWithoutLoanApplicationsInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -1610,6 +1654,8 @@ export type CustomerUpdateWithoutLoanApplicationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1658,6 +1704,8 @@ export type CustomerUncheckedUpdateWithoutLoanApplicationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1706,6 +1754,8 @@ export type CustomerCreateWithoutOccupationalDetailsInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -1754,6 +1804,8 @@ export type CustomerUncheckedCreateWithoutOccupationalDetailsInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -1818,6 +1870,8 @@ export type CustomerUpdateWithoutOccupationalDetailsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1866,6 +1920,8 @@ export type CustomerUncheckedUpdateWithoutOccupationalDetailsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1914,6 +1970,8 @@ export type CustomerCreateWithoutEmploymentDetailsInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -1962,6 +2020,8 @@ export type CustomerUncheckedCreateWithoutEmploymentDetailsInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -2026,6 +2086,8 @@ export type CustomerUpdateWithoutEmploymentDetailsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2074,6 +2136,8 @@ export type CustomerUncheckedUpdateWithoutEmploymentDetailsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2122,6 +2186,8 @@ export type CustomerCreateWithoutFinancialDetailsInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -2170,6 +2236,8 @@ export type CustomerUncheckedCreateWithoutFinancialDetailsInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -2234,6 +2302,8 @@ export type CustomerUpdateWithoutFinancialDetailsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2282,6 +2352,8 @@ export type CustomerUncheckedUpdateWithoutFinancialDetailsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2330,6 +2402,8 @@ export type CustomerCreateWithoutLoanRecoveriesInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -2378,6 +2452,8 @@ export type CustomerUncheckedCreateWithoutLoanRecoveriesInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -2442,6 +2518,8 @@ export type CustomerUpdateWithoutLoanRecoveriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2490,6 +2568,8 @@ export type CustomerUncheckedUpdateWithoutLoanRecoveriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2538,6 +2618,8 @@ export type CustomerCreateWithoutCreditReportInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -2586,6 +2668,8 @@ export type CustomerUncheckedCreateWithoutCreditReportInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -2650,6 +2734,8 @@ export type CustomerUpdateWithoutCreditReportInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2698,6 +2784,8 @@ export type CustomerUncheckedUpdateWithoutCreditReportInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2746,6 +2834,8 @@ export type CustomerCreateWithoutNachMandatesInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -2794,6 +2884,8 @@ export type CustomerUncheckedCreateWithoutNachMandatesInput = {
   id?: string
   title: $Enums.Title
   firstName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName: string
   middleName?: string | null
   fatherName: string
@@ -2858,6 +2950,8 @@ export type CustomerUpdateWithoutNachMandatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2906,6 +3000,8 @@ export type CustomerUncheckedUpdateWithoutNachMandatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.EnumTitleFieldUpdateOperationsInput | $Enums.Title
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3030,6 +3126,8 @@ export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   id?: boolean
   title?: boolean
   firstName?: boolean
+  aadhaarProvider?: boolean
+  panProvider?: boolean
   lastName?: boolean
   middleName?: boolean
   fatherName?: boolean
@@ -3082,6 +3180,8 @@ export type CustomerSelectScalar = {
   id?: boolean
   title?: boolean
   firstName?: boolean
+  aadhaarProvider?: boolean
+  panProvider?: boolean
   lastName?: boolean
   middleName?: boolean
   fatherName?: boolean
@@ -3119,7 +3219,7 @@ export type CustomerSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "firstName" | "lastName" | "middleName" | "fatherName" | "motherName" | "woname" | "email" | "dob" | "contactNumber" | "alternateNumber" | "category" | "categoryOther" | "maritalStatus" | "maritalStatusOther" | "noOfFamilyDependents" | "noOfChildren" | "qualification" | "correspondenceAddressType" | "aadhaarNumber" | "panNumber" | "passportNumber" | "voterId" | "drivingLicenceNo" | "gender" | "genderOther" | "presentAccommodation" | "periodOfStay" | "rentPerMonth" | "nationality" | "phoneNumber" | "relationshipWithCoApplicant" | "relationWithCoApplicantOther" | "employmentType" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
+export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "firstName" | "aadhaarProvider" | "panProvider" | "lastName" | "middleName" | "fatherName" | "motherName" | "woname" | "email" | "dob" | "contactNumber" | "alternateNumber" | "category" | "categoryOther" | "maritalStatus" | "maritalStatusOther" | "noOfFamilyDependents" | "noOfChildren" | "qualification" | "correspondenceAddressType" | "aadhaarNumber" | "panNumber" | "passportNumber" | "voterId" | "drivingLicenceNo" | "gender" | "genderOther" | "presentAccommodation" | "periodOfStay" | "rentPerMonth" | "nationality" | "phoneNumber" | "relationshipWithCoApplicant" | "relationWithCoApplicantOther" | "employmentType" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
 export type CustomerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   addresses?: boolean | Prisma.Customer$addressesArgs<ExtArgs>
   loanApplications?: boolean | Prisma.Customer$loanApplicationsArgs<ExtArgs>
@@ -3148,6 +3248,8 @@ export type $CustomerPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     id: string
     title: $Enums.Title
     firstName: string
+    aadhaarProvider: runtime.JsonValue | null
+    panProvider: runtime.JsonValue | null
     lastName: string
     middleName: string | null
     fatherName: string
@@ -3563,6 +3665,8 @@ export interface CustomerFieldRefs {
   readonly id: Prisma.FieldRef<"Customer", 'String'>
   readonly title: Prisma.FieldRef<"Customer", 'Title'>
   readonly firstName: Prisma.FieldRef<"Customer", 'String'>
+  readonly aadhaarProvider: Prisma.FieldRef<"Customer", 'Json'>
+  readonly panProvider: Prisma.FieldRef<"Customer", 'Json'>
   readonly lastName: Prisma.FieldRef<"Customer", 'String'>
   readonly middleName: Prisma.FieldRef<"Customer", 'String'>
   readonly fatherName: Prisma.FieldRef<"Customer", 'String'>

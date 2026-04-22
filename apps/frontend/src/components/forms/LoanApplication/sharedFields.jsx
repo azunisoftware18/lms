@@ -71,6 +71,56 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
   const sameAddress = watch(`${prefix}.sameAsCurrent`) ?? false;
   const isCoApplicant = prefix.startsWith("coApplicants.");
   const isGuarantor = prefix.startsWith("guarantors.");
+  const aadhaarProvider = watch(`${prefix}.aadhaarProvider`);
+  const panProvider = watch(`${prefix}.panProvider`);
+  const currentAadhaarNumber = watch(`${prefix}.aadhaarNumber`);
+  const providerSources = [aadhaarProvider, panProvider].filter(Boolean);
+  const getProviderValue = (...keys) => {
+    for (const source of providerSources) {
+      const sourcesToCheck = [source, source?.data, source?.data?.data].filter(Boolean);
+      for (const item of sourcesToCheck) {
+        for (const key of keys) {
+          const value = key.split(".").reduce((acc, part) => acc?.[part], item);
+          if (value !== undefined && value !== null && String(value).trim()) {
+            return String(value).trim();
+          }
+        }
+      }
+    }
+    return "";
+  };
+  const providerFirstName = getProviderValue("firstName", "name");
+  const providerMiddleName = getProviderValue("middleName");
+  const providerLastName = getProviderValue("lastName", "name");
+  const providerFatherName = getProviderValue("fatherName", "care_of");
+  const providerDob = getProviderValue("dob");
+  const providerContactNumber = getProviderValue("contactNumber", "mobile", "phone");
+  const providerAddressLine1 = getProviderValue("split_address.house", "address", "buildingName", "streetName");
+  const providerAddressCity = getProviderValue("split_address.vtc", "split_address.po", "city");
+  const providerAddressDistrict = getProviderValue("split_address.dist", "district");
+  const providerAddressPin = getProviderValue("split_address.pincode", "pinCode");
+  const providerAddressLandmark = getProviderValue("split_address.landmark", "landmark");
+  const providerEmail = getProviderValue("data.email", "email");
+  const providerMother = getProviderValue(
+    "data.motherName",
+    "motherName",
+    "mother",
+    "data.mother",
+  );
+  const providerAadhaar = getProviderValue(
+    "data.aadhaarNumber",
+    "aadhaarNumber",
+    "data.aadhaar",
+    "aadhaar",
+    "data.uid",
+    "uid",
+    "data.uidNumber",
+    "uidNumber",
+  );
+  const isAadhaarNumberLocked =
+    Boolean(providerAadhaar) ||
+    (Boolean(aadhaarProvider) && Boolean(currentAadhaarNumber));
+  const providerPan = getProviderValue("data.pan", "panNumber", "pan");
 
   const copyCurrentAddress = useCallback(() => {
     [
@@ -100,13 +150,24 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
           name={`${prefix}.firstName`}
           control={control}
           render={({ field }) => (
-            <InputField label="First Name" isRequired {...field} />
+            <InputField
+              label="First Name"
+              isRequired
+              isDisabled={Boolean(providerFirstName)}
+              {...field}
+            />
           )}
         />
         <Controller
           name={`${prefix}.middleName`}
           control={control}
-          render={({ field }) => <InputField label="Middle Name" {...field} />}
+          render={({ field }) => (
+            <InputField
+              label="Middle Name"
+              isDisabled={Boolean(providerMiddleName)}
+              {...field}
+            />
+          )}
         />
         <Controller
           name={`${prefix}.lastName`}
@@ -115,6 +176,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
             <InputField
               label="Last Name"
               isRequired={isCoApplicant || isGuarantor}
+              isDisabled={Boolean(providerLastName)}
               {...field}
             />
           )}
@@ -129,6 +191,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
             <InputField
               label="Father's Name"
               isRequired={isCoApplicant || isGuarantor}
+              isDisabled={Boolean(providerFatherName)}
               {...field}
             />
           )}
@@ -140,6 +203,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
             <InputField
               label="Mother's Name"
               isRequired={isCoApplicant || isGuarantor}
+              isDisabled={Boolean(providerMother)}
               {...field}
             />
           )}
@@ -147,7 +211,12 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
         <Controller
           name={`${prefix}.woname`}
           control={control}
-          render={({ field }) => <InputField label="W/o" {...field} />}
+          render={({ field }) => (
+            <InputField
+              label="W/o"
+              {...field}
+            />
+          )}
         />
       </Grid>
 
@@ -181,9 +250,9 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
               label="Email Address"
               type="email"
               isRequired={false}
+              isDisabled={Boolean(providerEmail)}
               {...field}
               onBlur={() => {
-                // Only validate/show toasts for co-applicants (not guarantors or applicants)
                 if (!isCoApplicant || isGuarantor) return;
                 const v = field.value || "";
                 if (!v) return;
@@ -212,6 +281,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
             <InputField
               label="PAN No."
               isRequired={isCoApplicant || isGuarantor}
+              isDisabled={Boolean(providerPan)}
               {...field}
             />
           )}
@@ -227,6 +297,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
               label="Date of Birth"
               isRequired={isCoApplicant || isGuarantor}
               type="date"
+              isDisabled={Boolean(providerDob)}
               value={
                 field.value
                   ? new Date(field.value).toISOString().split("T")[0]
@@ -274,6 +345,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
               label="Mobile Number"
               type="tel"
               isRequired={isCoApplicant || isGuarantor}
+              isDisabled={Boolean(providerContactNumber)}
               {...field}
               onChange={(e) =>
                 field.onChange(e.target.value.replace(/\D/g, "").slice(0, 10))
@@ -337,6 +409,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
             <InputField
               label="Aadhaar Card No."
               isRequired={isCoApplicant || isGuarantor}
+              isDisabled={isAadhaarNumberLocked}
               {...field}
             />
           )}
@@ -412,19 +485,34 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
       <Controller
         name={`${prefix}.currentAddress.addressLine1`}
         control={control}
-        render={({ field }) => <InputField label="Address Line 1" {...field} />}
+        render={({ field }) => (
+          <InputField
+            label="Address Line 1"
+            {...field}
+          />
+        )}
       />
 
       <Grid cols={3}>
         <Controller
           name={`${prefix}.currentAddress.city`}
           control={control}
-          render={({ field }) => <InputField label="City / Town" {...field} />}
+          render={({ field }) => (
+            <InputField
+              label="City / Town"
+              {...field}
+            />
+          )}
         />
         <Controller
           name={`${prefix}.currentAddress.district`}
           control={control}
-          render={({ field }) => <InputField label="District" {...field} />}
+          render={({ field }) => (
+            <InputField
+              label="District"
+              {...field}
+            />
+          )}
         />
         <Controller
           name={`${prefix}.currentAddress.state`}
@@ -458,13 +546,21 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
         <Controller
           name={`${prefix}.currentAddress.landmark`}
           control={control}
-          render={({ field }) => <InputField label="Land Mark" {...field} />}
+          render={({ field }) => (
+            <InputField
+              label="Land Mark"
+              {...field}
+            />
+          )}
         />
         <Controller
           name={`${prefix}.currentAddress.phoneWithStd`}
           control={control}
           render={({ field }) => (
-            <InputField label="Phone No. (With STD Code)" {...field} />
+            <InputField
+              label="Phone No. (With STD Code)"
+              {...field}
+            />
           )}
         />
       </Grid>
@@ -493,18 +589,36 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
       <Controller
         name={`${prefix}.permanentAddress.addressLine1`}
         control={control}
-        render={({ field }) => <InputField label="Address Line 1" {...field} />}
+        render={({ field }) => (
+          <InputField
+            label="Address Line 1"
+            isDisabled={Boolean(providerAddressLine1)}
+            {...field}
+          />
+        )}
       />
       <Grid cols={3}>
         <Controller
           name={`${prefix}.permanentAddress.city`}
           control={control}
-          render={({ field }) => <InputField label="City / Town" {...field} />}
+          render={({ field }) => (
+            <InputField
+              label="City / Town"
+              isDisabled={Boolean(providerAddressCity)}
+              {...field}
+            />
+          )}
         />
         <Controller
           name={`${prefix}.permanentAddress.district`}
           control={control}
-          render={({ field }) => <InputField label="District" {...field} />}
+          render={({ field }) => (
+            <InputField
+              label="District"
+              isDisabled={Boolean(providerAddressDistrict)}
+              {...field}
+            />
+          )}
         />
         <Controller
           name={`${prefix}.permanentAddress.state`}
@@ -527,6 +641,7 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
           render={({ field }) => (
             <InputField
               label="Pin Code"
+              isDisabled={Boolean(providerAddressPin)}
               {...field}
               onChange={(e) =>
                 field.onChange(e.target.value.replace(/\D/g, "").slice(0, 6))
@@ -537,7 +652,13 @@ export const PersonPersonalFields = ({ control, prefix, watch, setValue }) => {
         <Controller
           name={`${prefix}.permanentAddress.landmark`}
           control={control}
-          render={({ field }) => <InputField label="Land Mark" {...field} />}
+          render={({ field }) => (
+            <InputField
+              label="Land Mark"
+              isDisabled={Boolean(providerAddressLandmark)}
+              {...field}
+            />
+          )}
         />
       </Grid>
 

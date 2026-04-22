@@ -198,3 +198,32 @@ export const getAllPermissionsCodeAndNameService = async () => {
   });
   return permissions;
 };
+
+export const unassignPermissionsService = async (
+  userId: string,
+  permissionCodes: string[],
+) => {
+  // Check if user exists
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    const e: any = new Error("User not found");
+    e.statusCode = 404;
+    throw e;
+  }
+
+  const permissions = await getPermissionsByCodes(permissionCodes);
+
+  const result = await prisma.$transaction(
+    permissions.map((permission: any) =>
+      (prisma as any).userPermission.updateMany({
+        where: {
+          userId,
+          permissionId: permission.id,
+        },
+        data: { allowed: false },
+      }),
+    ),
+  );
+
+  return result;
+};

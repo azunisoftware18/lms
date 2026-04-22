@@ -1,131 +1,52 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
-import axios from "axios";
+// apiGet fallback removed; `usePartners` handles fetching
 import Button from "../../../components/ui/Button";
 import AddPartnerTable from "../../../components/tables/AddPartnerTable";
-import AddPartnerModal from "../../../components/modals/AddPartnerModal";
 import AddPartnerForm from "../../../components/forms/AddPartnerForm";
-import { useCreatePartner, useUpdatePartner } from "../../../hooks/usePartner";
+import { useBranches } from "../../../hooks/useBranches";
+import {
+  useCreatePartner,
+  useUpdatePartner,
+  usePartners,
+  useUploadPartnerDocuments,
+} from "../../../hooks/usePartner";
+import { useDispatch } from "react-redux";
+import { setPartners } from "../../../store/slices/partnerSlice";
+import toast from "react-hot-toast";
 
 export default function PartnerAddPage() {
   const [showPartnerModal, setShowPartnerModal] = useState(false);
   const [errors, setErrors] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [partners, setPartners] = useState([]);
 
-  // --- FORM STATE ---
+  const { partners, refetch } = usePartners();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { branches } = useBranches();
+
+  // Ensure partners are loaded on mount
+  useEffect(() => {
+    void refetch();
+  }, [refetch]);
+
+  // Fallback: if store empty after refetch, fetch directly and inject
+  // No inline fallback here — `usePartners` performs fetching and normalization.
+
   const initialFormState = {
     companyName: "",
     partnerName: "",
     email: "",
     phone: "",
-    altPhone: "",
-    website: "",
-    establishedYear: "",
-    partnerType: "Individual",
-    businessNature: "",
-
-    address: "",
-    city: "",
-    state: "",
-    pincode: "",
-    country: "India",
-    contactPerson: "",
-    contactPersonDesignation: "",
-
     partnerId: "",
-    businessCategory: "Finance",
-    specialization: "",
-    totalEmployees: "",
-    annualTurnover: "",
-    registrationNo: "",
-    gstNo: "",
-    panNo: "",
-
-    companyLogo: null,
-    panDoc: null,
-    gstDoc: null,
-    licenseDoc: null,
-    agreementDoc: null,
-
-    accountHolder: "",
-    bankName: "",
-    accountNo: "",
-    ifsc: "",
-    upiId: "",
-
-    commissionType: "Percentage",
     commissionValue: "",
-    paymentCycle: "Monthly",
-    minimumPayout: "",
-    taxDeduction: "",
-
-    monthlyTarget: "",
-    quarterlyTarget: "",
-    annualTarget: "",
-    performanceRating: "3",
-
     status: "Active",
-    partnershipDate: "",
-    renewalDate: "",
-    permissions: {
-      viewLeads: false,
-      addCustomers: false,
-      viewReports: false,
-      accessPortal: false,
-      manageSubAgents: false,
-    },
-
-    username: "",
-    password: "",
-    portalAccess: false,
   };
 
   const [formData, setFormData] = useState(initialFormState);
-  useEffect(() => {
-    let isCancelled = false;
 
-    const loadPartners = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/partner/all`,
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          },
-        );
-
-        if (!isCancelled) {
-          setPartners(res.data.data || res.data.partners || []);
-        }
-      } catch (error) {
-        console.error("Failed to fetch partners", error);
-      }
-    };
-
-    loadPartners();
-
-    return () => {
-      isCancelled = true;
-    };
-  }, []);
-
-  const performanceOptions = [
-    { value: "1", label: "Poor", color: "bg-red-100 text-red-800" },
-    {
-      value: "2",
-      label: "Below Average",
-      color: "bg-orange-100 text-orange-800",
-    },
-    { value: "3", label: "Average", color: "bg-yellow-100 text-yellow-800" },
-    { value: "4", label: "Good", color: "bg-green-100 text-green-800" },
-    { value: "5", label: "Excellent", color: "bg-blue-100 text-blue-800" },
-  ];
-
-  // --- FORM HANDLERS ---
   const resetForm = () => {
     setFormData(initialFormState);
     setErrors({});
@@ -135,170 +56,84 @@ export default function PartnerAddPage() {
 
   const handleAddNew = () => {
     resetForm();
-    const newId = `PTR${String(partners.length + 101).padStart(3, "0")}`;
+    const newId = `PTR${String((partners?.length || 0) + 101).padStart(3, "0")}`;
     setFormData((prev) => ({ ...prev, partnerId: newId }));
-    setShowPartnerModal(true);
+    navigate("/admin/partner/add", { state: { partnerId: newId } });
   };
 
   const handleEdit = (partner) => {
-    setFormData({
-      ...initialFormState,
-      ...partner,
-      companyName: partner.companyName || "",
-      partnerName: partner.partnerName || partner.contactPerson || "",
-      email: partner.email || "",
-      phone: partner.phone || "",
-      partnerType: partner.partnerType || "Individual",
-      city: partner.city || "",
-      contactPerson: partner.contactPerson || partner.partnerName || "",
-      contactPersonDesignation: partner.contactPersonDesignation || "",
-      partnerId: partner.partnerId || partner.id || "",
-      businessCategory: partner.businessCategory || "Finance",
-      specialization: partner.specialization || "",
-      totalEmployees: partner.totalEmployees || "",
-      annualTurnover: partner.annualTurnover
-        ? partner.annualTurnover
-            .replace("₹", "")
-            .replace(" Cr", "")
-            .replace(" Lakhs", "")
-        : "",
-      registrationNo: partner.registrationNo || "",
-      gstNo: partner.gstNo || "",
-      panNo: partner.panNo || "",
-      accountHolder: partner.accountHolder || "",
-      bankName: partner.bankName || "",
-      accountNo: partner.accountNo || "",
-      ifsc: partner.ifsc || "",
-      upiId: partner.upiId || "",
-      commissionType: partner.commissionType || "Percentage",
-      commissionValue: partner.commissionValue
-        ? partner.commissionValue.replace("%", "").replace("₹", "")
-        : "",
-      paymentCycle: partner.paymentCycle || "Monthly",
-      minimumPayout: partner.minimumPayout
-        ? partner.minimumPayout.replace("₹", "").replace(",", "")
-        : "",
-      monthlyTarget: partner.monthlyTarget
-        ? partner.monthlyTarget.replace("₹", "").replace(",", "")
-        : "",
-      quarterlyTarget: partner.quarterlyTarget
-        ? partner.quarterlyTarget
-            .replace("₹", "")
-            .replace(",", "")
-            .replace(" Cr", "0000000")
-            .replace(" Lakhs", "00000")
-        : "",
-      annualTarget: partner.annualTarget
-        ? partner.annualTarget
-            .replace("₹", "")
-            .replace(",", "")
-            .replace(" Cr", "0000000")
-            .replace(" Lakhs", "00000")
-        : "",
-      performanceRating: String(partner.performanceRating || "3"),
-      status: partner.status || "Active",
-      partnershipDate: partner.partnershipDate || "",
-      renewalDate: partner.renewalDate || "",
-      portalAccess: partner.portalAccess || false,
-      username: partner.username || "",
-      permissions: partner.permissions || {
-        viewLeads: false,
-        addCustomers: false,
-        viewReports: false,
-        accessPortal: false,
-        manageSubAgents: false,
-      },
-    });
-
+    setFormData({ ...initialFormState, ...partner });
     setEditId(partner.id);
     setIsEditing(true);
     setShowPartnerModal(true);
   };
 
   const handleDelete = (id) => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete this partner? This action cannot be undone.",
-      )
-    ) {
-      setPartners(partners.filter((partner) => partner.id !== id));
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    let newValue = value;
-
-    if (name === "phone" || name === "altPhone")
-      newValue = value.replace(/[^0-9]/g, "").slice(0, 10);
-    if (name === "pincode") newValue = value.replace(/[^0-9]/g, "").slice(0, 6);
-    if (name === "gstNo") newValue = value.toUpperCase().slice(0, 15);
-    if (name === "panNo") newValue = value.toUpperCase().slice(0, 10);
-    if (
-      name === "annualTurnover" ||
-      name === "monthlyTarget" ||
-      name === "quarterlyTarget" ||
-      name === "annualTarget" ||
-      name === "minimumPayout" ||
-      name === "commissionValue"
-    ) {
-      newValue = value.replace(/[^0-9.]/g, "");
-    }
-
-    if (type === "checkbox") {
-      if (name === "portalAccess") {
-        setFormData((prev) => ({ ...prev, portalAccess: checked }));
-      } else if (name.startsWith("perm_")) {
-        const key = name.replace("perm_", "");
-        setFormData((prev) => ({
-          ...prev,
-          permissions: { ...prev.permissions, [key]: checked },
-        }));
-      } else {
-        setFormData({ ...formData, [name]: checked });
+    if (window.confirm("Are you sure you want to delete this partner?")) {
+      try {
+        const remaining = (partners || []).filter((p) => p.id !== id);
+        dispatch(setPartners(remaining));
+      } catch (e) {
+        toast.error(`Failed to delete partner: ${e.message}`);
       }
-    } else {
-      setFormData({ ...formData, [name]: newValue });
-      if (errors[name]) setErrors({ ...errors, [name]: "" });
     }
-  };
-
-  const validateForm = () => {
-    let newErrors = {};
-
-    if (!formData.companyName)
-      newErrors.companyName = "Company Name is required";
-    if (!formData.partnerName)
-      newErrors.partnerName = "Contact Person is required";
-    if (!formData.email) newErrors.email = "Email is required";
-    if (!formData.phone || formData.phone.length < 10)
-      newErrors.phone = "Valid Phone is required";
-    if (!formData.partnerId) newErrors.partnerId = "Partner ID is required";
-    if (!formData.commissionValue)
-      newErrors.commissionValue = "Commission Value is required";
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   const createPartner = useCreatePartner();
   const updatePartner = useUpdatePartner();
+  const uploadDocuments = useUploadPartnerDocuments();
 
   const handleSubmit = async (submittedData) => {
-    // `submittedData` comes from AddPartnerForm (Zod-parsed) when available.
+    if (submittedData?.partnerData) {
+      // If the backend already returned uploaded documents, do not upload again.
+      try {
+        const partner = submittedData.partnerData;
+        const uploadedDocuments = submittedData.uploadedDocuments || [];
+        const documents = submittedData.documents || [];
+        const documentTypes = submittedData.documentTypes || [];
+
+        if (
+          partner?.id &&
+          documents.length > 0 &&
+          uploadedDocuments.length === 0
+        ) {
+          const form = new FormData();
+          documents.forEach((file) => form.append("documents", file));
+          if (documentTypes && documentTypes.length > 0) {
+            form.append("documentTypes", JSON.stringify(documentTypes));
+          }
+
+          await uploadDocuments.mutateAsync({
+            partnerId: partner.id,
+            formData: form,
+          });
+        }
+
+        await refetch();
+        setShowPartnerModal(false);
+        resetForm();
+      } catch (e) {
+        // show error but continue
+        console.error("Document upload failed:", e);
+        await refetch();
+        setShowPartnerModal(false);
+        resetForm();
+      }
+
+      return;
+    }
+
     const payload = { ...formData, ...(submittedData || {}) };
     try {
       if (isEditing) {
         await updatePartner.mutateAsync({ id: editId, data: payload });
-        alert("Partner Updated Successfully!");
       } else {
         await createPartner.mutateAsync(payload);
-        alert("Partner Added Successfully!");
       }
+      await refetch();
       setShowPartnerModal(false);
       resetForm();
     } catch (err) {
-      console.error("Failed to submit partner", err);
       setErrors({ form: err?.message || "Submission failed" });
     }
   };
@@ -320,9 +155,18 @@ export default function PartnerAddPage() {
           </p>
         </div>
 
-        <Button onClick={handleAddNew} className="px-6 py-2.5">
-          <Plus size={20} /> Add New Partner
-        </Button>
+        <div className="flex gap-3 items-center">
+          <Button onClick={handleAddNew} className="px-6 py-2.5">
+            <Plus size={20} /> Add New Partner
+          </Button>
+        </div>
+      </div>
+
+      <div className="mb-4">
+        <div className="text-sm text-slate-600">
+          Partners in store:{" "}
+          <strong>{Array.isArray(partners) ? partners.length : 0}</strong>
+        </div>
       </div>
 
       <AddPartnerTable
@@ -331,21 +175,32 @@ export default function PartnerAddPage() {
         onDelete={handleDelete}
       />
 
-      <AddPartnerModal
-        isOpen={showPartnerModal}
-        onClose={closeModal}
-        title={isEditing ? "Edit Partner" : "Add New Partner"}
-      >
-        <AddPartnerForm
-          formData={formData}
-          errors={errors}
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
-          onCancel={closeModal}
-          isEditing={isEditing}
-          performanceOptions={performanceOptions}
-        />
-      </AddPartnerModal>
+      {showPartnerModal && (
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden p-8 mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-gray-800">
+              {isEditing ? "Edit Partner" : "Add New Partner"}
+            </h2>
+            <Button onClick={closeModal} variant="secondary">
+              Close
+            </Button>
+          </div>
+
+          <AddPartnerForm
+            initialFormState={isEditing ? formData : undefined}
+            isEditing={isEditing}
+            onCancel={closeModal}
+            onSuccess={handleSubmit}
+            errors={errors}
+            branchOptions={(branches || []).map((b) => ({
+              value: b.id,
+              label: b.name
+                ? `${b.name}${b.code ? ` (${b.code})` : ""}`
+                : b.code,
+            }))}
+          />
+        </div>
+      )}
     </div>
   );
 }

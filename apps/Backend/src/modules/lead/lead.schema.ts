@@ -44,6 +44,10 @@ export const updateLeadStatusSchema = z.object({
   status: statusEnum,
 });
 
+export const editLeadLoginChargesSchema = z.object({
+  defaultLoginCharges: z.coerce.number().nonnegative(),
+});
+
 export const leadIdParamSchema = z.object({
     id: z.string().min(1, "id param is required"),
 

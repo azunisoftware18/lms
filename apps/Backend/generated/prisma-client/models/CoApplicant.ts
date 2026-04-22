@@ -113,6 +113,8 @@ export type CoApplicantCountAggregateOutputType = {
   loanApplicationId: number
   firstName: number
   lastName: number
+  aadhaarProvider: number
+  panProvider: number
   middleName: number
   fatherName: number
   motherName: number
@@ -232,6 +234,8 @@ export type CoApplicantCountAggregateInputType = {
   loanApplicationId?: true
   firstName?: true
   lastName?: true
+  aadhaarProvider?: true
+  panProvider?: true
   middleName?: true
   fatherName?: true
   motherName?: true
@@ -354,6 +358,8 @@ export type CoApplicantGroupByOutputType = {
   loanApplicationId: string
   firstName: string
   lastName: string
+  aadhaarProvider: runtime.JsonValue | null
+  panProvider: runtime.JsonValue | null
   middleName: string | null
   fatherName: string | null
   motherName: string | null
@@ -412,6 +418,8 @@ export type CoApplicantWhereInput = {
   loanApplicationId?: Prisma.StringFilter<"CoApplicant"> | string
   firstName?: Prisma.StringFilter<"CoApplicant"> | string
   lastName?: Prisma.StringFilter<"CoApplicant"> | string
+  aadhaarProvider?: Prisma.JsonNullableFilter<"CoApplicant">
+  panProvider?: Prisma.JsonNullableFilter<"CoApplicant">
   middleName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   fatherName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   motherName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
@@ -454,6 +462,8 @@ export type CoApplicantOrderByWithRelationInput = {
   loanApplicationId?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
+  aadhaarProvider?: Prisma.SortOrderInput | Prisma.SortOrder
+  panProvider?: Prisma.SortOrderInput | Prisma.SortOrder
   middleName?: Prisma.SortOrderInput | Prisma.SortOrder
   fatherName?: Prisma.SortOrderInput | Prisma.SortOrder
   motherName?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -501,6 +511,8 @@ export type CoApplicantWhereUniqueInput = Prisma.AtLeast<{
   loanApplicationId?: Prisma.StringFilter<"CoApplicant"> | string
   firstName?: Prisma.StringFilter<"CoApplicant"> | string
   lastName?: Prisma.StringFilter<"CoApplicant"> | string
+  aadhaarProvider?: Prisma.JsonNullableFilter<"CoApplicant">
+  panProvider?: Prisma.JsonNullableFilter<"CoApplicant">
   middleName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   fatherName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   motherName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
@@ -542,6 +554,8 @@ export type CoApplicantOrderByWithAggregationInput = {
   loanApplicationId?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
+  aadhaarProvider?: Prisma.SortOrderInput | Prisma.SortOrder
+  panProvider?: Prisma.SortOrderInput | Prisma.SortOrder
   middleName?: Prisma.SortOrderInput | Prisma.SortOrder
   fatherName?: Prisma.SortOrderInput | Prisma.SortOrder
   motherName?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -585,6 +599,8 @@ export type CoApplicantScalarWhereWithAggregatesInput = {
   loanApplicationId?: Prisma.StringWithAggregatesFilter<"CoApplicant"> | string
   firstName?: Prisma.StringWithAggregatesFilter<"CoApplicant"> | string
   lastName?: Prisma.StringWithAggregatesFilter<"CoApplicant"> | string
+  aadhaarProvider?: Prisma.JsonNullableWithAggregatesFilter<"CoApplicant">
+  panProvider?: Prisma.JsonNullableWithAggregatesFilter<"CoApplicant">
   middleName?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
   fatherName?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
   motherName?: Prisma.StringNullableWithAggregatesFilter<"CoApplicant"> | string | null
@@ -619,6 +635,8 @@ export type CoApplicantCreateInput = {
   id?: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -660,6 +678,8 @@ export type CoApplicantUncheckedCreateInput = {
   loanApplicationId: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -699,6 +719,8 @@ export type CoApplicantUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -740,6 +762,8 @@ export type CoApplicantUncheckedUpdateInput = {
   loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -780,6 +804,8 @@ export type CoApplicantCreateManyInput = {
   loanApplicationId: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -814,6 +840,8 @@ export type CoApplicantUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -848,6 +876,8 @@ export type CoApplicantUncheckedUpdateManyInput = {
   loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -904,6 +934,8 @@ export type CoApplicantCountOrderByAggregateInput = {
   loanApplicationId?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
+  aadhaarProvider?: Prisma.SortOrder
+  panProvider?: Prisma.SortOrder
   middleName?: Prisma.SortOrder
   fatherName?: Prisma.SortOrder
   motherName?: Prisma.SortOrder
@@ -1201,6 +1233,8 @@ export type CoApplicantCreateWithoutAddressesInput = {
   id?: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -1241,6 +1275,8 @@ export type CoApplicantUncheckedCreateWithoutAddressesInput = {
   loanApplicationId: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -1295,6 +1331,8 @@ export type CoApplicantUpdateWithoutAddressesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1335,6 +1373,8 @@ export type CoApplicantUncheckedUpdateWithoutAddressesInput = {
   loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1373,6 +1413,8 @@ export type CoApplicantCreateWithoutLoanApplicationInput = {
   id?: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -1412,6 +1454,8 @@ export type CoApplicantUncheckedCreateWithoutLoanApplicationInput = {
   id?: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -1481,6 +1525,8 @@ export type CoApplicantScalarWhereInput = {
   loanApplicationId?: Prisma.StringFilter<"CoApplicant"> | string
   firstName?: Prisma.StringFilter<"CoApplicant"> | string
   lastName?: Prisma.StringFilter<"CoApplicant"> | string
+  aadhaarProvider?: Prisma.JsonNullableFilter<"CoApplicant">
+  panProvider?: Prisma.JsonNullableFilter<"CoApplicant">
   middleName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   fatherName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
   motherName?: Prisma.StringNullableFilter<"CoApplicant"> | string | null
@@ -1515,6 +1561,8 @@ export type CoApplicantCreateWithoutFinancialDetailsInput = {
   id?: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -1555,6 +1603,8 @@ export type CoApplicantUncheckedCreateWithoutFinancialDetailsInput = {
   loanApplicationId: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -1609,6 +1659,8 @@ export type CoApplicantUpdateWithoutFinancialDetailsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1649,6 +1701,8 @@ export type CoApplicantUncheckedUpdateWithoutFinancialDetailsInput = {
   loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1687,6 +1741,8 @@ export type CoApplicantCreateWithoutOccupationalDetailsInput = {
   id?: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -1727,6 +1783,8 @@ export type CoApplicantUncheckedCreateWithoutOccupationalDetailsInput = {
   loanApplicationId: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -1781,6 +1839,8 @@ export type CoApplicantUpdateWithoutOccupationalDetailsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1821,6 +1881,8 @@ export type CoApplicantUncheckedUpdateWithoutOccupationalDetailsInput = {
   loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1859,6 +1921,8 @@ export type CoApplicantCreateWithoutEmploymentDetailsInput = {
   id?: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -1899,6 +1963,8 @@ export type CoApplicantUncheckedCreateWithoutEmploymentDetailsInput = {
   loanApplicationId: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -1953,6 +2019,8 @@ export type CoApplicantUpdateWithoutEmploymentDetailsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1993,6 +2061,8 @@ export type CoApplicantUncheckedUpdateWithoutEmploymentDetailsInput = {
   loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2031,6 +2101,8 @@ export type CoApplicantCreateWithoutDocumentsInput = {
   id?: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -2071,6 +2143,8 @@ export type CoApplicantUncheckedCreateWithoutDocumentsInput = {
   loanApplicationId: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -2125,6 +2199,8 @@ export type CoApplicantUpdateWithoutDocumentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2165,6 +2241,8 @@ export type CoApplicantUncheckedUpdateWithoutDocumentsInput = {
   loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2203,6 +2281,8 @@ export type CoApplicantCreateWithoutKycInput = {
   id?: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -2243,6 +2323,8 @@ export type CoApplicantUncheckedCreateWithoutKycInput = {
   loanApplicationId: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -2297,6 +2379,8 @@ export type CoApplicantUpdateWithoutKycInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2337,6 +2421,8 @@ export type CoApplicantUncheckedUpdateWithoutKycInput = {
   loanApplicationId?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2375,6 +2461,8 @@ export type CoApplicantCreateManyLoanApplicationInput = {
   id?: string
   firstName: string
   lastName: string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: string | null
   fatherName?: string | null
   motherName?: string | null
@@ -2409,6 +2497,8 @@ export type CoApplicantUpdateWithoutLoanApplicationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2448,6 +2538,8 @@ export type CoApplicantUncheckedUpdateWithoutLoanApplicationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2487,6 +2579,8 @@ export type CoApplicantUncheckedUpdateManyWithoutLoanApplicationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  aadhaarProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panProvider?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2580,6 +2674,8 @@ export type CoApplicantSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   loanApplicationId?: boolean
   firstName?: boolean
   lastName?: boolean
+  aadhaarProvider?: boolean
+  panProvider?: boolean
   middleName?: boolean
   fatherName?: boolean
   motherName?: boolean
@@ -2625,6 +2721,8 @@ export type CoApplicantSelectScalar = {
   loanApplicationId?: boolean
   firstName?: boolean
   lastName?: boolean
+  aadhaarProvider?: boolean
+  panProvider?: boolean
   middleName?: boolean
   fatherName?: boolean
   motherName?: boolean
@@ -2655,7 +2753,7 @@ export type CoApplicantSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CoApplicantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "firstName" | "lastName" | "middleName" | "fatherName" | "motherName" | "woname" | "relation" | "relationOther" | "contactNumber" | "phoneNumber" | "email" | "dob" | "category" | "maritalStatus" | "noOfDependents" | "noOfChildren" | "qualification" | "correspondenceAddressType" | "panNumber" | "aadhaarNumber" | "voterId" | "drivingLicenceNo" | "passportNumber" | "presentAccommodation" | "periodOfStay" | "rentPerMonth" | "employmentType" | "kycId" | "createdAt" | "updatedAt", ExtArgs["result"]["coApplicant"]>
+export type CoApplicantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "loanApplicationId" | "firstName" | "lastName" | "aadhaarProvider" | "panProvider" | "middleName" | "fatherName" | "motherName" | "woname" | "relation" | "relationOther" | "contactNumber" | "phoneNumber" | "email" | "dob" | "category" | "maritalStatus" | "noOfDependents" | "noOfChildren" | "qualification" | "correspondenceAddressType" | "panNumber" | "aadhaarNumber" | "voterId" | "drivingLicenceNo" | "passportNumber" | "presentAccommodation" | "periodOfStay" | "rentPerMonth" | "employmentType" | "kycId" | "createdAt" | "updatedAt", ExtArgs["result"]["coApplicant"]>
 export type CoApplicantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   loanApplication?: boolean | Prisma.LoanApplicationDefaultArgs<ExtArgs>
   kyc?: boolean | Prisma.CoApplicant$kycArgs<ExtArgs>
@@ -2683,6 +2781,8 @@ export type $CoApplicantPayload<ExtArgs extends runtime.Types.Extensions.Interna
     loanApplicationId: string
     firstName: string
     lastName: string
+    aadhaarProvider: runtime.JsonValue | null
+    panProvider: runtime.JsonValue | null
     middleName: string | null
     fatherName: string | null
     motherName: string | null
@@ -3091,6 +3191,8 @@ export interface CoApplicantFieldRefs {
   readonly loanApplicationId: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly firstName: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly lastName: Prisma.FieldRef<"CoApplicant", 'String'>
+  readonly aadhaarProvider: Prisma.FieldRef<"CoApplicant", 'Json'>
+  readonly panProvider: Prisma.FieldRef<"CoApplicant", 'Json'>
   readonly middleName: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly fatherName: Prisma.FieldRef<"CoApplicant", 'String'>
   readonly motherName: Prisma.FieldRef<"CoApplicant", 'String'>

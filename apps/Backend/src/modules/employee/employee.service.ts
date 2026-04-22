@@ -13,11 +13,89 @@ import { buildBranchFilter } from "../../common/utils/branchFilter.js";
 import { AppError } from "../../common/utils/apiError.js";
 import { Role } from "../../../generated/prisma-client/enums.js";
 import type { Role as UserRole } from "../../../generated/prisma-client/enums.js";
+import { hashPassword } from "../../common/utils/utils.js";
 //Todo: add permission checks where necessary
+
+type EmployeeRoleDocumentConfig = {
+  required: string[];
+  optional: string[];
+};
+
+const normalizeDocumentToken = (value: string) =>
+  String(value || "")
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+
+const parseRoleDocumentConfig = (employeeRole: {
+  documentsRequired?: string | null;
+  documentsOptions?: string | null;
+}): EmployeeRoleDocumentConfig => {
+  const parseCsv = (value?: string | null) =>
+    String(value || "")
+      .split(",")
+      .map((entry) => normalizeDocumentToken(entry))
+      .filter(Boolean);
+
+  const required = parseCsv(employeeRole.documentsRequired);
+  const optional = parseCsv(employeeRole.documentsOptions);
+
+  return {
+    required: Array.from(new Set(required)),
+    optional: Array.from(new Set(optional)),
+  };
+};
+
+const stripDocumentSide = (documentType: string) =>
+  normalizeDocumentToken(documentType).replace(/_(FRONT|BACK|FILE)$/, "");
+
+const mapUploadedEmployeeDocuments = (
+  uploadedFiles: Express.Multer.File[],
+  allowedBaseTypes: Set<string>,
+) => {
+  const mapped = uploadedFiles.map((file) => ({
+    documentType: normalizeDocumentToken(file.fieldname),
+    documentPath: `/uploads/${file.filename}`,
+  }));
+
+  const invalidTypes = mapped
+    .map((doc) => doc.documentType)
+    .filter((documentType) => !allowedBaseTypes.has(stripDocumentSide(documentType)));
+
+  if (invalidTypes.length > 0) {
+    throw AppError.badRequest(
+      `Invalid employee document types: ${Array.from(new Set(invalidTypes)).join(", ")}`,
+    );
+  }
+
+  return mapped;
+};
+
+const assertRequiredEmployeeDocuments = (
+  requiredBaseTypes: string[],
+  uploadedDocumentTypes: string[],
+  existingDocumentTypes: string[] = [],
+) => {
+  if (!requiredBaseTypes.length) return;
+
+  const uploadedBaseTypes = uploadedDocumentTypes.map(stripDocumentSide);
+  const existingBaseTypes = existingDocumentTypes.map(stripDocumentSide);
+  const available = new Set([...uploadedBaseTypes, ...existingBaseTypes]);
+
+  const missing = requiredBaseTypes.filter((requiredDoc) => !available.has(requiredDoc));
+  if (missing.length > 0) {
+    throw AppError.badRequest(
+      `Missing required employee documents: ${missing.join(", ")}`,
+    );
+  }
+};
 
 export async function createEmployeeService(
   data: CreateEmployee,
   requestedByRole?: string,
+  requestedByUserId?: string,
+  uploadedFiles: Express.Multer.File[] = [],
 ) {
   const requestedRole = (data.role ?? Role.EMPLOYEE) as UserRole;
   if (requestedRole !== Role.EMPLOYEE && requestedByRole !== Role.SUPER_ADMIN) {
@@ -63,8 +141,24 @@ export async function createEmployeeService(
     throw AppError.badRequest("Invalid or inactive employee role");
   }
 
+  const roleDocumentConfig = parseRoleDocumentConfig(employeeRole);
+  const allowedDocumentTypes = new Set([
+    ...roleDocumentConfig.required,
+    ...roleDocumentConfig.optional,
+  ]);
+
+  const normalizedUploadedDocuments = uploadedFiles.length
+    ? mapUploadedEmployeeDocuments(uploadedFiles, allowedDocumentTypes)
+    : [];
+
+  assertRequiredEmployeeDocuments(
+    roleDocumentConfig.required,
+    normalizedUploadedDocuments.map((doc) => doc.documentType),
+  );
+
   try {
     const employeeId = await generateUniqueEmployeeId();
+    const hashedPassword = await hashPassword(data.password);
 
     const dobVal = data.dob
       ? typeof data.dob === "string"
@@ -77,7 +171,61 @@ export async function createEmployeeService(
         : data.dateOfJoining
       : null;
 
-    const { employee } = await prisma.$transaction(async (tx) => {
+    const emergencyContact = String(
+      (data as any).emergencyContact ?? data.contactNumber ?? "",
+    ).trim();
+
+    const relationshipInput = String(
+      (data as any).emergencyRelationship ??
+        (data as any).emergencyRelation ??
+        "FATHER",
+    )
+      .trim()
+      .toUpperCase();
+
+    const allowedRelationships = new Set([
+      "FATHER",
+      "MOTHER",
+      "SPOUSE",
+      "SIBLING",
+      "FRIEND",
+      "OTHER",
+    ]);
+
+    const emergencyRelationship = allowedRelationships.has(relationshipInput)
+      ? relationshipInput
+      : "OTHER";
+
+    const department = String(
+      (data as any).department ?? data.roleTitle ?? data.designation ?? "GENERAL",
+    ).trim();
+
+    const basicSalary = Number(data.basicSalary ?? data.salary ?? 0);
+    const conveyance = data.conveyance != null ? Number(data.conveyance) : null;
+    const medicalAllowance =
+      data.medicalAllowance != null ? Number(data.medicalAllowance) : null;
+    const otherAllowances =
+      data.otherAllowances != null ? Number(data.otherAllowances) : null;
+    const pfDeduction = data.pfDeduction != null ? Number(data.pfDeduction) : null;
+    const taxDeduction = data.taxDeduction != null ? Number(data.taxDeduction) : null;
+
+    const { employee, documents, user } = await prisma.$transaction(async (tx) => {
+      const createdUser = await tx.user.create({
+        data: {
+          fullName: data.fullName,
+          userName: data.userName,
+          email: data.email,
+          password: hashedPassword,
+          role: requestedRole as any,
+          contactNumber: data.contactNumber || "",
+          branch: { connect: { id: branch.id } },
+          isActive:
+            typeof data.isActive === "boolean"
+              ? data.isActive
+              : (data.status ?? "Active") === "Active",
+        },
+      });
+
       const currentAddress = data.addresses?.currentAddress;
       const permanentAddress = data.addresses?.permanentAddress;
       const selectedAddress = currentAddress ?? permanentAddress;
@@ -111,36 +259,69 @@ export async function createEmployeeService(
 
       const createdEmployee = await (tx as any).employee.create({
         data: {
-          
           employeeId,
-          employeeRoleId: data.employeeRoleId,
+          user: { connect: { id: createdUser.id } },
+          branch: { connect: { id: data.branchId } },
+          employeeRole: { connect: { id: data.employeeRoleId } },
           fullName: data.fullName,
           Email: data.email,
           contactNumber: data.contactNumber || "",
+          reportingManagerId: data.reportingManager || null,
           atlMobileNumber: data.atlMobileNumber ?? "",
           dob: dobVal ?? new Date(),
           gender: (data.gender ?? "OTHER") as any,
           maritalStatus: (data.maritalStatus ?? "SINGLE") as any,
           designation: data.designation ?? "",
+          emergencyContact,
+          emergencyRelationship: emergencyRelationship as any,
+          department,
           experience: data.experience ?? "",
           workLocation: (data.workLocation ?? "OFFICE") as any,
-          
+          accountHolder: data.accountHolder ?? null,
+          bankName: data.bankName ?? null,
+          bankAccountNo: data.bankAccountNo ?? null,
+          ifsc: data.ifsc ?? null,
+          upiId: data.upiId ?? null,
+          basicSalary,
+          conveyance,
+          medicalAllowance,
+          otherAllowances,
+          pfDeduction,
+          taxDeduction,
+
           dateOfJoining: dojVal ?? new Date(),
-          salary: typeof data.salary === "number" ? data.salary : 0,
-          addressId: employeeAddress?.id,
-          branchId: data.branchId,
+          ...(employeeAddress?.id
+            ? { address: { connect: { id: employeeAddress.id } } }
+            : {}),
         },
         include: {
           employeeRole: true,
+          user: true,
         },
       });
 
-      return {  employee: createdEmployee };
+      const createdDocuments = normalizedUploadedDocuments.length
+        ? await Promise.all(
+            normalizedUploadedDocuments.map((doc) =>
+              (tx as any).document.create({
+                data: {
+                  employeeId: createdEmployee.id,
+                  branchId: data.branchId,
+                  uploadedBy: requestedByUserId || "SYSTEM",
+                  documentType: doc.documentType,
+                  documentPath: doc.documentPath,
+                },
+              }),
+            ),
+          )
+        : [];
+
+      return { employee: createdEmployee, documents: createdDocuments, user: createdUser };
     });
 
     // hide password before returning
-    const { password: _pw, ...safeUser } = employee as any;
-    return { user: safeUser, employee };
+    const { password: _pw, ...safeUser } = user as any;
+    return { user: safeUser, employee, documents };
   } catch (error: unknown) {
     const eAny = error as any;
     if (eAny && eAny.code === "P2002") {
@@ -216,10 +397,16 @@ export async function getEmployeeByIdService(id: string) {
     where: { userId: employee.userId },
   });
 
+  const documents = await (prisma as any).document.findMany({
+    where: { employeeId: id },
+    orderBy: { createdAt: "asc" },
+  });
+
   return {
     ...employee,
     user: safeUser,
     kycs,
+    documents,
   };
 }
 
@@ -229,6 +416,7 @@ export async function updateEmployeeService(
   userId?: string,
   branchId?: string,
   requestedByRole?: string,
+  uploadedFiles: Express.Multer.File[] = [],
 ) {
   try {
     const existing = await (prisma as any).employee.findUnique({
@@ -367,12 +555,31 @@ export async function updateEmployeeService(
       "branchId",
       "department",
       "joiningDate",
+      "accountHolder",
+      "bankName",
+      "bankAccountNo",
+      "ifsc",
+      "upiId",
+      "basicSalary",
+      "conveyance",
+      "medicalAllowance",
+      "otherAllowances",
+      "pfDeduction",
+      "taxDeduction",
     ];
     for (const key of empFields) {
       if (Object.prototype.hasOwnProperty.call(updateData, key)) {
         let val = (updateData as any)[key];
         if (key === "joiningDate" && typeof val === "string") {
           val = new Date(val);
+        }
+        if (
+          ["basicSalary", "conveyance", "medicalAllowance", "otherAllowances", "pfDeduction", "taxDeduction"].includes(key) &&
+          val !== null &&
+          val !== undefined &&
+          val !== ""
+        ) {
+          val = Number(val);
         }
         (employeeUpdateData as any)[key] = val;
       }
@@ -388,13 +595,40 @@ export async function updateEmployeeService(
       }
     }
 
+    const employeeRoleForDocuments = employeeUpdateData.employeeRoleId
+      ? await (prisma as any).employeeRole.findUnique({
+          where: { id: employeeUpdateData.employeeRoleId },
+        })
+      : existing.employeeRole;
+
+    const roleDocumentConfig = parseRoleDocumentConfig(employeeRoleForDocuments || {});
+    const allowedDocumentTypes = new Set([
+      ...roleDocumentConfig.required,
+      ...roleDocumentConfig.optional,
+    ]);
+
+    const normalizedUploadedDocuments = uploadedFiles.length
+      ? mapUploadedEmployeeDocuments(uploadedFiles, allowedDocumentTypes)
+      : [];
+
+    const existingEmployeeDocuments = await (prisma as any).document.findMany({
+      where: { employeeId: id },
+      select: { documentType: true },
+    });
+
+    assertRequiredEmployeeDocuments(
+      roleDocumentConfig.required,
+      normalizedUploadedDocuments.map((doc) => doc.documentType),
+      existingEmployeeDocuments.map((doc: { documentType: string }) => doc.documentType),
+    );
+
     const prismaData: any = {};
     if (Object.keys(userUpdateData).length > 0)
       prismaData.user = { update: userUpdateData } as any;
     if (Object.keys(employeeUpdateData).length > 0)
       Object.assign(prismaData, employeeUpdateData);
 
-    const updatedEmployee = await prisma.$transaction(async (tx) => {
+    const { updatedEmployee, documents } = await prisma.$transaction(async (tx) => {
       if (normalizedAddressPayload) {
         if (existing.addressId) {
           await tx.address.update({
@@ -412,11 +646,41 @@ export async function updateEmployeeService(
       if (Object.keys(employeeUpdateData).length > 0)
         Object.assign(prismaData, employeeUpdateData);
 
-      return (tx as any).employee.update({
+      const employeeRecord = await (tx as any).employee.update({
         where: { id },
         data: prismaData,
         include: { user: true, employeeRole: true },
       });
+
+      if (normalizedUploadedDocuments.length > 0) {
+        const reuploadedTypes = Array.from(
+          new Set(normalizedUploadedDocuments.map((doc) => doc.documentType)),
+        );
+
+        await (tx as any).document.deleteMany({
+          where: {
+            employeeId: id,
+            documentType: { in: reuploadedTypes },
+          },
+        });
+
+        await (tx as any).document.createMany({
+          data: normalizedUploadedDocuments.map((doc) => ({
+            employeeId: id,
+            branchId: employeeRecord.branchId,
+            uploadedBy: userId || "SYSTEM",
+            documentType: doc.documentType,
+            documentPath: doc.documentPath,
+          })),
+        });
+      }
+
+      const updatedDocuments = await (tx as any).document.findMany({
+        where: { employeeId: id },
+        orderBy: { createdAt: "asc" },
+      });
+
+      return { updatedEmployee: employeeRecord, documents: updatedDocuments };
     });
     const { user, ...employeeOnly } = updatedEmployee as any;
 
@@ -445,9 +709,9 @@ export async function updateEmployeeService(
 
     if (user) {
       const { password: _pw, ...safeUser } = user as any;
-      return { employee: employeeOnly, user: safeUser };
+      return { employee: employeeOnly, user: safeUser, documents };
     }
-    return { employee: employeeOnly, user: null };
+    return { employee: employeeOnly, user: null, documents };
   } catch (error: unknown) {
     const eAny = error as any;
     if (eAny && eAny.code === "P2002") {

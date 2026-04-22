@@ -612,10 +612,6 @@ export type EnumCommissionStatusFieldUpdateOperationsInput = {
   set?: $Enums.CommissionStatus
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type PartnerCommissionCreateNestedManyWithoutLoanInput = {
   create?: Prisma.XOR<Prisma.PartnerCommissionCreateWithoutLoanInput, Prisma.PartnerCommissionUncheckedCreateWithoutLoanInput> | Prisma.PartnerCommissionCreateWithoutLoanInput[] | Prisma.PartnerCommissionUncheckedCreateWithoutLoanInput[]
   connectOrCreate?: Prisma.PartnerCommissionCreateOrConnectWithoutLoanInput | Prisma.PartnerCommissionCreateOrConnectWithoutLoanInput[]

@@ -1,4 +1,7 @@
 export type AuditAction =
+  | "CREATE_LEAD"
+  | "UPDATE_LEAD"
+  | "UPDATE_LEAD_LOGIN_CHARGES"
   | "CREATE_LOAN"
   | "CREATE_EMPLOYEE"
   | "UPDATE_EMPLOYEE"
@@ -47,6 +50,7 @@ export type AuditAction =
   | "APPLY_FORECLOSE";
 
 export type AuditEntityType =
+  | "LEAD"
   | "LOAN"
   | "LOAN_ASSIGNMENT"
   | "LOAN_RECOVERY"

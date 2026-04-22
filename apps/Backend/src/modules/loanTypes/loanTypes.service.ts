@@ -73,11 +73,10 @@ export const createLoanTypeService = async (loanTypeData: LoanTypeDTO) => {
         minInterestRate: data.minInterestRate,
         maxInterestRate: data.maxInterestRate,
         defaultInterestRate: data.defaultInterestRate,
-
-        
         minProcessingFee: data.minProcessingFee,
         maxProcessingFee: data.maxProcessingFee,
         minLoginCharges: data.minLoginCharges,
+        defaultLoginCharges: data.defaultLoginCharges,
         maxLoginCharges: data.maxLoginCharges,
         gstApplicable: data.gstApplicable,
         gstPercentage: data.gstApplicable ? data.gstPercentage : null,

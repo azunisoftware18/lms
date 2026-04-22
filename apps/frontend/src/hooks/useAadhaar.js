@@ -28,17 +28,18 @@ const validateRefId = (refId) => {
 	return normalized;
 };
 
-const sendAadhaarOtp = ({ aadhaarNumber }) => {
+const sendAadhaarOtp = ({ aadhaarNumber, ...rest }) => {
 	const normalizedAadhaar = validateAadhaarNumber(aadhaarNumber);
-	return apiPost("/aadhaar/send-otp", { aadhaarNumber: normalizedAadhaar });
+	return apiPost("/aadhaar/send-otp", { aadhaarNumber: normalizedAadhaar, ...rest });
 };
 
-const verifyAadhaarOtp = ({ ref_id, otp }) => {
+const verifyAadhaarOtp = ({ ref_id, otp, ...rest }) => {
 	const normalizedRefId = validateRefId(ref_id);
 	const normalizedOtp = validateOtp(otp);
 	return apiPost("/aadhaar/verify-otp", {
 		ref_id: normalizedRefId,
 		otp: normalizedOtp,
+		...rest,
 	});
 };
 

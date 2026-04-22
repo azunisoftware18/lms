@@ -17,12 +17,26 @@ export default function EmployeeDetailsModal({
   onClose,
   onDownloadProfile,
 }) {
-  // safe to compute managerId even if employee is undefined
-  const managerId =
+  const nonEmpty = (...values) =>
+    values.find((value) => value != null && String(value).trim().length);
+
+  const reportingManagerRaw = employee?.reportingManager;
+  const reportingManagerRef =
     employee?.reportingManagerId ||
-    (typeof employee?.reportingManager === "string"
-      ? employee.reportingManager
-      : null);
+    (typeof reportingManagerRaw === "object" && reportingManagerRaw !== null
+      ? reportingManagerRaw.id
+      : typeof reportingManagerRaw === "string"
+        ? reportingManagerRaw
+        : null);
+
+  // Avoid querying by obvious human names.
+  const managerId =
+    typeof reportingManagerRef === "string" &&
+    reportingManagerRef.trim().length > 0 &&
+    !/\s/.test(reportingManagerRef)
+      ? reportingManagerRef
+      : null;
+
   const managerQuery = useBranchAdminById(managerId);
   const managerData = managerQuery?.data?.data || managerQuery?.data || null;
   const managerEmployeeQuery = useEmployee(managerId);
@@ -68,13 +82,17 @@ export default function EmployeeDetailsModal({
     )
       return employee.totalSalary;
     const sum =
-      toNum(employee.basicSalary) +
+      toNum(nonEmpty(employee.basicSalary, employee.salaryDetails?.basicSalary)) +
       toNum(employee.hra) +
-      toNum(employee.conveyance) +
-      toNum(employee.medicalAllowance) +
-      toNum(employee.otherAllowances) -
-      toNum(employee.pfDeduction) -
-      toNum(employee.taxDeduction);
+      toNum(nonEmpty(employee.conveyance, employee.salaryDetails?.conveyance)) +
+      toNum(
+        nonEmpty(employee.medicalAllowance, employee.salaryDetails?.medicalAllowance),
+      ) +
+      toNum(
+        nonEmpty(employee.otherAllowances, employee.salaryDetails?.otherAllowances),
+      ) -
+      toNum(nonEmpty(employee.pfDeduction, employee.salaryDetails?.pfDeduction)) -
+      toNum(nonEmpty(employee.taxDeduction, employee.salaryDetails?.taxDeduction));
     return sum || null;
   })();
 
@@ -92,7 +110,18 @@ export default function EmployeeDetailsModal({
 
   const getReportingManagerName = () => {
     const rm = employee.reportingManager;
+
+    const directName = nonEmpty(
+      employee.reportingManagerName,
+      employee.reportingManagerFullName,
+      typeof rm === "object" && rm !== null
+        ? rm.fullName || rm.name || rm.username || rm.email
+        : null,
+    );
+
+    if (directName) return directName;
     if (!rm && !employee.reportingManagerId) return null;
+
     if (typeof rm === "object" && rm !== null) {
       return rm.fullName || rm.name || rm.username || rm.email || rm.id || null;
     }
@@ -190,19 +219,25 @@ export default function EmployeeDetailsModal({
                   <div>
                     <span className="text-gray-500 block">Email</span>
                     <span className="font-medium text-gray-800">
-                      {show(employee.email)}
+                      {show(nonEmpty(employee.email, employee.Email, employee.user?.email))}
                     </span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">Phone</span>
                     <span className="font-medium text-gray-800">
-                      {show(employee.phone)}
+                      {show(
+                        nonEmpty(
+                          employee.phone,
+                          employee.contactNumber,
+                          employee.user?.contactNumber,
+                        ),
+                      )}
                     </span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">Alt Phone</span>
                     <span className="font-medium text-gray-800">
-                      {show(employee.altPhone)}
+                      {show(nonEmpty(employee.altPhone, employee.atlMobileNumber))}
                     </span>
                   </div>
                   <div>
@@ -218,7 +253,7 @@ export default function EmployeeDetailsModal({
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray500 block">Marital Status</span>
+                    <span className="text-gray-500 block">Marital Status</span>
                     <span className="font-medium text-gray-800">
                       {show(employee.maritalStatus)}
                     </span>
@@ -333,32 +368,46 @@ export default function EmployeeDetailsModal({
                   <div className="flex justify-between">
                     <span>Bank Name:</span>
                     <span className="font-bold text-gray-800">
-                      {show(employee.bankName)}
+                      {show(
+                        nonEmpty(employee.bankName, employee.accountDetails?.bankName),
+                      )}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Account No:</span>
                     <span className="font-mono text-gray-800">
-                      {show(employee.bankAccountNo || employee.accountNo)}
+                      {show(
+                        nonEmpty(
+                          employee.bankAccountNo,
+                          employee.accountNo,
+                          employee.accountDetails?.bankAccountNo,
+                        ),
+                      )}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span>IFSC Code:</span>
                     <span className="font-mono text-gray-800">
-                      {show(employee.ifsc)}
+                      {show(nonEmpty(employee.ifsc, employee.accountDetails?.ifsc))}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Account Holder:</span>
                     <span className="font-medium text-gray-800">
-                      {show(employee.accountHolder)}
+                      {show(
+                        nonEmpty(
+                          employee.accountHolder,
+                          employee.accountDetails?.accountHolder,
+                        ),
+                      )}
                     </span>
                   </div>
-                  {show(employee.upiId) !== "-" && (
+                  {show(nonEmpty(employee.upiId, employee.accountDetails?.upiId)) !==
+                    "-" && (
                     <div className="flex justify-between">
                       <span>UPI ID:</span>
                       <span className="font-medium text-blue-600">
-                        {show(employee.upiId)}
+                        {show(nonEmpty(employee.upiId, employee.accountDetails?.upiId))}
                       </span>
                     </div>
                   )}
@@ -374,7 +423,12 @@ export default function EmployeeDetailsModal({
                     <div className="flex justify-between">
                       <span>Basic Salary:</span>
                       <span className="font-bold text-gray-800">
-                        {show(employee.basicSalary)}
+                        {show(
+                          nonEmpty(
+                            employee.basicSalary,
+                            employee.salaryDetails?.basicSalary,
+                          ),
+                        )}
                       </span>
                     </div>
                     <div className="flex justify-between">
@@ -386,31 +440,56 @@ export default function EmployeeDetailsModal({
                     <div className="flex justify-between">
                       <span>Conveyance:</span>
                       <span className="text-gray-700">
-                        {show(employee.conveyance)}
+                        {show(
+                          nonEmpty(
+                            employee.conveyance,
+                            employee.salaryDetails?.conveyance,
+                          ),
+                        )}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span>Medical Allowance:</span>
                       <span className="text-gray-700">
-                        {show(employee.medicalAllowance)}
+                        {show(
+                          nonEmpty(
+                            employee.medicalAllowance,
+                            employee.salaryDetails?.medicalAllowance,
+                          ),
+                        )}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span>Other Allowances:</span>
                       <span className="text-gray-700">
-                        {show(employee.otherAllowances)}
+                        {show(
+                          nonEmpty(
+                            employee.otherAllowances,
+                            employee.salaryDetails?.otherAllowances,
+                          ),
+                        )}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span>PF Deduction:</span>
                       <span className="text-gray-700">
-                        {show(employee.pfDeduction)}
+                        {show(
+                          nonEmpty(
+                            employee.pfDeduction,
+                            employee.salaryDetails?.pfDeduction,
+                          ),
+                        )}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span>Tax Deduction:</span>
                       <span className="text-gray-700">
-                        {show(employee.taxDeduction)}
+                        {show(
+                          nonEmpty(
+                            employee.taxDeduction,
+                            employee.salaryDetails?.taxDeduction,
+                          ),
+                        )}
                       </span>
                     </div>
                     <div className="border-t border-green-200 pt-2 mt-2">
