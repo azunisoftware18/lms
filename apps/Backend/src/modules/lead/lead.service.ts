@@ -137,6 +137,7 @@ export const getAllLeadsService = async (params: {
         status: true,
         assignedTo: true,
         assignedBy: true,
+        defaultLoggingFeeAmount: true,
         convertedLoanApplicationId: true,
         createdAt: true,
         updatedAt: true,

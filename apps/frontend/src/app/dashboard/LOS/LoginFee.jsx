@@ -1,727 +1,381 @@
-import { useState } from "react";
-import {
-  Edit,
-  Trash2,
-  User,
-  Plus,
-  CalendarDays,
-  Clock,
-  XCircle,
-  DollarSign,
-  Hourglass,
-} from "lucide-react";
+import { useMemo, useState } from "react";
 import * as Icons from "lucide-react";
-
-import LeadsTable from "../../../components/tables/LeadsTable";
-import { useLead, getLeadByIdOrNumber } from "../../../hooks/useLead";
 import toast from "react-hot-toast";
+
+import { useLead, getLeadByIdOrNumber } from "../../../hooks/useLead";
+import {
+  useChargeLogginFee,
+  useLogginFeeList,
+  useUpdateLogginFeeStatus,
+} from "../../../hooks/useLogginFee";
 import StatusCard from "../../../components/common/StatusCard";
 
-import LeadFormModal from "../../../components/modals/LeadFormModal";
-import Button from "../../../components/ui/Button";
+const paymentModeOptions = [
+  { label: "UPI", value: "UPI" },
+  { label: "Cash", value: "CASH" },
+  { label: "Bank Transfer", value: "BANK" },
+  { label: "Cheque", value: "CHEQUE" },
+];
 
-import { LEAD_ACTION_DEFINITIONS } from "../../../lib/LOSDummyData";
-// import { colorVariables } from "../../../lib";
+const statusOptions = ["PENDING", "PAID", "FAILED", "REFUNDED", "CANCELLED"];
+
+const statusClasses = {
+  PENDING: "bg-yellow-100 text-yellow-700",
+  PAID: "bg-green-100 text-green-700",
+  FAILED: "bg-red-100 text-red-700",
+  REFUNDED: "bg-purple-100 text-purple-700",
+  CANCELLED: "bg-gray-100 text-gray-700",
+};
+
+const formatINR = (amount) => {
+  const num = Number(amount) || 0;
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 2,
+  }).format(num);
+};
 
 export default function LoginFee() {
-  const [activeTab, setActiveTab] = useState("charge-fee");
-  const [formData, setFormData] = useState({
-    leadId: "",
-    applicantName: "",
-    mobileNumber: "",
-    email: "",
-    loanAmount: "",
-    feeAmount: "",
-    paymentMode: "online",
-    transactionId: "",
-  });
-
-  const [generatedFees, setGeneratedFees] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState("pay");
+  const [searchInput, setSearchInput] = useState("");
+  const [selectedLead, setSelectedLead] = useState(null);
+  const [paymentMode, setPaymentMode] = useState("UPI");
   const [selectedFee, setSelectedFee] = useState(null);
   const [showReceipt, setShowReceipt] = useState(false);
-  // const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Lead listing state for Track Leads tab
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [dateRange, setDateRange] = useState("ALL");
-  const itemsPerPage = 10;
 
-  const {
-    leads = [],
-    loading,
-    refetch: _refetch,
-  } = useLead({
+  const { leads = {} } = useLead({ page: 1, limit: 10, search: "", status: "" });
+
+  const { fees, meta, loading, isFetching } = useLogginFeeList({
     page: currentPage,
-    limit: itemsPerPage,
-    search: searchTerm,
+    limit: 10,
+    q: searchTerm,
     status: statusFilter,
   });
 
-  const _totalItems = leads?.total || 0;
-  const _totalPages = leads?.totalPages || 1;
+  const chargeFee = useChargeLogginFee();
+  const updateStatus = useUpdateLogginFeeStatus();
 
-  const statusCounts = (leads?.data || []).reduce((acc, item) => {
-    const s = item?.status || "UNKNOWN";
-    acc[s] = (acc[s] || 0) + 1;
-    return acc;
-  }, {});
+  const rawFee =
+    selectedLead?.defaultLoggingFeeAmount ??
+    selectedLead?.defaultLoginCharges ??
+    selectedLead?.loanType?.defaultLoginCharges ??
+    selectedLead?.defaultLoggingfeeamount ??
+    500;
+  const feeAmount = Number(rawFee) || 0;
+  const gstAmount = Number((feeAmount * 0.18).toFixed(2));
+  const totalAmount = Number((feeAmount + gstAmount).toFixed(2));
 
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const generateUniqueNumber = () => {
-    const prefix = "TXN";
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const random = Math.floor(Math.random() * 10000)
-      .toString()
-      .padStart(4, "0");
-    return `${prefix}-${year}${month}${day}-${random}`;
-  };
-
-  const handleChargeFee = (e) => {
-    e.preventDefault();
-    const uniqueNumber = generateUniqueNumber();
-    const newFee = {
-      id: `LF${Date.now()}`,
-      uniqueNumber: uniqueNumber,
-      applicantName: formData.applicantName,
-      mobile: formData.mobileNumber,
-      email: formData.email,
-      amount: formData.feeAmount,
-      status: "pending",
-      date: new Date().toISOString().split("T")[0],
-      paymentMode: formData.paymentMode,
-      transactionId: formData.transactionId || "",
-      leadId: formData.leadId || `LD-${Date.now()}`,
-    };
-
-    setGeneratedFees([newFee, ...generatedFees]);
-    setSelectedFee(newFee);
-    setShowReceipt(true);
-
-    // Reset form
-    setFormData({
-      leadId: "",
-      applicantName: "",
-      mobileNumber: "",
-      email: "",
-      loanAmount: "",
-      feeAmount: "",
-      paymentMode: "online",
-      transactionId: "",
-    });
-  };
-
-  const ReceiptModal = () => {
-    if (!showReceipt || !selectedFee) return null;
-
-    return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-          <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center">
-            <h3 className="text-xl font-bold text-gray-900">
-              Application Fee Receipt
-            </h3>
-            <button
-              onClick={() => setShowReceipt(false)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <Icons.X className="w-5 h-5" />
-            </button>
-          </div>
-
-          <div className="p-6">
-            {/* Receipt Header */}
-            <div className="text-center mb-6">
-              <div className="inline-flex p-3 bg-blue-100 rounded-full mb-3">
-                <Icons.Receipt className="w-8 h-8 text-blue-600" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900">
-                Payment Receipt
-              </h2>
-              <p className="text-gray-500">Loan Application Fee</p>
-            </div>
-
-            {/* Receipt Details */}
-            <div className="space-y-4">
-              <div className="bg-gray-50 rounded-xl p-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-xs text-gray-500">Application Number</p>
-                    <p className="font-semibold text-gray-900 mt-1">
-                      {selectedFee.uniqueNumber}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Date</p>
-                    <p className="font-semibold text-gray-900 mt-1">
-                      {selectedFee.date}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Applicant Name</p>
-                    <p className="font-semibold text-gray-900 mt-1">
-                      {selectedFee.applicantName}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Mobile Number</p>
-                    <p className="font-semibold text-gray-900 mt-1">
-                      {selectedFee.mobile}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Email ID</p>
-                    <p className="font-semibold text-gray-900 mt-1">
-                      {selectedFee.email}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Payment Mode</p>
-                    <p className="font-semibold text-gray-900 mt-1 capitalize">
-                      {selectedFee.paymentMode}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="border-t border-b border-gray-200 py-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Applicationlogin Fee</span>
-                  <span className="text-xl font-bold text-gray-900">
-                    ₹{selectedFee.amount}
-                  </span>
-                </div>
-              </div>
-
-              <div className="bg-blue-50 rounded-xl p-4">
-                <div className="flex items-start gap-3">
-                  <Icons.Info className="w-5 h-5 text-blue-600 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-blue-900 font-medium">
-                      Next Steps
-                    </p>
-                    <p className="text-xs text-blue-700 mt-1">
-                      Please use this Application Number to upload your
-                      documents. You will receive a confirmation email shortly.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-6 flex gap-3">
-              <button
-                onClick={() => window.print()}
-                className="px-4 py-2.5 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all"
-              >
-                <Icons.Download className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+  const feeStatusCounts = useMemo(() => {
+    return (fees || []).reduce(
+      (acc, item) => {
+        acc.total += 1;
+        if (item?.status === "PENDING") acc.pending += 1;
+        if (item?.status === "PAID") acc.paid += 1;
+        if (item?.status === "FAILED") acc.failed += 1;
+        if (item?.status === "REFUNDED") acc.refunded += 1;
+        return acc;
+      },
+      { total: 0, pending: 0, paid: 0, failed: 0, refunded: 0 },
     );
-  };
+  }, [fees]);
 
-  // Formatter and computed amounts for the Fee Information panel
-  const formatINR = (amount) => {
-    const num = Number(amount) || 0;
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 2,
-    }).format(num);
-  };
+  const filteredFees = useMemo(() => {
+    const q = (searchTerm || "").toLowerCase();
+    return (fees || []).filter((item) => {
+      if (statusFilter && item.status !== statusFilter) return false;
+      if (!q) return true;
+      return [
+        item.applicationNumber,
+        item.leadNumber,
+        item.applicantName,
+        item.mobileNumber,
+        item.email,
+        item.transactionId,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase()
+        .includes(q);
+    });
+  }, [fees, searchTerm, statusFilter]);
 
-  const feeAmountNum = Number(formData.feeAmount) || 0;
-  const gstAmount = Math.round(feeAmountNum * 0.18 * 100) / 100;
-  const totalAmount = Math.round((feeAmountNum + gstAmount) * 100) / 100;
+  const totalLeadItems = leads?.total || 0;
+  
 
-  // Populate form fields by searching local leads first, then calling API
-  const fetchAndFillLead = async (leadId) => {
-    if (!leadId) return;
-    // Try local cache first
-    const foundLocal = (leads?.data || []).find(
-      (l) => l.id === leadId || l.leadId === leadId || l.uniqueId === leadId,
-    );
-    if (foundLocal) {
-      setFormData((prev) => ({
-        ...prev,
-        leadId: foundLocal.LeadNumber || leadNumber,
-        applicantName:
-          foundLocal.fullName || foundLocal.name || foundLocal.applicantName || prev.applicantName || "",
-        mobileNumber: foundLocal.contactNumber || foundLocal.mobile || foundLocal.mobileNumber || prev.mobileNumber || "",
-        email: foundLocal.email || prev.email || "",
-        loanAmount: foundLocal.loanAmount || prev.loanAmount || "",
-      }));
-      toast.success("Lead loaded from cache");
+  const fetchAndSearchLead = async (leadNumber) => {
+    if (!leadNumber || !leadNumber.trim()) {
+      setSelectedLead(null);
       return;
     }
 
-    // Fallback: call API to fetch lead by id or lead number
+    const trimmed = leadNumber.trim();
+    const foundLocal = (leads?.data || []).find(
+      (l) => l.id === trimmed || l.leadId === trimmed || l.leadNumber === trimmed,
+    );
+
+    if (foundLocal) {
+      setSelectedLead(foundLocal);
+      toast.success("Lead found");
+      return;
+    }
+
     try {
-      const data = await getLeadByIdOrNumber(leadId);
+      const data = await getLeadByIdOrNumber(trimmed);
       if (!data) {
+        setSelectedLead(null);
         toast.error("Lead not found");
         return;
       }
-      setFormData((prev) => ({
-        ...prev,
-        leadId: data.leadNumber || leadNumber,
-        applicantName: data.fullName || data.name || data.applicantName || prev.applicantName || "",
-        mobileNumber: data.contactNumber || data.mobile || data.phone || prev.mobileNumber || "",
-        email: data.email || prev.email || "",
-        loanAmount: data.loanAmount || prev.loanAmount || "",
-      }));
-      toast.success("Lead loaded");
+      setSelectedLead(data);
+      toast.success("Lead found");
     } catch (err) {
+      setSelectedLead(null);
       toast.error(err?.message || "Failed to fetch lead");
     }
   };
 
+  const handlePay = async (e) => {
+    e.preventDefault();
+    if (!selectedLead) {
+      toast.error("Please search and select a lead first");
+      return;
+    }
+
+    try {
+      const payload = {
+        leadId: selectedLead.id || selectedLead.leadId,
+        applicantName: selectedLead.fullName || selectedLead.name,
+        mobileNumber: selectedLead.contactNumber || selectedLead.mobile,
+        email: selectedLead.email,
+        loanAmount: selectedLead.loanAmount || 0,
+        feeAmount,
+        paymentMode,
+        institutionType: "NBFC",
+      };
+
+      const res = await chargeFee.mutateAsync(payload);
+      const created = res?.data;
+      if (!created) {
+        toast.error("Unexpected response from server");
+        return;
+      }
+
+      setSelectedFee(created);
+      setShowReceipt(true);
+      setSelectedLead(null);
+      setSearchInput("");
+      setActiveTab("history");
+    } catch (err) {
+      toast.error(err?.message || "Payment failed");
+    }
+  };
+
+  const handleStatusChange = async (id, status) => {
+    try {
+      await updateStatus.mutateAsync({ id, payload: { status } });
+    } catch {
+      /* handled by hook */
+    }
+  };
+  
+
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8 flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Login Fee Management
-            </h1>
-            <p className="text-gray-600">
-              Manage and view all login fee details
-            </p>
-          </div>
-
-          {/* Add New Lead Button */}
-          <Button
-            // onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2"
-          >
-            <Icons.Plus size={18} />
-            <span>New Lead</span>
-          </Button>
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-slate-900">Login Fee</h1>
+          <p className="text-slate-600 mt-1">Quick payment interface — search by lead number and pay.</p>
         </div>
 
-        {/* Top Stats & Search */}
-
-        <div className="flex flex-col gap-6">
-          {/* Status Cards - responsive wrap */}
-          <div className="flex flex-wrap gap-4 mb-6">
-            <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6">
-              <StatusCard
-                title="Total Leads"
-                value={_totalItems}
-                icon={Icons.User}
-                colorClass="text-white"
-                bgClass="bg-gradient-to-r from-blue-500 to-blue-600"
-                percent={_totalItems ? 100 : 0}
-              />
-            </div>
-
-            <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6">
-              <StatusCard
-                title="Interested"
-                value={statusCounts.INTERESTED || 0}
-                icon={Icons.CalendarDays}
-                colorClass="text-cyan-600"
-                bgClass="bg-cyan-50"
-                percent={
-                  _totalItems
-                    ? Math.round(
-                        ((statusCounts.INTERESTED || 0) / _totalItems) * 100,
-                      )
-                    : 0
-                }
-              />
-            </div>
-
-            <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6">
-              <StatusCard
-                title="Approved"
-                value={statusCounts.APPROVED || 0}
-                icon={Icons.User}
-                colorClass="text-green-600"
-                bgClass="bg-green-50"
-                percent={
-                  _totalItems
-                    ? Math.round(
-                        ((statusCounts.APPROVED || 0) / _totalItems) * 100,
-                      )
-                    : 0
-                }
-              />
-            </div>
-
-            <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6">
-              <StatusCard
-                title="Rejected"
-                value={statusCounts.REJECTED || 0}
-                icon={Icons.XCircle}
-                colorClass="text-red-600"
-                bgClass="bg-red-50"
-                percent={
-                  _totalItems
-                    ? Math.round(
-                        ((statusCounts.REJECTED || 0) / _totalItems) * 100,
-                      )
-                    : 0
-                }
-              />
-            </div>
-
-            <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6">
-              <StatusCard
-                title="Pending"
-                value={statusCounts.PENDING || 0}
-                icon={Icons.Hourglass}
-                colorClass="text-yellow-700"
-                bgClass="bg-yellow-50"
-                percent={
-                  _totalItems
-                    ? Math.round(
-                        ((statusCounts.PENDING || 0) / _totalItems) * 100,
-                      )
-                    : 0
-                }
-              />
-            </div>
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 mb-6">
+          <StatusCard title="Total Leads" value={totalLeadItems} icon={Icons.Users} colorClass="text-white" bgClass="bg-gradient-to-r from-blue-500 to-blue-600" percent={100} />
+          <StatusCard title="Fees In View" value={meta?.total || feeStatusCounts.total} icon={Icons.Receipt} colorClass="text-indigo-700" bgClass="bg-indigo-50" percent={0} />
+          <StatusCard title="Paid" value={feeStatusCounts.paid} icon={Icons.CheckCircle} colorClass="text-green-700" bgClass="bg-green-50" percent={0} />
+          <StatusCard title="Pending" value={feeStatusCounts.pending} icon={Icons.Clock3} colorClass="text-yellow-700" bgClass="bg-yellow-50" percent={0} />
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-2 mb-6 border-b border-gray-200">
-          {[  
-            {
-              id: "charge-fee",
-              label: "Charge Login Fee",
-              icon: "CreditCard",
-            },
-          ].map((tab) => {
-            const IconComp = Icons[tab.icon];
+        <div className="flex gap-2 mb-6 border-b border-slate-200">
+          {[{ id: "pay", label: "Pay Login Fee", icon: Icons.CreditCard }, { id: "history", label: "Payment History", icon: Icons.History }].map((tab) => {
+            const IconComp = tab.icon;
             return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-6 py-3 text-sm font-medium transition-all relative ${
-                  activeTab === tab.id
-                    ? "text-blue-600"
-                    : "text-gray-500 hover:text-gray-700"
-                }`}
-              >
+              <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`px-5 py-3 text-sm font-semibold transition-all border-b-2 ${activeTab === tab.id ? "border-blue-600 text-blue-700" : "border-transparent text-slate-500 hover:text-slate-700"}`}>
                 <IconComp className="w-4 h-4 inline mr-2" />
                 {tab.label}
-                {activeTab === tab.id && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full"></div>
-                )}
               </button>
             );
           })}
         </div>
 
-        {/* Track Fees Tab: show leads table instead of the static fee records */}
-        {activeTab === "track-leads" && (
-          <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <LeadsTable
-              items={leads?.data || []}
-              loading={loading}
-              getActions={() => []}
-              currentPage={currentPage}
-              totalPages={_totalPages}
-              onPageChange={setCurrentPage}
-              search={searchTerm}
-              setSearch={(value) => {
-                const v = typeof value === "string" ? value : value?.target?.value ?? "";
-                setSearchTerm(v);
-                setCurrentPage(1);
-              }}
-              filterValue={statusFilter}
-              setFilterValue={(value) => {
-                setStatusFilter(value);
-                setCurrentPage(1);
-              }}
-              filterOptions={[]}
-              dateRange={dateRange}
-              setDateRange={(v) => {
-                setDateRange(v);
-                setCurrentPage(1);
-              }}
-            />
-          </div>
-        )}
-
-        {/* Charge Fee Tab */}
-        {activeTab === "charge-fee" && (
-           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-sm p-6">
+        {activeTab === "pay" && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm p-6">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-2 bg-blue-100 rounded-xl">
-                  <Icons.FileText className="w-5 h-5 text-blue-600" />
+                  <Icons.Zap className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    Lead Application Details
-                  </h2>
-                  <p className="text-xs text-gray-500">
-                    Enter lead information to generate application fee
-                  </p>
+                  <h2 className="text-lg font-semibold text-slate-900">Process Payment</h2>
+                  <p className="text-xs text-slate-500">Search lead and complete payment</p>
                 </div>
               </div>
 
-              <form onSubmit={handleChargeFee} className="space-y-5">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Lead ID <span className="text-red-500">*</span>
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        name="leadId"
-                        value={formData.leadId}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            [e.target.name]: e.target.value,
-                          })
-                        }
-                        onBlur={(e) => fetchAndFillLead(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.currentTarget.blur();
-                            fetchAndFillLead(e.currentTarget.value);
-                          }
-                        }}
-                        placeholder="Enter Lead ID"
-                        className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={() => fetchAndFillLead(formData.leadId)}
-                        className="inline-flex items-center px-3 py-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100"
-                        aria-label="Fetch lead"
-                      >
-                        <Icons.Search className="w-4 h-4" />
-                      </button>
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-900 mb-3">Lead Number</label>
+                  <div className="flex gap-2">
+                    <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder="Enter lead number" className="flex-1 px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <button type="button" onClick={() => fetchAndSearchLead(searchInput)} className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2">
+                      <Icons.Search className="w-4 h-4" />
+                      Search
+                    </button>
+                  </div>
+                </div>
+
+                {selectedLead && (
+                  <div className="border border-slate-200 rounded-xl p-5 bg-slate-50">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-semibold text-slate-900">Lead Details</h3>
+                      <button type="button" onClick={() => setSelectedLead(null)} className="text-slate-500 hover:text-slate-700"><Icons.X className="w-4 h-4" /></button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-slate-600 text-xs">Applicant Name</p>
+                        <p className="font-semibold text-slate-900">{selectedLead.fullName || selectedLead.name || "-"}</p>
+                      </div>
+                      <div>
+                        <p className="text-slate-600 text-xs">Mobile</p>
+                        <p className="font-semibold text-slate-900">{selectedLead.contactNumber || selectedLead.mobile || "-"}</p>
+                      </div>
+                      <div>
+                        <p className="text-slate-600 text-xs">Email</p>
+                        <p className="font-semibold text-slate-900">{selectedLead.email || "-"}</p>
+                      </div>
+                      <div>
+                        <p className="text-slate-600 text-xs">Loan Amount</p>
+                        <p className="font-semibold text-slate-900">{formatINR(selectedLead.loanAmount || 0)}</p>
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Applicant Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="applicantName"
-                      value={formData.applicantName}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          [e.target.name]: e.target.value,
-                        })
-                      }
-                      placeholder="Full Name"
-                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Mobile Number <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="tel"
-                      name="mobileNumber"
-                      value={formData.mobileNumber}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          [e.target.name]: e.target.value,
-                        })
-                      }
-                      placeholder="10-digit mobile number"
-                      pattern="[0-9]{10}"
-                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email ID <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          [e.target.name]: e.target.value,
-                        })
-                      }
-                      placeholder="email@example.com"
-                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Loan Amount
-                    </label>
-                    <input
-                      type="number"
-                      name="loanAmount"
-                      value={formData.loanAmount}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          [e.target.name]: e.target.value,
-                        })
-                      }
-                      placeholder="Enter loan amount"
-                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Login Fee (₹)
-                    </label>
-                    <input
-                      type="number"
-                      name="feeAmount"
-                      value={formData.feeAmount}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          [e.target.name]: e.target.value,
-                        })
-                      }
-                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Payment Mode <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      name="paymentMode"
-                      value={formData.paymentMode}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          [e.target.name]: e.target.value,
-                        })
-                      }
-                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-                      required
-                    >
-                      <option value="online">Online Payment</option>
-                      <option value="offline">Offline / Cash</option>
-                      <option value="bank_transfer">Bank Transfer</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Transaction ID
-                    </label>
-                    <input
-                      type="text"
-                      name="transactionId"
-                      value={formData.transactionId}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          [e.target.name]: e.target.value,
-                        })
-                      }
-                      placeholder="Enter transaction reference"
-                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
-                </div>
+                )}
 
-                <button
-                  type="submit"
-                  className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-all font-semibold flex items-center justify-center gap-2"
-                >
-                  <Icons.CreditCard className="w-5 h-5" />
-                  Charge Fee & Generate Application Number
-                </button>
-              </form>
-            </div>
-          </div>
+                {selectedLead && (
+                  <form onSubmit={handlePay} className="space-y-5">
+                    <div>
+                      <label className="block text-sm font-semibold text-slate-900 mb-3">Payment Method</label>
+                      <select value={paymentMode} onChange={(e) => setPaymentMode(e.target.value)} className="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        {paymentModeOptions.map((opt) => (
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                      </select>
+                    </div>
 
-          <div className="space-y-6">
-            <div className="bg-linear-to-br from-blue-50 to-indigo-50 rounded-2xl p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <Icons.Info className="w-6 h-6 text-blue-600" />
-                <h3 className="font-semibold text-gray-900">Fee Information</h3>
-              </div>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Application Fee</span>
-                  <span className="font-bold text-gray-900">
-                    {formatINR(feeAmountNum)}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">GST (18%)</span>
-                  <span className="font-bold text-gray-900">
-                    {formatINR(gstAmount)}
-                  </span>
-                </div>
-                <div className="border-t border-blue-200 pt-2">
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold text-gray-900">
-                      Total Amount
-                    </span>
-                    <span className="font-bold text-xl text-blue-600">
-                      {formatINR(totalAmount)}
-                    </span>
+                    <button type="submit" disabled={chargeFee.isPending || !selectedLead} className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-all font-semibold flex items-center justify-center gap-2 text-lg">
+                      <Icons.Zap className="w-5 h-5" />{chargeFee.isPending ? "Processing..." : "Pay Login Fee"}
+                    </button>
+                  </form>
+                )}
+
+                {!selectedLead && (
+                  <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center">
+                    <Icons.Search className="w-12 h-12 text-slate-400 mx-auto mb-3" />
+                    <p className="text-slate-600 font-medium">Search a lead to process payment</p>
                   </div>
-                </div>
+                )}
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm p-6">
-              <h3 className="font-semibold text-gray-900 mb-3">
-                Important Notes
-              </h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li className="flex items-start gap-2">
-                  <Icons.CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
-                  <span>Application fee is non-refundable</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Icons.CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
-                  <span>Unique number generated after fee payment</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Icons.CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
-                  <span>Use unique number for document upload</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Icons.AlertCircle className="w-4 h-4 text-yellow-500 mt-0.5" />
-                  <span>Valid for 30 days from generation</span>
-                </li>
-              </ul>
+            <div className="space-y-6">
+              {selectedLead && (
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100">
+                  <div className="flex items-center gap-3 mb-4"><Icons.Calculator className="w-6 h-6 text-blue-600" /><h3 className="font-semibold text-slate-900">Fee Breakdown</h3></div>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center text-sm"><span className="text-slate-600">Base Fee</span><span className="font-bold text-slate-900">{formatINR(feeAmount)}</span></div>
+                    <div className="flex justify-between items-center text-sm"><span className="text-slate-600">GST (18%)</span><span className="font-bold text-slate-900">{formatINR(gstAmount)}</span></div>
+                    <div className="border-t border-blue-200 pt-3 flex justify-between items-center"><span className="font-semibold text-slate-900">Total Amount</span><span className="font-bold text-2xl text-blue-700">{formatINR(totalAmount)}</span></div>
+                  </div>
+                </div>
+              )}
+
+              <div className="bg-white rounded-2xl shadow-sm p-6 border border-slate-200">
+                <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2"><Icons.Info className="w-4 h-4 text-blue-600" />Payment Info</h3>
+                <ul className="space-y-2.5 text-sm text-slate-600">
+                  <li className="flex items-start gap-2"><Icons.CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" /><span>Receipt generated instantly</span></li>
+                  <li className="flex items-start gap-2"><Icons.CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" /><span>Transaction ID auto-generated by system</span></li>
+                  <li className="flex items-start gap-2"><Icons.CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" /><span>Supports all payment methods</span></li>
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
         )}
+
+        {activeTab === "history" && (
+          <div className="bg-white rounded-2xl shadow-sm p-6">
+            <div className="flex flex-col lg:flex-row gap-3 lg:items-center lg:justify-between mb-5">
+              <h3 className="text-lg font-semibold text-slate-900">Payment History</h3>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="relative">
+                  <Icons.Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                  <input type="text" value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }} placeholder="Search by app no / lead / name" className="pl-9 pr-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500" />
+                </div>
+                <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }} className="px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500"><option value="">All Statuses</option>{statusOptions.map((s) => <option key={s} value={s}>{s}</option>)}</select>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto border border-slate-100 rounded-xl">
+              <table className="w-full min-w-[900px]"><thead className="bg-slate-50"><tr><th className="text-left text-xs font-semibold text-slate-600 px-4 py-3">Lead</th><th className="text-left text-xs font-semibold text-slate-600 px-4 py-3">Applicant</th><th className="text-left text-xs font-semibold text-slate-600 px-4 py-3">Amount</th><th className="text-left text-xs font-semibold text-slate-600 px-4 py-3">Payment</th><th className="text-left text-xs font-semibold text-slate-600 px-4 py-3">Status</th><th className="text-left text-xs font-semibold text-slate-600 px-4 py-3">Action</th></tr></thead>
+                <tbody>
+                  {(loading || isFetching) && (<tr><td colSpan={6} className="px-4 py-6 text-center text-slate-500">Loading fee records...</td></tr>)}
+
+                  {!loading && !isFetching && filteredFees.length === 0 && (<tr><td colSpan={6} className="px-4 py-6 text-center text-slate-500">No login fee records found</td></tr>)}
+
+                  {!loading && !isFetching && filteredFees.map((item) => (
+                    <tr key={item.id} className="border-t border-slate-100 hover:bg-slate-50">
+                      <td className="px-4 py-3 text-sm text-slate-700">{item.leadNumber || item.leadId}</td>
+                      <td className="px-4 py-3 text-sm text-slate-700"><div>{item.applicantName}</div><div className="text-xs text-slate-500">{item.mobileNumber}</div></td>
+                      <td className="px-4 py-3 text-sm font-semibold text-slate-900">{formatINR(item.totalAmount)}</td>
+                      <td className="px-4 py-3 text-sm text-slate-700"><div>{item.paymentMode}</div><div className="text-xs text-slate-500 font-mono">{item.transactionId || "Auto-Gen"}</div></td>
+                      <td className="px-4 py-3 text-sm"><span className={`px-2 py-1 rounded-full text-xs font-semibold ${statusClasses[item.status] || "bg-slate-100 text-slate-700"}`}>{item.status}</span></td>
+                      <td className="px-4 py-3 text-sm"><div className="flex gap-2"><button type="button" className="px-3 py-1.5 rounded-md border border-slate-200 hover:bg-slate-50 text-xs font-medium" onClick={() => { setSelectedFee(item); setShowReceipt(true); }}>Receipt</button><select value={item.status} onChange={(e) => handleStatusChange(item.id, e.target.value)} disabled={updateStatus.isPending} className="px-2 py-1.5 rounded-md border border-slate-200 text-xs font-medium bg-white">{statusOptions.map((s) => <option key={s} value={s}>{s}</option>)}</select></div></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="flex items-center justify-between mt-4">
+              <p className="text-sm text-slate-600">Page {meta?.page || 1} of {meta?.totalPages || 1}</p>
+              <div className="flex gap-2">
+                <button type="button" disabled={(meta?.page || 1) <= 1} onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} className="px-3 py-1.5 border border-slate-200 rounded-md disabled:opacity-50 text-sm font-medium hover:bg-slate-50">Previous</button>
+                <button type="button" disabled={(meta?.page || 1) >= (meta?.totalPages || 1)} onClick={() => setCurrentPage((p) => Math.min(meta?.totalPages || p, p + 1))} className="px-3 py-1.5 border border-slate-200 rounded-md disabled:opacity-50 text-sm font-medium hover:bg-slate-50">Next</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showReceipt && selectedFee && (
+          <div className="fixed inset-0 z-50 bg-black/50 p-4 flex items-center justify-center">
+            <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden">
+              <div className="p-6 border-b border-slate-200 flex items-center justify-between bg-gradient-to-r from-blue-50 to-indigo-50">
+                <div className="flex items-center gap-3"><Icons.CheckCircle className="w-6 h-6 text-green-500" /><div><h3 className="text-lg font-semibold text-slate-900">Payment Receipt</h3><p className="text-xs text-slate-500">Login Fee Payment</p></div></div>
+                <button type="button" onClick={() => setShowReceipt(false)} className="p-2 rounded-md hover:bg-slate-100"><Icons.X className="w-4 h-4" /></button>
+              </div>
+              <div className="p-6 space-y-6">
+                <div className="grid grid-cols-2 gap-4 text-sm"><div><p className="text-slate-500 text-xs uppercase font-semibold">Application Number</p><p className="font-mono font-semibold text-slate-900 mt-1">{selectedFee.applicationNumber}</p></div><div><p className="text-slate-500 text-xs uppercase font-semibold">Lead Number</p><p className="font-mono font-semibold text-slate-900 mt-1">{selectedFee.leadNumber || selectedFee.leadId}</p></div><div><p className="text-slate-500 text-xs uppercase font-semibold">Applicant</p><p className="font-semibold text-slate-900 mt-1">{selectedFee.applicantName}</p></div><div><p className="text-slate-500 text-xs uppercase font-semibold">Mobile</p><p className="font-semibold text-slate-900 mt-1">{selectedFee.mobileNumber}</p></div></div>
+                <div className="border rounded-xl p-5 bg-gradient-to-br from-slate-50 to-slate-100"><h4 className="text-sm font-semibold text-slate-900 mb-3">Amount Details</h4><div className="space-y-2.5 text-sm"><div className="flex justify-between"><span className="text-slate-600">Base Fee</span><span className="font-semibold text-slate-900">{formatINR(selectedFee.feeAmount)}</span></div><div className="flex justify-between"><span className="text-slate-600">GST (18%)</span><span className="font-semibold text-slate-900">{formatINR(selectedFee.gstAmount)}</span></div><div className="pt-2.5 border-t border-slate-300 flex justify-between items-center"><span className="font-semibold text-slate-900">Total Amount Paid</span><span className="font-bold text-2xl text-blue-700">{formatINR(selectedFee.totalAmount)}</span></div></div></div>
+                <div className="bg-blue-50 rounded-xl p-5 border border-blue-200"><h4 className="text-sm font-semibold text-slate-900 mb-3">Payment Details</h4><div className="space-y-2 text-sm"><div className="flex justify-between"><span className="text-slate-600">Payment Mode</span><span className="font-semibold text-slate-900">{selectedFee.paymentMode}</span></div><div className="flex justify-between"><span className="text-slate-600">Transaction ID</span><span className="font-mono font-semibold text-slate-900">{selectedFee.transactionId || "Generated by System"}</span></div><div className="flex justify-between"><span className="text-slate-600">Status</span><span className={`px-2 py-1 rounded-full text-xs font-semibold ${statusClasses[selectedFee.status]}`}>{selectedFee.status}</span></div></div></div>
+                <div className="flex justify-end gap-2"><button type="button" onClick={() => window.print()} className="px-6 py-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 font-medium text-slate-900 flex items-center gap-2"><Icons.Printer className="w-4 h-4" />Print Receipt</button><button type="button" onClick={() => setShowReceipt(false)} className="px-6 py-2.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 font-medium">Done</button></div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {(loading || isFetching) && (<div className="fixed bottom-4 right-4 px-4 py-2 rounded-lg bg-slate-900 text-white text-sm shadow-lg flex items-center gap-2"><Icons.Loader className="w-4 h-4 animate-spin" />Syncing data...</div>)}
       </div>
     </div>
   );
 }
- 

@@ -33,6 +33,7 @@ import loanDraftRouter from "./modules/loanDraft/loanDraft.router.js";
 import sanctionRouter from "./modules/sanction/sanction.router.js";
 import aadhaarRouter from "./modules/aadhaar/aadhaar.routes.js";
 import panRouter from "./modules/pan/pan.routes.js";
+import logginFeeRouter from "./modules/logginFee/logginfee.router.js";
 
 const router = Router();
 
@@ -74,4 +75,5 @@ router.use("/sanctions", sanctionRouter);
 router.use("/foreclose", forecloseRouter);
 router.use("/aadhaar",aadhaarRouter);
 router.use("/pan", panRouter);
+router.use("/loggin-fee", logginFeeRouter);
 export default router;
