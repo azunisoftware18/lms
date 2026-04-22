@@ -395,6 +395,7 @@ export const LeadsScalarFieldEnum = {
   dob: 'dob',
   gender: 'gender',
   partnerId: 'partnerId',
+  defaultLoggingFeeAmount: 'defaultLoggingFeeAmount',
   loanAmount: 'loanAmount',
   loanTypeId: 'loanTypeId',
   addressId: 'addressId',

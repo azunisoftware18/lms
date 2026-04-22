@@ -6,7 +6,7 @@ import { AddressType } from "../../../generated/prisma-client/enums.js";
 import { generateLoanNumber } from "../../common/generateId/generateLoanNumber.js";
 import { buildLeadSearch } from "../../common/utils/search.js";
 import { getPagination } from "../../common/utils/pagination.js";
-
+import { logAction } from "../../audit/audit.helper.js";
 export const createLeadService = async (leadData: CreateLead) => {
   const dob =
     typeof leadData.dob === "string" ? new Date(leadData.dob) : leadData.dob;
@@ -16,7 +16,9 @@ export const createLeadService = async (leadData: CreateLead) => {
       id: leadData.loanTypeId,
       isActive: true,
     },
-    select: { id: true },
+    select: { id: true, 
+      defaultLoginCharges: true,
+    },
   });
 
   if (!typecheck) {
@@ -37,6 +39,7 @@ export const createLeadService = async (leadData: CreateLead) => {
       email: leadData.email,
       leadNumber,
       dob,
+      defaultLoggingFeeAmount: typecheck.defaultLoginCharges,
       gender: leadData.gender,
       loanAmount: leadData.loanAmount,
       loanType: {
@@ -142,6 +145,7 @@ export const getAllLeadsService = async (params: {
             id: true,
             name: true,
             minLoginCharges: true,
+            defaultLoginCharges: true,
             maxLoginCharges: true,
           }
         },
@@ -168,6 +172,7 @@ export const getAllLeadsService = async (params: {
     pinCode: lead.address?.pinCode ?? null,
     // expose loan type login charge bounds at top-level for callers
     minLoginCharges: lead.loanType?.minLoginCharges ?? null,
+    defaultLoginCharges: lead.loanType?.defaultLoginCharges ?? null,
     maxLoginCharges: lead.loanType?.maxLoginCharges ?? null,
   }));
 
@@ -204,6 +209,7 @@ export const getLeadByIdService = async (id: string) => {
           id: true,
           name: true,
           minLoginCharges: true,
+          defaultLoginCharges: true,
           maxLoginCharges: true,
         },
       },
@@ -225,6 +231,7 @@ export const getLeadByIdService = async (id: string) => {
       state: lead.address?.state ?? null,
       pinCode: lead.address?.pinCode ?? null,
       minLoginCharges: lead.loanType?.minLoginCharges ?? null,
+      defaultLoginCharges: lead.loanType?.defaultLoginCharges ?? null,
       maxLoginCharges: lead.loanType?.maxLoginCharges ?? null,
     };
   }
@@ -252,6 +259,7 @@ export const getLeadByIdService = async (id: string) => {
           id: true,
           name: true,
           minLoginCharges: true,
+          defaultLoginCharges: true,
           maxLoginCharges: true,
         },
       },
@@ -274,6 +282,7 @@ export const getLeadByIdService = async (id: string) => {
       state: byLeadNumber.address?.state ?? null,
       pinCode: byLeadNumber.address?.pinCode ?? null,
       minLoginCharges: byLeadNumber.loanType?.minLoginCharges ?? null,
+      defaultLoginCharges: byLeadNumber.loanType?.defaultLoginCharges ?? null,
       maxLoginCharges: byLeadNumber.loanType?.maxLoginCharges ?? null,
     };
   }
@@ -389,6 +398,7 @@ export const assignLeadService = async (
             name: true,
             minLoginCharges: true,
             maxLoginCharges: true,
+            defaultLoginCharges: true,
           }
         },
         address: {
@@ -423,6 +433,7 @@ export const assignLeadService = async (
       pinCode: updated.address?.pinCode ?? null,
       minLoginCharges: updated.loanType?.minLoginCharges ?? null,
       maxLoginCharges: updated.loanType?.maxLoginCharges ?? null,
+      defaultLoginCharges: updated.loanType?.defaultLoginCharges ?? null,
     };
   } catch (error: unknown) {
     const eAny = error as any;
@@ -593,3 +604,130 @@ export const convertLeadToLoanApplicationService = async (leadId: string) => {
     return loanApplication;
   });
 };
+
+
+export const editLogginChargesService = async (id: string, userId: string,  defaultLoginCharges: number) => {
+  try {
+    if (defaultLoginCharges < 0) {
+      const e: any = new Error("defaultLoginCharges must be non-negative");
+      e.statusCode = 400;
+      throw e;
+    }
+    const lead = await prisma.leads.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        status: true,
+        defaultLoggingFeeAmount: true,
+        loanTypeId: true,
+        loanType: {
+          select: {
+            id: true,
+            maxLoginCharges: true,
+            defaultLoginCharges: true,
+            minLoginCharges: true,
+          },
+        },
+      },
+    });
+    if (!lead) {
+      const e: any = new Error("Lead not found");
+      e.statusCode = 404;
+      throw e;
+    }
+    if (!lead.loanTypeId) {
+      const e: any = new Error("Lead does not have an associated loan type");
+      e.statusCode = 400;
+      throw e;
+    }
+
+    if (["APPROVED", "FUNDED", "CLOSED"].includes(lead.status)) {
+      const e: any = new Error(
+        `Login charges cannot be edited when lead is in ${lead.status} status`,
+      );
+      e.statusCode = 400;
+      throw e;
+    }
+
+    if (defaultLoginCharges > (lead.loanType?.maxLoginCharges ?? Infinity)) {
+      const e: any = new Error(
+        `defaultLoginCharges cannot exceed maxLoginCharges of ${lead.loanType?.maxLoginCharges}`,
+      );
+      e.statusCode = 400;
+      throw e;
+    }
+    if (defaultLoginCharges < (lead.loanType?.minLoginCharges ?? 0)) {
+      const e: any = new Error(
+        `defaultLoginCharges cannot be less than minLoginCharges of ${lead.loanType?.minLoginCharges}`,
+      );
+      e.statusCode = 400;
+      throw e;
+    }
+
+    const oldStatus = lead.status;
+    const oldLoginCharges = lead.defaultLoggingFeeAmount;
+    const hasLoginChargesChanged = oldLoginCharges !== defaultLoginCharges;
+    const shouldMoveToUnderReview =
+      hasLoginChargesChanged &&
+      ["APPLICATION_IN_PROGRESS", "APPLICATION_SUBMITTED", "UNDER_REVIEW"].includes(
+        oldStatus,
+      );
+
+    const nextStatus = shouldMoveToUnderReview ? "UNDER_REVIEW" : oldStatus;
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { branchId: true },
+    });
+
+    if (!user?.branchId) {
+      const e: any = new Error("User branch information not found");
+      e.statusCode = 400;
+      throw e;
+    }
+
+    const updated = await prisma.leads.update({
+      where: { id },
+      data: {
+        defaultLoggingFeeAmount: defaultLoginCharges,
+        status: nextStatus as any,
+      },
+      select: {
+        id: true,
+        status: true,
+        defaultLoggingFeeAmount: true,
+      },
+    });
+
+    await logAction({
+      entityType: "LEAD",
+      entityId: lead.id,
+      action: "UPDATE_LEAD_LOGIN_CHARGES",
+      performedBy: userId,
+      branchId: user.branchId,
+      oldValue: {
+        status: oldStatus,
+        defaultLoggingFeeAmount: oldLoginCharges,
+      },
+      newValue: {
+        status: updated.status,
+        defaultLoggingFeeAmount: updated.defaultLoggingFeeAmount,
+      },
+      remarks:
+        oldStatus === updated.status
+          ? "Lead login charges updated"
+          : `Lead login charges updated and status changed from ${oldStatus} to ${updated.status}`,
+    });
+
+    return  updated;
+  } catch (error: unknown) {
+    const eAny = error as any;
+    if (eAny && eAny.code === "P2025") {
+      const e: any = new Error("Lead not found");
+      e.statusCode = 404;
+      throw e;
+    }
+    throw error;
+  }
+};
+

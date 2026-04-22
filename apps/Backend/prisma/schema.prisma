@@ -393,6 +393,7 @@ model Leads {
   dob                        DateTime
   gender                     Gender
   partnerId                  String?
+  defaultLoggingFeeAmount    Float?           @default(0) // Default fee for logging a lead, can be overridden by partner agreement
   loanAmount                 Float
   loanTypeId                 String
   addressId                  String?           @unique
@@ -2017,6 +2018,7 @@ enum LeadStatus {
   CLOSED
   DROPPED
   PENDING
+  
 }
 
 enum PartnerType {

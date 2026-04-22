@@ -27,10 +27,12 @@ export type AggregateLeads = {
 }
 
 export type LeadsAvgAggregateOutputType = {
+  defaultLoggingFeeAmount: number | null
   loanAmount: number | null
 }
 
 export type LeadsSumAggregateOutputType = {
+  defaultLoggingFeeAmount: number | null
   loanAmount: number | null
 }
 
@@ -43,6 +45,7 @@ export type LeadsMinAggregateOutputType = {
   dob: Date | null
   gender: $Enums.Gender | null
   partnerId: string | null
+  defaultLoggingFeeAmount: number | null
   loanAmount: number | null
   loanTypeId: string | null
   addressId: string | null
@@ -63,6 +66,7 @@ export type LeadsMaxAggregateOutputType = {
   dob: Date | null
   gender: $Enums.Gender | null
   partnerId: string | null
+  defaultLoggingFeeAmount: number | null
   loanAmount: number | null
   loanTypeId: string | null
   addressId: string | null
@@ -83,6 +87,7 @@ export type LeadsCountAggregateOutputType = {
   dob: number
   gender: number
   partnerId: number
+  defaultLoggingFeeAmount: number
   loanAmount: number
   loanTypeId: number
   addressId: number
@@ -97,10 +102,12 @@ export type LeadsCountAggregateOutputType = {
 
 
 export type LeadsAvgAggregateInputType = {
+  defaultLoggingFeeAmount?: true
   loanAmount?: true
 }
 
 export type LeadsSumAggregateInputType = {
+  defaultLoggingFeeAmount?: true
   loanAmount?: true
 }
 
@@ -113,6 +120,7 @@ export type LeadsMinAggregateInputType = {
   dob?: true
   gender?: true
   partnerId?: true
+  defaultLoggingFeeAmount?: true
   loanAmount?: true
   loanTypeId?: true
   addressId?: true
@@ -133,6 +141,7 @@ export type LeadsMaxAggregateInputType = {
   dob?: true
   gender?: true
   partnerId?: true
+  defaultLoggingFeeAmount?: true
   loanAmount?: true
   loanTypeId?: true
   addressId?: true
@@ -153,6 +162,7 @@ export type LeadsCountAggregateInputType = {
   dob?: true
   gender?: true
   partnerId?: true
+  defaultLoggingFeeAmount?: true
   loanAmount?: true
   loanTypeId?: true
   addressId?: true
@@ -260,6 +270,7 @@ export type LeadsGroupByOutputType = {
   dob: Date
   gender: $Enums.Gender
   partnerId: string | null
+  defaultLoggingFeeAmount: number | null
   loanAmount: number
   loanTypeId: string
   addressId: string | null
@@ -303,6 +314,7 @@ export type LeadsWhereInput = {
   dob?: Prisma.DateTimeFilter<"Leads"> | Date | string
   gender?: Prisma.EnumGenderFilter<"Leads"> | $Enums.Gender
   partnerId?: Prisma.StringNullableFilter<"Leads"> | string | null
+  defaultLoggingFeeAmount?: Prisma.FloatNullableFilter<"Leads"> | number | null
   loanAmount?: Prisma.FloatFilter<"Leads"> | number
   loanTypeId?: Prisma.StringFilter<"Leads"> | string
   addressId?: Prisma.StringNullableFilter<"Leads"> | string | null
@@ -329,6 +341,7 @@ export type LeadsOrderByWithRelationInput = {
   dob?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   partnerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  defaultLoggingFeeAmount?: Prisma.SortOrderInput | Prisma.SortOrder
   loanAmount?: Prisma.SortOrder
   loanTypeId?: Prisma.SortOrder
   addressId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -360,6 +373,7 @@ export type LeadsWhereUniqueInput = Prisma.AtLeast<{
   dob?: Prisma.DateTimeFilter<"Leads"> | Date | string
   gender?: Prisma.EnumGenderFilter<"Leads"> | $Enums.Gender
   partnerId?: Prisma.StringNullableFilter<"Leads"> | string | null
+  defaultLoggingFeeAmount?: Prisma.FloatNullableFilter<"Leads"> | number | null
   loanAmount?: Prisma.FloatFilter<"Leads"> | number
   loanTypeId?: Prisma.StringFilter<"Leads"> | string
   assignedTo?: Prisma.StringNullableFilter<"Leads"> | string | null
@@ -385,6 +399,7 @@ export type LeadsOrderByWithAggregationInput = {
   dob?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   partnerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  defaultLoggingFeeAmount?: Prisma.SortOrderInput | Prisma.SortOrder
   loanAmount?: Prisma.SortOrder
   loanTypeId?: Prisma.SortOrder
   addressId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -413,6 +428,7 @@ export type LeadsScalarWhereWithAggregatesInput = {
   dob?: Prisma.DateTimeWithAggregatesFilter<"Leads"> | Date | string
   gender?: Prisma.EnumGenderWithAggregatesFilter<"Leads"> | $Enums.Gender
   partnerId?: Prisma.StringNullableWithAggregatesFilter<"Leads"> | string | null
+  defaultLoggingFeeAmount?: Prisma.FloatNullableWithAggregatesFilter<"Leads"> | number | null
   loanAmount?: Prisma.FloatWithAggregatesFilter<"Leads"> | number
   loanTypeId?: Prisma.StringWithAggregatesFilter<"Leads"> | string
   addressId?: Prisma.StringNullableWithAggregatesFilter<"Leads"> | string | null
@@ -432,6 +448,7 @@ export type LeadsCreateInput = {
   email: string
   dob: Date | string
   gender: $Enums.Gender
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   convertedLoanApplicationId?: string | null
   status?: $Enums.LeadStatus
@@ -454,6 +471,7 @@ export type LeadsUncheckedCreateInput = {
   dob: Date | string
   gender: $Enums.Gender
   partnerId?: string | null
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   loanTypeId: string
   addressId?: string | null
@@ -474,6 +492,7 @@ export type LeadsUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
@@ -496,6 +515,7 @@ export type LeadsUncheckedUpdateInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -517,6 +537,7 @@ export type LeadsCreateManyInput = {
   dob: Date | string
   gender: $Enums.Gender
   partnerId?: string | null
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   loanTypeId: string
   addressId?: string | null
@@ -536,6 +557,7 @@ export type LeadsUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
@@ -552,6 +574,7 @@ export type LeadsUncheckedUpdateManyInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -593,6 +616,7 @@ export type LeadsCountOrderByAggregateInput = {
   dob?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   partnerId?: Prisma.SortOrder
+  defaultLoggingFeeAmount?: Prisma.SortOrder
   loanAmount?: Prisma.SortOrder
   loanTypeId?: Prisma.SortOrder
   addressId?: Prisma.SortOrder
@@ -605,6 +629,7 @@ export type LeadsCountOrderByAggregateInput = {
 }
 
 export type LeadsAvgOrderByAggregateInput = {
+  defaultLoggingFeeAmount?: Prisma.SortOrder
   loanAmount?: Prisma.SortOrder
 }
 
@@ -617,6 +642,7 @@ export type LeadsMaxOrderByAggregateInput = {
   dob?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   partnerId?: Prisma.SortOrder
+  defaultLoggingFeeAmount?: Prisma.SortOrder
   loanAmount?: Prisma.SortOrder
   loanTypeId?: Prisma.SortOrder
   addressId?: Prisma.SortOrder
@@ -637,6 +663,7 @@ export type LeadsMinOrderByAggregateInput = {
   dob?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   partnerId?: Prisma.SortOrder
+  defaultLoggingFeeAmount?: Prisma.SortOrder
   loanAmount?: Prisma.SortOrder
   loanTypeId?: Prisma.SortOrder
   addressId?: Prisma.SortOrder
@@ -649,6 +676,7 @@ export type LeadsMinOrderByAggregateInput = {
 }
 
 export type LeadsSumOrderByAggregateInput = {
+  defaultLoggingFeeAmount?: Prisma.SortOrder
   loanAmount?: Prisma.SortOrder
 }
 
@@ -880,6 +908,7 @@ export type LeadsCreateWithoutAssignedToUserInput = {
   email: string
   dob: Date | string
   gender: $Enums.Gender
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   convertedLoanApplicationId?: string | null
   status?: $Enums.LeadStatus
@@ -901,6 +930,7 @@ export type LeadsUncheckedCreateWithoutAssignedToUserInput = {
   dob: Date | string
   gender: $Enums.Gender
   partnerId?: string | null
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   loanTypeId: string
   addressId?: string | null
@@ -930,6 +960,7 @@ export type LeadsCreateWithoutAssignedByUserInput = {
   email: string
   dob: Date | string
   gender: $Enums.Gender
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   convertedLoanApplicationId?: string | null
   status?: $Enums.LeadStatus
@@ -951,6 +982,7 @@ export type LeadsUncheckedCreateWithoutAssignedByUserInput = {
   dob: Date | string
   gender: $Enums.Gender
   partnerId?: string | null
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   loanTypeId: string
   addressId?: string | null
@@ -1000,6 +1032,7 @@ export type LeadsScalarWhereInput = {
   dob?: Prisma.DateTimeFilter<"Leads"> | Date | string
   gender?: Prisma.EnumGenderFilter<"Leads"> | $Enums.Gender
   partnerId?: Prisma.StringNullableFilter<"Leads"> | string | null
+  defaultLoggingFeeAmount?: Prisma.FloatNullableFilter<"Leads"> | number | null
   loanAmount?: Prisma.FloatFilter<"Leads"> | number
   loanTypeId?: Prisma.StringFilter<"Leads"> | string
   addressId?: Prisma.StringNullableFilter<"Leads"> | string | null
@@ -1035,6 +1068,7 @@ export type LeadsCreateWithoutPartnerInput = {
   email: string
   dob: Date | string
   gender: $Enums.Gender
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   convertedLoanApplicationId?: string | null
   status?: $Enums.LeadStatus
@@ -1055,6 +1089,7 @@ export type LeadsUncheckedCreateWithoutPartnerInput = {
   email: string
   dob: Date | string
   gender: $Enums.Gender
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   loanTypeId: string
   addressId?: string | null
@@ -1101,6 +1136,7 @@ export type LeadsCreateWithoutAddressInput = {
   email: string
   dob: Date | string
   gender: $Enums.Gender
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   convertedLoanApplicationId?: string | null
   status?: $Enums.LeadStatus
@@ -1122,6 +1158,7 @@ export type LeadsUncheckedCreateWithoutAddressInput = {
   dob: Date | string
   gender: $Enums.Gender
   partnerId?: string | null
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   loanTypeId: string
   assignedTo?: string | null
@@ -1157,6 +1194,7 @@ export type LeadsUpdateWithoutAddressInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
@@ -1178,6 +1216,7 @@ export type LeadsUncheckedUpdateWithoutAddressInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   assignedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1197,6 +1236,7 @@ export type LeadsCreateWithoutLoanApplicationsInput = {
   email: string
   dob: Date | string
   gender: $Enums.Gender
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   convertedLoanApplicationId?: string | null
   status?: $Enums.LeadStatus
@@ -1218,6 +1258,7 @@ export type LeadsUncheckedCreateWithoutLoanApplicationsInput = {
   dob: Date | string
   gender: $Enums.Gender
   partnerId?: string | null
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   loanTypeId: string
   addressId?: string | null
@@ -1253,6 +1294,7 @@ export type LeadsUpdateWithoutLoanApplicationsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
@@ -1274,6 +1316,7 @@ export type LeadsUncheckedUpdateWithoutLoanApplicationsInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1293,6 +1336,7 @@ export type LeadsCreateWithoutLoanTypeInput = {
   email: string
   dob: Date | string
   gender: $Enums.Gender
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   convertedLoanApplicationId?: string | null
   status?: $Enums.LeadStatus
@@ -1314,6 +1358,7 @@ export type LeadsUncheckedCreateWithoutLoanTypeInput = {
   dob: Date | string
   gender: $Enums.Gender
   partnerId?: string | null
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   addressId?: string | null
   assignedTo?: string | null
@@ -1360,6 +1405,7 @@ export type LeadsCreateManyAssignedToUserInput = {
   dob: Date | string
   gender: $Enums.Gender
   partnerId?: string | null
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   loanTypeId: string
   addressId?: string | null
@@ -1379,6 +1425,7 @@ export type LeadsCreateManyAssignedByUserInput = {
   dob: Date | string
   gender: $Enums.Gender
   partnerId?: string | null
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   loanTypeId: string
   addressId?: string | null
@@ -1397,6 +1444,7 @@ export type LeadsUpdateWithoutAssignedToUserInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
@@ -1418,6 +1466,7 @@ export type LeadsUncheckedUpdateWithoutAssignedToUserInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1438,6 +1487,7 @@ export type LeadsUncheckedUpdateManyWithoutAssignedToUserInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1456,6 +1506,7 @@ export type LeadsUpdateWithoutAssignedByUserInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
@@ -1477,6 +1528,7 @@ export type LeadsUncheckedUpdateWithoutAssignedByUserInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1497,6 +1549,7 @@ export type LeadsUncheckedUpdateManyWithoutAssignedByUserInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1515,6 +1568,7 @@ export type LeadsCreateManyPartnerInput = {
   email: string
   dob: Date | string
   gender: $Enums.Gender
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   loanTypeId: string
   addressId?: string | null
@@ -1534,6 +1588,7 @@ export type LeadsUpdateWithoutPartnerInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
@@ -1554,6 +1609,7 @@ export type LeadsUncheckedUpdateWithoutPartnerInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1574,6 +1630,7 @@ export type LeadsUncheckedUpdateManyWithoutPartnerInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   loanTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1594,6 +1651,7 @@ export type LeadsCreateManyLoanTypeInput = {
   dob: Date | string
   gender: $Enums.Gender
   partnerId?: string | null
+  defaultLoggingFeeAmount?: number | null
   loanAmount: number
   addressId?: string | null
   assignedTo?: string | null
@@ -1612,6 +1670,7 @@ export type LeadsUpdateWithoutLoanTypeInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   convertedLoanApplicationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
@@ -1633,6 +1692,7 @@ export type LeadsUncheckedUpdateWithoutLoanTypeInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1653,6 +1713,7 @@ export type LeadsUncheckedUpdateManyWithoutLoanTypeInput = {
   dob?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultLoggingFeeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   loanAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   addressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1703,6 +1764,7 @@ export type LeadsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   dob?: boolean
   gender?: boolean
   partnerId?: boolean
+  defaultLoggingFeeAmount?: boolean
   loanAmount?: boolean
   loanTypeId?: boolean
   addressId?: boolean
@@ -1732,6 +1794,7 @@ export type LeadsSelectScalar = {
   dob?: boolean
   gender?: boolean
   partnerId?: boolean
+  defaultLoggingFeeAmount?: boolean
   loanAmount?: boolean
   loanTypeId?: boolean
   addressId?: boolean
@@ -1743,7 +1806,7 @@ export type LeadsSelectScalar = {
   updatedAt?: boolean
 }
 
-export type LeadsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "contactNumber" | "leadNumber" | "email" | "dob" | "gender" | "partnerId" | "loanAmount" | "loanTypeId" | "addressId" | "assignedTo" | "assignedBy" | "convertedLoanApplicationId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["leads"]>
+export type LeadsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "contactNumber" | "leadNumber" | "email" | "dob" | "gender" | "partnerId" | "defaultLoggingFeeAmount" | "loanAmount" | "loanTypeId" | "addressId" | "assignedTo" | "assignedBy" | "convertedLoanApplicationId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["leads"]>
 export type LeadsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   address?: boolean | Prisma.Leads$addressArgs<ExtArgs>
   partner?: boolean | Prisma.Leads$partnerArgs<ExtArgs>
@@ -1773,6 +1836,7 @@ export type $LeadsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     dob: Date
     gender: $Enums.Gender
     partnerId: string | null
+    defaultLoggingFeeAmount: number | null
     loanAmount: number
     loanTypeId: string
     addressId: string | null
@@ -2165,6 +2229,7 @@ export interface LeadsFieldRefs {
   readonly dob: Prisma.FieldRef<"Leads", 'DateTime'>
   readonly gender: Prisma.FieldRef<"Leads", 'Gender'>
   readonly partnerId: Prisma.FieldRef<"Leads", 'String'>
+  readonly defaultLoggingFeeAmount: Prisma.FieldRef<"Leads", 'Float'>
   readonly loanAmount: Prisma.FieldRef<"Leads", 'Float'>
   readonly loanTypeId: Prisma.FieldRef<"Leads", 'String'>
   readonly addressId: Prisma.FieldRef<"Leads", 'String'>

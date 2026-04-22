@@ -220,6 +220,37 @@ export const useUpdateLeadStatus = () => {
   });
 };
 
+export const useUpdateLeadLoginCharges = () => {
+  const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+  return useMutation({
+    mutationFn: async ({ id, defaultLoginCharges }) => {
+      const res = await apiPost(`/lead/edit-login-charges/${id}`, {
+        defaultLoginCharges,
+      });
+      return res.data;
+    }
+    ,
+    onMutate: () => {
+      dispatch(setLoading(true));
+    },
+    onSuccess: (data) => {
+      dispatch(updateLeadInList(extractLeadEntity(data)));
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
+      dispatch(setLoading(false));
+      dispatch(clearError());
+      showSuccess("Lead login charges updated successfully!");
+    },
+    onError: (error) => {
+      const message = error?.message || "Failed to update lead login charges";
+      dispatch(setLoading(false));
+      dispatch(setError(message));
+      showError(message);
+    },
+  });
+};
+
+
 export const useAssignLead = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();

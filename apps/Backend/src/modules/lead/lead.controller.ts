@@ -5,6 +5,7 @@ import {
   createLeadService,
   getAllLeadsService,
   getLeadByIdService,
+  editLogginChargesService,
   updateLeadStatusService,
 } from "./lead.service.js";
 
@@ -38,12 +39,20 @@ const toPublicLead = (lead: any) => {
           name: lead.loanType.name,
           isActive: lead.loanType.isActive,
           minLoginCharges: lead.loanType.minLoginCharges ?? null,
+          defaultLoginCharges: lead.loanType.defaultLoginCharges ?? null,
           maxLoginCharges: lead.loanType.maxLoginCharges ?? null,
         }
       : null,
     // expose top-level login charge bounds if present on the lead object
     minLoginCharges:
       lead.minLoginCharges ?? lead.loanType?.minLoginCharges ?? null,
+    defaultLoginCharges:
+      lead.defaultLoginCharges ?? lead.loanType?.defaultLoginCharges ?? null,
+    defaultLoggingFeeAmount:
+      lead.defaultLoggingFeeAmount ??
+      lead.defaultLoginCharges ??
+      lead.loanType?.defaultLoginCharges ??
+      null,
     maxLoginCharges:
       lead.maxLoginCharges ?? lead.loanType?.maxLoginCharges ?? null,
     address: addressLine,
@@ -120,7 +129,8 @@ export const createLeadController = async (req: Request, res: Response) => {
 
     res.status(error.statusCode || 500).json({
       success: false,
-      message: getSafeErrorMessage(error, "Lead creation failed"),
+      // message: getSafeErrorMessage(error, "Lead creation failed"),
+      message:error.message || "Lead creation failed",
     });
   }
 };
@@ -147,7 +157,7 @@ export const getAllLeadsController = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: "Failed to retrieve leads",
+      message: error.message || "Failed to retrieve leads",
     });
   }
 };
@@ -259,6 +269,39 @@ export const convertLeadToLoanController = async (
     res.status(error.statusCode || 500).json({
       success: false,
       message: getSafeErrorMessage(error, "Conversion failed"),
+    });
+  }
+};
+
+export const editLogginChargesController= async (req: Request, res: Response) => {
+  try {
+    const id = getParamAsString(req.params.id);
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Authentication required",
+      });
+    }
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid lead ID provided",
+      });
+    }
+    const defaultLoginCharges = req.body.defaultLoginCharges;
+    const updated = await editLogginChargesService(id, userId, defaultLoginCharges);
+    res.status(200).json({
+      success: true,
+      message: "Lead login charges updated successfully",
+      data: updated
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message || "Failed to update lead login charges",
     });
   }
 };
