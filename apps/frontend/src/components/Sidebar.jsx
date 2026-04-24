@@ -220,10 +220,10 @@ export default function Sidebar() {
             { name: "GST Detail", path: "accounting/gst" },
             { name: "Topup Refund", path: "accounting/topup-refund" },
             { name: "Balance Report", path: "accounting/balance-report" },
-            { name: "Reconcile Bank Balance", path: "accounting/reconcile" },
-            { name: "IMD Authorization", path: "/admin/accounting/imd-authorization" },
-            { name: "Reciept Entry", path: "/admin/accounting/reciept-entry" },
-            { name: "Trial Balance", path: "/admin/accounting/trial-balance" },
+            { name: "Reconcile Bank Balance", path: "accounting/reconcile-bank-balance" },
+            { name: "IMD Authorization", path: "accounting/imd-authorization" },
+            { name: "Reciept Entry", path: "accounting/receipt-entry" },
+            { name: "Trial Balance", path: "accounting/trial-balance" },
           ]
         },
 

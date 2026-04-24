@@ -95,6 +95,19 @@ import CreditReportView from "../app/dashboard/LOS/CreditReportView.jsx";
 import RoleManagement from "../app/dashboard/RoleManagement.jsx";
 import LoginFee from "../app/dashboard/LOS/LoginFee.jsx";
 
+// Accounting pages
+import AccountMastersPage from "../app/dashboard/Accounting/AccountMastersPage.jsx";
+import TransactionBooksPage from "../app/dashboard/Accounting/TransactionBooksPage.jsx";
+import ProfitAndLossBalancesPage from "../app/dashboard/Accounting/ProfitAndLossBalancesPage.jsx";
+import GSTDetailPage from "../app/dashboard/Accounting/GSTDetailPage.jsx";
+import TopupRefundPage from "../app/dashboard/Accounting/TopupRefundPage.jsx";
+import BalanceReportPage from "../app/dashboard/Accounting/BalanceReportPage.jsx";
+import IMDAuthorizationPage from "../app/dashboard/Accounting/IMDAuthorizationPage.jsx";
+import FinancialDashboardPage from "../app/dashboard/Accounting/ReconcileBankBalancePage.jsx";
+import ReconcileBankBalancePage from "../app/dashboard/Accounting/ReconcileBankBalancePage.jsx";
+import RecieptEntryPage from "../app/dashboard/Accounting/RecieptEntryPage.jsx";
+import TrialBalancePage from "../app/dashboard/Accounting/TrialBalancePage.jsx";
+
 export default function AppRoutes() {
   const dispatch = useDispatch();
 
@@ -263,8 +276,10 @@ export default function AppRoutes() {
         <Route path="employee" element={<EmployeeAddPage />} />
         <Route path="partner" element={<PartnerAddPage />} />
         <Route path="partner/add" element={<PartnerCreatePage />} />
+
         {/* Role management route */}
         <Route path="role-management" element={<RoleManagement />} />
+
         {/* reports routes */}
         <Route path="due-list" element={<DueListPage />} />
         <Route path="reports/npa-reports" element={<NPAReportsPage />} />
@@ -281,6 +296,7 @@ export default function AppRoutes() {
           path="reports/sales-target-and-achievement"
           element={<SalesTargetAndAchievementPage />}
         />
+
         {/* Permission managemnet route  */}
         <Route
           path="permission-management"
@@ -290,6 +306,19 @@ export default function AppRoutes() {
           path="permission-management/user/:userId"
           element={<UserPermissionPage />}
         />
+
+        {/* Accounting routes */}
+        <Route path="accounting/account-masters" element={<AccountMastersPage />} />
+        <Route path="accounting/transaction-books" element={<TransactionBooksPage />} />
+        <Route path="accounting/profit-loss-balances" element={<ProfitAndLossBalancesPage />} />
+        <Route path="accounting/gst" element={<GSTDetailPage />} />
+        <Route path="accounting/topup-refund" element={<TopupRefundPage />} />
+        <Route path="accounting/balance-report" element={<BalanceReportPage />}/>
+        <Route path="accounting/reconcile-bank-balance" element={<ReconcileBankBalancePage />} />
+        <Route path="accounting/imd-authorization" element={<IMDAuthorizationPage />} />
+        <Route path="accounting/receipt-entry" element={<RecieptEntryPage />} />
+        <Route path="accounting/trial-balance" element={<TrialBalancePage />} />
+
       </Route>
     </Routes>
   );
