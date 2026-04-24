@@ -11,9 +11,13 @@ export default function UpdateLoginChargesModal({ isOpen, lead, onClose, onSucce
 
   useEffect(() => {
     if (lead) {
-      setLoginCharges(
-        lead?.defaultLoginCharges ?? lead?.defaultLoggingFeeAmount ?? "",
-      );
+      const current =
+        lead?.defaultLoggingFeeAmount ??
+        lead?.defaultLoginCharges ??
+        lead?.loanType?.defaultLoginCharges ??
+        "";
+
+      setLoginCharges(current === null || current === undefined ? "" : String(current));
     }
   }, [lead, isOpen]);
 
@@ -120,7 +124,7 @@ export default function UpdateLoginChargesModal({ isOpen, lead, onClose, onSucce
                 <span className="text-sm text-gray-600">Login Fee</span>
                 <span className="font-semibold text-green-600">
                   ₹ {Number(
-                    lead?.defaultLoginCharges ?? lead?.defaultLoggingFeeAmount ?? 0,
+                    lead?.defaultLoggingFeeAmount ?? lead?.defaultLoginCharges ?? lead?.loanType?.defaultLoginCharges ?? 0,
                   ).toLocaleString("en-IN")}
                 </span>
               </div>
@@ -150,7 +154,7 @@ export default function UpdateLoginChargesModal({ isOpen, lead, onClose, onSucce
                 <span className="text-sm text-blue-700">Current Charges</span>
                 <span className="font-semibold text-blue-900">
                   ₹ {Number(
-                    lead?.defaultLoginCharges ?? lead?.defaultLoggingFeeAmount ?? 0,
+                    lead?.defaultLoggingFeeAmount ?? lead?.defaultLoginCharges ?? lead?.loanType?.defaultLoginCharges ?? 0,
                   ).toLocaleString("en-IN")}
                 </span>
               </div>
