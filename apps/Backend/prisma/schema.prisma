@@ -1017,6 +1017,41 @@ model LoanQuestionnaire {
   createdAt DateTime @default(now())
 }
 
+//===================================ACCOUNTING & RECOVERY MODULE=====================================
+
+model Account {
+  id               String    @id @default(cuid())
+  code             String    @unique
+  name             String
+  type             AccountType
+  parentAccountId  String?
+  parentAccount    Account?  @relation("ParentChild", fields: [parentAccountId], references: [id])
+  childAccounts    Account[] @relation("ParentChild")
+  openingBalance   Float     @default(0)
+  currentBalance   Float     @default(0)
+  status           AccountStatus @default(ACTIVE)
+  description      String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([type])
+  @@index([status])
+  @@index([parentAccountId])
+  @@map("accounts")
+}
+
+enum AccountType {
+  ASSET
+  LIABILITY
+  INCOME
+  EXPENSE
+}
+
+enum AccountStatus {
+  ACTIVE
+  INACTIVE
+}
+
 model LoanRecovery {
   id String @id @default(cuid())
 
