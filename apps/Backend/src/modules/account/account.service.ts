@@ -1,5 +1,5 @@
 // src/modules/account/account.service.ts
-import PrismaClient from '@prisma/client';
+import { prisma } from "../../db/prismaService.js";
 import {
   ICreateAccountDTO,
   IUpdateAccountDTO,
@@ -7,7 +7,7 @@ import {
   IAccount
 } from './account.types.js';
 
-const prisma = new PrismaClient();
+// use shared prisma instance from prismaService
 
 export class AccountService {
   

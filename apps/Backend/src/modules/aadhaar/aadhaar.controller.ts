@@ -24,7 +24,7 @@ const DUMMY_VERIFY_RESPONSE = {
     dob: "09-02-2003",
     email: "",
     gender: "M",
-    name: "ggaiz Khan",
+    name: "faiz Khan",
     split_address: {
       country: "India",
       dist: "Jaipur",

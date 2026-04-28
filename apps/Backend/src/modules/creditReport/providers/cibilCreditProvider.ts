@@ -2,6 +2,7 @@ import axios from "axios";
 import logger from "../../../common/logger.js";
 import ENV from "../../../common/config/env.js";
 import { prisma } from "../../../db/prismaService.js";
+import { Request, Response } from "express";
 
 
 const CIBIL_API_URL = ENV.CIBIL_API || "https://api.bulkpe.in/client/getCibil";
