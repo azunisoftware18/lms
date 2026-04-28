@@ -8,6 +8,7 @@ const leadStatusOptions = [
   { label: "Pending", value: "PENDING" },
 ];
 import EditLeadDialog from "../reports/EditLeadDialog";
+import LeadDetailModal from "../reports/LeadDetailModal";
 import {
   Edit,
   Trash2,
@@ -18,6 +19,7 @@ import {
   XCircle,
   DollarSign,
   Hourglass,
+  Eye,
 } from "lucide-react";
 import * as Icons from "lucide-react";
 // SearchField removed from this view - only status cards shown
@@ -45,6 +47,7 @@ export default function LeadsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
   const [updateChargesModalOpen, setUpdateChargesModalOpen] = useState(false);
   const [selectedLead, setSelectedLead] = useState(null);
   const [activeTab, setActiveTab] = useState("track-leads");
@@ -130,9 +133,11 @@ export default function LeadsPage() {
       Edit: <Edit size={16} />,
       Trash2: <Trash2 size={16} />,
       DollarSign: <DollarSign size={16} />,
+      Eye: <Eye size={16} />,
     };
 
     const defaultDefs = [
+      { key: "view", label: "View Details", icon: "Eye" },
       { key: "edit", label: "Edit", icon: "Edit" },
       { key: "charges", label: "Edit Login Fee", icon: "DollarSign" },
       { key: "delete", label: "Delete", icon: "Trash2" },
@@ -141,13 +146,23 @@ export default function LeadsPage() {
     const defs =
       typeof LEAD_ACTION_DEFINITIONS !== "undefined" &&
       Array.isArray(LEAD_ACTION_DEFINITIONS)
-        ? LEAD_ACTION_DEFINITIONS
-        : defaultDefs;
+        ? // clone to avoid mutating global defs
+          LEAD_ACTION_DEFINITIONS.slice()
+        : defaultDefs.slice();
+
+    // Ensure 'view' action is present (don't rely on external defs)
+    if (!defs.find((a) => a.key === "view")) {
+      defs.unshift({ key: "view", label: "View Details", icon: "Eye" });
+    }
 
     return defs.map((action) => ({
       ...action,
       icon: iconMap[action.icon] || iconMap.Edit,
       onClick: () => {
+        if (action.key === "view") {
+          setSelectedLead(item);
+          setDetailDialogOpen(true);
+        }
         if (action.key === "edit") {
           setSelectedLead(item);
           setEditDialogOpen(true);
@@ -380,6 +395,16 @@ approving={approveLead.isPending}
         }}
       />
 
+      {/* Lead Detail Modal */}
+      <LeadDetailModal
+        open={detailDialogOpen}
+        lead={selectedLead}
+        onClose={() => {
+          setDetailDialogOpen(false);
+          setSelectedLead(null);
+        }}
+      />
+
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8 flex justify-between items-center">
@@ -493,11 +518,11 @@ approving={approveLead.isPending}
       <div className="flex gap-2 mb-6 border-b border-gray-200">
         {[
           { id: "track-leads", label: "Track Leads", icon: "List" },
-          {
-            id: "charge-fee",
-            label: "Charge Application Fee",
-            icon: "CreditCard",
-          },
+          // {
+          //   id: "charge-fee",
+          //   label: "Charge Application Fee",
+          //   icon: "CreditCard",
+          // },
         ].map((tab) => {
           const IconComp = Icons[tab.icon];
           return (
