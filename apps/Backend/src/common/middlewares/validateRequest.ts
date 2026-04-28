@@ -1,5 +1,5 @@
 // src/common/middleware/validateRequest.ts
-import type { ZodTypeAny, ZodError, ZodIssue } from 'zod';
+import { ZodTypeAny, ZodError, ZodIssue } from 'zod';
 
 type Request = {
   body: unknown;
