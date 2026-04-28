@@ -19,8 +19,9 @@ import toast from "react-hot-toast";
 
 const getLeads = (params = {}) => apiGet("/lead/all", { params });
 const createLead = (payload) => apiPost("/lead", payload);
-const updateLeadStatus = ({ id, status }) =>
-  apiPatch(`/lead/update-status/${id}`, { status });
+const updateLeadStatus = ({ id, status, remarks }) =>
+  apiPatch(`/lead/update-status/${id}`, { status, remarks });
+const approveLead = (id) => apiPost(`/lead/${id}/approve`);
 const assignLead = ({ id, payload }) => apiPatch(`/lead/assign/${id}`, payload);
 const convertLeadToLoan = (id) => apiGet(`/lead/convert-to-loan/${id}`);
 
@@ -243,6 +244,31 @@ export const useUpdateLeadLoginCharges = () => {
     },
     onError: (error) => {
       const message = error?.message || "Failed to update lead login charges";
+      dispatch(setLoading(false));
+      dispatch(setError(message));
+      showError(message);
+    },
+  });
+};
+
+
+export const useApproveLead = () => {
+  const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+  return useMutation({
+    mutationFn: approveLead,
+    onMutate: () => {
+      dispatch(setLoading(true));
+    },
+    onSuccess: (data) => {
+      dispatch(updateLeadInList(extractLeadEntity(data)));
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
+      dispatch(setLoading(false));
+      dispatch(clearError());
+      showSuccess("Lead approved successfully!");
+    },
+    onError: (error) => {
+      const message = error?.message || "Failed to approve lead";
       dispatch(setLoading(false));
       dispatch(setError(message));
       showError(message);

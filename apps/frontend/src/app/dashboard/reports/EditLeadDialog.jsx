@@ -1,23 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SelectField from "../../../components/ui/SelectField";
+import TextAreaField from "../../../components/ui/TextAreaField";
 import Button from "../../../components/ui/Button";
 
 const STATUS_OPTIONS = [
   { label: "Contacted", value: "CONTACTED" },
   { label: "Interested", value: "INTERESTED" },
-  { label: "Approved", value: "APPROVED" },
   { label: "Rejected", value: "REJECTED" },
   { label: "Pending", value: "PENDING" },
 ];
 
-export default function EditLeadDialog({ open, lead, onClose, onSave }) {
+const REJECTED_ONLY_OPTIONS = [{ label: "Rejected", value: "REJECTED" }];
+
+export default function EditLeadDialog({
+  open,
+  lead,
+  onClose,
+  onSave,
+  onApprove,
+  approving = false,
+}) {
   const [status, setStatus] = useState(() =>
     lead?.status ? lead.status : "PENDING",
   );
+  const [remark, setRemark] = useState(() => lead?.remarks || "");
   const [touched, setTouched] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    setStatus(lead?.status || "PENDING");
+    setRemark(lead?.remarks || "");
+    setTouched(false);
+  }, [open, lead?.id, lead?.status, lead?.remarks]);
 
   // Derive displayed status: if user hasn't touched the field, reflect `lead.status`.
   const displayedStatus = touched ? status : lead?.status || "PENDING";
+  const isRejectedLead = lead?.status === "REJECTED";
+  const shouldAskForRemark = displayedStatus === "REJECTED";
+  const trimmedRemark = remark.trim();
+  const hasDefaultLoggingFeeAmount =
+    lead?.defaultLoggingFeeAmount !== null &&
+    lead?.defaultLoggingFeeAmount !== undefined;
+  const availableStatusOptions = isRejectedLead
+    ? REJECTED_ONLY_OPTIONS
+    : STATUS_OPTIONS;
 
   if (!open || !lead) return null;
 
@@ -63,9 +89,28 @@ export default function EditLeadDialog({ open, lead, onClose, onSave }) {
                 setTouched(true);
                 setStatus(v);
               }}
-              options={STATUS_OPTIONS}
+              options={availableStatusOptions}
               isRequired
+              isDisabled={isRejectedLead}
             />
+            {shouldAskForRemark && (
+              <div className="mt-4">
+                <TextAreaField
+                  label="Rejection Remark"
+                  value={remark}
+                  onChange={(e) => setRemark(e.target.value)}
+                  placeholder="Enter the reason for rejecting this lead"
+                  rows={4}
+                  isRequired
+                  maxLength={500}
+                />
+              </div>
+            )}
+            {!hasDefaultLoggingFeeAmount && (
+              <p className="mt-2 text-xs text-amber-700">
+                Set login charges before approving this lead.
+              </p>
+            )}
           </div>
         </div>
 
@@ -75,7 +120,23 @@ export default function EditLeadDialog({ open, lead, onClose, onSave }) {
             Cancel
           </Button>
           <Button
-            onClick={() => onSave({ ...lead, status: displayedStatus })}
+            type="button"
+            onClick={() => onApprove?.(lead)}
+            disabled={!hasDefaultLoggingFeeAmount || approving}
+            className="bg-green-600 hover:bg-green-700 text-white"
+          >
+            {approving ? "Approving..." : "Approve Lead"}
+          </Button>
+          <Button
+            type="button"
+            onClick={() =>
+              onSave({
+                ...lead,
+                status: displayedStatus,
+                remarks: shouldAskForRemark ? trimmedRemark : lead?.remarks || "",
+              })
+            }
+            disabled={shouldAskForRemark && !trimmedRemark}
             className="bg-blue-600 hover:bg-blue-700 text-white"
           >
             Save Changes

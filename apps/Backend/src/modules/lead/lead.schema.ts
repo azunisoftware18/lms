@@ -42,6 +42,15 @@ export const updateLeadSchema = createLeadSchema.partial();
 
 export const updateLeadStatusSchema = z.object({
   status: statusEnum,
+  remarks: z.string().trim().max(500).optional(),
+}).superRefine((data, context) => {
+  if (data.status === "REJECTED" && !data.remarks?.trim()) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["remarks"],
+      message: "Remarks are required when lead is rejected",
+    });
+  }
 });
 
 export const editLeadLoginChargesSchema = z.object({

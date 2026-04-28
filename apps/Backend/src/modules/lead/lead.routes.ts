@@ -17,7 +17,9 @@ import {
   getAllLeadsController,
   getLeadByIdController,
   updateLeadStatusController,
-  editLogginChargesController
+  editLogginChargesController,
+  approveLeadController
+
 } from "./lead.controller.js";
 export const leadRouter = Router();
 import { checkPermissionMiddleware } from "../../common/middlewares/permission.middleware.js";
@@ -66,4 +68,12 @@ leadRouter.post(
   checkPermissionMiddleware("EDIT_LEAD_LOGIN_CHARGES"),
   editLogginChargesController
 )
+
+
+leadRouter.post(
+  "/:id/approve",
+  validate(leadIdParamSchema, "params"),
+  checkPermissionMiddleware("APPROVE_LEAD"),
+  approveLeadController
+);
 export default leadRouter;

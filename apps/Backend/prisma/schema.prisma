@@ -403,6 +403,7 @@ model Leads {
   convertedLoanApplicationId String?
   status                     LeadStatus        @default(PENDING)
   createdAt                  DateTime          @default(now())
+  remarks                    String?
   updatedAt                  DateTime          @updatedAt
   // Relations  assignedToUser User? @relation("LeadAssignedTo", fields: [assignedTo], references
   partner                    Partner?          @relation("PartnerLeads", fields: [partnerId], references: [id])

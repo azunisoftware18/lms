@@ -72,6 +72,7 @@ export const createLeadService = async (leadData: CreateLead) => {
       dob: true,
       gender: true,
       loanAmount: true,
+      remarks: true,
       status: true,
       assignedTo: true,
       assignedBy: true,
@@ -134,6 +135,7 @@ export const getAllLeadsService = async (params: {
         dob: true,
         gender: true,
         loanAmount: true,
+        remarks: true,
         status: true,
         assignedTo: true,
         assignedBy: true,
@@ -199,6 +201,7 @@ export const getLeadByIdService = async (id: string) => {
       dob: true,
       gender: true,
       loanAmount: true,
+      remarks: true,
       status: true,
       assignedTo: true,
       assignedBy: true,
@@ -249,6 +252,7 @@ export const getLeadByIdService = async (id: string) => {
       dob: true,
       gender: true,
       loanAmount: true,
+      remarks: true,
       status: true,
       assignedTo: true,
       assignedBy: true,
@@ -293,7 +297,11 @@ export const getLeadByIdService = async (id: string) => {
   throw e;
 };
 
-export const updateLeadStatusService = async (id: string, status: string) => {
+export const updateLeadStatusService = async (
+  id: string,
+  status: string,
+  remarks?: string,
+) => {
   const allowed = [
     "CONTACTED",
     "INTERESTED",
@@ -317,10 +325,46 @@ export const updateLeadStatusService = async (id: string, status: string) => {
     throw e;
   }
 
+  const trimmedRemarks = typeof remarks === "string" ? remarks.trim() : "";
+  if (normalized === "REJECTED" && !trimmedRemarks) {
+    const e: any = new Error("Remarks are required when lead is rejected");
+    e.statusCode = 400;
+    throw e;
+  }
+
   try {
+     const lead = await prisma.leads.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        status: true,
+        remarks: true,
+      }
+    });
+    if (!lead) {
+      const e: any = new Error("Lead not found");
+      e.statusCode = 404;
+      throw e;
+    }
+
+    if (lead.status === "APPROVED" && normalized !== "APPROVED") {
+      const e: any = new Error("Cannot change status of an approved lead");
+      e.statusCode = 400;
+      throw e;
+    }
+
+    if (lead.status === "REJECTED" && normalized !== "REJECTED") {
+      const e: any = new Error("Cannot change status of a rejected lead");
+      e.statusCode = 400;
+      throw e;
+    }
+
     const updatedLead = await prisma.leads.update({
       where: { id },
-      data: { status: normalized as any },
+      data: {
+        status: normalized as any,
+        ...(normalized === "REJECTED" ? { remarks: trimmedRemarks } : {}),
+      },
       select: {
         id: true,
         fullName: true,
@@ -331,6 +375,7 @@ export const updateLeadStatusService = async (id: string, status: string) => {
         gender: true,
         loanAmount: true,
         status: true,
+        remarks: true,
         assignedTo: true,
         assignedBy: true,
         convertedLoanApplicationId: true,
@@ -387,6 +432,7 @@ export const assignLeadService = async (
         dob: true,
         gender: true,
         loanAmount: true,
+        remarks: true,
         status: true,
         assignedTo: true,
         assignedBy: true,
@@ -732,3 +778,102 @@ export const editLogginChargesService = async (id: string, userId: string,  defa
   }
 };
 
+export const approveLeadService = async (id: string, status: string) => {
+  try {
+    const normalizedStatus =
+      typeof status === "string" ? status.toUpperCase().trim() : status;
+    const lead = await prisma.leads.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        status: true,
+        defaultLoggingFeeAmount: true,
+        },
+    }
+    );
+    if (!lead) {
+      const e: any = new Error("Lead not found");
+      e.statusCode = 404;
+      throw e;
+    }
+    if (lead.status === "APPROVED") {
+      const e: any = new Error("Lead is already approved");
+      e.statusCode = 400;
+      throw e;
+    }
+    if (lead.status === "REJECTED") {
+      const e: any = new Error("Cannot approve a rejected lead");
+      e.statusCode = 400;
+      throw e;
+    }
+
+    if (
+      lead.defaultLoggingFeeAmount === null ||
+      lead.defaultLoggingFeeAmount === undefined
+    ) {
+      const e: any = new Error(
+        "Set LoggingFeeAmount before approving the lead",
+      );
+      e.statusCode = 400;
+      throw e;
+    }
+
+    
+    const updatedLead = await prisma.leads.update({
+      where: { id },
+      data: { status: normalizedStatus as any },
+      select: {
+        id: true,
+        fullName: true,
+        contactNumber: true,
+        email: true,
+        leadNumber: true,
+        dob: true,
+        gender: true,
+        loanAmount: true,
+        defaultLoggingFeeAmount: true,
+        status: true,
+        assignedTo: true,
+        assignedBy: true,
+        convertedLoanApplicationId: true,
+        createdAt: true,
+        updatedAt: true,
+        loanType: {
+          select: {
+            id: true,
+            name: true,
+            minLoginCharges: true,
+            defaultLoginCharges: true,
+            maxLoginCharges: true,
+          },
+        },
+        address: {
+          select: {
+            addressLine1: true,
+            city: true,
+            state: true,
+            pinCode: true,
+          },
+        },
+      },
+    });
+    return {
+      ...updatedLead,
+      address: updatedLead.address?.addressLine1 ?? null,
+      city: updatedLead.address?.city ?? null,
+      state: updatedLead.address?.state ?? null,
+      pinCode: updatedLead.address?.pinCode ?? null,
+      minLoginCharges: updatedLead.loanType?.minLoginCharges ?? null,
+      defaultLoginCharges: updatedLead.loanType?.defaultLoginCharges ?? null,
+      maxLoginCharges: updatedLead.loanType?.maxLoginCharges ?? null,
+    };
+  } catch (error: unknown) {
+    const eAny = error as any;
+    if (eAny && eAny.code === "P2025") {
+      const e: any = new Error("Lead not found");
+      e.statusCode = 404;
+      throw e;
+    }
+    throw error;
+  }
+};

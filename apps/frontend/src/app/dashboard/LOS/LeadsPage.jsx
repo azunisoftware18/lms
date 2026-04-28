@@ -33,12 +33,14 @@ import {
   useUpdateLeadStatus,
   useGetLead,
   useUpdateLeadLoginCharges,
+  useApproveLead,
 } from "../../../hooks/useLead";
 import toast from "react-hot-toast";
 
 export default function LeadsPage() {
   const updateLeadStatus = useUpdateLeadStatus();
   const updateLoginCharges = useUpdateLeadLoginCharges();
+   const approveLead = useApproveLead();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -328,9 +330,10 @@ export default function LeadsPage() {
         open={editDialogOpen}
         lead={selectedLead}
         onClose={() => setEditDialogOpen(false)}
-        onSave={({ id, status }) => {
+approving={approveLead.isPending}
+        onSave={({ id, status, remarks }) => {
           updateLeadStatus.mutate(
-            { id, status },
+            { id, status, remarks },
             {
               onSuccess: () => {
                 setEditDialogOpen(false);
@@ -347,6 +350,20 @@ export default function LeadsPage() {
               },
             },
           );
+        }}
+        onApprove={({ id }) => {
+          approveLead.mutate(id, {
+            onSuccess: () => {
+              setEditDialogOpen(false);
+              setSelectedLead(null);
+              refetch();
+            },
+            onError: (error) => {
+              toast.error(
+                error?.response?.data?.message || "Failed to approve lead",
+              );
+            },
+          });
         }}
       />
 
