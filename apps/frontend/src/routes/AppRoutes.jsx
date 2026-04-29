@@ -112,12 +112,18 @@ export default function AppRoutes() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+  const storedUser = localStorage.getItem("user");
+  const token = localStorage.getItem("token");
 
-    if (storedUser) {
-      dispatch(setUser(JSON.parse(storedUser)));
-    }
-  }, [dispatch]);
+  if (storedUser && token) {
+    dispatch(
+      setUser({
+        user: JSON.parse(storedUser),
+        isAuthenticated: true,
+      })
+    );
+  }
+}, [dispatch]);
 
   return (
     <Routes>
