@@ -36,3 +36,9 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+
+# Ignore generated Prisma client and backend artifacts
+/apps/Backend/generated/
+/apps/Backend/generated/**
+/apps/Backend/logs/
+/apps/Backend/public/uploads/
