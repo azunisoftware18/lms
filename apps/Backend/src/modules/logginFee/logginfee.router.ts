@@ -4,13 +4,12 @@ import { validate } from "../../common/middlewares/zod.middleware.js";
 import {
 	createLogginFeeSchema,
 	logginFeeIdParamSchema,
-	updateLogginFeeStatusSchema,
 } from "./logginFee.schema.js";
 import {
 	chargeLogginFeeController,
 	getAllLogginFeesController,
 	getLogginFeeByIdController,
-	updateLogginFeeStatusController,
+	payLogginFeeController,
 } from "./logginFee.controller.js";
 
 const logginFeeRouter = Router();
@@ -34,11 +33,11 @@ logginFeeRouter.get(
 	getLogginFeeByIdController,
 );
 
-logginFeeRouter.patch(
-	"/:id/status",
+logginFeeRouter.post(
+	"/:id/pay",
 	validate(logginFeeIdParamSchema, "params"),
-	validate(updateLogginFeeStatusSchema),
-	updateLogginFeeStatusController,
+	payLogginFeeController,
 );
+
 
 export default logginFeeRouter;

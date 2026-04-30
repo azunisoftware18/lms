@@ -1101,6 +1101,44 @@ export const createFullLoanApplicationService = async (
 
         await createFinancialDetails(tx, data, loan.id);
 
+        // resolve leadNumber from common payload locations and update lead atomically
+        let leadNumber: string | undefined = (data as any).leadNumber;
+        if (!leadNumber && (data as any).applicant && (data as any).applicant.leadNumber) {
+          leadNumber = (data as any).applicant.leadNumber;
+        }
+        if (!leadNumber && (data as any).lead && (data as any).lead.leadNumber) {
+          leadNumber = (data as any).lead.leadNumber;
+        }
+        if (!leadNumber) {
+          // shallow search for keys that look like leadNumber
+          for (const key of Object.keys(data as any)) {
+            if (/leadnumber/i.test(key) && typeof (data as any)[key] === "string") {
+              leadNumber = (data as any)[key];
+              break;
+            }
+          }
+        }
+
+        if (!leadNumber) {
+          throw AppError.badRequest("leadNumber is required");
+        }
+
+        const leadRecord = await tx.leads.findFirst({
+          where: { leadNumber },
+          select: { id: true },
+        });
+
+        if (!leadRecord) {
+          throw AppError.notFound("Lead not found");
+        }
+
+        await tx.leads.update({
+          where: { id: leadRecord.id },
+          data: {
+            status: "APPLICATION_SUBMITTED",
+            convertedLoanApplicationId: loan.id,
+          },
+        });
         await logAction({
           entityType: "LOAN",
           entityId: loan.id,

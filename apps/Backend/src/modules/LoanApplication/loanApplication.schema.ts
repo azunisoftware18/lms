@@ -508,6 +508,7 @@ const referenceSchema = z.object({
 
 export const createFullLoanApplicationSchema = z.object({
   loanTypeId: z.string().min(1, "loanTypeId is required"),
+  leadNumber: z.string().trim().min(1, "leadNumber is required"),
 
   applicant: z.object({
     title: z.enum(["MR", "MRS", "MS", "DR", "PROF"]),

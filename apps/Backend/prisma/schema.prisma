@@ -3,7 +3,7 @@
 // =====================
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma-client"
+  output   = "../generated/prisma-client-generated"
 }
 
 // Counter table used to generate unique loan numbers per year
@@ -401,6 +401,8 @@ model Leads {
   assignedTo                 String?
   assignedBy                 String?
   convertedLoanApplicationId String?
+  loginFeeStatus             LoginFeeStatus @default(PENDING)
+  transactionId                String?        // For tracking payment of login fee
   status                     LeadStatus        @default(PENDING)
   createdAt                  DateTime          @default(now())
   remarks                    String?
@@ -410,6 +412,7 @@ model Leads {
   assignedToUser             User?             @relation("LeadAssignedTo", fields: [assignedTo], references: [id])
   assignedByUser             User?             @relation("LeadAssignedBy", fields: [assignedBy], references: [id])
   loanApplications           LoanApplication[]
+  loginFees                  LoginFeeRecord[]
   loanType                   LoanType          @relation(fields: [loanTypeId], references: [id])
 
   @@index([leadNumber])
@@ -1599,11 +1602,57 @@ model LoanAssignment {
   @@index([loanApplicationId, employeeId])
 }
 
+model LoginFeeRecord {
+  id                String   @id @default(cuid())
+  applicationNumber String   @unique
+  leadId            String
+  lead              Leads    @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  
+  leadNumber        String
+  applicantName     String
+  mobileNumber      String
+  email             String
+  
+  feeAmount         Float    @default(0)
+  gstAmount         Float    @default(0)
+  totalAmount       Float    @default(0)
+  loanAmount        Float    @default(0)
+  
+  paymentMode       String   @default("UPI") // UPI, CASH, BANK, CHEQUE
+  status            LoginFeeStatus @default(PENDING)
+  transactionId     String?  @unique
+  
+  institutionType   String   @default("NBFC") // NBFC, BANKING
+  institutionName   String?
+  bankName          String?
+  branchName        String?
+  ifscCode          String?
+  accountNumber     String?
+  
+  chargedAt         DateTime @default(now())
+  chargedBy         String
+  paidAt            DateTime?
+  paidBy            String?
+  
+  remarks           String?
+  branchId          String
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([leadId])
+  @@index([applicationNumber])
+  @@index([transactionId])
+  @@index([status])
+  @@index([branchId])
+  @@index([createdAt])
+}
+
 model AuditLog {
   id          String @id @default(cuid())
-  entityType  String // LOAN | TECHNICAL_REPORT | LEGAL_REPORT
+  entityType  String // LOAN | TECHNICAL_REPORT | LEGAL_REPORT | LOGIN_FEE
   entityId    String
-  action      String // CREATED | SUBMITTED | APPROVED | REJECTED
+  action      String // CREATED | SUBMITTED | APPROVED | REJECTED | CHARGE_LOGIN_FEE | UPDATE_LOGIN_FEE_STATUS
   performedBy String
 
   branchId  String
@@ -1824,6 +1873,13 @@ enum NachStatus {
   SUSPENDED
   FAILED
   CANCELLED
+}
+
+enum LoginFeeStatus {
+  PENDING
+  PAID
+  WAIVED
+  FAILED
 }
 
 enum DebitStatus {

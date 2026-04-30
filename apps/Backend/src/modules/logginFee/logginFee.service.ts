@@ -9,8 +9,11 @@ import {
 
 const ENTITY_TYPE = "LOGIN_FEE";
 const ACTION_CHARGE = "CHARGE_LOGIN_FEE";
-const ACTION_UPDATE = "UPDATE_LOGIN_FEE_STATUS";
+const ACTION_PAY = "PAY_LOGIN_FEE";
 
+/**
+ * Generates a unique application number with format: APP-YYYYMMDD-XXXXX
+ */
 const generateApplicationNumber = () => {
 	const date = new Date();
 	const yyyy = date.getFullYear();
@@ -22,6 +25,9 @@ const generateApplicationNumber = () => {
 	return `APP-${yyyy}${mm}${dd}-${random}`;
 };
 
+/**
+ * Generates a unique login fee record ID with format: LF-YYYYMMDD-XXXXX
+ */
 const generateLoginFeeId = () => {
 	const date = new Date();
 	const yyyy = date.getFullYear();
@@ -33,6 +39,9 @@ const generateLoginFeeId = () => {
 	return `LF-${yyyy}${mm}${dd}-${random}`;
 };
 
+/**
+ * Normalizes a database record to LoginFeeRecord type
+ */
 const normalizeRecord = (value: any): LoginFeeRecord | null => {
 	if (!value || typeof value !== "object") return null;
 	if (!value.id || !value.applicationNumber || !value.leadId) return null;
@@ -61,32 +70,31 @@ const normalizeRecord = (value: any): LoginFeeRecord | null => {
 		remarks: value.remarks ?? null,
 		chargedAt: String(value.chargedAt || new Date().toISOString()),
 		chargedBy: String(value.chargedBy || ""),
+		paidAt: value.paidAt ? String(value.paidAt) : null,
+		paidBy: value.paidBy ? String(value.paidBy) : null,
 		branchId: String(value.branchId || ""),
 	} as LoginFeeRecord;
 };
 
-const buildLatestRecords = (logs: any[]): LoginFeeRecord[] => {
-	const map = new Map<string, LoginFeeRecord>();
-
-	for (const log of logs) {
-		if (map.has(log.entityId)) continue;
-		const record = normalizeRecord(log.newValue);
-		if (record) map.set(log.entityId, record);
+/**
+ * Maps audit log status to Leads-compatible status
+ */
+const mapLeadLoginFeeStatus = (
+	status: LoginFeeStatus,
+): "PENDING" | "PAID" | "WAIVED" | "FAILED" => {
+	if (status === "PENDING" || status === "PAID" || status === "FAILED") {
+		return status;
 	}
-
-	return Array.from(map.values());
+	return "FAILED";
 };
 
-const parseDate = (value?: string) => {
-	if (!value) return null;
-	const parsed = new Date(value);
-	return Number.isNaN(parsed.getTime()) ? null : parsed;
-};
-
+/**
+ * Filters login fee records based on query parameters
+ */
 const filterRecords = (records: LoginFeeRecord[], query: LoginFeeQueryInput) => {
 	const q = (query.q || "").toLowerCase();
-	const from = parseDate(query.dateFrom);
-	const to = parseDate(query.dateTo);
+	const from = query.dateFrom ? new Date(query.dateFrom) : null;
+	const to = query.dateTo ? new Date(query.dateTo) : null;
 
 	return records.filter((item) => {
 		if (query.status && item.status !== query.status) return false;
@@ -111,11 +119,33 @@ const filterRecords = (records: LoginFeeRecord[], query: LoginFeeQueryInput) => 
 	});
 };
 
+/**
+ * Retrieves the latest login fee record for a given lead ID
+ */
+const getLatestLoginFeeRecordByLeadId = async (leadId: string) => {
+	const record = await prisma.loginFeeRecord.findFirst({
+		where: {
+			leadId,
+		},
+		orderBy: {
+			createdAt: "desc",
+		},
+	});
+
+	if (!record) return null;
+	return normalizeRecord(record);
+};
+
+/**
+ * Creates a new login fee charge for a lead
+ * @throws AppError if lead not found or fee already exists
+ */
 export const createLogginFeeService = async (
 	payload: CreateLoginFeeInput,
 	userId: string,
 	branchId: string,
 ) => {
+	// Validate and fetch lead
 	const lead = await prisma.leads.findFirst({
 		where: {
 			OR: [{ id: payload.leadId }, { leadNumber: payload.leadId }],
@@ -134,77 +164,118 @@ export const createLogginFeeService = async (
 		throw AppError.notFound("Lead not found");
 	}
 
+	// Check for existing non-FAILED login fee
+	const existingRecord = await getLatestLoginFeeRecordByLeadId(lead.id);
+	if (existingRecord) {
+		if (existingRecord.status === "FAILED") {
+			// Allow recharge for failed attempts
+			return existingRecord;
+		}
+		throw AppError.badRequest(
+			`Login fee already: ${existingRecord.status}. `
+		);
+	}
+
+	// Calculate amounts
 	const feeAmount = Number(payload.feeAmount || 0);
 	const gstAmount = Number((feeAmount * 0.18).toFixed(2));
 	const totalAmount = Number((feeAmount + gstAmount).toFixed(2));
 
-	const record: LoginFeeRecord = {
-		id: generateLoginFeeId(),
-		applicationNumber: generateApplicationNumber(),
-		leadId: lead.id,
-		leadNumber: lead.leadNumber,
-		applicantName: payload.applicantName || lead.fullName,
-		mobileNumber: payload.mobileNumber || lead.contactNumber,
-		email: payload.email || lead.email,
-		loanAmount: Number(payload.loanAmount ?? lead.loanAmount ?? 0),
-		feeAmount,
-		gstAmount,
-		totalAmount,
-		paymentMode: payload.paymentMode,
-		transactionId: payload.transactionId || null,
-		status: "PENDING",
-		institutionType: payload.institutionType || "NBFC",
-		institutionName: payload.institutionName || null,
-		bankName: payload.bankName || null,
-		branchName: payload.branchName || null,
-		ifscCode: payload.ifscCode || null,
-		accountNumber: payload.accountNumber || null,
-		remarks: payload.remarks || null,
-		chargedAt: new Date().toISOString(),
-		chargedBy: userId,
-		branchId,
-	};
-
-	await prisma.auditLog.create({
+	// Create login fee record in database
+	const dbRecord = await prisma.loginFeeRecord.create({
 		data: {
-			entityType: ENTITY_TYPE,
-			entityId: record.id,
-			action: ACTION_CHARGE,
-			performedBy: userId,
+			id: generateLoginFeeId(),
+			applicationNumber: generateApplicationNumber(),
+			leadId: lead.id,
+			leadNumber: lead.leadNumber,
+			applicantName: payload.applicantName || lead.fullName,
+			mobileNumber: payload.mobileNumber || lead.contactNumber,
+			email: payload.email || lead.email,
+			loanAmount: Number(payload.loanAmount ?? lead.loanAmount ?? 0),
+			feeAmount,
+			gstAmount,
+			totalAmount,
+			paymentMode: payload.paymentMode,
+			transactionId: payload.transactionId || null,
+			status: "PENDING",
+			institutionType: payload.institutionType || "NBFC",
+			institutionName: payload.institutionName || null,
+			bankName: payload.bankName || null,
+			branchName: payload.branchName || null,
+			ifscCode: payload.ifscCode || null,
+			accountNumber: payload.accountNumber || null,
+			remarks: payload.remarks || null,
+			chargedBy: userId,
 			branchId,
-			newValue: record as any,
-			remarks: "Login fee charged",
 		},
 	});
 
-	return record;
+	// Log action to audit log
+	await prisma.auditLog.create({
+		data: {
+			entityType: ENTITY_TYPE,
+			entityId: dbRecord.id,
+			action: ACTION_CHARGE,
+			performedBy: userId,
+			branchId,
+			newValue: dbRecord as any,
+			remarks: `Login fee charged for lead ${lead.leadNumber}`,
+		},
+	});
+
+	return normalizeRecord(dbRecord);
 };
 
+/**
+ * Lists all login fee records with pagination and filtering
+ */
 export const listLogginFeeService = async (query: LoginFeeQueryInput) => {
 	const page = Number(query.page || 1);
 	const limit = Number(query.limit || 10);
 
-	const logs = await prisma.auditLog.findMany({
-		where: {
-			entityType: ENTITY_TYPE,
-			action: {
-				in: [ACTION_CHARGE, ACTION_UPDATE],
-			},
-		},
-		orderBy: {
-			createdAt: "desc",
-		},
-	});
+	// Build filter conditions
+	const where: any = {};
+	
+	if (query.status) where.status = query.status;
+	if (query.paymentMode) where.paymentMode = query.paymentMode;
+	if (query.institutionType) where.institutionType = query.institutionType;
+	
+	if (query.dateFrom || query.dateTo) {
+		where.chargedAt = {};
+		if (query.dateFrom) where.chargedAt.gte = new Date(query.dateFrom);
+		if (query.dateTo) where.chargedAt.lte = new Date(query.dateTo);
+	}
 
-	const latestRecords = buildLatestRecords(logs);
-	const filtered = filterRecords(latestRecords, query);
-	const total = filtered.length;
+	// Search in specific fields
+	if (query.q) {
+		const searchQuery = query.q.toLowerCase();
+		where.OR = [
+			{ applicationNumber: { contains: searchQuery } },
+			{ leadNumber: { contains: searchQuery } },
+			{ applicantName: { contains: searchQuery } },
+			{ mobileNumber: { contains: searchQuery } },
+			{ email: { contains: searchQuery } },
+			{ transactionId: { contains: searchQuery } },
+		];
+	}
+
+	// Fetch total count and paginated records
+	const [total, records] = await Promise.all([
+		prisma.loginFeeRecord.count({ where }),
+		prisma.loginFeeRecord.findMany({
+			where,
+			orderBy: {
+				createdAt: "desc",
+			},
+			skip: (page - 1) * limit,
+			take: limit,
+		}),
+	]);
+
 	const totalPages = Math.max(1, Math.ceil(total / limit));
-	const start = (page - 1) * limit;
-	const data = filtered.slice(start, start + limit);
 
 	return {
-		data,
+		data: records.map((r: any) => normalizeRecord(r)).filter(Boolean),
 		meta: {
 			page,
 			limit,
@@ -214,58 +285,88 @@ export const listLogginFeeService = async (query: LoginFeeQueryInput) => {
 	};
 };
 
+/**
+ * Retrieves a single login fee record by ID
+ */
 export const getLogginFeeByIdService = async (id: string) => {
-	const logs = await prisma.auditLog.findMany({
-		where: {
-			entityType: ENTITY_TYPE,
-			entityId: id,
-			action: {
-				in: [ACTION_CHARGE, ACTION_UPDATE],
-			},
-		},
-		orderBy: {
-			createdAt: "desc",
-		},
+	const record = await prisma.loginFeeRecord.findUnique({
+		where: { id },
 	});
 
-	if (!logs.length) {
-		throw AppError.notFound("Login fee record not found");
-	}
-
-	const record = normalizeRecord(logs[0].newValue);
 	if (!record) {
-		throw AppError.notFound("Login fee record not found");
+		throw AppError.notFound(`Login fee record with ID ${id} not found`);
 	}
 
-	return record;
+	return normalizeRecord(record)!;
 };
 
-export const updateLogginFeeStatusService = async (
+/**
+ * Marks a login fee as PAID and atomically updates the Leads table
+ * @throws AppError if record not found, already paid, or not latest for lead
+ */
+export const payLogginFeeService = async (
 	id: string,
-	status: LoginFeeStatus,
 	userId: string,
 	branchId: string,
-	remarks?: string | null,
 ) => {
+	// Fetch the fee record (throws if not found)
 	const current = await getLogginFeeByIdService(id);
-	const updated: LoginFeeRecord = {
-		...current,
-		status,
-		remarks: remarks ?? current.remarks,
-	};
+	
+	// Verify it's the latest fee for this lead
+	const latestForLead = await getLatestLoginFeeRecordByLeadId(current.leadId);
+	if (!latestForLead || latestForLead.id !== current.id) {
+		throw AppError.badRequest(
+			"Only the latest login fee record for this lead can be paid"
+		);
+	}
 
-	await prisma.auditLog.create({
-		data: {
-			entityType: ENTITY_TYPE,
-			entityId: id,
-			action: ACTION_UPDATE,
-			performedBy: userId,
-			branchId,
-			oldValue: current as any,
-			newValue: updated as any,
-			remarks: `Login fee status updated to ${status}`,
-		},
+	// Check if already paid
+	if (current.status === "PAID" || latestForLead.status === "PAID") {
+		throw AppError.badRequest("Login fee is already marked as PAID");
+	}
+
+	// Generate transaction ID
+	const transactionId = `TXN-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+	const now = new Date();
+
+	// Update in transaction for data consistency
+	const updated = await prisma.$transaction(async (tx) => {
+		// Update LoginFeeRecord
+		const updatedRecord = await tx.loginFeeRecord.update({
+			where: { id },
+			data: {
+				status: "PAID",
+				transactionId,
+				paidAt: now,
+				paidBy: userId,
+			},
+		});
+
+		// Update Leads table
+		await tx.leads.update({
+			where: { id: current.leadId },
+			data: {
+				loginFeeStatus: "PAID",
+				transactionId,
+			},
+		});
+
+		// Log to audit trail
+		await tx.auditLog.create({
+			data: {
+				entityType: ENTITY_TYPE,
+				entityId: id,
+				action: ACTION_PAY,
+				performedBy: userId,
+				branchId,
+				oldValue: current as any,
+				newValue: updatedRecord as any,
+				remarks: `Login fee marked as PAID with transaction ID ${transactionId}`,
+			},
+		});
+
+		return updatedRecord;
 	});
 
-	return updated;
+	return normalizeRecord(updated)!;
 };

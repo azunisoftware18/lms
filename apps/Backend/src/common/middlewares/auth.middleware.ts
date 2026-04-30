@@ -79,7 +79,7 @@ export const authMiddleware = async (
       } catch (err: any) {
         if (err.name !== "TokenExpiredError") {
           logger.warn("Invalid access token");
-          throw AppError.unauthorized("Invalid access token");
+          return next(AppError.unauthorized("Invalid access token"));
         }
       }
     }
@@ -88,7 +88,7 @@ export const authMiddleware = async (
     const refreshToken = req.cookies?.refreshToken;
 
     if (!refreshToken) {
-      throw AppError.unauthorized("Authentication required");
+      return next(AppError.unauthorized("Authentication required"));
     }
 
     let decodedRefresh: AuthPayload;
@@ -96,7 +96,7 @@ export const authMiddleware = async (
     try {
       decodedRefresh = verifyRefreshToken(refreshToken) as AuthPayload;
     } catch {
-      throw AppError.unauthorized("Invalid refresh token");
+      return next(AppError.unauthorized("Invalid refresh token"));
     }
 
     req.user = {
@@ -151,6 +151,6 @@ export const authMiddleware = async (
     return next();
   } catch (error) {
     logger.error("Authentication failed: %o", error);
-    throw AppError.unauthorized("Authentication failed");
+    return next(AppError.unauthorized("Authentication failed"));
   }
 };

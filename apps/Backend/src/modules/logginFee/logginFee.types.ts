@@ -9,6 +9,12 @@ export type LoginFeeStatus =
 
 export type LoginFeeInstitutionType = "NBFC" | "BANKING";
 
+/**
+ * LoginFeeRecord represents a login fee charge for a lead
+ * - Immutable once created
+ * - Status can only be changed through system actions (charge, pay)
+ * - Users cannot manually update status
+ */
 export interface LoginFeeRecord {
 	id: string;
 	applicationNumber: string;
@@ -33,9 +39,14 @@ export interface LoginFeeRecord {
 	remarks?: string | null;
 	chargedAt: string;
 	chargedBy: string;
+	paidAt?: string | null;
+	paidBy?: string | null;
 	branchId: string;
 }
 
+/**
+ * Input for creating a new login fee
+ */
 export interface CreateLoginFeeInput {
 	leadId: string;
 	applicantName: string;
@@ -54,6 +65,9 @@ export interface CreateLoginFeeInput {
 	remarks?: string;
 }
 
+/**
+ * Query filters for listing login fees
+ */
 export interface LoginFeeQueryInput {
 	page?: number;
 	limit?: number;

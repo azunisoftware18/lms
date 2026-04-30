@@ -186,6 +186,7 @@ export interface apperoveLoanInput {
 
 export interface FullLoanApplicationInput {
   loanTypeId: string;
+  leadNumber: string;
 
   applicant: {
     title: Enums.Title;

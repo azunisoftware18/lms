@@ -41,11 +41,6 @@ export const createLogginFeeSchema = z
 		}
 	});
 
-export const updateLogginFeeStatusSchema = z.object({
-	status: statusEnum,
-	remarks: z.string().trim().optional().nullable(),
-});
-
 export const logginFeeIdParamSchema = z.object({
 	id: z.string().trim().min(1, "id is required"),
 });
