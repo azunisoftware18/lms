@@ -81,15 +81,30 @@ export default function DocumentPage() {
   // Document stats
   const documentStats = {
     total: documents.length,
-    verified: documents.filter(
-      (d) => (d.verificationStatus || "").toLowerCase() === "verified",
-    ).length,
-    pending: documents.filter(
-      (d) => (d.verificationStatus || "").toLowerCase() === "pending",
-    ).length,
-    rejected: documents.filter(
+    verified:
+      documents.length > 0 &&
+      documents.every(
+        (d) => (d.verificationStatus || "").toLowerCase() === "verified",
+      )
+        ? 1
+        : 0,
+    pending:
+      documents.some(
+        (d) => (d.verificationStatus || "").toLowerCase() === "pending",
+      ) &&
+      !documents.some(
+        (d) => (d.verificationStatus || "").toLowerCase() === "rejected",
+      ) &&
+      !documents.every(
+        (d) => (d.verificationStatus || "").toLowerCase() === "verified",
+      )
+        ? 1
+        : 0,
+    rejected: documents.some(
       (d) => (d.verificationStatus || "").toLowerCase() === "rejected",
-    ).length,
+    )
+      ? 1
+      : 0,
   };
 
   // Handlers for document verification/rejection
@@ -199,6 +214,42 @@ export default function DocumentPage() {
         ].some((field) => loanType[field] === undefined)
       ? "Some document requirement fields are missing for this loan type. Please check loan type configuration."
       : null;
+
+  // Calculate overall statistics before any conditional return so hook order stays stable.
+  const overallStats = useMemo(() => {
+    let totalDocs = 0;
+    let verifiedApplications = 0;
+    let pendingApplications = 0;
+    let rejectedApplications = 0;
+
+    applications.forEach((app) => {
+      const appTotalDocuments = app.totalDocuments ?? app.documentCount ?? 0;
+      const appVerifiedDocuments = app.verifiedDocuments ?? 0;
+      const appRejectedDocuments = app.rejectedDocuments ?? 0;
+
+      totalDocs += appTotalDocuments;
+
+      if (appRejectedDocuments > 0) {
+        rejectedApplications += 1;
+      } else if (
+        appTotalDocuments > 0 &&
+        appVerifiedDocuments === appTotalDocuments
+      ) {
+        verifiedApplications += 1;
+      } else if (appTotalDocuments > 0) {
+        pendingApplications += 1;
+      }
+    });
+
+    return {
+      totalApplications: applications.length,
+      totalDocuments: totalDocs,
+      verifiedDocuments: verifiedApplications,
+      pendingDocuments: pendingApplications,
+      rejectedDocuments: rejectedApplications,
+    };
+  }, [applications]);
+
   // TODO: If Port will change then also should change this
   // If application selected, show document management view
   const buildDocumentUrl = (path) => {
@@ -237,25 +288,29 @@ export default function DocumentPage() {
                   title="Total Documents"
                   value={documentStats.total}
                   icon={FileText}
-                  variant="blue"
+                  colorClass="text-blue-600"
+                  bgClass="bg-blue-50"
                 />
                 <StatusCard
                   title="Verified"
                   value={documentStats.verified}
                   icon={CheckCircle}
-                  variant="green"
+                  colorClass="text-green-600"
+                  bgClass="bg-green-50"
                 />
                 <StatusCard
                   title="Pending"
                   value={documentStats.pending}
                   icon={Clock}
-                  variant="orange"
+                  colorClass="text-orange-600"
+                  bgClass="bg-orange-50"
                 />
                 <StatusCard
                   title="Rejected"
                   value={documentStats.rejected}
                   icon={XCircle}
-                  variant="red"
+                  colorClass="text-red-600"
+                  bgClass="bg-red-50"
                 />
               </div>
 
@@ -272,8 +327,9 @@ export default function DocumentPage() {
                     name: doc.documentType || doc.documentName || "-",
                     category: doc.category || "-",
                     applicantType:
+                      doc.applicantType || // Use new applicantType field from backend
                       doc.ownerType ||
-                      (doc.party ? doc.party.toUpperCase() : "APPLICANT"),
+                      (doc.party ? doc.party.toUpperCase() : "applicant"),
                     uploadDate: doc.createdAt
                       ? new Date(doc.createdAt).toLocaleDateString()
                       : "-",
@@ -358,6 +414,46 @@ export default function DocumentPage() {
             Select a loan application to manage documents
           </p>
         </div>
+
+        {/* Overall Statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+          <StatusCard
+            title="Total Applications"
+            value={overallStats.totalApplications}
+            icon={FileText}
+            colorClass="text-blue-600"
+            bgClass="bg-blue-50"
+          />
+          <StatusCard
+            title="Total Documents"
+            value={overallStats.totalDocuments}
+            icon={FileText}
+            colorClass="text-indigo-600"
+            bgClass="bg-indigo-50"
+          />
+          <StatusCard
+            title="Verified"
+            value={overallStats.verifiedDocuments}
+            icon={CheckCircle}
+            colorClass="text-green-600"
+            bgClass="bg-green-50"
+          />
+          <StatusCard
+            title="Pending"
+            value={overallStats.pendingDocuments}
+            icon={Clock}
+            colorClass="text-orange-600"
+            bgClass="bg-orange-50"
+          />
+          <StatusCard
+            title="Rejected"
+            value={overallStats.rejectedDocuments}
+            icon={XCircle}
+            colorClass="text-red-600"
+            bgClass="bg-red-50"
+          />
+        </div>
+
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 mb-6">
           <SearchField
             value={searchTerm}
@@ -417,10 +513,11 @@ export default function DocumentPage() {
                 0,
                 uploadedCount - verifiedCount - rejectedCount,
               );
-              const totalDocumentsDisplay =
-                totalRequired > 0
-                  ? totalRequired
-                  : (app.totalDocuments ?? uploadedCount);
+              const totalDocumentsDisplay = Math.max(
+                totalRequired > 0 ? totalRequired : 0,
+                uploadedCount,
+                app.totalDocuments ?? 0,
+              );
               const fullName =
                 [
                   app.customer?.firstName,

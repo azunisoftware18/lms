@@ -469,7 +469,7 @@ model LoanApplication {
   totalPayable    Float?
   loanPurpose     String?
   cibilScore      Int?
-  status          LoanStatus    @default(application_in_progress)
+  status          LoanStatus    @default(APPLICATION_STARTED)
   approvalDate    DateTime?
   activationDate  DateTime?
   rejectionReason String?
@@ -2228,30 +2228,33 @@ enum InterestType {
 }
 
 enum LoanStatus {
-  draft
-  submitted
-  kyc_pending
-  credit_check
-  under_review
-  TECHNICAL_PENDING
-  TECHNICAL_APPROVED
-  TECHNICAL_REJECTED
-  LEGAL_PENDING
-  LEGAL_APPROVED
-  LEGAL_REJECTED
-  LOANRULES_APPROVED
-  LOANRULES_REJECTED
-  approved
-  SANCTIONED
-  Ready_for_disbursement
-  rejected
-  disbursed
-  active
-  closed
-  delinquent
-  written_off
-  defaulted
-  application_in_progress
+  LEAD_CREATED
+  LEAD_VERIFICATION
+  APPLICATION_STARTED
+  DOCUMENT_COLLECTION
+  KYC_VERIFICATION
+  CREDIT_BUREAU_CHECK
+  BANK_STATEMENT_ANALYSIS
+  ELIGIBILITY_CHECK
+  UNDERWRITING
+  APPROVED
+  REJECTED
+  SANCTION_LETTER_ISSUED
+  AGREEMENT_SIGNED
+  DISBURSEMENT_INITIATED
+  DISBURSED
+  MOVED_TO_LMS
+  ACTIVE
+  EMI_SCHEDULE_GENERATED
+  EMI_DUE
+  PAYMENT_RECEIVED
+  DELINQUENT
+  COLLECTIONS
+  SETTLED
+  CLOSED
+  WRITTEN_OFF
+  DEFAULTED
+  FORECLOSURE_PENDING
 }
 
 enum ApprovalLevel {

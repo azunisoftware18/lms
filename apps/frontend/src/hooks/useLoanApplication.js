@@ -281,7 +281,8 @@ export const useUploadDocuments = () => {
         // fallback for single file
         formData.append(files.documentType, files.file);
       }
-      if (party) formData.append("party", party);
+      // Always include applicant type to identify which applicant these documents belong to
+      formData.append("applicantType", party || "applicant");
       return apiPost(`/loan-applications/${id}/documents`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
