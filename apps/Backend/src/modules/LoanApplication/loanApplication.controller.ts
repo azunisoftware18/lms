@@ -256,7 +256,7 @@ export const uploadLoanDocumentsController = async (
       select: { documentType: true },
     });
 
-    const existingDocTypes = existingDocuments.map((doc) =>
+    const existingDocTypes = existingDocuments.map((doc:any) =>
       normalizeLoanDocumentType(doc.documentType),
     );
 
