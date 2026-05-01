@@ -41,7 +41,11 @@ const CreditDashboard = () => {
 
   // Fetch real loan applications
   const { data, isLoading, refetch } = useLoanApplications();
-  const applications = data?.data || data || [];
+  const allApplications = data?.data || data || [];
+  // Filter to show only KYC_VERIFICATION status applications
+  const applications = allApplications.filter(
+    (app) => app.status === "KYC_VERIFICATION"
+  );
 
   // Helpers to normalize fields
   const getAppDate = (app) => {
@@ -317,8 +321,14 @@ const CreditDashboard = () => {
     );
   };
 
-  const openReportModal = (partyType) => {
-    if (!selectedLoan) return;
+  const getSelectedPartyType = () => {
+    if (selectedParty?.label === "Co-applicant") return "coapplicant";
+    if (selectedParty?.label === "Guarantor") return "guarantor";
+    return "applicant";
+  };
+
+  const buildReportParty = (partyType) => {
+    if (!selectedLoan) return null;
 
     let party = null;
     let label = "Applicant";
@@ -337,12 +347,20 @@ const CreditDashboard = () => {
     }
 
     const data = normalizePartyData(selectedLoan, party, label);
-    if (!data) return;
+    if (!data) return null;
 
-    setReportTarget({
+    return {
       ...data,
       reportPath,
-    });
+    };
+  };
+
+  const openReportModal = (partyType) => {
+    const data = buildReportParty(partyType);
+    if (!data) return;
+
+    setSelectedParty(data);
+    setReportTarget(data);
     setReportModalOpen(true);
   };
 
@@ -367,6 +385,55 @@ const CreditDashboard = () => {
     );
   };
 
+  const handleViewReport = (partyType) => {
+    if (!selectedLoan) return;
+
+    let party = null;
+    let label = "Applicant";
+    let reportPath = `/admin/los/credit-report/${selectedLoan.id}?party=applicant`;
+    let lookupValue = "";
+
+    if (partyType === "coapplicant") {
+      party = getCoApplicantParty(selectedLoan);
+      label = "Co-applicant";
+      lookupValue = party?.panNumber || party?.contactNumber || selectedLoan.loanNumber || "";
+      reportPath = `/admin/los/credit-report/${selectedLoan.id}?party=coapplicant&partyId=${party?.panNumber || party?.contactNumber || party?.id || ""}`;
+    } else if (partyType === "guarantor") {
+      party = getGuarantorParty(selectedLoan);
+      label = "Guarantor";
+      lookupValue = party?.panNumber || party?.contactNumber || selectedLoan.loanNumber || "";
+      reportPath = `/admin/los/credit-report/${selectedLoan.id}?party=guarantor&partyId=${party?.panNumber || party?.contactNumber || party?.id || ""}`;
+    } else {
+      const applicant = selectedLoan.customer;
+      lookupValue = applicant?.panNumber || applicant?.contactNumber || selectedLoan.loanNumber || "";
+      reportPath = `/admin/los/credit-report/${selectedLoan.id}?party=applicant`;
+    }
+
+    if (!lookupValue) {
+      console.error("Cannot fetch report: no PAN or contact number available");
+      return;
+    }
+
+    refreshReport.mutate(
+      {
+        q: lookupValue,
+        reason: `manual-${label.toLowerCase()}-check`,
+      },
+      {
+        onSuccess: () => {
+          setModalOpen(false);
+          navigate(reportPath);
+        },
+        onError: (error) => {
+          console.error("Failed to fetch credit report:", error);
+          // Still navigate even if report fetch fails
+          setModalOpen(false);
+          navigate(reportPath);
+        },
+      },
+    );
+  };
+
   // Helper to open modal and select applicant only
   const handleCreditCheck = (loan) => {
     setSelectedLoan(loan);
@@ -374,12 +441,12 @@ const CreditDashboard = () => {
     setSelectedParty({ ...applicant, label: "Applicant" });
     setModalOpen(true);
     // Trigger initial fetch of credit report using applicant PAN/contact or loanNumber fallback
-    try {
-      const q = loan.customer?.panNumber || loan.customer?.contactNumber || loan.loanNumber;
-      refreshReport.mutate({ q, reason: "manual-check" });
-    } catch (err) {
-      console.error("Failed to refresh credit report:", err);
-    }
+    // try {
+    //   const q = loan.customer?.panNumber || loan.customer?.contactNumber || loan.loanNumber;
+    //   refreshReport.mutate({ q, reason: "manual-check" });
+    // } catch (err) {
+    //   console.error("Failed to refresh credit report:", err);
+    // }
   };
 
   const navigate = useNavigate();
@@ -642,11 +709,11 @@ const CreditDashboard = () => {
                   <button
                     className={`px-3 py-1.5 rounded-lg border ${selectedParty?.label === "Applicant" ? "bg-blue-600 text-white" : "bg-white text-slate-700"}`}
                     onClick={() => {
-                      const applicant = {
-                        id: selectedLoan.customer?.id,
-                        ...selectedLoan.customer,
-                      };
-                      setSelectedParty({ ...applicant, label: "Applicant" });
+                      const data = buildReportParty("applicant");
+                      if (data) {
+                        setSelectedParty(data);
+                        setReportTarget(data);
+                      }
                     }}
                   >
                     Applicant
@@ -655,22 +722,10 @@ const CreditDashboard = () => {
                     <button
                       className={`px-3 py-1.5 rounded-lg border ${selectedParty?.label === "Co-applicant" ? "bg-blue-600 text-white" : "bg-white text-slate-700"}`}
                       onClick={() => {
-                        const party =
-                          (selectedLoan.coApplicants &&
-                            selectedLoan.coApplicants[0]) ||
-                          (selectedLoan.coapplicants &&
-                            selectedLoan.coapplicants[0]) ||
-                          selectedLoan.coApplicant ||
-                          null;
-                        if (party) {
-                          setSelectedParty({ ...party, label: "Co-applicant" });
-                          // trigger refresh using PAN/contact if available
-                          const q = party.panNumber || party.contactNumber || selectedLoan.loanNumber;
-                          try {
-                            refreshReport.mutate({ q, reason: "manual-check" });
-                          } catch (err) {
-                            console.error("Failed to refresh credit report:", err);
-                          }
+                        const data = buildReportParty("coapplicant");
+                        if (data) {
+                          setSelectedParty(data);
+                          setReportTarget(data);
                         }
                       }}
                     >
@@ -681,19 +736,10 @@ const CreditDashboard = () => {
                     <button
                       className={`px-3 py-1.5 rounded-lg border ${selectedParty?.label === "Guarantor" ? "bg-blue-600 text-white" : "bg-white text-slate-700"}`}
                       onClick={() => {
-                        const party =
-                          (selectedLoan.guarantors &&
-                            selectedLoan.guarantors[0]) ||
-                          selectedLoan.guarantor ||
-                          null;
-                        if (party) {
-                          setSelectedParty({ ...party, label: "Guarantor" });
-                          const q = party.panNumber || party.contactNumber || selectedLoan.loanNumber;
-                          try {
-                            refreshReport.mutate({ q, reason: "manual-check" });
-                          } catch (err) {
-                            console.error("Failed to refresh credit report:", err);
-                          }
+                        const data = buildReportParty("guarantor");
+                        if (data) {
+                          setSelectedParty(data);
+                          setReportTarget(data);
                         }
                       }}
                     >
@@ -839,10 +885,7 @@ const CreditDashboard = () => {
                           <button
                             className="px-3 py-1.5 rounded-lg border bg-white text-slate-700 text-sm"
                             onClick={() => {
-                              setModalOpen(false);
-                              navigate(
-                                `/admin/los/credit-report/${selectedLoan.id}?party=applicant`,
-                              );
+                              openReportModal(getSelectedPartyType());
                             }}
                           >
                             View Report
