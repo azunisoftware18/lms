@@ -107,6 +107,7 @@ import FinancialDashboardPage from "../app/dashboard/Accounting/ReconcileBankBal
 import ReconcileBankBalancePage from "../app/dashboard/Accounting/ReconcileBankBalancePage.jsx";
 import RecieptEntryPage from "../app/dashboard/Accounting/RecieptEntryPage.jsx";
 import TrialBalancePage from "../app/dashboard/Accounting/TrialBalancePage.jsx";
+import ProfilePage from "../app/dashboard/Profile.jsx";
 
 export default function AppRoutes() {
   const dispatch = useDispatch();
@@ -213,6 +214,7 @@ export default function AppRoutes() {
         }
       >
         <Route index element={<DashboardPage />} />
+        <Route path="profile" element={<ProfilePage />} />
         <Route path="borrowers" element={<BorrowerPage />} />
         <Route
           path="lms/loan-account-management"
