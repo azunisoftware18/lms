@@ -7,20 +7,33 @@ import * as Enums from "../../../generated/prisma-client/enums.js";
 
 export type InterestType = "FLAT" | "REDUCING";
 export type LoanStatus =
-  | "draft"
-  | "submitted"
-  | "kyc_pending"
-  | "credit_check"
-  | "under_review"
-  | "approved"
-  | "rejected"
-  | "disbursed"
-  | "active"
-  | "closed"
-  | "written_off"
-  | "defaulted"
-  | "FORECLOSURE_PENDING"
-  | "application_in_progress";
+  | "LEAD_CREATED"
+  | "LEAD_VERIFICATION"
+  | "APPLICATION_STARTED"
+  | "DOCUMENT_COLLECTION"
+  | "KYC_VERIFICATION"
+  | "CREDIT_BUREAU_CHECK"
+  | "BANK_STATEMENT_ANALYSIS"
+  | "ELIGIBILITY_CHECK"
+  | "UNDERWRITING"
+  | "APPROVED"
+  | "REJECTED"
+  | "SANCTION_LETTER_ISSUED"
+  | "AGREEMENT_SIGNED"
+  | "DISBURSEMENT_INITIATED"
+  | "DISBURSED"
+  | "MOVED_TO_LMS"
+  | "ACTIVE"
+  | "EMI_SCHEDULE_GENERATED"
+  | "EMI_DUE"
+  | "PAYMENT_RECEIVED"
+  | "DELINQUENT"
+  | "COLLECTIONS"
+  | "SETTLED"
+  | "CLOSED"
+  | "WRITTEN_OFF"
+  | "DEFAULTED"
+  | "FORECLOSURE_PENDING";
 
 export type Title = "MR" | "MRS" | "MS" | "DR" | "PROF";
 export type Gender = "MALE" | "FEMALE" | "OTHER";
@@ -112,7 +125,7 @@ export interface CreateLoanApplication {
   coApplicantContactNumber?: string;
 
   approvedAmount?: number;
-  status?: LoanStatus; // optional, default: application_in_progress
+  status?: LoanStatus; // optional, default: APPLICATION_STARTED
 
   documents?: {
     documentType: string;
@@ -186,6 +199,7 @@ export interface apperoveLoanInput {
 
 export interface FullLoanApplicationInput {
   loanTypeId: string;
+  leadNumber: string;
 
   applicant: {
     title: Enums.Title;

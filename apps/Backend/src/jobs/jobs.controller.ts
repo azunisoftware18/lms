@@ -27,7 +27,7 @@ export const runLoanDefaultCron = async () => {
   try {
     // Fetch all active and delinquent loans
     const activeLoans = await prisma.loanApplication.findMany({
-      where: { status: { in: ["active", "delinquent"] } },
+      where: { status: { in: ["ACTIVE", "DELINQUENT"] } },
       select: { id: true },
     });
 

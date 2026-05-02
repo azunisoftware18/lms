@@ -179,7 +179,7 @@ export const refreshCreditReportService = async (
   });
 
   if (!existingReport) {
-    throw new Error("No credit report found for the search query");
+    throw new Error("No credit report found ");
   }
 
   resolvedCustomerId = existingReport.customerId;

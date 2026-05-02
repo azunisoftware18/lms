@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `leads` ADD COLUMN `loginFeeStatus` ENUM('PENDING', 'PAID', 'WAIVED', 'FAILED') NOT NULL DEFAULT 'PENDING',
+    ADD COLUMN `transactionId` VARCHAR(191) NULL;

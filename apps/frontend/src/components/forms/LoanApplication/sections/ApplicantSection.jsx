@@ -593,7 +593,7 @@ export default function ApplicantSection({
             </div>
 
 
-            {/* /// Aadhaar fetch section is moved to the personal information section for better UX, so leaving this space blank for now. */}
+             /// Aadhaar fetch section is moved to the personal information section for better UX, so leaving this space blank for now. 
 
             <div className="flex items-end justify-end">
               <div className="mt-6">

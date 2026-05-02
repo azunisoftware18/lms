@@ -9,7 +9,7 @@ export const startLoanDefaultJob = () => {
   cron.schedule("10 * * * *", async () => {
     try {
       const activeLoans = await prisma.loanApplication.findMany({
-        where: { status: { in: ["active", "delinquent"] } },
+        where: { status: { in: ["ACTIVE", "DELINQUENT"] } },
         select: { id: true },
       });
 

@@ -17,6 +17,7 @@ import ConfirmationDialog from "../../../components/common/ConfirmationDialog";
 import ApplicationPageTable from "../../../components/tables/ApplicationPageTable";
 import LoanApplicationView from "../ViewDetail/LoanApplicationView";
 import LoanApplicationForm from "../../../components/forms/LoanApplication/LoanApplicationForm";
+import LoginFeePaymentGateModal from "../../../components/modals/LoginFeePaymentGateModal";
 import { useLoanApplication } from "../../../hooks/useLoanApplication";
 
 import {
@@ -28,6 +29,8 @@ import { showError, showInfo } from "../../../lib/utils/toastService";
 
 export default function ProfessionalNBFCPortal() {
   const [showForm, setShowForm] = useState(false);
+  const [showPaymentGate, setShowPaymentGate] = useState(false);
+  const [gatePassedData, setGatePassedData] = useState(null);
   const [searchTerm] = useState("");
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [showApproveDialog, setShowApproveDialog] = useState(false);
@@ -346,9 +349,15 @@ export default function ProfessionalNBFCPortal() {
   if (showForm) {
     return (
       <LoanApplicationForm
-        onClose={() => setShowForm(false)}
+        onClose={() => {
+          setShowForm(false);
+          setGatePassedData(null);
+        }}
+        initialData={selectedApp}
+        verifiedData={gatePassedData}
         onSuccess={() => {
           setShowForm(false);
+          setGatePassedData(null);
           refetchApplications();
         }}
       />
@@ -372,7 +381,7 @@ export default function ProfessionalNBFCPortal() {
             </p>
           </div>
           <Button
-            onClick={() => setShowForm(true)}
+            onClick={() => setShowPaymentGate(true)}
             className="bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200 w-full sm:w-auto justify-center"
           >
             <Plus size={18} className="mr-2" /> New Application
@@ -419,12 +428,30 @@ export default function ProfessionalNBFCPortal() {
       </div>
 
       {/* Modals */}
+      <LoginFeePaymentGateModal
+        isOpen={showPaymentGate}
+        onClose={() => {
+          setShowPaymentGate(false);
+          setGatePassedData(null);
+        }}
+        onSuccess={(data) => {
+          setGatePassedData(data);
+          setShowPaymentGate(false);
+          setShowForm(true);
+        }}
+      />
+
       {showForm && (
         <LoanApplicationForm
-          onClose={() => setShowForm(false)}
+          onClose={() => {
+            setShowForm(false);
+            setGatePassedData(null);
+          }}
           initialData={selectedApp}
+          verifiedData={gatePassedData}
           onSuccess={() => {
             setShowForm(false);
+            setGatePassedData(null);
             refetchApplications();
           }}
         />

@@ -3,7 +3,7 @@ import {
 	createLogginFeeService,
 	getLogginFeeByIdService,
 	listLogginFeeService,
-	updateLogginFeeStatusService,
+	payLogginFeeService,
 } from "./logginFee.service.js";
 import { LoginFeeStatus } from "./logginFee.types.js";
 
@@ -104,10 +104,7 @@ export const getLogginFeeByIdController = async (req: Request, res: Response) =>
 	}
 };
 
-export const updateLogginFeeStatusController = async (
-	req: Request,
-	res: Response,
-) => {
+export const payLogginFeeController = async (req: Request, res: Response) => {
 	try {
 		const userContext = getUserContext(req);
 		if (!userContext) {
@@ -116,28 +113,25 @@ export const updateLogginFeeStatusController = async (
 				message: "Unauthorized",
 			});
 		}
-
 		const id = req.params.id;
 		const recordId = getParamAsString(id);
-		const { status, remarks } = req.body;
-
-		const data = await updateLogginFeeStatusService(
+		const data = await payLogginFeeService(
 			recordId,
-			status,
 			userContext.userId,
 			userContext.branchId,
-			remarks,
 		);
-
 		return res.status(200).json({
 			success: true,
-			message: "Login fee status updated successfully",
+			message: "Login fee marked as PAID successfully",
 			data,
+
 		});
 	} catch (error: any) {
+
 		return res.status(error?.statusCode || 500).json({
 			success: false,
-			message: getSafeError(error, "Failed to update login fee status"),
+			message: getSafeError(error, "Failed to mark login fee as PAID"),
 		});
 	}
+
 };

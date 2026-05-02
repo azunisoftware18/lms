@@ -14,17 +14,26 @@ import ConfirmationDialog from "../common/ConfirmationDialog";
 const COLUMNS = ["Document", "Applicant", "Upload Date", "Status", "Actions"];
 
 function ApplicantBadge({ applicantType }) {
-  const isPrimary = applicantType === "APPLICANT";
+  // Handle both uppercase (APPLICANT, CO_APPLICANT, GUARANTOR) and lowercase (applicant, coApplicant, guarantor)
+  const type = (applicantType || "applicant").toUpperCase();
+  const isPrimary = type === "APPLICANT" || type === "PRIMARY";
+
+  let label = "Primary";
+  if (type.includes("CO")) label = "Co-Applicant";
+  if (type.includes("GUARANTOR")) label = "Guarantor";
+  if (type === "OTHER") label = "Other";
+
+  const bgColor = isPrimary
+    ? "bg-blue-100 text-blue-700"
+    : type.includes("GUARANTOR")
+      ? "bg-orange-100 text-orange-700"
+      : type === "OTHER"
+        ? "bg-gray-100 text-gray-700"
+        : "bg-violet-100 text-violet-700";
 
   return (
-    <span
-      className={`px-2 py-1 rounded-full text-xs font-medium ${
-        isPrimary
-          ? "bg-blue-100 text-blue-700"
-          : "bg-violet-100 text-violet-700"
-      }`}
-    >
-      {isPrimary ? "Primary" : "Co-applicant"}
+    <span className={`px-2 py-1 rounded-full text-xs font-medium ${bgColor}`}>
+      {label}
     </span>
   );
 }

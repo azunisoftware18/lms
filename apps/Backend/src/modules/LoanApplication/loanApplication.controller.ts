@@ -134,6 +134,7 @@ export const uploadLoanDocumentsController = async (
   const loanApplicationId = typeof req.params.id === 'string' ? req.params.id : (Array.isArray(req.params.id) ? req.params.id[0] : '');
   const userId = req.user.id;
   const files = req.files as Express.Multer.File[];
+  const applicantType = ((req.body?.applicantType as string) || "applicant").toLowerCase(); // Which applicant type this upload is for
 
   try {
     /* ---------------- 1️⃣ Validate files ---------------- */
@@ -144,11 +145,13 @@ export const uploadLoanDocumentsController = async (
       });
     }
 
-    /* ---------------- 2️⃣ Fetch loan ---------------- */
+    /* ---------------- 2️⃣ Fetch loan with co-applicants and guarantors ---------------- */
     const loanApplication = await prisma.loanApplication.findUnique({
       where: { id: loanApplicationId },
       include: {
         kyc: true,
+        coapplicants: true,
+        guarantors: true,
       },
     });
 
@@ -253,7 +256,7 @@ export const uploadLoanDocumentsController = async (
       select: { documentType: true },
     });
 
-    const existingDocTypes = existingDocuments.map((doc) =>
+    const existingDocTypes = existingDocuments.map((doc:any) =>
       normalizeLoanDocumentType(doc.documentType),
     );
 
@@ -286,6 +289,9 @@ export const uploadLoanDocumentsController = async (
     const documents = await uploadLoanDocumentsService(
       loanApplicationId,
       documentsPayload,
+      applicantType,
+      loanApplication.coapplicants,
+      loanApplication.guarantors,
     );
 
     return res.status(201).json({

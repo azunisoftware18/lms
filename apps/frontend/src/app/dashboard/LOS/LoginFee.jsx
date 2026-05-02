@@ -6,7 +6,7 @@ import { useLead, getLeadByIdOrNumber } from "../../../hooks/useLead";
 import {
   useChargeLogginFee,
   useLogginFeeList,
-  useUpdateLogginFeeStatus,
+  usePayLogginFee,
 } from "../../../hooks/useLogginFee";
 import StatusCard from "../../../components/common/StatusCard";
 
@@ -58,7 +58,7 @@ export default function LoginFee() {
   });
 
   const chargeFee = useChargeLogginFee();
-  const updateStatus = useUpdateLogginFeeStatus();
+  const payFee = usePayLogginFee();
 
   const rawFee =
     selectedLead?.defaultLoggingFeeAmount ??
@@ -165,7 +165,14 @@ export default function LoginFee() {
         return;
       }
 
-      setSelectedFee(created);
+      const paidRes = await payFee.mutateAsync(created.id);
+      const paidRecord = paidRes?.data;
+      if (!paidRecord) {
+        toast.error("Unexpected payment response from server");
+        return;
+      }
+
+      setSelectedFee(paidRecord);
       setShowReceipt(true);
       setSelectedLead(null);
       setSearchInput("");
@@ -175,13 +182,7 @@ export default function LoginFee() {
     }
   };
 
-  const handleStatusChange = async (id, status) => {
-    try {
-      await updateStatus.mutateAsync({ id, payload: { status } });
-    } catch {
-      /* handled by hook */
-    }
-  };
+
   
 
   return (
@@ -274,8 +275,8 @@ export default function LoginFee() {
                       </select>
                     </div>
 
-                    <button type="submit" disabled={chargeFee.isPending || !selectedLead} className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-all font-semibold flex items-center justify-center gap-2 text-lg">
-                      <Icons.Zap className="w-5 h-5" />{chargeFee.isPending ? "Processing..." : "Pay Login Fee"}
+                    <button type="submit" disabled={chargeFee.isPending || payFee.isPending || !selectedLead} className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-all font-semibold flex items-center justify-center gap-2 text-lg">
+                      <Icons.Zap className="w-5 h-5" />{chargeFee.isPending || payFee.isPending ? "Processing..." : "Pay Login Fee"}
                     </button>
                   </form>
                 )}
@@ -340,7 +341,7 @@ export default function LoginFee() {
                       <td className="px-4 py-3 text-sm font-semibold text-slate-900">{formatINR(item.totalAmount)}</td>
                       <td className="px-4 py-3 text-sm text-slate-700"><div>{item.paymentMode}</div><div className="text-xs text-slate-500 font-mono">{item.transactionId || "Auto-Gen"}</div></td>
                       <td className="px-4 py-3 text-sm"><span className={`px-2 py-1 rounded-full text-xs font-semibold ${statusClasses[item.status] || "bg-slate-100 text-slate-700"}`}>{item.status}</span></td>
-                      <td className="px-4 py-3 text-sm"><div className="flex gap-2"><button type="button" className="px-3 py-1.5 rounded-md border border-slate-200 hover:bg-slate-50 text-xs font-medium" onClick={() => { setSelectedFee(item); setShowReceipt(true); }}>Receipt</button><select value={item.status} onChange={(e) => handleStatusChange(item.id, e.target.value)} disabled={updateStatus.isPending} className="px-2 py-1.5 rounded-md border border-slate-200 text-xs font-medium bg-white">{statusOptions.map((s) => <option key={s} value={s}>{s}</option>)}</select></div></td>
+                      <td className="px-4 py-3 text-sm"><div className="flex gap-2"><button type="button" className="px-3 py-1.5 rounded-md border border-slate-200 hover:bg-slate-50 text-xs font-medium" onClick={() => { setSelectedFee(item); setShowReceipt(true); }}>Receipt</button></div></td>
                     </tr>
                   ))}
                 </tbody>

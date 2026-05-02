@@ -86,21 +86,33 @@ export const CoApplicantRelationEnum = z.enum([
 export const interestTypeEnum = z.enum(["FLAT", "REDUCING"]);
 
 export const loanStatusEnum = z.enum([
-  "draft",
-  "submitted",
-  "kyc_pending",
-  "credit_check",
-  "under_review",
-  "LOANRULES_APPROVED",
-  "LOANRULES_REJECTED",
-  "approved",
-  "rejected",
-  "disbursed",
-  "active",
-  "closed",
-  "written_off",
-  "defaulted",
-  "application_in_progress",
+  "LEAD_CREATED",
+  "LEAD_VERIFICATION",
+  "APPLICATION_STARTED",
+  "DOCUMENT_COLLECTION",
+  "KYC_VERIFICATION",
+  "CREDIT_BUREAU_CHECK",
+  "BANK_STATEMENT_ANALYSIS",
+  "ELIGIBILITY_CHECK",
+  "UNDERWRITING",
+  "APPROVED",
+  "REJECTED",
+  "SANCTION_LETTER_ISSUED",
+  "AGREEMENT_SIGNED",
+  "DISBURSEMENT_INITIATED",
+  "DISBURSED",
+  "MOVED_TO_LMS",
+  "ACTIVE",
+  "EMI_SCHEDULE_GENERATED",
+  "EMI_DUE",
+  "PAYMENT_RECEIVED",
+  "DELINQUENT",
+  "COLLECTIONS",
+  "SETTLED",
+  "CLOSED",
+  "WRITTEN_OFF",
+  "DEFAULTED",
+  "FORECLOSURE_PENDING",
 ]);
 
 export const customerInlineSchema = z.object({
@@ -508,6 +520,7 @@ const referenceSchema = z.object({
 
 export const createFullLoanApplicationSchema = z.object({
   loanTypeId: z.string().min(1, "loanTypeId is required"),
+  leadNumber: z.string().trim().min(1, "leadNumber is required"),
 
   applicant: z.object({
     title: z.enum(["MR", "MRS", "MS", "DR", "PROF"]),

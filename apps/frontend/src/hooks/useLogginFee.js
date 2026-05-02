@@ -12,8 +12,7 @@ const getLogginFeeById = (id) => apiGet(`/loggin-fee/${id}`);
 
 const chargeLogginFee = (payload) => apiPost("/loggin-fee/charge", payload);
 
-const updateLogginFeeStatus = ({ id, payload }) =>
-	apiPatch(`/loggin-fee/${id}/status`, payload);
+const payLogginFee = (id) => apiPost(`/loggin-fee/${id}/pay`);
 
 export const useLogginFeeList = (params = {}) => {
 	const normalizedParams = normalizeParams(params || {});
@@ -58,7 +57,6 @@ export const useChargeLogginFee = () => {
 		mutationFn: chargeLogginFee,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["logginFeeList"] });
-			showSuccess("Login fee charged successfully");
 		},
 		onError: (error) => {
 			showError(error?.message || "Failed to charge login fee");
@@ -66,17 +64,18 @@ export const useChargeLogginFee = () => {
 	});
 };
 
-export const useUpdateLogginFeeStatus = () => {
+export const usePayLogginFee = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: updateLogginFeeStatus,
+		mutationFn: payLogginFee,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["logginFeeList"] });
-			showSuccess("Login fee status updated successfully");
+			queryClient.invalidateQueries({ queryKey: ["logginFee"] });
+			showSuccess("Login fee marked as PAID successfully");
 		},
 		onError: (error) => {
-			showError(error?.message || "Failed to update login fee status");
+			showError(error?.message || "Failed to mark login fee as PAID");
 		},
 	});
 };

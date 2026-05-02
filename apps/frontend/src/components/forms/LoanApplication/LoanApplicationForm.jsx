@@ -25,6 +25,10 @@ import ReviewSection from "./sections/ReviewSection";
 import SuccessScreen from "./sections/SuccessScreen";
 import { SectionCard } from "./sharedFields";
 import { personDefaults } from "./sharedUtils";
+import {
+  applyAadhaarProfile,
+  applyPanProfile,
+} from "../../../lib/utils/identityProfileHelper";
 
 const STEPS = [
   { id: "applicant", label: "Applicant", shortLabel: "Applicant" },
@@ -1150,6 +1154,7 @@ export default function LoanApplicationForm({
   onClose,
   onSuccess = () => {},
   initialData = null,
+  verifiedData = null,
 }) {
   const draftSnapshot = useMemo(() => {
     try {
@@ -1188,6 +1193,88 @@ export default function LoanApplicationForm({
     mode: "onTouched",
     defaultValues: DEFAULT_VALUES,
   });
+
+  // Auto-fill verified Aadhaar and PAN from payment gate
+  React.useEffect(() => {
+    console.log("[LoanApplicationForm] verifiedData received:", verifiedData);
+    if (!verifiedData?.verificationData) return;
+
+    const {
+      aadhaarNumber,
+      panNumber,
+      verificationMethod,
+      profileData,
+      verificationResponse,
+    } = verifiedData.verificationData;
+
+    if (verificationMethod === "aadhaar" && profileData) {
+      console.log("[LoanApplicationForm] applying Aadhaar profile:", profileData, "aadhaarNumber:", aadhaarNumber);
+      applyAadhaarProfile(profileData, aadhaarNumber, setValue);
+      // store raw provider payload so ApplicantSection can read provider values
+      if (verificationResponse) {
+        try {
+          setValue("applicant.aadhaarProvider", verificationResponse, {
+            shouldDirty: true,
+            shouldTouch: true,
+          });
+        } catch (e) {
+          console.warn("Failed to set applicant.aadhaarProvider", e);
+        }
+      }
+      // ensure applicant tab is visible for user to see autofilled values
+      try {
+        setCurrentStep("applicant");
+      } catch (e) {}
+    } else if (verificationMethod === "pan" && profileData) {
+      console.log("[LoanApplicationForm] applying PAN profile:", profileData);
+      applyPanProfile(profileData, setValue);
+      if (verificationResponse) {
+        try {
+          setValue("applicant.panProvider", verificationResponse, {
+            shouldDirty: true,
+            shouldTouch: true,
+          });
+        } catch (e) {
+          console.warn("Failed to set applicant.panProvider", e);
+        }
+      }
+      try {
+        setCurrentStep("applicant");
+      } catch (e) {}
+    } else {
+      if (aadhaarNumber) {
+        setValue("applicant.aadhaarNumber", aadhaarNumber);
+      }
+
+      if (panNumber) {
+        setValue("applicant.panNumber", panNumber);
+      }
+    }
+
+    if (verificationResponse) {
+      if (verificationMethod === "aadhaar") {
+        setValue("applicant.aadhaarVerificationResponse", verificationResponse);
+      } else if (verificationMethod === "pan") {
+        setValue("applicant.panVerificationResponse", verificationResponse);
+      }
+    }
+
+    if (verifiedData.lead) {
+      const lead = verifiedData.lead;
+
+      if (lead.leadNumber) {
+        setValue("leadNumber", lead.leadNumber);
+      }
+
+      if (lead.contactNumber) {
+        setValue("applicant.contactNumber", lead.contactNumber);
+      }
+
+      if (lead.email) {
+        setValue("applicant.email", lead.email);
+      }
+    }
+  }, [verifiedData, setValue]);
 
   const { mutate: createLoanApplication } = useCreateLoanApplication({
     onSuccess: () => {
@@ -1300,9 +1387,10 @@ export default function LoanApplicationForm({
   } = useFieldArray({ control, name: "guarantors" });
 
   useEffect(() => {
+    if (verifiedData?.verificationData) return;
     if (!initialData) return;
     reset({ ...DEFAULT_VALUES, ...initialData });
-  }, [initialData, reset]);
+  }, [initialData, reset, verifiedData]);
 
   useEffect(() => {
     if (!draftSnapshot?.values) return;

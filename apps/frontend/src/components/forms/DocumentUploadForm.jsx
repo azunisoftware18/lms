@@ -229,15 +229,26 @@ export default function DocumentUploadForm({
           return;
         }
 
-        const filesPayload = allEntries.map((entry) => ({
-          file: entry.file,
-          documentType: normalizeDocType(entry.docType),
-        }));
-
-        await uploadDocumentsMutation.mutateAsync({
-          id: selectedApplication.id,
-          files: filesPayload,
+        // Make separate upload calls for each party type to ensure correct ID assignment
+        const groupedByParty = {};
+        allEntries.forEach((entry) => {
+          if (!groupedByParty[entry.party]) groupedByParty[entry.party] = [];
+          groupedByParty[entry.party].push(entry);
         });
+
+        // Upload documents party by party
+        for (const [party, entries] of Object.entries(groupedByParty)) {
+          const filesPayload = entries.map((entry) => ({
+            file: entry.file,
+            documentType: normalizeDocType(entry.docType),
+          }));
+
+          await uploadDocumentsMutation.mutateAsync({
+            id: selectedApplication.id,
+            files: filesPayload,
+            party: party, // Include party type (applicant, coApplicant, guarantor, other)
+          });
+        }
 
         toast.success("Documents uploaded successfully");
         setUploadFiles({

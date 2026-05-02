@@ -50,6 +50,9 @@ export async function uploadLoanDocumentsService(
     documentPath: string;
     uploadedBy: string;
   }[],
+  applicantType: string = "applicant",
+  coApplicants: any[] = [],
+  guarantors: any[] = [],
 ) {
   return prisma.$transaction(async (tx) => {
     const loanApplication = await tx.loanApplication.findUnique({
@@ -69,13 +72,45 @@ export async function uploadLoanDocumentsService(
       throw AppError.notFound("KYC record not found for loan application");
     }
 
+    // Determine which applicant ID to use based on applicantType
+    let coApplicantId: string | null = null;
+    let guarantorId: string | null = null;
+    
+    if (applicantType === "coapplicant" && coApplicants?.length > 0) {
+      coApplicantId = coApplicants[0].id;
+    } else if (applicantType === "guarantor" && guarantors?.length > 0) {
+      guarantorId = guarantors[0].id;
+    }
+    // else: for "applicant" and "other", documents link to loanApplicationId only
+
     for (const doc of documents) {
-      const existingDoc = await tx.document.findFirst({
-        where: {
-          loanApplicationId,
-          documentType: doc.documentType,
-        },
-      });
+      // For same-type documents, check uniqueness within that applicant type
+      let existingDoc;
+      
+      if (coApplicantId) {
+        existingDoc = await tx.document.findFirst({
+          where: {
+            coApplicantId,
+            documentType: doc.documentType,
+          },
+        });
+      } else if (guarantorId) {
+        existingDoc = await tx.document.findFirst({
+          where: {
+            guarantorId,
+            documentType: doc.documentType,
+          },
+        });
+      } else {
+        existingDoc = await tx.document.findFirst({
+          where: {
+            loanApplicationId,
+            coApplicantId: null,
+            guarantorId: null,
+            documentType: doc.documentType,
+          },
+        });
+      }
 
       if (existingDoc) {
         await tx.document.update({
@@ -94,6 +129,8 @@ export async function uploadLoanDocumentsService(
         await tx.document.create({
           data: {
             loanApplicationId,
+            coApplicantId,
+            guarantorId,
             kycId: loanApplication.kyc.id,
             branchId: loanApplication.branchId,
             documentType: doc.documentType,
@@ -115,18 +152,34 @@ export async function uploadLoanDocumentsService(
       performedBy: documents[0].uploadedBy,
       branchId: loanApplication.branchId,
       oldValue: null,
-      newValue: { uploadedDocumentTypes },
+      newValue: { uploadedDocumentTypes, applicantType },
     });
 
-    const uploadedDocuments = await tx.document.findMany({
+    // Fetch ALL documents for this loan (all applicant types)
+    const allCoApplicantIds = coApplicants?.map((c) => c.id).filter(Boolean) || [];
+    const allGuarantorIds = guarantors?.map((g) => g.id).filter(Boolean) || [];
+
+    const allDocuments = await tx.document.findMany({
       where: {
-        loanApplicationId,
-        documentType: { in: uploadedDocumentTypes },
+        OR: [
+          { loanApplicationId },
+          ...(allCoApplicantIds.length > 0
+            ? [{ coApplicantId: { in: allCoApplicantIds } }]
+            : []),
+          ...(allGuarantorIds.length > 0
+            ? [{ guarantorId: { in: allGuarantorIds } }]
+            : []),
+        ],
       },
       orderBy: { createdAt: "asc" },
     });
 
-    return sanitizeDocumentList(uploadedDocuments);
+    await tx.loanApplication.update({
+      where: { id: loanApplicationId },
+      data: { status: "DOCUMENT_COLLECTION" },
+    });
+
+    return sanitizeDocumentList(allDocuments);
   });
 }
 
@@ -184,7 +237,7 @@ export async function verifyDocumentService(
       await tx.loanApplication.update({
         where: { id: document.loanApplicationId },
         data: {
-          status: "under_review",
+          status: "KYC_VERIFICATION",
         },
       });
     }
@@ -228,8 +281,8 @@ export async function rejectDocumentService(
     throw AppError.notFound("Associated loan application not found");
   }
 
-  if (loanApplication.status !== "kyc_pending") {
-    throw AppError.badRequest("Loan application not in KYC pending status");
+  if (loanApplication.status !== "DOCUMENT_COLLECTION") {
+    throw AppError.badRequest("Loan application not in DOCUMENT_COLLECTION status");
   }
 
   const document = await prisma.document.update({
@@ -260,7 +313,7 @@ export async function rejectDocumentService(
   await prisma.loanApplication.update({
     where: { id: document.loanApplicationId },
     data: {
-      status: "kyc_pending",
+      status: "DOCUMENT_COLLECTION",
     },
   });
 
@@ -825,13 +878,13 @@ export const reviewLoanService = async (loanId: string) => {
 
   if (!loan) throw AppError.notFound("Loan not found");
 
-  if (loan.status !== "application_in_progress") {
+  if (loan.status !== "APPLICATION_STARTED") {
     throw AppError.badRequest("Loan not eligible for review");
   }
 
   const updated = await prisma.loanApplication.update({
     where: { id: loanId },
-    data: { status: "under_review" },
+    data: { status: "UNDERWRITING" },
   });
 
   return {
@@ -867,7 +920,7 @@ export const approveLoanService = async (
     throw AppError.notFound("Loan application not found");
   }
 
-  if (existingLoan.status !== "under_review") {
+  if (existingLoan.status !== "UNDERWRITING") {
     throw AppError.badRequest("Loan not ready for approval");
   }
 
@@ -890,10 +943,10 @@ export const approveLoanService = async (
   const result = await prisma.loanApplication.updateMany({
     where: {
       id: loanId,
-      status: "under_review",
+      status: "UNDERWRITING",
     },
     data: {
-      status: "approved",
+      status: "APPROVED",
       latePaymentFeeType: data.latePaymentFeeType,
       latePaymentFee: data.latePaymentFee,
       bounceCharges: data.bounceCharges,
@@ -942,7 +995,7 @@ export const approveLoanService = async (
       interestRate: existingLoan.interestRate,
     },
     newValue: {
-      status: "approved",
+      status: "APPROVED",
       approvedAmount: data.approvedAmount,
       tenureMonths: data.tenureMonths,
       interestType: data.interestType,
@@ -999,7 +1052,7 @@ export const rejectLoanService = async (
     throw AppError.notFound("Loan application not found");
   }
 
-  if (loan.status !== "under_review") {
+  if (loan.status !== "UNDERWRITING") {
     throw AppError.badRequest(
       "Loan not ready for rejection. Only loans under review can be rejected.",
     );
@@ -1008,7 +1061,7 @@ export const rejectLoanService = async (
   const updatedLoan = await prisma.loanApplication.update({
     where: { id: loanId },
     data: {
-      status: "rejected",
+      status: "REJECTED",
       rejectionReason: reason,
       approvedBy: userId,
     },
@@ -1025,7 +1078,7 @@ export const rejectLoanService = async (
       rejectionReason: loan.rejectionReason,
     },
     newValue: {
-      status: "rejected",
+      status: "REJECTED",
       rejectionReason: reason,
     },
     remarks: `Loan ${loan.loanNumber} rejected. Reason: ${reason}`,
@@ -1101,6 +1154,44 @@ export const createFullLoanApplicationService = async (
 
         await createFinancialDetails(tx, data, loan.id);
 
+        // resolve leadNumber from common payload locations and update lead atomically
+        let leadNumber: string | undefined = (data as any).leadNumber;
+        if (!leadNumber && (data as any).applicant && (data as any).applicant.leadNumber) {
+          leadNumber = (data as any).applicant.leadNumber;
+        }
+        if (!leadNumber && (data as any).lead && (data as any).lead.leadNumber) {
+          leadNumber = (data as any).lead.leadNumber;
+        }
+        if (!leadNumber) {
+          // shallow search for keys that look like leadNumber
+          for (const key of Object.keys(data as any)) {
+            if (/leadnumber/i.test(key) && typeof (data as any)[key] === "string") {
+              leadNumber = (data as any)[key];
+              break;
+            }
+          }
+        }
+
+        if (!leadNumber) {
+          throw AppError.badRequest("leadNumber is required");
+        }
+
+        const leadRecord = await tx.leads.findFirst({
+          where: { leadNumber },
+          select: { id: true },
+        });
+
+        if (!leadRecord) {
+          throw AppError.notFound("Lead not found");
+        }
+
+        await tx.leads.update({
+          where: { id: leadRecord.id },
+          data: {
+            status: "APPLICATION_SUBMITTED",
+            convertedLoanApplicationId: loan.id,
+          },
+        });
         await logAction({
           entityType: "LOAN",
           entityId: loan.id,

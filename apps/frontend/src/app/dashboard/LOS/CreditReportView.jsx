@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { useLoanApplication } from "../../../hooks/useLoanApplication";
 import { useEligibility } from "../../../hooks/useEligibility";
 import { useRefreshCreditReport } from "../../../hooks/useCreditReport";
@@ -99,8 +100,11 @@ const CreditReportView = () => {
 
   const eligibility = useEligibility(loanId);
   const refreshReport = useRefreshCreditReport();
+  const storedReportData = useSelector((state) => state.creditReport.reportData);
 
   useEffect(() => {
+    if (storedReportData) return;
+
     let q = loan.loanNumber || loanId;
     if (party === "coapplicant" && partyId) q = partyId;
     if (party === "guarantor" && partyId) q = partyId;
@@ -108,10 +112,10 @@ const CreditReportView = () => {
       q = loan.customer?.contactNumber || loan.customer?.panNumber || loan.loanNumber || q;
     }
     if (q) refreshReport.mutate({ q, reason: `view-${party}` });
-  }, [loanId, loan.loanNumber, loan.customer?.contactNumber, loan.customer?.panNumber, partyId]);
+  }, [storedReportData, loanId, loan.loanNumber, loan.customer?.contactNumber, loan.customer?.panNumber, party, partyId]);
 
   // Extract credit report data
-  const creditData = refreshReport.data?.data || refreshReport.data || {};
+  const creditData = storedReportData?.data || storedReportData || refreshReport.data?.data || refreshReport.data || {};
   const creditScore = creditData.creditScore;
   const scoreMeta = creditScore ? { color: getScoreColor(creditScore), label: getScoreLabel(creditScore) } : null;
 
